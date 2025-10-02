@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.just-rondon.com
+
+# Sitemaps
+Sitemap: https://www.just-rondon.com/sitemap.xml
