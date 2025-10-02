@@ -1,0 +1,312 @@
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model Profile {
+  id            String   @id @default(uuid())
+  clerkId       String   @unique
+  username      String   @unique
+  email         String
+  profileImage  String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  reviewsArtwork ReviewArtwork[]
+  favoriteArtwork     FavoriteArtwork[]
+  favoriteMuseum     FavoriteMuseum[]
+  hasVisited    hasVisited[]
+  reviewsMuseum ReviewMuseum[]
+  bookings       Booking[]
+}
+
+model Museum {
+  id           String     @id @default(uuid())
+  name         String     @unique
+  engName      String?    
+  slug         String     @unique
+  tagline      String?
+  category     String?    @default("museum")
+  description  String?
+  summary  String?
+  blurb  String?
+  highlights    String[]
+  price        Float
+  tourPrice    Float
+  address      String
+  lat          Float
+  lng          Float
+  image        String
+  website      String?
+  recommendLevel  Int?      @default(0)
+  isForChildren Boolean @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  
+  openingHours OpeningHours[]
+  artworks     Artwork[]
+  bookings      Booking[]
+  reviews      ReviewMuseum[]
+  favorites   FavoriteMuseum[]
+  hasVisited hasVisited[]
+  exhibition Exhibition[]
+  trivia    Trivia[]
+  museumInfo  MuseumInfo?
+}
+
+model Artwork {
+  id          String   @id @default(uuid())
+  title String //和名(なるべく簡潔に) 
+  engTitle String? // 英名(なるべく簡潔に) 
+  artist String? // 作者（不明であれば、"作者不詳"） 
+  year String? // 例：何年頃
+  location String? // Room [0-60] roomと同じ
+  room String? // Room [0-60] locationと同じ
+  highlights String[] // ここがスゴいという作品の見どころ 
+  description String? // 英語の説明に加えて、chatGPTが調べたことを補足してわかりやすく。前知識がない人でもわかるように用語の説明も必要であれば加える
+  recommendLevel  Int      @default(0) //0-3の範囲で。厳しめに判定
+  mustSee     Boolean
+  image       String?                      // ""
+  isOnDisplay Boolean  @default(true)      // 展示中かどうか
+  museumId    String    @default("6cc90107-59e4-45a8-b901-abb9748ebeea")                 // 所属美術館のID（外部キー）
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  museum      Museum   @relation(fields: [museumId], references: [id])
+  reviews      ReviewArtwork[]
+  
+  favorites    FavoriteArtwork[]
+}
+
+model hasVisited {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile    Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId  String
+  museum   Museum  @relation(fields: [museumId], references: [id], onDelete: Cascade)
+  museumId String
+}
+
+model FavoriteMuseum {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile    Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId  String
+  museum   Museum  @relation(fields: [museumId], references: [id], onDelete: Cascade)
+  museumId String
+}
+
+model FavoriteArtwork {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile    Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId  String
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  artworkId String
+}
+
+
+model ReviewMuseum {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile    Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId  String
+  museum   Museum  @relation(fields: [museumId], references: [id], onDelete: Cascade)
+  museumId String
+
+}
+
+model ReviewArtwork {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String
+  profileId  String
+  artworkId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  artwork    Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, artworkId])
+}
+
+model Booking {
+  id            String   @id @default(uuid())
+  tourDate      DateTime
+  numGuests     Int
+  paymentStatus Boolean @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+  museum   Museum  @relation(fields: [museumId], references: [id], onDelete: Cascade)
+  museumId String
+}
+
+model OpeningHours {
+  id         String   @id @default(uuid())
+  museumId   String
+  dayOfWeek  String 
+  openTime   String?   // "09:00"
+  closeTime  String?   // "17:00"
+  
+  museum     Museum   @relation(fields: [museumId], references: [id])
+
+  @@unique([museumId, dayOfWeek])
+}
+
+model Exhibition {
+  id          String   @id @default(cuid())
+  museumId    String
+  name        String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  admission   Float　 // 料金
+  Museum      Museum   @relation(fields: [museumId], references: [id])
+}
+
+model Trivia {
+  id        String   @id @default(cuid())
+  museumId  String
+  title     String
+  content   String    // 短くてもOK、長文ならMarkdown
+  Museum    Museum   @relation(fields: [museumId], references: [id])
+}
+
+model MuseumInfo {
+  id                   String   @id @default(cuid())
+  museumId             String   @unique
+  admissionFeeAdult    Float?   // 例: "20ポンド"
+  admissionFeeStudent  Float?
+  admissionFeeChild    Float?
+  photographyAllowed   String?   // 例: "フラッシュ禁止・商用不可"
+  recommendedDuration  Int?   // 例: "1〜2時間"
+  reservationRequired  Boolean?  // 予約必須かどうか
+  cloakroomInfo        String?   // 例: "無料", "有料", "なし"
+  nearestStation       String?   // 最寄駅名
+  stationWalkingMinutes Int?     // 駅から徒歩何分
+  nearestBusStop       String?   // 最寄バス停名
+  busStopWalkingMinutes Int?     // バス停から徒歩何分
+  guidedTourAvailable  Boolean?  // ガイドツアー有無
+  guidedTourFee        Float?   // 例: "無料" or "10ポンド"
+  guidedTourLanguages  String?   // 例: "英語・日本語対応"
+  cafeteriaAvailable   Boolean?  // 飲食施設の有無
+  shopAvailable        Boolean?  // ショップの有無
+  wifiAvailable        Boolean?  // Wi-Fiの有無
+  website      String?
+  museum      Museum    @relation(fields: [museumId], references: [id])
+}
+
+model News {
+  id          String   @id @default(cuid())
+  title       String
+  summary       String
+  content     String
+  category    String
+  image       String   @default("/news-bg.JPG")
+  tags        String[]   // ← 配列で保持
+  views_count Int      @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Musical {
+  id          String   @id @default(uuid())
+  name         String     //和名
+  engName      String //英名
+  slug         String     @unique
+  tagline      String?
+  description  String
+  summary  String
+  blurb  String?
+  highlights    String[]
+  theatreName String
+  address      String
+  lat          Float
+  lng          Float
+  image        String
+  website      String
+  original     String @default("")
+  isOnShow Boolean      // 上映中かどうか
+  recommendLevel  Int      @default(0)
+  mustSee     Boolean
+  songs       Song[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Song{
+  id          String   @id @default(cuid())
+  index       Int
+  name        String     //和名
+  artist      String
+  lyrics      String
+  scene       String
+  youtubeId   String?
+  musicalId   String
+  musical     Musical  @relation(fields: [musicalId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Post {
+  id        String       @id @default(cuid())
+  category  String @default("none")
+  author    String
+  deletePsswrd String @default("0000")
+  title     String
+  content   String
+  ip        String?
+  userAgent   String?
+  sessionId   String?
+  votes     Int       @default(0)
+  views     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comments  Comment[]
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  parent    Comment?  @relation("CommentToChildren", fields: [parentId], references: [id])
+  parentId  String?
+  children  Comment[] @relation("CommentToChildren")
+  author    String
+  content   String
+    ip        String?
+  userAgent   String?
+  sessionId   String?
+  votes     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Contact{
+  id String @id @default(cuid())
+  name String
+  email String
+  message String
+  token String @unique
+  confirmed Boolean  @default(false)
+}

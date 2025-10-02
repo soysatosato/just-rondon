@@ -1,0 +1,96 @@
+type Section = {
+  id: string;
+  title: string;
+  items: {
+    title: string;
+    description: string;
+    href: string;
+  }[];
+};
+
+export const sections: Section[] = [
+  {
+    id: "museums",
+    title: "美術館特集",
+    items: [
+      {
+        title: "美術館ナビ",
+        description: "ロンドン中の美術館を一覧でチェック",
+        href: "/museums",
+      },
+      {
+        title: "絶対に行くべき美術館10選",
+        description: "迷ったらここ！押さえておきたいトップ10",
+        href: "/museums/best-10-museums",
+      },
+      {
+        title: "キッズ向け美術館",
+        description: "子どもと一緒に楽しめるおすすめスポット",
+        href: "/museums/best-museums-for-kids",
+      },
+      {
+        title: "街で見つかるバンクシー",
+        description: "ストリートアートの名作を探索",
+        href: "/museums/vanksy",
+      },
+    ],
+  },
+  {
+    id: "theatre",
+    title: "劇場・ミュージカル",
+    items: [
+      {
+        title: "人気劇場ガイド",
+        description: "ロンドンの主要ミュージカル劇場を徹底紹介",
+        href: "/musicals",
+      },
+    ],
+  },
+  {
+    id: "column",
+    title: "コラム",
+    items: [
+      {
+        title: "ビザ取得方法",
+        description:
+          "渡航目的に応じたビザの種類や申請手順、必要書類についてわかりやすく解説しています。",
+        href: "",
+      },
+      {
+        title: "ETA（電子渡航認証）の取得",
+        description:
+          "イギリスへの短期渡航で必要な電子渡航認証（ETA）の取得方法や注意点を紹介。",
+        href: "",
+      },
+      {
+        title: "仕事探しのポイント",
+        description:
+          "海外でのアルバイトや正社員、リモートワークなど、現地で働くための情報と求人探しのコツをまとめています。",
+        href: "",
+      },
+    ],
+  },
+  {
+    id: "news",
+    title: "News",
+    items: [
+      {
+        title: "最新ニュース",
+        description: "こちらでロンドンの最新ニュース・情報を確認できます。",
+        href: "/news",
+      },
+    ],
+  },
+  {
+    id: "chatboard",
+    title: "掲示板",
+    items: [
+      {
+        title: "ロンドん！掲示板",
+        description:
+          "カフェやバーの話、仕事や趣味、イベント情報…何でも自由に書き込んで、誰かの新しい発見につなげよう！",
+        href: "/chatboard",
+      },
+    ],
+  },
+];
