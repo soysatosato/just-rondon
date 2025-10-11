@@ -5,6 +5,8 @@ import { fetchNews } from "@/utils/actions/news";
 import { Metadata } from "next";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export async function generateMetadata({
   params,
@@ -90,12 +92,24 @@ export default async function NewsDetailPage({
           <p className="text-lg font-semibold mb-6 border-l-4 border-indigo-500 pl-4">
             {news.summary}
           </p>
-          <div className="prose prose-lg max-w-none leading-relaxed text-muted-foreground">
-            {news.content.split(/\n+/).map((para, idx) => (
-              <p key={idx} className="mb-6">
-                {para}
-              </p>
-            ))}
+          <div className="prose prose-lg max-w-none leading-relaxed text-muted-foreground break-words">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ node, ...props }) => <p className="mb-6" {...props} />,
+                a: ({ node, ...props }) => (
+                  <a className="text-indigo-600 hover:underline" {...props} />
+                ),
+                strong: ({ node, ...props }) => (
+                  <strong className="font-bold" {...props} />
+                ),
+                li: ({ node, ...props }) => (
+                  <li className="ml-6 list-disc" {...props} />
+                ),
+              }}
+            >
+              {news.content}
+            </ReactMarkdown>
           </div>
         </CardContent>
       </Card>
