@@ -1,4 +1,3 @@
-// import FavoriteToggleButton from "@/components/card/FavoriteToggleButton";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 import ShareButton from "@/components/museums/ShareButton";
 import { Separator } from "@/components/ui/separator";
@@ -76,7 +75,6 @@ export default async function MuseumDetailsPage({
         </h1>
         <div className="flex ml-2 gap-x-3 mt-1 md:mt-0">
           <ShareButton museumId={museum.id} name={museum.name} />
-          {/* <FavoriteToggleButton type="museum" targetId={museum.id} /> */}
         </div>
       </header>
       <MuseumHero museum={museum} />
@@ -111,9 +109,7 @@ export default async function MuseumDetailsPage({
             </CardContent>
           </Card>
         </div>
-        {/* Calender */}
       </section>
-      {/* {<SubmitReview museumId={museum.id} museumSlug={museum.slug} />} */}
     </section>
   );
 }

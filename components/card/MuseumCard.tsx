@@ -1,8 +1,6 @@
 import Link from "next/link";
-import FavoriteToggleButton from "./FavoriteToggleButton";
 import { MuseumCardProps } from "@/utils/types";
 import { formatCurrency } from "@/utils/format";
-import MuseumRating from "./MuseumRating";
 import ImageCarousel from "./ImageCarousel";
 
 type props = {
@@ -20,7 +18,6 @@ export default function MuseumCard({ museum }: props) {
           <h3 className="text-sm font-semibold mt-1">
             {name.substring(0, 30)}
           </h3>
-          <MuseumRating inPage={false} museumId={museumId} />
         </div>
         <p className="text-sm text-muted-foreground mt-1">
           {tagline?.substring(0, 40)}
@@ -32,9 +29,6 @@ export default function MuseumCard({ museum }: props) {
           </p>
         </div>
       </Link>
-      <div className="absolute top-5 right-5 z-5">
-        <FavoriteToggleButton type="museum" targetId={museumId} />
-      </div>
     </article>
   );
 }
