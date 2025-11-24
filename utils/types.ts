@@ -5,7 +5,6 @@ export type actionFunction = (
 
 export type MuseumCardProps = {
   image: string[];
-  id: string;
   slug: string;
   name: string;
   tagline: string | null;

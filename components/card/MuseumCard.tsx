@@ -7,7 +7,7 @@ type props = {
   museum: MuseumCardProps;
 };
 export default function MuseumCard({ museum }: props) {
-  const { price, slug, name, image, id: museumId, tagline } = museum;
+  const { price, slug, name, image, tagline } = museum;
   return (
     <article className="group relative">
       <Link href={`museums/${slug}`}>
