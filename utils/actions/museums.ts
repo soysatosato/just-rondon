@@ -2,7 +2,7 @@
 
 import {
   artworkFormSchema,
-  createReviewMuseumSchema,
+  // createReviewMuseumSchema,
   imageSchema,
   museumExhibitionSchema,
   museumFormSchema,
@@ -377,120 +377,120 @@ export const fetchMuseumDetailsBySlug = (slug: string) => {
   });
 };
 
-export const createMuseumReviewAction = async (
-  prevState: any,
-  formData: FormData
-) => {
-  const user = await getAuthUser();
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(
-      createReviewMuseumSchema,
-      rawData
-    );
-    await db.reviewMuseum.create({
-      data: {
-        ...validatedFields,
-        profileId: user.id,
-      },
-    });
-    revalidatePath(`/museums/${rawData.museumSlug}`);
-    return { message: "Review added successfully" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
+// export const createMuseumReviewAction = async (
+//   prevState: any,
+//   formData: FormData
+// ) => {
+//   const user = await getAuthUser();
+//   try {
+//     const rawData = Object.fromEntries(formData);
+//     const validatedFields = validateWithZodSchema(
+//       createReviewMuseumSchema,
+//       rawData
+//     );
+//     await db.reviewMuseum.create({
+//       data: {
+//         ...validatedFields,
+//         profileId: user.id,
+//       },
+//     });
+//     revalidatePath(`/museums/${rawData.museumSlug}`);
+//     return { message: "Review added successfully" };
+//   } catch (error) {
+//     return renderError(error);
+//   }
+// };
 
-export const fetchMuseumReviews = async (museumId: string) => {
-  const reviews = await db.reviewMuseum.findMany({
-    where: { museumId },
-    select: {
-      id: true,
-      rating: true,
-      comment: true,
-      profile: {
-        select: {
-          username: true,
-          profileImage: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-  return reviews;
-};
+// export const fetchMuseumReviews = async (museumId: string) => {
+//   const reviews = await db.reviewMuseum.findMany({
+//     where: { museumId },
+//     select: {
+//       id: true,
+//       rating: true,
+//       comment: true,
+//       profile: {
+//         select: {
+//           username: true,
+//           profileImage: true,
+//         },
+//       },
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+//   return reviews;
+// };
 
-export const fetchMuseumReviewsByUser = async () => {
-  const user = await getAuthUser();
-  const reviews = await db.reviewMuseum.findMany({
-    where: { profileId: user.id },
-    select: {
-      id: true,
-      rating: true,
-      comment: true,
-      museum: {
-        select: {
-          name: true,
-          image: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+// export const fetchMuseumReviewsByUser = async () => {
+//   const user = await getAuthUser();
+//   const reviews = await db.reviewMuseum.findMany({
+//     where: { profileId: user.id },
+//     select: {
+//       id: true,
+//       rating: true,
+//       comment: true,
+//       museum: {
+//         select: {
+//           name: true,
+//           image: true,
+//         },
+//       },
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
 
-  return reviews;
-};
+//   return reviews;
+// };
 
-export const deleteMuseumReviewAction = async (prevState: {
-  reviewId: string;
-}) => {
-  const { reviewId } = prevState;
-  const user = await getAuthUser();
-  try {
-    await db.reviewMuseum.delete({
-      where: { id: reviewId, profileId: user.id },
-    });
-    revalidatePath("/reviews");
-    return { message: "Review deleted successfully" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
+// export const deleteMuseumReviewAction = async (prevState: {
+//   reviewId: string;
+// }) => {
+//   const { reviewId } = prevState;
+//   const user = await getAuthUser();
+//   try {
+//     await db.reviewMuseum.delete({
+//       where: { id: reviewId, profileId: user.id },
+//     });
+//     revalidatePath("/reviews");
+//     return { message: "Review deleted successfully" };
+//   } catch (error) {
+//     return renderError(error);
+//   }
+// };
 
-export async function fetchMuseumRating(museumId: string) {
-  const result = await db.reviewMuseum.groupBy({
-    by: ["museumId"],
-    _avg: {
-      rating: true,
-    },
-    _count: {
-      rating: true,
-    },
-    where: {
-      museumId,
-    },
-  });
-  return {
-    rating: result[0]?._avg.rating?.toFixed(1) ?? 0,
-    count: result[0]?._count.rating ?? 0,
-  };
-}
+// export async function fetchMuseumRating(museumId: string) {
+//   const result = await db.reviewMuseum.groupBy({
+//     by: ["museumId"],
+//     _avg: {
+//       rating: true,
+//     },
+//     _count: {
+//       rating: true,
+//     },
+//     where: {
+//       museumId,
+//     },
+//   });
+//   return {
+//     rating: result[0]?._avg.rating?.toFixed(1) ?? 0,
+//     count: result[0]?._count.rating ?? 0,
+//   };
+// }
 
-export const findExistingMuseumReview = async (
-  userId: string,
-  museumId: string
-) => {
-  return db.reviewMuseum.findFirst({
-    where: {
-      profileId: userId,
-      museumId: museumId,
-    },
-  });
-};
+// export const findExistingMuseumReview = async (
+//   userId: string,
+//   museumId: string
+// ) => {
+//   return db.reviewMuseum.findFirst({
+//     where: {
+//       profileId: userId,
+//       museumId: museumId,
+//     },
+//   });
+// };
 
 export const createArtworkAction = async (
   prevState: any,

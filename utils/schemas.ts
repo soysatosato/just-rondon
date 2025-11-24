@@ -97,33 +97,33 @@ export const artworkFormSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export const createReviewMuseumSchema = z.object({
-  museumId: z.string(),
-  rating: z.coerce.number().int().min(1).max(5),
-  comment: z
-    .string()
-    .trim()
-    .min(4, {
-      message: "コメントは4文字以上で入力してください。",
-    })
-    .max(300, {
-      message: "コメントは300文字以内で入力してください。",
-    }),
-});
+// export const createReviewMuseumSchema = z.object({
+//   museumId: z.string(),
+//   rating: z.coerce.number().int().min(1).max(5),
+//   comment: z
+//     .string()
+//     .trim()
+//     .min(4, {
+//       message: "コメントは4文字以上で入力してください。",
+//     })
+//     .max(300, {
+//       message: "コメントは300文字以内で入力してください。",
+//     }),
+// });
 
-export const createReviewArtworkSchema = z.object({
-  artworkId: z.string(),
-  rating: z.coerce.number().int().min(1).max(5),
-  comment: z
-    .string()
-    .trim()
-    .min(4, {
-      message: "コメントは4文字以上で入力してください。",
-    })
-    .max(300, {
-      message: "コメントは300文字以内で入力してください。",
-    }),
-});
+// export const createReviewArtworkSchema = z.object({
+//   artworkId: z.string(),
+//   rating: z.coerce.number().int().min(1).max(5),
+//   comment: z
+//     .string()
+//     .trim()
+//     .min(4, {
+//       message: "コメントは4文字以上で入力してください。",
+//     })
+//     .max(300, {
+//       message: "コメントは300文字以内で入力してください。",
+//     }),
+// });
 
 export const museumInfoSchema = z.object({
   id: z.string().optional(), // update時のみ使用

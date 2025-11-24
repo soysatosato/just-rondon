@@ -1,8 +1,6 @@
 // import FavoriteToggleButton from "@/components/card/FavoriteToggleButton";
-import MuseumRating from "@/components/card/MuseumRating";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 import ShareButton from "@/components/museums/ShareButton";
-// import SubmitReview from "@/components/reviews/SubmitReview";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchMuseumDetailsBySlug } from "@/utils/actions/museums";
@@ -100,12 +98,6 @@ export default async function MuseumDetailsPage({
       <MuseumTrivia trivia={museum.trivia} />
       <section className="lg:grid gap-x-12 mt-12">
         <div className="">
-          <div className="flex gap-x-4">
-            {/* <h1 className="text-xl font-bold">{museum.name}</h1> */}
-            <MuseumRating inPage museumId={museum.id} />
-          </div>
-          {/* <MuseumReviews museumId={museum.id} /> */}
-
           <Separator className="my-4" />
           <Card>
             <CardContent className="space-y-1">
