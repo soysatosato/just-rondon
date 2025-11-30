@@ -2,23 +2,32 @@ import { fetchLatestNewsByCategory } from "@/utils/actions/news";
 import Link from "next/link";
 
 export const metadata = {
-  title: "ロンドンニュース | 最新情報をまとめてチェック | ロンドん！",
+  title:
+    "ロンドン観光スポット一覧 | 人気名所・おすすめ体験をまとめてチェック | ロンドん！",
   description:
-    "ロンドンの最新ニュースやイベント情報、日常生活に役立つ話題のトピックをまとめてお届けします。",
-  keywords: ["ロンドン", "ニュース", "最新情報", "イベント", "観光", "話題"],
+    "ロンドンの人気観光スポットやおすすめ体験、家族向けの無料スポット、季節のイベントまで、旅行に役立つ情報をわかりやすくまとめて紹介します。",
+  keywords: [
+    "ロンドン",
+    "観光",
+    "観光名所",
+    "おすすめスポット",
+    "ロンドン旅行",
+    "観光地一覧",
+    "ロンドン観光ガイド",
+  ],
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: "https://www.just-rondon.com/news",
+    canonical: "https://www.just-rondon.com/sightseeing",
   },
   openGraph: {
-    title: "ロンドンニュース | 最新情報をまとめてチェック",
+    title: "ロンドン観光スポット一覧 | 人気名所・おすすめ体験をチェック",
     description:
-      "ロンドンの最新ニュースやイベント情報、話題のトピックをまとめてお届けします。",
-    url: "https://www.just-rondon.com/news",
-    siteName: "ロンドん！ | ニュース",
+      "ロンドン観光に欠かせない定番スポットから無料で楽しめる体験、季節のイベントまで、旅行前に知っておきたい情報を総まとめ。",
+    url: "https://www.just-rondon.com/sightseeing",
+    siteName: "ロンドん！ | 観光スポット",
     locale: "ja_JP",
     type: "website",
   },

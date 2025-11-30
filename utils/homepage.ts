@@ -10,6 +10,42 @@ type Section = {
 
 export const sections: Section[] = [
   {
+    id: "sightseeing",
+    title: "観光特集",
+    items: [
+      {
+        title: "ロンドン観光ナビ",
+        description: "主要スポットをまとめてチェック",
+        href: "/sightseeing",
+      },
+      {
+        title: "ハリー・ポッター聖地巡礼ガイド",
+        description: "映画ロケ地から魔法の世界まで完全紹介",
+        href: "/sightseeing/harry-potter",
+      },
+      {
+        title: "子どもと無料で楽しめるスポット",
+        description: "家族でお得に巡れるロンドンの無料名所",
+        href: "/sightseeing/kids-free-activities",
+      },
+      {
+        title: "絶対に外せないロンドン観光",
+        description: "初めてでも迷わない必見スポット特集",
+        href: "/sightseeing/must-see",
+      },
+      {
+        title: "ロイヤル・ロンドン特集",
+        description: "王室ゆかりの地や宮殿を巡るロイヤル旅",
+        href: "/sightseeing/royal-london",
+      },
+      {
+        title: "クリスマスマーケット特集",
+        description: "冬だけの特別なマーケットを徹底ガイド",
+        href: "/sightseeing/christmas-markets",
+      },
+    ],
+  },
+  {
     id: "museums",
     title: "美術館特集",
     items: [

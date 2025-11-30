@@ -21,6 +21,12 @@ module.exports = {
       "/chatboard",
       "/chatboard/create",
       "/contact",
+      "/sightseeing",
+      "/sightseeing/harry-potter",
+      "/sightseeing/kids-free-activities",
+      "/sightseeing/must-see",
+      "/sightseeing/royal-london",
+      "/sightseeing/christmas-markets",
       "/",
     ];
     for (const p of staticPages) {
@@ -52,6 +58,13 @@ module.exports = {
           await config.transform(config, `/musicals/${mu.slug}/songs/${s.id}`)
         );
       }
+    }
+    const attractions = await prisma.attraction.findMany({
+      select: { slug: true },
+    });
+
+    for (const a of attractions) {
+      paths.push(await config.transform(config, `/sightseeing/${a.slug}`));
     }
     const news = await prisma.news.findMany({
       select: { id: true },

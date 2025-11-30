@@ -69,6 +69,13 @@ export default function Navbar() {
                 </SheetHeader>
 
                 <nav className="flex flex-col space-y-3 mt-4">
+                  <Link
+                    href="/sightseeing"
+                    className=" hover:text-red-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    ロンドン観光ナビ
+                  </Link>
                   <Accordion type="single" collapsible>
                     <AccordionItem value="museums" className="border-b-0">
                       <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
@@ -167,6 +174,13 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
           <NavigationMenu>
             <NavigationMenuList className="gap-x-6">
+              <NavigationMenuItem className="pr-6">
+                <NavigationMenuLink asChild>
+                  <Link href="/sightseeing" className="hover:underline">
+                    ロンドン観光ナビ
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuTrigger>美術館</NavigationMenuTrigger>
                 <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">

@@ -256,6 +256,10 @@ model Attraction {
   image        String
   website      String?
   recommendLevel  Int?      @default(0)
+  mustSee      Boolean    @default(false)
+  isForKids      Boolean    @default(false)
+  isFree      Boolean    @default(false)
+  category     String    @default("")
 
   sections     AttractionSection[]
 
@@ -271,6 +275,33 @@ model AttractionSection {
 
   attractionId  String
   attraction    Attraction @relation(fields: [attractionId], references: [id])
+
+  createdAt     DateTime @default(now())
+  }
+
+  model Content {
+  id String  @id @default(cuid())
+  title     String
+  engTitle     String?
+  slug      String    
+  summary   String
+  mainText  String?
+  image        String?
+  website      String?
+  category     String    @default("")
+  createdAt DateTime         @default(now())
+
+  sections  ContentSection[]
+}
+
+model ContentSection {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String?
+  displayOrder  Int @default(0)
+
+  contentId  String
+  content    Content @relation(fields: [contentId], references: [id])
 
   createdAt     DateTime @default(now())
   }

@@ -1,0 +1,254 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import dynamic from "next/dynamic";
+import { fetchAttractionDetails } from "@/utils/actions/attractions";
+import { redirect } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import ReactMarkdown from "react-markdown";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[400px] w-full" />,
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const attraction = await fetchAttractionDetails(params.slug);
+
+  if (!attraction) {
+    return {
+      title: "ロンドン観光ガイド | ロンドん!",
+      description: "ロンドン観光に役立つ情報をまとめて紹介します。",
+    };
+  }
+
+  const title = `${attraction.name} | ${
+    attraction.engName ?? "London Attraction"
+  } | ロンドん!`;
+
+  const description = attraction.summary
+    ? `「${attraction.name}」の魅力や見どころ、アクセス情報を詳しく紹介。ロンドンの人気観光スポットの完全ガイド。`
+    : "ロンドン観光に役立つスポット情報を紹介します。";
+
+  const canonicalUrl = `https://www.just-rondon.com/attractions/${params.slug}`;
+
+  return {
+    title,
+    description,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "website",
+      url: canonicalUrl,
+      title,
+      description,
+      siteName: "ロンドん!",
+      locale: "ja_JP",
+    },
+  };
+}
+
+export default async function AttractionDetail({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const attraction = await fetchAttractionDetails(params.slug);
+  if (!attraction) redirect("/");
+
+  return (
+    <main className="w-full max-w-5xl mx-auto">
+      {/* Hero image full width */}
+      <Dialog>
+        {/* 通常表示（クリックで開く） */}
+        <DialogTrigger asChild>
+          <div className="w-full aspect-[3/1] overflow-hidden cursor-zoom-in">
+            <img
+              src={attraction.image}
+              alt={attraction.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </DialogTrigger>
+
+        {/* 拡大表示 */}
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/80 border-none">
+          <img
+            src={attraction.image}
+            alt={attraction.name}
+            className="w-full h-full object-contain"
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Title + Location */}
+      <section className="px-6 py-6 space-y-3">
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">
+          <span>{attraction.name}</span>
+          <span className="ml-4 text-base md:text-lg font-light text-muted-foreground md:ml-3 md:mb-0 leading-none uppercase tracking-wider">
+            {attraction.engName}
+          </span>
+        </h1>
+        {attraction.tagline && (
+          <p className="text-sm italic text-muted-foreground">
+            {attraction.tagline}
+          </p>
+        )}
+      </section>
+
+      <Tabs
+        defaultValue="overview"
+        className="bg-gray-50 rounded-xl border mx-6 p-4 space-y-4"
+      >
+        <TabsList>
+          {/* Render Overview tab only if address or website exists */}
+          {(attraction.address !== "-" || attraction.website) && (
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+          )}
+          {/* Render Map tab only if address exists */}
+          {attraction.address !== "-" && (
+            <TabsTrigger value="location">Map</TabsTrigger>
+          )}
+        </TabsList>
+
+        {/* Overview Content */}
+        {(attraction.address !== "-" || attraction.website) && (
+          <TabsContent value="overview">
+            <div className="space-y-4 text-gray-800 text-sm">
+              <div>
+                <p className="font-semibold">場所</p>
+                {attraction.address && attraction.address !== "-" ? (
+                  <Link
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      attraction.name
+                    )}&query_place_id=${attraction.lat},${attraction.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {attraction.address}
+                  </Link>
+                ) : (
+                  <span>--</span>
+                )}
+              </div>
+
+              <div>
+                <p className="font-semibold">公式サイト</p>
+                {attraction.website ? (
+                  <Link
+                    href={attraction.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {attraction.website}
+                  </Link>
+                ) : (
+                  <span>--</span>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+        )}
+
+        {/* Map Content */}
+        {attraction.address !== "-" && (
+          <TabsContent value="location">
+            <div className="my-8 space-y-2">
+              <Card>
+                <CardContent className="space-y-1">
+                  <DynamicMap lat={attraction.lat} lng={attraction.lng} />
+                  <div className="mt-2 text-xs md:text-sm">
+                    <Link
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                        attraction.name
+                      )}&query_place_id=${attraction.lat},${attraction.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {attraction.address}
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        )}
+      </Tabs>
+
+      {/* About section */}
+      <section className="px-6 py-12 max-w-3xl mx-auto space-y-10">
+        <div className="p-10 rounded-3xl shadow-md bg-white">
+          <div className="relative float-left mr-6 mb-4 w-28 h-28">
+            <Image
+              src="/overview.png"
+              alt="Overview Icon"
+              fill
+              className="object-contain drop-shadow-md"
+            />
+          </div>
+
+          {attraction.summary && (
+            <p className="text-[18px] leading-relaxed text-neutral-800 font-light whitespace-pre-line">
+              {attraction.summary}
+            </p>
+          )}
+
+          <div className="clear-both" />
+        </div>
+
+        <div className="space-y-12">
+          {attraction.sections?.map((sec) => (
+            <section
+              key={sec.id}
+              className="space-y-4 pb-4 border-l-4 border-neutral-300 pl-5 hover:border-neutral-500 transition-colors"
+            >
+              <h2 className="text-xl md:text-2xl font-semibold tracking-tight flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-neutral-400 inline-block"></span>
+                {sec.title}
+              </h2>
+
+              <div className="prose prose-neutral max-w-none text-sm leading-relaxed">
+                <ReactMarkdown
+                  components={{
+                    p: ({ node, ...props }) => (
+                      <p className="mb-6 last:mb-0" {...props} />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h3
+                        className="text-xl font-semibold mt-8 mb-4"
+                        {...props}
+                      />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul
+                        className="list-disc list-outside mb-6 last:mb-0"
+                        {...props}
+                      />
+                    ),
+                  }}
+                >
+                  {sec.description}
+                </ReactMarkdown>
+              </div>
+            </section>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
