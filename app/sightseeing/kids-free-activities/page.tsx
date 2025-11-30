@@ -95,11 +95,7 @@ export default async function KidsFreeListPage() {
         <section className="grid gap-10">
           {items.map((item: any) => (
             <div key={item.id} id={item.slug} className="scroll-mt-24">
-              <Link
-                key={item.id}
-                href={`/sightseeing/${item.slug}`}
-                className="group block"
-              >
+              <Link href={`/sightseeing/${item.slug}`} className="group block">
                 <Card
                   className="shadow-sm border bg-white/60 backdrop-blur-sm 
                          hover:shadow-xl hover:bg-white transition-all duration-300"

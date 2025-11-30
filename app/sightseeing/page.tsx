@@ -187,50 +187,50 @@ const tours = [
   // },
 ];
 
-const kidsAttractions = [
-  {
-    title: "Prehistoric Planet",
-    description: "恐竜の世界をテーマにした没入型アトラクション。",
-    slug: "",
-    image: "",
-    price: "£25.00〜",
-  },
-  {
-    title: "IFS Cloud Cable Car（ロンドン・ケーブルカー）",
-    description: "空中散歩でテムズ川を横断。子どもにも大人気。",
-    slug: "",
-    image: "",
-    price: "£13.00〜",
-  },
-  {
-    title: "Paradox Museum London",
-    description: "錯視やトリックアートで「脳が混乱する」体験型ミュージアム。",
-    slug: "",
-    image: "",
-    price: "£16.90〜",
-  },
-  {
-    title: "London Transport Museum",
-    description: "ロンドンのバスや地下鉄の歴史を楽しみながら学べる博物館。",
-    slug: "",
-    image: "",
-    price: "£24.50〜",
-  },
-  {
-    title: "The Paddington Bear Experience",
-    description: "パディントンの世界に入り込める体験型アトラクション。",
-    slug: "",
-    image: "",
-    price: "£34.00〜",
-  },
-  {
-    title: "Jurassic World: The Experience",
-    description: "映画『ジュラシック・ワールド』の世界を再現した没入型体験。",
-    slug: "",
-    image: "",
-    price: "£31.90〜",
-  },
-];
+// const kidsAttractions = [
+//   {
+//     title: "Prehistoric Planet",
+//     description: "恐竜の世界をテーマにした没入型アトラクション。",
+//     slug: "",
+//     image: "",
+//     price: "£25.00〜",
+//   },
+//   {
+//     title: "IFS Cloud Cable Car（ロンドン・ケーブルカー）",
+//     description: "空中散歩でテムズ川を横断。子どもにも大人気。",
+//     slug: "",
+//     image: "",
+//     price: "£13.00〜",
+//   },
+//   {
+//     title: "Paradox Museum London",
+//     description: "錯視やトリックアートで「脳が混乱する」体験型ミュージアム。",
+//     slug: "",
+//     image: "",
+//     price: "£16.90〜",
+//   },
+//   {
+//     title: "London Transport Museum",
+//     description: "ロンドンのバスや地下鉄の歴史を楽しみながら学べる博物館。",
+//     slug: "",
+//     image: "",
+//     price: "£24.50〜",
+//   },
+//   {
+//     title: "The Paddington Bear Experience",
+//     description: "パディントンの世界に入り込める体験型アトラクション。",
+//     slug: "",
+//     image: "",
+//     price: "£34.00〜",
+//   },
+//   {
+//     title: "Jurassic World: The Experience",
+//     description: "映画『ジュラシック・ワールド』の世界を再現した没入型体験。",
+//     slug: "",
+//     image: "",
+//     price: "£31.90〜",
+//   },
+// ];
 
 const freeAttractions = [
   {
@@ -329,8 +329,8 @@ export default function Page() {
 
           {/* メインの4カード */}
           <div className="grid gap-4 sm:grid-cols-2">
-            {highlightAttractions.map((item) => (
-              <Link href={`/sightseeing/${item.slug}`}>
+            {highlightAttractions.map((item, idx) => (
+              <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
                     <Image
@@ -383,8 +383,8 @@ export default function Page() {
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {mustSeeCategories.map((item) => (
-              <Link href={`/sightseeing/${item.slug}`}>
+            {mustSeeCategories.map((item, idx) => (
+              <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
                     <Image
@@ -422,8 +422,8 @@ export default function Page() {
         <section className="space-y-6">
           <h2 className="text-xl font-semibold">季節イベント</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {seasonalAttractions.map((item) => (
-              <Link href={`/sightseeing/${item.slug}`}>
+            {seasonalAttractions.map((item, idx) => (
+              <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
                     <Image
@@ -478,8 +478,8 @@ export default function Page() {
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">王室ゆかりのスポット</h3>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-              {royalAttractions.map((item) => (
-                <Link href={`/sightseeing/${item.slug}`}>
+              {royalAttractions.map((item, idx) => (
+                <Link key={idx} href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                     <div className="relative h-40 w-full">
                       <Image
@@ -509,8 +509,8 @@ export default function Page() {
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">見逃せないロンドンツアー</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            {tours.map((item) => (
-              <Link href={`/sightseeing/${item.slug}`}>
+            {tours.map((item, idx) => (
+              <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
                     <Image
@@ -549,7 +549,7 @@ export default function Page() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {kidsAttractions.map((item) => (
+            {kidsAttractions.map((item,idx) => (
               <Link href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
@@ -584,8 +584,8 @@ export default function Page() {
           </p>
 
           <div className="grid gap-4 md:grid-cols-3">
-            {freeAttractions.map((item) => (
-              <Link href={`/museums/${item.slug}`}>
+            {freeAttractions.map((item, idx) => (
+              <Link key={idx} href={`/museums/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
                     <Image

@@ -54,7 +54,7 @@ export default async function MustSeePage() {
       <h1 className="text-2xl font-bold mb-4">Must-See Attractions</h1>
       <p className="text-base text-muted-foreground mb-8">
         ロンドンを訪れるなら絶対に見ておきたいスポットをまとめています。
-        一生に一度は見ておきたい、王道中の王道の"MUST SEE"です。
+        一生に一度は見ておきたい、王道中の王道の &quot;MUST SEE&quot; です。
       </p>
 
       <div className="grid gap-8">
