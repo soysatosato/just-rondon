@@ -3,6 +3,7 @@ import Providers from "./providers";
 import { ClerkProvider } from "@clerk/nextjs";
 import MainNav from "@/components/navbar/MainNav";
 import { defaultMetadata } from "./metadata";
+import MainFooter from "@/components/home/MainFooter";
 
 export const metadata = defaultMetadata;
 export default function RootLayout({
@@ -17,6 +18,7 @@ export default function RootLayout({
           <Providers>
             <MainNav />
             <main className="container py-4">{children}</main>
+            <MainFooter />
           </Providers>
         </body>
       </html>

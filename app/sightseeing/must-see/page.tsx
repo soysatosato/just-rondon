@@ -89,7 +89,11 @@ export default async function MustSeePage() {
                 />
               </AspectRatio>
 
-              {a.summary && <p className="mt-4 text-gray-700">{a.summary}</p>}
+              {a.summary && (
+                <p className="mt-4 text-gray-700 dark:text-neutral-300">
+                  {a.summary}
+                </p>
+              )}
 
               <div className="mt-4">
                 <Button asChild variant="outline">

@@ -98,7 +98,9 @@ export default async function KidsFreeListPage() {
               <Link href={`/sightseeing/${item.slug}`} className="group block">
                 <Card
                   className="shadow-sm border bg-white/60 backdrop-blur-sm 
-                         hover:shadow-xl hover:bg-white transition-all duration-300"
+    hover:shadow-xl hover:bg-white transition-all duration-300
+    dark:bg-slate-800/60 dark:hover:bg-slate-800 
+    dark:border-slate-700"
                 >
                   <CardHeader>
                     <CardTitle className="text-xl font-semibold">

@@ -2,14 +2,22 @@
 
 import db from "../db";
 
-export const fetchChristmasMarket = async () => {
-  // ページごとの取得
+export const fetchChristmasMarkets = async () => {
   const contents = await db.content.findMany({
     where: { category: "christmas-market" },
     include: { sections: true },
   });
 
   return contents;
+};
+
+export const fetchChristmasMarketBySlug = async (slug: string) => {
+  const content = await db.content.findFirst({
+    where: { category: "christmas-market", slug },
+    include: { sections: true },
+  });
+
+  return content;
 };
 
 export const fetchKidsFreeActivities = async () => {
@@ -37,6 +45,24 @@ export const fetchHPActivities = async () => {
     orderBy: {
       createdAt: "desc",
     },
+  });
+
+  return contents;
+};
+
+export const fetchThamesRiverCruises = async () => {
+  const contents = await db.content.findMany({
+    where: { category: "thames-cruise" },
+    include: { sections: true },
+  });
+
+  return contents;
+};
+
+export const fetchStadiumTours = async () => {
+  const contents = await db.content.findMany({
+    where: { category: "stadium-tour" },
+    include: { sections: true },
   });
 
   return contents;

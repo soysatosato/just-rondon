@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
 import { fetchRoyalActivities } from "@/utils/actions/contents";
 
-export default async function KidsFreeListPage() {
+export default async function RoyalAcrivitiesListPage() {
   const items = await fetchRoyalActivities();
 
   return (
@@ -68,8 +68,8 @@ export default async function KidsFreeListPage() {
                 className="group block"
               >
                 <Card
-                  className="shadow-sm border bg-white/60 backdrop-blur-sm 
-                         hover:shadow-xl hover:bg-white transition-all duration-300"
+                  className="shadow-sm border bg-white/60 dark:bg-white/20 backdrop-blur-sm 
+                         hover:shadow-xl hover:bg-white dark:hover:bg-black transition-all duration-300"
                 >
                   {item.image && (
                     <Image

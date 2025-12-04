@@ -1,4 +1,3 @@
-// app/page.tsx
 import {
   Card,
   CardHeader,
@@ -83,9 +82,18 @@ const seasonalAttractions = [
   {
     title: "クリスマスマーケット2025",
     description: "本物そっくりなセレブの蝋人形が150体以上勢ぞろい。",
-    slug: "christmas-market",
+    slug: "christmas-markets",
     image:
       "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/london-cm-bg.jpeg",
+  },
+  {
+    title: "Hyde Park Winter Wonderland",
+    description:
+      "巨大テーマパークのような冬の祭典。アイススケートやアトラクション、巨大マーケットまで勢揃い。",
+    slug: "hyde-park-winter-wonderland-2025",
+    image:
+      "https://upload.wikimedia.org/wikipedia/en/a/a1/Winter_Wonderland_logo.png",
+    price: "£5〜（日時により変動）",
   },
   {
     title: "Chelsea Winter Village",
@@ -94,6 +102,17 @@ const seasonalAttractions = [
     image:
       "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/chelseawintervillage.jpeg",
     price: "£23.95〜",
+  },
+  {
+    title: "クリスマス・ライト・ロンドン・バスツアー 2025",
+    description:
+      "冬季限定、ロンドン中心部のイルミネーションを巡るナイトツアー。",
+    slug: "christmas-lights-london-bus-tour-2025",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/4/4d/Christmas_lights_-_geograph.org.uk_-_5233969.jpg",
+
+    price: "£26.00〜",
+    badge: "",
   },
 ];
 
@@ -151,40 +170,34 @@ const tours = [
     price: "£49.00〜",
     badge: "",
   },
-  // {
-  //   title: "テムズ川ボートツアー",
-  //   description: "テムズ川から眺めるビッグ・ベンやタワーブリッジは格別。",
-  //   slug: "",
-  //   image: "",
-  //   price: "目安 £20〜",
-  //   badge: "",
-  // },
-  // {
-  //   title: "The Total London Experience",
-  //   description: "主要スポットを1日でまわる欲張りツアー。",
-  //   slug: "",
-  //   image: "",
-  //   price: "£129.00〜",
-  //   badge: "",
-  // },
-  // {
-  //   title: "Christmas Lights Bus Tour",
-  //   description:
-  //     "冬季限定、ロンドン中心部のイルミネーションを巡るナイトツアー。",
-  //   slug: "",
-  //   image: "",
+  {
+    title: "テムズ川ボートツアー",
+    description: "テムズ川から眺めるビッグ・ベンやタワーブリッジは格別。",
+    slug: "thames-cruise",
+    image:
+      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/thamescruisebg.jpeg",
+    price: "目安 £20〜",
+    badge: "",
+  },
+  {
+    title: "ロンドン1日完全制覇ツアー",
+    description: "主要スポットを1日でまわる欲張りツアー。",
+    slug: "the-total-london-experience-tour",
+    image:
+      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/london-city-bus-tours-logo.jpeg",
+    price: "£129.00〜",
+    badge: "",
+  },
 
-  //   price: "£26.00〜",
-  //   badge: "",
-  // },
-  // {
-  //   title: "London Stadium Tours",
-  //   description: "プレミアリーグのスタジアム見学ツアーなどスポーツ好き向け。",
-  //   slug: "",
-  //   image: "",
-  //   price: "£20.00〜（目安）",
-  //   badge: "",
-  // },
+  {
+    title: "ロンドン・スタジアムツアー完全ガイド",
+    description: "プレミアリーグのスタジアム見学ツアーなどスポーツ好き向け。",
+    slug: "stadium-tours",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/d/d2/London_Wembley.jpg",
+    price: "£20.00〜（目安）",
+    badge: "",
+  },
 ];
 
 // const kidsAttractions = [
@@ -307,19 +320,19 @@ const faqItems = [
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen">
       <main className="mx-auto max-w-6xl px-4 py-8 space-y-12">
         <section className="space-y-6">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               London Sightseeing
             </h1>
-            <p className="max-w-3xl text-sm leading-relaxed text-slate-600">
+            <p className="max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
               ロンドンには、世界的に有名な観光スポットがぎゅっと詰まっています。
               王室ゆかりの宮殿や歴史ある教会、最先端の展望台や体験型ミュージアムまで、
               初めてのロンドンでも、リピーターでも楽しめる見どころが目白押しです。
             </p>
-            <p className="max-w-3xl text-xs leading-relaxed text-slate-500">
+            <p className="max-w-3xl text-xs leading-relaxed text-slate-500 dark:text-slate-400">
               ここでは、日本からの旅行者にも人気の「絶対に外せないスポット」を中心に、
               テーマ別にロンドンの見どころを整理して紹介します。
               多くの施設は事前予約制や日時指定チケット制なので、
@@ -358,7 +371,7 @@ export default function Page() {
         {/* ロンドン観光の概要テキスト */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">ロンドン観光の始め方</h2>
-          <p className="max-w-4xl text-sm leading-relaxed text-slate-600">
+          <p className="max-w-4xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
             ロンドンの魅力は「歴史」と「今」が同時に存在していることです。
             タワー・オブ・ロンドンで中世の雰囲気を味わいつつ、
             ロンドン・アイからは近未来的なシティのビル群を見渡せます。
@@ -366,7 +379,7 @@ export default function Page() {
             バッキンガム宮殿では衛兵交代式を見守る——
             1日のうちに何世紀分もの時間旅行ができてしまうのがロンドンです。
           </p>
-          <p className="max-w-4xl text-xs leading-relaxed text-slate-500">
+          <p className="max-w-4xl text-xs leading-relaxed text-slate-500 dark:text-slate-400">
             「何から回ればいいか分からない」という人は、
             まずは「必見スポット」と「シティパス」の情報を押さえ、
             1〜2日分のシンプルなモデルコースを作るのがおすすめです。
@@ -377,7 +390,7 @@ export default function Page() {
         <section className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold">ロンドン必見スポット</h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600">
+            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
               バッキンガム宮殿やビッグ・ベン、ロンドン・アイなど、
               「ロンドンらしさ」を感じる名所をテーマ別にチェックしましょう。
             </p>
@@ -404,8 +417,8 @@ export default function Page() {
               </Link>
             ))}
           </div>
-          <Card className="border-dashed border-slate-300 bg-slate-50">
-            <CardContent className="space-y-2 py-4 text-xs text-slate-600">
+          <Card className="border-dashed border-slate-300 bg-slate-50 dark:bg-slate-700">
+            <CardContent className="space-y-2 py-4 text-xs text-slate-600 dark:text-slate-300">
               <p className="font-semibold">
                 Sightseeing pass（観光パス）をうまく使おう
               </p>
@@ -434,10 +447,14 @@ export default function Page() {
                   </div>
                   <CardContent className="space-y-1 py-3">
                     <p className="text-sm font-semibold">{item.title}</p>
-                    <p className="text-xs text-slate-600">{item.description}</p>
-                    <p className="pt-1 text-xs font-medium text-slate-900">
-                      From {item.price}
+                    <p className="text-xs text-slate-600 dark:text-slate-300">
+                      {item.description}
                     </p>
+                    {item.price && (
+                      <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
+                        From {item.price}
+                      </p>
+                    )}
                   </CardContent>
                 </Card>
               </Link>
@@ -491,10 +508,10 @@ export default function Page() {
                     </div>
                     <CardContent className="space-y-1 py-2">
                       <p className="text-xs font-semibold">{item.title}</p>
-                      <p className="text-[11px] text-slate-600">
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300">
                         {item.description}
                       </p>
-                      <p className="text-[11px] font-medium text-slate-900">
+                      <p className="text-[11px] font-medium text-slate-900 dark:text-slate-100">
                         From {item.price}
                       </p>
                     </CardContent>
@@ -529,8 +546,10 @@ export default function Page() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-600">{item.description}</p>
-                    <p className="pt-1 text-xs font-medium text-slate-900">
+                    <p className="text-xs text-slate-600 dark:text-slate-300">
+                      {item.description}
+                    </p>
+                    <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
                       {item.price}
                     </p>
                   </CardContent>
@@ -543,7 +562,7 @@ export default function Page() {
         {/* <section className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold">家族で楽しめるロンドン</h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600">
+            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
               子どもと一緒のロンドン旅行なら、体験型ミュージアムやアトラクションが充実したエリアを中心にホテルを選ぶと移動が楽になります。
             </p>
           </div>
@@ -562,8 +581,8 @@ export default function Page() {
                   </div>
                   <CardContent className="space-y-1 py-3">
                     <p className="text-sm font-semibold">{item.title}</p>
-                    <p className="text-xs text-slate-600">{item.description}</p>
-                    <p className="pt-1 text-xs font-medium text-slate-900">
+                    <p className="text-xs text-slate-600 dark:text-slate-300">{item.description}</p>
+                    <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
                       From {item.price}
                     </p>
                   </CardContent>
@@ -578,7 +597,7 @@ export default function Page() {
           <h2 className="text-xl font-semibold">
             ロンドンの必見ミュージアム & アートギャラリー
           </h2>
-          <p className="max-w-4xl text-sm text-slate-600">
+          <p className="max-w-4xl text-sm text-slate-600 dark:text-slate-300">
             ロンドンの多くの国立博物館・美術館は入場無料（特別展は有料）で、
             コスパの面でも世界トップクラス。雨の日は「ミュージアムはしご」もおすすめです。
           </p>
@@ -612,14 +631,11 @@ export default function Page() {
           <h2 className="text-xl font-semibold">ロンドン観光 FAQ</h2>
           <div className="space-y-4">
             {faqItems.map((faq) => (
-              <Card
-                key={faq.question}
-                className="border-none bg-white shadow-sm"
-              >
+              <Card key={faq.question} className="border-none shadow-sm">
                 <CardHeader>
                   <CardTitle className="text-sm">{faq.question}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-1 text-xs leading-relaxed text-slate-600">
+                <CardContent className="space-y-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
                   {faq.answer.map((line) => (
                     <div key={line} className="flex gap-1">
                       <span className="shrink-0">・</span>

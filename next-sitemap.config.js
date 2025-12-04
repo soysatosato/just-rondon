@@ -27,6 +27,8 @@ module.exports = {
       "/sightseeing/must-see",
       "/sightseeing/royal-london",
       "/sightseeing/christmas-markets",
+      "/sightseeing/stadium-tours",
+      "/sightseeing/thames-cruise",
       "/",
     ];
     for (const p of staticPages) {
@@ -66,6 +68,20 @@ module.exports = {
     for (const a of attractions) {
       paths.push(await config.transform(config, `/sightseeing/${a.slug}`));
     }
+
+    const christmasMarkets = await prisma.content.findMany({
+      where: { category: "christmas-market" },
+      include: { sections: true },
+    });
+    for (const cm of christmasMarkets) {
+      paths.push(
+        await config.transform(
+          config,
+          `/sightseeing/christmas-markets/${cm.slug}`
+        )
+      );
+    }
+
     const news = await prisma.news.findMany({
       select: { id: true },
     });

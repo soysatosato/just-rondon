@@ -1,68 +1,73 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { fetchHPActivities } from "@/utils/actions/contents";
+import { fetchStadiumTours } from "@/utils/actions/contents";
 import ExpandableText from "@/components/card/ExpandableText";
 
 export const metadata = {
   title:
-    "ハリー・ポッター聖地巡礼 in ロンドン | ロケ地・モデル地・スタジオツアー完全ガイド | ロンドん！",
+    "テムズ川クルーズ完全ガイド | ロンドン観光を満喫するリバークルーズ | ロンドん！",
   description:
-    "ロンドンで巡るハリー・ポッターの聖地特集。キングスクロス駅9¾番線、レドンホール・マーケット、ミレニアム橋、ロンドン動物園、レイコック村など映画ロケ地を徹底紹介。スタジオツアー（WB Studio Tour London）への行き方も掲載。",
+    "ロンドン名物のテムズ川クルーズを徹底解説。ビッグ・ベン、ロンドン・アイ、タワーブリッジを眺める観光クルーズや、ナイトクルーズ、ディナークルーズまで、料金・ルート・おすすめを紹介する保存版ガイド。",
   keywords: [
-    "ハリー・ポッター",
-    "Harry Potter",
-    "ハリポタ 聖地巡礼",
-    "ロンドン ハリーポッター",
-    "ロケ地",
-    "スタジオツアー",
-    "9¾番線",
-    "映画ロケ地",
-    "ワーナーブラザーズスタジオツアー",
-    "キングスクロス駅",
-    "レドンホールマーケット",
+    "テムズ川クルーズ",
+    "ロンドン クルーズ",
+    "リバークルーズ",
+    "ナイトクルーズ",
+    "ロンドン 観光",
+    "タワーブリッジ",
+    "ロンドンアイ",
+    "ビッグベン",
+    "ディナークルーズ",
+    "観光船",
+    "川下り ロンドン",
+    "ロンドン 川 クルーズ",
   ],
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: "https://www.just-rondon.com/sightseeing/harry-potter",
+    canonical: "https://www.just-rondon.com/sightseeing/thames-cruise",
   },
   openGraph: {
-    title:
-      "ハリー・ポッター聖地巡礼ガイド | ロンドンで訪れたいロケ地 & 名所一覧",
+    title: "テムズ川クルーズ完全ガイド | ロンドンの名所を船から楽しむ",
     description:
-      "ロンドンで楽しむハリー・ポッターの世界。映画ロケ地、ゆかりある建物、スタジオツアー、魔法ワールドを感じられる場所をまとめた完全ガイド。",
-    url: "https://www.just-rondon.com/sightseeing/harry-potter",
-    siteName: "ロンドん！ | ハリー・ポッター特集",
+      "ビッグ・ベン、ロンドン塔、ウェストミンスター寺院など、テムズ川沿いの名所を結ぶ人気クルーズ。観光、ディナー、ナイトクルーズまで徹底紹介。",
+    url: "https://www.just-rondon.com/sightseeing/thames-cruise",
+    siteName: "ロンドん！ | テムズ川クルーズ特集",
     locale: "ja_JP",
     type: "website",
   },
 };
 
-export default async function HarryPotterPage() {
-  const contents = await fetchHPActivities();
+export default async function tadiumToursListPage() {
+  const contents = await fetchStadiumTours();
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-10">
       <div>
         <h2 className="text-lg italic font-semibold text-center text-purple-700 dark:text-purple-300 mt-2">
-          Harry Potter Spots in London
+          Stadium Tours in London
         </h2>
         <h1 className="text-2xl font-bold text-center">
-          ロンドンで巡るハリー・ポッタースポット
+          ロンドンで楽しむスタジアムツアー
         </h1>
       </div>
       <div>
         <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-          ロンドンは、魔法界の外側にあっても不思議がそこかしこに染み込んでいる街です。重層的な歴史、曲がりくねった街路、居心地のいいパブ、そして古い建物が織りなす空気だけでも魅力的ですが、この街には愛され続ける『ハリー・ポッター』の世界と結びついた場所が数多くあります。
+          ロンドンは、世界トップレベルのフットボール（サッカー）が息づく街です。
+          街を歩けば、プレミアリーグの歴史や熱狂がそこかしこに漂っています。
         </p>
         <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-          映画のロケ地、没入型のスタジオツアー、遊び心あふれるショップ、テーマ性のあるホテルまで、ファンが魔法の世界に一歩踏み込めるスポットがぎっしりと詰まっています。
+          スタジアムツアーでは、選手たちが実際に使うロッカールーム、ピッチへ続くトンネル、
+          VIPが座るロイヤルボックスなど、普段絶対入れない場所に足を踏み入れることができます。
+          まさに“試合前夜の緊張感”を体験できる裏側への冒険です。
         </p>
         <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-10">
-          このガイドでは、ロンドンに点在する必見のハリー・ポッターゆかりの場所を紹介します。本や映画、そして舞台が残した魔法の痕跡をたどりながら、街の中に潜む“魔法の片鱗”を探しにいきましょう。
+          このガイドでは、アーセナル、チェルシー、トッテナム、ウェストハム、
+          そして聖地ウェンブリーまで、ロンドンが誇るスタジアムツアーを紹介します。
+          少しだけファン目線で、心が高鳴る瞬間を一緒に巡っていきましょう。
         </p>
       </div>
       <section className="space-y-2">

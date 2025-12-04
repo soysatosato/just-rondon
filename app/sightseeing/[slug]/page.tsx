@@ -110,7 +110,7 @@ export default async function AttractionDetail({
 
       <Tabs
         defaultValue="overview"
-        className="bg-gray-50 rounded-xl border mx-6 p-4 space-y-4"
+        className="bg-gray-50 dark:bg-gray-800 rounded-xl border mx-6 p-4 space-y-4"
       >
         <TabsList>
           {/* Render Overview tab only if address or website exists */}
@@ -126,7 +126,7 @@ export default async function AttractionDetail({
         {/* Overview Content */}
         {(attraction.address !== "-" || attraction.website) && (
           <TabsContent value="overview">
-            <div className="space-y-4 text-gray-800 text-sm">
+            <div className="space-y-4 text-gray-800 dark:text-gray-100 text-sm">
               <div>
                 <p className="font-semibold">場所</p>
                 {attraction.address && attraction.address !== "-" ? (
@@ -136,7 +136,7 @@ export default async function AttractionDetail({
                     )}&query_place_id=${attraction.lat},${attraction.lng}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 dark:text-blue-300 hover:underline"
                   >
                     {attraction.address}
                   </Link>
@@ -152,7 +152,7 @@ export default async function AttractionDetail({
                     href={attraction.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 dark:text-blue-300  hover:underline"
                   >
                     {attraction.website}
                   </Link>
@@ -192,18 +192,18 @@ export default async function AttractionDetail({
 
       {/* About section */}
       <section className="px-6 py-12 max-w-3xl mx-auto space-y-10">
-        <div className="p-10 rounded-3xl shadow-md bg-white">
+        <div className="p-10 rounded-3xl shadow-md bg-white dark:bg-gray-800">
           <div className="relative float-left mr-6 mb-4 w-28 h-28">
             <Image
               src="/overview.png"
               alt="Overview Icon"
               fill
-              className="object-contain drop-shadow-md"
+              className="object-contain drop-shadow-md  dark:bg-neutral-100"
             />
           </div>
 
           {attraction.summary && (
-            <p className="text-[18px] leading-relaxed text-neutral-800 font-light whitespace-pre-line">
+            <p className="text-[18px] leading-relaxed text-neutral-800 dark:text-neutral-300  font-light whitespace-pre-line">
               {attraction.summary}
             </p>
           )}
