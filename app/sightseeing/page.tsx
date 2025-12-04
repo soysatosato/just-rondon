@@ -200,50 +200,54 @@ const tours = [
   },
 ];
 
-// const kidsAttractions = [
-//   {
-//     title: "Prehistoric Planet",
-//     description: "恐竜の世界をテーマにした没入型アトラクション。",
-//     slug: "",
-//     image: "",
-//     price: "£25.00〜",
-//   },
-//   {
-//     title: "IFS Cloud Cable Car（ロンドン・ケーブルカー）",
-//     description: "空中散歩でテムズ川を横断。子どもにも大人気。",
-//     slug: "",
-//     image: "",
-//     price: "£13.00〜",
-//   },
-//   {
-//     title: "Paradox Museum London",
-//     description: "錯視やトリックアートで「脳が混乱する」体験型ミュージアム。",
-//     slug: "",
-//     image: "",
-//     price: "£16.90〜",
-//   },
-//   {
-//     title: "London Transport Museum",
-//     description: "ロンドンのバスや地下鉄の歴史を楽しみながら学べる博物館。",
-//     slug: "",
-//     image: "",
-//     price: "£24.50〜",
-//   },
-//   {
-//     title: "The Paddington Bear Experience",
-//     description: "パディントンの世界に入り込める体験型アトラクション。",
-//     slug: "",
-//     image: "",
-//     price: "£34.00〜",
-//   },
-//   {
-//     title: "Jurassic World: The Experience",
-//     description: "映画『ジュラシック・ワールド』の世界を再現した没入型体験。",
-//     slug: "",
-//     image: "",
-//     price: "£31.90〜",
-//   },
-// ];
+const kidsAttractions = [
+  {
+    title: "プリヒストリック・プラネット：恐竜没入体験",
+    description: "恐竜の世界をテーマにした没入型アトラクション。",
+    slug: "prehistoric-planet-london",
+    image:
+      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/Prehistoric-Planet-Discovering-Dinosaurs-at-Lightroom.jpeg",
+    price: "£25.00〜",
+  },
+  {
+    title: "IFSクラウド・ケーブルカー（ロンドン・ケーブルカー）",
+    description: "空中散歩でテムズ川を横断。子どもにも大人気。",
+    slug: "ifs-cloud-cable-car-london",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/9/9a/Emirates_Air_Line_towers_24_May_2012.jpg",
+    price: "£13.00〜",
+  },
+  //   {
+  //     title: "Paradox Museum London",
+  //     description: "錯視やトリックアートで「脳が混乱する」体験型ミュージアム。",
+  //     slug: "",
+  //     image: "",
+  //     price: "£16.90〜",
+  //   },
+  //   {
+  //     title: "London Transport Museum",
+  //     description: "ロンドンのバスや地下鉄の歴史を楽しみながら学べる博物館。",
+  //     slug: "",
+  //     image: "",
+  //     price: "£24.50〜",
+  //   },
+  {
+    title: "パディントン・ベア・エクスペリエンス",
+    description: "パディントンの世界に入り込める体験型アトラクション。",
+    slug: "jurassic-world-experience-london",
+    image:
+      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/padd-bear-the-experience.jpeg",
+    price: "£34.00〜",
+  },
+  {
+    title: "ジュラシック・ワールド：エクスペリエンス",
+    description: "映画『ジュラシック・ワールド』の世界を再現した没入型体験。",
+    slug: "jurassic-world-experience-london",
+    image:
+      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/JWE-uk.jpeg",
+    price: "£31.90〜",
+  },
+];
 
 const freeAttractions = [
   {
@@ -559,7 +563,7 @@ export default function Page() {
           </div>
         </section>
 
-        {/* <section className="space-y-6">
+        <section className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold">家族で楽しめるロンドン</h2>
             <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
@@ -568,8 +572,8 @@ export default function Page() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {kidsAttractions.map((item,idx) => (
-              <Link href={`/sightseeing/${item.slug}`}>
+            {kidsAttractions.map((item, idx) => (
+              <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
                     <Image
@@ -581,7 +585,9 @@ export default function Page() {
                   </div>
                   <CardContent className="space-y-1 py-3">
                     <p className="text-sm font-semibold">{item.title}</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">{item.description}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300">
+                      {item.description}
+                    </p>
                     <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
                       From {item.price}
                     </p>
@@ -590,7 +596,7 @@ export default function Page() {
               </Link>
             ))}
           </div>
-        </section> */}
+        </section>
 
         {/* 博物館 & アート */}
         <section className="space-y-4">
