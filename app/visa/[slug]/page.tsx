@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
@@ -16,6 +17,58 @@ const components = {
     </Link>
   ),
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const content = await fetchContentBySlug(params.slug);
+
+  if (!content) {
+    return {
+      title: "英国ビザ・入国手続きガイド | ロンドん!",
+      description:
+        "イギリス渡航前に知っておきたいビザ情報や入国要件を分かりやすく解説します。",
+      robots: {
+        index: true,
+        follow: true,
+      },
+      alternates: {
+        canonical: `https://www.just-rondon.com/visa/${params.slug}`,
+      },
+    };
+  }
+
+  const title = `${content.title} | 英国ビザガイド | ロンドん!`;
+
+  const description = content.summary
+    ? `${content.summary} 英国渡航に必要な最新のビザ要件と申請手続きについて詳しく解説。`
+    : "英国ビザ情報を詳しく紹介します。";
+
+  const canonicalUrl = `https://www.just-rondon.com/visa/${params.slug}`;
+
+  return {
+    title,
+    description,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: "article",
+      url: canonicalUrl,
+      title,
+      description,
+      siteName: "ロンドん!｜英国ビザ情報",
+      locale: "ja_JP",
+    },
+  };
+}
+
 export default async function VisaGuidePage({
   params,
 }: {
