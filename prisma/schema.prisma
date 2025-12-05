@@ -299,6 +299,7 @@ model ContentSection {
   title         String
   description   String?
   displayOrder  Int @default(0)
+  image         String?
 
   contentId  String
   content    Content @relation(fields: [contentId], references: [id])

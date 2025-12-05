@@ -90,19 +90,19 @@ export const sections: Section[] = [
         title: "ビザ取得方法",
         description:
           "渡航目的に応じたビザの種類や申請手順、必要書類についてわかりやすく解説しています。",
-        href: "",
+        href: "/visa/uk-visa-guide-2025",
       },
       {
         title: "ETA（電子渡航認証）の取得",
         description:
           "イギリスへの短期渡航で必要な電子渡航認証（ETA）の取得方法や注意点を紹介。",
-        href: "",
+        href: "/sightseeing/eta-uk-visa-guide",
       },
       {
-        title: "仕事探しのポイント",
+        title: "ワーホリビザの申請方法",
         description:
-          "海外でのアルバイトや正社員、リモートワークなど、現地で働くための情報と求人探しのコツをまとめています。",
-        href: "",
+          "ワーホリの申請手順、必要書類についてわかりやすく解説しています。",
+        href: "/visa/uk-youth-mobility-visa",
       },
     ],
   },

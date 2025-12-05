@@ -29,6 +29,9 @@ module.exports = {
       "/sightseeing/christmas-markets",
       "/sightseeing/stadium-tours",
       "/sightseeing/thames-cruise",
+      "/visa/uk-visa-guide-2025",
+      "/sightseeing/eta-uk-visa-guide",
+      "/visa/uk-youth-mobility-visa",
       "/",
     ];
     for (const p of staticPages) {

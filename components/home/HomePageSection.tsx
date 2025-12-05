@@ -71,21 +71,8 @@ export default function HomePageSection({ sections }: Props) {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.15 }}
                 >
-                  {section.id !== "column" ? (
-                    <Link href={item.href}>
-                      <Card className="hover:scale-105 transition-transform shadow-md cursor-pointer bg-card text-card-foreground p-6 h-40 flex flex-col justify-center items-center text-center rounded-lg">
-                        <CardContent className="p-0 flex flex-col justify-center items-center">
-                          <CardTitle className="text-xl md:text-2xl">
-                            {item.title}
-                          </CardTitle>
-                          <p className="text-sm md:text-base mt-2">
-                            {item.description}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ) : (
-                    <Card className="opacity-50 cursor-not-allowed bg-card text-card-foreground p-6 h-40 flex flex-col justify-center items-center text-center rounded-lg">
+                  <Link href={item.href}>
+                    <Card className="hover:scale-105 transition-transform shadow-md cursor-pointer bg-card text-card-foreground p-6 h-40 flex flex-col justify-center items-center text-center rounded-lg">
                       <CardContent className="p-0 flex flex-col justify-center items-center">
                         <CardTitle className="text-xl md:text-2xl">
                           {item.title}
@@ -95,7 +82,7 @@ export default function HomePageSection({ sections }: Props) {
                         </p>
                       </CardContent>
                     </Card>
-                  )}
+                  </Link>
                 </motion.div>
               ))}
             </div>

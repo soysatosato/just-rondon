@@ -67,3 +67,11 @@ export const fetchStadiumTours = async () => {
 
   return contents;
 };
+
+export const fetchContentBySlug = async (slug: string) => {
+  const content = await db.content.findFirst({
+    where: { slug },
+    include: { sections: { orderBy: { displayOrder: "asc" } } },
+  });
+  return content;
+};
