@@ -32,6 +32,7 @@ module.exports = {
       "/visa/uk-visa-guide-2025",
       "/sightseeing/eta-uk-visa-guide",
       "/visa/uk-youth-mobility-visa",
+      "/lyrixplorer",
       "/",
     ];
     for (const p of staticPages) {
@@ -82,6 +83,24 @@ module.exports = {
           config,
           `/sightseeing/christmas-markets/${cm.slug}`
         )
+      );
+    }
+
+    const lyrics = await prisma.lyrics.findMany({
+      select: { id: true },
+    });
+
+    for (const ly of lyrics) {
+      paths.push(await config.transform(config, `/lyrixplorer/songs/${ly.id}`));
+    }
+
+    const artists = await prisma.artist.findMany({
+      select: { id: true },
+    });
+
+    for (const artst of artists) {
+      paths.push(
+        await config.transform(config, `/lyrixplorer/artists/${artst.id}`)
       );
     }
 

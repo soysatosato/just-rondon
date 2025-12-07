@@ -70,6 +70,13 @@ export default function Navbar() {
 
                 <nav className="flex flex-col space-y-3 mt-4">
                   <Link
+                    href="/"
+                    className=" hover:text-red-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    トップページ
+                  </Link>
+                  <Link
                     href="/sightseeing"
                     className=" hover:text-red-600 transition"
                     onClick={() => setOpen(false)}
