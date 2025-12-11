@@ -182,7 +182,7 @@ export const fetchSortedLyrics = async (
     const albumMap: Record<string, typeof songs> = {};
 
     songs.forEach((song) => {
-      const key = song.album || "Single / Unknown";
+      const key = song.album || "Single / その他収録曲";
       if (!albumMap[key]) albumMap[key] = [];
       albumMap[key].push(song);
     });

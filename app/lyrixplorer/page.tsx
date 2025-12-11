@@ -135,7 +135,7 @@ export default async function LyriXplolerHome() {
             })}
           </div>
         </section>
-        /* ================= HOT ARTISTS ================= */
+
         <section className="space-y-4">
           <div className="flex items-center gap-3">
             <Flame className="h-6 w-6 text-orange-400" />

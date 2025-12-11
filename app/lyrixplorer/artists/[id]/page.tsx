@@ -1,6 +1,8 @@
 import ArtistPageClient from "@/components/lyrix/ArtistPageClient";
+import { Button } from "@/components/ui/button";
 import { fetchArtistDetails, fetchSortedLyrics } from "@/utils/actions/lyrics";
 import { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({
@@ -78,5 +80,21 @@ export default async function ArtistPage({
 
   const data = await fetchSortedLyrics(params.id, sortBy, sortOrder);
 
-  return <ArtistPageClient artist={artist} data={data} />;
+  return (
+    <>
+      <ArtistPageClient artist={artist} data={data} />
+      <div>
+        <p className=" text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
+          意味を知ったあとに聴いた曲は、同じ音でもまるで違う瞬間があります。
+          一行の歌詞が、思いがけず心の奥を揺らす夜もあるでしょう。
+          気になるフレーズを見つけたら、和訳と一緒にゆっくりと音の物語を追いかけてみてください。
+        </p>
+        <div className="text-center mt-8">
+          <Link href={`/lyrixplorer`}>
+            <Button variant="outline">トップページへ戻る</Button>
+          </Link>
+        </div>
+      </div>
+    </>
+  );
 }

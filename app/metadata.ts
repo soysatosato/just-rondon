@@ -42,5 +42,6 @@ export const defaultMetadata: Metadata = {
   },
   icons: {
     icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.png" }],
   },
 };
