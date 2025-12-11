@@ -53,7 +53,7 @@ export function SearchBox({ href = "/search" }: { href?: string }) {
             name="q"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search across the universe..."
+            placeholder="曲名やアーティスト名を入力..."
             className="w-full border-0 bg-transparent px-0 text-sm
             focus-visible:ring-0
             text-gray-700 placeholder:text-gray-500 

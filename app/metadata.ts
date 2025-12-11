@@ -24,7 +24,7 @@ export const defaultMetadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/just-rondon.png",
+        url: "/logo.svg",
         width: 1200,
         height: 630,
         alt: "ロンドん! ロンドン観光・エンタメガイド",
@@ -36,8 +36,11 @@ export const defaultMetadata: Metadata = {
     title: "ロンドん! | ロンドン観光・美術館・ニュース・ミュージカル情報",
     description:
       "美術館や展覧会、ミュージカル・イベント・映画プレミア、最新ニュースなどロンドン観光の情報をわかりやすく紹介する総合ガイドサイト。",
-    images: ["/just-rondon.png"],
+    images: ["/logo.svg"],
     site: "@just_rondon",
     creator: "@just_rondon",
+  },
+  icons: {
+    icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
   },
 };

@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { fetchThamesRiverCruises } from "@/utils/actions/contents";
 import Link from "next/link";
 import ExpandableText from "@/components/card/ExpandableText";
+import BreadCrumbs from "@/components/home/BreadCrumbs";
 
 export default async function ThamesRiverCruisesListPage() {
   const items = await fetchThamesRiverCruises();
@@ -11,6 +12,13 @@ export default async function ThamesRiverCruisesListPage() {
   return (
     <div className="max-w-5xl mx-auto py-16 space-y-14">
       {/* Hero Section */}
+      <div className="mb-4">
+        <BreadCrumbs
+          name="観光ガイド"
+          link="sightseeing"
+          name2="テムズ川特集"
+        />
+      </div>
       <section className="relative text-center space-y-6 rounded-2xl overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 -z-10">

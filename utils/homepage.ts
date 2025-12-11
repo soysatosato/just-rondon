@@ -19,6 +19,12 @@ export const sections: Section[] = [
         href: "/sightseeing",
       },
       {
+        title: "ロンドン観光施設一覧",
+        description:
+          "初めての旅行でも迷わない、ロンドン定番スポットをわかりやすく一覧化",
+        href: "/sightseeing/all",
+      },
+      {
         title: "ハリー・ポッター聖地巡礼ガイド",
         description: "映画ロケ地から魔法の世界まで完全紹介",
         href: "/sightseeing/harry-potter",

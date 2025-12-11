@@ -388,6 +388,15 @@ export default function Page() {
             まずは「必見スポット」と「シティパス」の情報を押さえ、
             1〜2日分のシンプルなモデルコースを作るのがおすすめです。
           </p>
+
+          <div className="flex justify-end mt-2">
+            <Link
+              href="/sightseeing/all"
+              className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              ロンドン観光スポット一覧を見る →
+            </Link>
+          </div>
         </section>
 
         {/* 必見スポットカテゴリ */}

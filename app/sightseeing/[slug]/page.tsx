@@ -3,12 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import dynamic from "next/dynamic";
-import { fetchAttractionDetails } from "@/utils/actions/attractions";
+import {
+  fetchAttractionDetails,
+  fetchRandomAttractionsByCategory,
+} from "@/utils/actions/attractions";
 import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
+import BreadCrumbs from "@/components/home/BreadCrumbs";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
@@ -68,8 +72,25 @@ export default async function AttractionDetail({
   const attraction = await fetchAttractionDetails(params.slug);
   if (!attraction) redirect("/");
 
+  const related = await fetchRandomAttractionsByCategory(
+    attraction.category,
+    params.slug,
+    2
+  );
+
   return (
     <main className="w-full max-w-5xl mx-auto">
+      <div className="mb-4">
+        <BreadCrumbs
+          name="観光ガイド"
+          link="sightseeing"
+          name2={
+            attraction.name.length > 7
+              ? attraction.name.slice(0, 7) + "..."
+              : attraction.name
+          }
+        />
+      </div>
       {/* Hero image full width */}
       <Dialog>
         {/* 通常表示（クリックで開く） */}
@@ -210,6 +231,34 @@ export default async function AttractionDetail({
 
           <div className="clear-both" />
         </div>
+        {related.length > 0 && (
+          <section className="px-6 py-12 max-w-5xl mx-auto space-y-6">
+            <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
+              同じカテゴリーの観光スポット
+            </h2>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {related.map((spot) => (
+                <Link
+                  key={spot.slug}
+                  href={`/sightseeing/${spot.slug}`}
+                  className="block group"
+                >
+                  <div className="rounded-lg overflow-hidden shadow hover:shadow-md transition">
+                    <img
+                      src={spot.image}
+                      alt={spot.name}
+                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
+                    />
+                  </div>
+                  <p className="mt-2 text-sm font-medium group-hover:underline">
+                    {spot.name}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         <div className="space-y-12">
           {attraction.sections?.map((sec) => (

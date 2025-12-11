@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { SearchBox } from "@/components/form/LyricsSearchBox";
+import { SearchBox } from "@/components/lyrix/LyricsSearchBox";
 import { fetchLatestTop10Lyrics } from "@/utils/actions/lyrics";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -66,7 +66,6 @@ export default async function LyriXplolerHome() {
             </div>
           </div>
         </section>
-
         {/* ================= HOT SONGS ================= */}
         <section className="space-y-4">
           <div className="flex items-center justify-between gap-2">
@@ -136,55 +135,91 @@ export default async function LyriXplolerHome() {
             })}
           </div>
         </section>
-
-        {/* ================= HOT ARTISTS =================
+        /* ================= HOT ARTISTS ================= */
         <section className="space-y-4">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-3">
-              <Mic2 className="h-6 w-6 text-violet-400" />
-              <div>
-                <h2 className="font-bold text-lg">Voices Across Galaxies</h2>
-                <p className="text-xs text-slate-400">宇宙中で注目される声</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <Flame className="h-6 w-6 text-orange-400" />
+            <div>
+              <h2 className="font-bold text-lg">Hot Artists</h2>
+              <p className="text-xs text-slate-400">
+                世界を動かすトップアーティスト
+              </p>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-xs text-slate-300 hover:text-slate-100"
-            >
-              More Artists
-            </Button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {hotArtists.map((artist) => (
-              <Card
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                name: "Taylor Swift",
+                nameJa: "テイラー・スウィフト",
+                slug: "taylor-swift",
+              },
+              {
+                name: "Ed Sheeran",
+                nameJa: "エド・シーラン",
+                slug: "ed-sheeran",
+              },
+              {
+                name: "Ariana Grande",
+                nameJa: "アリアナ・グランデ",
+                slug: "ariana-grande",
+              },
+            ].map((artist) => (
+              <Link
                 key={artist.name}
-                className="flex items-center gap-3 border-slate-700/70 bg-slate-900/70 px-3 py-3 transition hover:border-violet-400/60 hover:bg-slate-900"
+                href={`/lyrixplorer/artists/${artist.slug}`}
               >
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback>
-                    {artist.name.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <Card
+                  className="
+            group flex items-center gap-4 p-4 
+            border border-slate-700/70 bg-slate-900/70 
+            rounded-xl relative overflow-hidden
+            transition 
+            hover:border-pink-400/60 hover:shadow-lg hover:shadow-pink-500/20
+          "
+                >
+                  {/* 背景のグラデ */}
+                  <div
+                    className="
+              absolute inset-0 opacity-10 
+              bg-gradient-to-br from-pink-500/40 via-purple-500/30 to-sky-500/40
+              group-hover:opacity-20 transition
+            "
+                  />
 
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium  text-slate-300">
-                    {artist.name}
-                  </p>
-                  {artist.nameJa && (
-                    <p className="text-[11px] text-slate-400">
+                  {/* アバター */}
+                  <div
+                    className="
+              relative h-12 w-12 rounded-full flex items-center justify-center
+              text-slate-200 font-bold text-sm
+              bg-gradient-to-br from-pink-500/40 to-purple-600/40
+              ring-1 ring-slate-700/60
+              group-hover:scale-105 group-hover:shadow-md 
+              transition
+            "
+                  >
+                    {artist.name
+                      .split(" ")
+                      .map((part) => part[0])
+                      .join("")
+                      .toUpperCase()}
+                  </div>
+
+                  {/* テキスト */}
+                  <div className="relative space-y-1">
+                    <p className="text-sm font-semibold text-slate-200 group-hover:text-pink-200 transition">
+                      {artist.name}
+                    </p>
+
+                    <p className="text-xs text-slate-400 group-hover:text-slate-300 transition">
                       {artist.nameJa}
                     </p>
-                  )}
-                  <p className="text-[11px] text-slate-400">
-                    Hit: {artist.hotSong}
-                  </p>
-                </div>
-              </Card>
+                  </div>
+                </Card>
+              </Link>
             ))}
           </div>
-        </section> */}
+        </section>
       </div>
     </main>
   );
