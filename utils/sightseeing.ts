@@ -59,7 +59,6 @@ export const STATIC_ROYAL = {
   slug: "royal-london",
   image:
     "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/royal-london-bg.jpeg",
-  price: "ガイド記事",
 };
 
 // tour 静的2件
@@ -98,7 +97,7 @@ async function getRandom(where: any, take: number) {
 }
 
 export async function getHighlightAttractions() {
-  const items = await getRandom({ recommendLevel: 5 }, 3);
+  const items = await getRandom({ recommendLevel: 5 }, 2);
 
   return [
     ...items.map((a) => ({
@@ -159,15 +158,15 @@ export async function getTours() {
   const items = await getRandom({ category: "tour" }, 3);
 
   return [
+    ...STATIC_TOURS,
     ...items.map((a) => ({
       title: a.name,
-      description: a.summary || a.tagline || "",
+      description: a.tagline || a.summary || "",
       slug: a.slug,
       image: a.image,
       price: undefined,
       badge: "",
     })),
-    ...STATIC_TOURS,
   ];
 }
 

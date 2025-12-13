@@ -5,9 +5,17 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
-import Image from "next/image";
+
+import { CardCarousel } from "@/components/card/CardCarousel";
+
 import {
   getHighlightAttractions,
   getMustSeeCategories,
@@ -85,8 +93,9 @@ export default async function Page() {
     getTours(),
     getKidsAttractions(),
     getFreeAttractions(),
-    getTodaysPicks(1),
+    getTodaysPicks(3),
   ]);
+
   return (
     <div className="min-h-screen">
       <main className="mx-auto max-w-6xl px-4 py-8 space-y-12">
@@ -108,9 +117,9 @@ export default async function Page() {
             </p>
           </div>
 
-          {/* メインの4カード */}
+          {/* メインの4カード（ここはそのまま） */}
           <div className="grid gap-4 sm:grid-cols-2">
-            {highlightAttractions.map((item, idx) => (
+            {highlightAttractions.map((item: any, idx: any) => (
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
@@ -137,7 +146,7 @@ export default async function Page() {
           </div>
         </section>
 
-        {/* ロンドン観光の概要テキスト */}
+        {/* ロンドン観光の概要テキスト（そのまま） */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">ロンドン観光の始め方</h2>
           <p className="max-w-4xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
@@ -164,6 +173,7 @@ export default async function Page() {
           </div>
         </section>
 
+        {/* Today’s Picks（grid → carousel） */}
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl font-bold">Today’s Picks</h2>
@@ -172,35 +182,40 @@ export default async function Page() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            {todaysPicks.map((item, idx) => (
-              <Link key={idx} href={`/sightseeing/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition">
-                  <div className="relative h-40 w-full">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <CardHeader className="space-y-1">
-                    <p className="text-xs font-semibold text-emerald-600">
-                      Today’s Pick
-                    </p>
-                    <CardTitle className="text-base">{item.title}</CardTitle>
-                    <CardDescription className="text-xs">
-                      {item.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
+          <CardCarousel>
+            {todaysPicks.map((item: any, idx: any) => (
+              <div
+                key={idx}
+                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+              >
+                <Link href={`/sightseeing/${item.slug}`}>
+                  <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition">
+                    <div className="relative h-40 w-full">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <CardHeader className="space-y-1">
+                      <p className="text-xs font-semibold text-emerald-600">
+                        Today’s Pick
+                      </p>
+                      <CardTitle className="text-base">{item.title}</CardTitle>
+                      <CardDescription className="text-xs">
+                        {item.description}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
-        {/* 必見スポットカテゴリ */}
+        {/* 必見スポットカテゴリ（ここはgridのまま維持） */}
         <section className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold">ロンドン必見スポット</h2>
@@ -210,7 +225,7 @@ export default async function Page() {
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {mustSeeCategories.map((item, idx) => (
+            {mustSeeCategories.map((item: any, idx: any) => (
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
@@ -246,69 +261,14 @@ export default async function Page() {
           </Card>
         </section>
 
-        {/* 季節・人気アトラクション */}
+        {/* 季節イベント（grid → carousel） */}
         <section className="space-y-6">
           <h2 className="text-xl font-semibold">季節イベント</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {seasonalAttractions.map((item, idx) => (
-              <Link key={idx} href={`/sightseeing/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-40 w-full">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <CardContent className="space-y-1 py-3">
-                    <p className="text-sm font-semibold">{item.title}</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </section>
 
-        {/* カテゴリフィルタ風セクション */}
-        <section className="space-y-4">
-          {/* <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="font-semibold">Explore by category</span>
-            <div className="flex flex-wrap gap-2 text-xs">
-              <span className="rounded-full bg-slate-900 px-3 py-1 text-white">
-                All London
-              </span>
-              <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-700">
-                Attractions
-              </span>
-              <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-700">
-                Theme Park
-              </span>
-              <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-700">
-                Bridge
-              </span>
-              <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-700">
-                Architecture
-              </span>
-              <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-700">
-                Boat
-              </span>
-              <span className="rounded-full bg-slate-200 px-3 py-1 text-slate-700">
-                More categories
-              </span>
-            </div>
-          </div> */}
-
-          {/* 王室ゆかりのスポット */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold">王室ゆかりのスポット</h3>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-              {royalAttractions.map((item, idx) => (
-                <Link key={idx} href={`/sightseeing/${item.slug}`}>
+          <CardCarousel>
+            {seasonalAttractions.map((item: any, idx: any) => (
+              <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
+                <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                     <div className="relative h-40 w-full">
                       <img
@@ -319,60 +279,99 @@ export default async function Page() {
                         decoding="async"
                       />
                     </div>
-                    <CardContent className="space-y-1 py-2">
-                      <p className="text-xs font-semibold">{item.title}</p>
-                      <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                    <CardContent className="space-y-1 py-3">
+                      <p className="text-sm font-semibold">{item.title}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
                         {item.description}
-                      </p>
-                      <p className="text-[11px] font-medium text-slate-900 dark:text-slate-100">
-                        From {item.price}
                       </p>
                     </CardContent>
                   </Card>
                 </Link>
+              </div>
+            ))}
+          </CardCarousel>
+        </section>
+
+        {/* 王室ゆかり（grid → carousel） */}
+        <section className="space-y-4">
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold">王室ゆかりのスポット</h3>
+
+            <CardCarousel>
+              {royalAttractions.map((item: any, idx: any) => (
+                <div
+                  key={idx}
+                  className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_25%]"
+                >
+                  <Link href={`/sightseeing/${item.slug}`}>
+                    <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
+                      <div className="relative h-40 w-full">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                      <CardContent className="space-y-1 py-2">
+                        <p className="text-xs font-semibold">{item.title}</p>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                          {item.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </div>
               ))}
-            </div>
+            </CardCarousel>
           </div>
         </section>
 
-        {/* ツアー & リバークルーズ */}
+        {/* ツアー（grid → carousel） */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">見逃せないロンドンツアー</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {tours.map((item, idx) => (
-              <Link key={idx} href={`/sightseeing/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-40 w-full">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <CardContent className="space-y-1 py-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-semibold">{item.title}</p>
-                      {item.badge && (
-                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                          {item.badge}
-                        </span>
-                      )}
+
+          <CardCarousel>
+            {tours.map((item: any, idx: any) => (
+              <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
+                <Link href={`/sightseeing/${item.slug}`}>
+                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
+                    <div className="relative h-40 w-full">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">
-                      {item.description}
-                    </p>
-                    <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
-                      {item.price}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+                    <CardContent className="space-y-1 py-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm font-semibold">{item.title}</p>
+                        {item.badge && (
+                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        {item.description}
+                      </p>
+                      {item.price && (
+                        <p className="text-[11px] font-medium text-slate-900 dark:text-slate-100">
+                          From {item.price}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Link>
+              </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
+        {/* 家族向け（grid → carousel） */}
         <section className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold">家族で楽しめるロンドン</h2>
@@ -381,35 +380,34 @@ export default async function Page() {
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {kidsAttractions.map((item, idx) => (
-              <Link key={idx} href={`/sightseeing/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-40 w-full">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <CardContent className="space-y-1 py-3">
-                    <p className="text-sm font-semibold">{item.title}</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-300">
-                      {item.description}
-                    </p>
-                    <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
-                      From {item.price}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+          <CardCarousel>
+            {kidsAttractions.map((item: any, idx: any) => (
+              <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
+                <Link href={`/sightseeing/${item.slug}`}>
+                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
+                    <div className="relative h-40 w-full">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <CardContent className="space-y-1 py-3">
+                      <p className="text-sm font-semibold">{item.title}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        {item.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
-        {/* 博物館 & アート */}
+        {/* ミュージアム（grid → carousel） */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">
             ロンドンの必見ミュージアム & アートギャラリー
@@ -419,53 +417,69 @@ export default async function Page() {
             コスパの面でも世界トップクラス。雨の日は「ミュージアムはしご」もおすすめです。
           </p>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {freeAttractions.map((item, idx) => (
-              <Link key={idx} href={`/museums/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-40 w-full">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <CardHeader className="space-y-1">
-                    <CardTitle className="text-base">{item.title}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed">
-                      {item.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
+          <CardCarousel>
+            {freeAttractions.map((item: any, idx: any) => (
+              <div
+                key={idx}
+                className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+              >
+                <Link href={`/museums/${item.slug}`}>
+                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
+                    <div className="relative h-40 w-full">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <CardHeader className="space-y-1">
+                      <CardTitle className="text-base">{item.title}</CardTitle>
+                      <CardDescription className="text-xs leading-relaxed">
+                        {item.description}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              </div>
             ))}
-          </div>
+          </CardCarousel>
         </section>
 
-        {/* FAQ */}
+        {/* FAQ（Card一覧 → Accordion） */}
         <section className="space-y-6">
           <h2 className="text-xl font-semibold">ロンドン観光 FAQ</h2>
-          <div className="space-y-4">
-            {faqItems.map((faq) => (
-              <Card key={faq.question} className="border-none shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-sm">{faq.question}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                  {faq.answer.map((line) => (
-                    <div key={line} className="flex gap-1">
-                      <span className="shrink-0">・</span>
-                      <div className="prose prose-slate max-w-none">
-                        <ReactMarkdown>{line}</ReactMarkdown>
-                      </div>
+
+          <Accordion type="single" collapsible className="space-y-3">
+            {faqItems.map((faq: any, idx: any) => (
+              <AccordionItem
+                key={idx}
+                value={`faq-${idx}`}
+                className="border-none"
+              >
+                <Card className="border-none shadow-sm">
+                  <AccordionTrigger className="px-6 py-4">
+                    <span className="text-sm font-semibold">
+                      {faq.question}
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-4">
+                    <div className="space-y-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                      {faq.answer.map((line: any, i: any) => (
+                        <div key={i} className="flex gap-1">
+                          <span className="shrink-0">・</span>
+                          <div className="prose prose-slate max-w-none">
+                            <ReactMarkdown>{line}</ReactMarkdown>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
+                  </AccordionContent>
+                </Card>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </section>
       </main>
     </div>
