@@ -82,22 +82,20 @@ export default function HighlightedArtworks({
               >
                 <Link href={`/museums/${slug}/artworks/${artwork.id}`}>
                   <div className="relative w-full h-72 rounded-2xl overflow-hidden shadow-md">
-                    <div className="relative w-full h-72 rounded-2xl overflow-hidden shadow-md pointer-events-none">
-                      <Image
-                        src={artwork.image}
-                        alt={artwork.title}
-                        fill
-                        className="object-cover w-full h-full transition-transform duration-500 ease-in-out hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3 rounded-b-2xl">
-                        <h3 className="text-lg md:text-xl font-semibold tracking-wide text-white">
-                          {artwork.title}
-                        </h3>
-                        <p className="text-xs md:text-sm text-gray-300">
-                          {artwork.artist} — {artwork.year}
-                        </p>
-                      </div>
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3 rounded-b-2xl">
+                      <h3 className="text-lg md:text-xl font-semibold tracking-wide text-white">
+                        {artwork.title}
+                      </h3>
+                      <p className="text-xs md:text-sm text-gray-300">
+                        {artwork.artist} — {artwork.year}
+                      </p>
                     </div>
                   </div>
                   <p className="mt-4 text-sm md:text-base text-gray-700 flex-grow line-clamp-3">

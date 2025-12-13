@@ -9,10 +9,10 @@ export default function NewsLetter() {
         <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr]">
           <div>
             <h2 className="mb-2 text-xl font-semibold text-slate-900">
-              Visit London ニュースレターでロンドンの最新情報をゲット
+              Just Rondon ニュースレターでロンドンの最新情報をゲット
             </h2>
             <p className="mb-4 max-w-xl text-sm text-slate-600">
-              季節の見どころ、新規オープン、限定オファーなどをいち早くお届けします。いつでも解約可能。
+              季節の見どころ、新規オープン、耳寄りなニュースなどを無料でいち早くお届けします。いつでも解約可能。
             </p>
             <form className="flex flex-col gap-3 sm:flex-row">
               <Input
@@ -21,7 +21,7 @@ export default function NewsLetter() {
                 className="bg-white"
               />
               <Button type="submit" className="whitespace-nowrap text-xs">
-                購読する
+                無料購読
               </Button>
             </form>
             <p className="mt-3 max-w-xl text-[11px] leading-relaxed text-slate-500">
@@ -30,11 +30,12 @@ export default function NewsLetter() {
           </div>
 
           <div className="relative hidden h-40 w-full overflow-hidden rounded-2xl sm:block lg:h-48">
-            <Image
+            <img
               src=""
-              alt="ロンドンのスカイライン"
-              fill
-              className="object-cover"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

@@ -26,12 +26,14 @@ export default function ImageInputContainer(props: ImageInputContainerProps) {
   return (
     <div>
       {image ? (
-        <Image
+        <img
           src={image}
           alt={name}
           width={100}
           height={100}
           className="rounded object-cover mb-4 w-24 h-24"
+          loading="lazy"
+          decoding="async"
         />
       ) : (
         userIcon

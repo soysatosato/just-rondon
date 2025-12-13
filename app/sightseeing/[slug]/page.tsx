@@ -215,11 +215,12 @@ export default async function AttractionDetail({
       <section className="px-6 py-12 max-w-3xl mx-auto space-y-10">
         <div className="p-10 rounded-3xl shadow-md bg-white dark:bg-gray-800">
           <div className="relative float-left mr-6 mb-4 w-28 h-28">
-            <Image
+            <img
               src="/overview.png"
               alt="Overview Icon"
-              fill
-              className="object-contain drop-shadow-md  dark:bg-neutral-100"
+              className="absolute inset-0 w-full h-full object-contain drop-shadow-md dark:bg-neutral-100"
+              loading="lazy"
+              decoding="async"
             />
           </div>
 

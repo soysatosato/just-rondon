@@ -120,13 +120,12 @@ export default function MuseumListClient({
                           {m.address}
                         </p>
                         <div className="relative w-full h-48 mt-2 rounded-xl overflow-hidden">
-                          <Image
+                          <img
                             src={m.image}
                             alt={m.name}
-                            fill
-                            quality={25}
-                            className="object-cover"
+                            className="absolute inset-0 w-full h-full object-cover"
                             loading="lazy"
+                            decoding="async"
                           />
                         </div>
                       </div>

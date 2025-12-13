@@ -25,13 +25,15 @@ export default function ImageInputMultipleContainer(props: props) {
       <div className="flex gap-4 mb-4">
         {previewUrls.length > 0 ? (
           previewUrls.map((url, i) => (
-            <Image
+            <img
               key={i}
               src={url}
               alt={`${name} preview ${i + 1}`}
               width={100}
               height={100}
               className="rounded object-cover w-24 h-24"
+              loading="lazy"
+              decoding="async"
             />
           ))
         ) : (

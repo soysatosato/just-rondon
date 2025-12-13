@@ -40,12 +40,14 @@ export default function Navbar() {
             <div className="flex flex-col">
               <span className="font-bold text-2xl text-red-400">
                 ロンド
-                <Image
-                  src="/logo.png" // public/logo.png に画像を配置している場合
+                <img
+                  src="/logo.png"
                   alt="Logo"
                   width={32}
                   height={32}
                   className="inline-block mb-2"
+                  loading="lazy"
+                  decoding="async"
                 />
               </span>
               <span className="text-xs text-muted-foreground font-normal italic opacity-70">
@@ -164,16 +166,18 @@ export default function Navbar() {
             <div className="flex flex-col items-center">
               <span className="font-bold text-2xl text-red-600">
                 ロンド
-                <Image
-                  src="/logo.png" // public/logo.png に画像を配置している場合
+                <img
+                  src="/logo.png"
                   alt="Logo"
                   width={32}
                   height={32}
                   className="inline-block mb-2"
+                  loading="lazy"
+                  decoding="async"
                 />
               </span>
               <span className="text-xs text-gray-600 font-normal italic opacity-70">
-                Live. Love.London.- 最強ロンドンガイド
+                Live.Love.London. - 最強ロンドンガイド
               </span>
             </div>
           </Link>

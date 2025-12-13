@@ -88,11 +88,12 @@ export default async function ArtworkDetailPage({
 
       {artwork?.image && (
         <div className="relative mx-auto overflow-hidden rounded-lg shadow-sm transform hover:scale-[1.01] transition duration-200 w-full max-w-2xl aspect-[4/3]">
-          <Image
-            src={artwork?.image}
-            alt={artwork?.title}
-            fill
-            className="object-contain"
+          <img
+            src={artwork.image}
+            alt={artwork.title}
+            className="absolute inset-0 w-full h-full object-contain"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       )}

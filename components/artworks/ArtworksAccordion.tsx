@@ -47,12 +47,14 @@ export default function ArtworksAccordion({ slug, rooms }: Props) {
                       href={`/museums/${slug}/artworks/${art.id}`}
                       className="block rounded-md overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-lg"
                     >
-                      <Image
+                      <img
                         src={art.image || "/placeholder.jpg"}
                         alt={art.title}
                         width={250}
                         height={250}
                         className="rounded-md object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                       {/* ボタンをオーバーレイ */}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-100 rounded-md">

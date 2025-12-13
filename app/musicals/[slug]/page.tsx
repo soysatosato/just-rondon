@@ -85,12 +85,14 @@ export default async function musicalDetailsPage({
       />
       <div className="max-w-5xl mx-auto px-4 py-12">
         <div className="relative h-96 mb-2 rounded-xl overflow-hidden shadow-lg">
-          <Image
+          <img
             src={musical.image}
             alt={musical.name}
-            fill
-            className="object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
+
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
             <h2 className="text-base sm:text-lg md:text-xl font-medium text-gray-200 mb-1">
               {musical.engName}

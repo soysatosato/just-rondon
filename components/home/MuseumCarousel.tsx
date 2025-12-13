@@ -63,11 +63,12 @@ export default function MuseumCarousel({ museums }: { museums: any[] }) {
               <Link href={`/museums/${slug}`} className="block">
                 <CardContent className="p-0 flex flex-col h-full">
                   <div className="relative w-full h-48">
-                    <Image
+                    <img
                       src={image}
                       alt={name}
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <div className="p-4 flex-1 flex flex-col justify-between">

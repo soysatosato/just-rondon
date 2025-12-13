@@ -88,7 +88,11 @@ export default function ArtistPageClient({ artist, data }: any) {
 
       {/* Album Mode */}
       {isAlbumMode ? (
-        <Accordion type="multiple" className="w-full space-y-4">
+        <Accordion
+          type="multiple"
+          defaultValue={data.map((album: any) => album.albumName)}
+          className="w-full space-y-4"
+        >
           {data.map((album: any) => (
             <AccordionItem
               key={album.albumName}
@@ -125,11 +129,12 @@ export default function ArtistPageClient({ artist, data }: any) {
                         {/* YouTube Thumbnail */}
                         {song.youtubeId && (
                           <div className="w-16 h-10 relative rounded overflow-hidden shadow">
-                            <Image
+                            <img
                               src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
                               alt={song.name}
-                              fill
-                              className="object-cover"
+                              className="absolute inset-0 w-full h-full object-cover"
+                              loading="lazy"
+                              decoding="async"
                             />
                           </div>
                         )}
@@ -173,11 +178,12 @@ export default function ArtistPageClient({ artist, data }: any) {
 
                 {song.youtubeId && (
                   <div className="w-16 h-10 relative rounded overflow-hidden shadow">
-                    <Image
+                    <img
                       src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
                       alt={song.name}
-                      fill
-                      className="object-cover"
+                      width="64"
+                      height="40"
+                      className="object-cover rounded shadow"
                     />
                   </div>
                 )}

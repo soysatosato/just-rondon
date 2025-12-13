@@ -107,11 +107,12 @@ export default async function AlbumPage({
               {/* Thumbnail */}
               {song.youtubeId && (
                 <div className="w-16 h-10 relative rounded overflow-hidden shadow">
-                  <Image
+                  <img
                     src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
                     alt={song.name}
-                    fill
-                    className="object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               )}

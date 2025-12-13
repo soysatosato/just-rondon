@@ -53,11 +53,12 @@ export default function MuseumsMapComponent({ museums }: Props) {
             <Card className="max-w-[200px] md:max-w-xs">
               {museum.image && (
                 <div className="relative w-full h-24 rounded-t-lg overflow-hidden">
-                  <Image
+                  <img
                     src={museum.image}
                     alt={museum.name}
-                    fill
-                    className="object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               )}

@@ -43,14 +43,13 @@ export default async function NewsDetailPage({
     <div>
       <BreadCrumbs name="ニュース" link="news" name2={news.category} />
       <Card className="max-w-4xl mx-auto my-12 shadow-lg rounded-xl overflow-hidden">
-        {/* Hero 画像 */}
         <div className="relative w-full h-96 rounded-xl overflow-hidden shadow-lg">
-          {/* 画像 */}
-          <Image
+          <img
             src={news.image}
             alt={news.title}
-            fill
-            className="object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
 
           {/* オーバーレイ */}

@@ -361,3 +361,9 @@ enum RankingType {
 
 
 
+model LyricsRequest {
+  id        Int      @id @default(autoincrement())
+  title     String
+  artist    String?
+  createdAt DateTime @default(now())
+}

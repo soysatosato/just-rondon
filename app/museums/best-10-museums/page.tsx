@@ -100,11 +100,12 @@ export default async function MuseumsPage() {
                 </div>
 
                 <div className="relative w-full h-64 mt-2">
-                  <Image
+                  <img
                     src={museum.image}
                     alt={museum.name}
-                    fill
-                    className="object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
 

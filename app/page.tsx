@@ -16,7 +16,6 @@ import {
 import Link from "next/link";
 import TitleLogo from "@/components/home/TitleLogo";
 import { useState } from "react";
-import RainCanvas from "@/components/home/RainParticles";
 
 export default function Page() {
   const [value, setValue] = useState("");
@@ -30,8 +29,8 @@ export default function Page() {
                 src="/just-rondon.png"
                 alt="ロンドん！"
                 fill
+                sizes="(max-width: 768px) 100vw, 80vw"
                 className="object-cover brightness-75 dark:brightness-60"
-                priority
               />
             </div>
           </div>
@@ -209,7 +208,13 @@ function MustSeeCard({ title, image, badge }: SimpleCardProps) {
   return (
     <Card className="overflow-hidden border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="relative h-32 w-full">
-        <Image src={image} alt={title} fill className="object-cover" />
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
+          className="object-cover"
+        />
         {badge && (
           <span className="absolute left-2 top-2 rounded-full bg-white/90 dark:bg-slate-900/90 px-2 py-0.5 text-[10px] font-semibold text-red-600 shadow">
             {badge}

@@ -111,11 +111,12 @@ export default async function SongsByArtistPage({
                   {/* YouTube サムネイル */}
                   {song.youtubeId && (
                     <div className="w-16 h-10 relative flex-shrink-0 rounded overflow-hidden">
-                      <Image
+                      <img
                         src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
                         alt={song.name}
-                        fill
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   )}

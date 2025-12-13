@@ -72,12 +72,14 @@ export default async function RoyalAcrivitiesListPage() {
                          hover:shadow-xl hover:bg-white dark:hover:bg-black transition-all duration-300"
                 >
                   {item.image && (
-                    <Image
+                    <img
                       src={item.image}
                       alt={item.title}
                       width={800}
                       height={500}
                       className="w-full h-48 object-cover rounded-t-lg"
+                      loading="lazy"
+                      decoding="async"
                     />
                   )}
                   <CardHeader>

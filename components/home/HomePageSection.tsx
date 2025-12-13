@@ -20,11 +20,12 @@ export default function HomePageSection({ sections }: Props) {
     <>
       <section className="relative w-full h-[350px] flex justify-center items-center overflow-hidden">
         <div className="relative w-full max-w-[700px]  h-[350px] ">
-          <Image
+          <img
             src="/just-rondon-bg.jpg"
             alt="London"
-            fill
-            className="w-full rounded-xl object-cover"
+            className="absolute inset-0 w-full h-full rounded-xl object-cover"
+            loading="lazy"
+            decoding="async"
           />
 
           <div className="absolute inset-0 flex flex-col justify-center items-center px-4">

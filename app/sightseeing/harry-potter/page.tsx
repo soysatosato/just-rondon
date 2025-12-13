@@ -106,11 +106,12 @@ export default async function HarryPotterPage() {
 
                 {item.image && (
                   <div className="relative w-full h-64 mt-4 rounded-lg overflow-hidden">
-                    <Image
+                    <img
                       src={item.image}
                       alt={item.title}
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 )}

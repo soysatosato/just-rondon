@@ -95,11 +95,12 @@ export default async function FacilitiesListPage({
                 ratio={16 / 9}
                 className="rounded-md overflow-hidden"
               >
-                <Image
+                <img
                   src={f.image}
                   alt={f.name}
-                  fill
-                  className="object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               </AspectRatio>
 

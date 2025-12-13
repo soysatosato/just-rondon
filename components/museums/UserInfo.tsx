@@ -10,12 +10,14 @@ export default function UserInfo({ profile }: props) {
   const { profileImage, username } = profile;
   return (
     <article className="grid grid-cols-[auto, 1fr] gap-4 mt-4">
-      <Image
+      <img
         src={profileImage}
         alt={username}
         width={50}
         height={50}
         className="rounded h-12 w-12 object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <div>
         <p>

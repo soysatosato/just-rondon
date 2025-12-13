@@ -18,12 +18,12 @@ export default function ImageCarousel({ images, name }: Props) {
       <CarouselContent>
         {images.map((img, index) => (
           <CarouselItem key={index} className="relative h-[300px]">
-            <Image
+            <img
               src={img}
               alt={`${name} image ${index + 1}`}
-              fill
-              sizes="(max-width:768px) 100vw, 50vw"
-              className="rounded-md object-cover"
+              className="absolute inset-0 w-full h-full rounded-md object-cover"
+              loading="lazy"
+              decoding="async"
             />
           </CarouselItem>
         ))}

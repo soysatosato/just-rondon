@@ -114,11 +114,12 @@ export default async function Page() {
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
-                    <Image
-                      src={item.image} // ← データに image プロパティを追加する
+                    <img
+                      src={item.image}
                       alt={item.title}
-                      fill // 親要素いっぱいに広げる
-                      className="object-cover" // よくある“カードのトップ画像”の見え方
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardHeader className="space-y-1">
@@ -176,11 +177,12 @@ export default async function Page() {
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition">
                   <div className="relative h-40 w-full">
-                    <Image
+                    <img
                       src={item.image}
                       alt={item.title}
-                      fill
-                      className="object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardHeader className="space-y-1">
@@ -212,11 +214,12 @@ export default async function Page() {
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
-                    <Image
-                      src={item.image} // ← データに image プロパティを追加する
+                    <img
+                      src={item.image}
                       alt={item.title}
-                      fill // 親要素いっぱいに広げる
-                      className="object-cover" // よくある“カードのトップ画像”の見え方
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardHeader className="space-y-1">
@@ -251,10 +254,12 @@ export default async function Page() {
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
-                    <Image
-                      src={item.image} // ← データに image プロパティを追加する
+                    <img
+                      src={item.image}
                       alt={item.title}
-                      fill // 親要素いっぱいに広げる
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardContent className="space-y-1 py-3">
@@ -306,11 +311,12 @@ export default async function Page() {
                 <Link key={idx} href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                     <div className="relative h-40 w-full">
-                      <Image
-                        src={item.image} // ← データに image プロパティを追加する
+                      <img
+                        src={item.image}
                         alt={item.title}
-                        fill // 親要素いっぱいに広げる
-                        className="object-cover" // よくある“カードのトップ画像”の見え方
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <CardContent className="space-y-1 py-2">
@@ -337,11 +343,12 @@ export default async function Page() {
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
-                    <Image
-                      src={item.image} // ← データに image プロパティを追加する
+                    <img
+                      src={item.image}
                       alt={item.title}
-                      fill // 親要素いっぱいに広げる
-                      className="object-cover" // よくある“カードのトップ画像”の見え方
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardContent className="space-y-1 py-3">
@@ -379,11 +386,12 @@ export default async function Page() {
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
-                    <Image
-                      src={item.image} // ← データに image プロパティを追加する
+                    <img
+                      src={item.image}
                       alt={item.title}
-                      fill // 親要素いっぱいに広げる
-                      className="object-cover" // よくある“カードのトップ画像”の見え方
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardContent className="space-y-1 py-3">
@@ -416,11 +424,12 @@ export default async function Page() {
               <Link key={idx} href={`/museums/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                   <div className="relative h-40 w-full">
-                    <Image
-                      src={item.image} // ← データに image プロパティを追加する
+                    <img
+                      src={item.image}
                       alt={item.title}
-                      fill // 親要素いっぱいに広げる
-                      className="object-cover" // よくある“カードのトップ画像”の見え方
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <CardHeader className="space-y-1">

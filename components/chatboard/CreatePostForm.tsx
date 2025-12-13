@@ -112,6 +112,7 @@ export default function CreatePostForm() {
               name="deletePsswrd"
               type="text"
               placeholder="任意の削除用パスワード(4文字)"
+              defaultValue="0000"
               className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100"
             />
             {errors.deletePsswrd && (

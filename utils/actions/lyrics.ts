@@ -1,28 +1,72 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import db from "../db";
+import nodemailer from "nodemailer";
+import { redirect } from "next/navigation";
 
-export const fetchLyricsbyQuery = async (query: string) => {
-  const q = query?.trim() ?? "";
-  if (!q || q === "") {
-    return [];
+export const fetchLyricsbyQuery = async ({
+  q,
+  page = 1,
+  limit = 10,
+}: {
+  q: string;
+  page?: number;
+  limit?: number;
+}) => {
+  const query = q?.trim() ?? "";
+
+  if (!query) {
+    return {
+      songs: [],
+      totalCount: 0,
+    };
   }
 
-  let songs = [] as any[];
-  if (q.length > 0) {
-    songs = await db.lyrics.findMany({
-      where: {
-        OR: [
-          { name: { contains: q, mode: "insensitive" } },
-          { artist: { name: { contains: q } } },
-          { artist: { engName: { contains: q, mode: "insensitive" } } },
-        ],
+  const whereClause: Prisma.LyricsWhereInput = {
+    OR: [
+      {
+        name: {
+          contains: query,
+          mode: Prisma.QueryMode.insensitive,
+        },
       },
-      include: { artist: true },
-      take: 30,
-    });
-  }
-  return songs ?? [];
+      {
+        artist: {
+          name: {
+            contains: query,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
+      },
+      {
+        artist: {
+          engName: {
+            contains: query,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
+      },
+    ],
+  };
+
+  // 全件数
+  const totalCount = await db.lyrics.count({
+    where: whereClause,
+  });
+
+  // ページ分のデータ
+  const songs = await db.lyrics.findMany({
+    where: whereClause,
+    include: { artist: true },
+    skip: (page - 1) * limit,
+    take: limit,
+  });
+
+  return {
+    songs,
+    totalCount,
+  };
 };
 
 export async function fetchLyricsDetails(id: string) {
@@ -256,3 +300,44 @@ export const fetchLyricsByAlbum = async (artistId: string, album: string) => {
   });
   return tracks;
 };
+
+export async function createLyricsRequest(formData: FormData) {
+  const title = formData.get("title")?.toString().trim();
+  const artist = formData.get("artist")?.toString().trim();
+
+  if (!title) {
+    throw new Error("曲名は必須です");
+  }
+
+  // DB保存
+  await db.lyricsRequest.create({
+    data: {
+      title,
+      artist: artist || null,
+    },
+  });
+
+  // 管理者通知メール
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: Number(process.env.EMAIL_PORT),
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.FROM_EMAIL,
+    to: process.env.EMAIL_USER,
+    subject: "【LyriXplorer】歌詞リクエストが届きました",
+    text: `
+新しい歌詞リクエストがあります。
+
+曲名: ${title}
+アーティスト: ${artist ?? "未入力"}
+    `,
+  });
+  redirect("/lyrixplorer/request?success=1");
+}

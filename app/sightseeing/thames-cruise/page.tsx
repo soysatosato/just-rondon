@@ -22,11 +22,12 @@ export default async function ThamesRiverCruisesListPage() {
       <section className="relative text-center space-y-6 rounded-2xl overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 -z-10">
-          <Image
+          <img
             src="https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/thamescruisebg.jpeg"
             alt="Thames River background"
-            fill
-            className="object-cover opacity-60"
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
         </div>
@@ -81,12 +82,14 @@ export default async function ThamesRiverCruisesListPage() {
                             transition-all duration-300"
               >
                 {item.image && (
-                  <Image
+                  <img
                     src={item.image}
                     alt={item.title}
                     width={800}
                     height={500}
                     className="w-full h-48 object-cover rounded-t-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 )}
 

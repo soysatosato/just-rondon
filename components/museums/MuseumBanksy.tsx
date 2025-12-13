@@ -81,11 +81,12 @@ export default function MuseumBanksy() {
                         {art.fromIG ? (
                           <InstagramEmbed url={art.url} isDialogOpen />
                         ) : (
-                          <Image
+                          <img
                             src={art.url}
                             alt={art.engName}
-                            fill
-                            className="object-cover"
+                            className="absolute inset-0 w-full h-full object-cover"
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                       </div>
@@ -107,11 +108,12 @@ export default function MuseumBanksy() {
                     {art.fromIG ? (
                       <InstagramEmbed url={art.url} isDialogOpen />
                     ) : (
-                      <Image
+                      <img
                         src={art.url}
                         alt={art.engName}
-                        fill
-                        className="object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                     )}
                   </div>

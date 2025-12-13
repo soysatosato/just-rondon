@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { fetchLyricsbyQuery } from "@/utils/actions/lyrics";
 import Image from "next/image";
+import Pagination from "@/components/home/Pagination";
 
 export const metadata = {
   title: "洋楽の歌詞を検索して和訳・意味を知る｜LyriXplorer 検索",
@@ -38,11 +39,22 @@ export const metadata = {
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: {
+    q?: string;
+    page?: string;
+  };
 }) {
   const q = searchParams.q ?? "";
-  const songs = await fetchLyricsbyQuery(q);
-  console.log(q);
+  const currentPage = Number(searchParams.page) || 1;
+  const itemsPerPage = 10;
+
+  const { page, ...restParams } = searchParams;
+
+  const { songs, totalCount } = await fetchLyricsbyQuery({
+    q,
+    page: currentPage,
+    limit: itemsPerPage,
+  });
   return (
     <main className="min-h-screen px-4 py-10">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -60,9 +72,24 @@ export default async function SearchPage({
         </form>
 
         <p className="text-sm text-slate-400">
-          “{q}” の検索結果：{songs.length}件
+          “{q}” の検索結果：{totalCount}件
         </p>
+        <div className="mt-6">
+          {totalCount === 0 && q && (
+            <div className="rounded-md border border-slate-700 bg-slate-900 p-4 space-y-2">
+              <p className="text-slate-300 text-sm">
+                「{q}」に一致する歌詞は見つかりませんでした。
+              </p>
 
+              <Link
+                href={`/lyrixplorer/request?q=${encodeURIComponent(q)}`}
+                className="text-sm text-blue-400 hover:underline"
+              >
+                この曲をリクエストする
+              </Link>
+            </div>
+          )}
+        </div>
         <div className="grid gap-4">
           {songs.map((song) => (
             <Link
@@ -81,11 +108,12 @@ export default async function SearchPage({
                   {/* Thumbnail */}
                   {song.youtubeId && (
                     <div className="w-20 h-12 relative rounded overflow-hidden shadow-sm dark:shadow-none dark:border dark:border-slate-700">
-                      <Image
+                      <img
                         src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
                         alt={song.name}
-                        fill
-                        className="object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   )}
@@ -113,8 +141,14 @@ export default async function SearchPage({
             </Link>
           ))}
 
-          {songs.length <= 0 && (
-            <p className="text-slate-500 text-sm">検索結果がありません。</p>
+          {totalCount > itemsPerPage && (
+            <Pagination
+              currentPage={currentPage}
+              totalItems={totalCount}
+              itemsPerPage={itemsPerPage}
+              baseUrl="/lyrixplorer/search"
+              query={restParams}
+            />
           )}
         </div>
       </div>

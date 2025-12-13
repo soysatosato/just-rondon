@@ -115,11 +115,12 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
       {/* ③ image */}
       {content.image && (
         <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
-          <Image
+          <img
             src={content.image}
             alt={content.title}
-            fill
-            className="object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       )}
