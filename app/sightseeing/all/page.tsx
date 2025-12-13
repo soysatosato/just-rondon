@@ -37,6 +37,7 @@ export default async function FacilitiesListPage({
   const currentPage = Number(searchParams.page) || 1;
   const itemsPerPage = 10;
 
+  const { page, ...restParams } = searchParams;
   // QueryString → フィルター条件に変換
   const filters = {
     sort: searchParams.sort || null,
@@ -126,6 +127,7 @@ export default async function FacilitiesListPage({
         totalItems={totalCount}
         itemsPerPage={itemsPerPage}
         baseUrl="/sightseeing/all"
+        query={restParams}
       />
     </div>
   );

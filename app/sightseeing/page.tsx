@@ -8,271 +8,16 @@ import {
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import Image from "next/image";
-
-const highlightAttractions = [
-  {
-    title: "Warner Bros. Studio Tour London",
-    subtitle: "舞台にもなったロケ地",
-    description:
-      "映画『ハリー・ポッター』の撮影セットをそのまま体験できるスタジオツアー。",
-    slug: "warner-bros-studio-tour-harry-potter",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f7/Entrance_of_Warner_Bros._Studio_Tour_London_%282025%29.jpg",
-  },
-  {
-    title: "ロンドン塔",
-    subtitle: "世界遺産",
-    description:
-      "王冠ジュエルが展示されている、ロンドンを代表する世界遺産の塔。",
-    slug: "tower-of-london",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f0/Tower_of_London_White_Tower.jpg",
-  },
-  {
-    title: "London Eye",
-    subtitle: "ロンドン旅の定番スポット",
-    description:
-      "テムズ川沿いにそびえる巨大観覧車。ロンドンの街並みを360°一望。",
-    slug: "london-eye",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d6/London-Eye-2009.JPG",
-  },
-  {
-    title: "The London Pass",
-    subtitle: "ロンドン観光パス",
-    description: "主要観光スポットの入場料がセットになったお得なシティパス。",
-    slug: "the-london-pass",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/londonpass.jpeg",
-  },
-];
-
-const mustSeeCategories = [
-  {
-    title: "ロンドン必見スポット厳選",
-    description: "まず押さえておきたい代表的な観光名所を厳選。",
-    slug: "must-see",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/must-see-bg.jpg",
-  },
-  {
-    title: "ハリー・ポッターゆかりの地",
-    description: "作品の舞台となったロケ地や関連アトラクションを巡る。",
-    slug: "harry-potter",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/51/Harry_Potter_logo.svg",
-  },
-  {
-    title: "王室ゆかりの観光地",
-    description: "バッキンガム宮殿や王室ギャラリーなど英国王室の世界へ。",
-    slug: "royal-london",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/royal-london-bg.jpeg",
-  },
-  {
-    title: "子どもと楽しむロンドン",
-    description: "家族旅行にぴったりな体験型スポットを紹介。",
-    slug: "kids-free-activities",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/kids-free-activities-bg.jpeg",
-  },
-];
-
-const seasonalAttractions = [
-  {
-    title: "クリスマスマーケット2025",
-    description: "本物そっくりなセレブの蝋人形が150体以上勢ぞろい。",
-    slug: "christmas-markets",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/london-cm-bg.jpeg",
-  },
-  {
-    title: "Hyde Park Winter Wonderland",
-    description:
-      "巨大テーマパークのような冬の祭典。アイススケートやアトラクション、巨大マーケットまで勢揃い。",
-    slug: "hyde-park-winter-wonderland-2025",
-    image:
-      "https://upload.wikimedia.org/wikipedia/en/a/a1/Winter_Wonderland_logo.png",
-    price: "£5〜（日時により変動）",
-  },
-  {
-    title: "Chelsea Winter Village",
-    description: "光のトンネルとマーケットが楽しめる冬季限定イベント。",
-    slug: "chelsea-winter-village-2025",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/chelseawintervillage.jpeg",
-    price: "£23.95〜",
-  },
-  {
-    title: "クリスマス・ライト・ロンドン・バスツアー 2025",
-    description:
-      "冬季限定、ロンドン中心部のイルミネーションを巡るナイトツアー。",
-    slug: "christmas-lights-london-bus-tour-2025",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/4/4d/Christmas_lights_-_geograph.org.uk_-_5233969.jpg",
-
-    price: "£26.00〜",
-    badge: "",
-  },
-];
-
-const royalAttractions = [
-  {
-    title: "Royal Observatory",
-    description: "グリニッジ子午線で有名な天文台。",
-    slug: "royal-observatory-greenwich",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Royal_observatory_Greenwich.JPG",
-    price: "£24.00〜",
-  },
-  {
-    title: "Kensington Palace",
-    description: "ケイト妃ゆかりの宮殿。王室の暮らしを感じられる展示も。",
-    slug: "kensington-palace",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/8/80/Kensington_Palace%2C_the_South_Front_-_geograph.org.uk_-_287402.jpg",
-    price: "£24.70〜",
-  },
-  {
-    title: "The King’s Gallery",
-    description: "ロイヤルコレクションの名画が並ぶギャラリー。",
-    slug: "kings-gallery-buckingham-palace",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/2/21/The_King%27s_Gallery_2024-06-27.jpg",
-    price: "£19.00〜",
-  },
-  {
-    title: "Hampton Court Palace",
-    description: "ヘンリー8世ゆかりの宮殿。迷路庭園や歴史的な部屋が見どころ。",
-    slug: "hampton-court-palace",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/b/b6/Tudor_Chimney_Pots_at_Hampton_Court_Palace_-_panoramio.jpg",
-    price: "£28.00〜",
-  },
-];
-
-const tours = [
-  {
-    title: "乗り降り自由バスツアー",
-    description: "乗り降り自由の定番観光バス。主要スポットを効率よく巡れる。",
-    slug: "hop-on-hop-off-bus-tour-london",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/2/2c/YJ11TVA_TOOTBUS_Volvo_B9TL_with_East_Lancs_Visionaire_bodywork_%2852511927151%29.jpg",
-    price: "£42.00〜",
-    badge: "",
-  },
-  {
-    title: "アフタヌーンティー・バスツアー",
-    description: "ロンドン名物アフタヌーンティーを楽しみながら市内を周遊。",
-    slug: "afternoon-tea-bus-london",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/afternoontea-bus-tour.jpeg",
-    price: "£49.00〜",
-    badge: "",
-  },
-  {
-    title: "テムズ川ボートツアー",
-    description: "テムズ川から眺めるビッグ・ベンやタワーブリッジは格別。",
-    slug: "thames-cruise",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/thamescruisebg.jpeg",
-    price: "目安 £20〜",
-    badge: "",
-  },
-  {
-    title: "ロンドン1日完全制覇ツアー",
-    description: "主要スポットを1日でまわる欲張りツアー。",
-    slug: "the-total-london-experience-tour",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/london-city-bus-tours-logo.jpeg",
-    price: "£129.00〜",
-    badge: "",
-  },
-
-  {
-    title: "ロンドン・スタジアムツアー完全ガイド",
-    description: "プレミアリーグのスタジアム見学ツアーなどスポーツ好き向け。",
-    slug: "stadium-tours",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d2/London_Wembley.jpg",
-    price: "£20.00〜（目安）",
-    badge: "",
-  },
-];
-
-const kidsAttractions = [
-  {
-    title: "プリヒストリック・プラネット：恐竜没入体験",
-    description: "恐竜の世界をテーマにした没入型アトラクション。",
-    slug: "prehistoric-planet-london",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/Prehistoric-Planet-Discovering-Dinosaurs-at-Lightroom.jpeg",
-    price: "£25.00〜",
-  },
-  {
-    title: "IFSクラウド・ケーブルカー（ロンドン・ケーブルカー）",
-    description: "空中散歩でテムズ川を横断。子どもにも大人気。",
-    slug: "ifs-cloud-cable-car-london",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/9a/Emirates_Air_Line_towers_24_May_2012.jpg",
-    price: "£13.00〜",
-  },
-  //   {
-  //     title: "Paradox Museum London",
-  //     description: "錯視やトリックアートで「脳が混乱する」体験型ミュージアム。",
-  //     slug: "",
-  //     image: "",
-  //     price: "£16.90〜",
-  //   },
-  //   {
-  //     title: "London Transport Museum",
-  //     description: "ロンドンのバスや地下鉄の歴史を楽しみながら学べる博物館。",
-  //     slug: "",
-  //     image: "",
-  //     price: "£24.50〜",
-  //   },
-  {
-    title: "パディントン・ベア・エクスペリエンス",
-    description: "パディントンの世界に入り込める体験型アトラクション。",
-    slug: "jurassic-world-experience-london",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/padd-bear-the-experience.jpeg",
-    price: "£34.00〜",
-  },
-  {
-    title: "ジュラシック・ワールド：エクスペリエンス",
-    description: "映画『ジュラシック・ワールド』の世界を再現した没入型体験。",
-    slug: "jurassic-world-experience-london",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/JWE-uk.jpeg",
-    price: "£31.90〜",
-  },
-];
-
-const freeAttractions = [
-  {
-    title: "大英博物館",
-    description: "ロゼッタストーンをはじめ、世界中の文化財が集まる巨大博物館。",
-    slug: "british-museum",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/1/1b/British_Museum_from_NE_2_%28cropped%29.JPG",
-  },
-  {
-    title: "ナショナル・ギャラリー",
-    description:
-      "英国を代表する美術館。ファン・ゴッホやターナーなど名画が多数展示されている。",
-    slug: "national-gallery",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f6/Galer%C3%ADa_Nacional%2C_Londres%2C_Inglaterra%2C_2014-08-07%2C_DD_036.JPG",
-  },
-  {
-    title: "Tate Modern",
-    description: "テムズ川沿いの発電所跡にある現代アート美術館。",
-    slug: "tate-modern",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Tate_Modern_-_Bankside_Power_Station.jpg/1920px-Tate_Modern_-_Bankside_Power_Station.jpg",
-  },
-];
+import {
+  getHighlightAttractions,
+  getMustSeeCategories,
+  getSeasonalAttractions,
+  getRoyalAttractions,
+  getTours,
+  getKidsAttractions,
+  getFreeAttractions,
+  getTodaysPicks,
+} from "@/utils/sightseeing";
 
 const faqItems = [
   {
@@ -322,7 +67,26 @@ const faqItems = [
   },
 ];
 
-export default function Page() {
+export default async function Page() {
+  const [
+    highlightAttractions,
+    mustSeeCategories,
+    seasonalAttractions,
+    royalAttractions,
+    tours,
+    kidsAttractions,
+    freeAttractions,
+    todaysPicks,
+  ] = await Promise.all([
+    getHighlightAttractions(),
+    getMustSeeCategories(),
+    getSeasonalAttractions(),
+    getRoyalAttractions(),
+    getTours(),
+    getKidsAttractions(),
+    getFreeAttractions(),
+    getTodaysPicks(1),
+  ]);
   return (
     <div className="min-h-screen">
       <main className="mx-auto max-w-6xl px-4 py-8 space-y-12">
@@ -399,6 +163,41 @@ export default function Page() {
           </div>
         </section>
 
+        <section className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-bold">Today’s Picks</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              本日のおすすめスポットをランダムにセレクト。
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            {todaysPicks.map((item, idx) => (
+              <Link key={idx} href={`/sightseeing/${item.slug}`}>
+                <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition">
+                  <div className="relative h-40 w-full">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <CardHeader className="space-y-1">
+                    <p className="text-xs font-semibold text-emerald-600">
+                      Today’s Pick
+                    </p>
+                    <CardTitle className="text-base">{item.title}</CardTitle>
+                    <CardDescription className="text-xs">
+                      {item.description}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {/* 必見スポットカテゴリ */}
         <section className="space-y-6">
           <div>
@@ -463,11 +262,6 @@ export default function Page() {
                     <p className="text-xs text-slate-600 dark:text-slate-300">
                       {item.description}
                     </p>
-                    {item.price && (
-                      <p className="pt-1 text-xs font-medium text-slate-900 dark:text-slate-100">
-                        From {item.price}
-                      </p>
-                    )}
                   </CardContent>
                 </Card>
               </Link>
