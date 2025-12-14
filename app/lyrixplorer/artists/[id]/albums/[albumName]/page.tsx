@@ -68,25 +68,76 @@ export default async function AlbumPage({
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-6">
-      {/* アルバムヘッダー */}
-      <div className="flex items-center gap-6 mb-10">
-        {tracks[0].artist.imageUrl && (
-          <img
-            src={tracks[0].artist.imageUrl}
-            alt={tracks[0].artist.name}
-            className="w-24 h-24 rounded-xl object-cover shadow-md"
-          />
-        )}
-        <div>
-          <h1 className="text-3xl font-bold mb-2">{albumName}</h1>
-          <p>
+      {/* ================= ALBUM HEADER ================= */}
+      <div
+        className="
+    relative mb-12 rounded-2xl overflow-hidden
+    border border-slate-200/60 dark:border-slate-700/60
+    bg-gradient-to-br
+      from-slate-50 via-white to-slate-100
+      dark:from-slate-900 dark:via-slate-800 dark:to-slate-900
+    shadow-md dark:shadow-lg
+  "
+      >
+        {/* 背景アクセント */}
+        <div
+          className="
+      absolute inset-0 opacity-20 dark:opacity-25
+      bg-gradient-to-br from-pink-400/30 via-purple-400/20 to-sky-400/30
+    "
+        />
+
+        <div className="relative flex items-center gap-5 p-5 sm:p-6">
+          {/* アーティスト画像 */}
+          {tracks[0].artist.imageUrl && (
+            <img
+              src={tracks[0].artist.imageUrl}
+              alt={tracks[0].artist.name}
+              className="
+          w-20 h-20 sm:w-24 sm:h-24
+          rounded-xl object-cover
+          ring-1 ring-black/10 dark:ring-white/20
+          shadow-sm
+        "
+            />
+          )}
+
+          {/* テキスト */}
+          <div className="flex-1 space-y-2">
+            <p className="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">
+              Album
+            </p>
+
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100 leading-tight">
+              {albumName}
+            </h1>
+
+            {/* アーティストリンク */}
             <Link
               href={`/lyrixplorer/artists/${params.id}`}
-              className=" text-blue-600 dark:text-blue-300 hover:opacity-80"
+              className="
+          inline-flex items-center gap-2
+          text-sm font-medium
+          text-sky-700 dark:text-sky-300
+          hover:text-sky-600 dark:hover:text-sky-200
+          transition
+        "
             >
-              {tracks[0].artist.engName}
+              {/* モバイル用：ボタン感 */}
+              <span
+                className="
+            inline-flex items-center gap-1
+            px-2.5 py-1 rounded-full
+            bg-sky-100 text-sky-700
+            dark:bg-sky-500/20 dark:text-sky-300
+            sm:bg-transparent sm:px-0 sm:py-0
+          "
+              >
+                {tracks[0].artist.engName}
+                <span className="text-xs opacity-70">→</span>
+              </span>
             </Link>
-          </p>
+          </div>
         </div>
       </div>
 

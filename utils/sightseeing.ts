@@ -129,13 +129,13 @@ export async function getSeasonalAttractions() {
   const items = await getRandom({ category: "seasonal" }, 3);
 
   return [
+    STATIC_SEASONAL,
     ...items.map((a) => ({
       title: a.name,
       description: a.tagline || a.summary || "",
       slug: a.slug,
       image: a.image,
     })),
-    STATIC_SEASONAL,
   ];
 }
 
@@ -143,6 +143,7 @@ export async function getRoyalAttractions() {
   const items = await getRandom({ category: "royal" }, 3);
 
   return [
+    STATIC_ROYAL,
     ...items.map((a) => ({
       title: a.name,
       description: a.tagline || a.summary || "",
@@ -150,7 +151,6 @@ export async function getRoyalAttractions() {
       image: a.image,
       price: undefined,
     })),
-    STATIC_ROYAL,
   ];
 }
 
@@ -174,7 +174,7 @@ export async function getKidsAttractions() {
   const items = await getRandom({ isForKids: true }, 4);
   return items.map((a) => ({
     title: a.name,
-    description: a.summary || a.tagline || "",
+    description: a.tagline || a.summary || "",
     slug: a.slug,
     image: a.image,
     price: undefined,
@@ -185,7 +185,7 @@ export async function getFreeAttractions() {
   const items = await getRandom({ isFree: true }, 3);
   return items.map((a) => ({
     title: a.name,
-    description: a.summary || a.tagline || "",
+    description: a.tagline || a.summary || "",
     slug: a.slug,
     image: a.image,
   }));

@@ -341,3 +341,120 @@ export async function createLyricsRequest(formData: FormData) {
   });
   redirect("/lyrixplorer/request?success=1");
 }
+
+export async function fetchTodaysPicks(limit = 3) {
+  const total = await db.lyrics.count();
+
+  if (total === 0) return [];
+
+  const skip = Math.floor(Math.random() * total);
+
+  return db.lyrics.findMany({
+    skip,
+    take: limit,
+    include: {
+      artist: true,
+    },
+  });
+}
+
+export async function fetchHotAlbums(limit = 5) {
+  const latest = await db.ranking.findFirst({
+    where: { type: "HOT_ALBUM" },
+    orderBy: { periodEnd: "desc" },
+    select: { periodEnd: true },
+  });
+
+  if (!latest) return [];
+
+  return db.ranking.findMany({
+    where: {
+      type: "HOT_ALBUM",
+      periodEnd: latest.periodEnd,
+    },
+    orderBy: { rank: "asc" },
+    take: limit,
+    include: {
+      artist: true,
+    },
+  });
+}
+export async function fetchTodaysAlbumPick() {
+  // ① 7曲以上ある album × artist を抽出
+  const candidates = await db.lyrics.groupBy({
+    by: ["artistId", "album"],
+    where: {
+      album: { not: null },
+    },
+    _count: {
+      _all: true,
+    },
+    having: {
+      id: {
+        _count: {
+          gte: 7,
+        },
+      },
+    },
+  });
+
+  if (candidates.length === 0) return null;
+
+  // ② ランダムで1つ選択
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+
+  // ③ アーティスト名取得
+  const artist = await db.artist.findUnique({
+    where: { id: pick.artistId },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
+  if (!artist || !pick.album) return null;
+
+  // ④ year / month を代表1曲から取得
+  const meta = await db.lyrics.findFirst({
+    where: {
+      artistId: pick.artistId,
+      album: pick.album,
+    },
+    select: {
+      year: true,
+      month: true,
+    },
+    orderBy: {
+      albumOrder: "asc",
+    },
+  });
+
+  if (!meta) return null;
+
+  return {
+    album: pick.album,
+    artistId: artist.id,
+    artistName: artist.name,
+    year: meta.year,
+    month: meta.month,
+  };
+}
+
+export async function fetchHotArtistsRandom(limit = 6) {
+  // ① isHot = true の総数
+  const total = await db.artist.count({
+    where: { isHot: true },
+  });
+
+  if (total === 0) return [];
+
+  // ② ランダム offset
+  const skip = Math.floor(Math.random() * total);
+
+  // ③ 取得
+  return db.artist.findMany({
+    where: { isHot: true },
+    skip,
+    take: limit,
+  });
+}

@@ -6,7 +6,13 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { SearchBox } from "@/components/lyrix/LyricsSearchBox";
-import { fetchLatestTop10Lyrics } from "@/utils/actions/lyrics";
+import {
+  fetchHotAlbums,
+  fetchHotArtistsRandom,
+  fetchLatestTop10Lyrics,
+  fetchTodaysAlbumPick,
+  fetchTodaysPicks,
+} from "@/utils/actions/lyrics";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -44,47 +50,127 @@ export const metadata: Metadata = {
 
 export default async function LyriXplolerHome() {
   const top10 = await fetchLatestTop10Lyrics();
+  const todaysPick = await fetchTodaysPicks();
+  const todaysAlbumPick = await fetchTodaysAlbumPick();
+  const hotAlbums = await fetchHotAlbums();
+  const hotArtists = await fetchHotArtistsRandom();
+
   return (
-    <main className="min-h-screen bg-gradient-to-b ">
-      <div className="px-4 py-4 lg:px-6 lg:py-14 space-y-12">
+    <main className="min-h-screen bg-gradient-to-b">
+      <div className="px-4 py-4 lg:px-6 lg:py-14 space-y-14">
         {/* ================= HERO ================= */}
-        <section className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
+        <section className="flex flex-col gap-10">
           <div>
-            <div
-              className="flex w-full items-center gap-2 px-3 py-2 mb-6 rounded-xl shadow-sm backdrop-blur
-                   border border-gray-300 bg-white/70 
-                   dark:border-slate-700/70 dark:bg-slate-950/60"
-            >
+            <div className="flex items-center gap-2 px-3 py-2 mb-6 rounded-xl border bg-white/70 dark:bg-slate-950/60">
               <SearchBox href="/lyrixplorer/search" />
             </div>
-            <div
-              className="max-w-xl mb-3 text-base space-y-4 italic
-                    text-gray-700 dark:text-slate-300"
-            >
+            <div className="max-w-xl italic text-gray-700 dark:text-slate-300">
               <p>A lyrics explorer that helps you understand every line.</p>
               <p>世界の音楽を、分かりやすい言葉で。</p>
             </div>
           </div>
         </section>
-        {/* ================= HOT SONGS ================= */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between gap-2">
+
+        {/* ================= TODAY'S PICK ================= */}
+        {todaysPick.length > 0 && (
+          <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <Flame className="h-6 w-6 text-red-400" />
+              <Flame className="h-6 w-6 text-pink-400" />
               <div>
-                <h2 className="font-bold text-lg">Trending</h2>
+                <h2 className="font-bold text-lg">Today’s Pick</h2>
                 <p className="text-xs text-slate-400">
-                  今いちばん宇宙規模で響いてる曲
+                  今日という日に、偶然出会う一曲
                 </p>
               </div>
             </div>
-            {/* <Button
-              variant="ghost"
-              size="sm"
-              className="text-xs text-slate-300 hover:text-slate-100"
+
+            <div className="grid gap-3">
+              {todaysPick.map((song) => {
+                const youtubeId = song.youtubeId;
+                const thumbnail = youtubeId
+                  ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+                  : null;
+
+                return (
+                  <Link key={song.id} href={`/lyrixplorer/songs/${song.id}`}>
+                    <Card className="group flex gap-3 overflow-hidden border-slate-700/70 bg-slate-900/70 transition hover:border-pink-400/60">
+                      {/* ===== サムネイル ===== */}
+                      <div className="relative h-20 w-32 shrink-0">
+                        {thumbnail ? (
+                          <img
+                            src={thumbnail}
+                            alt={song.name}
+                            className="h-full w-full object-cover transition group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-gradient-to-br from-pink-500/40 via-purple-500/40 to-sky-500/40" />
+                        )}
+
+                        {/* 再生っぽいオーバーレイ */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition">
+                          <div className="h-6 w-6 rounded-full bg-white/80 text-black text-xs flex items-center justify-center">
+                            ▶
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ===== テキスト ===== */}
+                      <CardContent className="flex flex-col justify-center py-3 space-y-1">
+                        <CardTitle className="text-sm font-semibold text-slate-200 group-hover:text-pink-200 transition">
+                          {song.name}
+                        </CardTitle>
+
+                        <CardDescription className="text-xs text-slate-400 group-hover:text-slate-300 transition">
+                          {song.artist.name}
+                        </CardDescription>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ================= TODAY'S ALBUM PICK ================= */}
+        {todaysAlbumPick && (
+          <section className="space-y-4">
+            <div className="flex items-center gap-3 mb-2">
+              <Flame className="h-6 w-6 text-purple-400" />
+              <div>
+                <h2 className="font-bold text-lg">Today’s Album Pick</h2>
+                <p className="text-xs text-slate-400">今日はこのアルバムから</p>
+              </div>
+            </div>
+
+            <Link
+              href={`/lyrixplorer/artists/${todaysAlbumPick.artistId}/albums/${todaysAlbumPick.album}`}
             >
-              View All
-            </Button> */}
+              <Card className="p-4 bg-slate-900/70 hover:border-purple-400/60 transition">
+                <CardTitle className="text-sm text-slate-200">
+                  {todaysAlbumPick.album}
+                </CardTitle>
+                <CardDescription className="text-xs text-slate-400">
+                  {todaysAlbumPick.artistName}
+                  {todaysAlbumPick.year > 0 && ` · ${todaysAlbumPick.year}`}
+                  {todaysAlbumPick.month > 0 && `.${todaysAlbumPick.month}`}
+                </CardDescription>
+              </Card>
+            </Link>
+          </section>
+        )}
+
+        {/* ================= TRENDING ================= */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Flame className="h-6 w-6 text-red-400" />
+            <div>
+              <h2 className="font-bold text-lg">Trending</h2>
+              <p className="text-xs text-slate-400">
+                今いちばん宇宙規模で響いてる曲
+              </p>
+            </div>
           </div>
 
           <div className="grid gap-3 md:grid-cols-2">
@@ -99,34 +185,28 @@ export default async function LyriXplolerHome() {
                   key={song.rank}
                   href={`/lyrixplorer/songs/${song.lyricsId}`}
                 >
-                  <Card className="group flex gap-3 border-slate-700/70 bg-slate-900/70 transition hover:border-sky-500/60 hover:bg-slate-900 overflow-hidden">
-                    {/* サムネ or グラデ */}
+                  <Card className="group flex gap-3 bg-slate-900/70 hover:border-sky-500/60 transition">
                     <div className="relative h-20 w-32 shrink-0">
                       {thumbnail ? (
                         <img
                           src={thumbnail}
-                          alt={song.lyrics?.name ?? "thumbnail"}
-                          className="h-full w-full object-cover transition group-hover:scale-105"
+                          alt={song.lyrics?.name ?? ""}
+                          className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-sky-700/40 via-purple-600/40 to-pink-500/40 group-hover:opacity-90 transition" />
+                        <div className="h-full w-full bg-gradient-to-br from-sky-700/40 via-purple-600/40 to-pink-500/40" />
                       )}
-
-                      {/* Rank Badge */}
-                      <div className="absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-sky-300">
+                      <div className="absolute bottom-1 left-1 text-xs font-bold text-sky-300">
                         #{song.rank}
                       </div>
                     </div>
 
-                    {/* 曲情報 */}
-                    <CardContent className="flex flex-col justify-center py-3 space-y-1">
-                      <CardTitle className="text-sm text-slate-200 font-semibold group-hover:text-sky-200">
+                    <CardContent className="py-3">
+                      <CardTitle className="text-sm text-slate-200 mb-2">
                         {song.lyrics?.name}
                       </CardTitle>
-
-                      <CardDescription className="text-xs text-slate-400 group-hover:text-sky-300 transition">
-                        {song.lyrics?.artist.name} ·{" "}
-                        {song.lyrics?.artist.engName}
+                      <CardDescription className="text-xs text-slate-400">
+                        {song.lyrics?.artist.name}
                       </CardDescription>
                     </CardContent>
                   </Card>
@@ -136,84 +216,65 @@ export default async function LyriXplolerHome() {
           </div>
         </section>
 
+        {/* ================= HOT ALBUM ================= */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Flame className="h-6 w-6 text-red-400" />
+            <div>
+              <h2 className="font-bold text-lg">HOT Album</h2>
+              <p className="text-xs text-slate-400">今週のアルバムチャート</p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {hotAlbums.map((album) => (
+              <Link
+                key={album.id}
+                href={`/lyrixplorer/artists/${album.artistId}/albums/${album.album}`}
+              >
+                <Card className="p-4 bg-slate-900/70 hover:border-red-400/60 transition">
+                  <p className="text-xs font-bold text-sky-400">
+                    #{album.rank}
+                  </p>
+                  <p className="text-sm text-slate-200 font-semibold mb-2">
+                    {album.album}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {album.artist?.engName}
+                  </p>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
         <section className="space-y-4">
           <div className="flex items-center gap-3">
             <Flame className="h-6 w-6 text-orange-400" />
             <div>
               <h2 className="font-bold text-lg">Hot Artists</h2>
-              <p className="text-xs text-slate-400">
-                世界を動かすトップアーティスト
-              </p>
+              <p className="text-xs text-slate-400">注目アーティスト</p>
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "Taylor Swift",
-                nameJa: "テイラー・スウィフト",
-                slug: "taylor-swift",
-              },
-              {
-                name: "Ed Sheeran",
-                nameJa: "エド・シーラン",
-                slug: "ed-sheeran",
-              },
-              {
-                name: "Ariana Grande",
-                nameJa: "アリアナ・グランデ",
-                slug: "ariana-grande",
-              },
-            ].map((artist) => (
-              <Link
-                key={artist.name}
-                href={`/lyrixplorer/artists/${artist.slug}`}
-              >
-                <Card
-                  className="
-            group flex items-center gap-4 p-4 
-            border border-slate-700/70 bg-slate-900/70 
-            rounded-xl relative overflow-hidden
-            transition 
-            hover:border-pink-400/60 hover:shadow-lg hover:shadow-pink-500/20
-          "
-                >
-                  {/* 背景のグラデ */}
-                  <div
-                    className="
-              absolute inset-0 opacity-10 
-              bg-gradient-to-br from-pink-500/40 via-purple-500/30 to-sky-500/40
-              group-hover:opacity-20 transition
-            "
-                  />
-
-                  {/* アバター */}
-                  <div
-                    className="
-              relative h-12 w-12 rounded-full flex items-center justify-center
-              text-slate-200 font-bold text-sm
-              bg-gradient-to-br from-pink-500/40 to-purple-600/40
-              ring-1 ring-slate-700/60
-              group-hover:scale-105 group-hover:shadow-md 
-              transition
-            "
-                  >
-                    {artist.name
+            {hotArtists.map((artist) => (
+              <Link key={artist.id} href={`/lyrixplorer/artists/${artist.id}`}>
+                <Card className="group flex items-center gap-4 p-4 bg-slate-900/70 hover:border-orange-400/60 transition">
+                  <div className="h-12 w-12 rounded-full flex items-center justify-center font-bold bg-gradient-to-br from-orange-500/40 to-pink-500/40">
+                    {artist.engName
                       .split(" ")
-                      .map((part) => part[0])
+                      .map((p) => p[0])
                       .join("")
                       .toUpperCase()}
                   </div>
 
-                  {/* テキスト */}
-                  <div className="relative space-y-1">
-                    <p className="text-sm font-semibold text-slate-200 group-hover:text-pink-200 transition">
-                      {artist.name}
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200 mb-1">
+                      {artist.engName}
                     </p>
-
-                    <p className="text-xs text-slate-400 group-hover:text-slate-300 transition">
-                      {artist.nameJa}
-                    </p>
+                    {artist.name && (
+                      <p className="text-xs text-slate-400">{artist.name}</p>
+                    )}
                   </div>
                 </Card>
               </Link>

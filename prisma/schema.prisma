@@ -334,6 +334,7 @@ model Artist {
   imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isHot    Boolean?
 
   songs     Lyrics[]
   rankings  Ranking[]
@@ -343,6 +344,7 @@ model Ranking {
   id          String       @id @default(cuid())
   type        RankingType
   rank        Int
+  album       String?
   periodStart DateTime
   periodEnd   DateTime
 
@@ -356,6 +358,7 @@ model Ranking {
 }
 enum RankingType {
   HOT_SONGS
+  HOT_ALBUM
   HOT_ARTISTS
 }
 

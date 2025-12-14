@@ -47,11 +47,11 @@ export default function ArtistPageClient({ artist, data }: any) {
         )}
 
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-            {artist.name}
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-lg">
+          <h1 className="text-3xl italic font-bold tracking-tight text-gray-900 dark:text-gray-100">
             {artist.engName}
+          </h1>
+          <p className="mt-2 italic text-gray-500 dark:text-gray-400 text-lg">
+            {artist.name}
           </p>
         </div>
       </div>
