@@ -1,9 +1,11 @@
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
+import { fetchTodaysPicks } from "@/utils/actions/lyrics";
 import {
   fetchMusicalIdandName,
   fetchSongDetails,
 } from "@/utils/actions/musicals";
 import { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -50,6 +52,7 @@ export default async function SongDetailsPage({
   params: { slug: string; id: string };
 }) {
   const song = await fetchSongDetails(params.id);
+  const picks = await fetchTodaysPicks(2);
   if (!song) redirect("/musicals");
   return (
     <>
@@ -100,6 +103,47 @@ export default async function SongDetailsPage({
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {song.lyrics}
           </ReactMarkdown>
+        </div>
+        <div className="mt-16">
+          <h2 className="text-xl font-bold mb-6 text-indigo-700 dark:text-indigo-300">
+            こちらもおすすめ
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {picks.map((pick) => {
+              const thumbnail = pick.youtubeId
+                ? `https://img.youtube.com/vi/${pick.youtubeId}/hqdefault.jpg`
+                : "/no-thumbnail.png"; // fallback
+
+              return (
+                <Link
+                  key={pick.id}
+                  href={`/lyrixplorer/songs/${pick.id}`}
+                  className="group block rounded-xl overflow-hidden bg-card shadow-md hover:shadow-xl transition-all duration-300"
+                >
+                  {/* サムネイル */}
+                  <div className="relative w-full h-40 overflow-hidden">
+                    <img
+                      src={thumbnail}
+                      alt={`${pick.name} thumbnail`}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+
+                  {/* 曲情報 */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 group-hover:underline">
+                      {pick.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {pick.artist.name}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>
