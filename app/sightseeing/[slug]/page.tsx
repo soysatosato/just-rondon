@@ -13,6 +13,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
+import { Badge } from "@/components/ui/badge";
+import { Baby, Flame, Star, Tag, Ticket } from "lucide-react";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
@@ -64,6 +66,100 @@ export async function generateMetadata({
   };
 }
 
+function RecommendLevel({ level }: { level: number }) {
+  return (
+    <div
+      className="inline-flex items-center gap-3 rounded-full 
+      bg-neutral-100 px-4 py-2 
+      dark:bg-neutral-900/80 dark:ring-1 dark:ring-neutral-800
+    "
+    >
+      <div className="flex gap-1">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`h-5 w-5 ${
+              i < level
+                ? "fill-yellow-400 text-yellow-400"
+                : "text-neutral-300 dark:text-neutral-600"
+            }`}
+          />
+        ))}
+      </div>
+
+      <div
+        className="flex items-center gap-1 text-xs 
+        text-neutral-600 dark:text-neutral-400
+      "
+      >
+        <span>おすすめ度</span>
+        <span className="font-medium">{level}</span>
+      </div>
+    </div>
+  );
+}
+
+function AttractionBadges({ attraction }: { attraction: any }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {attraction.mustSee && (
+        <Badge
+          className="flex items-center gap-1 
+          bg-red-500 text-white 
+          dark:bg-red-600
+        "
+        >
+          <Flame className="h-3 w-3" />
+          MUST SEE
+        </Badge>
+      )}
+
+      {attraction.isForKids && (
+        <Badge
+          variant="secondary"
+          className="flex items-center gap-1 
+            dark:bg-neutral-800 dark:text-neutral-200
+          "
+        >
+          <Baby className="h-3 w-3" />
+          子ども向け
+        </Badge>
+      )}
+
+      {attraction.isFree && (
+        <Badge
+          variant="secondary"
+          className="flex items-center gap-1 
+            dark:bg-neutral-800 dark:text-neutral-200
+          "
+        >
+          <Ticket className="h-3 w-3" />
+          無料
+        </Badge>
+      )}
+    </div>
+  );
+}
+
+function CategoryLink({ category }: { category: string }) {
+  return (
+    <Link
+      href={`/sightseeing/all?category=${encodeURIComponent(category)}`}
+      className="inline-flex items-center gap-1 rounded-full border 
+        px-3 py-1 text-xs 
+        text-neutral-600 border-neutral-300 
+        transition
+        hover:bg-neutral-100
+        dark:text-neutral-300 dark:border-neutral-700 
+        dark:hover:bg-neutral-800
+      "
+    >
+      <Tag className="h-3 w-3" />
+      {category}
+    </Link>
+  );
+}
+
 export default async function AttractionDetail({
   params,
 }: {
@@ -95,7 +191,14 @@ export default async function AttractionDetail({
       <Dialog>
         {/* 通常表示（クリックで開く） */}
         <DialogTrigger asChild>
-          <div className="w-full aspect-[3/1] overflow-hidden cursor-zoom-in">
+          <div className="relative w-full aspect-[3/1] overflow-hidden">
+            {/* RecommendLevel Overlay */}
+            {attraction.recommendLevel && (
+              <div className="absolute bottom-4 right-4 z-10">
+                <RecommendLevel level={attraction.recommendLevel} />
+              </div>
+            )}
+
             <img
               src={attraction.image}
               alt={attraction.name}
@@ -122,6 +225,12 @@ export default async function AttractionDetail({
             {attraction.engName}
           </span>
         </h1>
+
+        <div className="flex flex-wrap items-center gap-4 mt-4">
+          <AttractionBadges attraction={attraction} />
+          <CategoryLink category={attraction.category} />
+        </div>
+
         {attraction.tagline && (
           <p className="text-sm italic text-muted-foreground">
             {attraction.tagline}

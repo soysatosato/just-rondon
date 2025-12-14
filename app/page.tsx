@@ -59,7 +59,6 @@ export default function Page() {
                   <SelectItem value="musicals">ミュージカルを探す</SelectItem>
                   <SelectItem value="chatboard">掲示板を見る</SelectItem>
                   <SelectItem value="news">ニュースを見る</SelectItem>
-                  <SelectItem value="visa">ビザ情報を調べる</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -162,6 +161,7 @@ export default function Page() {
               href="/museums/best-10-museums"
               title="ロンドンのおすすめの美術館"
             />
+            <ExploreCard href="/chatboard" title="ロンドンなんでも掲示板" />
           </div>
         </div>
       </section>
