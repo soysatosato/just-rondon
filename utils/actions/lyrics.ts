@@ -458,3 +458,90 @@ export async function fetchHotArtistsRandom(limit = 6) {
     take: limit,
   });
 }
+
+export async function createArtist(formData: FormData) {
+  const name = formData.get("name") as string;
+  const engName = formData.get("engName") as string;
+  const imageUrl = formData.get("imageUrl") as string | null;
+  const isHot = formData.get("isHot") === "on";
+
+  await db.artist.create({
+    data: {
+      name,
+      engName,
+      imageUrl: imageUrl || null,
+      isHot,
+    },
+  });
+
+  redirect("/lyrixplorer");
+}
+
+export async function createLyrics(formData: FormData) {
+  const name = formData.get("name") as string;
+  const artistId = formData.get("artistId") as string;
+  const lyrics = formData.get("lyrics") as string;
+
+  const scene = formData.get("scene") as string | null;
+  const album = formData.get("album") as string | null;
+  const youtubeId = formData.get("youtubeId") as string | null;
+  const genre = formData.get("genre") as string | null;
+
+  const year = Number(formData.get("year") || 0);
+  const month = Number(formData.get("month") || 0);
+  const albumOrder = Number(formData.get("albumOrder") || 0);
+
+  await db.lyrics.create({
+    data: {
+      name,
+      artistId,
+      lyrics,
+      scene: scene || null,
+      album: album || null,
+      youtubeId: youtubeId || null,
+      genre: genre || null,
+      year,
+      month,
+      albumOrder,
+    },
+  });
+
+  redirect("/lyrixplorer");
+}
+export async function fetchArtists() {
+  const artists = await db.artist.findMany({
+    orderBy: { name: "asc" },
+  });
+  return artists;
+}
+export async function fetchLyrics() {
+  const lyrics = await db.lyrics.findMany({
+    orderBy: { name: "asc" },
+  });
+  return lyrics;
+}
+
+export async function createRanking(formData: FormData) {
+  const type = formData.get("type") as any;
+  const rank = Number(formData.get("rank"));
+  const album = formData.get("album") as string | null;
+  const periodStart = new Date(formData.get("periodStart") as string);
+  const periodEnd = new Date(formData.get("periodEnd") as string);
+
+  const lyricsId = (formData.get("lyricsId") as string) || null;
+  const artistId = (formData.get("artistId") as string) || null;
+
+  await db.ranking.create({
+    data: {
+      type,
+      rank,
+      album: album || null,
+      periodStart,
+      periodEnd,
+      lyricsId,
+      artistId,
+    },
+  });
+
+  redirect("/lyrixplorer");
+}
