@@ -465,14 +465,14 @@ export async function createArtist(formData: FormData) {
   const imageUrl = formData.get("imageUrl") as string | null;
   const isHot = formData.get("isHot") === "on";
 
-  await db.artist.create({
-    data: {
-      name,
-      engName,
-      imageUrl: imageUrl || null,
-      isHot,
-    },
-  });
+  // await db.artist.create({
+  //   data: {
+  //     name,
+  //     engName,
+  //     imageUrl: imageUrl || null,
+  //     isHot,
+  //   },
+  // });
 
   redirect("/lyrixplorer");
 }
@@ -491,20 +491,20 @@ export async function createLyrics(formData: FormData) {
   const month = Number(formData.get("month") || 0);
   const albumOrder = Number(formData.get("albumOrder") || 0);
 
-  await db.lyrics.create({
-    data: {
-      name,
-      artistId,
-      lyrics,
-      scene: scene || null,
-      album: album || null,
-      youtubeId: youtubeId || null,
-      genre: genre || null,
-      year,
-      month,
-      albumOrder,
-    },
-  });
+  // await db.lyrics.create({
+  //   data: {
+  //     name,
+  //     artistId,
+  //     lyrics,
+  //     scene: scene || null,
+  //     album: album || null,
+  //     youtubeId: youtubeId || null,
+  //     genre: genre || null,
+  //     year,
+  //     month,
+  //     albumOrder,
+  //   },
+  // });
 
   redirect("/lyrixplorer");
 }
@@ -531,17 +531,17 @@ export async function createRanking(formData: FormData) {
   const lyricsId = (formData.get("lyricsId") as string) || null;
   const artistId = (formData.get("artistId") as string) || null;
 
-  await db.ranking.create({
-    data: {
-      type,
-      rank,
-      album: album || null,
-      periodStart,
-      periodEnd,
-      lyricsId,
-      artistId,
-    },
-  });
+  // await db.ranking.create({
+  //   data: {
+  //     type,
+  //     rank,
+  //     album: album || null,
+  //     periodStart,
+  //     periodEnd,
+  //     lyricsId,
+  //     artistId,
+  //   },
+  // });
 
   redirect("/lyrixplorer");
 }
