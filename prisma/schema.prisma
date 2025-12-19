@@ -370,3 +370,47 @@ model LyricsRequest {
   artist    String?
   createdAt DateTime @default(now())
 }
+
+model ServiceCharge {
+  id                     String   @id
+  placeId                String
+  storeName              String
+  storeAddress           String
+  lat                    Float
+  lng                    Float
+  borough                String?
+  postcode               String?
+
+  // ===== MVP =====
+  serviceChargeCollected Boolean
+  distributionType       String?
+  amountPeriod           String?
+  amountValue            Float?
+
+  // ===== サービスチャージ専用の自由記述 =====
+  serviceChargeComment   String?
+
+  // ===== Phase2: 賄い・生活 =====
+  mealCountPerDay        String?   // "0" | "1" | "2plus"
+  mealRestrictions       String[] // ["no-beef", "no-meat", "no-fish", "none"]
+  mealComment       String? // ["no-beef", "no-meat", "no-fish", "none"]
+  mealDrink              String?   // "alcohol-ok" | "softdrinks" | "water-only" | "none"
+
+  shiftSchedule          String?   // "monthly" | "weekly" | "last-minute"
+  visaSupport            String?   // "yes" | "no" | "unknown"
+
+  // ===== 職場環境 =====
+  workAtmosphere         String?   // "good" | "neutral" | "tense" | "toxic"
+  managementPresence     String?   // "owner-daily" | "manager-daily" | "sometimes" | "hands-off"
+
+  ethnicityRatio         String?   // 選択肢のみ（自由記述なし）
+
+  // ===== 全体の自由記述 =====
+  generalComment         String?
+
+  createdAt              DateTime @default(now())
+
+  @@index([placeId])
+  @@index([serviceChargeCollected])
+}
+

@@ -37,8 +37,11 @@ export default function Page() {
 
           <div className="relative">
             <TitleLogo />
-            <h1 className="my-6 text-center text-xl font-semibold tracking-tight drop-shadow-sm sm:text-4xl text-slate-900 dark:text-slate-100">
-              ロンドンを発見しよう
+            <h1 className="mt-6 text-center text-xl font-semibold tracking-tight drop-shadow-sm sm:text-4xl text-slate-900 dark:text-slate-100">
+              ロンドン観光最強ガイド
+            </h1>
+            <h1 className="mt-3 mb-8 text-center text-lg  tracking-tight drop-shadow-sm sm:text-4xl text-slate-900 dark:text-slate-100">
+              観光スポット・美術館・ミュージカル情報
             </h1>
 
             {/* 検索バー */}
@@ -81,13 +84,20 @@ export default function Page() {
 
             {/* サブテキスト */}
             <div className="mt-12 rounded-2xl bg-white/90 dark:bg-slate-900/80 p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
-              <h2 className="mb-3 text-base font-semibold text-slate-900 dark:text-slate-100">
+              <h2 className="mb-3 text-base font-semibold">
                 ロンドン観光をもっと楽しむためのガイド
               </h2>
-              <div className="space-y-1 text-xs text-slate-600 dark:text-slate-300">
-                <p>ロンドンの名所から美術館、ミュージカルなど</p>
-                <p>毎年多くの旅行者が訪れる街の魅力を紹介</p>
-                <p>旅行計画に役立つ情報をわかりやすく掲載</p>
+              <div className="text-xs text-slate-600 space-y-2 leading-relaxed">
+                <p>
+                  ロンドん！は、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
+                  定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
+                  初めての方にも分かりやすく情報をまとめています。
+                </p>
+                <p>
+                  地下鉄やバスなどの移動手段、無料で楽しめる観光地、
+                  子ども連れや一人旅におすすめのスポットなど、
+                  旅行計画に役立つ実用的な情報も充実しています。
+                </p>
               </div>
             </div>
           </div>

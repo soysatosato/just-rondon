@@ -67,6 +67,9 @@ export default async function SongDetailsPage({
           <h1 className="text-xl sm:text-3xl font-extrabold mb-2 text-indigo-700 dark:text-indigo-300 leading-snug">
             {song.name}
           </h1>
+          <h2 className="sr-only">
+            {song.name} の歌詞と和訳（{song.artist.engName}）
+          </h2>
           <p className="text-base sm:text-xl  mb-1">
             <span className="font-semibold">Artist:</span>{" "}
             <Link

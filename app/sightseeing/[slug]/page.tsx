@@ -37,7 +37,7 @@ export async function generateMetadata({
 
   const title = `${attraction.name} | ${
     attraction.engName ?? "London Attraction"
-  } | ロンドん!`;
+  } の見どころ・行き方・所要時間｜ロンドン観光ガイド`;
 
   const description = attraction.summary
     ? `「${attraction.name}」の魅力や見どころ、アクセス情報を詳しく紹介。ロンドンの人気観光スポットの完全ガイド。`
@@ -62,6 +62,21 @@ export async function generateMetadata({
       description,
       siteName: "ロンドん!",
       locale: "ja_JP",
+    },
+    other: {
+      "application/ld+json": JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "TouristAttraction",
+        name: attraction.name,
+        description: attraction.summary,
+        address: attraction.address,
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: attraction.lat,
+          longitude: attraction.lng,
+        },
+        isAccessibleForFree: attraction.isFree,
+      }),
     },
   };
 }
@@ -201,7 +216,7 @@ export default async function AttractionDetail({
 
             <img
               src={attraction.image}
-              alt={attraction.name}
+              alt={`${attraction.name}｜ロンドン観光スポット`}
               className="w-full h-full object-cover"
             />
           </div>
@@ -211,7 +226,7 @@ export default async function AttractionDetail({
         <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/80 border-none">
           <img
             src={attraction.image}
-            alt={attraction.name}
+            alt={`${attraction.name}｜ロンドン観光スポット`}
             className="w-full h-full object-contain"
           />
         </DialogContent>
@@ -225,6 +240,11 @@ export default async function AttractionDetail({
             {attraction.engName}
           </span>
         </h1>
+        <p className="mt-4 text-base text-muted-foreground">
+          {attraction.name} は、ロンドンを代表する
+          {attraction.category}の観光スポットで、
+          初心者からリピーターまで楽しめる場所です。
+        </p>
 
         <div className="flex flex-wrap items-center gap-4 mt-4">
           <AttractionBadges attraction={attraction} />
@@ -357,7 +377,7 @@ export default async function AttractionDetail({
                   <div className="rounded-lg overflow-hidden shadow hover:shadow-md transition">
                     <img
                       src={spot.image}
-                      alt={spot.name}
+                      alt={`${spot.name}｜ロンドン観光スポット`}
                       className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>

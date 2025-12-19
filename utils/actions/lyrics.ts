@@ -155,7 +155,7 @@ export const fetchLyricsByArtist = async (
     include: {
       artist: { select: { engName: true, name: true, imageUrl: true } },
     },
-    orderBy: { year: "desc" },
+    orderBy: { year: "desc", month: "desc" },
     skip: (page - 1) * limit,
     take: limit,
   });

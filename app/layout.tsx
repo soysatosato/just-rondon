@@ -1,7 +1,6 @@
 import "./globals.css";
 import Providers from "./providers";
 import { ClerkProvider } from "@clerk/nextjs";
-import MainNav from "@/components/navbar/MainNav";
 import { defaultMetadata } from "./metadata";
 import MainFooter from "@/components/home/MainFooter";
 import Navbar from "@/components/navbar/Navbar";
