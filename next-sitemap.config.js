@@ -33,6 +33,7 @@ module.exports = {
       "/sightseeing/eta-uk-visa-guide",
       "/visa/uk-youth-mobility-visa",
       "/lyrixplorer",
+      "/jobs/service-charges",
       "/",
     ];
     for (const p of staticPages) {

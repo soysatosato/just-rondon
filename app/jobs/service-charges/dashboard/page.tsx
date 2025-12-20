@@ -45,6 +45,12 @@ export default async function DashboardPage({ searchParams }: Props) {
               サービスチャージや労働環境の実態
             </span>
             を、現場の声として集約しています。
+            <br />
+            店舗名（英名）を入力することで、
+            <span className="font-medium text-foreground">
+              個別の店舗データを検索
+            </span>
+            できます。
           </p>
           <p className="text-sm text-muted-foreground">
             情報は匿名で投稿できます。調査は、働く人同士の協力によって
@@ -85,7 +91,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             ? "検索結果"
             : hasQuery
             ? "※ 検索は3文字以上でのみ実行されます"
-            : "一覧表示を見るにはアンケートへのご協力が必要です"}
+            : "一覧表示で見るにはアンケートへのご協力が必要です"}
         </p>
 
         {/* 検索結果あり */}
@@ -130,7 +136,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             のレビューが集まっています。
           </p>
           <p className="text-sm text-muted-foreground">
-            一覧表示を見るには、まずアンケートにご協力ください。
+            一覧表示で見るには、まずアンケートにご協力ください。
           </p>
           <Button asChild>
             <Link href="/jobs/service-charges/survey">
@@ -150,6 +156,24 @@ export default async function DashboardPage({ searchParams }: Props) {
           <div className="mt-3">
             <Button asChild variant="secondary" size="sm">
               <Link href="/chatboard">雑談掲示板を見る</Link>
+            </Button>
+          </div>
+        </div>
+        {/* 制度解説リンク */}
+        <div className="max-w-2xl rounded-lg border bg-muted/40 p-4">
+          <p className="text-sm font-medium">
+            サービスチャージの制度について知りたい方へ
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            英国のサービスチャージは法律（Tipping Act
+            2023）で厳密に定められています。
+            調査データを見る前に、制度の全体像を確認したい方はこちら。
+          </p>
+          <div className="mt-3">
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/jobs/service-charges">
+                サービスチャージの仕組みと法律を解説
+              </Link>
             </Button>
           </div>
         </div>

@@ -1,11 +1,8 @@
 "use client";
-import { Metadata } from "next";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectTrigger,
@@ -16,6 +13,7 @@ import {
 import Link from "next/link";
 import TitleLogo from "@/components/home/TitleLogo";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 export default function Page() {
   const [value, setValue] = useState("");
@@ -62,6 +60,9 @@ export default function Page() {
                   <SelectItem value="musicals">ミュージカルを探す</SelectItem>
                   <SelectItem value="chatboard">掲示板を見る</SelectItem>
                   <SelectItem value="news">ニュースを見る</SelectItem>
+                  <SelectItem value="jobs/service-charges">
+                    サービスチャージについて調べる
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
