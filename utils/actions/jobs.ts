@@ -101,7 +101,6 @@ export async function fetchServiceCharges(q?: string) {
         placeId: "desc",
       },
     },
-    take: 10,
   });
 
   return data;
@@ -113,5 +112,32 @@ export async function fetchServiceChargesByPlaceId(
   return db.serviceCharge.findMany({
     where: { placeId },
     orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function fetchServiceChargeCount() {
+  const count = await db.serviceCharge.count();
+  return count;
+}
+
+export async function fetchServiceChargesPaged(
+  page: number,
+  itemsPerPage: number
+) {
+  return db.serviceCharge.groupBy({
+    by: ["placeId", "storeName", "storeAddress"],
+    _count: {
+      placeId: true,
+    },
+    orderBy: [
+      {
+        _count: { placeId: "desc" },
+      },
+      {
+        storeName: "asc", // ← 安定ソート用
+      },
+    ],
+    skip: (page - 1) * itemsPerPage,
+    take: itemsPerPage,
   });
 }

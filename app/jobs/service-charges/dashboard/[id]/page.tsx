@@ -67,7 +67,7 @@ export default async function DashboardDetailPage({ params }: Props) {
           {/* 地図 */}
           {store.lat && store.lng && (
             <div className="space-y-2">
-              <div className="relative h-[38vh] w-full overflow-hidden rounded-xl">
+              <div className="relative z-0 h-[38vh] w-full overflow-hidden rounded-xl">
                 <PropertyMap lat={store.lat} lng={store.lng} />
                 <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-black/5 dark:ring-white/10" />
               </div>
@@ -226,11 +226,7 @@ export default async function DashboardDetailPage({ params }: Props) {
         {/* 追加登録導線 */}
         <div className="text-center">
           <Button asChild>
-            <Link
-              href={`/jobs/service-charges/survey?placeId=${store.placeId}`}
-            >
-              この店舗についてレビューを追加する
-            </Link>
+            <Link href="/jobs/service-charges/dashboard">検索ページに戻る</Link>
           </Button>
         </div>
       </div>

@@ -4,8 +4,11 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { fetchServiceCharges } from "@/utils/actions/jobs";
 import { Button } from "@/components/ui/button";
+import {
+  fetchServiceCharges,
+  fetchServiceChargeCount,
+} from "@/utils/actions/jobs";
 
 type Props = {
   searchParams?: {
@@ -15,14 +18,21 @@ type Props = {
 
 export default async function DashboardPage({ searchParams }: Props) {
   const q = searchParams?.q?.trim() ?? "";
-
-  const records = await fetchServiceCharges(q);
   const isSearching = q.length > 0;
+
+  // 件数だけは常に取得（一覧は取得しない）
+  const totalCount = await fetchServiceChargeCount();
+
+  // 検索時のみ一覧取得
+  const records = isSearching ? await fetchServiceCharges(q) : [];
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
-      <div className="mx-auto max-w-5xl px-4 py-8 space-y-6">
+      <div className="mx-auto max-w-5xl px-4 py-8 space-y-8">
+        {/* タイトル */}
         <h1 className="text-2xl font-semibold">調査データ検索（英名）</h1>
+
+        {/* 説明 */}
         <div className="space-y-2 max-w-2xl">
           <p className="text-sm text-muted-foreground">
             ロンドン市内の日本食レストランにおける
@@ -31,22 +41,13 @@ export default async function DashboardPage({ searchParams }: Props) {
             </span>
             を、現場の声として集約しています。
           </p>
-
           <p className="text-sm text-muted-foreground">
-            情報は匿名で投稿できます。該当店舗が未登録の場合は、
-            アンケートから新しく追加できます。
+            情報は匿名で投稿できます。調査は、働く人同士の協力によって
+            成り立っています。
           </p>
-
-          <div>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/jobs/service-charges/survey">
-                アンケートに回答する
-              </Link>
-            </Button>
-          </div>
         </div>
 
-        {/* 検索フォーム */}
+        {/* 検索フォーム（検索自体は許可） */}
         <form className="max-w-md space-y-2" method="GET">
           <Input
             name="q"
@@ -60,11 +61,31 @@ export default async function DashboardPage({ searchParams }: Props) {
 
         {/* サブタイトル */}
         <p className="text-sm text-muted-foreground">
-          {isSearching ? "検索結果" : "最近追加されたレビュー"}
+          {isSearching
+            ? "検索結果"
+            : "一覧表示を見るにはアンケートへのご協力が必要です"}
         </p>
 
-        {/* 結果あり */}
-        {records.length > 0 && (
+        {/* 未検索時：件数だけ見せる */}
+        {!isSearching && (
+          <div className="rounded-lg border border-dashed p-6 text-center space-y-3">
+            <p className="text-sm">
+              現在 <span className="font-medium">全 {totalCount} 件</span>{" "}
+              のレビューが集まっています。
+            </p>
+            <p className="text-sm text-muted-foreground">
+              一覧表示を見るには、まずアンケートにご協力ください。
+            </p>
+            <Button asChild>
+              <Link href="/jobs/service-charges/survey">
+                アンケートに回答する
+              </Link>
+            </Button>
+          </div>
+        )}
+
+        {/* 検索結果あり */}
+        {isSearching && records.length > 0 && (
           <div className="grid gap-3">
             {records.map((r) => (
               <Link
@@ -88,17 +109,32 @@ export default async function DashboardPage({ searchParams }: Props) {
         )}
 
         {/* 検索結果なし */}
-        {records.length === 0 && isSearching && (
+        {isSearching && records.length === 0 && (
           <div className="rounded-lg border border-dashed p-6 text-center space-y-3">
             <p className="text-sm">該当する店舗は見当たりません。</p>
             <p className="text-sm text-muted-foreground">
-              従業員ですか？この店舗の情報を最初に登録できます。
+              この店舗の情報を、最初に登録できます。
             </p>
             <Button asChild>
               <Link href="/jobs/service-charges/survey">新しく登録する</Link>
             </Button>
           </div>
         )}
+        {/* 掲示板導線（雑談・一般） */}
+        <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
+          <p className="text-sm font-medium">
+            雑談・情報交換用の掲示板もあります
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            ちょっとした質問・雑談などは
+            調査とは別の、雑談掲示板で自由に書き込めます。
+          </p>
+          <div className="mt-3">
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/chatboard">雑談掲示板を見る</Link>
+            </Button>
+          </div>
+        </div>
       </div>
     </main>
   );
