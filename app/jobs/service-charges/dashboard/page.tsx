@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 import {
   fetchServiceCharges,
   fetchServiceChargeCount,
@@ -18,13 +20,16 @@ type Props = {
 
 export default async function DashboardPage({ searchParams }: Props) {
   const q = searchParams?.q?.trim() ?? "";
-  const isSearching = q.length > 0;
 
-  // 件数だけは常に取得（一覧は取得しない）
+  // 状態判定
+  const hasQuery = q.length > 0;
+  const isSearchable = q.length >= 3;
+
+  // 件数は常に取得
   const totalCount = await fetchServiceChargeCount();
 
-  // 検索時のみ一覧取得
-  const records = isSearching ? await fetchServiceCharges(q) : [];
+  // 3文字以上のときのみ検索
+  const records = isSearchable ? await fetchServiceCharges(q) : [];
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
@@ -47,59 +52,58 @@ export default async function DashboardPage({ searchParams }: Props) {
           </p>
         </div>
 
-        {/* 検索フォーム（検索自体は許可） */}
+        {/* 検索フォーム */}
         <form className="max-w-md space-y-2" method="GET">
           <Input
             name="q"
-            placeholder="Search by English store name or area"
+            placeholder="Search by English store name (min 3 chars)"
             defaultValue={q}
+            aria-invalid={hasQuery && !isSearchable}
           />
           <Button type="submit" size="sm">
             検索
           </Button>
         </form>
 
+        {/* 強調注意書き：3文字未満 */}
+        {hasQuery && !isSearchable && (
+          <Alert variant="destructive" className="max-w-md">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>検索条件が不十分です</AlertTitle>
+            <AlertDescription>
+              検索は <strong>3文字以上</strong> の英字で行ってください。
+              <br />
+              例：
+              <code className="ml-1 rounded bg-muted px-1 py-0.5">yok</code>
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* サブタイトル */}
         <p className="text-sm text-muted-foreground">
-          {isSearching
+          {isSearchable
             ? "検索結果"
+            : hasQuery
+            ? "※ 検索は3文字以上でのみ実行されます"
             : "一覧表示を見るにはアンケートへのご協力が必要です"}
         </p>
 
-        {/* 未検索時：件数だけ見せる */}
-        {!isSearching && (
-          <div className="rounded-lg border border-dashed p-6 text-center space-y-3">
-            <p className="text-sm">
-              現在 <span className="font-medium">全 {totalCount} 件</span>{" "}
-              のレビューが集まっています。
-            </p>
-            <p className="text-sm text-muted-foreground">
-              一覧表示を見るには、まずアンケートにご協力ください。
-            </p>
-            <Button asChild>
-              <Link href="/jobs/service-charges/survey">
-                アンケートに回答する
-              </Link>
-            </Button>
-          </div>
-        )}
-
         {/* 検索結果あり */}
-        {isSearching && records.length > 0 && (
+        {isSearchable && records.length > 0 && (
           <div className="grid gap-3">
             {records.map((r) => (
               <Link
                 key={r.placeId}
                 href={`/jobs/service-charges/dashboard/${r.placeId}`}
               >
-                <Card className="p-4 hover:bg-muted/40 transition">
+                <Card className="p-4 transition hover:bg-muted/40">
                   <p className="font-medium">
                     {r.storeName || "（店舗名不明）"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {r.storeAddress}
                   </p>
-                  <p className="text-xs mt-1 text-muted-foreground">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {r._count.placeId} 件のレビュー
                   </p>
                 </Card>
@@ -109,7 +113,7 @@ export default async function DashboardPage({ searchParams }: Props) {
         )}
 
         {/* 検索結果なし */}
-        {isSearching && records.length === 0 && (
+        {isSearchable && records.length === 0 && (
           <div className="rounded-lg border border-dashed p-6 text-center space-y-3">
             <p className="text-sm">該当する店舗は見当たりません。</p>
             <p className="text-sm text-muted-foreground">
@@ -120,7 +124,21 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Button>
           </div>
         )}
-        {/* 掲示板導線（雑談・一般） */}
+        <div className="rounded-lg border border-dashed p-6 text-center space-y-3">
+          <p className="text-sm">
+            現在 <span className="font-medium">全 {totalCount} 件</span>{" "}
+            のレビューが集まっています。
+          </p>
+          <p className="text-sm text-muted-foreground">
+            一覧表示を見るには、まずアンケートにご協力ください。
+          </p>
+          <Button asChild>
+            <Link href="/jobs/service-charges/survey">
+              アンケートに回答する
+            </Link>
+          </Button>
+        </div>
+        {/* 掲示板導線 */}
         <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
           <p className="text-sm font-medium">
             雑談・情報交換用の掲示板もあります

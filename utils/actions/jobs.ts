@@ -87,8 +87,6 @@ export async function fetchServiceCharges(q?: string) {
       ? {
           OR: [
             { storeName: { contains: q, mode: "insensitive" } },
-            { storeAddress: { contains: q, mode: "insensitive" } },
-            { borough: { contains: q, mode: "insensitive" } },
             { postcode: { contains: q, mode: "insensitive" } },
           ],
         }
