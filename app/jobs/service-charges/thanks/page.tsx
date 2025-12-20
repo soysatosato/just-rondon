@@ -26,12 +26,19 @@ export default function ThanksPage() {
 
           <div className="pt-2">
             <Button asChild className="w-full">
-              <Link href="/jobs/service-charges/dashboard">トップに戻る</Link>
+              <Link href="/jobs/service-charges/dashboard/archive">
+                一覧表示を見る
+              </Link>
             </Button>
           </div>
-
-          <p className="text-xs text-muted-foreground">
-            ※ 同一端末からの再回答は推奨していません。
+          <p className="text-xs text-muted-foreground space-y-1">
+            <span className="block">
+              ※ このページ以外から一覧へ戻るリンクは設けていません。
+            </span>
+            <span className="block">
+              ※
+              再度閲覧する場合は、凛ん草木のページのURLを保存するなどして控えておくことをおすすめします。
+            </span>
           </p>
         </CardContent>
       </Card>
