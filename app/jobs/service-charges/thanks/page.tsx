@@ -33,11 +33,11 @@ export default function ThanksPage() {
           </div>
           <p className="text-xs text-muted-foreground space-y-1">
             <span className="block">
-              ※ このページ以外から一覧へ戻るリンクは設けていません。
+              ※ このページ以外から一覧表示へ移動するリンクは設けていません。
             </span>
             <span className="block">
               ※
-              再度閲覧する場合は、凛ん草木のページのURLを保存するなどして控えておくことをおすすめします。
+              再度閲覧する場合は、リンク先のURLを保存するなどして控えておくことをおすすめします。
             </span>
           </p>
         </CardContent>
