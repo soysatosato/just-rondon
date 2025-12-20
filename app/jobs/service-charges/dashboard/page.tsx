@@ -147,22 +147,6 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Link>
           </Button>
         </div>
-        {/* 掲示板導線 */}
-        <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
-          <p className="text-sm font-medium">
-            雑談・情報交換用の掲示板もあります
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            ちょっとした質問・雑談などは
-            調査とは別の、雑談掲示板で自由に書き込めます。
-          </p>
-          <div className="mt-3">
-            <Button asChild variant="secondary" size="sm">
-              <Link href="/chatboard">雑談掲示板を見る</Link>
-            </Button>
-          </div>
-        </div>
-        {/* 制度解説リンク */}
         <div className="max-w-2xl rounded-lg border bg-muted/40 p-4">
           <p className="text-sm font-medium">
             サービスチャージの制度について知りたい方へ
@@ -177,6 +161,20 @@ export default async function DashboardPage({ searchParams }: Props) {
               <Link href="/jobs/service-charges">
                 サービスチャージの仕組みと法律を解説
               </Link>
+            </Button>
+          </div>
+        </div>
+        <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
+          <p className="text-sm font-medium">
+            雑談・情報交換用の掲示板もあります
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            ちょっとした質問・雑談などは
+            調査とは別の、雑談掲示板で自由に書き込めます。
+          </p>
+          <div className="mt-3">
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/chatboard">雑談掲示板を見る</Link>
             </Button>
           </div>
         </div>

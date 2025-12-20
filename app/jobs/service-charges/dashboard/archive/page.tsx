@@ -34,13 +34,21 @@ export default async function ArchivePage({ searchParams }: Props) {
           </p>
         </div>
 
-        <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground space-y-1">
-          <p>※ 当一覧ページへの再アクセスにはアンケート回答が必要です。</p>
-          <p>※ 継続利用される場合は、ブックマークを推奨します。</p>
+        <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <ul className="list-disc list-outside space-y-1">
+            <li>
+              当ページへの再アクセスには、原則としてアンケート回答が必要になります。
+            </li>
+            <li>
+              当ページURLをブックマーク等しておくことで、再回答せずに閲覧できます。
+            </li>
+          </ul>
         </div>
 
         <Button asChild variant="outline" size="sm">
-          <Link href="/jobs/service-charges/dashboard">検索ページに戻る</Link>
+          <Link href="/jobs/service-charges/dashboard">
+            検索トップページに戻る
+          </Link>
         </Button>
 
         <p className="text-sm text-muted-foreground">全 {totalItems} 件</p>

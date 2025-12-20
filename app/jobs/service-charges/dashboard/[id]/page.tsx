@@ -16,6 +16,7 @@ import {
   VISA_SUPPORT_LABEL,
   MANAGEMENT_PRESENCE_LABEL,
   labelOf,
+  MEAL_RESTRICTION_LABEL,
 } from "@/utils/labels";
 import {
   Collapsible,
@@ -31,8 +32,23 @@ type Props = {
 };
 
 function formatAmount(value: number | null, period: string | null): string {
-  if (!value) return "未記入";
+  if (!value) return "-";
   return `${labelOf(AMOUNT_PERIOD_LABEL, period)} 約£${value}`;
+}
+
+function renderMealRestrictions(values: string[]) {
+  if (!values || values.length === 0) return "-";
+
+  // 「特に制限なし」が含まれていたら、それだけ表示
+  if (values.includes("none")) {
+    return MEAL_RESTRICTION_LABEL.none;
+  }
+
+  return values
+    .map(
+      (v) => MEAL_RESTRICTION_LABEL[v as keyof typeof MEAL_RESTRICTION_LABEL]
+    )
+    .join("・");
 }
 
 const PropertyMap = dynamic(() => import("@/components/museums/PropertyMap"), {
@@ -106,7 +122,7 @@ export default async function DashboardDetailPage({ params }: Props) {
                   <p className="text-base font-semibold">サービスチャージ</p>
 
                   <p>
-                    会計時にサービスチャージを徴収：
+                    サービスチャージ：
                     <span className="ml-1 font-medium">
                       {r.serviceChargeCollected ? "あり" : "なし"}
                     </span>
@@ -152,17 +168,11 @@ export default async function DashboardDetailPage({ params }: Props) {
                   <CollapsibleContent className="mt-4 space-y-6 rounded-lg border p-4">
                     {/* 賄い */}
                     <section className="space-y-1">
-                      <p className="font-medium">賄い</p>
-                      <p>回数：{r.mealCountPerDay ?? "未記入"}</p>
+                      <p className="font-semibold text-base mb-3">賄い</p>
+                      <p>回数：{r.mealCountPerDay ?? "-"}</p>
                       <p>
                         提供されない食材：
-                        {r.mealRestrictions.length
-                          ? r.mealRestrictions.join("・")
-                          : "特に制限なし"}
-                      </p>
-                      <p>
-                        ドリンク：
-                        {labelOf(MEAL_DRINK_LABEL, r.mealDrink)}
+                        {renderMealRestrictions(r.mealRestrictions)}
                       </p>
 
                       {r.mealComment && (
@@ -170,13 +180,19 @@ export default async function DashboardDetailPage({ params }: Props) {
                           その他：{r.mealComment}
                         </p>
                       )}
+                      <p>
+                        ドリンク：
+                        {labelOf(MEAL_DRINK_LABEL, r.mealDrink)}
+                      </p>
                     </section>
 
                     <Separator />
 
                     {/* 労働条件 */}
                     <section className="space-y-1">
-                      <p className="font-medium">労働条件・制度</p>
+                      <p className="font-semibold text-base mb-3">
+                        労働条件・制度
+                      </p>
                       <p>
                         シフト：
                         {labelOf(SHIFT_SCHEDULE_LABEL, r.shiftSchedule)}
@@ -198,7 +214,7 @@ export default async function DashboardDetailPage({ params }: Props) {
 
                     {/* 職場環境 */}
                     <section className="space-y-1">
-                      <p className="font-medium">職場環境</p>
+                      <p className="font-semibold text-base mb-3">職場環境</p>
                       <p>
                         雰囲気：
                         {labelOf(WORK_ATMOSPHERE_LABEL, r.workAtmosphere)}

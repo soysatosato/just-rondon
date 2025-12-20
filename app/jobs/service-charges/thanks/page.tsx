@@ -31,15 +31,16 @@ export default function ThanksPage() {
               </Link>
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground space-y-1">
-            <span className="block">
-              ※ このページ以外から一覧表示へ移動するリンクは設けていません。
-            </span>
-            <span className="block">
-              ※
-              再度閲覧する場合は、リンク先のURLを保存するなどして控えておくことをおすすめします。
-            </span>
-          </p>
+          <div className="mt-4 text-left rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-xs text-amber-900">
+            <ul className="space-y-1 list-disc list-outside">
+              <li>
+                このページ以外から一覧表示へ移動するリンクは設けていません。
+              </li>
+              <li>
+                再度閲覧する場合は、リンク先のURLを保存するなどして控えておくことをおすすめします。
+              </li>
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </main>

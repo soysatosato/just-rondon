@@ -84,3 +84,12 @@ export function labelOf<T extends string>(
   if (!value) return "未記入";
   return map[value as T] ?? "未記入";
 }
+
+export type MealRestriction = "beef" | "meat" | "fish" | "none";
+
+export const MEAL_RESTRICTION_LABEL: Record<MealRestriction, string> = {
+  beef: "牛肉",
+  meat: "肉全般",
+  fish: "魚介類",
+  none: "特に制限なし",
+};

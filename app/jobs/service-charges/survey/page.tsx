@@ -69,7 +69,7 @@ export default function SurveyPage() {
               ロンドン日本食レストランに関する実態調査
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              個人が特定される情報（氏名・連絡先等）は入力しないでください。
+              個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。
             </p>
           </CardHeader>
 
@@ -300,7 +300,7 @@ export default function SurveyPage() {
                   <p className="font-medium">Q4. 自由記載（任意）</p>
                   <p className="text-xs text-muted-foreground">
                     サービスチャージの運用について、補足や気になる点があればご記入ください。
-                    個人が特定される内容は書かないでください。
+                    個人が特定される内容や誹謗中傷は書かないでください。
                   </p>
                 </div>
 
@@ -565,7 +565,7 @@ export default function SurveyPage() {
                         rows={4}
                         className="text-sm"
                         maxLength={1000}
-                        placeholder="職場全体について補足があればご記入ください"
+                        placeholder="職場全体について補足があればご記入ください。個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。"
                       />
                     </section>
                   </section>
