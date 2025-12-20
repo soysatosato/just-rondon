@@ -138,6 +138,9 @@ export default async function DashboardPage({ searchParams }: Props) {
           <p className="text-sm text-muted-foreground">
             一覧表示で見るには、まずアンケートにご協力ください。
           </p>
+          <p className="text-sm text-muted-foreground">
+            アンケートに回答すると、一覧ページへのリンクが表示されます。
+          </p>
           <Button asChild>
             <Link href="/jobs/service-charges/survey">
               アンケートに回答する
