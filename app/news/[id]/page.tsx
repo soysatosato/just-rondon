@@ -95,15 +95,38 @@ export default async function NewsDetailPage({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                p: ({ ...props }) => <p className="mb-6" {...props} />,
-                a: ({ ...props }) => (
-                  <a className="text-indigo-600 hover:underline" {...props} />
+                h2: ({ ...props }) => (
+                  <h2
+                    className="mt-12 mb-6 text-2xl font-bold border-b pb-2 text-foreground"
+                    {...props}
+                  />
+                ),
+                h3: ({ ...props }) => (
+                  <h3
+                    className="mt-10 mb-4 text-xl font-semibold text-foreground"
+                    {...props}
+                  />
+                ),
+                h4: ({ ...props }) => (
+                  <h4
+                    className="mt-8 mb-3 text-lg font-semibold text-foreground"
+                    {...props}
+                  />
+                ),
+                p: ({ ...props }) => (
+                  <p className="mb-6 leading-relaxed" {...props} />
                 ),
                 strong: ({ ...props }) => (
-                  <strong className="font-bold" {...props} />
+                  <strong className="font-bold text-foreground" {...props} />
                 ),
                 li: ({ ...props }) => (
-                  <li className="ml-6 list-disc" {...props} />
+                  <li className="ml-6 list-disc mb-2" {...props} />
+                ),
+                a: ({ ...props }) => (
+                  <a
+                    className="text-indigo-600 hover:underline break-all"
+                    {...props}
+                  />
                 ),
               }}
             >
