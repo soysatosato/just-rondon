@@ -127,14 +127,10 @@ export async function fetchServiceChargesPaged(
     _count: {
       placeId: true,
     },
-    orderBy: [
-      {
-        _count: { placeId: "desc" },
-      },
-      {
-        storeName: "asc", // ← 安定ソート用
-      },
-    ],
+    _max: {
+      createdAt: true,
+    },
+    orderBy: [{ _max: { createdAt: "desc" } }],
     skip: (page - 1) * itemsPerPage,
     take: itemsPerPage,
   });

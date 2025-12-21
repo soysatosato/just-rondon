@@ -78,7 +78,7 @@ export default async function ArchivePage({ searchParams }: Props) {
           currentPage={currentPage}
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}
-          baseUrl="/dashboard/archive"
+          baseUrl="jobs/service-charges/dashboard/archive"
         />
       </div>
     </main>
