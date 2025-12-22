@@ -123,7 +123,7 @@ export async function fetchServiceChargesPaged(
   itemsPerPage: number
 ) {
   return db.serviceCharge.groupBy({
-    by: ["placeId", "storeName", "storeAddress"],
+    by: ["placeId", "storeName"],
     _count: {
       placeId: true,
     },
