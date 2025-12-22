@@ -129,6 +129,7 @@ export async function fetchServiceChargesPaged(
     },
     _max: {
       createdAt: true,
+      storeAddress: true,
     },
     orderBy: [{ _max: { createdAt: "desc" } }],
     skip: (page - 1) * itemsPerPage,
