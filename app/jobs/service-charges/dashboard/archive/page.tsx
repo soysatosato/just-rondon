@@ -63,7 +63,7 @@ export default async function ArchivePage({ searchParams }: Props) {
               <Card className="p-4 hover:bg-muted/40 transition">
                 <p className="font-medium">{r.storeName || "（店舗名不明）"}</p>
                 <p className="text-xs text-muted-foreground">
-                  {r.storeAddress}
+                  {r._max.storeAddress}
                 </p>
                 <p className="text-xs mt-1 text-muted-foreground">
                   {r._count.placeId} 件のレビュー
