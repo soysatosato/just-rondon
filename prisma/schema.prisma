@@ -414,3 +414,34 @@ model ServiceCharge {
   @@index([serviceChargeCollected])
 }
 
+model RedditPost {
+  id             String   @id @default(cuid())
+  title          String
+  titleJa        String
+  authorId       String?
+  displayOrder   Int
+  createdAt      DateTime @default(now())
+
+  // スレッドとの親子
+  redditId       String
+  reddit         Reddit @relation(fields: [redditId], references: [id])
+
+  @@index([redditId])
+}
+
+
+model Reddit {
+  id            String   @id @default(cuid())
+  imageUrl       String?
+  title         String   @unique   
+  titleJa       String            // 日本語訳
+  body          String
+  bodyJa        String
+  authorId       String?             
+  postedAt       DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  posts         RedditPost[]
+}
+

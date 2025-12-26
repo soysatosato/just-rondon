@@ -34,6 +34,7 @@ module.exports = {
       "/visa/uk-youth-mobility-visa",
       "/lyrixplorer",
       "/jobs/service-charges",
+      "/matome",
       "/",
     ];
     for (const p of staticPages) {
@@ -119,6 +120,14 @@ module.exports = {
 
     for (const p of posts) {
       paths.push(await config.transform(config, `/chatboard/${p.id}`));
+    }
+
+    const reddits = await prisma.reddit.findMany({
+      select: { id: true },
+    });
+
+    for (const rddt of reddits) {
+      paths.push(await config.transform(config, `/matome/${rddt.id}`));
     }
 
     return paths;

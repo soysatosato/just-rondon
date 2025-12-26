@@ -12,6 +12,7 @@ import { BiComment } from "react-icons/bi";
 import { AiOutlineLike } from "react-icons/ai";
 import { Metadata } from "next";
 import Pagination from "@/components/home/Pagination";
+import { MatomeList } from "@/components/chatboard/MatomeList";
 
 export const metadata: Metadata = {
   title: "掲示板・雑談・コミュニティ・出会い・サークル | ロンドん！話題まとめ",
@@ -50,6 +51,28 @@ export default async function PostsPage({
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4 text-center">
+        <section className="mb-10">
+          <Card className="border border-gray-200 dark:border-gray-700 rounded-2xl">
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-lg md:text-xl font-extrabold">
+                ロンドンの現地の声まとめ
+              </CardTitle>
+              <CardDescription className="text-sm leading-relaxed">
+                現地の空気感、価格感、治安感、混雑感を体感する。
+                雑談や書き込みは、この下の掲示板でどうぞ。
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="pt-0">
+              <MatomeList take={3} />
+              <div className="pt-2 mt-4">
+                <Button asChild size="sm">
+                  <Link href="/matome">まとめ一覧へ（観光に出発）</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
         <div className="flex-1">
           <h1 className="text-xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-3">
             ロンドンライフ掲示板

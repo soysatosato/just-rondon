@@ -162,3 +162,38 @@ export const DeletePostAction = async (prevState: any, formData: FormData) => {
     return renderError(error);
   }
 };
+
+export const fetchAllMatome = async ({
+  page = 1,
+  limit = 10,
+  take,
+}: {
+  page?: number;
+  limit?: number;
+  take?: number;
+} = {}) => {
+  const finalLimit = take ?? limit;
+  const total = await db.reddit.count();
+
+  // ページごとの取得
+  const reddits = await db.reddit.findMany({
+    skip: (page - 1) * limit,
+    take: finalLimit,
+    orderBy: [{ postedAt: "desc" }],
+    include: { posts: true },
+  });
+
+  return { reddits, total };
+};
+
+export const fetchMatome = async (id: string) => {
+  const matome = await db.reddit.findUnique({
+    where: { id },
+    include: {
+      posts: {
+        orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+      },
+    },
+  });
+  return matome;
+};
