@@ -111,6 +111,7 @@ export default async function SongDetailsPage({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {picks.map((pick) => {
+              if (!pick) return null;
               const thumbnail = pick.youtubeId
                 ? `https://img.youtube.com/vi/${pick.youtubeId}/hqdefault.jpg`
                 : "/no-thumbnail.png"; // fallback
@@ -143,6 +144,12 @@ export default async function SongDetailsPage({
                 </Link>
               );
             })}
+            <Link
+              href={`/lyrixplorer/`}
+              className="block text-xs text-right text-blue-600 dark:text-blue-300 underline hover:opacity-80"
+            >
+              和訳サイトTOPへ →
+            </Link>
           </div>
         </div>
       </div>
