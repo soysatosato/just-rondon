@@ -279,10 +279,12 @@ export default async function AttractionDetail({
             <div className="space-y-4 text-gray-800 dark:text-gray-100 text-sm">
               <div>
                 <p className="font-semibold">場所</p>
-                {attraction.address && attraction.address !== "-" ? (
+                {attraction.address &&
+                attraction.address !== "-" &&
+                attraction.engName ? (
                   <Link
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      attraction.name
+                      attraction.engName
                     )}&query_place_id=${attraction.lat},${attraction.lng}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -322,16 +324,18 @@ export default async function AttractionDetail({
                 <CardContent className="space-y-1">
                   <DynamicMap lat={attraction.lat} lng={attraction.lng} />
                   <div className="mt-2 text-xs md:text-sm">
-                    <Link
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        attraction.name
-                      )}&query_place_id=${attraction.lat},${attraction.lng}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
-                    >
-                      {attraction.address}
-                    </Link>
+                    {attraction.engName && (
+                      <Link
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                          attraction.engName
+                        )}&query_place_id=${attraction.lat},${attraction.lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        {attraction.address}
+                      </Link>
+                    )}
                   </div>
                 </CardContent>
               </Card>
