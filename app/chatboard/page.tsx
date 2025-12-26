@@ -50,7 +50,7 @@ export default async function PostsPage({
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4 text-center">
+      <div className="flex flex-col mb-8 gap-4 text-center">
         <section className="mb-10">
           <Card className="border border-gray-200 dark:border-gray-700 rounded-2xl">
             <CardHeader className="space-y-2">

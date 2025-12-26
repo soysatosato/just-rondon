@@ -344,18 +344,23 @@ export async function createLyricsRequest(formData: FormData) {
 
 export async function fetchTodaysPicks(limit = 3) {
   const total = await db.lyrics.count();
-
   if (total === 0) return [];
 
-  const skip = Math.floor(Math.random() * total);
+  const skips = new Set<number>();
+  while (skips.size < limit) {
+    skips.add(Math.floor(Math.random() * total));
+  }
 
-  return db.lyrics.findMany({
-    skip,
-    take: limit,
-    include: {
-      artist: true,
-    },
-  });
+  const results = await Promise.all(
+    [...skips].map((skip) =>
+      db.lyrics.findFirst({
+        skip,
+        include: { artist: true },
+      })
+    )
+  );
+
+  return results.filter(Boolean);
 }
 
 export async function fetchHotAlbums(limit = 5) {
@@ -508,12 +513,43 @@ export async function createLyrics(formData: FormData) {
 
   redirect("/lyrixplorer");
 }
-export async function fetchArtists() {
-  const artists = await db.artist.findMany({
-    orderBy: { name: "asc" },
-  });
-  return artists;
+// utils/actions/lyrics.ts
+export async function fetchArtists(
+  page: number = 1,
+  itemsPerPage: number = 10
+) {
+  const safePage = Math.max(1, page);
+  const take = Math.max(1, itemsPerPage);
+  const skip = (safePage - 1) * take;
+
+  const where = {
+    name: {
+      not: "-",
+    },
+  };
+
+  const [total, artists] = await Promise.all([
+    db.artist.count({ where }),
+
+    db.artist.findMany({
+      where,
+      orderBy: { name: "asc" },
+      skip,
+      take,
+      include: {
+        _count: {
+          select: { songs: true },
+        },
+      },
+    }),
+  ]);
+
+  return {
+    artists,
+    total,
+  };
 }
+
 export async function fetchLyrics() {
   const lyrics = await db.lyrics.findMany({
     orderBy: { name: "asc" },

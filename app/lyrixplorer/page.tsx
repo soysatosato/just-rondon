@@ -86,20 +86,20 @@ export default async function LyriXplolerHome() {
 
             <div className="grid gap-3">
               {todaysPick.map((song) => {
-                const youtubeId = song.youtubeId;
+                const youtubeId = song?.youtubeId;
                 const thumbnail = youtubeId
                   ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
                   : null;
 
                 return (
-                  <Link key={song.id} href={`/lyrixplorer/songs/${song.id}`}>
+                  <Link key={song?.id} href={`/lyrixplorer/songs/${song?.id}`}>
                     <Card className="group flex gap-3 overflow-hidden border-slate-700/70 bg-slate-900/70 transition hover:border-pink-400/60">
                       {/* ===== サムネイル ===== */}
                       <div className="relative h-20 w-32 shrink-0">
                         {thumbnail ? (
                           <img
                             src={thumbnail}
-                            alt={song.name}
+                            alt={song?.name}
                             className="h-full w-full object-cover transition group-hover:scale-105"
                             loading="lazy"
                           />
@@ -118,11 +118,11 @@ export default async function LyriXplolerHome() {
                       {/* ===== テキスト ===== */}
                       <CardContent className="flex flex-col justify-center py-3 space-y-1">
                         <CardTitle className="text-sm font-semibold text-slate-200 group-hover:text-pink-200 transition">
-                          {song.name}
+                          {song?.name}
                         </CardTitle>
 
                         <CardDescription className="text-xs text-slate-400 group-hover:text-slate-300 transition">
-                          {song.artist.name}
+                          {song?.artist.name}
                         </CardDescription>
                       </CardContent>
                     </Card>
@@ -260,12 +260,23 @@ export default async function LyriXplolerHome() {
             {hotArtists.map((artist) => (
               <Link key={artist.id} href={`/lyrixplorer/artists/${artist.id}`}>
                 <Card className="group flex items-center gap-4 p-4 bg-slate-900/70 hover:border-orange-400/60 transition">
-                  <div className="h-12 w-12 rounded-full flex items-center justify-center font-bold bg-gradient-to-br from-orange-500/40 to-pink-500/40">
-                    {artist.engName
-                      .split(" ")
-                      .map((p) => p[0])
-                      .join("")
-                      .toUpperCase()}
+                  <div className="h-12 w-12 rounded-full overflow-hidden flex items-center justify-center font-bold bg-gradient-to-br from-orange-500/40 to-pink-500/40">
+                    {artist.imageUrl ? (
+                      <img
+                        src={artist.imageUrl}
+                        alt={artist.name}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span>
+                        {artist.engName
+                          .split(" ")
+                          .map((p) => p[0])
+                          .join("")
+                          .toUpperCase()}
+                      </span>
+                    )}
                   </div>
 
                   <div>
@@ -280,6 +291,13 @@ export default async function LyriXplolerHome() {
               </Link>
             ))}
           </div>
+
+          <Link
+            href="/lyrixplorer/artists"
+            className="text-right text-sm text-orange-400 hover:text-orange-300 transition font-medium mt-4"
+          >
+            すべてのアーティストを見る →
+          </Link>
         </section>
       </div>
     </main>

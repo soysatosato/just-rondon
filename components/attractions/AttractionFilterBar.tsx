@@ -11,8 +11,9 @@ const categories = [
   "tour",
   "shop",
   "garden",
-  "loyal",
+  "royal",
   "historic",
+  "architecture",
 ];
 
 export default function AttractionFilterBar() {

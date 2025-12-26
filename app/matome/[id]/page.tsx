@@ -92,14 +92,13 @@ export default async function MatomeDetailPage({
 
         <CardContent className="space-y-5">
           {reddit.imageUrl ? (
-            <div className="overflow-hidden rounded-xl border">
+            <div className="relative h-48 md:h-56 overflow-hidden rounded-xl border">
               <Image
                 src={reddit.imageUrl}
                 alt={reddit.title}
-                width={1200}
-                height={630}
-                className="w-full object-cover"
-                priority
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 768px"
               />
             </div>
           ) : null}

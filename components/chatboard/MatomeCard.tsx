@@ -8,8 +8,10 @@ export function MatomeCard({ thread }: { thread: any }) {
   return (
     <article
       className="
-        group overflow-hidden rounded-2xl border border-neutral-200 bg-white
+        group overflow-hidden rounded-2xl
+        border border-neutral-200 bg-white
         shadow-sm transition hover:shadow-md
+        dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-none
       "
     >
       <div className="flex gap-3 p-3 sm:gap-4 sm:p-4">
@@ -17,7 +19,8 @@ export function MatomeCard({ thread }: { thread: any }) {
         {hasImage && (
           <div
             className="
-              relative shrink-0 overflow-hidden rounded-xl bg-neutral-100
+              relative shrink-0 overflow-hidden rounded-xl
+              bg-neutral-100 dark:bg-neutral-800
               h-[72px] w-[96px]
               sm:h-[80px] sm:w-[112px]
             "
@@ -29,7 +32,8 @@ export function MatomeCard({ thread }: { thread: any }) {
               loading="lazy"
               className="
                 h-full w-full object-cover
-                transition-transform duration-300 group-hover:scale-[1.02]
+                transition-transform duration-300
+                group-hover:scale-[1.02]
               "
             />
           </div>
@@ -37,37 +41,54 @@ export function MatomeCard({ thread }: { thread: any }) {
 
         {/* content */}
         <div className="min-w-0 flex-1">
-          <h2 className="text-[15px] font-semibold leading-snug sm:text-base">
-            <Link
-              href={`/matome/${thread.id}`}
-              className="hover:underline underline-offset-4"
+          <Link href={`/matome/${thread.id}`} className="hover:opacity-80">
+            <h2
+              className="
+              text-[15px] font-semibold leading-snug
+              text-neutral-900 sm:text-base
+              dark:text-neutral-100
+            "
             >
               {thread.title}
-            </Link>
-          </h2>
+            </h2>
 
-          {/* titleJa (thin + slightly different feel) */}
-          <p className="mt-1 text-xs text-neutral-500 whitespace-pre-wrap sm:text-sm">
-            {thread.titleJa}
-          </p>
-
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-neutral-400">
-            <span>投稿日: {formatDate(thread.postedAt)}</span>
-            <span>コメント: {thread.posts?.length ?? 0}</span>
-          </div>
-
-          {/* bodyJa preview (3 lines, softer font) */}
-          {thread.bodyJa && (
+            {/* titleJa */}
             <p
               className="
-                mt-2 line-clamp-3 whitespace-pre-wrap
-                text-[13px] leading-relaxed text-neutral-700
-                [font-family:ui-serif,Georgia,serif]
-              "
+            mt-1 whitespace-pre-wrap text-xs
+            text-neutral-500 sm:text-sm
+            dark:text-neutral-400
+            "
             >
-              {thread.bodyJa}
+              {thread.titleJa}
             </p>
-          )}
+
+            <div
+              className="
+            mt-2 flex flex-wrap items-center gap-x-3 gap-y-1
+            text-[11px] text-neutral-400
+            dark:text-neutral-500
+            "
+            >
+              <span>投稿日: {formatDate(thread.postedAt)}</span>
+              <span>コメント: {thread.posts?.length ?? 0}</span>
+            </div>
+
+            {/* bodyJa preview */}
+            {thread.bodyJa && (
+              <p
+                className="
+            mt-2 line-clamp-3 whitespace-pre-wrap
+            text-[13px] leading-relaxed
+            text-neutral-700
+            dark:text-neutral-300
+            [font-family:ui-serif,Georgia,serif]
+            "
+              >
+                {thread.bodyJa}
+              </p>
+            )}
+          </Link>
         </div>
       </div>
     </article>

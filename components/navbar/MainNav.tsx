@@ -137,6 +137,13 @@ export default function Navbar() {
                     ニュース
                   </Link>
                   <Link
+                    href="/matome"
+                    className=" hover:text-red-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    ロンドンの声・話題まとめ
+                  </Link>
+                  <Link
                     href="/chatboard"
                     className=" hover:text-red-600 transition"
                     onClick={() => setOpen(false)}

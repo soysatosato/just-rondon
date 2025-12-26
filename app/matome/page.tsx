@@ -105,7 +105,7 @@ export default async function MatomePage() {
           </p>
         </div>
 
-        <MatomeList />
+        <MatomeList pagination />
       </section>
     </main>
   );
