@@ -1,22 +1,13 @@
-"use client";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+
 import Link from "next/link";
 import TitleLogo from "@/components/home/TitleLogo";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import HeroSearch from "@/components/home/HeroSearch";
 
 export default function Page() {
-  const [value, setValue] = useState("");
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950">
       <section className="relative border-b border-slate-200 dark:border-slate-800">
@@ -42,46 +33,7 @@ export default function Page() {
               観光スポット・美術館・ミュージカル情報
             </h1>
 
-            {/* 検索バー */}
-            <div className="mx-auto flex max-w-xl items-center rounded-full bg-white/95 dark:bg-slate-900/90 p-1.5 shadow-lg shadow-slate-900/20 dark:shadow-black/40 backdrop-blur">
-              <Select value={value} onValueChange={setValue}>
-                <SelectTrigger className="border-none bg-transparent text-sm text-slate-900 dark:text-slate-100 focus-visible:ring-0 w-full px-2 py-1 [&>svg]:hidden">
-                  <SelectValue placeholder="選択してください…" />
-                </SelectTrigger>
-
-                <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
-                  <SelectItem value="sightseeing">
-                    観光スポットを探す
-                  </SelectItem>
-                  <SelectItem value="sightseeing/all?category=tour">
-                    ツアーを見る
-                  </SelectItem>
-                  <SelectItem value="museums">美術館を探す</SelectItem>
-                  <SelectItem value="musicals">ミュージカルを探す</SelectItem>
-                  <SelectItem value="chatboard">掲示板を見る</SelectItem>
-                  <SelectItem value="news">ニュースを見る</SelectItem>
-                  <SelectItem value="jobs/service-charges">
-                    サービスチャージについて調べる
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              {value ? (
-                <Button
-                  asChild
-                  className="ml-1 rounded-full px-5 text-xs font-semibold"
-                >
-                  <Link href={`/${value}`}>Go</Link>
-                </Button>
-              ) : (
-                <Button
-                  disabled
-                  className="ml-1 rounded-full px-5 text-xs font-semibold opacity-40 dark:opacity-30"
-                >
-                  Go
-                </Button>
-              )}
-            </div>
+            <HeroSearch />
 
             {/* サブテキスト */}
             <div className="mt-12 rounded-2xl bg-white/90 dark:bg-slate-900/80 p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
