@@ -23,7 +23,7 @@ type SectionGroup = {
 
 export const metadata = {
   title:
-    "ロンドンのクリスマスマーケット特集 2025 | おすすめスポット・開催情報まとめ | ロンドん！",
+    "ロンドンのクリスマスマーケット特集 2025 | おすすめスポット・開催情報まとめ | ジャスト・ロンドン",
   description:
     "ロンドンのクリスマスマーケット2025年最新版。サウスバンク、ウィンターワンダーランド、ロンドンブリッジなど、各マーケットの開催期間、見どころ、アクセス、おすすめポイントをわかりやすく紹介します。",
   keywords: [
@@ -48,7 +48,7 @@ export const metadata = {
     description:
       "ロンドンの代表的なクリスマスマーケットをエリア別に徹底紹介。人気のウィンターワンダーランドから隠れた穴場まで、旅行に役立つ情報をまとめた決定版ガイド。",
     url: "https://www.just-rondon.com/sightseeing/christmas-markets",
-    siteName: "ロンドん！ | クリスマスマーケット特集",
+    siteName: "ジャスト・ロンドン | クリスマスマーケット特集",
     locale: "ja_JP",
     type: "website",
   },

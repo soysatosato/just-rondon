@@ -8,7 +8,7 @@ import rehypeRaw from "rehype-raw";
 
 export const metadata = {
   title:
-    "ETA（英国電子渡航認証）完全ガイド 2025｜対象国・申請方法・必要書類・注意点まとめ | ロンドん！",
+    "ETA（英国電子渡航認証）完全ガイド 2025｜対象国・申請方法・必要書類・注意点まとめ | ジャスト・ロンドン",
   description:
     "2025年最新版のETA（英国電子渡航認証）について詳しく解説。日本人はいつから必要？申請手順、対象国、料金、審査日数、注意点、よくある質問まで、英国旅行前に知っておくべき情報を網羅した完全ガイド。",
   keywords: [
@@ -35,7 +35,7 @@ export const metadata = {
     description:
       "渡航前に要チェック！イギリス入国に必要なETA（電子渡航認証）について、日本語でわかりやすく解説。申請手順・必要書類・いつから義務化？など疑問を完全網羅。",
     url: "https://www.just-rondon.com/sightseeing/eta-uk-visa-guide",
-    siteName: "ロンドん！｜英国ビザ・旅行手続き情報",
+    siteName: "ジャスト・ロンドン｜英国ビザ・旅行手続き情報",
     locale: "ja_JP",
     type: "article",
   },

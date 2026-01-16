@@ -8,7 +8,8 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "ロンドン観光・ミュージカル・劇場・シアターガイド | ロンドん!",
+  title:
+    "ロンドン観光・ミュージカル・劇場・シアターガイド | ジャスト・ロンドン",
   description:
     "初めてのロンドン観光でも安心！主要ミュージカルの見どころや必見作品、あらすじやストーリー、便利なアクセス方法をわかりやすく紹介する、観光客向けガイドサイトです。",
   robots: {
@@ -21,10 +22,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://www.just-rondon.com/musicals",
-    title: "ロンドン観光・ミュージカル・劇場・シアターガイド | ロンドん!",
+    title:
+      "ロンドン観光・ミュージカル・劇場・シアターガイド | ジャスト・ロンドン",
     description:
       "初めてのロンドン観光でも安心！主要ミュージカルの見どころや必見作品、あらすじやストーリー、便利なアクセス方法をわかりやすく紹介する、観光客向けガイドサイトです。",
-    siteName: "ロンドん!",
+    siteName: "ジャスト・ロンドン",
   },
 };
 export default async function HomePage({

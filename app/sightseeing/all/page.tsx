@@ -16,7 +16,7 @@ import AttractionFilterBar from "@/components/attractions/AttractionFilterBar";
 // フィルター UI（前回提供したやつ）
 
 export const metadata = {
-  title: "ロンドン観光施設一覧 | ロンドん！",
+  title: "ロンドン観光施設一覧 | ジャスト・ロンドン",
   description:
     "ロンドンの観光施設を一覧で紹介。話題のスポットから歴史ある名所まで、まとめてチェックできます。",
 };

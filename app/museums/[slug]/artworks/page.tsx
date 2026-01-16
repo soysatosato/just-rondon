@@ -72,7 +72,7 @@ export async function generateMetadata({
   const museum = await fetchMuseumIDandName(params.slug);
 
   return {
-    title: `${museum?.name}の主要作品一覧 | ロンドん！`,
+    title: `${museum?.name}の主要作品一覧 | ジャスト・ロンドン`,
     description: `${museum?.name}の主要作品を解説。ロンドン観光で絶対に見たい美術館・注目作品、必見作品の情報をわかりやすくガイドします。`,
     robots: {
       index: true,

@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const metadata = {
-  title: "ロンドンニュース | 最新情報をまとめてチェック | ロンドん！",
+  title: "ロンドンニュース | 最新情報をまとめてチェック | ジャスト・ロンドン",
   description:
     "ロンドンの最新ニュースやイベント情報、日常生活に役立つ話題のトピックをまとめてお届けします。",
   keywords: ["ロンドン", "ニュース", "最新情報", "イベント", "観光", "話題"],
@@ -24,7 +24,7 @@ export const metadata = {
     description:
       "ロンドンの最新ニュースやイベント情報、話題のトピックをまとめてお届けします。",
     url: "https://www.just-rondon.com/news",
-    siteName: "ロンドん！ | ニュース",
+    siteName: "ジャスト・ロンドン | ニュース",
     locale: "ja_JP",
     type: "website",
   },

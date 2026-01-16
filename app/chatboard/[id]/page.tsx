@@ -21,14 +21,14 @@ export async function generateMetadata({
   // }
 
   return {
-    title: `掲示板・雑談・コミュニティ・サークル・出会い | ${post?.title} | ロンドん！`,
+    title: `掲示板・雑談・コミュニティ・サークル・出会い | ${post?.title} | ジャスト・ロンドン`,
     description: `${post?.title} に関する話題・雑談を共有できる掲示板です。旅行・趣味・雑談など、${post?.title} に関連する情報を自由に投稿・閲覧でき、コメントして他のユーザーと交流することも可能です。`,
     openGraph: {
       type: "article",
       url: `https://www.just-rondon.com/chatboard/${params.id}`,
-      title: `掲示板・雑談・コミュニティ | ${post?.title} | ロンドん！`,
+      title: `掲示板・雑談・コミュニティ | ${post?.title} | ジャスト・ロンドン`,
       description: `${post?.title} に関する話題・雑談を共有できる掲示板です。旅行・趣味・雑談など、${post?.title} に関連する情報を自由に投稿・閲覧でき、コメントして他のユーザーと交流することも可能です。`,
-      siteName: "ロンドん！",
+      siteName: "ジャスト・ロンドン",
     },
     robots: {
       index: true,

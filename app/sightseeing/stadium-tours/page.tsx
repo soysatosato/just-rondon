@@ -6,7 +6,7 @@ import ExpandableText from "@/components/card/ExpandableText";
 
 export const metadata = {
   title:
-    "テムズ川クルーズ完全ガイド | ロンドン観光を満喫するリバークルーズ | ロンドん！",
+    "テムズ川クルーズ完全ガイド | ロンドン観光を満喫するリバークルーズ | ジャスト・ロンドン",
   description:
     "ロンドン名物のテムズ川クルーズを徹底解説。ビッグ・ベン、ロンドン・アイ、タワーブリッジを眺める観光クルーズや、ナイトクルーズ、ディナークルーズまで、料金・ルート・おすすめを紹介する保存版ガイド。",
   keywords: [
@@ -35,7 +35,7 @@ export const metadata = {
     description:
       "ビッグ・ベン、ロンドン塔、ウェストミンスター寺院など、テムズ川沿いの名所を結ぶ人気クルーズ。観光、ディナー、ナイトクルーズまで徹底紹介。",
     url: "https://www.just-rondon.com/sightseeing/thames-cruise",
-    siteName: "ロンドん！ | テムズ川クルーズ特集",
+    siteName: "ジャスト・ロンドン | テムズ川クルーズ特集",
     locale: "ja_JP",
     type: "website",
   },

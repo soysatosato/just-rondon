@@ -40,7 +40,7 @@ export async function generateMetadata({
   // データが存在しない場合（404用メタ）
   if (!content) {
     return {
-      title: "ロンドン・クリスマスマーケットガイド | ロンドん!",
+      title: "ロンドン・クリスマスマーケットガイド | ジャスト・ロンドン",
       description:
         "ロンドンのクリスマスマーケット情報をまとめて紹介します。ロケーションや開催期間もチェック！",
       robots: { index: false, follow: false },
@@ -48,7 +48,7 @@ export async function generateMetadata({
   }
 
   // タイトル生成
-  const title = `${content.title} | ロンドンのクリスマスマーケット | ロンドん!`;
+  const title = `${content.title} | ロンドンのクリスマスマーケット | ジャスト・ロンドン`;
 
   // description生成（summary → mainText fallback）
   const text = content.summary || content.mainText || "";
@@ -84,7 +84,7 @@ export async function generateMetadata({
       title,
       description,
       locale: "ja_JP",
-      siteName: "ロンドん!",
+      siteName: "ジャスト・ロンドン",
       images: content.image ? [{ url: content.image }] : undefined,
     },
   };

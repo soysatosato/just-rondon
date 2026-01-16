@@ -10,7 +10,7 @@ type HomePageProps = {
   };
 };
 export const metadata: Metadata = {
-  title: "ロンドん! | ロンドン観光・美術館・展覧会ガイド",
+  title: "ジャスト・ロンドン | ロンドン観光・美術館・展覧会ガイド",
   description:
     "初めてのロンドン観光でも安心！主要美術館の見どころや必見作品、展覧会情報、便利なアクセス方法をわかりやすく紹介する、観光客向けアートガイドサイトです。",
   robots: {

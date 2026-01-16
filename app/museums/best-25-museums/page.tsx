@@ -6,7 +6,7 @@ import { Sparkles } from "lucide-react";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 
 export const metadata = {
-  title: "ロンドンの美術館おすすめセレクション| ロンドん!!",
+  title: "ロンドンの美術館おすすめセレクション| ジャスト・ロンドン",
   description:
     "ロンドン観光で絶対行くべき美術館のおすすめセレクションを紹介！ナショナルギャラリーやテートモダン、ヴィクトリア＆アルバート美術館など、無料・話題の展示情報も網羅。見どころやアクセス、最新展覧会まで初心者でも安心して楽しめるガイドです。",
   robots: {
@@ -31,7 +31,7 @@ export default async function LondonMuseumsPage() {
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-10">
           <div className="bg-indigo-600 text-white py-20 text-center">
             <Badge className="rounded-2xl px-3 py-1 text-sm mb-5">
-              <Sparkles className="mr-1 h-4 w-4" /> ロンドん！特集
+              <Sparkles className="mr-1 h-4 w-4" /> ジャスト・ロンドン特集
             </Badge>
             <h1 className="text-3xl font-bold mb-2">美術館25選</h1>
             <p className="">ロンドンで行くべき25のミュージアムを紹介！</p>
@@ -41,7 +41,8 @@ export default async function LondonMuseumsPage() {
             旅の朝、テムズはまだ薄い銀色を帯びている。
           </p>
           <p className="mt-2 text-muted-foreground leading-8 text-lg">
-            ここは〈ロンドん！〉― ロンドンに魔法の促音をひとつ足した造語。
+            ここは〈ジャスト・ロンドン〉―
+            ロンドンに魔法の促音をひとつ足した造語。
             日常と非日常の境目が、少しだけ跳ねる場所。名品も実験も、王道も路地裏も、
             25の館を選りすぐり一冊の小説みたいに緩急をつけて特集しています。
             ページの順番は、あなたの足で自由に書き換えてください。

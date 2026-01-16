@@ -52,7 +52,7 @@ export async function generateMetadata({
       url: `https://www.just-rondon.com/musicals/${params.slug}`,
       title: `${musical?.name}・${musical?.engName}｜ロンドン観光・ミュージカルガイド`,
       description: `${musical?.name}|${musical?.engName}・ミュージカルの見どころ、アクセス、あらすじ、歌などを紹介。`,
-      siteName: "ロンドん！",
+      siteName: "ジャスト・ロンドン",
     },
     robots: {
       index: true,

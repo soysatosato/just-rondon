@@ -5,7 +5,7 @@ import { fetchKidsFreeActivities } from "@/utils/actions/contents";
 
 export const metadata = {
   title:
-    "子どもと行けるロンドン無料スポット特集 | 家族で楽しむ観光ガイド | ロンドん！",
+    "子どもと行けるロンドン無料スポット特集 | 家族で楽しむ観光ガイド | ジャスト・ロンドン",
   description:
     "ロンドンで子どもと楽しめる無料観光スポットを厳選紹介。自然史博物館、科学博物館、ブリティッシュミュージアム、スカイガーデン、コーラムズ・フィールズ、プレイパーク、動物スポットなど、家族で1日たっぷり遊べる人気の無料スポットをまとめたガイドです。",
   keywords: [
@@ -33,7 +33,7 @@ export const metadata = {
     description:
       "ロンドンで子連れに人気の無料スポットを総まとめ。自然史博物館や科学博物館、スカイガーデン、公園・動物・遊び場など、親子で楽しめる場所を一覧で紹介。",
     url: "https://www.just-rondon.com/sightseeing/kids-free-activities",
-    siteName: "ロンドん！ | 子どもと無料で楽しむロンドン",
+    siteName: "ジャスト・ロンドン | 子どもと無料で楽しむロンドン",
     locale: "ja_JP",
     type: "website",
   },

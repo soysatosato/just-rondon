@@ -15,7 +15,8 @@ import Pagination from "@/components/home/Pagination";
 import { MatomeList } from "@/components/chatboard/MatomeList";
 
 export const metadata: Metadata = {
-  title: "掲示板・雑談・コミュニティ・出会い・サークル | ロンドん！話題まとめ",
+  title:
+    "掲示板・雑談・コミュニティ・出会い・サークル・話題まとめ | ジャスト・ロンドン",
   description:
     "旅行、映画、趣味、雑談、サークル、出会いなど全ジャンルに対応した匿名掲示板。気軽に投稿・閲覧できるコミュニティサイトです。",
   robots: {
@@ -28,10 +29,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://www.just-rondon.com/chatboard",
-    title: "掲示板・雑談・コミュニティ・出会い・サークル | ロンドん！",
+    title: "掲示板・雑談・コミュニティ・出会い・サークル | ジャスト・ロンドン",
     description:
       "旅行、ミュージカル、美術館、映画、趣味、雑談など全ジャンルに対応した匿名掲示板。気軽に投稿・閲覧できるコミュニティサイトです。",
-    siteName: "ロンドん！",
+    siteName: "ジャスト・ロンドン",
   },
 };
 

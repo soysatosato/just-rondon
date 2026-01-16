@@ -16,7 +16,7 @@ export default function Page() {
             <div className="relative h-full w-full overflow-hidden rounded-2xl">
               <Image
                 src="/just-rondon.png"
-                alt="ロンドん！"
+                alt="ジャスト・ロンドン"
                 fill
                 sizes="(max-width: 768px) 100vw, 80vw"
                 className="object-cover brightness-75 dark:brightness-60"
@@ -25,11 +25,13 @@ export default function Page() {
           </div>
 
           <div className="relative">
-            <TitleLogo />
-            <h1 className="mt-6 text-center text-xl font-semibold tracking-tight drop-shadow-sm sm:text-4xl text-slate-900 dark:text-slate-100">
-              ロンドン観光最強ガイド
+            <h1 className="text-center text-3xl md:text-4xl font-extrabold tracking-tight select-none">
+              <TitleLogo />
             </h1>
-            <h1 className="mt-3 mb-8 text-center text-lg  tracking-tight drop-shadow-sm sm:text-4xl text-slate-900 dark:text-slate-100">
+            <h1 className="mt-6 text-center text-xl font-semibold tracking-tight drop-shadow-sm  text-slate-900 dark:text-slate-100">
+              ロンドン観光・旅行・現地ガイド
+            </h1>
+            <h1 className="mt-3 mb-8 text-center text-lg  tracking-tight drop-shadow-sm text-slate-900 dark:text-slate-100">
               観光スポット・美術館・ミュージカル情報
             </h1>
 
@@ -42,7 +44,7 @@ export default function Page() {
               </h2>
               <div className="text-xs text-slate-600 space-y-2 leading-relaxed">
                 <p>
-                  ロンドん！は、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
+                  ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
                   定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
                   初めての方にも分かりやすく情報をまとめています。
                 </p>

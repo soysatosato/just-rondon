@@ -45,13 +45,13 @@ export default function HomePageSection({ sections }: Props) {
             </h1>
             <div className="mt-4 space-y-2 bg-black/40 p-4 rounded-lg">
               <p className="text-white text-sm md:text-base leading-snug">
-                ここは〈ロンドん！〉ロンドンの街とカルチャーに、ひとつだけ魔法の拍を加えた造語。
+                ここは〈ジャスト・ロンドン〉ロンドンの街とカルチャーに、ひとつだけ魔法の拍を加えた造語。
                 美術館も、ミュージカルも、ブログも、ニュースも。
                 日常の選択肢が少しだけ豊かになる瞬間を届けます。
               </p>
               <p className="text-white/90 text-sm md:text-base leading-snug">
                 街角の発見や情報のひとつひとつが、あなたの毎日を少しだけ鮮やかに彩る。
-                〈ロンドん！〉は、そんな小さな体験と好奇心の合言葉です。
+                〈ジャスト・ロンドン〉は、そんな小さな体験と好奇心の合言葉です。
               </p>
             </div>
           </div>

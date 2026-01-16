@@ -22,14 +22,14 @@ export async function generateMetadata({
   // }
 
   return {
-    title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ロンドん！`,
+    title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ジャスト・ロンドン`,
     description: `${musical?.name} (${musical?.engName}) の歌詞と和訳を掲載。${musical?.name} の名曲・人気曲を日本語でわかりやすく解説。ミュージカルファン必見の歌詞・翻訳ガイドサイトです。`,
     openGraph: {
       type: "article",
       url: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
-      title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ロンドん！`,
+      title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ジャスト・ロンドン`,
       description: `${musical?.name} (${musical?.engName}) の歌詞と和訳を掲載。${musical?.name} の名曲・人気曲を日本語でわかりやすく解説。`,
-      siteName: "ロンドん！",
+      siteName: "ジャスト・ロンドン",
     },
     robots: {
       index: true,

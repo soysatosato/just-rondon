@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export const metadata = {
   title:
-    "英国サービスチャージ完全ガイド｜Tipping Act 2023・従業員の権利・事業者の義務まとめ | ロンドん！",
+    "英国サービスチャージ完全ガイド｜Tipping Act 2023・従業員の権利・事業者の義務まとめ | ジャスト・ロンドン",
   description:
     "英国のレストランやホテルで一般化しているサービスチャージについて、Tipping Act 2023の内容、強制・任意の違い、従業員の権利、Tronc制度、税務・最低賃金との関係まで網羅的に解説。",
   keywords: [
@@ -36,7 +36,7 @@ export const metadata = {
     description:
       "サービスチャージは誰のもの？拒否できる？英国のTipping Act 2023に基づき、事業者・従業員双方が知るべきルールを整理。",
     url: "https://www.just-rondon.com/hospitality/uk-service-charges-guide",
-    siteName: "ロンドん！｜英国生活・法律ガイド",
+    siteName: "ジャスト・ロンドン｜英国生活・法律ガイド",
     locale: "ja_JP",
     type: "article",
   },

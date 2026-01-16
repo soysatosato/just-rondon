@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     type: "website",
     url: "https://www.just-rondon.com/matome",
     title:
-      "ロンドンの話題・現地の声まとめ | 観光のヒントが見つかる | ロンドん!",
+      "ロンドンの話題・現地の声まとめ | 観光のヒントが見つかる | ジャスト・ロンドン",
     description:
       "ロンドン観光の合間にチェックしたい、現地の声・話題・体験談のまとめ一覧。観光や滞在のヒントになるトピックを、日本語付きで読みやすくまとめています。",
-    siteName: "ロンドん!",
+    siteName: "ジャスト・ロンドン",
   },
 };
 

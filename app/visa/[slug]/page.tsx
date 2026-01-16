@@ -27,7 +27,7 @@ export async function generateMetadata({
 
   if (!content) {
     return {
-      title: "英国ビザ・入国手続きガイド | ロンドん!",
+      title: "英国ビザ・入国手続きガイド | ジャスト・ロンドン",
       description:
         "イギリス渡航前に知っておきたいビザ情報や入国要件を分かりやすく解説します。",
       robots: {
@@ -40,7 +40,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${content.title} | 英国ビザガイド | ロンドん!`;
+  const title = `${content.title} | 英国ビザガイド | ジャスト・ロンドン`;
 
   const description = content.summary
     ? `${content.summary} 英国渡航に必要な最新のビザ要件と申請手続きについて詳しく解説。`
@@ -63,7 +63,7 @@ export async function generateMetadata({
       url: canonicalUrl,
       title,
       description,
-      siteName: "ロンドん!｜英国ビザ情報",
+      siteName: "ジャスト・ロンドン｜英国ビザ情報",
       locale: "ja_JP",
     },
   };

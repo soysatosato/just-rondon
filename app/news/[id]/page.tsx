@@ -49,12 +49,12 @@ export default async function NewsDetailPage({
     image: news.image ? [news.image] : undefined,
     author: {
       "@type": "Organization",
-      name: "ロンドん!",
+      name: "ジャスト・ロンドン",
       url: "https://www.just-rondon.com",
     },
     publisher: {
       "@type": "Organization",
-      name: "ロンドん!",
+      name: "ジャスト・ロンドン",
       logo: {
         "@type": "ImageObject",
         url: "https://www.just-rondon.com/icon.png",

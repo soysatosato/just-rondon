@@ -20,12 +20,12 @@ export async function generateMetadata({
 
   if (!matome) {
     return {
-      title: "記事が見つかりません | ロンドん!",
+      title: "記事が見つかりません | ジャスト・ロンドン",
       robots: { index: false, follow: false },
     };
   }
 
-  const title = `${matome.titleJa} | 現地の声 | ロンドん!`;
+  const title = `${matome.titleJa} | 現地の声 | ジャスト・ロンドン`;
   const description =
     matome.titleJa ||
     matome.bodyJa?.slice(0, 120) ||
@@ -46,7 +46,7 @@ export async function generateMetadata({
       url: `https://www.just-rondon.com/matome/${params.id}`,
       title,
       description,
-      siteName: "ロンドん!",
+      siteName: "ジャスト・ロンドン",
     },
   };
 }
@@ -153,14 +153,14 @@ export default async function MatomeDetailPage({
 
       <div className="pt-8 text-center text-xs text-muted-foreground">
         <p className="text-xs text-muted-foreground leading-relaxed">
-          ここまで読んだあなた、完全にロンドん！住民です。
+          ここまで読んだあなた、完全にジャスト・ロンドンの住民です。
           <br />
           せっかくなので今度は この街（サイト）を観光していきませんか。
         </p>
 
         <div className="flex flex-raw items-center justify-center gap-2 mt-4">
           <Button asChild size="sm">
-            <Link href="/">ロンドん！を観光する</Link>
+            <Link href="/">ジャスト・ロンドンを観光する</Link>
           </Button>
 
           <Button asChild variant="secondary" size="sm">

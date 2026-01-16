@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata = {
   title:
-    "ロンドン観光スポット一覧 | 人気名所・おすすめ体験をまとめてチェック | ロンドん！",
+    "ロンドン観光スポット一覧 | 人気名所・おすすめ体験をまとめてチェック | ジャスト・ロンドン",
   description:
     "ロンドンの人気観光スポットやおすすめ体験、家族向けの無料スポット、季節のイベントまで、旅行に役立つ情報をわかりやすくまとめて紹介します。",
   keywords: [
@@ -27,7 +27,7 @@ export const metadata = {
     description:
       "ロンドン観光に欠かせない定番スポットから無料で楽しめる体験、季節のイベントまで、旅行前に知っておきたい情報を総まとめ。",
     url: "https://www.just-rondon.com/sightseeing",
-    siteName: "ロンドん！ | 観光スポット",
+    siteName: "ジャスト・ロンドン | 観光スポット",
     locale: "ja_JP",
     type: "website",
   },

@@ -16,7 +16,7 @@ export default function MainFooter() {
           {/* <Link href="/lyrixplorer">和訳サイト</Link> */}
         </div>
         <p className="max-w-md text-[10px] leading-relaxed">
-          ロンドん！は、ロンドンの深層に迫る力量も器量もない中途半端な存在ですが、旅の判断をほんの少し整える一文が紛れていれば、それだけで存在理由になります。
+          ジャスト・ロンドンは、ロンドンの深層に迫る力量も器量もない中途半端な存在ですが、旅の判断をほんの少し整える一文が紛れていれば、それだけで存在理由になります。
         </p>
       </div>
     </footer>

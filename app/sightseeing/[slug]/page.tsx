@@ -30,7 +30,7 @@ export async function generateMetadata({
 
   if (!attraction) {
     return {
-      title: "ロンドン観光ガイド | ロンドん!",
+      title: "ロンドン観光ガイド | ジャスト・ロンドン",
       description: "ロンドン観光に役立つ情報をまとめて紹介します。",
     };
   }
@@ -60,7 +60,7 @@ export async function generateMetadata({
       url: canonicalUrl,
       title,
       description,
-      siteName: "ロンドん!",
+      siteName: "ジャスト・ロンドン",
       locale: "ja_JP",
     },
     other: {

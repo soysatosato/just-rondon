@@ -34,7 +34,7 @@ export async function sendContact(prevState: any, formData: FormData) {
   await transporter.sendMail({
     from: process.env.FROM_EMAIL,
     to: email,
-    subject: "【ロンドん！】お問い合わせ確認メール",
+    subject: "【ジャスト・ロンドン】お問い合わせ確認メール",
     text: `${name} 様、お問い合わせありがとうございます。
 以下のリンクをクリックしてお問い合わせを確定してください：
 

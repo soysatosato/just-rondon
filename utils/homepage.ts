@@ -128,7 +128,7 @@ export const sections: Section[] = [
     title: "掲示板",
     items: [
       {
-        title: "ロンドん！掲示板",
+        title: "ジャスト・ロンドン掲示板",
         description:
           "カフェやバーの話、仕事や趣味、イベント情報…何でも自由に書き込んで、誰かの新しい発見につなげよう！",
         href: "/chatboard",

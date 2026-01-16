@@ -17,7 +17,7 @@ import { FaGlobe } from "react-icons/fa";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 
 export const metadata = {
-  title: "ロンドンの絶対行くべき美術館10選 | ロンドん!!",
+  title: "ロンドンの絶対行くべき美術館10選 | ジャスト・ロンドン",
   description:
     "ロンドン観光で絶対行くべき美術館10館を厳選紹介！ナショナルギャラリーやテートモダン、ヴィクトリア＆アルバート美術館など、無料・話題の展示情報も網羅。見どころ、アクセス、最新展覧会まで初心者でも安心して楽しめる完全ガイド。",
   robots: {

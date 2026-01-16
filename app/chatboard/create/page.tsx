@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: "掲示板投稿 | 雑談・コミュニティ・話題まとめ",
     description:
       "旅行、ミュージカル、美術館、映画、趣味、雑談など全ジャンルに対応した匿名掲示板。気軽に投稿・閲覧できるコミュニティサイトです。",
-    siteName: "ロンドん！",
+    siteName: "ジャスト・ロンドン",
   },
   robots: {
     index: true,

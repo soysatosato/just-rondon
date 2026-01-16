@@ -23,7 +23,7 @@ export default function ContactDialog() {
           >
             <span className="relative z-10 flex items-center gap-2">
               <MdEmail className="text-xl" />
-              ロンドん！無料ガイドのお問い合わせ
+              ジャスト・ロンドン | 無料ガイドのお問い合わせ
             </span>
             <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition duration-300" />
           </Button>

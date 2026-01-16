@@ -2,7 +2,7 @@ import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 import MuseumBanksy from "@/components/museums/MuseumBanksy";
 
 export const metadata = {
-  title: "ロンドンのバンクシー作品まとめ | ロンドん!!",
+  title: "ロンドンのバンクシー作品まとめ | ジャスト・ロンドン",
   description:
     "ロンドンで見られるバンクシーの代表的な作品を一覧形式(場所・マップ)でまとめました。作品の背景解説付きでストリートアート巡りや観光に役立つ情報を掲載。",
   robots: {
