@@ -50,7 +50,7 @@ export default function Navbar() {
                 />
               </span>
               <span className="text-xs text-muted-foreground font-normal italic opacity-70">
-                Live.Love.London.- ロンドン観光・旅行・現地ガイド
+                JUST RONDON - ロンドン観光・旅行・現地ガイド
               </span>
             </div>
           </Link>
@@ -319,10 +319,10 @@ export default function Navbar() {
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
-
+              {/* 
               <NavigationMenuItem>
                 <LinksDropdown />
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
             </NavigationMenuList>
             <NavigationMenuViewport />
           </NavigationMenu>
