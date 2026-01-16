@@ -175,6 +175,17 @@ function CategoryLink({ category }: { category: string }) {
   );
 }
 
+const categoryLabelMap: Record<string, string> = {
+  entertainment: "エンターテインメント・体験型アトラクション",
+  tour: "観光ツアー・街歩き・ガイド付き体験",
+  garden: "庭園・公園・自然を楽しめる名所",
+  royal: "王室・宮殿・ロイヤルファミリーゆかりの名所",
+  shop: "ショッピング・マーケット・買い物スポット",
+  architecture: "建築・街並み・写真映えする見どころ",
+  historic: "歴史・文化・世界遺産クラスの名所",
+  seasonal: "期間限定イベント・季節限定の見どころ",
+};
+
 export default async function AttractionDetail({
   params,
 }: {
@@ -188,6 +199,8 @@ export default async function AttractionDetail({
     params.slug,
     2
   );
+  const categoryLabel =
+    categoryLabelMap[attraction.category] ?? "観光・見どころ満載の人気スポット";
 
   return (
     <main className="w-full max-w-5xl mx-auto">
@@ -242,8 +255,8 @@ export default async function AttractionDetail({
         </h1>
         <p className="mt-4 text-base text-muted-foreground">
           {attraction.name} は、ロンドンを代表する
-          {attraction.category}の観光スポットで、
-          初心者からリピーターまで楽しめる場所です。
+          {categoryLabel}
+          で、初心者からリピーターまで楽しめる場所です。
         </p>
 
         <div className="flex flex-wrap items-center gap-4 mt-4">

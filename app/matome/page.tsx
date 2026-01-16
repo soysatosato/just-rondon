@@ -34,8 +34,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function MatomePage() {
-  // JSON-LD（CollectionPage）
+export default async function MatomePage({
+  searchParams,
+}: {
+  searchParams?: {
+    page?: string;
+  };
+}) {
+  const page = Math.max(1, Number(searchParams?.page ?? "1") || 1);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -105,7 +111,7 @@ export default async function MatomePage() {
           </p>
         </div>
 
-        <MatomeList pagination />
+        <MatomeList page={page} pagination />
       </section>
     </main>
   );
