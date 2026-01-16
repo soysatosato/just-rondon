@@ -25,7 +25,6 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import Image from "next/image";
 import LinksDropdown from "./LinksDropdown";
 import { useState } from "react";
 import { MdMail } from "react-icons/md";
@@ -51,12 +50,12 @@ export default function Navbar() {
                 />
               </span>
               <span className="text-xs text-muted-foreground font-normal italic opacity-70">
-                Live. Love.London.- 最強ロンドンガイド
+                Live.Love.London.- ロンドン観光・旅行・現地ガイド
               </span>
             </div>
           </Link>
           <div className="flex items-center gap-2">
-            <LinksDropdown />
+            {/* <LinksDropdown /> */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" className="p-2">
