@@ -69,6 +69,7 @@ export default function MuseumCarousel({ museums }: { museums: any[] }) {
                       className="absolute inset-0 w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                     />
                   </div>
                   <div className="p-4 flex-1 flex flex-col justify-between">

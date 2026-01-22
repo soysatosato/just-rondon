@@ -68,7 +68,7 @@ export default async function ArtworkDetailPage({
                   <FaStar key={i} size={16} />
                 ) : (
                   <Star key={i} size={16} />
-                )
+                ),
               )}
             </div>
           )}
@@ -94,6 +94,7 @@ export default async function ArtworkDetailPage({
             className="absolute inset-0 w-full h-full object-contain"
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
           />
         </div>
       )}

@@ -106,6 +106,7 @@ export default async function MuseumsPage() {
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                   />
                 </div>
 

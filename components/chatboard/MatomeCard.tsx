@@ -29,12 +29,14 @@ export function MatomeCard({ thread }: { thread: any }) {
             <img
               src={thread.imageUrl}
               alt=""
-              loading="lazy"
               className="
                 h-full w-full object-cover
                 transition-transform duration-300
                 group-hover:scale-[1.02]
               "
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
             />
           </div>
         )}

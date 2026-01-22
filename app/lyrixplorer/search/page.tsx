@@ -114,6 +114,7 @@ export default async function SearchPage({
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                   )}
@@ -132,8 +133,8 @@ export default async function SearchPage({
                       {song.year && song.month
                         ? `${song.year}年 ${song.month}月 発売`
                         : song.year
-                        ? `${song.year}年`
-                        : "リリース情報なし"}
+                          ? `${song.year}年`
+                          : "リリース情報なし"}
                     </span>
                   </div>
                 </CardContent>

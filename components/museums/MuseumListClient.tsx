@@ -18,7 +18,7 @@ const MuseumsMapComponent = dynamic(
   {
     ssr: false,
     loading: () => <Skeleton className=" h-[200px] w-full" />,
-  }
+  },
 );
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -126,6 +126,7 @@ export default function MuseumListClient({
                             className="absolute inset-0 w-full h-full object-cover"
                             loading="lazy"
                             decoding="async"
+                            fetchPriority="low"
                           />
                         </div>
                       </div>

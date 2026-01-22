@@ -99,6 +99,9 @@ export default async function AlbumPage({
           ring-1 ring-black/10 dark:ring-white/20
           shadow-sm
         "
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
             />
           )}
 
@@ -164,6 +167,7 @@ export default async function AlbumPage({
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                   />
                 </div>
               )}

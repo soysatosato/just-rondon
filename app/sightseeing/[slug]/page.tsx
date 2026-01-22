@@ -197,7 +197,7 @@ export default async function AttractionDetail({
   const related = await fetchRandomAttractionsByCategory(
     attraction.category,
     params.slug,
-    2
+    2,
   );
   const categoryLabel =
     categoryLabelMap[attraction.category] ?? "観光・見どころ満載の人気スポット";
@@ -231,6 +231,9 @@ export default async function AttractionDetail({
               src={attraction.image}
               alt={`${attraction.name}｜ロンドン観光スポット`}
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
             />
           </div>
         </DialogTrigger>
@@ -241,6 +244,9 @@ export default async function AttractionDetail({
             src={attraction.image}
             alt={`${attraction.name}｜ロンドン観光スポット`}
             className="w-full h-full object-contain"
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
           />
         </DialogContent>
       </Dialog>
@@ -297,7 +303,7 @@ export default async function AttractionDetail({
                 attraction.engName ? (
                   <Link
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      attraction.engName
+                      attraction.engName,
                     )}&query_place_id=${attraction.lat},${attraction.lng}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -340,7 +346,7 @@ export default async function AttractionDetail({
                     {attraction.engName && (
                       <Link
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                          attraction.engName
+                          attraction.engName,
                         )}&query_place_id=${attraction.lat},${attraction.lng}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -367,6 +373,7 @@ export default async function AttractionDetail({
               className="absolute inset-0 w-full h-full object-contain drop-shadow-md dark:bg-neutral-100"
               loading="lazy"
               decoding="async"
+              fetchPriority="low"
             />
           </div>
 
@@ -396,6 +403,9 @@ export default async function AttractionDetail({
                       src={spot.image}
                       alt={`${spot.name}｜ロンドン観光スポット`}
                       className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
                     />
                   </div>
                   <p className="mt-2 text-sm font-medium group-hover:underline">

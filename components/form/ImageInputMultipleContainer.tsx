@@ -34,6 +34,7 @@ export default function ImageInputMultipleContainer(props: props) {
               className="rounded object-cover w-24 h-24"
               loading="lazy"
               decoding="async"
+              fetchPriority="low"
             />
           ))
         ) : (

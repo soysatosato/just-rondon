@@ -24,6 +24,7 @@ export default function ImageCarousel({ images, name }: Props) {
               className="absolute inset-0 w-full h-full rounded-md object-cover"
               loading="lazy"
               decoding="async"
+              fetchPriority="low"
             />
           </CarouselItem>
         ))}

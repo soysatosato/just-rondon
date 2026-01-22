@@ -59,6 +59,7 @@ export default function MuseumsMapComponent({ museums }: Props) {
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                   />
                 </div>
               )}

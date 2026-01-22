@@ -102,6 +102,8 @@ export default async function LyriXplolerHome() {
                             alt={song?.name}
                             className="h-full w-full object-cover transition group-hover:scale-105"
                             loading="lazy"
+                            decoding="async"
+                            fetchPriority="low"
                           />
                         ) : (
                           <div className="h-full w-full bg-gradient-to-br from-pink-500/40 via-purple-500/40 to-sky-500/40" />
@@ -192,6 +194,9 @@ export default async function LyriXplolerHome() {
                           src={thumbnail}
                           alt={song.lyrics?.name ?? ""}
                           className="h-full w-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                          fetchPriority="low"
                         />
                       ) : (
                         <div className="h-full w-full bg-gradient-to-br from-sky-700/40 via-purple-600/40 to-pink-500/40" />
@@ -266,6 +271,8 @@ export default async function LyriXplolerHome() {
                         src={artist.imageUrl}
                         alt={artist.name}
                         loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
                         className="h-full w-full object-cover"
                       />
                     ) : (

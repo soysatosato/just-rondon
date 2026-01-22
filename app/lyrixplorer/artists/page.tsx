@@ -21,7 +21,7 @@ export default async function ArtistsPage({
   const page = Math.max(1, Number(searchParams?.page ?? 1) || 1);
   const itemsPerPage = Math.max(
     1,
-    Number(searchParams?.itemsPerPage ?? 12) || 12
+    Number(searchParams?.itemsPerPage ?? 12) || 12,
   );
   const { artists, total } = await fetchArtists(page, itemsPerPage);
 
@@ -47,6 +47,8 @@ export default async function ArtistsPage({
                       src={a.imageUrl}
                       alt={a.name}
                       loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
                       className="h-full w-full object-cover"
                     />
                   ) : (

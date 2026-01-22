@@ -112,6 +112,7 @@ export default async function HarryPotterPage() {
                       className="absolute inset-0 w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                     />
                   </div>
                 )}

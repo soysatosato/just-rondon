@@ -91,6 +91,7 @@ export default async function musicalDetailsPage({
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
           />
 
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">

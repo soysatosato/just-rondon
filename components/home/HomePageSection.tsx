@@ -26,6 +26,7 @@ export default function HomePageSection({ sections }: Props) {
             className="absolute inset-0 w-full h-full rounded-xl object-cover"
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
           />
 
           <div className="absolute inset-0 flex flex-col justify-center items-center px-4">

@@ -88,6 +88,7 @@ export default function HighlightedArtworks({
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105"
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3 rounded-b-2xl">
                       <h3 className="text-lg md:text-xl font-semibold tracking-wide text-white">

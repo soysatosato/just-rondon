@@ -80,6 +80,7 @@ export default async function RoyalAcrivitiesListPage() {
                       className="w-full h-48 object-cover rounded-t-lg"
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                     />
                   )}
                   <CardHeader>

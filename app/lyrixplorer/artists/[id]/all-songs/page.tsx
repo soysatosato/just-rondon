@@ -64,7 +64,7 @@ export default async function SongsByArtistPage({
   const { songs, total, artist } = await fetchLyricsByArtist(
     params.id,
     currentPage,
-    itemsPerPage
+    itemsPerPage,
   );
 
   return (
@@ -117,6 +117,7 @@ export default async function SongsByArtistPage({
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                   )}

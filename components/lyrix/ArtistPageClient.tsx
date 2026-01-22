@@ -43,6 +43,9 @@ export default function ArtistPageClient({ artist, data }: any) {
             src={artist.imageUrl}
             className="w-32 h-32 rounded-full object-cover shadow-lg"
             alt={artist.name}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
           />
         )}
 
@@ -135,6 +138,7 @@ export default function ArtistPageClient({ artist, data }: any) {
                               className="absolute inset-0 w-full h-full object-cover"
                               loading="lazy"
                               decoding="async"
+                              fetchPriority="low"
                             />
                           </div>
                         )}
@@ -184,6 +188,9 @@ export default function ArtistPageClient({ artist, data }: any) {
                       width="64"
                       height="40"
                       className="object-cover rounded shadow"
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
                     />
                   </div>
                 )}

@@ -129,6 +129,7 @@ export default async function Page() {
                       className="absolute inset-0 w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                     />
                   </div>
                   <CardHeader className="space-y-1">
@@ -197,6 +198,7 @@ export default async function Page() {
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                     <CardHeader className="space-y-1">
@@ -235,6 +237,7 @@ export default async function Page() {
                       className="absolute inset-0 w-full h-full object-cover"
                       loading="lazy"
                       decoding="async"
+                      fetchPriority="low"
                     />
                   </div>
                   <CardHeader className="space-y-1">
@@ -277,6 +280,7 @@ export default async function Page() {
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                     <CardContent className="space-y-1 py-3">
@@ -312,6 +316,7 @@ export default async function Page() {
                           className="absolute inset-0 w-full h-full object-cover"
                           loading="lazy"
                           decoding="async"
+                          fetchPriority="low"
                         />
                       </div>
                       <CardContent className="space-y-1 py-2">
@@ -344,6 +349,7 @@ export default async function Page() {
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                     <CardContent className="space-y-1 py-3">
@@ -392,6 +398,7 @@ export default async function Page() {
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                     <CardContent className="space-y-1 py-3">
@@ -432,6 +439,7 @@ export default async function Page() {
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                     <CardHeader className="space-y-1">

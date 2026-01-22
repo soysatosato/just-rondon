@@ -87,6 +87,7 @@ export default function MuseumBanksy() {
                             className="absolute inset-0 w-full h-full object-cover"
                             loading="lazy"
                             decoding="async"
+                            fetchPriority="low"
                           />
                         )}
                       </div>
@@ -114,6 +115,7 @@ export default function MuseumBanksy() {
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     )}
                   </div>
@@ -123,7 +125,7 @@ export default function MuseumBanksy() {
                     <Button asChild variant="secondary" size="sm">
                       <Link
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                          art.address + " London"
+                          art.address + " London",
                         )}`}
                         target="_blank"
                         rel="noreferrer"

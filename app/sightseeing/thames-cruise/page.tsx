@@ -28,6 +28,7 @@ export default async function ThamesRiverCruisesListPage() {
             className="absolute inset-0 w-full h-full object-cover opacity-60"
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
           />
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
         </div>
@@ -90,6 +91,7 @@ export default async function ThamesRiverCruisesListPage() {
                     className="w-full h-48 object-cover rounded-t-lg"
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                   />
                 )}
 

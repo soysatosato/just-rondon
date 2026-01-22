@@ -34,6 +34,7 @@ export default function ImageInputContainer(props: ImageInputContainerProps) {
           className="rounded object-cover mb-4 w-24 h-24"
           loading="lazy"
           decoding="async"
+          fetchPriority="low"
         />
       ) : (
         userIcon

@@ -57,7 +57,7 @@ export default async function SongsPage({
   const { songs, total } = await fetchSongs(
     musical.id,
     currentPage,
-    itemsPerPage
+    itemsPerPage,
   );
 
   return (
@@ -119,6 +119,7 @@ export default async function SongsPage({
                         className="absolute inset-0 w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                     </div>
                   )}

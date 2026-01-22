@@ -18,6 +18,7 @@ export default function UserInfo({ profile }: props) {
         className="rounded h-12 w-12 object-cover"
         loading="lazy"
         decoding="async"
+        fetchPriority="low"
       />
       <div>
         <p>

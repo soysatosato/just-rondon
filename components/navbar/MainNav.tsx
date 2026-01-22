@@ -47,6 +47,7 @@ export default function Navbar() {
                   className="inline-block mb-2"
                   loading="lazy"
                   decoding="async"
+                  fetchPriority="low"
                 />
               </span>
               <span className="text-xs text-muted-foreground font-normal italic opacity-70">
@@ -180,6 +181,7 @@ export default function Navbar() {
                   className="inline-block mb-2"
                   loading="lazy"
                   decoding="async"
+                  fetchPriority="low"
                 />
               </span>
               <span className="text-xs text-gray-600 font-normal italic opacity-70">

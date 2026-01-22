@@ -55,6 +55,7 @@ export default function ArtworksAccordion({ slug, rooms }: Props) {
                         className="rounded-md object-cover"
                         loading="lazy"
                         decoding="async"
+                        fetchPriority="low"
                       />
                       {/* ボタンをオーバーレイ */}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-100 rounded-md">

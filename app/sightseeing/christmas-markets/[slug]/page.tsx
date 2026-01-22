@@ -96,7 +96,7 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
   if (!content) return notFound();
 
   const sections = content.sections.sort(
-    (a, b) => a.displayOrder - b.displayOrder
+    (a, b) => a.displayOrder - b.displayOrder,
   );
 
   return (
@@ -121,6 +121,7 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
           />
         </div>
       )}

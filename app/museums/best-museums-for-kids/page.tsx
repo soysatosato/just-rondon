@@ -99,7 +99,7 @@ export default async function MuseumsPage() {
 
                     <Link
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        museum.name + " " + museum.address + " London"
+                        museum.name + " " + museum.address + " London",
                       )}`}
                       target="_blank"
                       className="px-4 py-2 rounded-lg border border-border text-foreground hover:bg-muted transition"
@@ -138,6 +138,7 @@ export default async function MuseumsPage() {
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
+                    fetchPriority="low"
                   />
                 </div>
 
