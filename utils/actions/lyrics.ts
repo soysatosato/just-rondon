@@ -226,7 +226,7 @@ export const fetchLyricsByArtist = async (
   const songs = await db.lyrics.findMany({
     where: { artistId },
     include: {
-      artist: { select: { engName: true, name: true, imageUrl: true } },
+      artist: true,
     },
     orderBy: { year: "desc", month: "desc" },
     skip: (page - 1) * limit,
@@ -284,9 +284,7 @@ export const fetchSortedLyrics = async (
   const songs = await db.lyrics.findMany({
     where: { artistId },
     include: {
-      artist: {
-        select: { name: true, engName: true, imageUrl: true },
-      },
+      artist: true,
     },
   });
 
@@ -488,10 +486,7 @@ export async function fetchTodaysAlbumPick() {
   // ③ アーティスト名取得
   const artist = await db.artist.findUnique({
     where: { id: pick.artistId },
-    select: {
-      id: true,
-      name: true,
-    },
+
   });
 
   if (!artist || !pick.album) return null;
@@ -501,10 +496,6 @@ export async function fetchTodaysAlbumPick() {
     where: {
       artistId: pick.artistId,
       album: pick.album,
-    },
-    select: {
-      year: true,
-      month: true,
     },
     orderBy: {
       albumOrder: "asc",

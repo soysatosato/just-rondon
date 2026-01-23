@@ -271,20 +271,13 @@ export async function getTodaysPicks(limit = 3) {
   // 決定的なpivot（毎日変わる）
   const pivot = seed.toString(36);
 
-  const select = {
-    name: true,
-    tagline: true,
-    summary: true,
-    slug: true,
-    image: true,
-  } as const;
+
 
   // ① pivot以降から取得（ここで終わることが多い）
   const first = await db.attraction.findMany({
     where: { slug: { gte: pivot } },
     orderBy: { slug: "asc" },
     take: limit,
-    select,
   });
 
   if (first.length === limit) {
@@ -301,7 +294,6 @@ export async function getTodaysPicks(limit = 3) {
     where: { slug: { lt: pivot } },
     orderBy: { slug: "asc" },
     take: limit - first.length,
-    select,
   });
 
   const items = [...first, ...second];

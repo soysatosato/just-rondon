@@ -62,7 +62,6 @@ export const fetchRandomAttractionsByCategory = async (
     },
     orderBy: { slug: "asc" },
     take: limit,
-    select: { slug: true, name: true, image: true, engName: true },
   });
 };
 
@@ -128,13 +127,7 @@ export async function fetchAllAttractions({
     orderBy,
     skip,
     take,
-    select: {
-      slug: true,
-      name: true,
-      image: true,
-      engName: true,
-      recommendLevel: true,
-    },
+
   });
 
   const totalCount = totalCountPromise ? await totalCountPromise : undefined;
