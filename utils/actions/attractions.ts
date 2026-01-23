@@ -66,7 +66,7 @@ export const fetchRandomAttractionsByCategory = async (
   });
 };
 
-export const fetchMustSeeAttractionsCached = unstable_cache(
+export const fetchMustSeeAttractions = unstable_cache(
   async () =>
     db.attraction.findMany({
       where: { mustSee: true },
