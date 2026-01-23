@@ -127,13 +127,12 @@ export async function fetchAllAttractions({
     orderBy,
     skip,
     take,
-
   });
 
   const totalCount = totalCountPromise ? await totalCountPromise : undefined;
 
   return {
     facilities,
-    totalCount, // 必要な場合だけ入る
+    totalCount: totalCount ?? 0
   };
 }
