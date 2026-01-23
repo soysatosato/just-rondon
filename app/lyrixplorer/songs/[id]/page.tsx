@@ -57,7 +57,7 @@ export default async function SongDetailsPage({
   params: { id: string };
 }) {
   const song = await fetchLyricsDetails(params.id);
-  if (!song) redirect("/musicals");
+  if (!song) redirect("/lyrixplorer");
   return (
     <>
       <div className="max-w-3xl mx-auto p-8 bg-background rounded-2xl shadow-lg">

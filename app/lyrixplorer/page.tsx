@@ -12,6 +12,7 @@ import {
   fetchHotAlbums,
   fetchHotArtistsRandom,
   fetchLatestTop10Lyrics,
+  fetchLyrixplorerHomeData,
   fetchTodaysAlbumPick,
   fetchTodaysPicks,
 } from "@/utils/actions/lyrics";
@@ -51,12 +52,8 @@ export const metadata: Metadata = {
 };
 
 export default async function LyriXplolerHome() {
-  const top10 = await fetchLatestTop10Lyrics();
-  const todaysPick = await fetchTodaysPicks();
-  const todaysAlbumPick = await fetchTodaysAlbumPick();
-  const hotAlbums = await fetchHotAlbums();
-  const hotArtists = await fetchHotArtistsRandom();
-
+  const { top10, todaysPick, todaysAlbumPick, hotAlbums, hotArtists } =
+    await fetchLyrixplorerHomeData();
   return (
     <main className="min-h-screen bg-gradient-to-b">
       <div className="px-4 py-4 lg:px-6 lg:py-14 space-y-14">
@@ -157,8 +154,6 @@ export default async function LyriXplolerHome() {
                 </CardTitle>
                 <CardDescription className="text-xs text-slate-400">
                   {todaysAlbumPick.artistName}
-                  {todaysAlbumPick.year > 0 && ` · ${todaysAlbumPick.year}`}
-                  {todaysAlbumPick.month > 0 && `.${todaysAlbumPick.month}`}
                 </CardDescription>
               </Card>
             </Link>
@@ -281,7 +276,7 @@ export default async function LyriXplolerHome() {
                       <span>
                         {artist.engName
                           .split(" ")
-                          .map((p) => p[0])
+                          .map((p: string) => p[0])
                           .join("")
                           .toUpperCase()}
                       </span>

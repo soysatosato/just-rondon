@@ -86,18 +86,75 @@ export const STATIC_TOURS = [
 /* -----------------------------------------------------
    共通：ランダム取得ヘルパー
 ----------------------------------------------------- */
-async function getRandom(where: any, take: number) {
-  const count = await db.attraction.count({ where });
-  if (count === 0) return [];
-  if (count <= take) return db.attraction.findMany({ where });
+function hashToUint32(s: string) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  }
+  return h;
+}
 
-  const skip = Math.floor(Math.random() * (count - take + 1));
+function todayKeyUTC() {
+  return new Date().toISOString().slice(0, 10);
+}
 
-  return db.attraction.findMany({ where, skip, take });
+/* ===============================
+   🔥 モジュール内キャッシュ
+   （DBは1日1回・1リクエスト1回）
+================================ */
+let cachedPool: any[] | null = null;
+let cachedDay: string | null = null;
+
+async function getAttractionPool() {
+  const day = todayKeyUTC();
+
+  if (cachedPool && cachedDay === day) {
+    return cachedPool;
+  }
+
+  // 👇 DBアクセスはここ1回だけ
+  cachedPool = await db.attraction.findMany({
+    where: {
+      OR: [
+        { recommendLevel: 5 },
+        { mustSee: true },
+        { category: { in: ["seasonal", "royal", "tour"] } },
+        { isForKids: true },
+        { isFree: true },
+      ],
+    },
+    orderBy: { slug: "asc" },
+    take: 100,
+  });
+
+  cachedDay = day;
+  return cachedPool;
+}
+
+/* ===============================
+   共通ピック関数（DB触らない）
+================================ */
+function pick<T>(
+  list: T[],
+  filter: (a: T) => boolean,
+  seed: number,
+  take: number,
+): T[] {
+  const filtered = list.filter(filter);
+  if (filtered.length === 0) return [];
+
+  const offset = seed % filtered.length;
+  return [...filtered.slice(offset), ...filtered.slice(0, offset)].slice(
+    0,
+    take,
+  );
 }
 
 export async function getHighlightAttractions() {
-  const items = await getRandom({ recommendLevel: 5 }, 2);
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "highlight");
+
+  const items = pick(pool, (a) => a.recommendLevel === 5, seed, 2);
 
   return [
     ...items.map((a) => ({
@@ -112,7 +169,10 @@ export async function getHighlightAttractions() {
 }
 
 export async function getMustSeeCategories() {
-  const extra = await getRandom({ mustSee: true }, 1);
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "mustSee");
+
+  const extra = pick(pool, (a) => a.mustSee, seed, 1);
 
   return [
     ...STATIC_MUST_SEE_CATEGORIES,
@@ -126,7 +186,10 @@ export async function getMustSeeCategories() {
 }
 
 export async function getSeasonalAttractions() {
-  const items = await getRandom({ category: "seasonal" }, 3);
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "seasonal");
+
+  const items = pick(pool, (a) => a.category === "seasonal", seed, 1);
 
   return [
     STATIC_SEASONAL,
@@ -140,7 +203,10 @@ export async function getSeasonalAttractions() {
 }
 
 export async function getRoyalAttractions() {
-  const items = await getRandom({ category: "royal" }, 3);
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "royal");
+
+  const items = pick(pool, (a) => a.category === "royal", seed, 2);
 
   return [
     STATIC_ROYAL,
@@ -155,7 +221,10 @@ export async function getRoyalAttractions() {
 }
 
 export async function getTours() {
-  const items = await getRandom({ category: "tour" }, 3);
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "tour");
+
+  const items = pick(pool, (a) => a.category === "tour", seed, 1);
 
   return [
     ...STATIC_TOURS,
@@ -171,8 +240,10 @@ export async function getTours() {
 }
 
 export async function getKidsAttractions() {
-  const items = await getRandom({ isForKids: true }, 4);
-  return items.map((a) => ({
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "kids");
+
+  return pick(pool, (a) => a.isForKids, seed, 2).map((a) => ({
     title: a.name,
     description: a.tagline || a.summary || "",
     slug: a.slug,
@@ -182,32 +253,59 @@ export async function getKidsAttractions() {
 }
 
 export async function getFreeAttractions() {
-  const items = await getRandom({ isFree: true }, 3);
-  return items.map((a) => ({
+  const pool = await getAttractionPool();
+  const seed = hashToUint32(todayKeyUTC() + "free");
+
+  return pick(pool, (a) => a.isFree, seed, 3).map((a) => ({
     title: a.name,
     description: a.tagline || a.summary || "",
     slug: a.slug,
     image: a.image,
   }));
 }
+export async function getTodaysPicks(limit = 3) {
+  // 日替わりキー（UTC。Asia/Tokyoにしたければ後述）
+  const day = new Date().toISOString().slice(0, 10);
+  const seed = hashToUint32(`todays-picks-${day}`);
 
-async function getRandomAttractions(limit: number) {
-  const ids = await db.attraction.findMany({
-    select: { id: true },
+  // 決定的なpivot（毎日変わる）
+  const pivot = seed.toString(36);
+
+  const select = {
+    name: true,
+    tagline: true,
+    summary: true,
+    slug: true,
+    image: true,
+  } as const;
+
+  // ① pivot以降から取得（ここで終わることが多い）
+  const first = await db.attraction.findMany({
+    where: { slug: { gte: pivot } },
+    orderBy: { slug: "asc" },
+    take: limit,
+    select,
   });
 
-  if (ids.length === 0) return [];
+  if (first.length === limit) {
+    return first.map((a) => ({
+      title: a.name,
+      description: a.tagline || a.summary || "",
+      slug: a.slug,
+      image: a.image,
+    }));
+  }
 
-  const shuffled = ids.sort(() => Math.random() - 0.5).slice(0, limit);
-  const pickIds = shuffled.map((i) => i.id);
-
-  return db.attraction.findMany({
-    where: { id: { in: pickIds } },
+  // ② 足りない分だけ先頭から補完
+  const second = await db.attraction.findMany({
+    where: { slug: { lt: pivot } },
+    orderBy: { slug: "asc" },
+    take: limit - first.length,
+    select,
   });
-}
 
-export async function getTodaysPicks(count = 3) {
-  const items = await getRandomAttractions(count);
+  const items = [...first, ...second];
+
   return items.map((a) => ({
     title: a.name,
     description: a.tagline || a.summary || "",

@@ -80,7 +80,7 @@ export default async function Page() {
   const [
     highlightAttractions,
     mustSeeCategories,
-    seasonalAttractions,
+    // seasonalAttractions,
     royalAttractions,
     tours,
     kidsAttractions,
@@ -89,7 +89,7 @@ export default async function Page() {
   ] = await Promise.all([
     getHighlightAttractions(),
     getMustSeeCategories(),
-    getSeasonalAttractions(),
+    // getSeasonalAttractions(),
     getRoyalAttractions(),
     getTours(),
     getKidsAttractions(),
@@ -265,8 +265,7 @@ export default async function Page() {
           </Card>
         </section>
 
-        {/* 季節イベント（grid → carousel） */}
-        <section className="space-y-6">
+        {/* <section className="space-y-6">
           <h2 className="text-xl font-semibold">季節イベント</h2>
 
           <CardCarousel>
@@ -295,7 +294,7 @@ export default async function Page() {
               </div>
             ))}
           </CardCarousel>
-        </section>
+        </section> */}
 
         {/* 王室ゆかり（grid → carousel） */}
         <section className="space-y-4">
@@ -415,14 +414,16 @@ export default async function Page() {
           </CardCarousel>
         </section>
 
-        {/* ミュージアム（grid → carousel） */}
         <section className="space-y-4">
           <h2 className="text-xl font-semibold">
-            ロンドンの必見ミュージアム & アートギャラリー
+            無料で楽しめるロンドンの施設
           </h2>
           <p className="max-w-4xl text-sm text-slate-600 dark:text-slate-300">
-            ロンドンの多くの国立博物館・美術館は入場無料（特別展は有料）で、
-            コスパの面でも世界トップクラス。雨の日は「ミュージアムはしご」もおすすめです。
+            ロンドンには、国立博物館や美術館だけでなく、
+            公園、マーケット、歴史的建造物、展望スポットなど、
+            入場無料で楽しめる施設や見どころが数多くあります
+            （一部エリアや特別展示は有料の場合あり）。
+            予算を抑えながらも、ロンドンらしい文化や街の雰囲気を存分に味わえるのが魅力です。
           </p>
 
           <CardCarousel>

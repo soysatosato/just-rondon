@@ -165,7 +165,6 @@ export default async function VisaGuidePage({
 
 
 
-    /* 👇 表スタイルを大幅に強化 */
     [&_table]:w-full
     [&_table]:border-collapse
     [&_table]:overflow-hidden

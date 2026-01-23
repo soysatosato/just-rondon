@@ -1,9 +1,112 @@
 "use server";
-
+import { cache } from "react";
 import { Prisma } from "@prisma/client";
 import db from "../db";
 import nodemailer from "nodemailer";
 import { redirect } from "next/navigation";
+
+function hashToUint32(s: string) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+function dayKeyUTC() {
+  return new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+}
+function rotate<T>(arr: T[], seed: number) {
+  if (arr.length === 0) return arr;
+  const offset = seed % arr.length;
+  return [...arr.slice(offset), ...arr.slice(0, offset)];
+}
+
+export async function fetchLyrixplorerHomeData() {
+  const day = dayKeyUTC();
+  const seedBase = hashToUint32(`lyrixplorer|${day}`);
+
+  // 🔥 DBは1回だけ
+  // ランキング2種 + 曲 + アーティスト を全部一緒に引く
+  const rankings = await db.ranking.findMany({
+    where: {
+      OR: [{ type: "HOT_SONGS" }, { type: "HOT_ALBUM" }],
+    },
+    orderBy: { periodEnd: "desc" }, // 最新が先頭に来る
+    take: 300, // 週次ランキング想定。多めに取ってもOK
+    include: {
+      lyrics: { include: { artist: true } },
+      artist: true,
+    },
+  });
+
+  // ここからは JS 処理（DB触らない）
+
+  const latestSongs = await db.ranking.findFirst({
+    where: { type: "HOT_SONGS", lyricsId: { not: null } },
+    orderBy: { periodEnd: "desc" },
+    select: { periodEnd: true },
+  });
+
+  const top10 = latestSongs
+    ? await db.ranking.findMany({
+        where: {
+          type: "HOT_SONGS",
+          periodEnd: latestSongs.periodEnd,
+          lyricsId: { not: null },
+        },
+        orderBy: { rank: "asc" },
+        take: 10,
+        include: { lyrics: { include: { artist: true } } },
+      })
+    : [];
+
+  const hotAlbums = await db.ranking.findMany({
+    where: { type: "HOT_ALBUM" },
+    orderBy: [{ periodEnd: "desc" }, { rank: "asc" }],
+    take: 5,
+    include: { artist: true },
+  });
+
+  // 今日の曲ピック：top10から回す（なければ空）
+  const todaysPick = rotate(
+    top10.map((r) => r.lyrics).filter(Boolean) as any[],
+    seedBase + 11,
+  ).slice(0, 3);
+
+  // hotArtists：hotAlbumsやtop10由来のartistを回す（DB触らない）
+  const artistsFromRankings = [
+    ...top10.map((r) => r.lyrics?.artist).filter(Boolean),
+    ...hotAlbums.map((r) => r.artist).filter(Boolean),
+  ] as any[];
+
+  // 重複排除
+  const uniqArtistsMap = new Map<string, any>();
+  for (const a of artistsFromRankings) {
+    if (!uniqArtistsMap.has(a.id)) uniqArtistsMap.set(a.id, a);
+  }
+  const uniqArtists = [...uniqArtistsMap.values()];
+
+  const hotArtists = rotate(uniqArtists, seedBase + 22).slice(0, 6);
+
+  // todaysAlbumPick：hotAlbumsから日替わり1つ（DB触らない）
+  const todaysAlbumPick = hotAlbums.length
+    ? (() => {
+        const pick = rotate(hotAlbums, seedBase + 33)[0];
+
+        return {
+          artistId: pick.artistId ?? pick.artist?.id ?? "",
+          album: pick.album ?? "",
+          artistName: pick.artist?.name ?? "",
+        };
+      })()
+    : null;
+
+  return {
+    top10,
+    todaysPick,
+    todaysAlbumPick,
+    hotAlbums,
+    hotArtists,
+  };
+}
 
 export const fetchLyricsbyQuery = async ({
   q,
@@ -69,7 +172,13 @@ export const fetchLyricsbyQuery = async ({
   };
 };
 
-export async function fetchLyricsDetails(id: string) {
+const seedFromString = (s: string) => {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+};
+
+export const fetchLyricsDetails = cache(async (id: string) => {
   const song = await db.lyrics.findUnique({
     where: { id },
     include: { artist: true },
@@ -79,76 +188,40 @@ export async function fetchLyricsDetails(id: string) {
 
   const RELATED_COUNT = 3;
 
-  async function getRandomSongs(where: any) {
-    const ids = await db.lyrics.findMany({
-      select: { id: true },
-      where: {
-        ...where,
-        id: { not: id },
-      },
-    });
-
-    // 件数が足りなければそのまま返す
-    if (ids.length === 0) return [];
-
-    // ランダム抽選
-    const pickedIds = shuffle(ids.map((i) => i.id)).slice(0, RELATED_COUNT);
-
-    return db.lyrics.findMany({
-      where: { id: { in: pickedIds } },
-      include: { artist: true },
-    });
+  if (!song.genre) {
+    return { ...song, relatedSongs: [] };
   }
 
-  // 1. album 優先
-  let relatedSongs: any[] = [];
-  if (song.album) {
-    relatedSongs = await getRandomSongs({ album: song.album });
+  // ✅ ここが1クエリ（count/skip/ループ廃止）
+  const candidates = await db.lyrics.findMany({
+    where: {
+      genre: song.genre,
+      id: { not: id },
+    },
+    orderBy: { id: "asc" },
+    take: 30, // ここは調整OK（20〜50）
+    include: { artist: true },
+  });
+
+  if (candidates.length === 0) {
+    return { ...song, relatedSongs: [] };
   }
 
-  // 2. artist fallback
-  if (relatedSongs.length < RELATED_COUNT) {
-    const remain = RELATED_COUNT - relatedSongs.length;
-    const more = await getRandomSongs({ artistId: song.artistId });
-    relatedSongs = mergeAndLimit(relatedSongs, more, RELATED_COUNT);
-  }
-
-  // 3. genre fallback
-  if (song.genre && relatedSongs.length < RELATED_COUNT) {
-    const remain = RELATED_COUNT - relatedSongs.length;
-    const more = await getRandomSongs({ genre: song.genre });
-    relatedSongs = mergeAndLimit(relatedSongs, more, RELATED_COUNT);
-  }
-
-  // 4. 全体ランダム fallback
-  if (relatedSongs.length < RELATED_COUNT) {
-    const more = await getRandomSongs({});
-    relatedSongs = mergeAndLimit(relatedSongs, more, RELATED_COUNT);
-  }
+  // 決定的に「ずらして」3件取る
+  const seed = seedFromString(`${id}|${song.genre}`);
+  const offset = seed % candidates.length;
+  const relatedSongs = [
+    ...candidates.slice(offset),
+    ...candidates.slice(0, offset),
+  ].slice(0, Math.min(RELATED_COUNT, candidates.length));
 
   return { ...song, relatedSongs };
-}
-
-// ---------- Utility Functions ----------
-
-// 配列をランダムシャッフル
-function shuffle<T>(array: T[]): T[] {
-  return [...array].sort(() => Math.random() - 0.5);
-}
-
-// 重複を避けつつ最大 count 件に揃える
-function mergeAndLimit(existing: any[], add: any[], count: number) {
-  const merged = [...existing];
-  add.forEach((item) => {
-    if (!merged.some((m) => m.id === item.id)) merged.push(item);
-  });
-  return merged.slice(0, count);
-}
+});
 
 export const fetchLyricsByArtist = async (
   artistId: string,
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ) => {
   const songs = await db.lyrics.findMany({
     where: { artistId },
@@ -205,7 +278,7 @@ export const fetchArtistDetails = async (id: string) => {
 export const fetchSortedLyrics = async (
   artistId: string,
   sortBy: "album" | "name" | "year" | "views" = "album",
-  sortOrder: "asc" | "desc" = "asc"
+  sortOrder: "asc" | "desc" = "asc",
 ) => {
   // 全曲取得（後でまとめて処理）
   const songs = await db.lyrics.findMany({
@@ -268,7 +341,7 @@ export const fetchSortedLyrics = async (
       sorted.sort((a, b) =>
         sortOrder === "asc"
           ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name)
+          : b.name.localeCompare(a.name),
       );
       break;
 
@@ -276,13 +349,13 @@ export const fetchSortedLyrics = async (
       sorted.sort((a, b) =>
         sortOrder === "asc"
           ? a.year - b.year || a.month - b.month
-          : b.year - a.year || b.month - a.month
+          : b.year - a.year || b.month - a.month,
       );
       break;
 
     case "views":
       sorted.sort((a, b) =>
-        sortOrder === "asc" ? a.views - b.views : b.views - a.views
+        sortOrder === "asc" ? a.views - b.views : b.views - a.views,
       );
       break;
   }
@@ -343,24 +416,28 @@ export async function createLyricsRequest(formData: FormData) {
 }
 
 export async function fetchTodaysPicks(limit = 3) {
-  const total = await db.lyrics.count();
-  if (total === 0) return [];
+  const day = dayKeyUTC();
+  const seed = hashToUint32(`todaysPicks|${day}`);
+  const pivot = seed.toString(36);
 
-  const skips = new Set<number>();
-  while (skips.size < limit) {
-    skips.add(Math.floor(Math.random() * total));
-  }
+  const first = await db.lyrics.findMany({
+    where: { id: { gte: pivot } },
+    orderBy: { id: "asc" },
+    take: limit,
+    include: { artist: true },
+    // includeを使うなら selectは外す。どちらか片方。
+  });
 
-  const results = await Promise.all(
-    [...skips].map((skip) =>
-      db.lyrics.findFirst({
-        skip,
-        include: { artist: true },
-      })
-    )
-  );
+  if (first.length === limit) return first;
 
-  return results.filter(Boolean);
+  const second = await db.lyrics.findMany({
+    where: { id: { lt: pivot } },
+    orderBy: { id: "asc" },
+    take: limit - first.length,
+    include: { artist: true },
+  });
+
+  return [...first, ...second];
 }
 
 export async function fetchHotAlbums(limit = 5) {
@@ -516,7 +593,7 @@ export async function createLyrics(formData: FormData) {
 // utils/actions/lyrics.ts
 export async function fetchArtists(
   page: number = 1,
-  itemsPerPage: number = 10
+  itemsPerPage: number = 10,
 ) {
   const safePage = Math.max(1, page);
   const take = Math.max(1, itemsPerPage);
