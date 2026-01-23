@@ -1,3 +1,5 @@
+export const revalidate = 60 * 60;
+
 import { fetchLyricsDetails } from "@/utils/actions/lyrics";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";

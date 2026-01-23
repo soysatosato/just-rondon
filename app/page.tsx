@@ -1,3 +1,5 @@
+export const revalidate = 60 * 60;
+
 import Image from "next/image";
 
 import { Card, CardContent } from "@/components/ui/card";

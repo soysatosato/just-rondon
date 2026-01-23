@@ -1,3 +1,5 @@
+export const revalidate = 60 * 60;
+
 import { Flame } from "lucide-react";
 import {
   Card,
