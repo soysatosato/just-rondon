@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/lyrixplorer",
+      "destination": "https://lyrixplorer.com",
+      "permanent": true
+    },
+    {
+      "source": "/lyrixplorer/:path*",
+      "destination": "https://lyrixplorer.com/:path*",
+      "permanent": true
+    }
+  ]
+}
