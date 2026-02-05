@@ -37,7 +37,7 @@ export async function generateMetadata({
       siteName: "LyriXplorer",
     },
     robots: {
-      index: true,
+      index: false,
       follow: true,
     },
     alternates: {
@@ -49,7 +49,7 @@ export async function generateMetadata({
 function safeParam<T extends readonly string[]>(
   value: string | undefined,
   allowed: T,
-  fallback: T[number]
+  fallback: T[number],
 ): T[number] {
   return allowed.includes(value as any) ? (value as T[number]) : fallback;
 }
@@ -64,13 +64,13 @@ export default async function ArtistPage({
   const sortBy = safeParam(
     searchParams.sortBy,
     ["album", "name", "year", "views"] as const,
-    "album"
+    "album",
   );
 
   const sortOrder = safeParam(
     searchParams.sortOrder,
     ["asc", "desc"] as const,
-    "desc"
+    "desc",
   );
 
   const artist = await fetchArtistDetails(params.id);

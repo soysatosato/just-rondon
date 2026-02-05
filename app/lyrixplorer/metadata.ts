@@ -15,7 +15,7 @@ export const defaultMetadata: Metadata = {
     },
   ],
   robots: {
-    index: true,
+    index: false,
     follow: true,
   },
   alternates: {

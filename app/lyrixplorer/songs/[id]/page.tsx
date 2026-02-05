@@ -42,7 +42,7 @@ export async function generateMetadata({
       siteName: "LyriXplorer",
     },
     robots: {
-      index: true,
+      index: false,
       follow: true,
     },
     alternates: {

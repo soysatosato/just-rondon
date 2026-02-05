@@ -23,7 +23,7 @@ export const metadata = {
     canonical: "https://www.just-rondon.com/lyrixplorer/search",
   },
   robots: {
-    index: true,
+    index: false,
     follow: true,
   },
   openGraph: {
