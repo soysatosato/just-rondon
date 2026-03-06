@@ -8,6 +8,8 @@ import Link from "next/link";
 import TitleLogo from "@/components/home/TitleLogo";
 import { Badge } from "@/components/ui/badge";
 import HeroSearch from "@/components/home/HeroSearch";
+import AdMaxTravel from "@/components/ads/AdMaxTravel";
+import AdMaxTravel2 from "@/components/ads/AdMaxTravel2";
 
 export default function Page() {
   return (
@@ -56,6 +58,9 @@ export default function Page() {
                   旅行計画に役立つ実用的な情報も充実しています。
                 </p>
               </div>
+              <div className="mt-2">
+                <AdMaxTravel />
+              </div>
             </div>
           </div>
         </div>
@@ -96,6 +101,9 @@ export default function Page() {
                 href="/visa/uk-youth-mobility-visa"
                 title="ロンドン・ワーホリ"
               />
+            </div>
+            <div className="mt-2">
+              <AdMaxTravel2 />
             </div>
           </div>
         </div>
