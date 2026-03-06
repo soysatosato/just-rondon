@@ -42,7 +42,9 @@ export default function Page() {
             </h1>
 
             <HeroSearch />
-
+            <div className="mt-2">
+              <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+            </div>
             {/* サブテキスト */}
             <div className="mt-12 rounded-2xl bg-white/90 dark:bg-slate-900/80 p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
               <h2 className="mb-3 text-base font-semibold">
@@ -59,18 +61,6 @@ export default function Page() {
                   子ども連れや一人旅におすすめのスポットなど、
                   旅行計画に役立つ実用的な情報も充実しています。
                 </p>
-              </div>
-              <div className="mt-2">
-                <AdMaxTravel />
-              </div>
-              <div className="mt-2">
-                <AdMaxBanner />
-              </div>
-              <div className="mt-2">
-                <AdmaxSwitch id="8301071f4327eeee620da1fbc6464e7d" />
-              </div>
-              <div className="w-full min-w-[320px] min-h-[100px]">
-                <AdmaxSwitch id="00a385c4d645c59db6021c17ce7b4bea" />
               </div>
             </div>
           </div>
@@ -113,12 +103,13 @@ export default function Page() {
                 title="ロンドン・ワーホリ"
               />
             </div>
-            <div className="mt-2">
-              <AdMaxTravel2 />
-            </div>
           </div>
         </div>
       </section>
+
+      <div className="mt-2">
+        <AdMaxBanner id="8301071f4327eeee620da1fbc6464e7d" />
+      </div>
 
       {/* ロンドン探索 */}
       <section className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
