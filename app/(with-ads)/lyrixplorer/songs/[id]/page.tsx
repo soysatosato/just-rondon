@@ -103,7 +103,7 @@ export default async function SongDetailsPage({
           </div>
         )}
 
-        <div className="mt-2">
+        <div className="my-4">
           <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
         </div>
         {/* 歌詞 */}

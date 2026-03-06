@@ -70,7 +70,7 @@ export default async function LyriXplolerHome() {
             </div>
           </div>
         </section>
-        <div className="mt-2">
+        <div className="my-2">
           <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
         </div>
         {/* ================= TODAY'S PICK ================= */}
