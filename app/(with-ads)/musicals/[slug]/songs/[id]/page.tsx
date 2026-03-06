@@ -1,3 +1,4 @@
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import { fetchTodaysPicks } from "@/utils/actions/lyrics";
 import {
@@ -97,7 +98,9 @@ export default async function SongDetailsPage({
             ></iframe>
           </div>
         )}
-
+        <div className="mt-2">
+          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+        </div>
         {/* 歌詞 */}
         <div className="prose prose-lg prose-indigo mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>

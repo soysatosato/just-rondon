@@ -278,11 +278,10 @@ export default async function AttractionDetail({
             {attraction.tagline}
           </p>
         )}
-
-        <div className="mt-4 justify-center flex">
-          <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
-        </div>
       </section>
+      <div className="mt-4 justify-center flex">
+        <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+      </div>
 
       <Tabs
         defaultValue="overview"
@@ -423,7 +422,9 @@ export default async function AttractionDetail({
             </div>
           </section>
         )}
-
+        <div className="mt-4 justify-center flex">
+          <AdMaxBanner />
+        </div>
         <div className="space-y-12">
           {attraction.sections?.map((sec) => (
             <section
@@ -434,9 +435,7 @@ export default async function AttractionDetail({
                 <span className="h-3 w-3 rounded-full bg-neutral-400 inline-block"></span>
                 {sec.title}
               </h2>
-              <div className="mt-4 justify-center flex">
-                <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
-              </div>
+
               <div className="prose prose-neutral max-w-none text-sm leading-relaxed">
                 <ReactMarkdown
                   components={{

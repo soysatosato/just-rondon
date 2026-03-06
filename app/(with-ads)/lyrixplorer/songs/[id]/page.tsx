@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import ExpandableText from "@/components/card/ExpandableText";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 export async function generateMetadata({
   params,
@@ -102,6 +103,9 @@ export default async function SongDetailsPage({
           </div>
         )}
 
+        <div className="mt-2">
+          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+        </div>
         {/* 歌詞 */}
         <div className="prose prose-lg prose-indigo mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>

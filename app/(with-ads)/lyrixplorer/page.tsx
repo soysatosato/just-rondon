@@ -18,6 +18,7 @@ import {
 } from "@/utils/actions/lyrics";
 import Link from "next/link";
 import type { Metadata } from "next";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 export const metadata: Metadata = {
   title:
@@ -69,7 +70,9 @@ export default async function LyriXplolerHome() {
             </div>
           </div>
         </section>
-
+        <div className="mt-2">
+          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+        </div>
         {/* ================= TODAY'S PICK ================= */}
         {todaysPick.length > 0 && (
           <section className="space-y-4">

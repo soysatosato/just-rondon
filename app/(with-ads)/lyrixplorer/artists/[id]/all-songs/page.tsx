@@ -1,3 +1,4 @@
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 import Pagination from "@/components/home/Pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,7 +84,9 @@ export default async function SongsByArtistPage({
           {artist.name} ({artist.engName}) の代表曲・人気曲をまとめました。
           各曲ページでは歌詞の和訳や背景解説もご覧いただけます。
         </p>
-
+        <div className="mt-2">
+          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+        </div>
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">
             <p className="text-gray-500 dark:text-gray-400 text-lg text-center">
