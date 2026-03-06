@@ -11,6 +11,7 @@ import HeroSearch from "@/components/home/HeroSearch";
 import AdMaxTravel from "@/components/ads/AdMaxTravel";
 import AdMaxTravel2 from "@/components/ads/AdMaxTravel2";
 import AdmaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdMaxBanner from "@/components/ads/AdMaxBammer";
 
 export default function Page() {
   return (
@@ -63,10 +64,13 @@ export default function Page() {
                 <AdMaxTravel />
               </div>
               <div className="mt-2">
+                <AdMaxBanner />
+              </div>
+              <div className="mt-2">
                 <AdmaxSwitch id="8301071f4327eeee620da1fbc6464e7d" />
               </div>
               <div className="w-full min-w-[320px] min-h-[100px]">
-                <AdmaxSwitch id="8301071f4327eeee620da1fbc6464e7d" />
+                <AdmaxSwitch id="00a385c4d645c59db6021c17ce7b4bea" />
               </div>
             </div>
           </div>
