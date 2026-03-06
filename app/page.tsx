@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import HeroSearch from "@/components/home/HeroSearch";
 import AdMaxTravel from "@/components/ads/AdMaxTravel";
 import AdMaxTravel2 from "@/components/ads/AdMaxTravel2";
+import AdmaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export default function Page() {
   return (
@@ -60,6 +61,12 @@ export default function Page() {
               </div>
               <div className="mt-2">
                 <AdMaxTravel />
+              </div>
+              <div className="mt-2">
+                <AdmaxSwitch id="8301071f4327eeee620da1fbc6464e7d" />
+              </div>
+              <div className="w-full min-w-[320px] min-h-[100px]">
+                <AdmaxSwitch id="8301071f4327eeee620da1fbc6464e7d" />
               </div>
             </div>
           </div>
