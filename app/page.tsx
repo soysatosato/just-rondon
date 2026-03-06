@@ -8,15 +8,12 @@ import Link from "next/link";
 import TitleLogo from "@/components/home/TitleLogo";
 import { Badge } from "@/components/ui/badge";
 import HeroSearch from "@/components/home/HeroSearch";
-import AdMaxTravel from "@/components/ads/AdMaxTravel";
-import AdMaxTravel2 from "@/components/ads/AdMaxTravel2";
-import AdmaxSwitch from "@/components/ads/AdMaxSwitch";
-import AdMaxBanner from "@/components/ads/AdMaxBammer";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-950">
-      <section className="relative border-b border-slate-200 dark:border-slate-800">
+    <main className="min-h-screen bg-background dark:bg-slate-950">
+      <section className="relative border-b  text-foreground">
         <div className="relative mx-auto max-w-6xl px-4 pt-8 pb-16 sm:pb-20">
           <div className="absolute inset-x-0 top-0 -z-10 h-full">
             <div className="relative h-full w-full overflow-hidden rounded-2xl">
@@ -42,15 +39,15 @@ export default function Page() {
             </h1>
 
             <HeroSearch />
-            <div className="mt-2">
+            <div className="mt-4">
               <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
             </div>
             {/* サブテキスト */}
-            <div className="mt-12 rounded-2xl bg-white/90 dark:bg-slate-900/80 p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
+            <div className="mt-12 rounded-2xl bg-background text-foreground p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
               <h2 className="mb-3 text-base font-semibold">
                 ロンドン観光をもっと楽しむためのガイド
               </h2>
-              <div className="text-xs text-slate-600 space-y-2 leading-relaxed">
+              <div className="text-xs text-muted-foreground space-y-2 leading-relaxed">
                 <p>
                   ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
                   定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
@@ -68,7 +65,7 @@ export default function Page() {
       </section>
 
       {/* 初めてのロンドン */}
-      <section className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+      <section className="border-b  text-foreground bg-slate-50 dark:bg-slate-950">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr]">
             <div>
@@ -112,14 +109,14 @@ export default function Page() {
       </div>
 
       {/* ロンドン探索 */}
-      <section className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <section className="border-b   text-foreground bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+              <h2 className="text-xl font-semibold text-foreground">
                 ロンドンをもっと探索
               </h2>
-              <p className="mt-1 max-w-xl text-sm text-slate-600 dark:text-slate-400">
+              <p className="mt-2 max-w-xl text-sm text-muted-foreground">
                 世界的ミュージカルから一流観光地、ユニークツアーやファミリー向けスポットまで盛りだくさん。
               </p>
             </div>
@@ -143,14 +140,14 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <section className="border-b  text-foreground bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="mb-6 grid gap-8 lg:grid-cols-[1.2fr,1fr]">
             <div>
-              <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+              <h2 className="text-xl font-semibold text-foreground">
                 ロンドンの催し物
               </h2>
-              <p className="mt-1 max-w-xl text-sm text-slate-600 dark:text-slate-400">
+              <p className="mt-2 max-w-xl text-sm text-muted-foreground">
                 年中行われるフェスティバル、祝日、スポーツイベントをチェック。
               </p>
             </div>
@@ -183,7 +180,7 @@ type SimpleCardProps = {
 
 function MustSeeCard({ title, image, badge }: SimpleCardProps) {
   return (
-    <Card className="overflow-hidden border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <Card className="overflow-hidden  text-foreground bg-background dark:bg-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="relative h-32 w-full">
         <Image
           src={image}
@@ -193,7 +190,7 @@ function MustSeeCard({ title, image, badge }: SimpleCardProps) {
           className="object-cover"
         />
         {badge && (
-          <span className="absolute left-2 top-2 rounded-full bg-white/90 dark:bg-slate-900/90 px-2 py-0.5 text-[10px] font-semibold text-red-600 shadow">
+          <span className="absolute left-2 top-2 rounded-full bg-background/90 dark:bg-slate-900/90 px-2 py-0.5 text-[10px] font-semibold text-red-600 shadow">
             {badge}
           </span>
         )}
@@ -210,7 +207,7 @@ function MustSeeCard({ title, image, badge }: SimpleCardProps) {
 function InfoPill({ title, href }: { title: string; href: string }) {
   return (
     <Link href={href}>
-      <button className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 text-left text-xs font-medium text-slate-800 dark:text-slate-200 shadow-sm hover:border-slate-300 dark:hover:border-slate-600">
+      <button className="w-full rounded-xl border  text-foreground bg-background dark:bg-slate-900 px-4 py-3 text-left text-xs font-medium text-slate-800 dark:text-slate-200 shadow-sm hover:border-slate-300 dark:hover:border-slate-600">
         {title}
       </button>
     </Link>
@@ -220,7 +217,7 @@ function InfoPill({ title, href }: { title: string; href: string }) {
 function ExploreCard({ title, href }: { title: string; href: string }) {
   return (
     <Link href={href}>
-      <Card className="h-full border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+      <Card className="h-full  text-foreground bg-background dark:bg-slate-900 shadow-sm">
         <CardContent className="flex h-full flex-col justify-between p-4">
           <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             {title}

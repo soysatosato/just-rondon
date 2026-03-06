@@ -1,3 +1,4 @@
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 import { fetchLatestNewsByCategory } from "@/utils/actions/news";
 import Link from "next/link";
 
@@ -53,7 +54,9 @@ export default async function NewsPage({}) {
           ロンドンの最新ニュースや話題をカテゴリごとにまとめてお届けします。
         </p>
       </header>
-
+      <div className="mt-4 justify-center flex">
+        <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+      </div>
       {/* カテゴリごとのニュース */}
       {CATEGORIES.map((category) => (
         <section key={category} className="space-y-6">

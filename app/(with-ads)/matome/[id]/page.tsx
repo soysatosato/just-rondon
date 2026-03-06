@@ -10,6 +10,7 @@ import { formatDate } from "@/utils/format";
 import { fetchMatome } from "@/utils/actions/chatboard";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 export async function generateMetadata({
   params,
@@ -89,7 +90,9 @@ export default async function MatomeDetailPage({
             ) : null}
           </div>
         </CardHeader>
-
+        <div className="mt-4 justify-center flex">
+          <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+        </div>
         <CardContent className="space-y-5">
           {reddit.imageUrl ? (
             <div className="relative h-48 md:h-56 overflow-hidden rounded-xl border">

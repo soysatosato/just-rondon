@@ -11,6 +11,7 @@ import {
   fetchServiceCharges,
   fetchServiceChargeCount,
 } from "@/utils/actions/jobs";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 type Props = {
   searchParams?: {
@@ -70,7 +71,9 @@ export default async function DashboardPage({ searchParams }: Props) {
             検索
           </Button>
         </form>
-
+        <div className="mt-4 justify-center flex">
+          <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+        </div>
         {/* 強調注意書き：3文字未満 */}
         {hasQuery && !isSearchable && (
           <Alert variant="destructive" className="max-w-md">
@@ -90,8 +93,8 @@ export default async function DashboardPage({ searchParams }: Props) {
           {isSearchable
             ? "検索結果"
             : hasQuery
-            ? "※ 検索は3文字以上でのみ実行されます"
-            : "一覧表示で見るにはアンケートへのご協力が必要です"}
+              ? "※ 検索は3文字以上でのみ実行されます"
+              : "一覧表示で見るにはアンケートへのご協力が必要です"}
         </p>
 
         {/* 検索結果あり */}

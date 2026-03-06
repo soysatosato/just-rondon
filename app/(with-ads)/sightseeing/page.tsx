@@ -27,6 +27,7 @@ import {
   getFreeAttractions,
   getTodaysPicks,
 } from "@/utils/sightseeing";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 const faqItems = [
   {
@@ -117,7 +118,9 @@ export default async function Page() {
               渡航前にオフィシャルサイトで最新情報を確認しておくと安心です。
             </p>
           </div>
-
+          <div className="mt-4 justify-center flex">
+            <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+          </div>
           {/* メインの4カード（ここはそのまま） */}
           <div className="grid gap-4 sm:grid-cols-2">
             {highlightAttractions.map((item: any, idx: any) => (

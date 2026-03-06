@@ -12,6 +12,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Pagination from "@/components/home/Pagination";
 import { fetchAllAttractions } from "@/utils/actions/attractions";
 import AttractionFilterBar from "@/components/attractions/AttractionFilterBar";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 // フィルター UI（前回提供したやつ）
 
@@ -71,7 +72,9 @@ export default async function FacilitiesListPage({
 
       {/* 追加：フィルターバー */}
       <AttractionFilterBar />
-
+      <div className="mt-4 justify-center flex">
+        <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+      </div>
       <div className="grid gap-8">
         {facilities.map((f) => (
           <Card key={f.id} className="overflow-hidden">

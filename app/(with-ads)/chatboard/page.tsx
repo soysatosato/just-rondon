@@ -13,6 +13,7 @@ import { AiOutlineLike } from "react-icons/ai";
 import { Metadata } from "next";
 import Pagination from "@/components/home/Pagination";
 import { MatomeList } from "@/components/chatboard/MatomeList";
+import AdMaxBanner from "@/components/ads/AdMaxBanner";
 
 export const metadata: Metadata = {
   title:
@@ -74,6 +75,9 @@ export default async function PostsPage({
             </CardContent>
           </Card>
         </section>
+        <div className="mt-4 justify-center flex">
+          <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+        </div>
         <div className="flex-1">
           <h1 className="text-xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-100 mb-3">
             ロンドンライフ掲示板
