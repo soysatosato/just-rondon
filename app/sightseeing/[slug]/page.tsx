@@ -17,6 +17,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Baby, Flame, Star, Tag, Ticket } from "lucide-react";
+import AdMaxTravel from "@/components/ads/AdMaxTravel";
+import AdMaxTravel2 from "@/components/ads/AdMaxTravel2";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
@@ -277,6 +279,10 @@ export default async function AttractionDetail({
             {attraction.tagline}
           </p>
         )}
+
+        <div className="pt-2">
+          <AdMaxTravel />
+        </div>
       </section>
 
       <Tabs
@@ -429,7 +435,9 @@ export default async function AttractionDetail({
                 <span className="h-3 w-3 rounded-full bg-neutral-400 inline-block"></span>
                 {sec.title}
               </h2>
-
+              <div className="flex justify-center">
+                <AdMaxTravel2 />
+              </div>
               <div className="prose prose-neutral max-w-none text-sm leading-relaxed">
                 <ReactMarkdown
                   components={{
