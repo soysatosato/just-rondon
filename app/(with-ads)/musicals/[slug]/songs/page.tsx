@@ -7,7 +7,6 @@ import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
-
 export async function generateMetadata({
   params,
 }: {
@@ -98,46 +97,44 @@ export default async function SongsPage({
         ) : (
           <ul className="divide-y divide-gray-200 dark:divide-gray-700 rounded-2xl shadow-md overflow-hidden">
             {songs.map((song: any) => (
-              <Link
-                key={song.id}
-                href={`/musicals/${params.slug}/songs/${song.id}`}
-                className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition items-center justify-between rounded-lg"
-              >
-                {/* 左側: 曲番号 + サムネイル + 曲名/アーティスト */}
-                <div className="flex items-center space-x-4">
-                  {/* 曲番号 */}
-                  <span className="text-gray-500 dark:text-gray-400 font-semibold w-6 text-center">
-                    {song.index}
-                  </span>
+              <li key={song.id}>
+                <Link
+                  href={`/musicals/${params.slug}/songs/${song.id}`}
+                  className="flex w-full items-center px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition rounded-lg"
+                >
+                  <div className="flex items-center space-x-4 min-w-0 w-full">
+                    <span className="text-gray-500 dark:text-gray-400 font-semibold w-6 text-center shrink-0">
+                      {song.index}
+                    </span>
 
-                  {/* YouTube サムネイル */}
-                  {song.youtubeId && (
-                    <div className="w-16 h-10 relative flex-shrink-0 rounded overflow-hidden">
-                      <img
-                        src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
-                        alt={song.name}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                      />
+                    {song.youtubeId && (
+                      <div className="w-16 h-10 relative flex-shrink-0 rounded overflow-hidden">
+                        <img
+                          src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
+                          alt={song.name}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
+                          fetchPriority="low"
+                        />
+                      </div>
+                    )}
+
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                        {song.name}
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300 text-xs truncate">
+                        <span className="font-semibold">Artist:</span>{" "}
+                        {song.artist}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        歌詞・和訳はこちら
+                      </p>
                     </div>
-                  )}
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                      {song.name}
-                    </p>
-                    <p className="text-gray-700 dark:text-gray-300 text-xs">
-                      <span className="font-semibold">Artist:</span>{" "}
-                      {song.artist}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      歌詞・和訳はこちら
-                    </p>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </li>
             ))}
           </ul>
         )}

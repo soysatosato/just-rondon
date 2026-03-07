@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     "曲名 和訳",
   ],
   robots: {
-    index: false,
+    index: true,
     follow: true,
   },
   alternates: {

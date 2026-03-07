@@ -45,9 +45,9 @@ export default async function HomePage({
   return (
     <>
       <section>
-        <div className="fixed inset-0 z-[9999] pointer-events-none">
+        {/* <div className="fixed inset-0 z-[9999] pointer-events-none">
           <RainCanvas />
-        </div>
+        </div> */}
         <Suspense fallback={<LoadingCards />}>
           <MusicalHomePage
             musicals={musicals}

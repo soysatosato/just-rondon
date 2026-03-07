@@ -25,8 +25,8 @@ export default function MusicalHomePage({
   itemsPerPage: number;
 }) {
   return (
-    <div className="max-w-7xl mx-auto px-3 space-y-8 bg-gradient-to-b from-background via-secondary to-background text-foreground">
-      <section className="relative bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white py-24 px-6">
+    <div className="max-w-7xl mx-auto px-3 space-y-8 bg-background text-foreground">
+      <section className="relative  py-24 px-6">
         <div className="max-w-3xl mx-auto text-center relative z-10">
           {/* タイトル */}
           <motion.h1

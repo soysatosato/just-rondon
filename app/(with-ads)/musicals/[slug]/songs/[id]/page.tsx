@@ -101,11 +101,20 @@ export default async function SongDetailsPage({
         <div className="my-4">
           <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
         </div>
+
         {/* 歌詞 */}
         <div className="prose prose-lg prose-indigo mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {song.lyrics}
           </ReactMarkdown>
+        </div>
+        <div className="mt-4 text-left">
+          <Link
+            href={`/musicals/${params.slug}/songs`}
+            className="inline-flex items-center text-sm text-blue-600 dark:text-blue-300 underline hover:opacity-80"
+          >
+            ← 曲一覧へ戻る
+          </Link>
         </div>
         <div className="mt-16">
           <h2 className="text-xl font-bold mb-6 text-indigo-700 dark:text-indigo-300">
