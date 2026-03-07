@@ -1,16 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-declare global {
-  interface Window {
-    admaxads?: Array<{
-      admax_id: string;
-      type: "banner" | "overlay";
-    }>;
-    __admax_tag__?: unknown;
-  }
-}
+import { loadAdMaxScript, registerAdMax } from "@/lib/admax";
 
 type Props = {
   id?: string;
@@ -20,27 +11,22 @@ export default function AdMaxOverlay({
   id = "79695e0a0c519cbdc2aa4d409afe80c4",
 }: Props) {
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    let mounted = true;
 
-    window.admaxads = window.admaxads || [];
-
-    if (
-      !window.admaxads.some((ad) => ad.admax_id === id && ad.type === "overlay")
-    ) {
-      window.admaxads.push({
-        admax_id: id,
-        type: "overlay",
-      });
+    async function init() {
+      registerAdMax(id, "overlay");
+      try {
+        await loadAdMaxScript();
+      } catch (error) {
+        console.error(error);
+      }
     }
 
-    const tag = document.createElement("script");
-    tag.src = "https://adm.shinobi.jp/st/t.js";
-    tag.async = true;
-    tag.charset = "utf-8";
-    document.body.appendChild(tag);
+    if (mounted) init();
 
     return () => {
-      window.__admax_tag__ = undefined;
+      mounted = false;
+      // layout常駐前提なので unregister は基本しない
     };
   }, [id]);
 
