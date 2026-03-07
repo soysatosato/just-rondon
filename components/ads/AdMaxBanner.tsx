@@ -6,7 +6,7 @@ declare global {
   interface Window {
     admaxads?: Array<{
       admax_id: string;
-      type: "banner";
+      type: "banner" | "overlay";
     }>;
     __admax_tag__?: unknown;
   }
