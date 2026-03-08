@@ -7,6 +7,7 @@ import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 export async function generateMetadata({
   params,
 }: {
@@ -84,7 +85,9 @@ export default async function SongsPage({
           {musical.name} ({musical.engName}) の代表曲・人気曲をまとめました。
           各曲ページでは歌詞の和訳や背景解説もご覧いただけます。
         </p>
-
+        <div className="my-4">
+          <AdMaxSwitch id="f588d5ab1ffd38172de3b94514384f61" />
+        </div>
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">
             <p className="text-gray-500 dark:text-gray-400 text-lg text-center">

@@ -72,7 +72,7 @@ export default async function LyriXplolerHome() {
           </div>
         </section>
         <div className="my-2">
-          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
+          <AdMaxSwitch id="f588d5ab1ffd38172de3b94514384f61" />
         </div>
         {/* ================= TODAY'S PICK ================= */}
         {todaysPick.length > 0 && (

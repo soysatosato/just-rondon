@@ -1,53 +1,34 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { loadAdMaxScript, registerAdMax, rerunAdMaxScript } from "@/lib/admax";
+import { useEffect } from "react";
+import { loadAdMaxScript, registerAdMax } from "@/lib/admax";
 
 type Props = {
   id?: string;
 };
 
 export default function AdMaxOverlay({
-  id = "2c910bfc0ab39ec7949e2abf514acabf",
+  id = "79695e0a0c519cbdc2aa4d409afe80c4",
 }: Props) {
-  const ref = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
-    let cancelled = false;
+    let mounted = true;
 
     async function init() {
-      if (!ref.current) return;
-
-      registerAdMax(id, "switch");
-
+      registerAdMax(id, "overlay");
       try {
         await loadAdMaxScript();
-
-        if (cancelled) return;
-
-        // 既にscript読込済みで、あとから枠だけ追加された場合の再評価
-        if (ref.current.children.length === 0) {
-          rerunAdMaxScript();
-        }
       } catch (error) {
         console.error(error);
       }
     }
 
-    init();
+    if (mounted) init();
 
     return () => {
-      cancelled = true;
-      // layout常駐前提なら unregister はしなくてOK
+      mounted = false;
+      // layout常駐前提なので unregister は基本しない
     };
   }, [id]);
 
-  return (
-    <div
-      ref={ref}
-      className="admax-switch"
-      data-admax-id={id}
-      style={{ display: "inline-block" }}
-    />
-  );
+  return null;
 }

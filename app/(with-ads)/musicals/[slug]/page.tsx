@@ -7,7 +7,6 @@ import {
   fetchMusicalIdandName,
 } from "@/utils/actions/musicals";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
