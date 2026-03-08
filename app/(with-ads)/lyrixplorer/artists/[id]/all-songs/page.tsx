@@ -1,4 +1,5 @@
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 import Pagination from "@/components/home/Pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -85,7 +86,7 @@ export default async function SongsByArtistPage({
           各曲ページでは歌詞の和訳や背景解説もご覧いただけます。
         </p>
         <div className="mt-2">
-          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">

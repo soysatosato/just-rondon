@@ -11,6 +11,7 @@ import { fetchMatome } from "@/utils/actions/chatboard";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export async function generateMetadata({
   params,
@@ -91,7 +92,7 @@ export default async function MatomeDetailPage({
           </div>
         </CardHeader>
         <div className="mt-4 justify-center flex">
-          <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
         <CardContent className="space-y-5">
           {reddit.imageUrl ? (

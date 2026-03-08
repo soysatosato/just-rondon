@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import type { Metadata } from "next";
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export const metadata: Metadata = {
   title:
@@ -71,7 +72,7 @@ export default async function LyriXplolerHome() {
           </div>
         </section>
         <div className="my-2">
-          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
         {/* ================= TODAY'S PICK ================= */}
         {todaysPick.length > 0 && (

@@ -6,6 +6,7 @@ import { MatomeList } from "@/components/chatboard/MatomeList";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export const dynamic = "force-dynamic"; // DB一覧は基本これでOK（キャッシュ事故防止）
 
@@ -101,7 +102,7 @@ export default async function MatomePage({
 
       <Separator />
       <div className="mt-4 justify-center flex">
-        <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+        <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
       </div>
       <Separator />
 

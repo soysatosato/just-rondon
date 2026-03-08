@@ -1,4 +1,5 @@
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import { fetchTodaysPicks } from "@/utils/actions/lyrics";
 import {
@@ -99,7 +100,7 @@ export default async function SongDetailsPage({
           </div>
         )}
         <div className="my-4">
-          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
 
         {/* 歌詞 */}

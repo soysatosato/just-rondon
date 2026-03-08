@@ -8,7 +8,7 @@ import Link from "next/link";
 import TitleLogo from "@/components/home/TitleLogo";
 import { Badge } from "@/components/ui/badge";
 import HeroSearch from "@/components/home/HeroSearch";
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export default function Page() {
   return (
@@ -40,7 +40,7 @@ export default function Page() {
 
             <HeroSearch />
             <div className="mt-4">
-              <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+              <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
             </div>
             {/* サブテキスト */}
             <div className="mt-12 rounded-2xl bg-background text-foreground p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
@@ -105,7 +105,7 @@ export default function Page() {
       </section>
 
       <div className="mt-2">
-        <AdMaxBanner id="8301071f4327eeee620da1fbc6464e7d" />
+        <AdMaxSwitch />
       </div>
 
       {/* ロンドン探索 */}

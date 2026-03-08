@@ -1,5 +1,5 @@
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
 import AdMaxOverlay from "@/components/ads/AdMaxOverlay";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 import type { ReactNode } from "react";
 
 export default function WithAdsLayout({ children }: { children: ReactNode }) {
@@ -8,7 +8,7 @@ export default function WithAdsLayout({ children }: { children: ReactNode }) {
       <AdMaxOverlay />
       {children}
       <div className="mt-2">
-        <AdMaxBanner id="8301071f4327eeee620da1fbc6464e7d" />
+        <AdMaxSwitch id="32ceb65479d99deacb56072aecc7aa0b" />
       </div>
     </div>
   );

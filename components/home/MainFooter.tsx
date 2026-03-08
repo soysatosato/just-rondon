@@ -12,6 +12,8 @@ export default function MainFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-3">
           <Link href="/contact">お問い合わせ</Link>
+          <Link href="/about">サイト概要</Link>
+          <Link href="/privacy">プライバシーポリシー</Link>
           <Link href="/">Top Pageへ</Link>
           {/* <Link href="/lyrixplorer">和訳サイト</Link> */}
         </div>

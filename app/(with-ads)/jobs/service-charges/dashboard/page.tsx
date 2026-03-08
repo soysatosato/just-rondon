@@ -12,6 +12,7 @@ import {
   fetchServiceChargeCount,
 } from "@/utils/actions/jobs";
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 type Props = {
   searchParams?: {
@@ -72,7 +73,7 @@ export default async function DashboardPage({ searchParams }: Props) {
           </Button>
         </form>
         <div className="mt-4 justify-center flex">
-          <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
         {/* 強調注意書き：3文字未満 */}
         {hasQuery && !isSearchable && (

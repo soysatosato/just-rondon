@@ -9,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import ExpandableText from "@/components/card/ExpandableText";
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export async function generateMetadata({
   params,
@@ -104,7 +105,7 @@ export default async function SongDetailsPage({
         )}
 
         <div className="my-4">
-          <AdMaxBanner id="aa4dbf2070b053dde8ae3cc69e54fdf4" />
+          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
         {/* 歌詞 */}
         <div className="prose prose-lg prose-indigo mx-auto">

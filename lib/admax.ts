@@ -2,7 +2,7 @@ declare global {
   interface Window {
     admaxads?: Array<{
       admax_id: string;
-      type: "banner" | "overlay";
+      type: "banner" | "overlay" | "switch";
     }>;
     __admaxScriptPromise__?: Promise<void>;
   }
@@ -10,7 +10,7 @@ declare global {
 
 const SCRIPT_SRC = "https://adm.shinobi.jp/st/t.js";
 
-export type AdMaxType = "banner" | "overlay";
+export type AdMaxType = "banner" | "overlay" | "switch";
 
 export function ensureAdMaxQueue() {
   if (typeof window === "undefined") return;

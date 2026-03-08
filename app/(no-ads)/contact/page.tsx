@@ -9,11 +9,11 @@ export default function ContactPage() {
             お問い合わせ
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            ご相談・ご質問などは、こちらのフォームよりお気軽にお問い合わせください。
+            Just Rondon
+            に関するご質問・ご感想・掲載内容についてのお問い合わせは、
+            こちらのフォームよりご連絡ください。
             <br />
-            観光ガイドに関するご相談や、Web制作・サイト改善のお手伝いなど、いずれの内容でも対応可能です。
-            <br />
-            内容を確認後、順次ご連絡いたします。
+            内容を確認のうえ、順次対応いたします。
           </p>
         </div>
 

@@ -18,6 +18,7 @@ import BreadCrumbs from "@/components/home/BreadCrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Baby, Flame, Star, Tag, Ticket } from "lucide-react";
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
@@ -280,7 +281,7 @@ export default async function AttractionDetail({
         )}
       </section>
       <div className="mt-4 justify-center flex">
-        <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+        <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
       </div>
 
       <Tabs
@@ -423,7 +424,7 @@ export default async function AttractionDetail({
           </section>
         )}
         <div className="mt-4 justify-center flex">
-          <AdMaxBanner />
+          <AdMaxSwitch />
         </div>
         <div className="space-y-12">
           {attraction.sections?.map((sec) => (

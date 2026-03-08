@@ -1,4 +1,5 @@
 import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 import { fetchLatestNewsByCategory } from "@/utils/actions/news";
 import Link from "next/link";
 
@@ -55,7 +56,7 @@ export default async function NewsPage({}) {
         </p>
       </header>
       <div className="mt-4 justify-center flex">
-        <AdMaxBanner id="00a385c4d645c59db6021c17ce7b4bea" />
+        <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
       </div>
       {/* カテゴリごとのニュース */}
       {CATEGORIES.map((category) => (
