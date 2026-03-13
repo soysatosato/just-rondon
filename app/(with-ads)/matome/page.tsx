@@ -5,7 +5,6 @@ import Link from "next/link";
 import { MatomeList } from "@/components/chatboard/MatomeList";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
 import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 export const dynamic = "force-dynamic"; // DB一覧は基本これでOK（キャッシュ事故防止）
