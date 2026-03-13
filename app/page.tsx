@@ -23,6 +23,7 @@ export default function Page() {
                 fill
                 sizes="(max-width: 768px) 100vw, 80vw"
                 className="object-cover brightness-75 dark:brightness-60"
+                priority
               />
             </div>
           </div>
@@ -92,7 +93,7 @@ export default function Page() {
                 title="ロンドン・ETA（電子渡航認証）"
               />
               <InfoPill
-                href="/visa//visa/uk-visa-guide-2025"
+                href="/visa/uk-visa-guide-2025"
                 title="ロンドン・ビザ情報"
               />
               <InfoPill
@@ -167,40 +168,6 @@ export default function Page() {
         </div>
       </section>
     </main>
-  );
-}
-
-/* ===== コンポーネント（同ファイル内） ===== */
-
-type SimpleCardProps = {
-  title: string;
-  image: string;
-  badge?: string;
-};
-
-function MustSeeCard({ title, image, badge }: SimpleCardProps) {
-  return (
-    <Card className="overflow-hidden  text-foreground bg-background dark:bg-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-      <div className="relative h-32 w-full">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, 400px"
-          className="object-cover"
-        />
-        {badge && (
-          <span className="absolute left-2 top-2 rounded-full bg-background/90 dark:bg-slate-900/90 px-2 py-0.5 text-[10px] font-semibold text-red-600 shadow">
-            {badge}
-          </span>
-        )}
-      </div>
-      <CardContent className="p-3">
-        <p className="text-xs font-medium text-slate-900 dark:text-slate-100">
-          {title}
-        </p>
-      </CardContent>
-    </Card>
   );
 }
 

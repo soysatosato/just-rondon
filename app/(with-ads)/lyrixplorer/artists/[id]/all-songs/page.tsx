@@ -86,7 +86,7 @@ export default async function SongsByArtistPage({
           各曲ページでは歌詞の和訳や背景解説もご覧いただけます。
         </p>
         <div className="mt-2">
-          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
+          <AdMaxSwitch id="f588d5ab1ffd38172de3b94514384f61" />
         </div>
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">
