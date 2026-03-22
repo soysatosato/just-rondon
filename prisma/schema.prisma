@@ -290,7 +290,7 @@ model AttractionSection {
   website      String?
   category     String    @default("")
   createdAt DateTime         @default(now())
-
+  route     String   @default("")
   sections  ContentSection[]
 }
 
