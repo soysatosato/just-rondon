@@ -2,7 +2,6 @@
 const nextConfig = {
   async redirects() {
     return [
-      // 1. 旧 lyrixplorer を新ドメインへ移行
       {
         source: "/lyrixplorer",
         has: [{ type: "host", value: "just-rondon.com" }],
@@ -16,7 +15,21 @@ const nextConfig = {
         permanent: true,
       },
 
-      // 2. それ以外は just-rondon.com → www.just-rondon.com
+      // www domain
+      {
+        source: "/lyrixplorer",
+        has: [{ type: "host", value: "www.just-rondon.com" }],
+        destination: "https://just-lyrics.com",
+        permanent: true,
+      },
+      {
+        source: "/lyrixplorer/:path*",
+        has: [{ type: "host", value: "www.just-rondon.com" }],
+        destination: "https://just-lyrics.com/:path*",
+        permanent: true,
+      },
+
+      // その他は apex -> www
       {
         source: "/:path*",
         has: [{ type: "host", value: "just-rondon.com" }],
