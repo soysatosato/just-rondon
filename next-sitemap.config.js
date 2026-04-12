@@ -32,7 +32,6 @@ module.exports = {
       "/visa/uk-visa-guide-2025",
       "/sightseeing/eta-uk-visa-guide",
       "/visa/uk-youth-mobility-visa",
-      "/lyrixplorer",
       "/jobs/service-charges",
       "/matome",
       "/",
@@ -50,7 +49,7 @@ module.exports = {
       paths.push(await config.transform(config, `/museums/${m.slug}/artworks`));
       for (const a of m.artworks) {
         paths.push(
-          await config.transform(config, `/museums/${m.slug}/artworks/${a.id}`)
+          await config.transform(config, `/museums/${m.slug}/artworks/${a.id}`),
         );
       }
     }
@@ -63,7 +62,7 @@ module.exports = {
       paths.push(await config.transform(config, `/musicals/${mu.slug}/songs`));
       for (const s of mu.songs) {
         paths.push(
-          await config.transform(config, `/musicals/${mu.slug}/songs/${s.id}`)
+          await config.transform(config, `/musicals/${mu.slug}/songs/${s.id}`),
         );
       }
     }
@@ -83,32 +82,10 @@ module.exports = {
       paths.push(
         await config.transform(
           config,
-          `/sightseeing/christmas-markets/${cm.slug}`
-        )
+          `/sightseeing/christmas-markets/${cm.slug}`,
+        ),
       );
     }
-
-    const lyrics = await prisma.lyrics.findMany({
-      select: { id: true },
-    });
-
-    for (const ly of lyrics) {
-      paths.push(await config.transform(config, `/lyrixplorer/songs/${ly.id}`));
-    }
-
-    const artists = await prisma.artist.findMany({
-      select: { id: true },
-    });
-
-    for (const artst of artists) {
-      paths.push(
-        await config.transform(config, `/lyrixplorer/artists/${artst.id}`)
-      );
-    }
-
-    const news = await prisma.news.findMany({
-      select: { id: true },
-    });
 
     for (const n of news) {
       paths.push(await config.transform(config, `/news/${n.id}`));
