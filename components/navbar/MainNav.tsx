@@ -129,7 +129,7 @@ export default function Navbar() {
                   >
                     ミュージカル
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/news"
                     className=" hover:text-red-600 transition"
                     onClick={() => setOpen(false)}
@@ -149,7 +149,7 @@ export default function Navbar() {
                     onClick={() => setOpen(false)}
                   >
                     掲示板
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/contact"
                     className=" hover:text-red-600 transition"
@@ -296,7 +296,7 @@ export default function Navbar() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem className="pr-6">
+              {/* <NavigationMenuItem className="pr-6">
                 <NavigationMenuLink asChild>
                   <Link href="/news" className="hover:underline">
                     ニュース
@@ -310,7 +310,7 @@ export default function Navbar() {
                     掲示板
                   </Link>
                 </NavigationMenuLink>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
 
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
