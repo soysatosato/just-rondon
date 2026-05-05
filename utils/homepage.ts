@@ -112,27 +112,27 @@ export const sections: Section[] = [
       },
     ],
   },
-  {
-    id: "news",
-    title: "News",
-    items: [
-      {
-        title: "最新ニュース",
-        description: "こちらでロンドンの最新ニュース・情報を確認できます。",
-        href: "/news",
-      },
-    ],
-  },
-  {
-    id: "chatboard",
-    title: "掲示板",
-    items: [
-      {
-        title: "ジャスト・ロンドン掲示板",
-        description:
-          "カフェやバーの話、仕事や趣味、イベント情報…何でも自由に書き込んで、誰かの新しい発見につなげよう！",
-        href: "/chatboard",
-      },
-    ],
-  },
+  // {
+  //   id: "news",
+  //   title: "News",
+  //   items: [
+  //     {
+  //       title: "最新ニュース",
+  //       description: "こちらでロンドンの最新ニュース・情報を確認できます。",
+  //       href: "/news",
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "chatboard",
+  //   title: "掲示板",
+  //   items: [
+  //     {
+  //       title: "ジャスト・ロンドン掲示板",
+  //       description:
+  //         "カフェやバーの話、仕事や趣味、イベント情報…何でも自由に書き込んで、誰かの新しい発見につなげよう！",
+  //       href: "/chatboard",
+  //     },
+  //   ],
+  // },
 ];

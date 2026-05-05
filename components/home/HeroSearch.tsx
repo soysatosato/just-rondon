@@ -28,8 +28,8 @@ export default function HeroSearch() {
           </SelectItem>
           <SelectItem value="museums">美術館を探す</SelectItem>
           <SelectItem value="musicals">ミュージカルを探す</SelectItem>
-          <SelectItem value="chatboard">掲示板を見る</SelectItem>
-          <SelectItem value="news">ニュースを見る</SelectItem>
+          {/* <SelectItem value="chatboard">掲示板を見る</SelectItem>
+          <SelectItem value="news">ニュースを見る</SelectItem> */}
           <SelectItem value="jobs/service-charges">
             サービスチャージについて調べる
           </SelectItem>

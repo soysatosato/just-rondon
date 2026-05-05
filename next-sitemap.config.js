@@ -17,9 +17,10 @@ module.exports = {
       "/museums/best-25-museums",
       "/museums/best-museums-for-kids",
       "/musicals",
-      "/news",
-      "/chatboard",
-      "/chatboard/create",
+      // "/news",
+      // "/chatboard",
+      // "/chatboard/create",
+      // "/matome",
       "/contact",
       "/sightseeing",
       "/sightseeing/harry-potter",
@@ -33,7 +34,6 @@ module.exports = {
       "/sightseeing/eta-uk-visa-guide",
       "/visa/uk-youth-mobility-visa",
       "/jobs/service-charges",
-      "/matome",
       "/",
     ];
     for (const p of staticPages) {
@@ -87,25 +87,25 @@ module.exports = {
       );
     }
 
-    for (const n of news) {
-      paths.push(await config.transform(config, `/news/${n.id}`));
-    }
+    // for (const n of news) {
+    //   paths.push(await config.transform(config, `/news/${n.id}`));
+    // }
 
-    const posts = await prisma.post.findMany({
-      select: { id: true },
-    });
+    // const posts = await prisma.post.findMany({
+    //   select: { id: true },
+    // });
 
-    for (const p of posts) {
-      paths.push(await config.transform(config, `/chatboard/${p.id}`));
-    }
+    // for (const p of posts) {
+    //   paths.push(await config.transform(config, `/chatboard/${p.id}`));
+    // }
 
-    const reddits = await prisma.reddit.findMany({
-      select: { id: true },
-    });
+    // const reddits = await prisma.reddit.findMany({
+    //   select: { id: true },
+    // });
 
-    for (const rddt of reddits) {
-      paths.push(await config.transform(config, `/matome/${rddt.id}`));
-    }
+    // for (const rddt of reddits) {
+    //   paths.push(await config.transform(config, `/matome/${rddt.id}`));
+    // }
 
     return paths;
   },
