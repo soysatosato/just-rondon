@@ -168,7 +168,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Button>
           </div>
         </div>
-        <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
+        {/* <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
           <p className="text-sm font-medium">
             雑談・情報交換用の掲示板もあります
           </p>
@@ -181,7 +181,7 @@ export default async function DashboardPage({ searchParams }: Props) {
               <Link href="/chatboard">雑談掲示板を見る</Link>
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );

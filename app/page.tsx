@@ -136,7 +136,7 @@ export default function Page() {
               href="/museums/best-10-museums"
               title="ロンドンのおすすめの美術館"
             />
-            <ExploreCard href="/chatboard" title="ロンドンなんでも掲示板" />
+            {/* <ExploreCard href="/chatboard" title="ロンドンなんでも掲示板" /> */}
           </div>
         </div>
       </section>
