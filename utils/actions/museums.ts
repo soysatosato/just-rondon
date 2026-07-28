@@ -1,13 +1,8 @@
 "use server";
 
 import {
-  artworkFormSchema,
   // createReviewMuseumSchema,
   imageSchema,
-  museumExhibitionSchema,
-  museumFormSchema,
-  museumInfoSchema,
-  museumTriviaSchema,
   profileSchema,
   validateWithZodSchema,
 } from "../schemas";
@@ -16,19 +11,11 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { uploadImage } from "../supabase";
-import { formatDate } from "../format";
 
 export const getAuthUser = async () => {
   const user = await currentUser();
   if (!user) throw new Error("You must be logged in to access this route.");
   if (!user.privateMetadata.hasProfile) redirect("/profile/create");
-  return user;
-};
-
-export const getAdminUser = async () => {
-  const user = await getAuthUser();
-  const isAdmin = user.id === process.env.ADMIN_USER_ID;
-  if (!isAdmin) redirect("/");
   return user;
 };
 
@@ -152,50 +139,6 @@ export const updateProfileImageAction = async (
   }
 };
 
-type IncomingHour = {
-  day: string;
-  open: string | null;
-  close: string | null;
-  closed: boolean;
-};
-
-function transformOpeningHours(jsonStr: string, museumId: string) {
-  const rawHours: IncomingHour[] = JSON.parse(jsonStr);
-
-  const validHours = rawHours.map((h) => ({
-    museumId,
-    dayOfWeek: h.day,
-    openTime: h.open,
-    closeTime: h.close,
-  }));
-
-  return validHours;
-}
-export const createMuseumAction = async (
-  prevState: any,
-  formData: FormData
-): Promise<{ message: string }> => {
-  await getAdminUser();
-  try {
-    const rawData = Object.fromEntries(formData);
-    const openingHoursJson = rawData.openingHours?.toString() ?? "[]";
-    const validatedFields = validateWithZodSchema(museumFormSchema, rawData);
-    const file = formData.get("image") as File;
-    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
-    const fullPath = await uploadImage(validatedFile.image);
-    const museum = await db.museum.create({
-      data: { ...validatedFields, image: fullPath },
-    });
-    const openingData = transformOpeningHours(openingHoursJson, museum.id);
-    await db.openingHours.createMany({
-      data: openingData,
-    });
-    return { message: "uploaded" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
-
 export const fetchMuseums = async ({
   search = "",
 }: { search?: string } = {}) => {
@@ -275,78 +218,6 @@ export const fetchKidsMuseums = async () => {
     },
   });
   return museums;
-};
-
-export const updateMuseumAction = async (
-  prevState: any,
-  formData: FormData
-): Promise<{ message: string }> => {
-  await getAdminUser();
-  const museumId = formData.get("id") as string;
-
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(museumFormSchema, rawData);
-    await db.museum.update({
-      where: {
-        id: museumId,
-      },
-      data: {
-        ...validatedFields,
-      },
-    });
-    const openingHoursJson = rawData.openingHours?.toString() ?? "[]";
-    const openingData = transformOpeningHours(openingHoursJson, museumId);
-    await db.openingHours.deleteMany({
-      where: { museumId },
-    });
-    await db.openingHours.createMany({
-      data: openingData,
-    });
-
-    revalidatePath(`/rentals/${museumId}/edit`);
-    return { message: "Updated" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
-
-export const updateMuseumImageAction = async (
-  prevState: any,
-  formData: FormData
-): Promise<{ message: string }> => {
-  await getAdminUser();
-  const museumId = formData.get("id") as string;
-
-  try {
-    const image = formData.get("image") as File;
-    const validatedFields = validateWithZodSchema(imageSchema, { image });
-    const fullPath = await uploadImage(validatedFields.image);
-
-    await db.museum.update({
-      where: {
-        id: museumId,
-      },
-      data: {
-        image: fullPath,
-      },
-    });
-    revalidatePath(`/admin/museum/${museumId}/edit`);
-    return { message: "Museum Image Updated Successful" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
-
-export const fetchMuseumDetails = (id: string) => {
-  return db.museum.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      openingHours: true,
-    },
-  });
 };
 
 export const fetchMuseumDetailsBySlug = (slug: string) => {
@@ -492,28 +363,6 @@ export const fetchMuseumDetailsBySlug = (slug: string) => {
 //   });
 // };
 
-export const createArtworkAction = async (
-  prevState: any,
-  formData: FormData
-): Promise<{ message: string }> => {
-  await getAdminUser();
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(artworkFormSchema, rawData);
-    const file = formData.get("image") as File;
-    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
-    const fullPath = await uploadImage(validatedFile.image);
-    console.log(fullPath);
-    await db.artwork.create({
-      data: { ...validatedFields, image: fullPath },
-    });
-    return { message: "" };
-  } catch (error) {
-    return renderError(error);
-  }
-  // redirect("/");
-};
-
 export const fetchArtworks = async (museumId: string) => {
   const artworks = await db.artwork.findMany({
     where: {
@@ -524,58 +373,6 @@ export const fetchArtworks = async (museumId: string) => {
     },
   });
   return artworks;
-};
-
-export const updateArtworkAction = async (
-  prevState: any,
-  formData: FormData
-): Promise<{ message: string }> => {
-  const artworkId = formData.get("id") as string;
-
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(artworkFormSchema, rawData);
-    await db.artwork.update({
-      where: {
-        id: artworkId,
-      },
-      data: {
-        ...validatedFields,
-      },
-    });
-
-    revalidatePath(`/rentals/${artworkId}/edit`);
-    return { message: "Update Successful" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
-
-export const updateArtworkImageAction = async (
-  prevState: any,
-  formData: FormData
-): Promise<{ message: string }> => {
-  const user = await getAdminUser();
-  const artworkId = formData.get("id") as string;
-
-  try {
-    const file = formData.get("image") as File;
-    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
-    const fullPath = await uploadImage(validatedFile.image);
-
-    await db.artwork.update({
-      where: {
-        id: artworkId,
-      },
-      data: {
-        image: fullPath,
-      },
-    });
-    revalidatePath(`/admin/artwork/${artworkId}/edit`);
-    return { message: "Artwork Image Updated Successful" };
-  } catch (error) {
-    return renderError(error);
-  }
 };
 
 export const fetchArtworkDetails = (id: string) => {
@@ -591,120 +388,3 @@ export const fetchArtworkDetails = (id: string) => {
   });
 };
 
-export const handleMuseumInfoAction = async (
-  prevState: any,
-  formData: FormData
-) => {
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(museumInfoSchema, rawData);
-
-    if (validatedFields.id) {
-      // すでに存在 → 更新処理
-      await db.museumInfo.update({
-        where: { id: validatedFields.id },
-        data: { ...validatedFields },
-      });
-    } else {
-      // idなし → 新規作成処理
-      const { id, ...dataWithoutId } = validatedFields;
-      await db.museumInfo.create({
-        data: dataWithoutId,
-      });
-    }
-    revalidatePath(`/admin/museum/${validatedFields.museumId}`);
-    return { message: "Musium Info Updated Successful" };
-  } catch (error) {
-    return renderError(error);
-  }
-};
-
-export const fetchMuseumInfo = (id: string) => {
-  return db.museumInfo.findFirst({
-    where: {
-      museumId: id,
-    },
-  });
-};
-
-export async function handleTriviaAction(prevState: any, formData: FormData) {
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(museumTriviaSchema, rawData);
-
-    if (validatedFields.id) {
-      // update
-      await db.trivia.update({
-        where: { id: validatedFields.id },
-        data: { ...validatedFields },
-      });
-    } else {
-      // create
-      await db.trivia.create({
-        data: { ...validatedFields },
-      });
-    }
-    redirect(`/admin/museum/${validatedFields.museumId}/museumTrivia`);
-  } catch (error) {
-    return renderError(error);
-  }
-}
-
-export const fetchMuseumTrivias = (id: string) => {
-  return db.trivia.findMany({
-    where: {
-      museumId: id,
-    },
-  });
-};
-export const fetchMuseumTrivia = (id: string) => {
-  return db.trivia.findUnique({
-    where: {
-      id,
-    },
-  });
-};
-
-export async function handleExhibitionAction(
-  prevState: any,
-  formData: FormData
-) {
-  try {
-    const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(
-      museumExhibitionSchema,
-      rawData
-    );
-
-    if (validatedFields.id) {
-      // update
-      await db.exhibition.update({
-        where: { id: validatedFields.id },
-        data: { ...validatedFields },
-      });
-    } else {
-      // create
-      await db.exhibition.create({
-        data: { ...validatedFields },
-      });
-    }
-    redirect(`/admin/museum/${validatedFields.museumId}/museumExhibition`);
-  } catch (error) {
-    return renderError(error);
-  }
-}
-
-export const fetchMuseumExhibitions = (id: string) => {
-  return db.exhibition.findMany({
-    where: {
-      museumId: id,
-    },
-  });
-};
-export const fetchMuseumExhibition = (id: string) => {
-  return db.exhibition.findUnique({
-    where: {
-      id,
-    },
-  });
-};

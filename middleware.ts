@@ -33,6 +33,5 @@ export const config = {
     "/favorites(.*)",
     "/reservations(.*)",
     "/reviews(.*)",
-    "/admin(.*)",
   ],
 };
