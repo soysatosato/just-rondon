@@ -1,17 +1,15 @@
-// app/dashboard/page.tsx
+// app/(with-ads)/jobs/service-charges/dashboard/page.tsx
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
 import {
   fetchServiceCharges,
-  fetchServiceChargeCount,
+  fetchServiceChargeStats,
 } from "@/utils/actions/jobs";
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
+import ServiceChargeStats from "@/components/jobs/ServiceChargeStats";
 import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 type Props = {
@@ -27,8 +25,8 @@ export default async function DashboardPage({ searchParams }: Props) {
   const hasQuery = q.length > 0;
   const isSearchable = q.length >= 3;
 
-  // 件数は常に取得
-  const totalCount = await fetchServiceChargeCount();
+  // 統計は常に取得
+  const stats = await fetchServiceChargeStats();
 
   // 3文字以上のときのみ検索
   const records = isSearchable ? await fetchServiceCharges(q) : [];
@@ -75,18 +73,21 @@ export default async function DashboardPage({ searchParams }: Props) {
         <div className="mt-4 justify-center flex">
           <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
         </div>
-        {/* 強調注意書き：3文字未満 */}
+        {/* 注意書き：3文字未満 */}
         {hasQuery && !isSearchable && (
-          <Alert variant="destructive" className="max-w-md">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>検索条件が不十分です</AlertTitle>
-            <AlertDescription>
-              検索は <strong>3文字以上</strong> の英字で行ってください。
-              <br />
-              例：
-              <code className="ml-1 rounded bg-muted px-1 py-0.5">yok</code>
-            </AlertDescription>
-          </Alert>
+          <div className="max-w-md rounded-lg border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+            検索は<strong className="text-foreground">3文字以上</strong>
+            の英字で行ってください（例：
+            <code className="mx-1 rounded bg-muted px-1 py-0.5">yok</code>
+            ）。3文字未満でも、
+            <Link
+              href="/jobs/service-charges/dashboard/archive"
+              className="underline underline-offset-2"
+            >
+              下の一覧ページ
+            </Link>
+            から探せます。
+          </div>
         )}
 
         {/* サブタイトル */}
@@ -95,7 +96,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             ? "検索結果"
             : hasQuery
               ? "※ 検索は3文字以上でのみ実行されます"
-              : "一覧表示で見るにはアンケートへのご協力が必要です"}
+              : "店舗名で検索するか、下の一覧ページからも探せます"}
         </p>
 
         {/* 検索結果あり */}
@@ -134,23 +135,29 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Button>
           </div>
         )}
-        <div className="rounded-lg border border-dashed p-6 text-center space-y-3">
-          <p className="text-sm">
-            現在 <span className="font-medium">全 {totalCount} 件</span>{" "}
-            のレビューが集まっています。
-          </p>
+        <ServiceChargeStats stats={stats} />
+
+        <div className="rounded-lg border p-6 text-center space-y-3">
           <p className="text-sm text-muted-foreground">
-            一覧表示で見るには、まずアンケートにご協力ください。
-          </p>
-          <p className="text-sm text-muted-foreground">
-            アンケートに回答すると、一覧ページへのリンクが表示されます。
+            寄せられた調査データはすべて、一覧ページでいつでも閲覧できます。
           </p>
           <Button asChild>
-            <Link href="/jobs/service-charges/survey">
-              アンケートに回答する
+            <Link href="/jobs/service-charges/dashboard/archive">
+              全件一覧を見る
             </Link>
           </Button>
+          <p className="text-xs text-muted-foreground">
+            まだ回答していない店舗があれば、
+            <Link
+              href="/jobs/service-charges/survey"
+              className="underline underline-offset-2"
+            >
+              アンケートにご協力ください
+            </Link>
+            。
+          </p>
         </div>
+
         <div className="max-w-2xl rounded-lg border bg-muted/40 p-4">
           <p className="text-sm font-medium">
             サービスチャージの制度について知りたい方へ
@@ -168,20 +175,6 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Button>
           </div>
         </div>
-        {/* <div className="max-w-2xl rounded-lg border bg-muted/30 p-4">
-          <p className="text-sm font-medium">
-            雑談・情報交換用の掲示板もあります
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            ちょっとした質問・雑談などは
-            調査とは別の、雑談掲示板で自由に書き込めます。
-          </p>
-          <div className="mt-3">
-            <Button asChild variant="secondary" size="sm">
-              <Link href="/chatboard">雑談掲示板を見る</Link>
-            </Button>
-          </div>
-        </div> */}
       </div>
     </main>
   );

@@ -9,23 +9,23 @@ datasource db {
 }
 
 model Profile {
-  id              String            @id @default(uuid())
-  clerkId         String            @unique
-  username        String            @unique
-  email           String
-  profileImage    String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  bookings        Booking[]
-  hasVisited      hasVisited[]
+  id           String       @id @default(uuid())
+  clerkId      String       @unique
+  username     String       @unique
+  email        String
+  profileImage String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  bookings     Booking[]
+  hasVisited   hasVisited[]
 }
 
 model Museum {
-  id             String           @id @default(uuid())
-  name           String           @unique
-  slug           String           @unique
+  id             String         @id @default(uuid())
+  name           String         @unique
+  slug           String         @unique
   tagline        String?
-  category       String?          @default("museum")
+  category       String?        @default("museum")
   description    String?
   price          Float
   address        String
@@ -33,13 +33,13 @@ model Museum {
   lng            Float
   image          String
   website        String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   tourPrice      Float
   highlights     String[]
-  recommendLevel Int?             @default(0)
+  recommendLevel Int?           @default(0)
   engName        String?
-  isForChildren  Boolean          @default(false)
+  isForChildren  Boolean        @default(false)
   summary        String?
   blurb          String?
   artworks       Artwork[]
@@ -52,23 +52,23 @@ model Museum {
 }
 
 model Artwork {
-  id             String            @id @default(uuid())
+  id             String   @id @default(uuid())
   title          String
   artist         String?
   year           String?
   location       String?
   description    String?
-  isOnDisplay    Boolean           @default(true)
-  museumId       String            @default("6cc90107-59e4-45a8-b901-abb9748ebeea")
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  isOnDisplay    Boolean  @default(true)
+  museumId       String   @default("6cc90107-59e4-45a8-b901-abb9748ebeea")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   image          String?
   room           String?
   mustSee        Boolean
-  recommendLevel Int               @default(0)
+  recommendLevel Int      @default(0)
   highlights     String[]
   engTitle       String?
-  museum         Museum            @relation(fields: [museumId], references: [id])
+  museum         Museum   @relation(fields: [museumId], references: [id])
 }
 
 model hasVisited {
@@ -244,125 +244,117 @@ model Contact {
 }
 
 model Attraction {
-  id           String     @id @default(uuid())
-  name         String     @unique
-  engName      String?    
-  slug         String     @unique
-  tagline      String?
-  summary  String?
-  address      String
-  lat          Float
-  lng          Float
-  image        String
-  website      String?
-  recommendLevel  Int?      @default(0)
-  mustSee      Boolean    @default(false)
-  isForKids      Boolean    @default(false)
-  isFree      Boolean    @default(false)
-  category     String    @default("")
-
-  sections     AttractionSection[]
-
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id             String              @id @default(uuid())
+  name           String              @unique
+  engName        String?
+  slug           String              @unique
+  tagline        String?
+  summary        String?
+  address        String
+  lat            Float
+  lng            Float
+  image          String
+  website        String?
+  recommendLevel Int?                @default(0)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  category       String              @default("")
+  mustSee        Boolean             @default(false)
+  isForKids      Boolean             @default(false)
+  isFree         Boolean             @default(false)
+  sections       AttractionSection[]
 }
 
 model AttractionSection {
-  id            Int       @id @default(autoincrement())
-  title         String
-  description   String?
-  displayOrder  Int
+  id           Int        @id @default(autoincrement())
+  title        String
+  description  String?
+  displayOrder Int
+  attractionId String
+  createdAt    DateTime   @default(now())
+  attraction   Attraction @relation(fields: [attractionId], references: [id])
+}
 
-  attractionId  String
-  attraction    Attraction @relation(fields: [attractionId], references: [id])
-
-  createdAt     DateTime @default(now())
-  }
 
   model Content {
   id String  @id @default(cuid())
   title     String
   engTitle     String?
   slug      String    
-  summary   String
+  summary   String?
   mainText  String?
+  description   String?
+  description2  String?  
+  description3  String?  
   image        String?
   website      String?
   category     String    @default("")
-  createdAt DateTime         @default(now())
   route     String   @default("")
   sections  ContentSection[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
+
 
 model ContentSection {
   id            Int       @id @default(autoincrement())
   title         String
+  subtitle      String?
   description   String?
+  description2  String?  
+  description3  String?  
   displayOrder  Int @default(0)
   image         String?
-
   contentId  String
-  content    Content @relation(fields: [contentId], references: [id])
-
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   }
 
-  model Lyrics {
+model Lyrics {
   id         String    @id @default(cuid())
   name       String
   artistId   String
-  artist     Artist    @relation(fields: [artistId], references: [id])
   lyrics     String
-  scene      String?
   album      String?
   youtubeId  String?
-  views      Int      @default(0)
+  views      Int       @default(0)
   genre      String?
-  year       Int     @default(0)
-  month      Int     @default(0)
-  albumOrder Int     @default(0)
-  
   createdAt  DateTime  @default(now())
-
-  rankings    Ranking[]
+  scene      String?
+  year       Int       @default(0)
+  month      Int       @default(0)
+  albumOrder Int       @default(0)
+  artist     Artist    @relation(fields: [artistId], references: [id])
+  rankings   Ranking[]
 }
 
 model Artist {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String
   engName   String
   imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isHot    Boolean?
-
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  isHot     Boolean?
   songs     Lyrics[]
   rankings  Ranking[]
 }
 
 model Ranking {
-  id          String       @id @default(cuid())
+  id          String      @id @default(cuid())
   type        RankingType
   rank        Int
-  album       String?
   periodStart DateTime
   periodEnd   DateTime
-
-  // Song と Artist どちらのランキングにも使える構造
   lyricsId    String?
+  artistId    String?
+  album       String?
+  artist      Artist?     @relation(fields: [artistId], references: [id])
   lyrics      Lyrics?     @relation(fields: [lyricsId], references: [id])
-  artistId  String?
-  artist    Artist?   @relation(fields: [artistId], references: [id])
 
   @@index([type, periodEnd])
 }
-enum RankingType {
-  HOT_SONGS
-  HOT_ALBUM
-  HOT_ARTISTS
-}
-
-
 
 model LyricsRequest {
   id        Int      @id @default(autoincrement())
@@ -380,68 +372,56 @@ model ServiceCharge {
   lng                    Float
   borough                String?
   postcode               String?
-
-  // ===== MVP =====
   serviceChargeCollected Boolean
   distributionType       String?
   amountPeriod           String?
   amountValue            Float?
-
-  // ===== サービスチャージ専用の自由記述 =====
-  serviceChargeComment   String?
-
-  // ===== Phase2: 賄い・生活 =====
-  mealCountPerDay        String?   // "0" | "1" | "2plus"
-  mealRestrictions       String[] // ["no-beef", "no-meat", "no-fish", "none"]
-  mealComment       String? // ["no-beef", "no-meat", "no-fish", "none"]
-  mealDrink              String?   // "alcohol-ok" | "softdrinks" | "water-only" | "none"
-
-  shiftSchedule          String?   // "monthly" | "weekly" | "last-minute"
-  visaSupport            String?   // "yes" | "no" | "unknown"
-
-  // ===== 職場環境 =====
-  workAtmosphere         String?   // "good" | "neutral" | "tense" | "toxic"
-  managementPresence     String?   // "owner-daily" | "manager-daily" | "sometimes" | "hands-off"
-
-  ethnicityRatio         String?   // 選択肢のみ（自由記述なし）
-
-  // ===== 全体の自由記述 =====
-  generalComment         String?
-
   createdAt              DateTime @default(now())
+  ethnicityRatio         String?
+  generalComment         String?
+  managementPresence     String?
+  mealCountPerDay        String?
+  mealDrink              String?
+  mealRestrictions       String[]
+  serviceChargeComment   String?
+  shiftSchedule          String?
+  visaSupport            String?
+  workAtmosphere         String?
+  mealComment            String?
 
   @@index([placeId])
   @@index([serviceChargeCollected])
 }
 
 model RedditPost {
-  id             String   @id @default(cuid())
-  title          String
-  titleJa        String
-  authorId       String?
-  displayOrder   Int
-  createdAt      DateTime @default(now())
-
-  // スレッドとの親子
-  redditId       String
-  reddit         Reddit @relation(fields: [redditId], references: [id])
+  id           String   @id @default(cuid())
+  title        String
+  titleJa      String
+  authorId     String?
+  createdAt    DateTime @default(now())
+  redditId     String
+  displayOrder Int
+  reddit       Reddit   @relation(fields: [redditId], references: [id])
 
   @@index([redditId])
 }
 
-
 model Reddit {
-  id            String   @id @default(cuid())
-  imageUrl       String?
-  title         String   @unique   
-  titleJa       String            // 日本語訳
-  body          String
-  bodyJa        String
-  authorId       String?             
-  postedAt       DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  posts         RedditPost[]
+  id        String       @id @default(cuid())
+  imageUrl  String?
+  title     String       @unique
+  titleJa   String
+  authorId  String?
+  postedAt  DateTime
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  body      String
+  bodyJa    String
+  posts     RedditPost[]
 }
 
+enum RankingType {
+  HOT_SONGS
+  HOT_ARTISTS
+  HOT_ALBUM
+}

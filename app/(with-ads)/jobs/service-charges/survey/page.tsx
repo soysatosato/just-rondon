@@ -1,4 +1,4 @@
-// app/survey/page.tsx
+// app/(with-ads)/jobs/service-charges/survey/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -18,6 +18,7 @@ import PlaceAutocomplete, {
 } from "@/components/jobs/PlaceAutocomplete";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 function SubmitButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
@@ -43,6 +44,10 @@ export default function SurveyPage() {
   const needsPeriod = useMemo(() => amountValue.trim() !== "", [amountValue]);
   const [amountPeriod, setAmountPeriod] = useState<"weekly" | "monthly" | null>(
     null
+  );
+  const amountMismatch = useMemo(
+    () => collected === "yes" && (amountValue.trim() !== "") !== (amountPeriod !== null),
+    [collected, amountValue, amountPeriod]
   );
   const [showError, setShowError] = useState(true);
   const [showExtra, setShowExtra] = useState(false);
@@ -82,7 +87,7 @@ export default function SurveyPage() {
             )}
 
             <form action={action} className="space-y-6">
-              {/* Q0: 店舗（現状はテキスト。後で Google Places Autocomplete で place_id をセット） */}
+              {/* Q0: 店舗（Google Places Autocomplete で place_id を取得） */}
               <section className="space-y-2">
                 <PlaceAutocomplete
                   onSelect={(place: SelectedPlace) => {
@@ -284,7 +289,14 @@ export default function SurveyPage() {
                       />
                     </div>
 
-                    <p className="text-xs text-muted-foreground">
+                    <p
+                      className={cn(
+                        "text-xs",
+                        amountMismatch
+                          ? "text-destructive font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
                       ※
                       金額を入力した場合は、週額または月額のどちらかを選択してください。
                     </p>
@@ -572,7 +584,7 @@ export default function SurveyPage() {
                 </>
               )}
 
-              <SubmitButton disabled={!placeId} />
+              <SubmitButton disabled={!placeId || amountMismatch} />
             </form>
           </CardContent>
         </Card>

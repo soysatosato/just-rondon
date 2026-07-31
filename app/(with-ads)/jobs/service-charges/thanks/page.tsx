@@ -1,4 +1,4 @@
-// app/thanks/page.tsx
+// app/(with-ads)/jobs/service-charges/thanks/page.tsx
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,20 +26,10 @@ export default function ThanksPage() {
 
           <div className="pt-2">
             <Button asChild className="w-full">
-              <Link href="/jobs/service-charges/dashboard/archive">
-                一覧表示を見る
+              <Link href="/jobs/service-charges/dashboard">
+                調査データを見る
               </Link>
             </Button>
-          </div>
-          <div className="mt-4 text-left rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-xs text-amber-900">
-            <ul className="space-y-1 list-disc list-outside">
-              <li>
-                このページ以外から一覧表示へ移動するリンクは設けていません。
-              </li>
-              <li>
-                再度閲覧する場合は、リンク先のURLを保存するなどして控えておくことをおすすめします。
-              </li>
-            </ul>
           </div>
         </CardContent>
       </Card>

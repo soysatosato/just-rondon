@@ -27,15 +27,14 @@ export const metadata = {
     follow: true,
   },
   alternates: {
-    canonical:
-      "https://www.just-rondon.com/hospitality/uk-service-charges-guide",
+    canonical: "https://www.just-rondon.com/jobs/service-charges",
   },
   openGraph: {
     title:
       "英国サービスチャージの仕組みと法律｜Tipping Act 2023をわかりやすく解説",
     description:
       "サービスチャージは誰のもの？拒否できる？英国のTipping Act 2023に基づき、事業者・従業員双方が知るべきルールを整理。",
-    url: "https://www.just-rondon.com/hospitality/uk-service-charges-guide",
+    url: "https://www.just-rondon.com/jobs/service-charges",
     siteName: "ジャスト・ロンドン｜英国生活・法律ガイド",
     locale: "ja_JP",
     type: "article",
@@ -179,6 +178,14 @@ export default async function ServiceChargeGuidePage() {
               className="text-blue-600 dark:text-blue-400  hover:opacity-80"
             >
               ロンドン市内のサービスチャージ実態調査（独自調査）
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/jobs/service-charges/case-story"
+              className="text-blue-600 dark:text-blue-400  hover:opacity-80"
+            >
+              サービスチャージ未払いで裁判に勝った話（実体験＋実用ガイド）
             </Link>
           </li>
         </ul>

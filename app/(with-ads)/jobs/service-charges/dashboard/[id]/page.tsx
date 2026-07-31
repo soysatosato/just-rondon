@@ -1,4 +1,4 @@
-// app/dashboard/[id]/page.tsx
+// app/(with-ads)/jobs/service-charges/dashboard/[id]/page.tsx
 
 import Link from "next/link";
 import { notFound } from "next/navigation";

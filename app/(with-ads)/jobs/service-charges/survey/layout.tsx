@@ -1,4 +1,4 @@
-// app/survey/layout.tsx
+// app/(with-ads)/jobs/service-charges/survey/layout.tsx
 import Script from "next/script";
 
 export default function SurveyLayout({
