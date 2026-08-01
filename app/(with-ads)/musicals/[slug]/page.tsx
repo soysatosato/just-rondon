@@ -16,8 +16,12 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import MusicalInfo from "@/components/musicals/MusicalInfo";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import Link from "next/link";
+import {
+  musicalBreadcrumbJsonLd,
+  theaterEventJsonLd,
+} from "@/components/musicals/jsonld";
 
 // dynamic 関数を使ってコンポーネントを、遅延読み込み（Dynamic Import）する
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
@@ -36,12 +40,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const musical = await fetchMusicalIdandName(params.slug);
 
-  // if (!musical) {
-  //   return {
-  //     title: "美術館情報が見つかりません",
-  //     description: "指定された美術館の情報が見つかりませんでした。",
-  //   };
-  // }
+  if (!musical) {
+    return {
+      title: "ミュージカル情報が見つかりません | ジャスト・ロンドン",
+      description: "指定されたミュージカルの情報が見つかりませんでした。",
+      robots: { index: false, follow: false },
+    };
+  }
 
   return {
     title: `${musical?.name}・${musical?.engName}｜ロンドン観光・ミュージカルガイド`,
@@ -73,10 +78,20 @@ export default async function musicalDetailsPage({
 
   return (
     <div>
-      <BreadCrumbs
-        name="ミュージカル"
-        link="musicals"
-        name2={
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(musicalBreadcrumbJsonLd(musical)),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(theaterEventJsonLd(musical)),
+        }}
+      />
+      <MusicalBreadCrumbs
+        name={
           musical.name.length > 7
             ? musical.name.slice(0, 7) + "..."
             : musical.name

@@ -17,6 +17,8 @@ module.exports = {
       "/museums/best-25-museums",
       "/museums/best-museums-for-kids",
       "/musicals",
+      "/musicals/west-end-tickets",
+      "/musicals/west-end-etiquette",
       // "/news",
       // "/chatboard",
       // "/chatboard/create",

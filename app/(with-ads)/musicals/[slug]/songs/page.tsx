@@ -8,18 +8,20 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
 import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import { musicalBreadcrumbJsonLd } from "@/components/musicals/jsonld";
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
   const musical = await fetchMusicalIdandName(params.slug);
-  // if (!musical) {
-  //   return {
-  //     title: "情報が見つかりません",
-  //     description: "指定されたミュージカルの情報が見つかりませんでした。",
-  //   };
-  // }
+  if (!musical) {
+    return {
+      title: "ミュージカル情報が見つかりません | ジャスト・ロンドン",
+      description: "指定されたミュージカルの曲一覧情報が見つかりませんでした。",
+      robots: { index: false, follow: false },
+    };
+  }
 
   return {
     title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ジャスト・ロンドン`,
@@ -62,6 +64,22 @@ export default async function SongsPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            musicalBreadcrumbJsonLd(
+              { name: musical.name, slug: params.slug },
+              [
+                {
+                  name: "曲一覧",
+                  url: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
+                },
+              ],
+            ),
+          ),
+        }}
+      />
       <MusicalBreadCrumbs
         name2="曲一覧"
         link2={params.slug}
@@ -149,8 +167,15 @@ export default async function SongsPage({
           maxPageButtons={5} // 表示するページ番号の数
         />
         <p className=" text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
-          ミュージカルをより楽しむためには、事前にあらすじや登場人物、主要シーンを把握しておくことが重要です。
-          英語で上演される作品では、歌詞やセリフの意味まで理解するのが難しい場合がありますが、このページではわかりやすく解説しています。{" "}
+          曲の歌詞や和訳を読んでおくと、キャラクターの心情やストーリーの転換点がより深く理解できます。
+          観劇前の予習はもちろん、観たあとの復習としてもおすすめです。チケットの買い方やお得な観劇方法は
+          <Link
+            href="/musicals/west-end-tickets"
+            className="text-blue-600 dark:text-blue-300 underline hover:opacity-80 mx-1"
+          >
+            チケットの買い方・お得な料金ガイド
+          </Link>
+          もあわせてご覧ください。
         </p>
         <div className="text-center mt-8">
           <Link href={`/musicals/${params.slug}`}>

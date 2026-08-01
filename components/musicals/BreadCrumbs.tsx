@@ -32,6 +32,16 @@ export default function MusicalBreadCrumbs({
         {/* Separator */}
         <BreadcrumbSeparator />
 
+        {/* Musicals hub */}
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link href="/musicals">ミュージカル</Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+
+        {/* Separator */}
+        <BreadcrumbSeparator />
+
         {/* Name */}
         <BreadcrumbItem>
           {name2 || name3 ? (

@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { musicalBreadcrumbJsonLd } from "@/components/musicals/jsonld";
 
 export async function generateMetadata({
   params,
@@ -19,13 +20,13 @@ export async function generateMetadata({
   const musical = await fetchMusicalIdandName(params.slug);
   const song = await fetchSongDetails(params.id);
 
-  // if (!musical || !song) {
-  //   return {
-  //     title: "情報が見つかりません",
-  //     description: "指定されたミュージカルの情報が見つかりませんでした。",
-  //     robots: { index: true, follow: true },
-  //   };
-  // }
+  if (!musical || !song) {
+    return {
+      title: "曲情報が見つかりません | ジャスト・ロンドン",
+      description: "指定された曲の情報が見つかりませんでした。",
+      robots: { index: false, follow: false },
+    };
+  }
   return {
     title: `${song?.name}の歌詞・和訳 | ${musical?.name} (${musical?.engName}) | ジャスト・ロンドン`,
     description: `${song?.name} の歌詞と和訳を掲載。${musical?.name} (${musical?.engName})の名曲・人気曲を日本語でわかりやすく解説。ミュージカルファン必見の歌詞・翻訳ガイドサイトです。`,
@@ -55,6 +56,26 @@ export default async function SongDetailsPage({
   if (!song) redirect("/musicals");
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            musicalBreadcrumbJsonLd(
+              { name: song.musical.name, slug: params.slug },
+              [
+                {
+                  name: "曲一覧",
+                  url: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
+                },
+                {
+                  name: song.name,
+                  url: `https://www.just-rondon.com/musicals/${params.slug}/songs/${params.id}`,
+                },
+              ],
+            ),
+          ),
+        }}
+      />
       <MusicalBreadCrumbs
         name2="曲一覧"
         name3={song.name.length > 7 ? song.name.slice(0, 7) + "..." : song.name}

@@ -1,8 +1,7 @@
 import LoadingCards from "@/components/card/LoadingCards";
-import Pagination from "@/components/home/Pagination";
-import RainCanvas from "@/components/home/RainParticles";
 import MusicalHomePage from "@/components/musicals/MusicalHomePage";
-import { fetchMusicals } from "@/utils/actions/musicals";
+import { fetchAllMusicals } from "@/utils/actions/musicals";
+import { collectionPageJsonLd } from "@/components/musicals/jsonld";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -29,39 +28,21 @@ export const metadata: Metadata = {
     siteName: "ジャスト・ロンドン",
   },
 };
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
-  const currentPage = parseInt(searchParams.page || "1", 10);
-  const itemsPerPage = 10;
+export default async function HomePage() {
+  const musicals = await fetchAllMusicals();
+  if (musicals.length === 0) redirect("/");
 
-  const { musicals, total } = await fetchMusicals({
-    page: currentPage,
-    limit: itemsPerPage,
-  });
-  if (!musicals) redirect("/");
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageJsonLd(musicals)),
+        }}
+      />
       <section>
-        {/* <div className="fixed inset-0 z-[9999] pointer-events-none">
-          <RainCanvas />
-        </div> */}
         <Suspense fallback={<LoadingCards />}>
-          <MusicalHomePage
-            musicals={musicals}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-          />
-          <div className="flex justify-center my-6">
-            <Pagination
-              currentPage={currentPage}
-              totalItems={total}
-              itemsPerPage={itemsPerPage}
-              baseUrl="/musicals"
-            />
-          </div>
+          <MusicalHomePage musicals={musicals} />
         </Suspense>
       </section>
     </>

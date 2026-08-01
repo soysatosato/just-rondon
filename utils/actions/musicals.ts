@@ -2,6 +2,21 @@
 
 import db from "../db";
 
+export const fetchAllMusicals = async () => {
+  return db.musical.findMany({
+    orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+  });
+};
+
+export const fetchTopMusicals = async (limit: number = 3) => {
+  return db.musical.findMany({
+    where: { mustSee: true },
+    orderBy: { recommendLevel: "desc" },
+    take: limit,
+    select: { slug: true, name: true, engName: true, image: true },
+  });
+};
+
 export const fetchMusicals = async ({
   page = 1,
   limit = 10,
