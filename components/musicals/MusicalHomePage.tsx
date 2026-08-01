@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import type { Musical } from "@prisma/client";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -10,8 +10,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -19,23 +18,108 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { FaGlobe } from "react-icons/fa";
+import { cn } from "@/lib/utils";
+import {
+  MapPin,
+  Search,
+  Sparkles,
+  Star,
+  Ticket,
+  BookOpen,
+  ArrowRight,
+  Theater,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 type SortOption = "recommend" | "name";
+type ViewMode = "grid" | "list";
+
+function RecommendStars({ level }: { level: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={cn(
+            "h-3.5 w-3.5",
+            i < level
+              ? "fill-amber-400 text-amber-400"
+              : "fill-transparent text-white/40",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
+function MusicalPosterCard({ musical }: { musical: Musical }) {
+  return (
+    <Link
+      href={`/musicals/${musical.slug}`}
+      className="group block h-full overflow-hidden rounded-2xl border border-border bg-card shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+    >
+      <div className="relative aspect-[3/4] w-full overflow-hidden">
+        <Image
+          src={musical.image}
+          alt={musical.name}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+
+        <div className="absolute left-2 top-2 right-2 flex items-start justify-between gap-1">
+          {musical.mustSee ? (
+            <Badge className="bg-rose-600 text-white border-transparent shadow">
+              Must See
+            </Badge>
+          ) : (
+            <span />
+          )}
+          <span className="rounded-full bg-black/50 backdrop-blur-sm px-2 py-1">
+            <RecommendStars level={musical.recommendLevel} />
+          </span>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+          <h3 className="text-lg font-bold leading-snug drop-shadow">
+            {musical.name}
+          </h3>
+          <p className="text-xs text-white/80 mt-0.5">{musical.engName}</p>
+          <p className="mt-2 line-clamp-2 text-xs text-white/85 leading-relaxed">
+            {musical.summary}
+          </p>
+          <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-white/95 group-hover:gap-2 transition-all">
+            詳細を見る <ArrowRight className="h-3.5 w-3.5" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function MusicalHomePage({ musicals }: { musicals: Musical[] }) {
   const [search, setSearch] = useState("");
   const [mustSeeOnly, setMustSeeOnly] = useState(false);
-  // 現状は全31作品が isOnShow: true のため、このチェックボックスは今のところ
+  // 現状は全31作品が isOnShow: true のため、このトグルは今のところ
   // 見た目上の絞り込み効果を持たない。上映終了作品が出た際に機能する。
   const [onShowOnly, setOnShowOnly] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("recommend");
+  const [view, setView] = useState<ViewMode>("grid");
+
+  const spotlightMusicals = useMemo(
+    () => musicals.filter((m) => m.mustSee).slice(0, 8),
+    [musicals],
+  );
+  const heroImages = useMemo(() => musicals.slice(0, 4), [musicals]);
 
   const filteredMusicals = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -67,209 +151,267 @@ export default function MusicalHomePage({ musicals }: { musicals: Musical[] }) {
     return sorted;
   }, [musicals, search, mustSeeOnly, onShowOnly, sortBy]);
 
+  const isFiltering = search.trim() !== "" || mustSeeOnly || onShowOnly;
+
   return (
-    <div className="max-w-7xl mx-auto px-3 space-y-8 bg-background text-foreground">
-      <section className="relative  py-24 px-6">
-        <div className="max-w-3xl mx-auto text-center relative z-10">
-          {/* タイトル */}
+    <div className="bg-background text-foreground pb-16">
+      {/* ===== ヒーロー ===== */}
+      <section className="relative isolate flex min-h-[480px] items-center overflow-hidden pb-24 pt-20 sm:min-h-[560px] sm:pb-28">
+        <div className="absolute inset-0 grid grid-cols-2 sm:grid-cols-4">
+          {heroImages.map((m, i) => (
+            <div key={m.id} className="relative h-full w-full">
+              <Image
+                src={m.image}
+                alt=""
+                fill
+                priority={i === 0}
+                className="object-cover"
+              />
+            </div>
+          ))}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-black/70 to-black/60" />
+
+        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center text-white">
+          <motion.span
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 backdrop-blur-sm ring-1 ring-white/20"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            {musicals.length}作品を掲載中
+          </motion.span>
+
           <motion.h1
-            className="text-xl md:text-5xl font-bold mb-6"
+            className="mt-5 text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl"
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1, type: "spring", stiffness: 120 }}
+            transition={{ duration: 0.8, type: "spring", stiffness: 120 }}
           >
-            ロンドンといえば
+            ロンドンといえば、
             <br />
-            ミュージカル
+            ミュージカル。
           </motion.h1>
 
-          {/* 説明文 */}
           <motion.p
-            className="text-xs md:text-base leading-relaxed text-gray-200 text-left"
+            className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-white/85 sm:text-base"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
           >
-            ミュージカルの魅力を最大限に味わうには、事前に作品の内容を理解しておくことが大切です。
-            英語で上演される舞台は、ストーリーや歌詞の細部まで把握するのが容易ではありません。
-          </motion.p>
-          <motion.p
-            className="text-xs md:text-base leading-relaxed text-gray-200 text-left mt-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-          >
-            あらすじや歌詞を押さえておくことで、演技や音楽の深みまで楽しめるでしょう。
-            本ページでは、各作品の内容と歌詞についてまとめていますので、観劇前にぜひご一読ください。
+            英語で上演される舞台も、あらすじや歌詞を事前に押さえておけば理解が深まります。
+            見どころ・チケットの買い方・劇場マナーまで、観劇前に知っておきたい情報をまとめました。
           </motion.p>
         </div>
       </section>
 
-      {/* チケットの買い方・マナーガイドへの導線 */}
-      <section className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Link href="/musicals/west-end-tickets" className="block">
-          <Card className="h-full shadow-sm transition hover:border-primary">
-            <CardContent className="p-5">
+      {/* ===== フローティング検索バー(ヒーローに重ねる) ===== */}
+      <div className="relative z-20 mx-auto -mt-14 max-w-4xl px-4 sm:-mt-16">
+        <Card className="rounded-2xl border-border/60 shadow-xl">
+          <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-5">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="作品名・キーワードで検索（例: 家族向け、ディズニー）"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setMustSeeOnly((v) => !v)}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+                  mustSeeOnly
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-transparent text-muted-foreground hover:bg-muted",
+                )}
+              >
+                Must See
+              </button>
+              <button
+                type="button"
+                onClick={() => setOnShowOnly((v) => !v)}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+                  onShowOnly
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-transparent text-muted-foreground hover:bg-muted",
+                )}
+              >
+                上映中のみ
+              </button>
+              <Select
+                value={sortBy}
+                onValueChange={(v) => setSortBy(v as SortOption)}
+              >
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="並び替え" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recommend">おすすめ順</SelectItem>
+                  <SelectItem value="name">名前順</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mx-auto mt-12 max-w-7xl space-y-16 px-4">
+        {/* ===== ガイドへの導線 ===== */}
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Link
+            href="/musicals/west-end-tickets"
+            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-primary hover:shadow-md"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Ticket className="h-6 w-6" />
+            </span>
+            <span className="min-w-0">
               <span className="block text-base font-semibold">
                 チケットの買い方・お得な料金ガイド
               </span>
-              <span className="mt-1 block text-sm text-muted-foreground">
+              <span className="mt-0.5 block text-sm text-muted-foreground">
                 公式サイトの使い分けやTKTS半額ブースなど、節約術をまとめました。
               </span>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/musicals/west-end-etiquette" className="block">
-          <Card className="h-full shadow-sm transition hover:border-primary">
-            <CardContent className="p-5">
+            </span>
+            <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+          </Link>
+          <Link
+            href="/musicals/west-end-etiquette"
+            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-primary hover:shadow-md"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Theater className="h-6 w-6" />
+            </span>
+            <span className="min-w-0">
               <span className="block text-base font-semibold">
                 劇場の楽しみ方・マナーガイド
               </span>
-              <span className="mt-1 block text-sm text-muted-foreground">
+              <span className="mt-0.5 block text-sm text-muted-foreground">
                 服装や開演時間、アクセス、当日のマナーを解説します。
               </span>
-            </CardContent>
-          </Card>
-        </Link>
-      </section>
+            </span>
+            <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+          </Link>
+        </section>
 
-      {/* 絞り込み・検索バー */}
-      <section className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-center gap-4">
-        <Input
-          placeholder="作品名・キーワードで検索"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
-        />
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="mustSeeOnly"
-            checked={mustSeeOnly}
-            onCheckedChange={(v) => setMustSeeOnly(Boolean(v))}
-          />
-          <Label htmlFor="mustSeeOnly">Must See のみ</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="onShowOnly"
-            checked={onShowOnly}
-            onCheckedChange={(v) => setOnShowOnly(Boolean(v))}
-          />
-          <Label htmlFor="onShowOnly">上映中のみ</Label>
-        </div>
-        <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-          <SelectTrigger className="w-full md:w-40">
-            <SelectValue placeholder="並び替え" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="recommend">おすすめ順</SelectItem>
-            <SelectItem value="name">名前順</SelectItem>
-          </SelectContent>
-        </Select>
-      </section>
-      <p className="max-w-4xl mx-auto text-sm text-muted-foreground">
-        {musicals.length}件中 {filteredMusicals.length}件を表示
-      </p>
+        {/* ===== Must See スポットライト ===== */}
+        {spotlightMusicals.length > 0 && !isFiltering && (
+          <section>
+            <div className="mb-5 flex items-end justify-between">
+              <div>
+                <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                  <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+                  必見・Must See ミュージカル
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  初めてのロンドン観劇なら、まずこの中から選べば間違いありません。
+                </p>
+              </div>
+            </div>
+            <Carousel opts={{ align: "start" }} className="w-full">
+              <CarouselContent className="-ml-4">
+                {spotlightMusicals.map((musical) => (
+                  <CarouselItem
+                    key={musical.id}
+                    className="basis-[62%] pl-4 sm:basis-[42%] lg:basis-[27%]"
+                  >
+                    <MusicalPosterCard musical={musical} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex" />
+              <CarouselNext className="hidden sm:flex" />
+            </Carousel>
+          </section>
+        )}
 
-      {filteredMusicals.length === 0 ? (
-        <p className="text-center text-muted-foreground py-12">
-          該当するミュージカルはありません。検索条件を変更してお試しください。
-        </p>
-      ) : (
-        /* タブ + リスト / カード表示 */
-        <Tabs defaultValue="grid" className="space-y-4">
-          <TabsList className="justify-center">
-            <TabsTrigger value="list">リスト表示</TabsTrigger>
-            <TabsTrigger value="grid">カード表示</TabsTrigger>
-          </TabsList>
+        {/* ===== 全作品一覧 ===== */}
+        <section>
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+                <BookOpen className="h-5 w-5 text-primary" />
+                全ミュージカル一覧
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {musicals.length}件中 {filteredMusicals.length}件を表示
+              </p>
+            </div>
 
-          <TabsContent value="list">
-            <Accordion type="single" collapsible>
+            <Tabs value={view} onValueChange={(v) => setView(v as ViewMode)}>
+              <TabsList>
+                <TabsTrigger value="grid">カード表示</TabsTrigger>
+                <TabsTrigger value="list">リスト表示</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          {filteredMusicals.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
+              <Search className="h-8 w-8 text-muted-foreground" />
+              <p className="mt-3 text-muted-foreground">
+                該当するミュージカルはありません。検索条件を変更してお試しください。
+              </p>
+            </div>
+          ) : view === "grid" ? (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
+              {filteredMusicals.map((musical) => (
+                <MusicalPosterCard key={musical.id} musical={musical} />
+              ))}
+            </div>
+          ) : (
+            <Accordion type="single" collapsible className="rounded-2xl border border-border">
               {filteredMusicals.map((musical, idx) => (
                 <AccordionItem key={musical.id} value={musical.name}>
-                  <AccordionTrigger>{`${idx + 1}. ${musical.name}`}</AccordionTrigger>
-                  <AccordionContent>
-                    <p className="whitespace-pre-line">{musical.summary}</p>
+                  <AccordionTrigger className="px-4 hover:no-underline">
+                    <div className="flex min-w-0 flex-1 items-center gap-3 text-left">
+                      <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md">
+                        <Image
+                          src={musical.image}
+                          alt={musical.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <span className="min-w-0 flex-1 truncate font-semibold">
+                        {idx + 1}. {musical.name}
+                      </span>
+                      {musical.mustSee && (
+                        <Badge className="shrink-0 bg-rose-600 text-white border-transparent">
+                          Must See
+                        </Badge>
+                      )}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4">
+                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>{musical.address}</span>
+                    </div>
+                    <p className="mt-2 whitespace-pre-line text-sm">
+                      {musical.summary}
+                    </p>
 
                     <Link
                       href={`/musicals/${musical.slug}`}
-                      target="_blank"
-                      className="text-blue-600 dark:text-blue-300 hover:underline mt-2 inline-block"
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
                     >
-                      詳細を見る
+                      詳細を見る <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
-          </TabsContent>
-
-          <TabsContent value="grid">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-              {filteredMusicals.map((musical, idx) => (
-                <Card
-                  key={musical.id}
-                  className="max-w-sm w-full shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-border bg-card text-card-foreground"
-                >
-                  <div className="flex justify-between items-center px-4 pt-4">
-                    <div className="text-lg font-bold text-foreground">
-                      {idx + 1}. {musical.name}
-                    </div>
-                  </div>
-
-                  <div className="relative w-full h-64 mt-2">
-                    <Image
-                      src={musical.image}
-                      alt={musical.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <Separator />
-
-                  <CardContent className="space-y-2 mt-6">
-                    <h2 className="text-xl font-bold text-foreground">
-                      {musical.name}
-                    </h2>
-                    <p className="text-muted-foreground whitespace-pre-line">
-                      {musical.summary}
-                    </p>
-
-                    <Separator />
-
-                    <div className="text-muted-foreground text-sm mt-2">
-                      <div className="flex items-center gap-1 mt-2">
-                        <FaMapMarkerAlt className="text-accent-foreground" />
-                        <span>{musical.address}</span>
-                      </div>
-
-                      {musical.website && (
-                        <div className="flex items-center gap-1 mt-2">
-                          <Link
-                            href={musical.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-primary hover:underline text-sm"
-                          >
-                            <FaGlobe /> 公式サイト
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-
-                  <CardFooter>
-                    <Button asChild className="bg-primary text-primary-foreground">
-                      <Link href={`/musicals/${musical.slug}`}>詳細を見る</Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      )}
+          )}
+        </section>
+      </div>
     </div>
   );
 }
