@@ -92,7 +92,9 @@ export default async function DashboardDetailPage({ params }: Props) {
               {/* Google Maps link */}
               <div className="text-right">
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${store.placeId}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    `${store.storeName} ${store.storeAddress}`,
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-foreground/80 hover:text-foreground transition"

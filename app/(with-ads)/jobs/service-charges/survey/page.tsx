@@ -15,9 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { submitSurvey } from "@/utils/actions/jobs";
-import PlaceAutocomplete, {
-  SelectedPlace,
-} from "@/components/jobs/PlaceAutocomplete";
+import StoreSearch, { SelectedStore } from "@/components/jobs/StoreSearch";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -65,8 +63,9 @@ export default function SurveyPage() {
   const [state, action] = useFormState<ActionState, FormData>(submitSurvey, {
     ok: true,
   });
-  const [placeId, setPlaceId] = useState<string | null>(null);
-  const [placeLabel, setPlaceLabel] = useState<string>("");
+  const [storeSelection, setStoreSelection] = useState<SelectedStore | null>(
+    null,
+  );
 
   const [collected, setCollected] = useState<"yes" | "no" | null>(null);
 
@@ -84,14 +83,6 @@ export default function SurveyPage() {
   const [showError, setShowError] = useState(true);
   const [showMealOther, setShowMealOther] = useState(false);
   const [mealRestrictions, setMealRestrictions] = useState<string[]>([]);
-  const [placeMeta, setPlaceMeta] = useState<{
-    name?: string;
-    address?: string;
-    lat?: number;
-    lng?: number;
-    borough?: string;
-    postcode?: string;
-  } | null>(null);
 
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -115,11 +106,11 @@ export default function SurveyPage() {
   const isLastStep = stepIndex === steps.length - 1;
 
   const nextDisabled = useMemo(() => {
-    if (currentStep === 1) return !placeId;
+    if (currentStep === 1) return !storeSelection;
     if (currentStep === 2) return collected === null;
     if (currentStep === 3) return amountMismatch;
     return false;
-  }, [currentStep, placeId, collected, amountMismatch]);
+  }, [currentStep, storeSelection, collected, amountMismatch]);
 
   function goNext() {
     if (!isLastStep) setCurrentStep(steps[stepIndex + 1]);
@@ -173,56 +164,68 @@ export default function SurveyPage() {
             )}
 
             <form action={action} className="space-y-6">
-              {/* ステップ1: 店舗（Google Places Autocomplete で place_id を取得） */}
+              {/* ステップ1: 店舗（自前の店舗マスタから検索して選択） */}
               <section className={stepClass(1)}>
-                <PlaceAutocomplete
-                  onSelect={(place: SelectedPlace) => {
-                    setPlaceId(place.placeId);
-                    setPlaceLabel(`${place.name} / ${place.address}`);
-                    setPlaceMeta({
-                      name: place.name,
-                      address: place.address,
-                      lat: place.lat,
-                      lng: place.lng,
-                      borough: place.borough,
-                      postcode: place.postcode,
-                    });
+                <StoreSearch
+                  onSelect={(selection) => {
+                    setStoreSelection(selection);
                     setShowError(false);
                   }}
                 />
 
-                <input
-                  type="hidden"
-                  name="storePlaceId"
-                  value={placeId ?? ""}
-                />
-                <input
-                  type="hidden"
-                  name="storeName"
-                  value={placeMeta?.name ?? ""}
-                />
-                <input
-                  type="hidden"
-                  name="storeAddress"
-                  value={placeMeta?.address ?? ""}
-                />
-                <input type="hidden" name="lat" value={placeMeta?.lat ?? ""} />
-                <input type="hidden" name="lng" value={placeMeta?.lng ?? ""} />
-                <input
-                  type="hidden"
-                  name="borough"
-                  value={placeMeta?.borough ?? ""}
-                />
-                <input
-                  type="hidden"
-                  name="postcode"
-                  value={placeMeta?.postcode ?? ""}
-                />
+                {storeSelection?.mode === "matched" && (
+                  <>
+                    <input
+                      type="hidden"
+                      name="storePlaceId"
+                      value={storeSelection.store.id}
+                    />
+                    <input
+                      type="hidden"
+                      name="storeName"
+                      value={storeSelection.store.name}
+                    />
+                    <input
+                      type="hidden"
+                      name="storeAddress"
+                      value={storeSelection.store.address}
+                    />
+                    <input
+                      type="hidden"
+                      name="lat"
+                      value={storeSelection.store.lat ?? ""}
+                    />
+                    <input
+                      type="hidden"
+                      name="lng"
+                      value={storeSelection.store.lng ?? ""}
+                    />
+                    <input
+                      type="hidden"
+                      name="borough"
+                      value={storeSelection.store.borough ?? ""}
+                    />
+                    <input
+                      type="hidden"
+                      name="postcode"
+                      value={storeSelection.store.postcode ?? ""}
+                    />
+                  </>
+                )}
 
-                {placeLabel && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    選択中: {placeLabel}
-                  </p>
+                {storeSelection?.mode === "manual" && (
+                  <>
+                    <input
+                      type="hidden"
+                      name="manualStoreName"
+                      value={storeSelection.name}
+                    />
+                    <input
+                      type="hidden"
+                      name="manualStoreAddress"
+                      value={storeSelection.address}
+                    />
+                  </>
                 )}
               </section>
 
@@ -672,7 +675,7 @@ export default function SurveyPage() {
                   )}
 
                   {isLastStep ? (
-                    <SubmitButton disabled={!placeId || amountMismatch} />
+                    <SubmitButton disabled={!storeSelection || amountMismatch} />
                   ) : (
                     <Button
                       type="button"

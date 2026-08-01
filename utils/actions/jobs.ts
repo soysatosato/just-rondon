@@ -7,19 +7,90 @@ import { ServiceCharge } from "@prisma/client";
 
 type ActionState = { ok: true } | { ok: false; message: string };
 
+export type StoreSearchResult = {
+  id: string;
+  name: string;
+  address: string;
+  lat: number | null;
+  lng: number | null;
+  borough: string | null;
+  postcode: string | null;
+};
+
+export async function searchStores(query: string): Promise<StoreSearchResult[]> {
+  const q = query.trim();
+  if (q.length < 2) return [];
+
+  const stores = await db.store.findMany({
+    where: {
+      OR: [
+        { name: { contains: q, mode: "insensitive" } },
+        { aliases: { has: q } },
+      ],
+    },
+    orderBy: { name: "asc" },
+    take: 10,
+  });
+
+  return stores.map((s) => ({
+    id: s.id,
+    name: s.name,
+    address: s.address,
+    lat: s.lat,
+    lng: s.lng,
+    borough: s.borough,
+    postcode: s.postcode,
+  }));
+}
+
 export async function submitSurvey(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   try {
-    const placeId = formData.get("storePlaceId")?.toString();
+    let placeId = formData.get("storePlaceId")?.toString();
+    const manualName = formData.get("manualStoreName")?.toString().trim();
+
+    let storeName = formData.get("storeName")?.toString() ?? "";
+    let storeAddress = formData.get("storeAddress")?.toString() ?? "";
+    let lat: number | null = null;
+    let lng: number | null = null;
+    let borough = formData.get("borough")?.toString() || null;
+    let postcode = formData.get("postcode")?.toString() || null;
+    let isVerified = true;
 
     const latStr = formData.get("lat")?.toString();
     const lngStr = formData.get("lng")?.toString();
-    const lat = latStr ? Number(latStr) : NaN;
-    const lng = lngStr ? Number(lngStr) : NaN;
+    if (latStr) lat = Number(latStr);
+    if (lngStr) lng = Number(lngStr);
 
-    if (!placeId || Number.isNaN(lat) || Number.isNaN(lng)) {
+    if (!placeId && manualName) {
+      if (manualName.length < 2) {
+        return { ok: false, message: "店舗名を入力してください。" };
+      }
+      const manualAddress =
+        formData.get("manualStoreAddress")?.toString().trim() ?? "";
+
+      const created = await db.store.create({
+        data: {
+          id: randomUUID(),
+          name: manualName,
+          address: manualAddress,
+          isVerified: false,
+        },
+      });
+
+      placeId = created.id;
+      storeName = manualName;
+      storeAddress = manualAddress;
+      lat = null;
+      lng = null;
+      borough = null;
+      postcode = null;
+      isVerified = false;
+    }
+
+    if (!placeId) {
       return { ok: false, message: "店舗を選択してください。" };
     }
 
@@ -57,12 +128,13 @@ export async function submitSurvey(
       data: {
         id: randomUUID(),
         placeId,
-        storeName: formData.get("storeName")?.toString() ?? "",
-        storeAddress: formData.get("storeAddress")?.toString() ?? "",
+        storeName,
+        storeAddress,
         lat,
         lng,
-        borough: formData.get("borough")?.toString() || null,
-        postcode: formData.get("postcode")?.toString() || null,
+        borough,
+        postcode,
+        isVerified,
         serviceChargeCollected: collected,
         distributionType: collected
           ? formData.get("distribution")?.toString() ?? null
@@ -109,14 +181,17 @@ export async function submitSurvey(
 export async function fetchServiceCharges(q?: string) {
   const data = await db.serviceCharge.groupBy({
     by: ["placeId", "storeName", "storeAddress"],
-    where: q
-      ? {
-          OR: [
-            { storeName: { contains: q, mode: "insensitive" } },
-            { postcode: { contains: q, mode: "insensitive" } },
-          ],
-        }
-      : undefined,
+    where: {
+      isVerified: true,
+      ...(q
+        ? {
+            OR: [
+              { storeName: { contains: q, mode: "insensitive" } },
+              { postcode: { contains: q, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    },
     _count: {
       placeId: true, // ← ここ重要
     },
@@ -142,9 +217,8 @@ export async function fetchServiceChargesByPlaceId(
 type ChargeFilter = { q?: string; collected?: "yes" | "no" };
 
 function buildWhere(filter?: ChargeFilter) {
-  if (!filter) return undefined;
-  const clauses: any[] = [];
-  if (filter.q) {
+  const clauses: any[] = [{ isVerified: true }];
+  if (filter?.q) {
     clauses.push({
       OR: [
         { storeName: { contains: filter.q, mode: "insensitive" } },
@@ -152,9 +226,9 @@ function buildWhere(filter?: ChargeFilter) {
       ],
     });
   }
-  if (filter.collected === "yes") clauses.push({ serviceChargeCollected: true });
-  if (filter.collected === "no") clauses.push({ serviceChargeCollected: false });
-  return clauses.length ? { AND: clauses } : undefined;
+  if (filter?.collected === "yes") clauses.push({ serviceChargeCollected: true });
+  if (filter?.collected === "no") clauses.push({ serviceChargeCollected: false });
+  return { AND: clauses };
 }
 
 export async function fetchServiceChargeCount(filter?: ChargeFilter) {
@@ -202,27 +276,33 @@ export async function fetchServiceChargeStats(): Promise<ServiceChargeStats> {
     amountGroup,
     storeGroup,
   ] = await Promise.all([
-    db.serviceCharge.count(),
+    db.serviceCharge.count({ where: { isVerified: true } }),
     db.serviceCharge.groupBy({
       by: ["serviceChargeCollected"],
+      where: { isVerified: true },
       _count: { _all: true },
     }),
     db.serviceCharge.groupBy({
       by: ["distributionType"],
-      where: { serviceChargeCollected: true },
+      where: { isVerified: true, serviceChargeCollected: true },
       _count: { _all: true },
     }),
     db.serviceCharge.groupBy({
       by: ["workAtmosphere"],
+      where: { isVerified: true },
       _count: { _all: true },
     }),
     db.serviceCharge.groupBy({
       by: ["amountPeriod"],
-      where: { serviceChargeCollected: true, amountValue: { not: null } },
+      where: {
+        isVerified: true,
+        serviceChargeCollected: true,
+        amountValue: { not: null },
+      },
       _avg: { amountValue: true },
       _count: { _all: true },
     }),
-    db.serviceCharge.groupBy({ by: ["placeId"] }),
+    db.serviceCharge.groupBy({ by: ["placeId"], where: { isVerified: true } }),
   ]);
 
   const collectedCount =

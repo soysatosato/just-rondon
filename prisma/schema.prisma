@@ -363,15 +363,31 @@ model LyricsRequest {
   createdAt DateTime @default(now())
 }
 
+model Store {
+  id         String   @id @default(cuid())
+  name       String
+  address    String
+  lat        Float?
+  lng        Float?
+  borough    String?
+  postcode   String?
+  aliases    String[] @default([])
+  isVerified Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([name])
+}
+
 model ServiceCharge {
   id                     String   @id
   placeId                String
   storeName              String
   storeAddress           String
-  lat                    Float
-  lng                    Float
+  lat                    Float?
+  lng                    Float?
   borough                String?
   postcode               String?
+  isVerified             Boolean  @default(true)
   serviceChargeCollected Boolean
   distributionType       String?
   amountPeriod           String?
