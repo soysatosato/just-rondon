@@ -1,4 +1,4 @@
-import { BadgeCheck, Book, Globe, Heart, Star } from "lucide-react";
+import { BadgeCheck, Book, Heart, Star, Ticket } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 
@@ -40,22 +40,18 @@ export default function MusicalInfo({
           label="おすすめ度"
           value={recommendLevel + "/5"}
         />
-        <InfoItem
-          icon={Globe}
-          label="公式サイト"
-          value={
-            <Link
-              href={website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
-            >
-              見る
-            </Link>
-          }
-        />
         <InfoItem icon={Book} label="原作" value={original} />
       </div>
+
+      <Link
+        href={website}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-8 inline-flex items-center gap-2 px-5 py-3 font-bold rounded-lg text-sm shadow-lg transition bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+      >
+        <Ticket size={18} />
+        公式サイトで予約する
+      </Link>
     </section>
   );
 }

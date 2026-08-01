@@ -18,6 +18,7 @@ import {
 import MusicalInfo from "@/components/musicals/MusicalInfo";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import Link from "next/link";
+import { Ticket } from "lucide-react";
 import {
   musicalBreadcrumbJsonLd,
   theaterEventJsonLd,
@@ -130,27 +131,48 @@ export default async function musicalDetailsPage({
             </div>
 
             {/* リンク部分 */}
-            <Link
-              href={
-                musical.songs.length > 1
-                  ? `/musicals/${musical.slug}/songs`
-                  : "#"
-              }
-              className={`
-      ml-2 inline-block px-4 py-2 font-bold rounded-lg text-sm shadow-lg transition
+            <div className="ml-2 flex flex-wrap justify-end gap-2">
+              <Link
+                href={musical.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 font-bold rounded-lg text-sm shadow-lg transition bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+              >
+                <Ticket size={16} />
+                予約する
+              </Link>
+              <Link
+                href={
+                  musical.songs.length > 1
+                    ? `/musicals/${musical.slug}/songs`
+                    : "#"
+                }
+                className={`
+      inline-block px-4 py-2 font-bold rounded-lg text-sm shadow-lg transition
       ${
         musical.songs.length > 1
           ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
           : "bg-gray-400 text-gray-200 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
       }
     `}
-              aria-disabled={musical.songs.length < 1} // アクセシビリティ対応
-            >
-              曲一覧へ
-            </Link>
+                aria-disabled={musical.songs.length < 1} // アクセシビリティ対応
+              >
+                曲一覧へ
+              </Link>
+            </div>
           </div>
 
           <p className="text-gray-400 italic">{musical.blurb}</p>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            チケットの選び方は
+            <Link
+              href="/musicals/west-end-tickets"
+              className="underline text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
+            >
+              チケットの買い方・お得な料金ガイド
+            </Link>
+            もあわせてどうぞ。
+          </p>
         </div>
 
         <MusicalInfo
