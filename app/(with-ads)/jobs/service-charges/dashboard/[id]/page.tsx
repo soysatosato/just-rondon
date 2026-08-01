@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { fetchServiceChargesByPlaceId } from "@/utils/actions/jobs";
+import StoreSummary from "@/components/jobs/StoreSummary";
 import {
   DISTRIBUTION_LABEL,
   AMOUNT_PERIOD_LABEL,
@@ -102,6 +103,10 @@ export default async function DashboardDetailPage({ params }: Props) {
             </div>
           )}
         </section>
+
+        <Separator />
+
+        <StoreSummary reviews={reviews} />
 
         <Separator />
 

@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { submitSurvey } from "@/utils/actions/jobs";
@@ -19,17 +21,45 @@ import PlaceAutocomplete, {
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import {
+  MEAL_RESTRICTION_LABEL,
+  MEAL_DRINK_LABEL,
+  SHIFT_SCHEDULE_LABEL,
+  VISA_SUPPORT_LABEL,
+  MANAGEMENT_PRESENCE_LABEL,
+  WORK_ATMOSPHERE_LABEL,
+  ETHNICITY_RATIO_LABEL,
+  type MealDrink,
+  type ShiftSchedule,
+  type VisaSupport,
+  type ManagementPresence,
+  type WorkAtmosphere,
+  type EthnicityRatio,
+} from "@/utils/labels";
 
 function SubmitButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending || disabled} className="w-full">
-      {pending ? "送信中..." : "送信"}
+    <Button
+      type="submit"
+      size="lg"
+      disabled={pending || disabled}
+      className="flex-1"
+    >
+      {pending ? "送信中..." : "この内容で送信"}
     </Button>
   );
 }
 
 type ActionState = { ok: true } | { ok: false; message: string };
+
+const STEP_TITLES: Record<number, string> = {
+  1: "店舗を選ぶ",
+  2: "サービスチャージの有無",
+  3: "分配方法・金額",
+  4: "コメント",
+  5: "追加の質問",
+};
 
 export default function SurveyPage() {
   const [state, action] = useFormState<ActionState, FormData>(submitSurvey, {
@@ -50,8 +80,8 @@ export default function SurveyPage() {
     [collected, amountValue, amountPeriod]
   );
   const [showError, setShowError] = useState(true);
-  const [showExtra, setShowExtra] = useState(false);
   const [showMealOther, setShowMealOther] = useState(false);
+  const [mealRestrictions, setMealRestrictions] = useState<string[]>([]);
   const [placeMeta, setPlaceMeta] = useState<{
     name?: string;
     address?: string;
@@ -61,21 +91,75 @@ export default function SurveyPage() {
     postcode?: string;
   } | null>(null);
 
+  const [currentStep, setCurrentStep] = useState(1);
+
   useEffect(() => {
     if (!needsPeriod) setAmountPeriod(null);
   }, [needsPeriod]);
 
+  const steps = useMemo(
+    () => (collected === "no" ? [1, 2, 4, 5] : [1, 2, 3, 4, 5]),
+    [collected]
+  );
+
+  useEffect(() => {
+    if (currentStep === 3 && collected === "no") {
+      setCurrentStep(4);
+    }
+  }, [collected, currentStep]);
+
+  const stepIndex = steps.indexOf(currentStep);
+  const isFirstStep = stepIndex === 0;
+  const isLastStep = stepIndex === steps.length - 1;
+
+  const nextDisabled = useMemo(() => {
+    if (currentStep === 1) return !placeId;
+    if (currentStep === 2) return collected === null;
+    if (currentStep === 3) return amountMismatch;
+    return false;
+  }, [currentStep, placeId, collected, amountMismatch]);
+
+  function goNext() {
+    if (!isLastStep) setCurrentStep(steps[stepIndex + 1]);
+  }
+  function goBack() {
+    if (!isFirstStep) setCurrentStep(steps[stepIndex - 1]);
+  }
+
+  function toggleMealRestriction(value: string, checked: boolean) {
+    setMealRestrictions((prev) =>
+      checked ? [...prev, value] : prev.filter((v) => v !== value)
+    );
+  }
+
+  function stepClass(n: number) {
+    return cn("space-y-6", currentStep !== n && "hidden");
+  }
+
   return (
     <main className="min-h-dvh bg-background text-foreground">
-      <div className="mx-auto max-w-2xl px-4 py-8">
+      <div className="mx-auto max-w-2xl px-4 py-4 sm:py-8">
         <Card className="border-border/60 shadow-sm">
-          <CardHeader className="space-y-2">
+          <CardHeader className="space-y-3">
             <CardTitle className="text-xl md:text-2xl">
               ロンドン日本食レストランに関する実態調査
             </CardTitle>
             <p className="text-sm text-muted-foreground">
               個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。
             </p>
+
+            <div className="space-y-1.5 pt-2">
+              <p className="text-xs text-muted-foreground">
+                ステップ {stepIndex + 1} / {steps.length}：
+                {STEP_TITLES[currentStep]}
+                {currentStep === 5 && (
+                  <span className="ml-1 text-muted-foreground/70">
+                    （すべて任意）
+                  </span>
+                )}
+              </p>
+              <Progress value={((stepIndex + 1) / steps.length) * 100} />
+            </div>
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -87,8 +171,8 @@ export default function SurveyPage() {
             )}
 
             <form action={action} className="space-y-6">
-              {/* Q0: 店舗（Google Places Autocomplete で place_id を取得） */}
-              <section className="space-y-2">
+              {/* ステップ1: 店舗（Google Places Autocomplete で place_id を取得） */}
+              <section className={stepClass(1)}>
                 <PlaceAutocomplete
                   onSelect={(place: SelectedPlace) => {
                     setPlaceId(place.placeId);
@@ -140,10 +224,8 @@ export default function SurveyPage() {
                 )}
               </section>
 
-              <Separator />
-
-              {/* Q1 */}
-              <section className="space-y-3">
+              {/* ステップ2: Q1 */}
+              <section className={stepClass(2)}>
                 <div className="space-y-1">
                   <p className="font-medium">
                     Q1.
@@ -157,40 +239,40 @@ export default function SurveyPage() {
                   onValueChange={(v: any) => {
                     const next = v === "yes" || v === "no" ? v : null;
                     setCollected(next);
-                    // NOの場合は下位質問を出さないだけで、FormDataは送られない（未選択）のでOK
                   }}
-                  className="grid gap-2"
+                  className="grid gap-2 mt-3"
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3 py-1.5">
                     <RadioGroupItem value="yes" id="collected-yes" />
                     <Label htmlFor="collected-yes">はい</Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3 py-1.5">
                     <RadioGroupItem value="no" id="collected-no" />
                     <Label htmlFor="collected-no">いいえ</Label>
                   </div>
                 </RadioGroup>
 
                 {collected === "no" && (
-                  <p className="text-sm text-muted-foreground">
-                    ご回答ありがとうございました。送信で終了します。
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    「いいえ」の場合、分配方法・金額の質問はスキップされます。
                   </p>
                 )}
               </section>
 
-              {/* YESのときだけ */}
-              {collected === "yes" && (
-                <>
-                  <Separator />
-
-                  {/* Q2 */}
-                  <section className="space-y-3">
+              {/* ステップ3: Q2 + Q3（collected="yes" のときのみステップとして表示されるが、
+                  値の保持のため常にDOM上には残し、非表示はCSSのみで行う） */}
+              <section className={stepClass(3)}>
+                <div className="space-y-6">
+                  <div className="space-y-3">
                     <p className="font-medium">
                       Q2. サービスチャージはどのように分配されていますか？
                     </p>
+                    <p className="text-xs text-muted-foreground">
+                      他のスタッフから聞いた話でも構いません（実際に受け取っていなくても分かる範囲でお答えください）。
+                    </p>
 
                     <RadioGroup name="distribution" className="grid gap-3">
-                      <div className="flex items-start space-x-2">
+                      <div className="flex items-start space-x-3 py-1.5">
                         <RadioGroupItem value="equal" id="dist-equal" />
                         <Label htmlFor="dist-equal" className="leading-tight">
                           <span className="block">
@@ -199,7 +281,7 @@ export default function SurveyPage() {
                         </Label>
                       </div>
 
-                      <div className="flex items-start space-x-2">
+                      <div className="flex items-start space-x-3 py-1.5">
                         <RadioGroupItem value="gradient" id="dist-gradient" />
                         <Label
                           htmlFor="dist-gradient"
@@ -211,7 +293,7 @@ export default function SurveyPage() {
                         </Label>
                       </div>
 
-                      <div className="flex items-start space-x-2">
+                      <div className="flex items-start space-x-3 py-1.5">
                         <RadioGroupItem value="fixed" id="dist-fixed" />
                         <Label htmlFor="dist-fixed" className="leading-tight">
                           <span className="block">
@@ -223,7 +305,7 @@ export default function SurveyPage() {
                         </Label>
                       </div>
 
-                      <div className="flex items-start space-x-2">
+                      <div className="flex items-start space-x-3 py-1.5">
                         <RadioGroupItem value="none" id="dist-none" />
                         <Label htmlFor="dist-none" className="leading-tight">
                           <span className="block">分配されていない</span>
@@ -233,24 +315,24 @@ export default function SurveyPage() {
                         </Label>
                       </div>
                     </RadioGroup>
-                  </section>
+                  </div>
 
                   <Separator />
 
-                  {/* Q3 */}
-                  {/* Q3 */}
-                  <section className="space-y-3">
+                  <div className="space-y-3">
                     <div className="space-y-1">
                       <p className="font-medium">
-                        Q3. サービスチャージ金額（任意）
+                        Q3. あなたが受け取っている金額（任意）
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        分かる範囲で、週額または月額の概算を入力してください。
-                        未入力でも問題ありません。
+                        店舗全体の総額ではなく、
+                        <span className="font-medium text-foreground">
+                          あなた個人が受け取っている金額
+                        </span>
+                        の概算を、分かる範囲で週額または月額のどちらかで入力してください。未入力でも問題ありません。
                       </p>
                     </div>
 
-                    {/* 週 / 月 は常に選択可能 */}
                     <RadioGroup
                       name="amountPeriod"
                       value={amountPeriod ?? ""}
@@ -263,12 +345,12 @@ export default function SurveyPage() {
                       }}
                       className="grid gap-2"
                     >
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1.5">
                         <RadioGroupItem value="weekly" id="period-weekly" />
                         <Label htmlFor="period-weekly">週額</Label>
                       </div>
 
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3 py-1.5">
                         <RadioGroupItem value="monthly" id="period-monthly" />
                         <Label htmlFor="period-monthly">月額</Label>
                       </div>
@@ -300,14 +382,12 @@ export default function SurveyPage() {
                       ※
                       金額を入力した場合は、週額または月額のどちらかを選択してください。
                     </p>
-                  </section>
-                </>
-              )}
+                  </div>
+                </div>
+              </section>
 
-              <Separator />
-              <Separator />
-
-              <section className="space-y-2">
+              {/* ステップ4: Q4 */}
+              <section className={stepClass(4)}>
                 <div className="space-y-1">
                   <p className="font-medium">Q4. 自由記載（任意）</p>
                   <p className="text-xs text-muted-foreground">
@@ -321,270 +401,294 @@ export default function SurveyPage() {
                   rows={4}
                   maxLength={1000}
                   placeholder="例）サービスチャージはフロアスタッフのみの間で分配。キッチンスタッフは分配されていない"
+                  className="mt-2"
                 />
               </section>
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowExtra(true)}
-              >
-                追加の質問に答える（任意）
-              </Button>
+              {/* ステップ5: 追加質問（任意） */}
+              <section className={stepClass(5)}>
+                <div className="space-y-8">
+                  <div className="space-y-1">
+                    <p className="font-medium text-lg">追加質問（任意）</p>
+                    <p className="text-xs text-muted-foreground">
+                      労働環境や福利厚生について、分かる範囲でお答えください。
+                      すべて任意です。回答しなくても送信できます。
+                    </p>
+                  </div>
 
-              {showExtra && (
-                <>
-                  <Separator />
+                  {/* ================= 賄い ================= */}
+                  <section className="space-y-6 rounded-lg bg-muted/40 p-4">
+                    <p className="font-medium text-foreground">賄いについて</p>
 
-                  <section className="space-y-8">
-                    {/* セクションタイトル */}
-                    <div className="space-y-1">
-                      <p className="font-medium text-lg">追加質問（任意）</p>
-                      <p className="text-xs text-muted-foreground">
-                        労働環境や福利厚生について、分かる範囲でお答えください。
-                      </p>
-                    </div>
-
-                    {/* ================= 賄い ================= */}
-                    <section className="space-y-6 rounded-lg bg-muted/40 p-4">
-                      <p className="font-medium text-foreground">
-                        賄いについて
-                      </p>
-
-                      {/* 回数 */}
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          1日の賄い回数
-                        </p>
-                        <RadioGroup
-                          name="mealCountPerDay"
-                          className="grid gap-1"
-                        >
-                          <Label>
-                            <RadioGroupItem value="0" /> 賄いなし
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="1" /> 1回
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="2plus" /> 2回以上
-                          </Label>
-                        </RadioGroup>
-                      </section>
-
-                      {/* 制限食材 */}
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          提供されない食材
-                        </p>
-                        <div className="grid gap-1">
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="mealRestrictions"
-                              value="beef"
-                            />{" "}
-                            牛肉
-                          </label>
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="mealRestrictions"
-                              value="meat"
-                            />{" "}
-                            肉全般
-                          </label>
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="mealRestrictions"
-                              value="fish"
-                            />{" "}
-                            魚
-                          </label>
-                          <label>
-                            <input
-                              type="checkbox"
-                              name="mealRestrictions"
-                              value="none"
-                            />{" "}
-                            特に制限なし
-                          </label>
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              value="other"
-                              onChange={(e) =>
-                                setShowMealOther(e.target.checked)
-                              }
-                            />
-                            その他
-                          </label>
-                        </div>
-
-                        {showMealOther && (
-                          <Textarea
-                            name="mealComment"
-                            rows={3}
-                            maxLength={500}
-                            className="mt-2 text-sm"
-                            placeholder="例）選択不可の賄いが多く、内容は日によってばらつきがある"
-                          />
-                        )}
-                      </section>
-
-                      {/* ドリンク */}
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          賄い時のドリンク提供
-                        </p>
-                        <RadioGroup name="mealDrink" className="grid gap-1">
-                          <Label>
-                            <RadioGroupItem value="alcohol" /> 酒まで自由
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="softdrink" />{" "}
-                            ソフトドリンク自由
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="water" /> 水・お茶のみ
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="none" /> 提供なし
-                          </Label>
-                        </RadioGroup>
-                      </section>
-                    </section>
-
-                    {/* ================= 労働条件 ================= */}
-                    <section className="space-y-6 rounded-lg bg-muted/30 p-4">
-                      <p className="font-medium text-foreground">
-                        労働条件・制度
-                      </p>
-
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          シフトの決まり方
-                        </p>
-                        <RadioGroup name="shiftSchedule" className="grid gap-1">
-                          <Label>
-                            <RadioGroupItem value="monthly" /> 月ごとに決まる
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="weekly" /> 週ごとに決まる
-                          </Label>
-                        </RadioGroup>
-                      </section>
-
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          ビザサポート
-                        </p>
-                        <RadioGroup name="visaSupport" className="grid gap-1">
-                          <Label>
-                            <RadioGroupItem value="yes" /> あり
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="no" /> なし
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="unknown" /> 分からない
-                          </Label>
-                        </RadioGroup>
-                      </section>
-
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          管理者の関与度
-                        </p>
-                        <RadioGroup
-                          name="managementPresence"
-                          className="grid gap-1"
-                        >
-                          <Label>
-                            <RadioGroupItem value="owner-daily" />{" "}
-                            オーナーが日常的に関与
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="manager-daily" />{" "}
-                            マネージャー常駐
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="sometimes" /> ときどき
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="hands-off" /> ほぼ不在
-                          </Label>
-                        </RadioGroup>
-                      </section>
-                    </section>
-
-                    {/* ================= 職場環境 ================= */}
-                    <section className="space-y-6 rounded-lg bg-muted/20 p-4">
-                      <p className="font-medium text-foreground">職場環境</p>
-
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          職場の雰囲気
-                        </p>
-                        <RadioGroup
-                          name="workAtmosphere"
-                          className="grid gap-1"
-                        >
-                          <Label>
-                            <RadioGroupItem value="good" /> 良い
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="neutral" /> 普通
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="tense" /> ピリピリしている
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="toxic" /> 明らかに問題あり
-                          </Label>
-                        </RadioGroup>
-                      </section>
-
-                      <section className="space-y-2">
-                        <p className="text-sm font-medium text-foreground/90">
-                          スタッフ構成
-                        </p>
-                        <RadioGroup
-                          name="ethnicityRatio"
-                          className="grid gap-1"
-                        >
-                          <Label>
-                            <RadioGroupItem value="mostly-japanese" />{" "}
-                            日本人が多い
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="mixed" /> 多国籍
-                          </Label>
-                          <Label>
-                            <RadioGroupItem value="mostly-non-japanese" />{" "}
-                            日本人は少数
-                          </Label>
-                        </RadioGroup>
-                      </section>
-                    </section>
                     <section className="space-y-2">
                       <p className="text-sm font-medium text-foreground/90">
-                        その他
+                        1日の賄い回数
                       </p>
-                      <Textarea
-                        name="generalComment"
-                        rows={4}
-                        className="text-sm"
-                        maxLength={1000}
-                        placeholder="職場全体について補足があればご記入ください。個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。"
-                      />
+                      <RadioGroup name="mealCountPerDay" className="grid gap-1">
+                        <div className="flex items-center space-x-3 py-1.5">
+                          <RadioGroupItem value="0" id="mealcount-0" />
+                          <Label htmlFor="mealcount-0">賄いなし</Label>
+                        </div>
+                        <div className="flex items-center space-x-3 py-1.5">
+                          <RadioGroupItem value="1" id="mealcount-1" />
+                          <Label htmlFor="mealcount-1">1回</Label>
+                        </div>
+                        <div className="flex items-center space-x-3 py-1.5">
+                          <RadioGroupItem value="2plus" id="mealcount-2plus" />
+                          <Label htmlFor="mealcount-2plus">2回以上</Label>
+                        </div>
+                      </RadioGroup>
+                    </section>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        提供されない食材
+                      </p>
+                      <div className="grid gap-1">
+                        {(["beef", "meat", "fish", "none"] as const).map(
+                          (v) => (
+                            <div
+                              key={v}
+                              className="flex items-center space-x-3 py-1.5"
+                            >
+                              <Checkbox
+                                id={`mealres-${v}`}
+                                checked={mealRestrictions.includes(v)}
+                                onCheckedChange={(c) =>
+                                  toggleMealRestriction(v, c === true)
+                                }
+                              />
+                              <Label htmlFor={`mealres-${v}`}>
+                                {MEAL_RESTRICTION_LABEL[v]}
+                              </Label>
+                            </div>
+                          )
+                        )}
+                        <div className="flex items-center space-x-3 py-1.5">
+                          <Checkbox
+                            id="mealres-other"
+                            checked={showMealOther}
+                            onCheckedChange={(c) =>
+                              setShowMealOther(c === true)
+                            }
+                          />
+                          <Label htmlFor="mealres-other">その他</Label>
+                        </div>
+                      </div>
+
+                      {mealRestrictions.map((v) => (
+                        <input
+                          key={v}
+                          type="hidden"
+                          name="mealRestrictions"
+                          value={v}
+                        />
+                      ))}
+
+                      {showMealOther && (
+                        <Textarea
+                          name="mealComment"
+                          rows={3}
+                          maxLength={500}
+                          className="mt-2 text-sm"
+                          placeholder="例）選択不可の賄いが多く、内容は日によってばらつきがある"
+                        />
+                      )}
+                    </section>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        賄い時のドリンク提供
+                      </p>
+                      <RadioGroup name="mealDrink" className="grid gap-1">
+                        {(Object.keys(MEAL_DRINK_LABEL) as MealDrink[]).map(
+                          (v) => (
+                            <div
+                              key={v}
+                              className="flex items-center space-x-3 py-1.5"
+                            >
+                              <RadioGroupItem value={v} id={`mealdrink-${v}`} />
+                              <Label htmlFor={`mealdrink-${v}`}>
+                                {MEAL_DRINK_LABEL[v]}
+                              </Label>
+                            </div>
+                          )
+                        )}
+                      </RadioGroup>
                     </section>
                   </section>
-                </>
-              )}
 
-              <SubmitButton disabled={!placeId || amountMismatch} />
+                  {/* ================= 労働条件 ================= */}
+                  <section className="space-y-6 rounded-lg bg-muted/30 p-4">
+                    <p className="font-medium text-foreground">
+                      労働条件・制度
+                    </p>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        シフトの決まり方
+                      </p>
+                      <RadioGroup name="shiftSchedule" className="grid gap-1">
+                        {(
+                          Object.keys(SHIFT_SCHEDULE_LABEL) as ShiftSchedule[]
+                        ).map((v) => (
+                          <div
+                            key={v}
+                            className="flex items-center space-x-3 py-1.5"
+                          >
+                            <RadioGroupItem value={v} id={`shift-${v}`} />
+                            <Label htmlFor={`shift-${v}`}>
+                              {SHIFT_SCHEDULE_LABEL[v]}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </section>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        ビザサポート
+                      </p>
+                      <RadioGroup name="visaSupport" className="grid gap-1">
+                        {(Object.keys(VISA_SUPPORT_LABEL) as VisaSupport[]).map(
+                          (v) => (
+                            <div
+                              key={v}
+                              className="flex items-center space-x-3 py-1.5"
+                            >
+                              <RadioGroupItem value={v} id={`visa-${v}`} />
+                              <Label htmlFor={`visa-${v}`}>
+                                {VISA_SUPPORT_LABEL[v]}
+                              </Label>
+                            </div>
+                          )
+                        )}
+                      </RadioGroup>
+                    </section>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        管理者の関与度
+                      </p>
+                      <RadioGroup
+                        name="managementPresence"
+                        className="grid gap-1"
+                      >
+                        {(
+                          Object.keys(
+                            MANAGEMENT_PRESENCE_LABEL
+                          ) as ManagementPresence[]
+                        ).map((v) => (
+                          <div
+                            key={v}
+                            className="flex items-center space-x-3 py-1.5"
+                          >
+                            <RadioGroupItem value={v} id={`mgmt-${v}`} />
+                            <Label htmlFor={`mgmt-${v}`}>
+                              {MANAGEMENT_PRESENCE_LABEL[v]}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </section>
+                  </section>
+
+                  {/* ================= 職場環境 ================= */}
+                  <section className="space-y-6 rounded-lg bg-muted/20 p-4">
+                    <p className="font-medium text-foreground">職場環境</p>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        職場の雰囲気
+                      </p>
+                      <RadioGroup name="workAtmosphere" className="grid gap-1">
+                        {(
+                          Object.keys(
+                            WORK_ATMOSPHERE_LABEL
+                          ) as WorkAtmosphere[]
+                        ).map((v) => (
+                          <div
+                            key={v}
+                            className="flex items-center space-x-3 py-1.5"
+                          >
+                            <RadioGroupItem value={v} id={`atmosphere-${v}`} />
+                            <Label htmlFor={`atmosphere-${v}`}>
+                              {WORK_ATMOSPHERE_LABEL[v]}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </section>
+
+                    <section className="space-y-2">
+                      <p className="text-sm font-medium text-foreground/90">
+                        スタッフ構成
+                      </p>
+                      <RadioGroup name="ethnicityRatio" className="grid gap-1">
+                        {(
+                          Object.keys(
+                            ETHNICITY_RATIO_LABEL
+                          ) as EthnicityRatio[]
+                        ).map((v) => (
+                          <div
+                            key={v}
+                            className="flex items-center space-x-3 py-1.5"
+                          >
+                            <RadioGroupItem value={v} id={`ethnicity-${v}`} />
+                            <Label htmlFor={`ethnicity-${v}`}>
+                              {ETHNICITY_RATIO_LABEL[v]}
+                            </Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </section>
+                  </section>
+
+                  <section className="space-y-2">
+                    <p className="text-sm font-medium text-foreground/90">
+                      その他
+                    </p>
+                    <Textarea
+                      name="generalComment"
+                      rows={4}
+                      className="text-sm"
+                      maxLength={1000}
+                      placeholder="職場全体について補足があればご記入ください。個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。"
+                    />
+                  </section>
+                </div>
+              </section>
+
+              {/* ナビゲーション */}
+              <div className="sticky bottom-0 -mx-4 border-t bg-background/95 px-4 py-3 backdrop-blur pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:pt-4">
+                <div className="flex gap-3">
+                  {!isFirstStep && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="lg"
+                      className="flex-1"
+                      onClick={goBack}
+                    >
+                      戻る
+                    </Button>
+                  )}
+
+                  {isLastStep ? (
+                    <SubmitButton disabled={!placeId || amountMismatch} />
+                  ) : (
+                    <Button
+                      type="button"
+                      size="lg"
+                      className="flex-1"
+                      disabled={nextDisabled}
+                      onClick={goNext}
+                    >
+                      次へ
+                    </Button>
+                  )}
+                </div>
+              </div>
             </form>
           </CardContent>
         </Card>
