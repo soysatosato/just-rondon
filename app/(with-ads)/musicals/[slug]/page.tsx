@@ -7,7 +7,6 @@ import {
   fetchMusicalIdandName,
 } from "@/utils/actions/musicals";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -16,9 +15,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import MusicalInfo from "@/components/musicals/MusicalInfo";
+import MusicalHero from "@/components/musicals/MusicalHero";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
-import Link from "next/link";
-import { Ticket } from "lucide-react";
+import { Theater } from "lucide-react";
 import {
   musicalBreadcrumbJsonLd,
   theaterEventJsonLd,
@@ -98,102 +97,47 @@ export default async function musicalDetailsPage({
             : musical.name
         }
       />
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        <div className="relative h-96 mb-2 rounded-xl overflow-hidden shadow-lg">
-          <img
-            src={musical.image}
-            alt={musical.name}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-
-          <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-            <h2 className="text-base sm:text-lg md:text-xl font-medium text-gray-200 mb-1">
-              {musical.engName}
-            </h2>
-            <h1 className="text-xl sm:text-2xl md:text-4xl font-extrabold text-white">
-              {musical.name}
-            </h1>
-            <p className="text-gray-300 mt-2">{musical.tagline}</p>
-          </div>
-        </div>
-        <div className="mb-12">
-          <div className="flex justify-between items-start mb-3">
-            {/* ハイライト部分 */}
-            <div className="flex-1 flex flex-wrap gap-2">
-              {musical.highlights.map((item, index) => (
-                <Badge key={index} variant="secondary">
-                  {item}
-                </Badge>
-              ))}
-            </div>
-
-            {/* リンク部分 */}
-            <div className="ml-2 flex flex-wrap justify-end gap-2">
-              <Link
-                href={musical.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 font-bold rounded-lg text-sm shadow-lg transition bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
-              >
-                <Ticket size={16} />
-                予約する
-              </Link>
-              <Link
-                href={
-                  musical.songs.length > 1
-                    ? `/musicals/${musical.slug}/songs`
-                    : "#"
-                }
-                className={`
-      inline-block px-4 py-2 font-bold rounded-lg text-sm shadow-lg transition
-      ${
-        musical.songs.length > 1
-          ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
-          : "bg-gray-400 text-gray-200 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
-      }
-    `}
-                aria-disabled={musical.songs.length < 1} // アクセシビリティ対応
-              >
-                曲一覧へ
-              </Link>
-            </div>
-          </div>
-
-          <p className="text-gray-400 italic">{musical.blurb}</p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            チケットの選び方は
-            <Link
-              href="/musicals/west-end-tickets"
-              className="underline text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors"
-            >
-              チケットの買い方・お得な料金ガイド
-            </Link>
-            もあわせてどうぞ。
-          </p>
-        </div>
+      <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10">
+        <MusicalHero
+          name={musical.name}
+          engName={musical.engName}
+          tagline={musical.tagline}
+          image={musical.image}
+          slug={musical.slug}
+          website={musical.website}
+          highlights={musical.highlights}
+          blurb={musical.blurb}
+          mustSee={musical.mustSee}
+          recommendLevel={musical.recommendLevel}
+          theatreName={musical.theatreName}
+          songsCount={musical.songs.length}
+        />
 
         <MusicalInfo
           isOnShow={musical.isOnShow}
-          mustSee={musical.mustSee}
           original={musical.original}
           recommendLevel={musical.recommendLevel}
-          website={musical.website}
         />
+
         <MusicalSceneDescription
           name={musical.name}
           description={musical.description}
         />
 
-        <div className="my-8 space-y-2">
-          <h2 className="text-xl md:text-2xl font-semibold">劇場情報</h2>
-          <Card>
+        <div id="theatre-info" className="space-y-2">
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground">
+            劇場情報
+          </h2>
+          <Card className="rounded-2xl border-border shadow-sm">
             <CardContent className="space-y-1">
-              <CardHeader>
-                <CardTitle>{musical.theatreName}</CardTitle>
-                <CardDescription>{musical.address}</CardDescription>
+              <CardHeader className="flex flex-row items-center gap-4 space-y-0">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Theater className="h-5 w-5" />
+                </span>
+                <div>
+                  <CardTitle>{musical.theatreName}</CardTitle>
+                  <CardDescription>{musical.address}</CardDescription>
+                </div>
               </CardHeader>
               <DynamicMap lat={musical.lat} lng={musical.lng} />
             </CardContent>

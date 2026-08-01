@@ -39,27 +39,10 @@ import {
   Theater,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import RecommendStars from "@/components/musicals/shared/RecommendStars";
 
 type SortOption = "recommend" | "name";
 type ViewMode = "grid" | "list";
-
-function RecommendStars({ level }: { level: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={cn(
-            "h-3.5 w-3.5",
-            i < level
-              ? "fill-amber-400 text-amber-400"
-              : "fill-transparent text-white/40",
-          )}
-        />
-      ))}
-    </div>
-  );
-}
 
 function MusicalPosterCard({ musical }: { musical: Musical }) {
   return (

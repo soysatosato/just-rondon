@@ -1,57 +1,48 @@
-import { BadgeCheck, Book, Heart, Star, Ticket } from "lucide-react";
-import Link from "next/link";
+import { Book, BadgeCheck, Heart } from "lucide-react";
 import { Badge } from "../ui/badge";
+import RecommendStars from "./shared/RecommendStars";
 
 export default function MusicalInfo({
   isOnShow,
-  mustSee,
   recommendLevel,
-  website,
   original,
 }: {
   isOnShow: boolean;
-  mustSee: boolean;
   recommendLevel: number;
-  website: string;
   original: string;
 }) {
   return (
-    <section className="max-w-4xl mx-auto py-10">
-      <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-gray-800 dark:text-gray-100 mb-6 border-b pb-2 border-gray-300 dark:border-gray-700">
+    <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+      <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-foreground mb-6">
         基本情報
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 text-gray-700 dark:text-gray-300">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5">
         {isOnShow && (
           <InfoItem
             icon={BadgeCheck}
             label="ステータス"
-            value={<Badge variant="destructive">上映中</Badge>}
-          />
-        )}
-        {mustSee && (
-          <InfoItem
-            icon={Star}
-            label="おすすめ度"
-            value={<Badge variant="default">Must See</Badge>}
+            value={
+              <Badge
+                variant="outline"
+                className="border-emerald-600/40 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400"
+              >
+                上映中
+              </Badge>
+            }
           />
         )}
         <InfoItem
           icon={Heart}
           label="おすすめ度"
-          value={recommendLevel + "/5"}
+          value={
+            <div className="flex items-center gap-2">
+              <RecommendStars level={recommendLevel} tone="muted" />
+              <span className="text-muted-foreground">{recommendLevel}/5</span>
+            </div>
+          }
         />
-        <InfoItem icon={Book} label="原作" value={original} />
+        <InfoItem icon={Book} label="原作" value={original || "情報なし"} />
       </div>
-
-      <Link
-        href={website}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-8 inline-flex items-center gap-2 px-5 py-3 font-bold rounded-lg text-sm shadow-lg transition bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
-      >
-        <Ticket size={18} />
-        公式サイトで予約する
-      </Link>
     </section>
   );
 }
@@ -67,12 +58,14 @@ function InfoItem({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <Icon size={20} className="text-indigo-500 dark:text-indigo-400 mt-1" />
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <Icon size={20} />
+      </span>
       <div>
-        <div className="text-xs uppercase tracking-widest font-semibold text-gray-500 dark:text-gray-400">
+        <div className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
           {label}
         </div>
-        <div className="text-sm font-medium text-gray-800 dark:text-gray-200 mt-1">
+        <div className="text-sm font-medium text-foreground mt-1">
           {value}
         </div>
       </div>
