@@ -129,6 +129,71 @@ export default function Navbar() {
                   >
                     ミュージカル
                   </Link>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="jobs" className="border-b-0">
+                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
+                        働く・暮らす
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
+                        <Link
+                          href="/jobs"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          労働問題ガイド トップ
+                        </Link>
+                        <Link
+                          href="/jobs/minimum-wage"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          最低賃金・給与明細
+                        </Link>
+                        <Link
+                          href="/jobs/employment-contract"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          労働契約・就業規則
+                        </Link>
+                        <Link
+                          href="/jobs/visa-and-work"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          ビザと就労
+                        </Link>
+                        <Link
+                          href="/jobs/workplace-harassment"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          ハラスメント相談先
+                        </Link>
+                        <Link
+                          href="/jobs/service-charges"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          サービスチャージ完全ガイド
+                        </Link>
+                        <Link
+                          href="/jobs/service-charges/case-story"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          審判所申立ての実体験
+                        </Link>
+                        <Link
+                          href="/jobs/service-charges/dashboard"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          店舗別データベース
+                        </Link>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                   {/* <Link
                     href="/news"
                     className=" hover:text-red-600 transition"
@@ -291,6 +356,67 @@ export default function Navbar() {
                     </Link>
                     <Link href="/musicals" className="hover:underline">
                       ミュージカルナビ
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>働く・暮らす</NavigationMenuTrigger>
+                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-red-600">
+                      ロンドンで働く・暮らす
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      最低賃金、労働契約、ビザ、サービスチャージなど、ロンドンで働く日本人のための労働法ガイド。実体験に基づく記録も公開しています。
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <Link
+                      href="/jobs/minimum-wage"
+                      className="hover:underline"
+                    >
+                      最低賃金・給与明細
+                    </Link>
+                    <Link
+                      href="/jobs/employment-contract"
+                      className="hover:underline"
+                    >
+                      労働契約・就業規則
+                    </Link>
+                    <Link href="/jobs/visa-and-work" className="hover:underline">
+                      ビザと就労
+                    </Link>
+                    <Link
+                      href="/jobs/workplace-harassment"
+                      className="hover:underline"
+                    >
+                      ハラスメント相談先
+                    </Link>
+                    <Link
+                      href="/jobs/service-charges"
+                      className="hover:underline"
+                    >
+                      サービスチャージ完全ガイド
+                    </Link>
+                    <Link
+                      href="/jobs/service-charges/case-story"
+                      className="hover:underline"
+                    >
+                      審判所申立ての実体験
+                    </Link>
+                    <Link
+                      href="/jobs/service-charges/dashboard"
+                      className="hover:underline"
+                    >
+                      店舗別データベース
+                    </Link>
+                    <Link
+                      href="/jobs"
+                      className="hover:underline text-red-600 font-medium"
+                    >
+                      労働問題ガイド トップ
                     </Link>
                   </div>
                 </NavigationMenuContent>

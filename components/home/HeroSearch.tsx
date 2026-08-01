@@ -33,6 +33,9 @@ export default function HeroSearch() {
           <SelectItem value="jobs/service-charges">
             サービスチャージについて調べる
           </SelectItem>
+          <SelectItem value="jobs">
+            ロンドンで働く（労働問題ガイド）
+          </SelectItem>
         </SelectContent>
       </Select>
 
