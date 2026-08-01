@@ -73,11 +73,13 @@ export default function SurveyPage() {
   const [amountValue, setAmountValue] = useState<string>("");
   const needsPeriod = useMemo(() => amountValue.trim() !== "", [amountValue]);
   const [amountPeriod, setAmountPeriod] = useState<"weekly" | "monthly" | null>(
-    null
+    null,
   );
   const amountMismatch = useMemo(
-    () => collected === "yes" && (amountValue.trim() !== "") !== (amountPeriod !== null),
-    [collected, amountValue, amountPeriod]
+    () =>
+      collected === "yes" &&
+      (amountValue.trim() !== "") !== (amountPeriod !== null),
+    [collected, amountValue, amountPeriod],
   );
   const [showError, setShowError] = useState(true);
   const [showMealOther, setShowMealOther] = useState(false);
@@ -99,7 +101,7 @@ export default function SurveyPage() {
 
   const steps = useMemo(
     () => (collected === "no" ? [1, 2, 4, 5] : [1, 2, 3, 4, 5]),
-    [collected]
+    [collected],
   );
 
   useEffect(() => {
@@ -128,7 +130,7 @@ export default function SurveyPage() {
 
   function toggleMealRestriction(value: string, checked: boolean) {
     setMealRestrictions((prev) =>
-      checked ? [...prev, value] : prev.filter((v) => v !== value)
+      checked ? [...prev, value] : prev.filter((v) => v !== value),
     );
   }
 
@@ -145,7 +147,7 @@ export default function SurveyPage() {
               ロンドン日本食レストランに関する実態調査
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。
+              個人が特定される情報は入力しないでください。
             </p>
 
             <div className="space-y-1.5 pt-2">
@@ -376,7 +378,7 @@ export default function SurveyPage() {
                         "text-xs",
                         amountMismatch
                           ? "text-destructive font-medium"
-                          : "text-muted-foreground"
+                          : "text-muted-foreground",
                       )}
                     >
                       ※
@@ -392,7 +394,6 @@ export default function SurveyPage() {
                   <p className="font-medium">Q4. 自由記載（任意）</p>
                   <p className="text-xs text-muted-foreground">
                     サービスチャージの運用について、補足や気になる点があればご記入ください。
-                    個人が特定される内容や誹謗中傷は書かないでください。
                   </p>
                 </div>
 
@@ -462,7 +463,7 @@ export default function SurveyPage() {
                                 {MEAL_RESTRICTION_LABEL[v]}
                               </Label>
                             </div>
-                          )
+                          ),
                         )}
                         <div className="flex items-center space-x-3 py-1.5">
                           <Checkbox
@@ -512,7 +513,7 @@ export default function SurveyPage() {
                                 {MEAL_DRINK_LABEL[v]}
                               </Label>
                             </div>
-                          )
+                          ),
                         )}
                       </RadioGroup>
                     </section>
@@ -561,7 +562,7 @@ export default function SurveyPage() {
                                 {VISA_SUPPORT_LABEL[v]}
                               </Label>
                             </div>
-                          )
+                          ),
                         )}
                       </RadioGroup>
                     </section>
@@ -576,7 +577,7 @@ export default function SurveyPage() {
                       >
                         {(
                           Object.keys(
-                            MANAGEMENT_PRESENCE_LABEL
+                            MANAGEMENT_PRESENCE_LABEL,
                           ) as ManagementPresence[]
                         ).map((v) => (
                           <div
@@ -603,9 +604,7 @@ export default function SurveyPage() {
                       </p>
                       <RadioGroup name="workAtmosphere" className="grid gap-1">
                         {(
-                          Object.keys(
-                            WORK_ATMOSPHERE_LABEL
-                          ) as WorkAtmosphere[]
+                          Object.keys(WORK_ATMOSPHERE_LABEL) as WorkAtmosphere[]
                         ).map((v) => (
                           <div
                             key={v}
@@ -626,9 +625,7 @@ export default function SurveyPage() {
                       </p>
                       <RadioGroup name="ethnicityRatio" className="grid gap-1">
                         {(
-                          Object.keys(
-                            ETHNICITY_RATIO_LABEL
-                          ) as EthnicityRatio[]
+                          Object.keys(ETHNICITY_RATIO_LABEL) as EthnicityRatio[]
                         ).map((v) => (
                           <div
                             key={v}

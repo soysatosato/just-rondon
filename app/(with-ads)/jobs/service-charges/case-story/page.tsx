@@ -137,7 +137,8 @@ export default function CaseStoryIndexPage() {
           {TITLE}
         </h1>
         <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          ロンドンのレストラン Tenshi（運営会社 Tenshi61 LTD）で働いていたときの、
+          ロンドンのレストラン Tenshi（運営会社 Tenshi61
+          LTD）で働いていたときの、
           未払いサービスチャージについての記録です。Acasへの相談から、Employment
           Tribunalの判決、そして実際にお金を回収するまでを、順を追って書いています。
         </p>
@@ -200,7 +201,7 @@ export default function CaseStoryIndexPage() {
       <section className="mt-10">
         <h2 className="text-lg font-semibold">経過</h2>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          個人が特定されないよう、具体的な日付は伏せています。順序と、間隔の感覚が伝わるように書きました。
+          順序と、間隔の感覚が伝わるように書きました。
         </p>
         <ol className="mt-5 space-y-4 border-l-2 border-gray-200 dark:border-neutral-700 pl-5">
           {timeline.map((t) => (
