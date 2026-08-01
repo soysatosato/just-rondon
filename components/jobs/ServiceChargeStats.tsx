@@ -140,7 +140,7 @@ export default function ServiceChargeStats({ stats }: { stats: Stats }) {
                   paddingAngle={collectionData.length > 1 ? 3 : 0}
                   strokeWidth={2}
                   className="stroke-card"
-                  label={({ percent }) => `${Math.round(percent * 100)}%`}
+                  label={({ percent }) => `${Math.round((percent ?? 0) * 100)}%`}
                 >
                   {collectionData.map((entry, i) => (
                     <Cell
