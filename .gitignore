@@ -54,3 +54,8 @@ next-env.d.ts
 #claude
 /.claude/
 /CLAUDE.md
+
+# next-sitemap が postbuild で生成する(コミットするとデプロイ間で古いものが残る)
+public/robots.txt
+public/sitemap.xml
+public/sitemap-*.xml

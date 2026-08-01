@@ -12,6 +12,14 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Sparkles } from "lucide-react";
 import ContactDialog from "@/components/form/ContactDialog";
+import JsonLd from "@/components/seo/JsonLd";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import {
+  artworkJsonLd,
+  museumBreadcrumbJsonLd,
+} from "@/components/museums/jsonld";
 
 export async function generateMetadata({
   params,
@@ -20,17 +28,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const artwork = await fetchArtworkDetails(params.id);
 
-  return {
+  return buildPageMetadata({
+    path: `/museums/${params.slug}/artworks/${params.id}`,
     title: `${artwork?.title}・${artwork?.artist}｜${artwork?.museum.name}の作品解説・ロンドン観光・美術館ガイド`,
+    titleSuffix: false,
     description: `${artwork?.title}・${artwork?.artist}（${artwork?.museum.name}所蔵）の見どころ・ハイライトを徹底解説。ロンドン観光で絶対に見るべき美術館・注目作品の情報をわかりやすくガイドします。`,
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: `https://www.just-rondon.com/museums/${params.slug}/artworks/${params.id}`,
-    },
-  };
+    images: artwork?.image ? [artwork.image] : undefined,
+  });
 }
 
 export default async function ArtworkDetailPage({
@@ -43,6 +47,29 @@ export default async function ArtworkDetailPage({
   const artwork = await fetchArtworkDetails(params.id);
   return (
     <main className="max-w-3xl mx-auto px-4 space-y-4">
+      {artwork && (
+        <>
+          <JsonLd
+            data={museumBreadcrumbJsonLd(
+              { name: museum.name, slug: params.slug },
+              [
+                {
+                  name: artwork.title,
+                  url: absoluteUrl(
+                    `/museums/${params.slug}/artworks/${params.id}`,
+                  ),
+                },
+              ],
+            )}
+          />
+          <JsonLd
+            data={artworkJsonLd(artwork, {
+              name: museum.name,
+              slug: params.slug,
+            })}
+          />
+        </>
+      )}
       <MuseumBreadCrumbs
         name={museum.name}
         link2={params.slug}
@@ -116,6 +143,8 @@ export default async function ArtworkDetailPage({
           </div>
         )}
       </section>
+
+      <AdSenseUnit slot={AD_SLOTS.inArticle} />
 
       {artwork?.highlights && (
         <section className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">

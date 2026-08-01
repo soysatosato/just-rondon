@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buildPageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import {
   Card,
@@ -12,11 +13,11 @@ import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { fetchMustSeeAttractions } from "@/utils/actions/attractions";
 
-export const metadata = {
-  title:
-    "絶対に外せないロンドン観光スポット特集 | 初めての旅行におすすめ名所ガイド | ジャスト・ロンドン",
-  description:
-    "ロンドン観光の定番スポットを厳選して紹介。ビッグ・ベン、タワーブリッジ、バッキンガム宮殿、ロンドン塔、ウェストミンスター寺院、自然史博物館など、初めてのロンドン旅行で絶対に外せない見どころをまとめた完全ガイド。",
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/must-see",
+  title: "絶対に外せないロンドン観光スポット特集 | 初めての旅行におすすめ名所ガイド | ジャスト・ロンドン",
+  titleSuffix: false,
+  description: "ロンドン観光の定番スポットを厳選して紹介。ビッグ・ベン、タワーブリッジ、バッキンガム宮殿、ロンドン塔、ウェストミンスター寺院、自然史博物館など、初めてのロンドン旅行で絶対に外せない見どころをまとめた完全ガイド。",
   keywords: [
     "ロンドン",
     "ロンドン観光",
@@ -28,23 +29,7 @@ export const metadata = {
     "ロンドン観光地",
     "王道ルート",
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/sightseeing/must-see",
-  },
-  openGraph: {
-    title: "絶対に外せないロンドン観光スポット特集 | 名所・王道ルートまとめ",
-    description:
-      "ロンドンを訪れるなら絶対に押さえておきたい観光スポットを総まとめ。タワーブリッジ、ビッグ・ベン、ロンドン塔、自然史博物館など、ロンドンの魅力を網羅した決定版ガイド。",
-    url: "https://www.just-rondon.com/sightseeing/must-see",
-    siteName: "ジャスト・ロンドン | ロンドン観光特集",
-    locale: "ja_JP",
-    type: "website",
-  },
-};
+});
 
 export default async function MustSeePage() {
   const attractions = await fetchMustSeeAttractions();

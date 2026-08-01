@@ -12,16 +12,58 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Pagination from "@/components/home/Pagination";
 import { fetchAllAttractions } from "@/utils/actions/attractions";
 import AttractionFilterBar from "@/components/attractions/AttractionFilterBar";
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
 // フィルター UI（前回提供したやつ）
 
-export const metadata = {
-  title: "ロンドン観光施設一覧 | ジャスト・ロンドン",
-  description:
-    "ロンドンの観光施設を一覧で紹介。話題のスポットから歴史ある名所まで、まとめてチェックできます。",
-};
+/**
+ * このページは page / sort / rec / mustSee / kids / free / category の
+ * 7パラメータで組み合わせ爆発する。フィルター付きは noindex にして
+ * クリーンURLへ canonical を寄せ、クロール予算を実ページに回す。
+ *
+ * robots.txt でブロックしてはいけない。クロールできないと noindex も読めず
+ * 「robots.txt によりブロックされましたがインデックスに登録されました」になる。
+ */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: {
+    page?: string;
+    sort?: string;
+    rec?: string;
+    mustSee?: string;
+    kids?: string;
+    free?: string;
+    category?: string;
+  };
+}): Promise<Metadata> {
+  const page = Number(searchParams.page) || 1;
+  const hasFilter = Boolean(
+    searchParams.sort ||
+      searchParams.rec ||
+      searchParams.mustSee ||
+      searchParams.kids ||
+      searchParams.free ||
+      searchParams.category,
+  );
+
+  return buildPageMetadata({
+    path:
+      !hasFilter && page > 1
+        ? `/sightseeing/all?page=${page}`
+        : "/sightseeing/all",
+    title:
+      page > 1 && !hasFilter
+        ? `ロンドン観光施設一覧（${page}ページ目）`
+        : "ロンドン観光施設一覧",
+    description:
+      "ロンドンの観光施設を一覧で紹介。話題のスポットから歴史ある名所まで、まとめてチェックできます。",
+    noindex: hasFilter,
+  });
+}
 
 export default async function FacilitiesListPage({
   searchParams,
@@ -74,7 +116,7 @@ export default async function FacilitiesListPage({
       {/* 追加：フィルターバー */}
       <AttractionFilterBar />
       <div className="mt-4 justify-center flex">
-        <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
+        <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
       </div>
       <div className="grid gap-8">
         {facilities.map((f) => (

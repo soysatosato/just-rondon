@@ -2,10 +2,42 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 /** @type {import('next-sitemap').IConfig} */
+/**
+ * public/robots.txt と public/sitemap*.xml は postbuild でここから生成される。
+ * public/ 側を直接編集しても毎回上書きされるので、変更は必ずこのファイルで行う。
+ */
 module.exports = {
   siteUrl: "https://www.just-rondon.com",
   generateRobotsTxt: true,
-  exclude: ["/api/*"],
+  exclude: [
+    "/api/*",
+    "/profile",
+    "/profile/*",
+    "/jobs/service-charges/dashboard",
+    "/jobs/service-charges/dashboard/*",
+    "/jobs/service-charges/survey",
+    "/jobs/service-charges/thanks",
+    "/contact/confirm",
+  ],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/api/",
+          "/profile",
+          "/jobs/service-charges/dashboard",
+          "/jobs/service-charges/survey",
+          "/jobs/service-charges/thanks",
+          "/contact/confirm",
+        ],
+      },
+    ],
+  },
+  // /sightseeing/all のフィルター付きURLはここでブロックしない。
+  // クロールを止めるとページ側の noindex を読めず、
+  // 「robots.txt によりブロックされましたがインデックスに登録されました」になるため。
   // sitemapSize: 5000, // ページ数が多い場合に分割
   additionalPaths: async (config) => {
     const paths = [];
@@ -24,7 +56,11 @@ module.exports = {
       // "/chatboard/create",
       // "/matome",
       "/contact",
+      "/about",
+      "/privacy",
+      "/events",
       "/sightseeing",
+      "/sightseeing/all",
       "/sightseeing/harry-potter",
       "/sightseeing/kids-free-activities",
       "/sightseeing/must-see",
@@ -102,6 +138,15 @@ module.exports = {
           `/sightseeing/christmas-markets/${cm.slug}`,
         ),
       );
+    }
+
+    // 月別イベントページ。これまでサイトマップに1件も入っていなかった。
+    const events = await prisma.content.findMany({
+      where: { category: "london-events-2025" },
+      select: { slug: true },
+    });
+    for (const e of events) {
+      paths.push(await config.transform(config, `/events/${e.slug}`));
     }
 
     // for (const n of news) {

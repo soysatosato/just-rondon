@@ -7,6 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buildPageMetadata } from "@/lib/seo";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, CalendarDays, Sparkles, Compass } from "lucide-react";
 import { fetchChristmasMarkets } from "@/utils/actions/contents";
@@ -21,11 +22,11 @@ type SectionGroup = {
   extra?: string;
 };
 
-export const metadata = {
-  title:
-    "ロンドンのクリスマスマーケット特集 2025 | おすすめスポット・開催情報まとめ | ジャスト・ロンドン",
-  description:
-    "ロンドンのクリスマスマーケット2025年最新版。サウスバンク、ウィンターワンダーランド、ロンドンブリッジなど、各マーケットの開催期間、見どころ、アクセス、おすすめポイントをわかりやすく紹介します。",
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/christmas-markets",
+  title: "ロンドンのクリスマスマーケット特集 2025 | おすすめスポット・開催情報まとめ | ジャスト・ロンドン",
+  titleSuffix: false,
+  description: "ロンドンのクリスマスマーケット2025年最新版。サウスバンク、ウィンターワンダーランド、ロンドンブリッジなど、各マーケットの開催期間、見どころ、アクセス、おすすめポイントをわかりやすく紹介します。",
   keywords: [
     "ロンドン",
     "クリスマスマーケット",
@@ -35,24 +36,7 @@ export const metadata = {
     "ヨーロッパ クリスマス",
     "ロンドン旅行",
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/sightseeing/christmas-markets",
-  },
-  openGraph: {
-    title:
-      "ロンドンのクリスマスマーケット特集 2025 | 開催情報・おすすめ完全ガイド",
-    description:
-      "ロンドンの代表的なクリスマスマーケットをエリア別に徹底紹介。人気のウィンターワンダーランドから隠れた穴場まで、旅行に役立つ情報をまとめた決定版ガイド。",
-    url: "https://www.just-rondon.com/sightseeing/christmas-markets",
-    siteName: "ジャスト・ロンドン | クリスマスマーケット特集",
-    locale: "ja_JP",
-    type: "website",
-  },
-};
+});
 
 function normalizeSections(sections: any[]): SectionGroup {
   const group: SectionGroup = {};

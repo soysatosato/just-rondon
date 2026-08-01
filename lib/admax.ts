@@ -67,16 +67,3 @@ export function loadAdMaxScript(): Promise<void> {
 
   return window.__admaxScriptPromise__;
 }
-
-/**
- * すでに script 読込済みのあとに、新しい admaxads を追加した場合の再評価用
- */
-export function rerunAdMaxScript() {
-  if (typeof window === "undefined") return;
-
-  const script = document.createElement("script");
-  script.src = SCRIPT_SRC;
-  script.async = true;
-  script.charset = "utf-8";
-  document.body.appendChild(script);
-}

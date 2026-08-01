@@ -3,6 +3,24 @@ import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
 import { fetchRoyalActivities } from "@/utils/actions/contents";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/royal-london",
+  title: "ロンドン王室スポットガイド | バッキンガム宮殿・ロンドン塔・ケンジントン宮殿",
+  description:
+    "イギリス王室ゆかりのロンドン観光スポットを厳選紹介。バッキンガム宮殿のステート・アパートメント公開や衛兵交代式、王冠宝器のあるロンドン塔、ダイアナ元妃が暮らしたケンジントン宮殿まで、めぐり方を解説します。",
+  keywords: [
+    "ロンドン 王室",
+    "バッキンガム宮殿",
+    "衛兵交代式",
+    "ロンドン塔",
+    "ケンジントン宮殿",
+    "王冠宝器",
+    "イギリス王室 観光",
+    "ロンドン 観光",
+  ],
+});
 
 export default async function RoyalAcrivitiesListPage() {
   const items = await fetchRoyalActivities();

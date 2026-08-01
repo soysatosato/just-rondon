@@ -20,9 +20,19 @@ import {
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
 import HeroContent from "@/components/home/HeroContent";
 import SectionHeader from "@/components/home/SectionHeader";
+import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/",
+  title: `${SITE_NAME} | ロンドン観光・美術館・ミュージカル・イベント情報`,
+  titleSuffix: false,
+  description:
+    "初めてのロンドン旅行でも安心。定番の観光スポット、美術館と必見作品、ウエストエンドのミュージカル、季節のイベント、ビザや現地で働く情報まで、日本語でまとめた総合ロンドンガイドです。",
+});
 
 export default function Page() {
   return (
@@ -44,10 +54,6 @@ export default function Page() {
 
           <div className="relative">
             <HeroContent />
-
-            <div className="mt-4">
-              <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
-            </div>
 
             {/* サブテキスト */}
             <div className="mt-12 rounded-2xl bg-card text-card-foreground p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
@@ -108,7 +114,7 @@ export default function Page() {
       </section>
 
       <div className="mt-2">
-        <AdMaxSwitch />
+        <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
       </div>
 
       {/* ロンドンで働く・暮らす */}

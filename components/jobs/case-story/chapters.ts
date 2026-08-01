@@ -1,6 +1,7 @@
 import type { CaseStoryArticle } from "./types";
 
-export const SITE_URL = "https://www.just-rondon.com";
+import { SITE_URL, buildPageMetadata } from "@/lib/seo";
+export { SITE_URL };
 export const CASE_STORY_BASE = "/jobs/service-charges/case-story";
 
 export type Chapter = {
@@ -101,23 +102,13 @@ export function getNeighbours(slug: string) {
  * canonical は必ず自分の実URLを指す。
  */
 export function buildMetadata(article: CaseStoryArticle) {
-  const url = `${SITE_URL}${chapterPath(article.slug)}`;
-
-  return {
-    title: `${article.title} | ジャスト・ロンドン`,
+  return buildPageMetadata({
+    path: chapterPath(article.slug),
+    title: article.title,
     description: article.description,
     keywords: article.keywords,
-    robots: { index: true, follow: true },
-    alternates: { canonical: url },
-    openGraph: {
-      title: article.title,
-      description: article.description,
-      url,
-      siteName: "ジャスト・ロンドン｜英国生活・法律ガイド",
-      locale: "ja_JP",
-      type: "article" as const,
-    },
-  };
+    type: "article",
+  });
 }
 
 export function breadcrumbJsonLd(article: CaseStoryArticle) {

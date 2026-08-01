@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { buildPageMetadata } from "@/lib/seo";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { fetchContentBySlug } from "@/utils/actions/contents";
@@ -7,11 +8,11 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
 
-export const metadata = {
-  title:
-    "英国サービスチャージ完全ガイド｜Tipping Act 2023・従業員の権利・事業者の義務まとめ | ジャスト・ロンドン",
-  description:
-    "英国のレストランやホテルで一般化しているサービスチャージについて、Tipping Act 2023の内容、強制・任意の違い、従業員の権利、Tronc制度、税務・最低賃金との関係まで網羅的に解説。",
+export const metadata = buildPageMetadata({
+  path: "/jobs/service-charges",
+  title: "英国サービスチャージ完全ガイド｜Tipping Act 2023・従業員の権利・事業者の義務まとめ | ジャスト・ロンドン",
+  titleSuffix: false,
+  description: "英国のレストランやホテルで一般化しているサービスチャージについて、Tipping Act 2023の内容、強制・任意の違い、従業員の権利、Tronc制度、税務・最低賃金との関係まで網羅的に解説。",
   keywords: [
     "サービスチャージ 英国",
     "Tipping Act 2023",
@@ -22,24 +23,7 @@ export const metadata = {
     "最低賃金 チップ",
     "Employment Tribunal チップ",
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/jobs/service-charges",
-  },
-  openGraph: {
-    title:
-      "英国サービスチャージの仕組みと法律｜Tipping Act 2023をわかりやすく解説",
-    description:
-      "サービスチャージは誰のもの？拒否できる？英国のTipping Act 2023に基づき、事業者・従業員双方が知るべきルールを整理。",
-    url: "https://www.just-rondon.com/jobs/service-charges",
-    siteName: "ジャスト・ロンドン｜英国生活・法律ガイド",
-    locale: "ja_JP",
-    type: "article",
-  },
-};
+});
 
 export default async function ServiceChargeGuidePage() {
   const slug = "uk-hospitality-service-charges-guide";

@@ -27,8 +27,26 @@ import {
   getFreeAttractions,
   getTodaysPicks,
 } from "@/utils/sightseeing";
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/sightseeing",
+  title: "ロンドン観光ガイド | 定番スポット・モデルコース・季節の楽しみ方",
+  description:
+    "初めてのロンドン旅行に。ロンドン塔、大英博物館、バッキンガム宮殿などの定番から、子連れで楽しめる無料スポット、王室ゆかりの名所、テムズ川クルーズまで、目的別に選べるロンドン観光ガイドです。",
+  keywords: [
+    "ロンドン観光",
+    "ロンドン 観光スポット",
+    "ロンドン 旅行",
+    "ロンドン モデルコース",
+    "ロンドン 定番",
+    "ロンドン 子連れ",
+    "ロンドン 無料",
+    "ロンドン 見どころ",
+  ],
+});
 
 const faqItems = [
   {
@@ -120,7 +138,7 @@ export default async function Page() {
             </p>
           </div>
           <div className="mt-4 justify-center flex">
-            <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
+            <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
           </div>
           {/* メインの4カード（ここはそのまま） */}
           <div className="grid gap-4 sm:grid-cols-2">

@@ -1,5 +1,6 @@
 // app/museums/page.tsx
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { buildPageMetadata } from "@/lib/seo";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -16,19 +17,12 @@ import Link from "next/link";
 import { FaGlobe } from "react-icons/fa";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 
-export const metadata = {
-  title:
-    "キッズ向けロンドン美術館おすすめセレクション＆家族で楽しむ無料・話題の展示ガイド",
-  description:
-    "ロンドン観光で子どもと一緒に楽しめるキッズ向け美術館のおすすめセレクションを紹介！テート・モダン、ヴィクトリア＆アルバート美術館など、家族で楽しめる無料・話題の展示情報やアクセス、体験型イベントまでわかりやすくガイドします。",
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/museums/best-museums-for-kids",
-  },
-};
+export const metadata = buildPageMetadata({
+  path: "/museums/best-museums-for-kids",
+  title: "キッズ向けロンドン美術館おすすめセレクション＆家族で楽しむ無料・話題の展示ガイド",
+  titleSuffix: false,
+  description: "ロンドン観光で子どもと一緒に楽しめるキッズ向け美術館のおすすめセレクションを紹介！テート・モダン、ヴィクトリア＆アルバート美術館など、家族で楽しめる無料・話題の展示情報やアクセス、体験型イベントまでわかりやすくガイドします。",
+});
 
 export default async function MuseumsPage() {
   const museums = await fetchKidsMuseums();

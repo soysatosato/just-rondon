@@ -5,6 +5,14 @@ import { notFound } from "next/navigation";
 import { fetchChristmasMarketBySlug } from "@/utils/actions/contents";
 
 import { MapPin, CalendarDays, Sparkles, Compass } from "lucide-react";
+import { buildPageMetadata } from "@/lib/seo";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+import JsonLd from "@/components/seo/JsonLd";
+import {
+  christmasMarketBreadcrumbJsonLd,
+  contentAttractionJsonLd,
+} from "@/components/sightseeing/jsonld";
 
 interface Props {
   params: {
@@ -56,12 +64,13 @@ export async function generateMetadata({
 
   const description = `${trimmedDesc}… 住所・開催期間・見どころを紹介。`;
 
-  // canonical URL設定
-  const canonicalUrl = `https://www.just-rondon.com/christmas-markets/${params.slug}`;
-
-  return {
+  return buildPageMetadata({
+    // 実ルートは /sightseeing/christmas-markets/[slug]
+    path: `/sightseeing/christmas-markets/${params.slug}`,
     title,
+    titleSuffix: false,
     description,
+    type: "article",
     keywords: [
       content.title,
       "クリスマスマーケット",
@@ -71,23 +80,8 @@ export async function generateMetadata({
       "London Christmas Market",
       "Christmas Event London",
     ],
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      type: "article",
-      url: canonicalUrl,
-      title,
-      description,
-      locale: "ja_JP",
-      siteName: "ジャスト・ロンドン",
-      images: content.image ? [{ url: content.image }] : undefined,
-    },
-  };
+    images: content.image ? [content.image] : undefined,
+  });
 }
 
 export default async function ChristmasMarketDetailPage({ params }: Props) {
@@ -101,6 +95,8 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 md:py-10 space-y-10">
+      <JsonLd data={christmasMarketBreadcrumbJsonLd(content)} />
+      <JsonLd data={contentAttractionJsonLd(content)} />
       <div>
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
           {content.title}
@@ -134,6 +130,8 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
           </ReactMarkdown>
         </section>
       )}
+
+      <AdSenseUnit slot={AD_SLOTS.inArticle} />
 
       {/* 公式サイトリンク */}
       {content.website && (

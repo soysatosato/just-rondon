@@ -7,6 +7,22 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { fetchEvents2025 } from "@/utils/actions/contents";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/events",
+  title: "ロンドンイベントカレンダー | 月別の祭り・マーケット・季節の行事",
+  description:
+    "ロンドンで開催されるイベントを月別にまとめたカレンダー。春のフラワーショー、夏の野外フェス、秋の芸術イベント、冬のクリスマスマーケットまで、旅行の時期選びに役立つ季節の行事を紹介します。",
+  keywords: [
+    "ロンドン イベント",
+    "ロンドン イベントカレンダー",
+    "ロンドン 祭り",
+    "ロンドン 季節",
+    "ロンドン クリスマスマーケット",
+    "ロンドン 旅行 時期",
+  ],
+});
 
 export default async function Events2025Page() {
   const contents = await fetchEvents2025();

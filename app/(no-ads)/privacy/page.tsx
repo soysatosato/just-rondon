@@ -1,6 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buildPageMetadata } from "@/lib/seo";
 
-const sections = [
+export const metadata = buildPageMetadata({
+  path: "/privacy",
+  title: "プライバシーポリシー",
+  description:
+    "ジャスト・ロンドンにおける個人情報の取り扱い、広告配信(Google AdSense)およびアクセス解析(Google アナリティクス)での Cookie の利用と、その無効化方法について説明します。",
+});
+
+type Section = {
+  title: string;
+  content: string[];
+  links?: { label: string; href: string }[];
+};
+
+const sections: Section[] = [
   {
     title: "個人情報の利用目的",
     content: [
@@ -9,11 +23,36 @@ const sections = [
     ],
   },
   {
-    title: "広告について",
+    title: "広告配信について",
     content: [
-      "当サイトでは、第三者配信の広告サービスを利用する場合があります。",
-      "広告配信事業者は、ユーザーの興味に応じた広告を表示するために Cookie を使用することがあります。",
-      "Cookie によりブラウザを識別することがありますが、個人を特定するものではありません。",
+      "当サイトでは、第三者配信の広告サービスとして Google AdSense を利用しています。",
+      "Google を含む第三者配信事業者は、Cookie を使用して、ユーザーが当サイトや他のサイトに過去にアクセスした際の情報に基づいて広告を配信します。",
+      "Cookie によりブラウザを識別することがありますが、氏名や住所などの個人を特定する情報は含まれません。",
+      "パーソナライズ広告は、広告設定ページからいつでも無効にできます。",
+    ],
+    links: [
+      {
+        label: "Google の広告設定",
+        href: "https://policies.google.com/technologies/ads",
+      },
+    ],
+  },
+  {
+    title: "アクセス解析について",
+    content: [
+      "当サイトでは、サイトの利用状況を把握するために Google アナリティクス（GA4）を利用しています。",
+      "Google アナリティクスは Cookie を使用してアクセス情報を収集しますが、収集されるデータは匿名で行われ、個人を特定するものではありません。",
+      "この収集は、Google アナリティクス オプトアウト アドオンを導入することで拒否できます。",
+    ],
+    links: [
+      {
+        label: "Google アナリティクス オプトアウト アドオン",
+        href: "https://tools.google.com/dlpage/gaoptout",
+      },
+      {
+        label: "Google のプライバシーポリシー",
+        href: "https://policies.google.com/privacy",
+      },
     ],
   },
 
@@ -69,6 +108,23 @@ export default function PrivacyPage() {
                       {paragraph}
                     </p>
                   ))}
+
+                  {section.links && (
+                    <ul className="space-y-1 text-sm md:text-base">
+                      {section.links.map((link) => (
+                        <li key={link.href}>
+                          <a
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sky-600 underline underline-offset-2 dark:text-sky-400"
+                          >
+                            {link.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </section>
             ))}

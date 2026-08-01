@@ -1,5 +1,6 @@
 // app/museums/page.tsx
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { buildPageMetadata } from "@/lib/seo";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -16,18 +17,12 @@ import Link from "next/link";
 import { FaGlobe } from "react-icons/fa";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 
-export const metadata = {
+export const metadata = buildPageMetadata({
+  path: "/museums/best-10-museums",
   title: "ロンドンの絶対行くべき美術館10選 | ジャスト・ロンドン",
-  description:
-    "ロンドン観光で絶対行くべき美術館10館を厳選紹介！ナショナルギャラリーやテートモダン、ヴィクトリア＆アルバート美術館など、無料・話題の展示情報も網羅。見どころ、アクセス、最新展覧会まで初心者でも安心して楽しめる完全ガイド。",
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/museums/best-10-museums",
-  },
-};
+  titleSuffix: false,
+  description: "ロンドン観光で絶対行くべき美術館10館を厳選紹介！ナショナルギャラリーやテートモダン、ヴィクトリア＆アルバート美術館など、無料・話題の展示情報も網羅。見どころ、アクセス、最新展覧会まで初心者でも安心して楽しめる完全ガイド。",
+});
 
 export default async function MuseumsPage() {
   const museums = await fetchTop10Museums();

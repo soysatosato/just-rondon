@@ -3,43 +3,28 @@ import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { fetchStadiumTours } from "@/utils/actions/contents";
 import ExpandableText from "@/components/card/ExpandableText";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/stadium-tours",
   title:
-    "テムズ川クルーズ完全ガイド | ロンドン観光を満喫するリバークルーズ | ジャスト・ロンドン",
+    "ロンドンのスタジアムツアー完全ガイド | アーセナル・チェルシー・ウェンブリー",
+  titleSuffix: false,
   description:
-    "ロンドン名物のテムズ川クルーズを徹底解説。ビッグ・ベン、ロンドン・アイ、タワーブリッジを眺める観光クルーズや、ナイトクルーズ、ディナークルーズまで、料金・ルート・おすすめを紹介する保存版ガイド。",
+    "エミレーツ・スタンフォードブリッジ・トッテナム・ウェンブリーなど、ロンドンの主要スタジアムツアーを徹底解説。予約方法、所要時間、料金の目安、見どころ、アクセスをまとめた保存版ガイド。",
   keywords: [
-    "テムズ川クルーズ",
-    "ロンドン クルーズ",
-    "リバークルーズ",
-    "ナイトクルーズ",
+    "スタジアムツアー ロンドン",
+    "エミレーツスタジアム ツアー",
+    "スタンフォードブリッジ ツアー",
+    "トッテナム スタジアム ツアー",
+    "ウェンブリー スタジアム",
+    "アーセナル 観戦",
+    "チェルシー 観戦",
+    "プレミアリーグ 観戦",
+    "ロンドン サッカー",
     "ロンドン 観光",
-    "タワーブリッジ",
-    "ロンドンアイ",
-    "ビッグベン",
-    "ディナークルーズ",
-    "観光船",
-    "川下り ロンドン",
-    "ロンドン 川 クルーズ",
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/sightseeing/thames-cruise",
-  },
-  openGraph: {
-    title: "テムズ川クルーズ完全ガイド | ロンドンの名所を船から楽しむ",
-    description:
-      "ビッグ・ベン、ロンドン塔、ウェストミンスター寺院など、テムズ川沿いの名所を結ぶ人気クルーズ。観光、ディナー、ナイトクルーズまで徹底紹介。",
-    url: "https://www.just-rondon.com/sightseeing/thames-cruise",
-    siteName: "ジャスト・ロンドン | テムズ川クルーズ特集",
-    locale: "ja_JP",
-    type: "website",
-  },
-};
+});
 
 export default async function tadiumToursListPage() {
   const contents = await fetchStadiumTours();

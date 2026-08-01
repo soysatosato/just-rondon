@@ -87,7 +87,9 @@ export const fetchEvents2025 = async () => {
 };
 export const fetchMonthlyEvents2025 = async (slug: string) => {
   const content = await db.content.findFirst({
-    where: { slug },
+    // category を絞らないと、クリスマスマーケット等の別カテゴリの Content が
+    // /events/<slug> でも同じ内容で描画され、canonical違いの重複ページになる
+    where: { slug, category: "london-events-2025" },
     include: {
       sections: {
         orderBy: { displayOrder: "asc" },

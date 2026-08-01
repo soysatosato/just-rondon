@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  loadAdMaxScript,
-  registerAdMax,
-  rerunAdMaxScript,
-  unregisterAdMax,
-} from "@/lib/admax";
+import { loadAdMaxScript, registerAdMax, unregisterAdMax } from "@/lib/admax";
 
 type Props = {
   id?: string;
@@ -31,10 +26,6 @@ export default function AdMaxSwitch({
         await loadAdMaxScript();
 
         if (cancelled) return;
-
-        if (ref.current && ref.current.children.length === 0) {
-          rerunAdMaxScript();
-        }
       } catch (error) {
         console.error(error);
       }

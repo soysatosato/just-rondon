@@ -17,8 +17,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Baby, Flame, Star, Tag, Ticket } from "lucide-react";
-import AdMaxBanner from "@/components/ads/AdMaxBanner";
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildPageMetadata } from "@/lib/seo";
+import {
+  attractionBreadcrumbJsonLd,
+  attractionJsonLd,
+  attractionPath,
+} from "@/components/sightseeing/jsonld";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
@@ -36,6 +43,7 @@ export async function generateMetadata({
     return {
       title: "ロンドン観光ガイド | ジャスト・ロンドン",
       description: "ロンドン観光に役立つ情報をまとめて紹介します。",
+      robots: { index: false, follow: true },
     };
   }
 
@@ -47,42 +55,14 @@ export async function generateMetadata({
     ? `「${attraction.name}」の魅力や見どころ、アクセス情報を詳しく紹介。ロンドンの人気観光スポットの完全ガイド。`
     : "ロンドン観光に役立つスポット情報を紹介します。";
 
-  const canonicalUrl = `https://www.just-rondon.com/attractions/${params.slug}`;
-
-  return {
+  // 構造化データは metadata.other ではなく body の <script> で出す(JsonLd コンポーネント)
+  return buildPageMetadata({
+    path: attractionPath(params.slug),
     title,
     description,
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      type: "website",
-      url: canonicalUrl,
-      title,
-      description,
-      siteName: "ジャスト・ロンドン",
-      locale: "ja_JP",
-    },
-    other: {
-      "application/ld+json": JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "TouristAttraction",
-        name: attraction.name,
-        description: attraction.summary,
-        address: attraction.address,
-        geo: {
-          "@type": "GeoCoordinates",
-          latitude: attraction.lat,
-          longitude: attraction.lng,
-        },
-        isAccessibleForFree: attraction.isFree,
-      }),
-    },
-  };
+    titleSuffix: false,
+    images: attraction.image ? [attraction.image] : undefined,
+  });
 }
 
 function RecommendLevel({ level }: { level: number }) {
@@ -208,6 +188,8 @@ export default async function AttractionDetail({
 
   return (
     <main className="w-full max-w-5xl mx-auto">
+      <JsonLd data={attractionBreadcrumbJsonLd(attraction)} />
+      <JsonLd data={attractionJsonLd(attraction)} />
       <div className="mb-4">
         <BreadCrumbs
           name="観光ガイド"
@@ -231,13 +213,14 @@ export default async function AttractionDetail({
               </div>
             )}
 
-            <img
+            {/* このページのLCP要素。priority を付けないと最後に読み込まれる */}
+            <Image
               src={attraction.image}
               alt={`${attraction.name}｜ロンドン観光スポット`}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-              fetchPriority="low"
+              fill
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="object-cover"
+              priority
             />
           </div>
         </DialogTrigger>
@@ -281,7 +264,7 @@ export default async function AttractionDetail({
         )}
       </section>
       <div className="mt-4 justify-center flex">
-        <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
+        <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-4" />
       </div>
 
       <Tabs
@@ -374,13 +357,14 @@ export default async function AttractionDetail({
       <section className="px-6 py-12 max-w-3xl mx-auto space-y-10">
         <div className="p-10 rounded-3xl shadow-md bg-white dark:bg-gray-800">
           <div className="relative float-left mr-6 mb-4 w-28 h-28">
-            <img
+            {/* 元画像は1.5MB。next/image に通して112pxのAVIF/WebPを配信する */}
+            <Image
               src="/overview.png"
               alt="Overview Icon"
+              width={112}
+              height={112}
               className="absolute inset-0 w-full h-full object-contain drop-shadow-md dark:bg-neutral-100"
               loading="lazy"
-              decoding="async"
-              fetchPriority="low"
             />
           </div>
 
@@ -424,7 +408,7 @@ export default async function AttractionDetail({
           </section>
         )}
         <div className="mt-4 justify-center flex">
-          <AdMaxSwitch />
+          <AdSenseUnit slot={AD_SLOTS.articleBottom} className="my-4" />
         </div>
         <div className="space-y-12">
           {attraction.sections?.map((sec) => (

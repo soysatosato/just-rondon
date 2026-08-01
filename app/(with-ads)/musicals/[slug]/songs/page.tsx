@@ -1,4 +1,5 @@
 import { fetchMusicalIdandName, fetchSongs } from "@/utils/actions/musicals";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -7,7 +8,8 @@ import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
 import { musicalBreadcrumbJsonLd } from "@/components/musicals/jsonld";
 export async function generateMetadata({
   params,
@@ -23,24 +25,12 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ジャスト・ロンドン`,
+  return buildPageMetadata({
+    path: `/musicals/${params.slug}/songs`,
+    title: `${musical?.name} (${musical?.engName}) 歌詞・和訳`,
     description: `${musical?.name} (${musical?.engName}) の歌詞と和訳を掲載。${musical?.name} の名曲・人気曲を日本語でわかりやすく解説。ミュージカルファン必見の歌詞・翻訳ガイドサイトです。`,
-    openGraph: {
-      type: "article",
-      url: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
-      title: `${musical?.name} (${musical?.engName}) 歌詞・和訳 | ジャスト・ロンドン`,
-      description: `${musical?.name} (${musical?.engName}) の歌詞と和訳を掲載。${musical?.name} の名曲・人気曲を日本語でわかりやすく解説。`,
-      siteName: "ジャスト・ロンドン",
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
-    },
-  };
+    type: "article",
+  });
 }
 
 export default async function SongsPage({
@@ -73,7 +63,7 @@ export default async function SongsPage({
               [
                 {
                   name: "曲一覧",
-                  url: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
+                  url: absoluteUrl(`/musicals/${params.slug}/songs`),
                 },
               ],
             ),
@@ -104,7 +94,7 @@ export default async function SongsPage({
           各曲ページでは歌詞の和訳や背景解説もご覧いただけます。
         </p>
         <div className="my-4">
-          <AdMaxSwitch id="f588d5ab1ffd38172de3b94514384f61" />
+          <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
         </div>
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">

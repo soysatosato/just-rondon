@@ -1,4 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/about",
+  title: "このサイトについて",
+  description:
+    "ジャスト・ロンドンは、ロンドンの観光・文化・生活・ニュースを日本語でわかりやすく紹介するサイトです。運営方針と掲載情報の考え方について説明します。",
+});
 
 const sections = [
   {

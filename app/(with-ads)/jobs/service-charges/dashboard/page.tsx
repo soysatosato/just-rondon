@@ -10,7 +10,6 @@ import {
   fetchServiceChargeStats,
 } from "@/utils/actions/jobs";
 import ServiceChargeStats from "@/components/jobs/ServiceChargeStats";
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
 
 type Props = {
   searchParams?: {
@@ -70,9 +69,6 @@ export default async function DashboardPage({ searchParams }: Props) {
             検索
           </Button>
         </form>
-        <div className="mt-4 justify-center flex">
-          <AdMaxSwitch id="57e21d07fef1c9d16bf3c30cb9e6b314" />
-        </div>
         {/* 注意書き：3文字未満 */}
         {hasQuery && !isSearchable && (
           <div className="max-w-md rounded-lg border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">

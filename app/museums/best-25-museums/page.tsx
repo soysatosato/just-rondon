@@ -1,22 +1,17 @@
 // app/london-museums/page.tsx
 import MuseumBlurbList from "@/components/museums/MuseumBlurbList";
+import { buildPageMetadata } from "@/lib/seo";
 import { fetchTop25Museums } from "@/utils/actions/museums";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles } from "lucide-react";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 
-export const metadata = {
+export const metadata = buildPageMetadata({
+  path: "/museums/best-25-museums",
   title: "ロンドンの美術館おすすめセレクション| ジャスト・ロンドン",
-  description:
-    "ロンドン観光で絶対行くべき美術館のおすすめセレクションを紹介！ナショナルギャラリーやテートモダン、ヴィクトリア＆アルバート美術館など、無料・話題の展示情報も網羅。見どころやアクセス、最新展覧会まで初心者でも安心して楽しめるガイドです。",
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/museums/best-25-museums",
-  },
-};
+  titleSuffix: false,
+  description: "ロンドン観光で絶対行くべき美術館のおすすめセレクションを紹介！ナショナルギャラリーやテートモダン、ヴィクトリア＆アルバート美術館など、無料・話題の展示情報も網羅。見どころやアクセス、最新展覧会まで初心者でも安心して楽しめるガイドです。",
+});
 
 export default async function LondonMuseumsPage() {
   const museums = await fetchTop25Museums();

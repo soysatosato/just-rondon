@@ -1,4 +1,6 @@
-import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import { AD_SLOTS } from "@/lib/adsense";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import {
   fetchMusicalIdandName,
@@ -27,24 +29,12 @@ export async function generateMetadata({
       robots: { index: false, follow: false },
     };
   }
-  return {
-    title: `${song?.name}の歌詞・和訳 | ${musical?.name} (${musical?.engName}) | ジャスト・ロンドン`,
+  return buildPageMetadata({
+    path: `/musicals/${params.slug}/songs/${params.id}`,
+    title: `${song?.name}の歌詞・和訳 | ${musical?.name} (${musical?.engName})`,
     description: `${song?.name} の歌詞と和訳を掲載。${musical?.name} (${musical?.engName})の名曲・人気曲を日本語でわかりやすく解説。ミュージカルファン必見の歌詞・翻訳ガイドサイトです。`,
-    openGraph: {
-      type: "article",
-      url: `https://www.just-rondon.com/musicals/${params.slug}/songs/${params.id}`,
-      title: `${song?.name}の歌詞・和訳 | ${musical?.name} (${musical?.engName}) | ジャスト・ロンドン`,
-      description: `${song?.name} の歌詞と和訳を掲載。${musical?.name} (${musical?.engName})の名曲・人気曲を日本語でわかりやすく解説。`,
-      siteName: "ジャスト・ロンドン",
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: `https://www.just-rondon.com/musicals/${params.slug}/songs/${params.id}`,
-    },
-  };
+    type: "article",
+  });
 }
 
 export default async function SongDetailsPage({
@@ -65,11 +55,11 @@ export default async function SongDetailsPage({
               [
                 {
                   name: "曲一覧",
-                  url: `https://www.just-rondon.com/musicals/${params.slug}/songs`,
+                  url: absoluteUrl(`/musicals/${params.slug}/songs`),
                 },
                 {
                   name: song.name,
-                  url: `https://www.just-rondon.com/musicals/${params.slug}/songs/${params.id}`,
+                  url: absoluteUrl(`/musicals/${params.slug}/songs/${params.id}`),
                 },
               ],
             ),
@@ -117,9 +107,7 @@ export default async function SongDetailsPage({
             ></iframe>
           </div>
         )}
-        <div className="my-4">
-          <AdMaxSwitch id="f588d5ab1ffd38172de3b94514384f61" />
-        </div>
+        <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-4" />
 
         {/* 歌詞 */}
         <div className="prose prose-lg prose-indigo mx-auto">

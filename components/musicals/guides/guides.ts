@@ -1,6 +1,7 @@
 import type { MusicalGuideArticle } from "./types";
 
-export const SITE_URL = "https://www.just-rondon.com";
+import { SITE_URL, buildPageMetadata } from "@/lib/seo";
+export { SITE_URL };
 export const MUSICALS_BASE = "/musicals";
 
 export type GuideMeta = {
@@ -41,23 +42,13 @@ export function getGuideMeta(slug: string) {
  * canonical は必ず自分の実URLを指す。
  */
 export function buildMetadata(article: MusicalGuideArticle) {
-  const url = `${SITE_URL}${guidePath(article.slug)}`;
-
-  return {
-    title: `${article.title} | ジャスト・ロンドン`,
+  return buildPageMetadata({
+    path: guidePath(article.slug),
+    title: article.title,
     description: article.description,
     keywords: article.keywords,
-    robots: { index: true, follow: true },
-    alternates: { canonical: url },
-    openGraph: {
-      title: article.title,
-      description: article.description,
-      url,
-      siteName: "ジャスト・ロンドン",
-      locale: "ja_JP",
-      type: "article" as const,
-    },
-  };
+    type: "article",
+  });
 }
 
 export function breadcrumbJsonLd(article: MusicalGuideArticle) {

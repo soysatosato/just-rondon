@@ -1,20 +1,15 @@
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import { buildPageMetadata } from "@/lib/seo";
 import MuseumListClient from "@/components/museums/MuseumListClient";
 import { fetchMuseumsStep10 } from "@/utils/actions/museums";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
+  path: "/museums/all-museums",
   title: "ロンドン美術館一覧 | 観光・美術館・展覧会ガイド",
-  description:
-    "初めてのロンドン観光でも安心！主要美術館の見どころや必見作品、展覧会情報、便利なアクセス方法をわかりやすく紹介する、観光客向けアートガイドサイトです。",
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/museums/all-museums",
-  },
-};
+  titleSuffix: false,
+  description: "初めてのロンドン観光でも安心！主要美術館の見どころや必見作品、展覧会情報、便利なアクセス方法をわかりやすく紹介する、観光客向けアートガイドサイトです。",
+});
 
 export default async function AllMuseumsPage({
   searchParams,

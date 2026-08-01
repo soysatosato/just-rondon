@@ -1,4 +1,7 @@
 import Link from "next/link";
+import JsonLd from "@/components/seo/JsonLd";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
@@ -17,18 +20,8 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbJsonLd(article)),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleJsonLd(article)),
-        }}
-      />
+      <JsonLd data={breadcrumbJsonLd(article)} />
+      <JsonLd data={articleJsonLd(article)} />
 
       <nav className="mb-6 text-xs text-gray-500 dark:text-gray-400">
         <Link href={JOBS_BASE} className="hover:underline">
@@ -57,6 +50,8 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
           <MarkdownBody>{article.mainText}</MarkdownBody>
         </section>
       )}
+
+      <AdSenseUnit slot={AD_SLOTS.inArticle} className="mb-10" />
 
       <div className="space-y-8">
         {article.sections.map((section, i) => (
@@ -122,6 +117,8 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
           </li>
         </ul>
       </div>
+
+      <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
 
       <GuideDisclaimer />
     </main>

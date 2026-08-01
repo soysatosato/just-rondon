@@ -13,6 +13,39 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { fetchMonthlyEvents2025 } from "@/utils/actions/contents";
+import { buildPageMetadata } from "@/lib/seo";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const content = await fetchMonthlyEvents2025(params.slug);
+
+  if (!content) {
+    return {
+      title: "ロンドンイベントカレンダー | ジャスト・ロンドン",
+      description: "ロンドンで開催されるイベントを月別に紹介します。",
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const text = content.summary || content.mainText || "";
+  const trimmed = text.replace(/[#>*_\-`]/g, "").slice(0, 110);
+
+  return buildPageMetadata({
+    path: `/events/${params.slug}`,
+    title: `${content.title} | ロンドンのイベント`,
+    description: trimmed
+      ? `${trimmed}… 開催時期と見どころを紹介します。`
+      : `${content.title}の開催時期や見どころを紹介します。`,
+    type: "article",
+    images: content.image ? [content.image] : undefined,
+  });
+}
 
 export default async function EventDetailPage({
   params,
@@ -38,6 +71,8 @@ export default async function EventDetailPage({
       </h1>
 
       {content.mainText && <ReactMarkdown>{content.mainText}</ReactMarkdown>}
+
+      <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
 
       <Separator className="my-6 dark:bg-neutral-700" />
 

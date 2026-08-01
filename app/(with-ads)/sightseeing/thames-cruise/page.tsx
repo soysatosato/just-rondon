@@ -5,6 +5,25 @@ import { fetchThamesRiverCruises } from "@/utils/actions/contents";
 import Link from "next/link";
 import ExpandableText from "@/components/card/ExpandableText";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/thames-cruise",
+  title: "テムズ川クルーズ完全ガイド | ロンドン観光を満喫するリバークルーズ",
+  description:
+    "ロンドン名物のテムズ川クルーズを徹底解説。ビッグ・ベン、ロンドン・アイ、タワーブリッジを眺める観光クルーズから、ナイトクルーズ、ディナークルーズ、アフタヌーンティークルーズまで、料金・ルート・おすすめを紹介します。",
+  keywords: [
+    "テムズ川クルーズ",
+    "ロンドン クルーズ",
+    "リバークルーズ",
+    "ナイトクルーズ",
+    "ディナークルーズ",
+    "タワーブリッジ",
+    "ロンドンアイ",
+    "ビッグベン",
+    "ロンドン 観光",
+  ],
+});
 
 export default async function ThamesRiverCruisesListPage() {
   const items = await fetchThamesRiverCruises();

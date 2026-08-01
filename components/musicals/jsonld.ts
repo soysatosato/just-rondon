@@ -1,6 +1,7 @@
 import type { Musical } from "@prisma/client";
 
-export const SITE_URL = "https://www.just-rondon.com";
+import { SITE_URL } from "@/lib/seo";
+export { SITE_URL };
 
 export function collectionPageJsonLd(musicals: Musical[]) {
   return {

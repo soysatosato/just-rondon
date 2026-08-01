@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { buildPageMetadata } from "@/lib/seo";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
@@ -17,6 +18,9 @@ import {
 import MusicalInfo from "@/components/musicals/MusicalInfo";
 import MusicalHero from "@/components/musicals/MusicalHero";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
 import { Theater } from "lucide-react";
 import {
   musicalBreadcrumbJsonLd,
@@ -48,24 +52,13 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  return buildPageMetadata({
+    path: `/musicals/${params.slug}`,
     title: `${musical?.name}・${musical?.engName}｜ロンドン観光・ミュージカルガイド`,
+    titleSuffix: false,
     description: `${musical?.name}|${musical?.engName}・ミュージカルの見どころ、アクセス、あらすじ、歌などを紹介。ロンドン観光で絶対に訪れたいミュージカルの情報・これだけは観るべき必見作品をわかりやすくガイドします。`,
-    openGraph: {
-      type: "article",
-      url: `https://www.just-rondon.com/musicals/${params.slug}`,
-      title: `${musical?.name}・${musical?.engName}｜ロンドン観光・ミュージカルガイド`,
-      description: `${musical?.name}|${musical?.engName}・ミュージカルの見どころ、アクセス、あらすじ、歌などを紹介。`,
-      siteName: "ジャスト・ロンドン",
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: `https://www.just-rondon.com/musicals/${params.slug}`,
-    },
-  };
+    type: "article",
+  });
 }
 
 export default async function musicalDetailsPage({
@@ -78,18 +71,8 @@ export default async function musicalDetailsPage({
 
   return (
     <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(musicalBreadcrumbJsonLd(musical)),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(theaterEventJsonLd(musical)),
-        }}
-      />
+      <JsonLd data={musicalBreadcrumbJsonLd(musical)} />
+      <JsonLd data={theaterEventJsonLd(musical)} />
       <MusicalBreadCrumbs
         name={
           musical.name.length > 7
@@ -112,6 +95,8 @@ export default async function musicalDetailsPage({
           theatreName={musical.theatreName}
           songsCount={musical.songs.length}
         />
+
+        <AdSenseUnit slot={AD_SLOTS.inArticle} />
 
         <MusicalInfo
           isOnShow={musical.isOnShow}

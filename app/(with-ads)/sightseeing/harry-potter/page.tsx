@@ -1,14 +1,15 @@
 import Image from "next/image";
+import { buildPageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { fetchHPActivities } from "@/utils/actions/contents";
 import ExpandableText from "@/components/card/ExpandableText";
 
-export const metadata = {
-  title:
-    "ハリー・ポッター聖地巡礼 in ロンドン | ロケ地・モデル地・スタジオツアー完全ガイド | ジャスト・ロンドン",
-  description:
-    "ロンドンで巡るハリー・ポッターの聖地特集。キングスクロス駅9¾番線、レドンホール・マーケット、ミレニアム橋、ロンドン動物園、レイコック村など映画ロケ地を徹底紹介。スタジオツアー（WB Studio Tour London）への行き方も掲載。",
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/harry-potter",
+  title: "ハリー・ポッター聖地巡礼 in ロンドン | ロケ地・モデル地・スタジオツアー完全ガイド | ジャスト・ロンドン",
+  titleSuffix: false,
+  description: "ロンドンで巡るハリー・ポッターの聖地特集。キングスクロス駅9¾番線、レドンホール・マーケット、ミレニアム橋、ロンドン動物園、レイコック村など映画ロケ地を徹底紹介。スタジオツアー（WB Studio Tour London）への行き方も掲載。",
   keywords: [
     "ハリー・ポッター",
     "Harry Potter",
@@ -22,24 +23,7 @@ export const metadata = {
     "キングスクロス駅",
     "レドンホールマーケット",
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/sightseeing/harry-potter",
-  },
-  openGraph: {
-    title:
-      "ハリー・ポッター聖地巡礼ガイド | ロンドンで訪れたいロケ地 & 名所一覧",
-    description:
-      "ロンドンで楽しむハリー・ポッターの世界。映画ロケ地、ゆかりある建物、スタジオツアー、魔法ワールドを感じられる場所をまとめた完全ガイド。",
-    url: "https://www.just-rondon.com/sightseeing/harry-potter",
-    siteName: "ジャスト・ロンドン | ハリー・ポッター特集",
-    locale: "ja_JP",
-    type: "website",
-  },
-};
+});
 
 export default async function HarryPotterPage() {
   const contents = await fetchHPActivities();

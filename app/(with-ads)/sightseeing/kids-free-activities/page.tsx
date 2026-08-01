@@ -1,13 +1,14 @@
 import Link from "next/link";
+import { buildPageMetadata } from "@/lib/seo";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
 import { fetchKidsFreeActivities } from "@/utils/actions/contents";
 
-export const metadata = {
-  title:
-    "子どもと行けるロンドン無料スポット特集 | 家族で楽しむ観光ガイド | ジャスト・ロンドン",
-  description:
-    "ロンドンで子どもと楽しめる無料観光スポットを厳選紹介。自然史博物館、科学博物館、ブリティッシュミュージアム、スカイガーデン、コーラムズ・フィールズ、プレイパーク、動物スポットなど、家族で1日たっぷり遊べる人気の無料スポットをまとめたガイドです。",
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/kids-free-activities",
+  title: "子どもと行けるロンドン無料スポット特集 | 家族で楽しむ観光ガイド | ジャスト・ロンドン",
+  titleSuffix: false,
+  description: "ロンドンで子どもと楽しめる無料観光スポットを厳選紹介。自然史博物館、科学博物館、ブリティッシュミュージアム、スカイガーデン、コーラムズ・フィールズ、プレイパーク、動物スポットなど、家族で1日たっぷり遊べる人気の無料スポットをまとめたガイドです。",
   keywords: [
     "ロンドン",
     "無料",
@@ -20,24 +21,7 @@ export const metadata = {
     "ロンドン 親子",
     "キッズ向け",
   ],
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://www.just-rondon.com/sightseeing/kids-free-activities",
-  },
-  openGraph: {
-    title:
-      "子どもと行けるロンドン無料観光スポット特集 | 家族で楽しむお得ガイド",
-    description:
-      "ロンドンで子連れに人気の無料スポットを総まとめ。自然史博物館や科学博物館、スカイガーデン、公園・動物・遊び場など、親子で楽しめる場所を一覧で紹介。",
-    url: "https://www.just-rondon.com/sightseeing/kids-free-activities",
-    siteName: "ジャスト・ロンドン | 子どもと無料で楽しむロンドン",
-    locale: "ja_JP",
-    type: "website",
-  },
-};
+});
 
 export default async function KidsFreeListPage() {
   const items = await fetchKidsFreeActivities();

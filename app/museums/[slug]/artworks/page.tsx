@@ -1,4 +1,5 @@
 import ArtworksAccordion from "@/components/artworks/ArtworksAccordion";
+import { buildPageMetadata } from "@/lib/seo";
 import ArtworksIntro from "@/components/artworks/ArtworksIntro";
 import RainCanvas from "@/components/home/RainParticles";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
@@ -71,17 +72,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const museum = await fetchMuseumIDandName(params.slug);
 
-  return {
-    title: `${museum?.name}の主要作品一覧 | ジャスト・ロンドン`,
+  return buildPageMetadata({
+    path: `/museums/${params.slug}/artworks`,
+    title: `${museum?.name}の主要作品一覧`,
     description: `${museum?.name}の主要作品を解説。ロンドン観光で絶対に見たい美術館・注目作品、必見作品の情報をわかりやすくガイドします。`,
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: `https://www.just-rondon.com/museums/${params.slug}/artworks`,
-    },
-  };
+  });
 }
 export default async function ArtworksPage({
   params,
