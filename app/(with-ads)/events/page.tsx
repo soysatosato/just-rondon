@@ -1,13 +1,6 @@
-import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { fetchEvents2025 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
+import EventMonthCard from "@/components/events/EventMonthCard";
 
 export const metadata = buildPageMetadata({
   path: "/events",
@@ -38,26 +31,12 @@ export default async function Events2025Page() {
       </p>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {contents.map((content) => (
-          <Card
+        {contents.map((content, index) => (
+          <EventMonthCard
             key={content.id}
-            className="hover:shadow-lg transition-shadow dark:bg-neutral-900 dark:border-neutral-700"
-          >
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold dark:text-white">
-                {content.title}
-              </CardTitle>
-              <CardDescription className="dark:text-gray-400">
-                {content.summary}
-              </CardDescription>
-            </CardHeader>
-
-            <div className="p-4">
-              <Link href={`/events/${content.slug}`} passHref>
-                <Button className="w-full">詳細を見る</Button>
-              </Link>
-            </div>
-          </Card>
+            content={content}
+            fallbackMonthNumber={index + 1}
+          />
         ))}
       </div>
     </main>
