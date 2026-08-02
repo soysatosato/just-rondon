@@ -1,6 +1,8 @@
 import type { Attraction } from "@prisma/client";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
+export const SIGHTSEEING_BASE = "/sightseeing";
+
 export function attractionPath(slug: string) {
   return `/sightseeing/${slug}`;
 }
@@ -138,3 +140,100 @@ export const SIGHTSEEING_PUBLISHER = {
   name: SITE_NAME,
   url: SITE_URL,
 };
+
+/**
+ * ホーム → 観光ガイド → (任意の下層) のパンくず。
+ * trail には /sightseeing より下の階層だけを渡す。
+ */
+export function sightseeingBreadcrumbJsonLd(
+  trail: { name: string; path: string }[] = []
+) {
+  const base = [
+    { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "観光ガイド",
+      item: `${SITE_URL}${SIGHTSEEING_BASE}`,
+    },
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      ...base,
+      ...trail.map((t, i) => ({
+        "@type": "ListItem",
+        position: base.length + i + 1,
+        name: t.name,
+        item: `${SITE_URL}${t.path}`,
+      })),
+    ],
+  };
+}
+
+/**
+ * JSON-LD に markdown の記法をそのまま入れないための整形。
+ *
+ * acceptedAnswer.text は検索エンジンにそのまま読まれるので、
+ * `**強調**` や `[ラベル](url)` が残っていると不自然な文字列になる。
+ * HTML を許可する仕様ではあるが、素の markdown 記法は HTML ではない。
+ */
+export function stripInlineMarkdown(md: string): string {
+  return md
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // [label](url) → label
+    .replace(/\*\*([^*]+)\*\*/g, "$1") // **bold** → bold
+    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "$1") // *italic* → italic
+    .replace(/`([^`]+)`/g, "$1") // `code` → code
+    .replace(/^[\s・\-*]+/, "") // 行頭の箇条書き記号
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function faqPageJsonLd(
+  items: { question: string; answer: string | string[] }[],
+  pageUrl: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${pageUrl}#faq`,
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: stripInlineMarkdown(item.question),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: (Array.isArray(item.answer) ? item.answer : [item.answer])
+          .map(stripInlineMarkdown)
+          .filter(Boolean)
+          .join(" "),
+      },
+    })),
+  };
+}
+
+/** /sightseeing ハブが持つガイド記事の一覧を CollectionPage として出す。 */
+export function sightseeingHubCollectionJsonLd(
+  guides: { slug: string; label: string; blurb: string }[],
+  meta: { name: string; description: string }
+) {
+  const url = `${SITE_URL}${SIGHTSEEING_BASE}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${url}#collection`,
+    url,
+    name: meta.name,
+    description: meta.description,
+    inLanguage: "ja",
+    publisher: SIGHTSEEING_PUBLISHER,
+    hasPart: guides.map((g) => ({
+      "@type": "Article",
+      name: g.label,
+      description: g.blurb,
+      url: `${SITE_URL}${SIGHTSEEING_BASE}/${g.slug}`,
+    })),
+  };
+}
