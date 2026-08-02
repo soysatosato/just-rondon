@@ -60,6 +60,7 @@ module.exports = {
       "/privacy",
       "/events",
       "/events/archive/2025",
+      "/column",
       "/sightseeing",
       "/sightseeing/all",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
@@ -165,6 +166,14 @@ module.exports = {
       paths.push(
         await config.transform(config, `/events/archive/2025/${e.slug}`),
       );
+    }
+
+    const columns = await prisma.content.findMany({
+      where: { category: "column" },
+      select: { slug: true },
+    });
+    for (const c of columns) {
+      paths.push(await config.transform(config, `/column/${c.slug}`));
     }
 
     // for (const n of news) {

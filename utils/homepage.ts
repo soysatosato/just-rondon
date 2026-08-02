@@ -93,6 +93,12 @@ export const sections: Section[] = [
     title: "コラム",
     items: [
       {
+        title: "コラムトップ",
+        description:
+          "イギリスの歴史・文化・伝統・制度を深掘りする読み物コラム。",
+        href: "/column",
+      },
+      {
         title: "ビザ取得方法",
         description:
           "渡航目的に応じたビザの種類や申請手順、必要書類についてわかりやすく解説しています。",

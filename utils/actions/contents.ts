@@ -99,6 +99,23 @@ export const fetchMonthlyEvents2025 = async (slug: string) => {
   return content;
 };
 
+export const fetchColumns = async () => {
+  const contents = await db.content.findMany({
+    where: { category: "column" },
+    orderBy: { createdAt: "desc" },
+  });
+  return contents;
+};
+
+export const fetchColumnBySlug = async (slug: string) => {
+  // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
+  const content = await db.content.findFirst({
+    where: { slug, category: "column" },
+    include: { sections: { orderBy: { displayOrder: "asc" } } },
+  });
+  return content;
+};
+
 export const fetchEvents2026 = async () => {
   const contents = await db.content.findMany({
     where: {
