@@ -29,72 +29,43 @@ import {
 } from "@/utils/sightseeing";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { buildPageMetadata } from "@/lib/seo";
+import { SITE_URL, buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import {
+  faqPageJsonLd,
+  sightseeingBreadcrumbJsonLd,
+  sightseeingHubCollectionJsonLd,
+} from "@/components/sightseeing/jsonld";
+import { sightseeingFaqItems } from "@/components/sightseeing/faq";
+import {
+  travelGuidePath,
+  travelGuides,
+} from "@/components/sightseeing/guides/guides";
+
+const PAGE_TITLE =
+  "ロンドン観光ガイド | 定番スポット・宿泊・移動手段・モデルコース";
+const PAGE_DESCRIPTION =
+  "初めてのロンドン旅行に。ロンドン塔や大英博物館などの定番スポットに加え、どのエリアに泊まるか、地下鉄とタッチ決済の使い方、1〜5日のモデルコース、両替・治安・eSIMまで、旅の準備から現地の歩き方までまとめたロンドン観光ガイドです。";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing",
-  title: "ロンドン観光ガイド | 定番スポット・モデルコース・季節の楽しみ方",
-  description:
-    "初めてのロンドン旅行に。ロンドン塔、大英博物館、バッキンガム宮殿などの定番から、子連れで楽しめる無料スポット、王室ゆかりの名所、テムズ川クルーズまで、目的別に選べるロンドン観光ガイドです。",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   keywords: [
     "ロンドン観光",
     "ロンドン 観光スポット",
     "ロンドン 旅行",
     "ロンドン モデルコース",
+    "ロンドン ホテル エリア",
+    "ロンドン 地下鉄",
+    "オイスターカード",
+    "ロンドン 旅行 準備",
     "ロンドン 定番",
     "ロンドン 子連れ",
     "ロンドン 無料",
     "ロンドン 見どころ",
   ],
 });
-
-const faqItems = [
-  {
-    question: "ロンドンで絶対に行くべき観光地は？",
-    answer: [
-      "**ロンドン塔**：世界遺産にも登録されている中世の要塞で、王冠ジュエルの展示が有名。",
-      "**ロンドン・アイ**：ヨーロッパ最大級の観覧車から、ロンドンのパノラマビューを楽しめる。",
-      "**セント・ポール大聖堂**：巨大なドームが象徴の教会。上部のギャラリーから街を一望可能。",
-      "**大英博物館**：古代エジプトやギリシャなど、人類史を網羅する世界最大級の博物館。",
-      "**ハンプトン・コート宮殿**：ヘンリー8世ゆかりの宮殿で、庭園や迷路も人気。",
-      "**バッキンガム宮殿**：英国王のロンドン公邸。夏季限定で内部一般公開や衛兵交代式が見どころ。",
-      "**ビッグ・ベン**：国会議事堂に隣接する象徴的な時計台。限定日には内部見学ツアーも実施。",
-    ],
-  },
-  {
-    question: "ロンドンのどのエリアに観光スポットが多い？",
-    answer: [
-      "**北ロンドン**：ロンドン動物園やマダム・タッソー蝋人形館、大英図書館など。",
-      "**東ロンドン**：O2アリーナの屋上クライムやケーブルカー、ジャック・ザ・リッパーのウォーキングツアー。",
-      "**南ロンドン**：テート・ブリテン、シェイクスピアズ・グローブ座、カティーサーク号など歴史スポットが充実。",
-      "**西ロンドン**：キュー・ガーデンズやケンジントン宮殿、自然史博物館などが集まるエリア。",
-    ],
-  },
-  {
-    question: "ロンドン旅行のおすすめ時期は？",
-    answer: [
-      "一年を通して比較的温暖で、いつ訪れても楽しめる都市。",
-      "一般的には「5月」がベストシーズンとされ、日照時間が長く、気温も穏やかで観光しやすい。",
-      "**春（3〜5月）**：花が咲き始め、公園散策にぴったり。",
-      "**夏（6〜8月）**：日が長く、屋外イベントやルーフトップバーが充実。ただし観光客も多め。",
-      "**秋（9〜11月）**：比較的穏やかな気候で、紅葉とともに落ち着いた雰囲気を楽しめる。",
-      "**冬（12〜2月）**：イルミネーションやクリスマスマーケットなど、イベント重視の人におすすめ。",
-    ],
-  },
-  {
-    question: "ロンドン観光は何日あれば足りる？",
-    answer: [
-      "主要スポットだけを巡るなら2〜3日でも可能だが、博物館や近郊都市も含めてじっくり楽しむなら5〜7日がおすすめ。",
-      "時間が限られている場合は、ホップオン・ホップオフバスやシティパスを活用すると効率的。",
-    ],
-  },
-  {
-    question: "ロンドンで最も訪問者数が多い観光地は？",
-    answer: [
-      "英国の観光業協会 ALVA の統計では、2024年のロンドンで最も訪問者数が多かったのは「大英博物館」で、年間約640万回以上の訪問があったとされている。",
-    ],
-  },
-];
 
 export default async function Page() {
   const [
@@ -119,6 +90,17 @@ export default async function Page() {
 
   return (
     <div className="min-h-screen">
+      <JsonLd data={sightseeingBreadcrumbJsonLd()} />
+      <JsonLd
+        data={sightseeingHubCollectionJsonLd(travelGuides, {
+          name: PAGE_TITLE,
+          description: PAGE_DESCRIPTION,
+        })}
+      />
+      <JsonLd
+        data={faqPageJsonLd(sightseeingFaqItems, `${SITE_URL}/sightseeing`)}
+      />
+
       <main className="mx-auto max-w-6xl px-4 py-8 space-y-12">
         <section className="space-y-6">
           <div className="space-y-4">
@@ -187,13 +169,51 @@ export default async function Page() {
             1〜2日分のシンプルなモデルコースを作るのがおすすめです。
           </p>
 
-          <div className="flex justify-end mt-2">
+          <div className="flex flex-wrap justify-end gap-4 mt-2">
+            <Link
+              href="/sightseeing/itinerary"
+              className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              1〜5日のモデルコースを見る →
+            </Link>
             <Link
               href="/sightseeing/all"
               className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
             >
               ロンドン観光スポット一覧を見る →
             </Link>
+          </div>
+        </section>
+
+        {/* 旅の準備（宿泊・移動・モデルコース・実用情報のガイドへの導線） */}
+        <section className="space-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
+              Travel Essentials
+            </p>
+            <h2 className="mt-2 text-xl font-semibold">旅の準備</h2>
+            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
+              どこに泊まるか、どう移動するか、何日で何を回るか。
+              観光スポットを選ぶ前に決めておきたいことを、テーマ別のガイドにまとめました。
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {travelGuides.map((guide) => (
+              <Link key={guide.slug} href={travelGuidePath(guide.slug)}>
+                <Card className="h-full border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer transition hover:border-emerald-400 hover:shadow-md dark:hover:border-emerald-500">
+                  <CardHeader className="space-y-1">
+                    <p className="text-xs font-semibold text-emerald-600">
+                      {guide.eyebrow}
+                    </p>
+                    <CardTitle className="text-base">{guide.label}</CardTitle>
+                    <CardDescription className="text-xs leading-relaxed">
+                      {guide.blurb}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
           </div>
         </section>
 
@@ -405,6 +425,14 @@ export default async function Page() {
             <h2 className="text-xl font-semibold">家族で楽しめるロンドン</h2>
             <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
               子どもと一緒のロンドン旅行なら、体験型ミュージアムやアトラクションが充実したエリアを中心にホテルを選ぶと移動が楽になります。
+              エリアごとの向き不向きは
+              <Link
+                href="/sightseeing/hotels"
+                className="mx-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                宿泊エリア別ホテル選び
+              </Link>
+              にまとめています。
             </p>
           </div>
 
@@ -449,12 +477,14 @@ export default async function Page() {
           </p>
 
           <CardCarousel>
-            {freeAttractions.map((item: any, idx: any) => (
+            {freeAttractions.map((item, idx) => (
               <div
                 key={idx}
                 className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
               >
-                <Link href={`/museums/${item.slug}`}>
+                {/* getFreeAttractions() が返すのは Attraction。
+                    /museums/[slug] は Museum テーブルを引くので繋がらない。 */}
+                <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                     <div className="relative h-40 w-full">
                       <img
@@ -484,7 +514,7 @@ export default async function Page() {
           <h2 className="text-xl font-semibold">ロンドン観光 FAQ</h2>
 
           <Accordion type="single" collapsible className="space-y-3">
-            {faqItems.map((faq: any, idx: any) => (
+            {sightseeingFaqItems.map((faq, idx) => (
               <AccordionItem
                 key={idx}
                 value={`faq-${idx}`}

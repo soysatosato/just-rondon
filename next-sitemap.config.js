@@ -62,6 +62,12 @@ module.exports = {
       "/events/archive/2025",
       "/sightseeing",
       "/sightseeing/all",
+      // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
+      // travelGuides と一致させること。
+      "/sightseeing/itinerary",
+      "/sightseeing/hotels",
+      "/sightseeing/transport",
+      "/sightseeing/travel-tips",
       "/sightseeing/harry-potter",
       "/sightseeing/kids-free-activities",
       "/sightseeing/must-see",

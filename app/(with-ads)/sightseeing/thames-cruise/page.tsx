@@ -90,6 +90,18 @@ export default async function ThamesRiverCruisesListPage() {
               </li>
             ))}
           </ul>
+
+          <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
+            観光クルーズではなく移動手段としてテムズ川を使うなら、Uber Boat
+            by Thames Clippers も便利です。運賃体系や乗り方は
+            <Link
+              href="/sightseeing/transport"
+              className="mx-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              ロンドンの交通ガイド
+            </Link>
+            で解説しています。
+          </p>
         </section>
 
         {/* Cards Section */}

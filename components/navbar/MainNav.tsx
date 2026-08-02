@@ -78,13 +78,64 @@ export default function Navbar() {
                   >
                     トップページ
                   </Link>
-                  <Link
-                    href="/sightseeing"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    ロンドン観光ナビ
-                  </Link>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="sightseeing" className="border-b-0">
+                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
+                        ロンドン観光
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
+                        <Link
+                          href="/sightseeing"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          ロンドン観光ナビ トップ
+                        </Link>
+                        <Link
+                          href="/sightseeing/itinerary"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          モデルコース（1〜5日）
+                        </Link>
+                        <Link
+                          href="/sightseeing/hotels"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          宿泊エリアの選び方
+                        </Link>
+                        <Link
+                          href="/sightseeing/transport"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          地下鉄・Oyster・空港アクセス
+                        </Link>
+                        <Link
+                          href="/sightseeing/travel-tips"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          旅の実用情報
+                        </Link>
+                        <Link
+                          href="/sightseeing/must-see"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          必見スポット
+                        </Link>
+                        <Link
+                          href="/sightseeing/eta-uk-visa-guide"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          ETA（電子渡航認証）
+                        </Link>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                   <Accordion type="single" collapsible>
                     <AccordionItem value="museums" className="border-b-0">
                       <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
@@ -259,11 +310,67 @@ export default function Navbar() {
           <NavigationMenu>
             <NavigationMenuList className="gap-x-6">
               <NavigationMenuItem className="pr-6">
-                <NavigationMenuLink asChild>
-                  <Link href="/sightseeing" className="hover:underline">
-                    ロンドン観光ナビ
-                  </Link>
-                </NavigationMenuLink>
+                <NavigationMenuTrigger>ロンドン観光</NavigationMenuTrigger>
+                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-red-600">
+                      ロンドン観光を計画する
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      どこに泊まり、どう移動し、何日で何を回るか。定番スポットの情報だけでなく、旅の準備に必要なことをまとめています。
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <Link
+                      href="/sightseeing/itinerary"
+                      className="hover:underline"
+                    >
+                      モデルコース（1〜5日）
+                    </Link>
+                    <Link
+                      href="/sightseeing/hotels"
+                      className="hover:underline"
+                    >
+                      宿泊エリアの選び方
+                    </Link>
+                    <Link
+                      href="/sightseeing/transport"
+                      className="hover:underline"
+                    >
+                      地下鉄・Oyster・空港
+                    </Link>
+                    <Link
+                      href="/sightseeing/travel-tips"
+                      className="hover:underline"
+                    >
+                      旅の実用情報
+                    </Link>
+                    <Link
+                      href="/sightseeing/must-see"
+                      className="hover:underline"
+                    >
+                      必見スポット
+                    </Link>
+                    <Link
+                      href="/sightseeing/eta-uk-visa-guide"
+                      className="hover:underline"
+                    >
+                      ETA（電子渡航認証）
+                    </Link>
+                    <Link
+                      href="/sightseeing/all"
+                      className="hover:underline"
+                    >
+                      観光スポット一覧
+                    </Link>
+                    <Link
+                      href="/sightseeing"
+                      className="hover:underline text-red-600 font-medium"
+                    >
+                      観光ナビ トップ
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuTrigger>美術館</NavigationMenuTrigger>

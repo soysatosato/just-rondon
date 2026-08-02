@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buildPageMetadata } from "@/lib/seo";
 import { Card, CardContent } from "@/components/ui/card";
@@ -118,6 +119,30 @@ export default async function ETAGUidePage() {
           </a>
         </footer>
       )}
+
+      <div className="mt-10 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          渡航前に確認しておきたいこと
+        </h2>
+        <ul className="space-y-2 text-sm">
+          <li>
+            <Link
+              href="/sightseeing/travel-tips"
+              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+            >
+              ロンドン旅行の実用情報｜両替・カード・チップ・治安・eSIM・電源・服装
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/sightseeing/transport"
+              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+            >
+              ロンドンの交通ガイド｜タッチ決済と空港アクセス
+            </Link>
+          </li>
+        </ul>
+      </div>
     </main>
   );
 }

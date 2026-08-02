@@ -37,9 +37,19 @@ export default async function MustSeePage() {
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
       <h1 className="text-2xl font-bold mb-4">Must-See Attractions</h1>
-      <p className="text-base text-muted-foreground mb-8">
+      <p className="text-base text-muted-foreground mb-4">
         ロンドンを訪れるなら絶対に見ておきたいスポットをまとめています。
         一生に一度は見ておきたい、王道中の王道の &quot;MUST SEE&quot; です。
+      </p>
+      <p className="text-sm text-muted-foreground mb-8">
+        これらをどの順番で、何日かけて回るかは
+        <Link
+          href="/sightseeing/itinerary"
+          className="mx-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
+        >
+          ロンドン モデルコース（1〜5日）
+        </Link>
+        にまとめています。
       </p>
 
       <div className="grid gap-8">
