@@ -9,16 +9,18 @@ import SeasonBadge from "@/components/events/SeasonBadge";
 export default function EventMonthCard({
   content,
   fallbackMonthNumber,
+  basePath = "/events",
 }: {
   content: Content;
   fallbackMonthNumber: number;
+  basePath?: string;
 }) {
   const monthNumber = getMonthNumber(content.slug, fallbackMonthNumber);
   const meta = getSeasonMeta(monthNumber);
   const Icon = meta.icon;
 
   return (
-    <Link href={`/events/${content.slug}`} className="group block h-full">
+    <Link href={`${basePath}/${content.slug}`} className="group block h-full">
       <Card className="h-full overflow-hidden rounded-2xl border-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md dark:bg-neutral-900 dark:border-neutral-700">
         <CardContent className="flex h-full flex-col gap-4 p-5">
           <div className="flex items-center justify-between">

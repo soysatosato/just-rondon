@@ -6,7 +6,7 @@ import { Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { fetchMonthlyEvents2026 } from "@/utils/actions/contents";
+import { fetchMonthlyEvents2025 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -20,7 +20,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const content = await fetchMonthlyEvents2026(params.slug);
+  const content = await fetchMonthlyEvents2025(params.slug);
 
   if (!content) {
     return {
@@ -34,8 +34,8 @@ export async function generateMetadata({
   const trimmed = text.replace(/[#>*_\-`]/g, "").slice(0, 110);
 
   return buildPageMetadata({
-    path: `/events/${params.slug}`,
-    title: `${content.title} | ロンドンのイベント`,
+    path: `/events/archive/2025/${params.slug}`,
+    title: `${content.title}（アーカイブ） | ロンドンのイベント`,
     description: trimmed
       ? `${trimmed}… 開催時期と見どころを紹介します。`
       : `${content.title}の開催時期や見どころを紹介します。`,
@@ -44,12 +44,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function EventDetailPage({
+export default async function EventDetailArchivePage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const content = await fetchMonthlyEvents2026(params.slug);
+  const content = await fetchMonthlyEvents2025(params.slug);
 
   if (!content) return notFound();
 
@@ -60,7 +60,7 @@ export default async function EventDetailPage({
   return (
     <main className="container mx-auto px-4 py-10">
       <div className="mb-6">
-        <Link href="/events">
+        <Link href="/events/archive/2025">
           <Button variant="outline" className="dark:border-neutral-600">
             ← 月一覧へ戻る
           </Button>
@@ -124,7 +124,7 @@ export default async function EventDetailPage({
       </div>
 
       <div className="text-center mt-10">
-        <Link href="/events">
+        <Link href="/events/archive/2025">
           <Button className="mx-auto">イベント一覧へ戻る</Button>
         </Link>
       </div>

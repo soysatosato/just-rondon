@@ -98,3 +98,24 @@ export const fetchMonthlyEvents2025 = async (slug: string) => {
   });
   return content;
 };
+
+export const fetchEvents2026 = async () => {
+  const contents = await db.content.findMany({
+    where: {
+      category: "london-events-2026",
+    },
+    orderBy: { createdAt: "asc" },
+  });
+  return contents;
+};
+export const fetchMonthlyEvents2026 = async (slug: string) => {
+  const content = await db.content.findFirst({
+    where: { slug, category: "london-events-2026" },
+    include: {
+      sections: {
+        orderBy: { displayOrder: "asc" },
+      },
+    },
+  });
+  return content;
+};

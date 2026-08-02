@@ -59,6 +59,7 @@ module.exports = {
       "/about",
       "/privacy",
       "/events",
+      "/events/archive/2025",
       "/sightseeing",
       "/sightseeing/all",
       "/sightseeing/harry-potter",
@@ -141,12 +142,23 @@ module.exports = {
     }
 
     // 月別イベントページ。これまでサイトマップに1件も入っていなかった。
-    const events = await prisma.content.findMany({
+    const events2026 = await prisma.content.findMany({
+      where: { category: "london-events-2026" },
+      select: { slug: true },
+    });
+    for (const e of events2026) {
+      paths.push(await config.transform(config, `/events/${e.slug}`));
+    }
+
+    // 2025年版はアーカイブURLに移動。
+    const events2025 = await prisma.content.findMany({
       where: { category: "london-events-2025" },
       select: { slug: true },
     });
-    for (const e of events) {
-      paths.push(await config.transform(config, `/events/${e.slug}`));
+    for (const e of events2025) {
+      paths.push(
+        await config.transform(config, `/events/archive/2025/${e.slug}`),
+      );
     }
 
     // for (const n of news) {
