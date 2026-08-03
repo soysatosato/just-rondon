@@ -3,16 +3,15 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { Sparkles } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { fetchMonthlyEvents2026, fetchEventsForMonth } from "@/utils/actions/contents";
-import { format } from "date-fns";
 import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { getMonthNumber, getSeasonMeta } from "@/lib/events";
 import SeasonBadge from "@/components/events/SeasonBadge";
+import EventDetailCard from "@/components/events/EventDetailCard";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -98,45 +97,14 @@ export default async function EventDetailPage({
       </h2>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        {events.map((event, idx) => {
-          const sameDay = event.startDate.getTime() === event.endDate.getTime();
-          const dateLabel = sameDay
-            ? format(event.startDate, "M月d日")
-            : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
-
-          return (
-            <Card
-              key={event.id}
-              className="rounded-2xl transition-shadow hover:shadow-md dark:bg-neutral-900 dark:border-neutral-700"
-            >
-              <CardContent className="flex gap-4 p-5">
-                <span
-                  className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                    meta.iconWrapClass
-                  )}
-                >
-                  {idx + 1}
-                </span>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-semibold dark:text-white">
-                      {event.title}
-                    </h3>
-                    <span className="text-xs font-medium text-primary">
-                      {dateLabel}
-                    </span>
-                  </div>
-                  {event.description && (
-                    <div className="prose prose-sm mt-2 max-w-none text-muted-foreground dark:prose-invert dark:text-gray-300">
-                      <ReactMarkdown>{event.description}</ReactMarkdown>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {events.map((event, idx) => (
+          <EventDetailCard
+            key={event.id}
+            event={event}
+            index={idx}
+            iconWrapClass={meta.iconWrapClass}
+          />
+        ))}
       </div>
 
       <div className="text-center mt-10">

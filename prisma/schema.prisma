@@ -312,16 +312,26 @@ model ContentSection {
   }
 
 model Event {
-  id           String   @id @default(cuid())
-  title        String
-  description  String
-  startDate    DateTime
-  endDate      DateTime
-  image        String?
-  website      String?
-  displayOrder Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  startDate       DateTime
+  endDate         DateTime
+  image           String?
+  website         String?
+  displayOrder    Int      @default(0)
+  // 「特徴・おすすめポイント」など、開催概要だけでは分からない実用情報
+  category        String?
+  venue           String?
+  area            String?
+  nearestStation  String?
+  priceInfo       String?
+  isFree          Boolean  @default(false)
+  bookingRequired Boolean  @default(false)
+  highlights      String[] @default([])
+  tips            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([startDate])
 }
