@@ -2,7 +2,7 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
-import { fetchChristmasMarketBySlug } from "@/utils/actions/contents";
+import { christmasMarkets } from "../data";
 
 import { MapPin, CalendarDays, Sparkles, Compass } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
@@ -38,12 +38,16 @@ const SectionBlock = ({
     </div>
   </section>
 );
+export function generateStaticParams() {
+  return christmasMarkets.map((m) => ({ slug: m.slug }));
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }) {
-  const content = await fetchChristmasMarketBySlug(params.slug);
+  const content = christmasMarkets.find((m) => m.slug === params.slug);
 
   // データが存在しない場合（404用メタ）
   if (!content) {
@@ -84,12 +88,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function ChristmasMarketDetailPage({ params }: Props) {
-  const content = await fetchChristmasMarketBySlug(params.slug);
+export default function ChristmasMarketDetailPage({ params }: Props) {
+  const content = christmasMarkets.find((m) => m.slug === params.slug);
 
   if (!content) return notFound();
 
-  const sections = content.sections.sort(
+  const sections = [...content.sections].sort(
     (a, b) => a.displayOrder - b.displayOrder,
   );
 
@@ -155,7 +159,7 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
           if (title.includes("場所"))
             return (
               <SectionBlock
-                key={sec.id}
+                key={sec.displayOrder}
                 icon={<MapPin className="h-5 w-5 text-sky-500" />}
                 title="場所（地図を見る）"
               >
@@ -187,7 +191,7 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
           if (title.includes("期間"))
             return (
               <SectionBlock
-                key={sec.id}
+                key={sec.displayOrder}
                 icon={<CalendarDays className="h-5 w-5 text-emerald-400" />}
                 title="期間"
               >
@@ -198,7 +202,7 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
           if (title.includes("訪問"))
             return (
               <SectionBlock
-                key={sec.id}
+                key={sec.displayOrder}
                 icon={<Sparkles className="h-5 w-5 text-amber-300" />}
                 title="訪問のコツ"
               >
@@ -209,7 +213,7 @@ export default async function ChristmasMarketDetailPage({ params }: Props) {
           if (title.includes("周辺"))
             return (
               <SectionBlock
-                key={sec.id}
+                key={sec.displayOrder}
                 icon={<Compass className="h-5 w-5 text-purple-400" />}
                 title="周辺でできること"
               >

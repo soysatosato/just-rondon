@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { fetchStadiumTours } from "@/utils/actions/contents";
+import { stadiumTours } from "./data";
 import ExpandableText from "@/components/card/ExpandableText";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -26,8 +26,8 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function tadiumToursListPage() {
-  const contents = await fetchStadiumTours();
+export default function tadiumToursListPage() {
+  const contents = stadiumTours;
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-10">
@@ -61,8 +61,8 @@ export default async function tadiumToursListPage() {
         </h2>
 
         <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-          {contents.map((item: any, idx: number) => (
-            <li key={item.id} className="leading-tight relative pl-6">
+          {contents.map((item, idx: number) => (
+            <li key={item.slug} className="leading-tight relative pl-6">
               <span
                 className="
             absolute left-0 text-gray-500 dark:text-gray-400 text-sm
@@ -89,7 +89,7 @@ export default async function tadiumToursListPage() {
         const isLinkable = item.slug && item.slug !== "-";
 
         return (
-          <div id={item.slug} key={item.id}>
+          <div id={item.slug} key={item.slug}>
             <Card className="p-4 shadow-md rounded-xl hover:shadow-lg transition">
               <CardHeader>
                 <CardTitle className="text-2xl">{item.title}</CardTitle>

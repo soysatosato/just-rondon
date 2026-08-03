@@ -2,7 +2,7 @@ import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
-import { fetchKidsFreeActivities } from "@/utils/actions/contents";
+import { kidsFreeActivities } from "./data";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/kids-free-activities",
@@ -23,8 +23,8 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function KidsFreeListPage() {
-  const items = await fetchKidsFreeActivities();
+export default function KidsFreeListPage() {
+  const items = kidsFreeActivities;
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-14">
@@ -50,8 +50,8 @@ export default async function KidsFreeListPage() {
           </h2>
 
           <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-            {items.map((item: any, idx: number) => (
-              <li key={item.id} className="leading-tight relative pl-6">
+            {items.map((item, idx) => (
+              <li key={item.slug} className="leading-tight relative pl-6">
                 <span
                   className="
             absolute left-0 text-gray-500 dark:text-gray-400 text-sm
@@ -77,8 +77,8 @@ export default async function KidsFreeListPage() {
 
         {/* --- Cards Section --- */}
         <section className="grid gap-10">
-          {items.map((item: any) => (
-            <div key={item.id} id={item.slug} className="scroll-mt-24">
+          {items.map((item) => (
+            <div key={item.slug} id={item.slug} className="scroll-mt-24">
               <Link href={`/sightseeing/${item.slug}`} className="group block">
                 <Card
                   className="shadow-sm border bg-white/60 backdrop-blur-sm 

@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildPageMetadata } from "@/lib/seo";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, CalendarDays, Sparkles, Compass } from "lucide-react";
-import { fetchChristmasMarkets } from "@/utils/actions/contents";
+import { christmasMarkets } from "./data";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
@@ -53,8 +53,8 @@ function normalizeSections(sections: any[]): SectionGroup {
   return group;
 }
 
-export default async function ChristmasMarketsPage() {
-  const contents = await fetchChristmasMarkets();
+export default function ChristmasMarketsPage() {
+  const contents = christmasMarkets;
 
   return (
     <main className="py-10">
@@ -84,7 +84,7 @@ export default async function ChristmasMarketsPage() {
 
           return (
             <Link
-              key={item.id}
+              key={item.slug}
               href={`/sightseeing/christmas-markets/${item.slug}`}
               className="block"
             >

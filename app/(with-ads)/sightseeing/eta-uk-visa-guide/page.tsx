@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { buildPageMetadata } from "@/lib/seo";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { fetchContentBySlug } from "@/utils/actions/contents";
+import { etaGuide } from "./data";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -27,10 +26,8 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function ETAGUidePage() {
-  const slug = "eta-uk-visa-guide";
-  const content = await fetchContentBySlug(slug);
-  if (!content) return notFound();
+export default function ETAGUidePage() {
+  const content = etaGuide;
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">

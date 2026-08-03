@@ -2,7 +2,7 @@ import Image from "next/image";
 import { buildPageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { fetchHPActivities } from "@/utils/actions/contents";
+import { hpActivities } from "./data";
 import ExpandableText from "@/components/card/ExpandableText";
 
 export const metadata = buildPageMetadata({
@@ -25,8 +25,8 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function HarryPotterPage() {
-  const contents = await fetchHPActivities();
+export default function HarryPotterPage() {
+  const contents = hpActivities;
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-10">
@@ -55,8 +55,8 @@ export default async function HarryPotterPage() {
         </h2>
 
         <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-          {contents.map((item: any, idx: number) => (
-            <li key={item.id} className="leading-tight relative pl-6">
+          {contents.map((item, idx) => (
+            <li key={idx} className="leading-tight relative pl-6">
               <span
                 className="
             absolute left-0 text-gray-500 dark:text-gray-400 text-sm
@@ -79,11 +79,11 @@ export default async function HarryPotterPage() {
           ))}
         </ul>
       </section>
-      {contents.map((item) => {
+      {contents.map((item, idx) => {
         const isLinkable = item.slug && item.slug !== "-";
 
         return (
-          <div id={item.slug} key={item.id}>
+          <div id={item.slug} key={idx}>
             <Card className="p-4 shadow-md rounded-xl hover:shadow-lg transition">
               <CardHeader>
                 <CardTitle className="text-2xl">{item.title}</CardTitle>
@@ -109,21 +109,19 @@ export default async function HarryPotterPage() {
 
                 {item.sections?.length > 0 && (
                   <div className="mt-6 space-y-6">
-                    {item.sections
-                      .sort((a, b) => a.displayOrder - b.displayOrder)
-                      .map((sec) => (
-                        <div
-                          key={sec.id}
-                          className="border-l-4 pl-4 border-purple-600"
-                        >
-                          <h3 className="text-xl font-semibold">{sec.title}</h3>
-                          {sec.description && (
-                            <p className="text-gray-600 dark:text-gray-300 mt-2 whitespace-pre-line">
-                              {sec.description}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                    {item.sections.map((sec, secIdx) => (
+                      <div
+                        key={secIdx}
+                        className="border-l-4 pl-4 border-purple-600"
+                      >
+                        <h3 className="text-xl font-semibold">{sec.title}</h3>
+                        {sec.description && (
+                          <p className="text-gray-600 dark:text-gray-300 mt-2 whitespace-pre-line">
+                            {sec.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
 

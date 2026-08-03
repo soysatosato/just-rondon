@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
-import { fetchRoyalActivities } from "@/utils/actions/contents";
+import { royalActivities } from "./data";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -22,8 +22,8 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function RoyalAcrivitiesListPage() {
-  const items = await fetchRoyalActivities();
+export default function RoyalAcrivitiesListPage() {
+  const items = royalActivities;
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-14">
@@ -51,8 +51,8 @@ export default async function RoyalAcrivitiesListPage() {
           </h2>
 
           <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-            {items.map((item: any, idx: number) => (
-              <li key={item.id} className="leading-tight relative pl-6">
+            {items.map((item, idx) => (
+              <li key={item.slug} className="leading-tight relative pl-6">
                 <span
                   className="
             absolute left-0 text-gray-500 dark:text-gray-400 text-sm
@@ -78,10 +78,10 @@ export default async function RoyalAcrivitiesListPage() {
 
         {/* --- Cards Section --- */}
         <section className="grid gap-10">
-          {items.map((item: any) => (
-            <div key={item.id} id={item.slug} className="scroll-mt-24">
+          {items.map((item) => (
+            <div key={item.slug} id={item.slug} className="scroll-mt-24">
               <Link
-                key={item.id}
+                key={item.slug}
                 href={`/sightseeing/${item.slug}`}
                 className="group block"
               >

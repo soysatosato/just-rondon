@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import ReactMarkdown from "react-markdown";
-import { fetchThamesRiverCruises } from "@/utils/actions/contents";
+import { thamesCruises } from "./data";
 import Link from "next/link";
 import ExpandableText from "@/components/card/ExpandableText";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
@@ -25,8 +25,8 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default async function ThamesRiverCruisesListPage() {
-  const items = await fetchThamesRiverCruises();
+export default function ThamesRiverCruisesListPage() {
+  const items = thamesCruises;
 
   return (
     <div className="max-w-5xl mx-auto py-16 space-y-14">
@@ -71,8 +71,8 @@ export default async function ThamesRiverCruisesListPage() {
           </h2>
 
           <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-            {items.map((item: any, idx: number) => (
-              <li key={item.id} className="leading-tight relative pl-6">
+            {items.map((item, idx: number) => (
+              <li key={item.slug} className="leading-tight relative pl-6">
                 <span className="absolute left-0 text-gray-500 dark:text-gray-400 text-sm">
                   {idx + 1}.
                 </span>
@@ -106,8 +106,8 @@ export default async function ThamesRiverCruisesListPage() {
 
         {/* Cards Section */}
         <section className="grid gap-10">
-          {items.map((item: any) => (
-            <div key={item.id} id={item.slug} className="scroll-mt-24">
+          {items.map((item) => (
+            <div key={item.slug} id={item.slug} className="scroll-mt-24">
               <Card
                 className="shadow-sm border bg-white/60 dark:bg-white/20 backdrop-blur-sm 
                             hover:shadow-xl hover:bg-white dark:hover:bg-black
@@ -161,8 +161,8 @@ export default async function ThamesRiverCruisesListPage() {
                         </div>
                       )}
 
-                      {item.sections.map((section: any) => (
-                        <div key={section.id}>
+                      {item.sections.map((section) => (
+                        <div key={section.title}>
                           <p className="font-semibold">{section.title}</p>
                           {section.description && (
                             <div className="text-muted-foreground underline text-sm mb-4">

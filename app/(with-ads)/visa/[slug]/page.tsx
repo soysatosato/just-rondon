@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { buildPageMetadata } from "@/lib/seo";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { fetchContentBySlug } from "@/utils/actions/contents";
+import { visaGuides } from "./data";
 import Link from "next/link";
 const components = {
   a: ({ href, children }: any) => (
@@ -19,12 +20,16 @@ const components = {
   ),
 };
 
+export function generateStaticParams() {
+  return visaGuides.map((guide) => ({ slug: guide.slug }));
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const content = await fetchContentBySlug(params.slug);
+  const content = visaGuides.find((guide) => guide.slug === params.slug);
 
   if (!content) {
     return {
@@ -51,14 +56,14 @@ export async function generateMetadata({
   });
 }
 
-export default async function VisaGuidePage({
+export default function VisaGuidePage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const content = await fetchContentBySlug(params.slug);
+  const content = visaGuides.find((guide) => guide.slug === params.slug);
 
-  if (!content) return <p>Not Found</p>;
+  if (!content) return notFound();
 
   return (
     <div className="container mx-auto max-w-3xl py-10">
