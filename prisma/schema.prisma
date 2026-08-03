@@ -327,21 +327,52 @@ model Event {
 }
 
 model Lyrics {
-  id         String    @id @default(cuid())
-  name       String
-  artistId   String
-  lyrics     String
-  album      String?
-  youtubeId  String?
-  views      Int       @default(0)
-  genre      String?
-  createdAt  DateTime  @default(now())
-  scene      String?
-  year       Int       @default(0)
-  month      Int       @default(0)
-  albumOrder Int       @default(0)
-  artist     Artist    @relation(fields: [artistId], references: [id])
-  rankings   Ranking[]
+  id           String        @id @default(cuid())
+  name         String
+  artistId     String
+  lyrics       String
+  album        String?
+  youtubeId    String?
+  views        Int           @default(0)
+  lastViewedAt DateTime?
+  genre        String?
+  createdAt    DateTime      @default(now())
+  scene        String?
+  year         Int           @default(0)
+  month        Int           @default(0)
+  albumOrder   Int           @default(0)
+  artist       Artist        @relation(fields: [artistId], references: [id])
+  rankings     Ranking[]
+  slangs       LyricsSlang[]
+
+  @@index([artistId, album])
+}
+
+model Slang {
+  id          String        @id @default(cuid())
+  term        String        @unique
+  slug        String        @unique
+  meaning     String
+  explanation String?
+  category    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  lyrics      LyricsSlang[]
+}
+
+model LyricsSlang {
+  id           String   @id @default(cuid())
+  lyricsId     String
+  slangId      String
+  lineExcerpt  String?
+  contextNote  String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  lyrics       Lyrics   @relation(fields: [lyricsId], references: [id], onDelete: Cascade)
+  slang        Slang    @relation(fields: [slangId], references: [id], onDelete: Cascade)
+
+  @@unique([lyricsId, slangId])
+  @@index([slangId])
 }
 
 model Artist {
