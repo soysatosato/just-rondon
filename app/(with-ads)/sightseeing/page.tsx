@@ -127,7 +127,7 @@ export default async function Page() {
             {highlightAttractions.map((item: any, idx: any) => (
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-40 w-full">
+                  <div className="relative h-32 w-full sm:h-40">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -142,7 +142,7 @@ export default async function Page() {
                       {item.subtitle}
                     </p>
                     <CardTitle className="text-lg">{item.title}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed">
+                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
                       {item.description}
                     </CardDescription>
                   </CardHeader>
@@ -207,7 +207,7 @@ export default async function Page() {
                       {guide.eyebrow}
                     </p>
                     <CardTitle className="text-base">{guide.label}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed">
+                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
                       {guide.blurb}
                     </CardDescription>
                   </CardHeader>
@@ -234,7 +234,7 @@ export default async function Page() {
               >
                 <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition">
-                    <div className="relative h-40 w-full">
+                    <div className="relative h-32 w-full sm:h-40">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -249,7 +249,7 @@ export default async function Page() {
                         Today’s Pick
                       </p>
                       <CardTitle className="text-base">{item.title}</CardTitle>
-                      <CardDescription className="text-xs">
+                      <CardDescription className="text-xs line-clamp-2">
                         {item.description}
                       </CardDescription>
                     </CardHeader>
@@ -273,7 +273,7 @@ export default async function Page() {
             {mustSeeCategories.map((item: any, idx: any) => (
               <Link key={idx} href={`/sightseeing/${item.slug}`}>
                 <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-40 w-full">
+                  <div className="relative h-32 w-full sm:h-40">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -285,7 +285,7 @@ export default async function Page() {
                   </div>
                   <CardHeader className="space-y-1">
                     <CardTitle className="text-base">{item.title}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed">
+                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
                       {item.description}
                     </CardDescription>
                   </CardHeader>
@@ -315,7 +315,7 @@ export default async function Page() {
               <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
                 <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-40 w-full">
+                    <div className="relative h-32 w-full sm:h-40">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -351,7 +351,7 @@ export default async function Page() {
                 >
                   <Link href={`/sightseeing/${item.slug}`}>
                     <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                      <div className="relative h-40 w-full">
+                      <div className="relative h-32 w-full sm:h-40">
                         <img
                           src={item.image}
                           alt={item.title}
@@ -384,7 +384,7 @@ export default async function Page() {
               <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
                 <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-40 w-full">
+                    <div className="relative h-32 w-full sm:h-40">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -441,7 +441,7 @@ export default async function Page() {
               <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
                 <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-40 w-full">
+                    <div className="relative h-32 w-full sm:h-40">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -486,7 +486,7 @@ export default async function Page() {
                     /museums/[slug] は Museum テーブルを引くので繋がらない。 */}
                 <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-40 w-full">
+                    <div className="relative h-32 w-full sm:h-40">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -498,7 +498,7 @@ export default async function Page() {
                     </div>
                     <CardHeader className="space-y-1">
                       <CardTitle className="text-base">{item.title}</CardTitle>
-                      <CardDescription className="text-xs leading-relaxed">
+                      <CardDescription className="text-xs leading-relaxed line-clamp-2">
                         {item.description}
                       </CardDescription>
                     </CardHeader>

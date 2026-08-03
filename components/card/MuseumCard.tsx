@@ -11,7 +11,7 @@ export default function MuseumCard({ museum }: props) {
   return (
     <article className="group relative">
       <Link href={`museums/${slug}`}>
-        <div className="relative h-[300px] mb-2 overflow-hidden rounded-md">
+        <div className="relative h-[180px] sm:h-[240px] lg:h-[300px] mb-2 overflow-hidden rounded-md">
           <ImageCarousel images={image} name={name} />
         </div>
         <div className="flex justify-between items-center">

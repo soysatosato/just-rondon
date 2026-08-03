@@ -15,7 +15,7 @@ export default function ColumnCard({ item }: { item: Content }) {
     <Link href={`/column/${item.slug}`} className="block">
       <Card className="w-full min-w-0 h-full border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden">
         {item.image && (
-          <div className="relative w-full h-40">
+          <div className="relative w-full h-32 sm:h-40">
             <img
               src={item.image}
               alt={item.title}

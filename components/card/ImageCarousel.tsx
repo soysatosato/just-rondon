@@ -17,7 +17,10 @@ export default function ImageCarousel({ images, name }: Props) {
     <Carousel className="w-full max-w-lg">
       <CarouselContent>
         {images.map((img, index) => (
-          <CarouselItem key={index} className="relative h-[300px]">
+          <CarouselItem
+            key={index}
+            className="relative h-[180px] sm:h-[240px] lg:h-[300px]"
+          >
             <img
               src={img}
               alt={`${name} image ${index + 1}`}
