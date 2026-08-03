@@ -46,6 +46,68 @@ export default async function ServiceChargeGuidePage() {
         )}
       </header>
 
+      {/* このページでわかること／実践コンテンツへの導線 */}
+      <div className="mt-8 space-y-5">
+        <nav
+          aria-label="目次"
+          className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-5"
+        >
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            このページでわかること
+          </h2>
+          <ol className="mt-3 list-none space-y-2 border-l border-gray-300 dark:border-neutral-700 pl-4">
+            {content.sections.map((section, i) => (
+              <li key={section.id}>
+                <a
+                  href={`#section-${section.id}`}
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline underline-offset-2"
+                >
+                  {i + 1}. {section.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <div>
+          <p className="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            法律・制度の解説だけでなく、実際のデータや事例も見られます
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Link
+              href="/jobs/service-charges/dashboard"
+              className="group block rounded-lg border-2 border-blue-200 dark:border-blue-900/60 bg-blue-50/60 dark:bg-blue-950/20 p-5 transition hover:border-blue-400 dark:hover:border-blue-500"
+            >
+              <p className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+                実態調査データ
+              </p>
+              <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100 group-hover:underline">
+                店舗別のサービスチャージ実態を見る →
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                ロンドン市内の日本食レストランで働く人からの声を集約。店舗名（英名）で検索できます。
+              </p>
+            </Link>
+
+            <Link
+              href="/jobs/service-charges/case-story"
+              className="group block rounded-lg border-2 border-amber-200 dark:border-amber-900/60 bg-amber-50/60 dark:bg-amber-950/20 p-5 transition hover:border-amber-400 dark:hover:border-amber-500"
+            >
+              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                実例・裁判記録
+              </p>
+              <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100 group-hover:underline">
+                未払いで審判所に申立てた記録を読む →
+              </p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                Acasでの相談からEmployment
+                Tribunalの判決、強制執行まで。実際に認容された計算方法も公開。
+              </p>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <Separator className="my-6" />
 
       {/* Main text (optional) */}
@@ -65,7 +127,8 @@ export default async function ServiceChargeGuidePage() {
         {content.sections.map((section) => (
           <Card
             key={section.id}
-            className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm"
+            id={`section-${section.id}`}
+            className="scroll-mt-24 bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm"
           >
             <CardContent className="p-6 space-y-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -136,43 +199,62 @@ export default async function ServiceChargeGuidePage() {
         ))}
       </div>
 
-      {/* Related links */}
-      <div className="mt-12 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-4">
-        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-          関連情報・参考リンク
-        </h3>
+      {/* 読了後の導線 */}
+      <div className="mt-12 space-y-5">
+        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          読み終えたら、次はこちら
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link
+            href="/jobs/service-charges/dashboard"
+            className="group block rounded-lg border-2 border-blue-200 dark:border-blue-900/60 bg-blue-50/60 dark:bg-blue-950/20 p-5 transition hover:border-blue-400 dark:hover:border-blue-500"
+          >
+            <p className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+              実態調査データ
+            </p>
+            <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100 group-hover:underline">
+              店舗別のサービスチャージ実態を見る →
+            </p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              自分の店の実態を検索、または情報を投稿できます。
+            </p>
+          </Link>
 
-        <ul className="space-y-2 text-sm">
-          {content.website && (
-            <li>
-              <a
-                href={content.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400  hover:opacity-80"
-              >
-                Acas公式サイト｜雇用・チップ分配に関するガイド
-              </a>
-            </li>
-          )}
+          <Link
+            href="/jobs/service-charges/case-story"
+            className="group block rounded-lg border-2 border-amber-200 dark:border-amber-900/60 bg-amber-50/60 dark:bg-amber-950/20 p-5 transition hover:border-amber-400 dark:hover:border-amber-500"
+          >
+            <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+              実例・裁判記録
+            </p>
+            <p className="mt-1 text-base font-semibold text-gray-900 dark:text-gray-100 group-hover:underline">
+              未払いで審判所に申立てた記録を読む →
+            </p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              申立てから判決、強制執行までの一部始終を公開しています。
+            </p>
+          </Link>
+        </div>
 
-          <li>
-            <Link
-              href="/jobs/service-charges/dashboard"
-              className="text-blue-600 dark:text-blue-400  hover:opacity-80"
-            >
-              ロンドン市内のサービスチャージ実態調査（独自調査）
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/jobs/service-charges/case-story"
-              className="text-blue-600 dark:text-blue-400  hover:opacity-80"
-            >
-              サービスチャージ未払いで裁判に勝った話（実体験＋実用ガイド）
-            </Link>
-          </li>
-        </ul>
+        {content.website && (
+          <div className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              参考リンク
+            </h3>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>
+                <a
+                  href={content.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                >
+                  Acas公式サイト｜雇用・チップ分配に関するガイド
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </main>
   );
