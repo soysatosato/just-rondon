@@ -23,7 +23,7 @@ export default function ArticleLayout({
   const position = getChapterIndex(article.slug) + 1;
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={breadcrumbJsonLd(article)} />
       <JsonLd data={articleJsonLd(article)} />
 

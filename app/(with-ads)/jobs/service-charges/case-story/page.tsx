@@ -116,7 +116,7 @@ export default function CaseStoryIndexPage() {
   const toolChapters = chapters.filter((c) => c.kind === "tool");
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
