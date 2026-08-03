@@ -311,6 +311,21 @@ model ContentSection {
   updatedAt DateTime @default(now()) @updatedAt
   }
 
+model Event {
+  id           String   @id @default(cuid())
+  title        String
+  description  String
+  startDate    DateTime
+  endDate      DateTime
+  image        String?
+  website      String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([startDate])
+}
+
 model Lyrics {
   id         String    @id @default(cuid())
   name       String

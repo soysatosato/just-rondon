@@ -136,3 +136,20 @@ export const fetchMonthlyEvents2026 = async (slug: string) => {
   });
   return content;
 };
+
+export const fetchEventsForMonth = async (year: number, month: number) => {
+  const start = new Date(Date.UTC(year, month - 1, 1));
+  const end = new Date(Date.UTC(year, month, 1));
+  return db.event.findMany({
+    where: { startDate: { lt: end }, endDate: { gte: start } },
+    orderBy: [{ startDate: "asc" }, { displayOrder: "asc" }],
+  });
+};
+
+export const fetchUpcomingEvents = async (limit = 6, from: Date = new Date()) => {
+  return db.event.findMany({
+    where: { endDate: { gte: from } },
+    orderBy: [{ startDate: "asc" }, { displayOrder: "asc" }],
+    take: limit,
+  });
+};

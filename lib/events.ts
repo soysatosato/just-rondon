@@ -31,6 +31,14 @@ export function getMonthNumber(slug: string, fallback = 1): number {
   return MONTH_NAME_TO_NUMBER[match[1].toLowerCase()] ?? fallback;
 }
 
+const MONTH_NUMBER_TO_NAME = Object.fromEntries(
+  Object.entries(MONTH_NAME_TO_NUMBER).map(([name, num]) => [num, name])
+) as Record<number, string>;
+
+export function getMonthSlug(year: number, month: number): string {
+  return `london-events-${year}-${MONTH_NUMBER_TO_NAME[month]}`;
+}
+
 export function getSeason(monthNumber: number): Season {
   if (monthNumber >= 3 && monthNumber <= 5) return "spring";
   if (monthNumber >= 6 && monthNumber <= 8) return "summer";

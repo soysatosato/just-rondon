@@ -6,7 +6,8 @@ import { Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { fetchMonthlyEvents2026 } from "@/utils/actions/contents";
+import { fetchMonthlyEvents2026, fetchEventsForMonth } from "@/utils/actions/contents";
+import { format } from "date-fns";
 import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -54,6 +55,9 @@ export default async function EventDetailPage({
   if (!content) return notFound();
 
   const monthNumber = getMonthNumber(content.slug);
+  const yearMatch = content.slug.match(/(\d{4})/);
+  const year = yearMatch ? parseInt(yearMatch[1], 10) : 2026;
+  const events = await fetchEventsForMonth(year, monthNumber);
   const meta = getSeasonMeta(monthNumber);
   const Icon = meta.icon;
 
@@ -94,33 +98,45 @@ export default async function EventDetailPage({
       </h2>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        {content.sections.map((section, idx) => (
-          <Card
-            key={section.id}
-            className="rounded-2xl transition-shadow hover:shadow-md dark:bg-neutral-900 dark:border-neutral-700"
-          >
-            <CardContent className="flex gap-4 p-5">
-              <span
-                className={cn(
-                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                  meta.iconWrapClass
-                )}
-              >
-                {idx + 1}
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-base font-semibold dark:text-white">
-                  {section.title}
-                </h3>
-                {section.description && (
-                  <div className="prose prose-sm mt-2 max-w-none text-muted-foreground dark:prose-invert dark:text-gray-300">
-                    <ReactMarkdown>{section.description}</ReactMarkdown>
+        {events.map((event, idx) => {
+          const sameDay = event.startDate.getTime() === event.endDate.getTime();
+          const dateLabel = sameDay
+            ? format(event.startDate, "M月d日")
+            : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
+
+          return (
+            <Card
+              key={event.id}
+              className="rounded-2xl transition-shadow hover:shadow-md dark:bg-neutral-900 dark:border-neutral-700"
+            >
+              <CardContent className="flex gap-4 p-5">
+                <span
+                  className={cn(
+                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
+                    meta.iconWrapClass
+                  )}
+                >
+                  {idx + 1}
+                </span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-base font-semibold dark:text-white">
+                      {event.title}
+                    </h3>
+                    <span className="text-xs font-medium text-primary">
+                      {dateLabel}
+                    </span>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                  {event.description && (
+                    <div className="prose prose-sm mt-2 max-w-none text-muted-foreground dark:prose-invert dark:text-gray-300">
+                      <ReactMarkdown>{event.description}</ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       <div className="text-center mt-10">
