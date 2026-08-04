@@ -5,7 +5,7 @@ export const tribunalCorrespondence: CaseStoryArticle = {
   title: "証拠提出と相手方とのやり取り",
   engTitle: "Evidence submission and correspondence with the respondent",
   summary:
-    "証拠バンドルの作り方、大容量ファイルの送り方とその落とし穴、そして「受け取っていない、再送しろ」と言われたときにどう答えたか。ここが実務としていちばん学びの多い段階でした。",
+    "証拠バンドルの作り方、大容量ファイルの送り方とその落とし穴、そして「受け取っていない、再送しろ」と言われたときにどう答えたか。相手が書いてきた誤った日付を訂正せずに返信すると何が起きるかも含めて、ここが実務としていちばん学びの多い段階でした。",
   description:
     "Employment Tribunalへの証拠提出と、相手方とのやり取りの記録です。証拠バンドルの構成、送達の記録の残し方、相手方の反論への対応を整理します。",
   keywords: [
@@ -14,6 +14,7 @@ export const tribunalCorrespondence: CaseStoryArticle = {
     "Tribunal 送達",
     "サービスチャージ 配分 反論",
     "雇用審判所 書類提出",
+    "Tribunal 相手方 メール 対応",
   ],
   mainText: `ET1が受理されると、審判所から通知が届きます。
 
@@ -86,11 +87,28 @@ export const tribunalCorrespondence: CaseStoryArticle = {
 
 問題は**そのリンクに有効期限がある**ことでした。
 
-提出から**およそ2か月が経ってから**、相手方から連絡が来ました。要旨はこうです。
+提出から**およそ2か月が経ってから**、相手方から連絡が来ました。原文はこうです。
 
-> 送られたリンクの有効期限が切れていて書類にアクセスできない。再送してほしい。
+> I must say I am unable to complete a submission at present because the links to the documents you sent have expired. Please can you re-send the documents?
+
+> 送られたリンクの有効期限が切れていて、現時点では提出書面を完成させられない。書類を再送してほしい。
 
 つまり、送付した時点ではアクセス可能だったものの、相手が実際に開こうとした時点では切れていたということです。
+
+さらに**その2週間ほど後**、同じ相手から次のメールが届きました。
+
+> I believe it's possible that my business partner […] may have clicked on the links back in October but she did not download any documents. So I do not have access to them.
+>
+> Are you saying that you're unwilling to send / make available these documents again?
+
+> 共同経営者が10月にリンクをクリックした可能性はあると思うが、書類はダウンロードしていない。だから手元にない。
+>
+> これらの書類を再度送る気はない、ということですか。
+
+この2通から読み取れることが2つあります。
+
+- **リンクを開いたこと自体は否定されていない。** 開いたが保存しなかった、という説明です。つまり送達そのものが争われているわけではありません
+- **1通目と2通目で、相手方の言う日付が動いている。** ここは次の節で扱います
 
 **ここから学べる教訓は明確です。**
 
@@ -103,10 +121,32 @@ export const tribunalCorrespondence: CaseStoryArticle = {
     },
     {
       title: "「受け取っていない」と言われたときの答え方",
-      subtitle: "再送はするが、期限は動かさない",
+      subtitle: "日付は訂正する。再送はするが、期限は動かさない",
       body: `この場面での対応が、この記録のなかで最も実用的な部分かもしれません。
 
-相手方の主張に対して、私はまず**事実を確認**しました。相手が言及していた日付には、私はそもそもメールを送っていませんでした。実際の送付は別の日で、審判所の指示に沿ったものでした。
+相手方のメールは、こう始まっていました。
+
+> I refer to your email dated 11 November 2025 to […].
+
+> 11月11日付であなたが送ったメールについて申し上げる。
+
+**この日付は事実と違いました。** その日に私はメールを送っていません。実際の送付は別の日で、審判所の指示に沿ったものでした。しかも次のメールでは、同じ相手が「10月にクリックしたかもしれない」と書いています。**相手方の説明のなかで、日付が動いているわけです。**
+
+細かい話に見えるかもしれません。実際には、ここを流すと後で効いてきます。
+
+**訂正せずに返信すると、その日付を前提として受け入れたことになるからです。**
+
+やり取りのメールは、後で証拠として審判所に提出されます。相手が「申立人は11月11日に送付したと述べている」という前提で書面を作った場合、その前提は**双方のメールに残った記録**によって裏づけられてしまいます。送付日がずれれば、期限内に送達したかどうかの評価も変わりえます。
+
+相手方が示してくる日時や事実関係は、**相手にとって都合のよい形で解釈されていることがあります。**そのまま受け取って返信すれば、それが記録として残ります。
+
+なので、私はまず**事実を確認**し、返信の冒頭で日付を訂正しました。感情的な反発としてではなく、**記録の訂正**としてです。
+
+- 相手が挙げた日付には送付していない、という事実を明記する
+- 実際に送付した日時と宛先を明記する
+- そのうえで本題に入る
+
+同じ理由で、2通目の「再送する気はないということか」という問い方にも乗りませんでした。**この時点で、私は拒否も承諾もしていません。**相手の前提を含んだ問いには、前提ごと答え直す必要があります。
 
 そのうえで、こう回答しました。
 
@@ -136,6 +176,20 @@ export const tribunalCorrespondence: CaseStoryArticle = {
       body: `相手方とのやり取りには、手続きとは関係のない内容も含まれていました。
 
 良好な関係だったはずだ、という話。個人的に失望した、という話。私の態度や人柄についての言及。国籍に触れる言い方もありました。
+
+実際の文面を挙げておきます。
+
+> I'm quite insulted that you were so polite and pleasant to my face, yet have proceeded to attempt to claim a large sum of money from my company - in effect, from me - after leaving. I wonder if you would treat a Japanese employer this way, or would you be more respectful?
+
+> 面と向かっては礼儀正しく感じよく振る舞っておきながら、退職後に私の会社から――実質的には私から――多額の金銭を請求しようとしていることに、かなり侮辱を感じている。日本人の雇用主に対しても同じことをするのだろうか、それとももっと敬意を払うのだろうか。
+
+> Maybe you think that we are a soft target because of this. I really hope not, because as an employer we will not tolerate being taken advantage of.
+
+> そういう事情から、我々を与しやすい相手だと思っているのかもしれない。そうでないことを願う。雇用主として、つけ込まれることを許すつもりはない。
+
+> I was really hoping for a more constructive attitude from you, I'm so disappointed on a personal level by your conduct since leaving Tenshi. You never really know what someone's like, do you?
+
+> もっと建設的な態度を期待していた。退職後のあなたの振る舞いには個人的に本当に失望している。人というのは、結局わからないものですね。
 
 こういうものが来ると、反論したくなります。
 
