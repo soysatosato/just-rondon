@@ -107,7 +107,7 @@ export const sections: Section[] = [
       {
         title: "ETA（電子渡航認証）の取得",
         description:
-          "イギリスへの短期渡航で必要な電子渡航認証（ETA）の取得方法や注意点を紹介。",
+          "日本国籍も取得必須。£20・10分で終わる申請を、英語しかないアプリ画面の日本語対訳付きで手順どおりに案内します。",
         href: "/sightseeing/eta-uk-visa-guide",
       },
       {

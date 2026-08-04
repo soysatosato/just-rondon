@@ -17,12 +17,22 @@ export type TravelGuideMeta = {
 };
 
 /**
- * 旅行ガイドの並び。「旅程 → 宿 → 移動 → 実用情報」＝旅行者の意思決定順。
+ * 旅行ガイドの並び。「渡航資格 → 旅程 → 宿 → 移動 → 実用情報」＝旅行者の意思決定順。
+ *
+ * ETA を先頭に置いているのは、これだけが「無いと出発できない」手続きだから。
+ * 旅程や宿を考える前に片付けてもらう。
  *
  * next-sitemap.config.js の staticPages、/sightseeing ハブの
  * 「旅の準備」カード表示順と一致させること。
  */
 export const travelGuides: TravelGuideMeta[] = [
+  {
+    slug: "eta-uk-visa-guide",
+    eyebrow: "Before You Fly",
+    label: "ETA（英国電子渡航認証）申請ガイド",
+    blurb:
+      "日本国籍も取得必須。£20・10分で終わる申請を、英語しかないアプリ画面の日本語対訳付きで案内します。ICチップが読めない・自撮りが弾かれる時の対処法も。",
+  },
   {
     slug: "itinerary",
     eyebrow: "Itineraries",
