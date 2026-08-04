@@ -65,6 +65,7 @@ module.exports = {
       "/sightseeing/all",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
       // travelGuides と一致させること。
+      "/sightseeing/eta-uk-visa-guide",
       "/sightseeing/itinerary",
       "/sightseeing/hotels",
       "/sightseeing/transport",
@@ -77,7 +78,6 @@ module.exports = {
       "/sightseeing/stadium-tours",
       "/sightseeing/thames-cruise",
       "/visa/uk-visa-guide-2025",
-      "/sightseeing/eta-uk-visa-guide",
       "/visa/uk-youth-mobility-visa",
       "/jobs",
       "/jobs/minimum-wage",
@@ -99,6 +99,16 @@ module.exports = {
     ];
     for (const p of staticPages) {
       paths.push(await config.transform(config, p));
+    }
+
+    // 裁判体験談は日英で1:1に対応している。日本語版に /en を足したものが英語版のURL。
+    // components/jobs/case-story/chapters.ts に章を足したら、上の staticPages と
+    // ここの両方に反映されるので、章の追加はこの1リストの編集だけで済む。
+    const caseStoryPages = staticPages.filter((p) =>
+      p.startsWith("/jobs/service-charges/case-story")
+    );
+    for (const p of caseStoryPages) {
+      paths.push(await config.transform(config, `/en${p}`));
     }
 
     const museums = await prisma.museum.findMany({

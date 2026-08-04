@@ -7,40 +7,53 @@ import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
 import ChapterNav from "./ChapterNav";
 import Disclaimer from "./Disclaimer";
+import HtmlLang from "./HtmlLang";
+import LocaleSwitch from "./LocaleSwitch";
 import {
-  CASE_STORY_BASE,
+  SERVICE_CHARGES_PATH,
   articleJsonLd,
   breadcrumbJsonLd,
+  caseStoryBase,
+  chapterPath,
   getChapterIndex,
 } from "./chapters";
-import type { CaseStoryArticle } from "./types";
+import { t } from "./ui";
+import type { CaseStoryArticle, Locale } from "./types";
 
 export default function ArticleLayout({
   article,
+  locale = "ja",
 }: {
   article: CaseStoryArticle;
+  locale?: Locale;
 }) {
   const position = getChapterIndex(article.slug) + 1;
+  const strings = t(locale);
+  const path = chapterPath(article.slug, locale);
 
   return (
     <main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
-      <JsonLd data={breadcrumbJsonLd(article)} />
-      <JsonLd data={articleJsonLd(article)} />
+      {locale === "en" && <HtmlLang lang="en" />}
+      <JsonLd data={breadcrumbJsonLd(article, locale)} />
+      <JsonLd data={articleJsonLd(article, locale)} />
 
-      <nav className="mb-6 text-xs text-gray-500 dark:text-gray-400">
-        <Link href="/jobs/service-charges" className="hover:underline">
-          サービスチャージ
-        </Link>
-        <span className="mx-1.5">/</span>
-        <Link href={CASE_STORY_BASE} className="hover:underline">
-          未払いの記録
-        </Link>
-      </nav>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <nav className="text-xs text-gray-500 dark:text-gray-400">
+          <Link href={SERVICE_CHARGES_PATH} className="hover:underline">
+            {strings.breadcrumbServiceCharges}
+          </Link>
+          <span className="mx-1.5">/</span>
+          <Link href={caseStoryBase(locale)} className="hover:underline">
+            {strings.breadcrumbStory}
+          </Link>
+        </nav>
+        <LocaleSwitch path={path} locale={locale} />
+      </div>
 
       <header className="space-y-3">
         {position > 0 && (
           <p className="text-xs font-medium tracking-wide text-blue-600 dark:text-blue-400">
-            第{position}章
+            {strings.chapterLabel(position)}
           </p>
         )}
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
@@ -89,8 +102,8 @@ export default function ArticleLayout({
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
 
-      <ChapterNav slug={article.slug} />
-      <Disclaimer />
+      <ChapterNav slug={article.slug} locale={locale} />
+      <Disclaimer locale={locale} />
     </main>
   );
 }

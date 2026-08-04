@@ -53,6 +53,19 @@ export type PageMetadataInput = {
   titleSuffix?: boolean;
   publishedTime?: string;
   modifiedTime?: string;
+  /** ページ本文の言語。og:locale と html の lang 相当。既定は日本語。 */
+  locale?: "ja" | "en";
+  /**
+   * hreflang 用の対訳ページ。{ ja: "/foo", en: "/en/foo" } の形で渡す。
+   * 相互に指し合っていないと Google は代替として扱わないので、
+   * 対訳を持つページでは「自分自身を含めて」全言語分を渡すこと。
+   */
+  languages?: Partial<Record<"ja" | "en", string>>;
+};
+
+const OG_LOCALES: Record<"ja" | "en", string> = {
+  ja: "ja_JP",
+  en: "en_GB",
 };
 
 function normaliseImage(image: OgImageInput) {
@@ -83,8 +96,17 @@ export function buildPageMetadata({
   titleSuffix = true,
   publishedTime,
   modifiedTime,
+  locale = "ja",
+  languages,
 }: PageMetadataInput): Metadata {
   const url = absoluteUrl(path);
+  // x-default は日本語版を指す。サイトの既定言語であり、全ページ揃っているのはこちらだけ。
+  const hreflang = languages
+    ? Object.fromEntries([
+        ...Object.entries(languages).map(([lang, p]) => [lang, absoluteUrl(p)]),
+        ...(languages.ja ? [["x-default", absoluteUrl(languages.ja)]] : []),
+      ])
+    : undefined;
   const ogImages = (
     images?.length
       ? images
@@ -105,14 +127,17 @@ export function buildPageMetadata({
     robots: noindex
       ? { index: false, follow: true }
       : { index: true, follow: true },
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      ...(hreflang ? { languages: hreflang } : {}),
+    },
     openGraph: {
       type,
       title,
       description,
       url,
       siteName,
-      locale: "ja_JP",
+      locale: OG_LOCALES[locale],
       images: ogImages,
       ...(type === "article" && publishedTime ? { publishedTime } : {}),
       ...(type === "article" && modifiedTime ? { modifiedTime } : {}),
