@@ -99,12 +99,12 @@ export default function Page() {
                 icon={Plane}
               />
               <InfoPill
-                href="/visa/uk-visa-guide-2025"
-                title="ロンドン・ビザ情報"
+                href="/visa"
+                title="英国ビザガイド"
                 icon={FileText}
               />
               <InfoPill
-                href="/visa/uk-youth-mobility-visa"
+                href="/visa/youth-mobility-scheme"
                 title="ロンドン・ワーホリ"
                 icon={Backpack}
               />

@@ -6,43 +6,25 @@
  * すべて GFM テーブルで書ける。専用の型は作らない。
  *
  * ここに増やしてよいのは「markdown では表現できないもの」だけ。
+ *
+ * 記事の骨格(目次・注意枠・FAQ・出典)は /visa のビザガイドと共通なので
+ * components/guides/types.ts に置いてある。ここでは旅行ガイド向けの
+ * 名前を付け直して再輸出する。
  */
 
-export type TravelGuideCallout = {
-  /** info=補足 / warn=事故が起きるもの / tip=知っていると得するもの */
-  tone: "info" | "warn" | "tip";
-  title: string;
-  /** markdown */
-  body: string;
-};
+import type {
+  GuideCalloutData,
+  GuideFaqItem,
+  GuideRelatedLink,
+  GuideSectionData,
+  GuideSourceLink,
+} from "@/components/guides/types";
 
-export type TravelGuideSection = {
-  /** 目次アンカー用。ページ内で一意。kebab-case。 */
-  id: string;
-  title: string;
-  subtitle?: string;
-  /** markdown(GFMテーブル可) */
-  body: string;
-  /** 「実務メモ」。本文とは視覚的に分ける。 */
-  tips?: string[];
-  callout?: TravelGuideCallout;
-};
-
-export type TravelGuideFaq = {
-  question: string;
-  /** markdown可。JSON-LD に出す際は stripInlineMarkdown() を通すこと。 */
-  answer: string;
-};
-
-export type TravelGuideSource = {
-  label: string;
-  url: string;
-};
-
-export type TravelGuideRelatedLink = {
-  href: string;
-  label: string;
-};
+export type TravelGuideCallout = GuideCalloutData;
+export type TravelGuideSection = GuideSectionData;
+export type TravelGuideFaq = GuideFaqItem;
+export type TravelGuideSource = GuideSourceLink;
+export type TravelGuideRelatedLink = GuideRelatedLink;
 
 export type TravelGuideArticle = {
   slug: string;

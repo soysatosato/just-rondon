@@ -29,6 +29,20 @@ const nextConfig = {
         permanent: true,
       },
 
+      // 旧ビザ記事。/visa をハブ化した際に slug を整理した。
+      // uk-visa-guide-2025 は URL に年が入っており、毎年 slug を作り直すか
+      // 古い年のまま放置するかの二択になるため、年を落として恒久 URL にした。
+      {
+        source: "/visa/uk-visa-guide-2025",
+        destination: "/visa/uk-visa-guide",
+        permanent: true,
+      },
+      {
+        source: "/visa/uk-youth-mobility-visa",
+        destination: "/visa/youth-mobility-scheme",
+        permanent: true,
+      },
+
       // その他は apex -> www
       {
         source: "/:path*",

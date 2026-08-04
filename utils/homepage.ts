@@ -88,6 +88,65 @@ export const sections: Section[] = [
       },
     ],
   },
+  /**
+   * ビザは「コラム」の一項目ではなく独立セクションにしている。
+   * 読み物ではなく手続きのための情報で、読者の緊急度も動機もまったく違うため。
+   * 並びは components/visa/guides/guides.ts の visaGuides と一致させること。
+   */
+  {
+    id: "visa",
+    title: "ビザ",
+    items: [
+      {
+        title: "ビザガイド トップ",
+        description:
+          "観光・就労・留学・家族。自分に必要な英国ビザを、目的と期間から絞り込めます。",
+        href: "/visa",
+      },
+      {
+        title: "ETA（電子渡航認証）の取得",
+        description:
+          "日本国籍も取得必須。£20・10分で終わる申請を、英語しかないアプリ画面の日本語対訳付きで手順どおりに案内します。",
+        href: "/sightseeing/eta-uk-visa-guide",
+      },
+      {
+        title: "全ルート比較",
+        description:
+          "日本人が実際に使う9ルートの費用・滞在期間・永住までの距離を一覧で比較します。",
+        href: "/visa/uk-visa-guide",
+      },
+      {
+        title: "YMS（ワーホリ）の申請方法",
+        description:
+          "18〜30歳ならスポンサー不要で最長2年。却下の最大要因である資金証明の通し方を詳しく解説します。",
+        href: "/visa/youth-mobility-scheme",
+      },
+      {
+        title: "Skilled Worker（就労ビザ）",
+        description:
+          "2025年7月に学士相当へ引き上げられ、約180職種が対象外に。今も取れる職種と年収の壁を整理しました。",
+        href: "/visa/skilled-worker",
+      },
+      {
+        title: "Student／Graduate ビザ",
+        description:
+          "留学の資金証明額、週20時間の数え方、卒業後2年の使い方。2027年からの18ヶ月短縮も解説。",
+        href: "/visa/student",
+      },
+      {
+        title: "家族・配偶者ビザ",
+        description:
+          "最低所得£29,000の証明方法と、関係の真実性をどう立証するか。審査に約12週間かかります。",
+        href: "/visa/family",
+      },
+      {
+        title: "渡英後の手続き",
+        description:
+          "eVisa、share code、NINo、GP登録、銀行口座。パスポート更新時の旅券番号更新を怠ると搭乗拒否されます。",
+        href: "/visa/after-arrival",
+      },
+    ],
+  },
   {
     id: "column",
     title: "コラム",
@@ -97,24 +156,6 @@ export const sections: Section[] = [
         description:
           "イギリスの歴史・文化・伝統・制度を深掘りする読み物コラム。",
         href: "/column",
-      },
-      {
-        title: "ビザ取得方法",
-        description:
-          "渡航目的に応じたビザの種類や申請手順、必要書類についてわかりやすく解説しています。",
-        href: "/visa/uk-visa-guide-2025",
-      },
-      {
-        title: "ETA（電子渡航認証）の取得",
-        description:
-          "日本国籍も取得必須。£20・10分で終わる申請を、英語しかないアプリ画面の日本語対訳付きで手順どおりに案内します。",
-        href: "/sightseeing/eta-uk-visa-guide",
-      },
-      {
-        title: "ワーホリビザの申請方法",
-        description:
-          "ワーホリの申請手順、必要書類についてわかりやすく解説しています。",
-        href: "/visa/uk-youth-mobility-visa",
       },
     ],
   },

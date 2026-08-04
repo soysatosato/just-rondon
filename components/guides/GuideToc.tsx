@@ -1,4 +1,4 @@
-import type { TravelGuideSection } from "./types";
+import type { GuideSectionData } from "./types";
 
 /**
  * 記事内目次。
@@ -7,7 +7,7 @@ import type { TravelGuideSection } from "./types";
 export default function GuideToc({
   sections,
 }: {
-  sections: TravelGuideSection[];
+  sections: GuideSectionData[];
 }) {
   if (sections.length === 0) return null;
 

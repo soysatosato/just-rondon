@@ -77,8 +77,17 @@ module.exports = {
       "/sightseeing/christmas-markets",
       "/sightseeing/stadium-tours",
       "/sightseeing/thames-cruise",
-      "/visa/uk-visa-guide-2025",
-      "/visa/uk-youth-mobility-visa",
+      // ビザガイド。並びは components/visa/guides/guides.ts の
+      // visaGuides と一致させること。ETA は本体が /sightseeing 側にあるため
+      // 上の旅行ガイドの並びに含まれており、ここには出さない。
+      "/visa",
+      "/visa/uk-visa-guide",
+      "/visa/youth-mobility-scheme",
+      "/visa/skilled-worker",
+      "/visa/global-talent",
+      "/visa/student",
+      "/visa/family",
+      "/visa/after-arrival",
       "/jobs",
       "/jobs/minimum-wage",
       "/jobs/employment-contract",

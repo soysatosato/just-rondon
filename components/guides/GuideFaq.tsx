@@ -6,10 +6,10 @@ import {
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
-import type { TravelGuideFaq } from "./types";
+import type { GuideFaqItem } from "./types";
 
 /** /sightseeing ハブの FAQ と同じ見た目にそろえた Accordion。 */
-export default function GuideFaq({ items }: { items: TravelGuideFaq[] }) {
+export default function GuideFaq({ items }: { items: GuideFaqItem[] }) {
   return (
     <section className="mt-12 space-y-4">
       <h2 className="text-lg font-semibold">よくある質問</h2>

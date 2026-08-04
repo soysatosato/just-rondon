@@ -1,5 +1,5 @@
 import MarkdownBody from "@/components/jobs/MarkdownBody";
-import type { TravelGuideCallout } from "./types";
+import type { GuideCalloutData } from "./types";
 
 /**
  * 注意・補足・小ワザを本文から視覚的に分離する。
@@ -8,7 +8,7 @@ import type { TravelGuideCallout } from "./types";
  * 全面運休」のような事故に直結する警告と、単なる引用が同じ見た目になる。
  */
 const TONE_STYLES: Record<
-  TravelGuideCallout["tone"],
+  GuideCalloutData["tone"],
   { wrapper: string; label: string; text: string }
 > = {
   info: {
@@ -35,7 +35,7 @@ export default function GuideCallout({
   tone,
   title,
   body,
-}: TravelGuideCallout) {
+}: GuideCalloutData) {
   const style = TONE_STYLES[tone];
 
   return (

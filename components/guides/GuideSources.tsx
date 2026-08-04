@@ -1,4 +1,4 @@
-import type { TravelGuideSource } from "./types";
+import type { GuideSourceLink } from "./types";
 
 /**
  * 一次情報へのリンクと鮮度の但し書き。
@@ -10,7 +10,7 @@ export default function GuideSources({
   sources,
   dataAsOf,
 }: {
-  sources: TravelGuideSource[];
+  sources: GuideSourceLink[];
   dataAsOf: string;
 }) {
   return (
