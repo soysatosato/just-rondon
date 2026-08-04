@@ -2,6 +2,7 @@ export const revalidate = 60 * 60;
 
 import Image from "next/image";
 import Link from "next/link";
+import { format } from "date-fns";
 import type { LucideIcon } from "lucide-react";
 import {
   MapPin,
@@ -16,14 +17,22 @@ import {
   BriefcaseBusiness,
   Receipt,
   Scale,
+  GraduationCap,
+  Users,
+  Award,
+  Home as HomeIcon,
+  Briefcase,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import HeroContent from "@/components/home/HeroContent";
 import SectionHeader from "@/components/home/SectionHeader";
+import ColumnCard from "@/components/column/ColumnCard";
+import { fetchColumns, fetchUpcomingEvents } from "@/utils/actions/contents";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -34,7 +43,14 @@ export const metadata = buildPageMetadata({
     "初めてのロンドン旅行でも安心。定番の観光スポット、美術館と必見作品、ウエストエンドのミュージカル、季節のイベント、ビザや現地で働く情報まで、日本語でまとめた総合ロンドンガイドです。",
 });
 
-export default function Page() {
+export default async function Page() {
+  const now = new Date();
+  const [latestColumns, upcomingEvents] = await Promise.all([
+    fetchColumns(),
+    fetchUpcomingEvents(3, now),
+  ]);
+  const columnPicks = latestColumns.slice(0, 3);
+
   return (
     <div className="bg-background">
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground">
@@ -117,6 +133,62 @@ export default function Page() {
         <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
       </div>
 
+      {/* 英国ビザ情報 */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="英国ビザ情報"
+            title="目的別・英国ビザガイド"
+            description="観光のETAはもちろん、ワーホリ・就労・留学・家族ビザ・渡英後の手続きまで。日本国籍の人が実際に使うルートを、目的と期間から探せます。"
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <ExploreCard
+              href="/visa/youth-mobility-scheme"
+              title="YMS（ワーホリ）申請ガイド"
+              description="18〜30歳ならスポンサーなしで最長2年働ける唯一のルート。日本枠は年6,000人・抽選なし。"
+              icon={Backpack}
+            />
+            <ExploreCard
+              href="/visa/skilled-worker"
+              title="Skilled Worker（就労ビザ）ガイド"
+              description="スポンサー企業を得て働くための就労ビザ。対象職種や年収要件、企業の探し方まで解説。"
+              icon={Briefcase}
+            />
+            <ExploreCard
+              href="/visa/global-talent"
+              title="Global Talent（卓越人材ビザ）ガイド"
+              description="研究者・アーティスト・技術者向け。雇用主のスポンサーが不要で、最短3年で永住権に届きます。"
+              icon={Award}
+            />
+            <ExploreCard
+              href="/visa/student"
+              title="Student／Graduate ビザガイド"
+              description="CASの取り方、維持費の証明額、就労できる時間まで。卒業後のGraduateビザについても解説。"
+              icon={GraduationCap}
+            />
+            <ExploreCard
+              href="/visa/family"
+              title="家族・配偶者ビザガイド"
+              description="英国人・定住者の配偶者として暮らすためのルート。所得要件や関係の真実性の立証方法。"
+              icon={Users}
+            />
+            <ExploreCard
+              href="/visa/after-arrival"
+              title="渡英後の手続きガイド"
+              description="UKVIアカウント、share code、NINo、GP登録、銀行口座。ビザが下りてからやるべきことまとめ。"
+              icon={HomeIcon}
+            />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/visa">英国ビザガイドをすべて見る →</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* ロンドンで働く・暮らす */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
@@ -194,6 +266,48 @@ export default function Page() {
             description="年中行われるフェスティバル、祝日、スポーツイベントをチェック。"
           />
 
+          {upcomingEvents.length > 0 && (
+            <div className="mb-8 grid gap-4 sm:grid-cols-3">
+              {upcomingEvents.map((event) => {
+                const sameDay =
+                  event.startDate.getTime() === event.endDate.getTime();
+                const dateLabel = sameDay
+                  ? format(event.startDate, "M月d日")
+                  : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
+
+                return (
+                  <Link key={event.id} href="/events">
+                    <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                      <CardContent className="p-4">
+                        <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                          <span className="text-xs font-semibold text-red-600">
+                            {dateLabel}
+                          </span>
+                          {event.isFree && (
+                            <Badge
+                              variant="outline"
+                              className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
+                            >
+                              無料
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm font-medium leading-snug">
+                          {event.title}
+                        </p>
+                        {event.venue && (
+                          <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
+                            {event.venue}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-3">
             <InfoPill
               href="/sightseeing/christmas-markets"
@@ -206,6 +320,33 @@ export default function Page() {
               icon={Baby}
             />
             <InfoPill href="/events" title="ロンドン年間イベントカレンダー" icon={Calendar} />
+          </div>
+        </div>
+      </section>
+
+      {/* コラム */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="コラム"
+            title="イギリスの歴史・文化・伝統を深掘りする読み物"
+            description="旅行ガイドだけでは伝えきれない、イギリスの奥深さをじっくり読み解くコラムを毎日更新でお届けします。"
+          />
+
+          {columnPicks.length > 0 ? (
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
+              {columnPicks.map((item) => (
+                <ColumnCard key={item.id} item={item} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">近日公開予定です。</p>
+          )}
+
+          <div className="mt-6 flex justify-center">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/column">コラムをすべて見る →</Link>
+            </Button>
           </div>
         </div>
       </section>

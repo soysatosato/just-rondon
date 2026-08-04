@@ -181,6 +181,71 @@ export default function Navbar() {
                     ミュージカル
                   </Link>
                   <Accordion type="single" collapsible>
+                    <AccordionItem value="visa" className="border-b-0">
+                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
+                        ビザ
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
+                        <Link
+                          href="/visa"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          英国ビザガイド トップ
+                        </Link>
+                        <Link
+                          href="/sightseeing/eta-uk-visa-guide"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          ETA（電子渡航認証）
+                        </Link>
+                        <Link
+                          href="/visa/youth-mobility-scheme"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          YMS（ワーホリ）
+                        </Link>
+                        <Link
+                          href="/visa/skilled-worker"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          Skilled Worker（就労）
+                        </Link>
+                        <Link
+                          href="/visa/global-talent"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          Global Talent（卓越人材）
+                        </Link>
+                        <Link
+                          href="/visa/student"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          Student／Graduate
+                        </Link>
+                        <Link
+                          href="/visa/family"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          家族・配偶者ビザ
+                        </Link>
+                        <Link
+                          href="/visa/after-arrival"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          渡英後の手続き
+                        </Link>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                  <Accordion type="single" collapsible>
                     <AccordionItem value="jobs" className="border-b-0">
                       <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
                         働く・暮らす
@@ -245,6 +310,20 @@ export default function Navbar() {
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
+                  <Link
+                    href="/events"
+                    className=" hover:text-red-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    イベント
+                  </Link>
+                  <Link
+                    href="/column"
+                    className=" hover:text-red-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    コラム
+                  </Link>
                   {/* <Link
                     href="/news"
                     className=" hover:text-red-600 transition"
@@ -469,6 +548,58 @@ export default function Navbar() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
+                <NavigationMenuTrigger>ビザ</NavigationMenuTrigger>
+                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-red-600">
+                      英国ビザを調べる
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      観光のETAから、ワーホリ、就労、留学、家族ビザ、渡英後の手続きまで。目的・期間から自分に必要なビザを見つけられます。
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <Link
+                      href="/sightseeing/eta-uk-visa-guide"
+                      className="hover:underline"
+                    >
+                      ETA（電子渡航認証）
+                    </Link>
+                    <Link href="/visa/uk-visa-guide" className="hover:underline">
+                      英国ビザ全ルート比較
+                    </Link>
+                    <Link
+                      href="/visa/youth-mobility-scheme"
+                      className="hover:underline"
+                    >
+                      YMS（ワーホリ）
+                    </Link>
+                    <Link href="/visa/skilled-worker" className="hover:underline">
+                      Skilled Worker（就労）
+                    </Link>
+                    <Link href="/visa/global-talent" className="hover:underline">
+                      Global Talent（卓越人材）
+                    </Link>
+                    <Link href="/visa/student" className="hover:underline">
+                      Student／Graduate
+                    </Link>
+                    <Link href="/visa/family" className="hover:underline">
+                      家族・配偶者ビザ
+                    </Link>
+                    <Link href="/visa/after-arrival" className="hover:underline">
+                      渡英後の手続き
+                    </Link>
+                    <Link
+                      href="/visa"
+                      className="hover:underline text-red-600 font-medium col-span-2"
+                    >
+                      英国ビザガイド トップ
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
                 <NavigationMenuTrigger>働く・暮らす</NavigationMenuTrigger>
                 <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
                   <div className="space-y-2">
@@ -527,6 +658,22 @@ export default function Navbar() {
                     </Link>
                   </div>
                 </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem className="pr-6">
+                <NavigationMenuLink asChild>
+                  <Link href="/events" className="hover:underline">
+                    イベント
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem className="pr-6">
+                <NavigationMenuLink asChild>
+                  <Link href="/column" className="hover:underline">
+                    コラム
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               {/* <NavigationMenuItem className="pr-6">
