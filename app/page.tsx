@@ -22,6 +22,7 @@ import {
   Award,
   Home as HomeIcon,
   Briefcase,
+  ShoppingBag,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -308,7 +309,12 @@ export default async function Page() {
             </div>
           )}
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <InfoPill
+              href="/souvenirs"
+              title="ロンドンのお土産"
+              icon={ShoppingBag}
+            />
             <InfoPill
               href="/sightseeing/christmas-markets"
               title="ロンドンのクリスマス"

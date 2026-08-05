@@ -95,6 +95,7 @@ module.exports = {
       "/events",
       "/events/archive/2025",
       "/column",
+      "/souvenirs",
       "/sightseeing",
       "/sightseeing/all",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の

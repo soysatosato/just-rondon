@@ -265,6 +265,46 @@ model Attraction {
   sections       AttractionSection[]
 }
 
+// ロンドン土産の特集(/souvenirs)で紹介する1品。
+//
+// image を nullable にしているのは、写真を自前で撮らない運用が前提だから。
+// 「画像が揃ってから公開する」にすると1件も出せなくなるので、
+// 画像なしでも成立するカードを描く前提で null を許容している。
+//
+// imageSource は表示側の分岐に使う。ライセンス表記が要るソース(commons)と、
+// 提携先のCDNから直接配信しなければならないソース(rakuten / amazon)とで
+// 扱いが変わるため、URL だけを持っていても正しく描けない。
+model Souvenir {
+  id             String   @id @default(cuid())
+  name           String
+  engName        String?
+  slug           String   @unique
+  category       String
+  /// カード用の一言。詳細を開かなくても選べる粒度で書く。
+  blurb          String
+  /// 詳細の本文。markdown。
+  body           String
+  priceRange     String?
+  /// 買える場所。「ヒースロー空港」「Tesco」など。
+  buyAt          String[] @default([])
+  tips           String?
+  recommendLevel Int      @default(0)
+  displayOrder   Int      @default(0)
+
+  image        String?
+  /// "commons" | "rakuten" | "amazon" | "official" | "own"
+  imageSource  String?
+  /// 出典・ライセンス表記。commons のときは必須。
+  imageCredit  String?
+  imageLink    String?
+  affiliateUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+}
+
 model AttractionSection {
   id           Int        @id @default(autoincrement())
   title        String
