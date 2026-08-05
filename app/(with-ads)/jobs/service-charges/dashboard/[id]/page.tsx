@@ -26,6 +26,10 @@ import {
 } from "@/components/ui/collapsible";
 import dynamic from "next/dynamic";
 
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("サービスチャージ集計の詳細");
+
 type Props = {
   params: {
     id: string; // placeId

@@ -31,6 +31,25 @@ export function absoluteImage(url: string): string {
   return /^https?:\/\//.test(url) ? url : absoluteUrl(url);
 }
 
+/**
+ * 検索結果に出したくないユーティリティページ用の metadata。
+ *
+ * robots.txt の Disallow だけでは足りない。クロールを止めると Google は
+ * ページ内の noindex を読めず、外部リンクがあれば URL だけがインデックスされる
+ * (「robots.txt によりブロックされましたが登録されました」)。
+ * noindex を効かせたいページは robots.txt 側の Disallow から外し、
+ * こちらで宣言すること。
+ *
+ * canonical と OG は意図的に付けない。インデックスさせないページに
+ * 正規URLを宣言する意味がなく、SNS カードも不要なため。
+ */
+export function noindexMetadata(title: string): Metadata {
+  return {
+    title: `${title} | ${SITE_NAME}`,
+    robots: { index: false, follow: true },
+  };
+}
+
 export type OgImageInput =
   | string
   | { url: string; width?: number; height?: number; alt?: string };

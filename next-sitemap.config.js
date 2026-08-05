@@ -24,14 +24,18 @@ module.exports = {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/api/",
-          "/profile",
-          "/jobs/service-charges/dashboard",
-          "/jobs/service-charges/survey",
-          "/jobs/service-charges/thanks",
-          "/contact/confirm",
-        ],
+        // Disallow は /api/ だけに絞る。
+        //
+        // 上の exclude で sitemap から外したユーティリティページ
+        // (/profile, /jobs/service-charges/dashboard|survey|thanks,
+        //  /contact/confirm) は、各ページが lib/seo.ts の noindexMetadata で
+        // noindex を宣言している。ここで Disallow するとクロールが止まり
+        // その noindex を読めなくなるため、外部リンク経由で
+        // 「robots.txt によりブロックされましたがインデックスに登録されました」
+        // になる。noindex を効かせるにはクロールさせる必要がある。
+        //
+        // /api/ は HTML を返さず noindex を載せられないので Disallow で止める。
+        disallow: ["/api/"],
       },
     ],
   },
@@ -39,6 +43,36 @@ module.exports = {
   // クロールを止めるとページ側の noindex を読めず、
   // 「robots.txt によりブロックされましたがインデックスに登録されました」になるため。
   // sitemapSize: 5000, // ページ数が多い場合に分割
+
+  /**
+   * 既定のままだと全URLが priority 0.7 / changefreq daily で並び、
+   * 「どれも同じ重要度で毎日更新される」という実態と違う申告になる。
+   * 階層の深さと更新頻度に合わせて出し分ける。
+   *
+   * priority はサイト内の相対値でしかない(Google への順位の要求ではない)ので、
+   * トップを 1.0 として下に向かって落とすだけでよい。
+   */
+  transform: async (config, path) => {
+    const depth = path.split("/").filter(Boolean).length;
+
+    // イベントとコラムは追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
+    const isFresh = /^\/(events|column)(\/|$)/.test(path);
+
+    let priority;
+    if (path === "/") priority = 1.0;
+    else if (depth === 1) priority = 0.9; // /sightseeing, /museums, /visa, /jobs …
+    else if (depth === 2) priority = 0.8; // 各ガイド・詳細ページ
+    else priority = 0.6; // それ以下(章ページ、作品ページなど)
+
+    return {
+      loc: path,
+      changefreq: isFresh ? "weekly" : "monthly",
+      priority,
+      lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      alternateRefs: config.alternateRefs ?? [],
+    };
+  },
+
   additionalPaths: async (config) => {
     const paths = [];
     const staticPages = [

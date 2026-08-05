@@ -11,6 +11,10 @@ import {
 } from "@/utils/actions/jobs";
 import ServiceChargeStats from "@/components/jobs/ServiceChargeStats";
 
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("サービスチャージ集計ダッシュボード");
+
 type Props = {
   searchParams?: {
     q?: string;

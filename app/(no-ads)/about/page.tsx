@@ -44,8 +44,11 @@ export default function AboutPage() {
       <div className="mx-auto max-w-3xl">
         <Card className="border-border bg-card shadow-sm">
           <CardHeader className="space-y-3">
-            <CardTitle className="text-center text-2xl font-bold tracking-tight md:text-4xl">
-              About
+            {/* 本文が h2 から始まるため、ページの h1 をここで明示する。 */}
+            <CardTitle asChild>
+              <h1 className="text-center text-2xl font-bold tracking-tight md:text-4xl">
+                About｜ジャスト・ロンドンについて
+              </h1>
             </CardTitle>
             <p className="text-center text-sm leading-6 text-muted-foreground md:text-base">
               このサイトの目的や運営方針についてご案内します。

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 
 import { cn } from "@/lib/utils";
 
@@ -29,16 +30,24 @@ const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = "CardHeader";
 
+/**
+ * 既定では div で描画する。カードのタイトルが同時にページの見出しでもある場合は
+ * asChild で h1〜h3 を渡すこと。div のままだと見出し階層に現れず、
+ * ページに h1 が1つも無い状態になる。
+ */
 const CardTitle = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("font-semibold leading-none tracking-tight", className)}
-    {...props}
-  />
-));
+  React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
+>(({ className, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "div";
+  return (
+    <Comp
+      ref={ref}
+      className={cn("font-semibold leading-none tracking-tight", className)}
+      {...props}
+    />
+  );
+});
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<

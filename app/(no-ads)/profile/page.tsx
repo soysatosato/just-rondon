@@ -7,6 +7,9 @@ import {
   updateProfileAction,
   updateProfileImageAction,
 } from "@/utils/actions/museums";
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("プロフィール");
 
 export default async function ProfilePage() {
   const profile = await fetchProfile();

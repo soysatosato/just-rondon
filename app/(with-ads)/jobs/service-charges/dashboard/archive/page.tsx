@@ -10,6 +10,9 @@ import {
   fetchServiceChargesPaged,
   fetchServiceChargeCount,
 } from "@/utils/actions/jobs";
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("サービスチャージ集計アーカイブ");
 
 type Props = {
   searchParams?: {

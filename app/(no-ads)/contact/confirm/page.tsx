@@ -3,6 +3,10 @@ import { sendAdminNotification } from "@/utils/actions/contact";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("お問い合わせの確認");
+
 export default async function ConfirmPage({
   searchParams,
 }: {

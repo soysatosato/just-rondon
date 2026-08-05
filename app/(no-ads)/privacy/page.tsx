@@ -84,8 +84,11 @@ export default function PrivacyPage() {
       <div className="mx-auto max-w-3xl">
         <Card className="border-border bg-card shadow-sm">
           <CardHeader className="space-y-3">
-            <CardTitle className="text-center text-2xl font-bold tracking-tight md:text-4xl">
-              Privacy Policy
+            {/* 本文が h2 から始まるため、ページの h1 をここで明示する。 */}
+            <CardTitle asChild>
+              <h1 className="text-center text-2xl font-bold tracking-tight md:text-4xl">
+                プライバシーポリシー
+              </h1>
             </CardTitle>
             <p className="text-center text-sm leading-6 text-muted-foreground md:text-base">
               当サイトにおける個人情報の取り扱いについてご説明します。

@@ -5,6 +5,10 @@ import { createProfileAction } from "@/utils/actions/museums";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("プロフィール作成");
+
 export default async function CreateProfilePage() {
   const user = await currentUser();
   if (user?.privateMetadata?.hasProfile) {

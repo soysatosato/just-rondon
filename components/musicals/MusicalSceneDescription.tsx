@@ -28,8 +28,11 @@ export default function MusicalSceneDescription({
         <Markdown
           remarkPlugins={[remarkGfm]}
           components={{
+            // 本文中の見出しは h2 から始める。ページの h1 は MusicalHero が
+            // 作品名で描画しているため、markdown の # をそのまま h1 にすると
+            // 1ページに h1 が複数出てしまう。
             h1: ({ ...props }) => (
-              <h1 className="text-xl sm:text-2xl font-bold text-primary" {...props} />
+              <h2 className="text-xl sm:text-2xl font-bold text-primary" {...props} />
             ),
             h2: ({ ...props }) => (
               <h2

@@ -73,7 +73,8 @@ export default async function HowToEnjoyUKMuseums() {
             <Markdown>
               ロンドンのミュージアム巡りの合間に、ぜひ体験してほしいのが**クリームティー**です。ミュージアム巡りは意外と体力を使いますので、鑑賞したあと、ミュージアム内のカフェで紅茶とスコーンを楽しむというのが、まさに理想的な午後の過ごし方です。
             </Markdown>
-            <h1 className="mt-3 font-semibold">クリームティーとは？</h1>
+            {/* タブ内の小見出し。ページの h1 は HeroSection が持つ。 */}
+            <h3 className="mt-3 font-semibold">クリームティーとは？</h3>
             クリームティーは、紅茶とスコーン、クロテッドクリーム（濃厚なクリーム）、そしてジャムのセット。イギリス南西部のデボン州やコーンウォール州が発祥とされ、イギリス全土で愛されています。スコーンは外はサクサク、中はふんわり。クロテッドクリームの濃厚なコクと甘酸っぱいジャムが紅茶にぴったりマッチします。
           </TabsContent>
           <TabsContent value="guide3" className="mt-4 text-muted-foreground">

@@ -4,6 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 
+import { noindexMetadata } from "@/lib/seo";
+
+export const metadata = noindexMetadata("ご回答ありがとうございました");
+
 export default function ThanksPage() {
   return (
     <main className="min-h-dvh bg-background text-foreground flex items-center justify-center px-4">
