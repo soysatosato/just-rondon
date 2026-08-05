@@ -203,3 +203,89 @@ export function sightseeingHubCollectionJsonLd(
     })),
   };
 }
+
+/* -----------------------------------------------------
+   ロケ地巡り(/sightseeing/film-locations)
+----------------------------------------------------- */
+
+export const FILM_LOCATIONS_BASE = `${SIGHTSEEING_BASE}/film-locations`;
+
+export function filmWorkPath(slug: string) {
+  return `${FILM_LOCATIONS_BASE}/${slug}`;
+}
+
+export function filmLocationsHubJsonLd(
+  works: { slug: string; title: string; summary: string }[]
+) {
+  const url = `${SITE_URL}${FILM_LOCATIONS_BASE}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${url}#collection`,
+    url,
+    name: "ロンドン 映画・ドラマのロケ地巡り",
+    description:
+      "ロンドンで撮影された映画・ドラマのロケ地を作品別にたどるガイド。実際に訪ねられる場所だけを、行き方と公開状況つきで紹介します。",
+    inLanguage: "ja",
+    publisher: SIGHTSEEING_PUBLISHER,
+    hasPart: works.map((w) => ({
+      "@type": "Article",
+      name: `${w.title}のロケ地`,
+      description: w.summary,
+      url: `${SITE_URL}${filmWorkPath(w.slug)}`,
+    })),
+  };
+}
+
+export function filmWorkBreadcrumbJsonLd(work: { slug: string; title: string }) {
+  return sightseeingBreadcrumbJsonLd([
+    { name: "ロケ地巡り", path: FILM_LOCATIONS_BASE },
+    { name: work.title, path: filmWorkPath(work.slug) },
+  ]);
+}
+
+/**
+ * ロケ地の一覧を ItemList として出す。
+ *
+ * 各スポットを Place ではなく ListItem 内の名前として出しているのは、
+ * 番地を持たない方針(data.ts のコメント参照)で PostalAddress を
+ * 埋められないため。住所の無い Place を並べても構造化データとしての
+ * 価値が無いので、記事内の順序付きリストとしてだけ伝える。
+ */
+export function filmWorkJsonLd(work: {
+  slug: string;
+  title: string;
+  engTitle: string;
+  summary: string;
+  spots: { name: string; scene: string }[];
+}) {
+  const url = `${SITE_URL}${filmWorkPath(work.slug)}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: `${work.title}のロケ地巡り`,
+    description: work.summary,
+    inLanguage: "ja",
+    mainEntityOfPage: url,
+    author: SIGHTSEEING_PUBLISHER,
+    publisher: SIGHTSEEING_PUBLISHER,
+    about: {
+      "@type": "CreativeWork",
+      name: work.engTitle,
+      alternateName: work.title,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: work.spots.length,
+      itemListElement: work.spots.map((s, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: s.name,
+        description: s.scene,
+      })),
+    },
+  };
+}

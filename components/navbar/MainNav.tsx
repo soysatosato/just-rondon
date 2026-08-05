@@ -127,6 +127,13 @@ export default function Navbar() {
                           必見スポット
                         </Link>
                         <Link
+                          href="/sightseeing/film-locations"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          映画・ドラマのロケ地巡り
+                        </Link>
+                        <Link
                           href="/sightseeing/eta-uk-visa-guide"
                           className="text-sm hover:text-red-600 transition"
                           onClick={() => setOpen(false)}
@@ -443,6 +450,12 @@ export default function Navbar() {
                       className="hover:underline"
                     >
                       必見スポット
+                    </Link>
+                    <Link
+                      href="/sightseeing/film-locations"
+                      className="hover:underline"
+                    >
+                      ロケ地巡り
                     </Link>
                     <Link
                       href="/sightseeing/eta-uk-visa-guide"

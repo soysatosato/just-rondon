@@ -107,6 +107,13 @@ module.exports = {
       "/sightseeing/transport",
       "/sightseeing/travel-tips",
       "/sightseeing/harry-potter",
+      // ロケ地巡り。作品ページはDBではなく
+      // app/(with-ads)/sightseeing/film-locations/data.ts の filmWorks なので、
+      // 作品を足したらここにも1行足すこと(このファイルはCJSでTSを読めない)。
+      "/sightseeing/film-locations",
+      "/sightseeing/film-locations/sherlock",
+      "/sightseeing/film-locations/bridgerton",
+      "/sightseeing/film-locations/downton-abbey",
       "/sightseeing/kids-free-activities",
       "/sightseeing/must-see",
       "/sightseeing/royal-london",

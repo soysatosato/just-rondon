@@ -30,6 +30,12 @@ export const sections: Section[] = [
         href: "/sightseeing/harry-potter",
       },
       {
+        title: "映画・ドラマのロケ地巡り",
+        description:
+          "SHERLOCK、ブリジャートン、ダウントン・アビーの撮影地を作品別に",
+        href: "/sightseeing/film-locations",
+      },
+      {
         title: "子どもと無料で楽しめるスポット",
         description: "家族でお得に巡れるロンドンの無料名所",
         href: "/sightseeing/kids-free-activities",

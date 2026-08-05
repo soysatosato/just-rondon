@@ -33,6 +33,7 @@ import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   faqPageJsonLd,
+  filmWorkPath,
   sightseeingBreadcrumbJsonLd,
   sightseeingHubCollectionJsonLd,
 } from "@/components/sightseeing/jsonld";
@@ -41,6 +42,7 @@ import {
   travelGuidePath,
   travelGuides,
 } from "@/components/sightseeing/guides/guides";
+import { filmWorks } from "./film-locations/data";
 
 const PAGE_TITLE =
   "ロンドン観光ガイド | 定番スポット・宿泊・移動手段・モデルコース";
@@ -214,6 +216,55 @@ export default async function Page() {
                 </Card>
               </Link>
             ))}
+          </div>
+        </section>
+
+        {/* ロケ地巡り。画像を持たない特集なので、カードは文字だけで成立させている。 */}
+        <section className="space-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">
+              Film &amp; TV Locations
+            </p>
+            <h2 className="mt-2 text-xl font-semibold">
+              映画・ドラマのロケ地巡り
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
+              221Bはベーカー街になく、王妃の宮殿は政府の迎賓館。
+              作品ごとに、実際に訪ねられるロケ地だけを行き方と見学の可否つきで紹介します。
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {filmWorks.map((work) => (
+              <Link key={work.slug} href={filmWorkPath(work.slug)}>
+                <Card className="h-full border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer transition hover:border-sky-400 hover:shadow-md dark:hover:border-sky-500">
+                  <CardHeader className="space-y-1">
+                    <p className="text-xs font-semibold text-sky-600">
+                      {work.eyebrow} · {work.years}
+                    </p>
+                    <CardTitle className="text-base">
+                      {work.title}のロケ地
+                    </CardTitle>
+                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
+                      {work.summary}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+            <Link href="/sightseeing/film-locations">
+              <Card className="h-full border-dashed border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 shadow-none cursor-pointer transition hover:border-sky-400 hover:shadow-md">
+                <CardHeader className="space-y-1">
+                  <p className="text-xs font-semibold text-sky-600">Guide</p>
+                  <CardTitle className="text-base">
+                    ロケ地巡りガイド トップ
+                  </CardTitle>
+                  <CardDescription className="text-xs leading-relaxed line-clamp-2">
+                    掲載中の作品一覧と、ロケ地を訪ねる前に知っておきたいこと。
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
           </div>
         </section>
 
