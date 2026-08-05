@@ -4,11 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
+import InstagramEmbed from "@/components/shared/InstagramEmbed";
 
 /**
  * 写真の無い店の代替。
  *
- * 店の写真は自由に使えるものが揃わないので、19軒中7軒は画像を持たない。
+ * 店の写真は自由に使えるものが揃わないので、画像を持たない店が残る。
  * 灰色の空箱を置くと読み込み失敗に見えるため、英名を大きく組んだ面にして
  * 画像のある店と並んでも意図した装丁として読めるようにする。
  */
@@ -104,6 +105,20 @@ export default function RestaurantCard({
         {restaurant.body && (
           <div className="border-t border-slate-200 pt-3 dark:border-slate-700">
             <MarkdownBody>{restaurant.body}</MarkdownBody>
+          </div>
+        )}
+
+        {/*
+          店自身の投稿を埋め込む。写真を複製しないので権利上いちばん安全に
+          「その店の実物」を出せる。画像のある店にも付けるのは、
+          Commons にあるのが外観写真ばかりで、料理が写らないため。
+        */}
+        {restaurant.instagramUrl && (
+          <div className="border-t border-slate-200 pt-3 dark:border-slate-700">
+            <p className="mb-2 text-xs font-semibold text-muted-foreground">
+              店の公式アカウントより
+            </p>
+            <InstagramEmbed url={restaurant.instagramUrl} />
           </div>
         )}
 

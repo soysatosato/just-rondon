@@ -5,6 +5,7 @@ import {
   resolveCommonsImage,
   type CommonsImage,
 } from "./lib/commons";
+import { normaliseInstagramUrl } from "./lib/instagram";
 
 /**
  * /restaurants の料理・店データを投入する。
@@ -26,6 +27,21 @@ type RestaurantSeed = {
   website?: string;
   bookingRequired?: boolean;
   commonsFile?: string;
+  /**
+   * 店の公式アカウントの「投稿」URL。
+   *
+   * 埋め込めるのは個別の投稿と Reels だけで、プロフィールのURL
+   * (instagram.com/dishoom/)では埋め込めない。Instagram がプロフィール
+   * 単位の埋め込みを廃止しているため。
+   *
+   * 取り方: 公式アカウントを開く → 載せたい投稿を開く → 右上の「…」→
+   * 「リンクをコピー」。得られる https://www.instagram.com/p/XXXXXXX/
+   * をそのまま貼る。末尾の ?igsh=... は付いていても外してよい。
+   *
+   * ここを埋めて再実行すれば反映される。DBを直接書き換えないこと。
+   * 次にこのスクリプトを流したときに上書きで消えるため。
+   */
+  instagramUrl?: string;
 };
 
 type DishSeed = {
@@ -594,6 +610,7 @@ async function main() {
         priceRange: r.priceRange ?? null,
         website: r.website ?? null,
         bookingRequired: r.bookingRequired ?? false,
+        instagramUrl: normaliseInstagramUrl(r.instagramUrl, r.slug),
         displayOrder: restOrder,
         ...imageColumns(restImage),
       };

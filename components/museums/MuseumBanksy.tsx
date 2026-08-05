@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaSprayCan } from "react-icons/fa";
-import InstagramEmbed from "../card/InstagramEmbed";
+import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import Image from "next/image";
 
 export default function MuseumBanksy() {
@@ -79,7 +79,7 @@ export default function MuseumBanksy() {
                     <CardContent>
                       <div className="relative w-full h-64 overflow-hidden rounded-lg border-2 border-gray-700">
                         {art.fromIG ? (
-                          <InstagramEmbed url={art.url} isDialogOpen />
+                          <InstagramEmbed url={art.url} reservedHeight={256} />
                         ) : (
                           <img
                             src={art.url}
@@ -107,7 +107,7 @@ export default function MuseumBanksy() {
                 <div className="space-y-4">
                   <div className="relative w-full h-72 border-2 border-gray-700 rounded-lg overflow-hidden">
                     {art.fromIG ? (
-                      <InstagramEmbed url={art.url} isDialogOpen />
+                      <InstagramEmbed url={art.url} reservedHeight={288} />
                     ) : (
                       <img
                         src={art.url}
