@@ -265,6 +265,79 @@ model Attraction {
   sections       AttractionSection[]
 }
 
+// イギリス料理1品(/restaurants/[slug])。
+//
+// 店ではなく料理を軸にしているのは、読者が「フィッシュ&チップスを食べたい」
+// から店を探すため。もうひとつ実務的な理由があり、店の写真は権利処理が
+// 面倒なのに対して料理の写真は自由に使えるものが揃っているので、
+// 料理を単位にすると各ページが確実に1枚は画像を持てる。
+model Dish {
+  id       String  @id @default(cuid())
+  slug     String  @unique
+  name     String
+  engName  String
+  tagline  String
+  /// ハブ(/restaurants)のカードに出す説明。
+  summary  String
+  /// 料理そのものの解説。markdown。
+  body     String
+  /// 頼み方・食べ方のコツ。markdown。
+  howTo    String?
+  priceRange String?
+  /// 「土曜の昼」「日曜だけ」など、食べに行くべき時間帯。
+  bestTime   String?
+
+  image       String?
+  imageSource String?
+  imageCredit String?
+  imageLink   String?
+
+  displayOrder Int          @default(0)
+  restaurants  Restaurant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 料理に紐づく店。
+//
+// 1つの店が複数の料理を出すことはあるが(パブは日曜ローストも朝食も出す)、
+// 特集としては「その店を何で推すのか」が定まっている方が読みやすいので
+// 多対多にはしていない。両方で推したくなったら、そのとき初めて中間表を作る。
+//
+// 住所を持たせていないのは番地の裏取りができないため。エリアと最寄り駅、
+// そして公式サイトへのリンクがあれば読者は辿り着ける。
+model Restaurant {
+  id      String @id @default(cuid())
+  slug    String @unique
+  name    String
+  engName String
+  dishId  String
+  dish    Dish   @relation(fields: [dishId], references: [id], onDelete: Cascade)
+
+  /// カード用の一言。なぜこの店なのかを1文で。
+  blurb String
+  body  String?
+
+  area            String
+  nearestStation  String?
+  priceRange      String?
+  website         String?
+  bookingRequired Boolean @default(false)
+
+  image       String?
+  imageSource String?
+  imageCredit String?
+  imageLink   String?
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dishId])
+}
+
 // ロンドン土産の特集(/souvenirs)で紹介する1品。
 //
 // image を nullable にしているのは、写真を自前で撮らない運用が前提だから。

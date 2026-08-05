@@ -1,5 +1,10 @@
 import "dotenv/config";
 import db from "../utils/db";
+import {
+  imageColumns,
+  resolveCommonsImage,
+  type CommonsImage,
+} from "./lib/commons";
 
 /**
  * /souvenirs のお土産データを投入する。
@@ -12,9 +17,6 @@ import db from "../utils/db";
  * 画像が解決できなかった品はそのまま image = null で登録する。
  * 特集の公開を画像の有無に待たせない方針(schema.prisma の Souvenir 参照)。
  */
-
-const UA =
-  "just-rondon/1.0 (https://www.just-rondon.com; souvenir feature image resolver)";
 
 type SouvenirSeed = {
   slug: string;
@@ -342,61 +344,6 @@ const SOUVENIRS: SouvenirSeed[] = [
     commonsFile: "File:Brown Betty teapot by Sadler 03.jpg",
   },
 ];
-
-type CommonsImage = {
-  url: string;
-  credit: string;
-  link: string;
-};
-
-/** Commons のキャプションは HTML で返ってくるのでタグを落とす。 */
-function stripHtml(html: string): string {
-  return html
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-async function resolveCommonsImage(
-  fileTitle: string,
-): Promise<CommonsImage | null> {
-  const endpoint =
-    "https://commons.wikimedia.org/w/api.php?" +
-    new URLSearchParams({
-      action: "query",
-      format: "json",
-      prop: "imageinfo",
-      iiprop: "url|extmetadata",
-      iiurlwidth: "1000",
-      titles: fileTitle,
-    }).toString();
-
-  const res = await fetch(endpoint, { headers: { "User-Agent": UA } });
-  if (!res.ok) return null;
-
-  const json = (await res.json()) as any;
-  const pages = json?.query?.pages ?? {};
-  const page: any = Object.values(pages)[0];
-  const info = page?.imageinfo?.[0];
-  if (!info) return null;
-
-  const meta = info.extmetadata ?? {};
-  const artist = meta.Artist?.value ? stripHtml(meta.Artist.value) : "不明";
-  const license = meta.LicenseShortName?.value
-    ? stripHtml(meta.LicenseShortName.value)
-    : "Wikimedia Commons";
-
-  // thumburl は縮小版。原寸は数MBあることがあり一覧に載せられない。
-  // 縮小版が無い(元が十分小さい)ファイルでは url にトラッキング用の
-  // クエリが付いてくるので落としておく。
-  const rawUrl: string = info.thumburl ?? info.url;
-
-  return {
-    url: rawUrl.split("?")[0],
-    credit: `${artist} / ${license}, via Wikimedia Commons`,
-    link: info.descriptionurl,
-  };
-}
 
 async function main() {
   let order = 0;

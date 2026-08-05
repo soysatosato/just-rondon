@@ -311,6 +311,13 @@ export default function Navbar() {
                     </AccordionItem>
                   </Accordion>
                   <Link
+                    href="/restaurants"
+                    className=" hover:text-red-600 transition"
+                    onClick={() => setOpen(false)}
+                  >
+                    イギリス料理
+                  </Link>
+                  <Link
                     href="/souvenirs"
                     className=" hover:text-red-600 transition"
                     onClick={() => setOpen(false)}
@@ -665,6 +672,14 @@ export default function Navbar() {
                     </Link>
                   </div>
                 </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem className="pr-6">
+                <NavigationMenuLink asChild>
+                  <Link href="/restaurants" className="hover:underline">
+                    イギリス料理
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               <NavigationMenuItem className="pr-6">

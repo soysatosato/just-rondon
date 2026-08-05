@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
+import ImageCredit from "@/components/shared/ImageCredit";
 import {
   SOUVENIR_CATEGORY_LABELS,
   type SouvenirCategory,
@@ -29,35 +30,6 @@ function ImageFallback({ souvenir }: { souvenir: Souvenir }) {
   );
 }
 
-/**
- * 画像の出典表記。
- *
- * Wikimedia Commons の CC 画像は作者名とライセンス名の表示が条件なので、
- * imageSource が commons のときは省略できない。
- * 将来アフィリエイトAPI由来の画像を混ぜたときも、ここで分岐を足す。
- */
-function ImageCredit({ souvenir }: { souvenir: Souvenir }) {
-  if (souvenir.imageSource !== "commons" || !souvenir.imageCredit) return null;
-
-  return (
-    <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
-      画像:{" "}
-      {souvenir.imageLink ? (
-        <a
-          href={souvenir.imageLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-2 hover:opacity-80"
-        >
-          {souvenir.imageCredit}
-        </a>
-      ) : (
-        souvenir.imageCredit
-      )}
-    </p>
-  );
-}
-
 export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
   return (
     <Card
@@ -81,7 +53,11 @@ export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
 
       <CardContent className="space-y-4 p-5">
         <div className="space-y-2">
-          <ImageCredit souvenir={souvenir} />
+          <ImageCredit
+            source={souvenir.imageSource}
+            credit={souvenir.imageCredit}
+            link={souvenir.imageLink}
+          />
 
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
             <h3 className="text-lg font-bold leading-snug">{souvenir.name}</h3>

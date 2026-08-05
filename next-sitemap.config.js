@@ -96,6 +96,7 @@ module.exports = {
       "/events/archive/2025",
       "/column",
       "/souvenirs",
+      "/restaurants",
       "/sightseeing",
       "/sightseeing/all",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
@@ -220,6 +221,12 @@ module.exports = {
       paths.push(
         await config.transform(config, `/events/archive/2025/${e.slug}`),
       );
+    }
+
+    // 料理ページ。/restaurants ハブ自体は上の staticPages 側にある。
+    const dishes = await prisma.dish.findMany({ select: { slug: true } });
+    for (const d of dishes) {
+      paths.push(await config.transform(config, `/restaurants/${d.slug}`));
     }
 
     const columns = await prisma.content.findMany({
