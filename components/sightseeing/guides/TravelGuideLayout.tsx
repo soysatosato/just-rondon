@@ -34,7 +34,7 @@ export default function TravelGuideLayout({
   const hasDaySections = article.sections.some((s) => /^day-\d+$/.test(s.id));
 
   return (
-    <main className="mx-auto max-w-4xl px-3 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(article)} />
       <JsonLd data={travelGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
