@@ -83,7 +83,7 @@ export default function TravelGuideLayout({
             id={section.id}
             className="scroll-mt-24 bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm"
           >
-            <CardContent className="p-6 space-y-2">
+            <CardContent className="p-4 sm:p-6 space-y-2">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {i + 1}. {section.title}
               </h2>
@@ -147,7 +147,7 @@ export default function TravelGuideLayout({
       </section>
 
       {article.relatedLinks && article.relatedLinks.length > 0 && (
-        <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">
+        <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4 sm:p-6 space-y-2">
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
             関連ページ
           </h2>
