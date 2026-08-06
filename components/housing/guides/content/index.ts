@@ -2,6 +2,7 @@ import type { HousingGuideArticle } from "../types";
 import depositsAndFees from "./deposits-and-fees";
 import japaneseListings from "./japanese-listings";
 import movingOut from "./moving-out";
+import noise from "./noise";
 import referencing from "./referencing";
 import rightmoveZooplaOpenrent from "./rightmove-zoopla-openrent";
 import spareroom from "./spareroom";
@@ -25,6 +26,7 @@ export const housingGuideArticles: Record<string, HousingGuideArticle> = {
   referencing,
   "where-to-live": whereToLive,
   viewing,
+  noise,
   "moving-out": movingOut,
 };
 
@@ -37,5 +39,6 @@ export {
   referencing,
   whereToLive,
   viewing,
+  noise,
   movingOut,
 };

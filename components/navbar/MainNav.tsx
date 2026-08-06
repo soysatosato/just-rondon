@@ -387,6 +387,13 @@ export default function Navbar() {
                           内見チェックリスト
                         </Link>
                         <Link
+                          href="/housing/noise"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          騒音トラブル
+                        </Link>
+                        <Link
                           href="/housing/moving-out"
                           className="text-sm hover:text-red-600 transition"
                           onClick={() => setOpen(false)}
@@ -817,6 +824,9 @@ export default function Navbar() {
                     </Link>
                     <Link href="/housing/viewing" className="hover:underline">
                       内見チェックリスト
+                    </Link>
+                    <Link href="/housing/noise" className="hover:underline">
+                      騒音トラブル
                     </Link>
                     <Link href="/housing/moving-out" className="hover:underline">
                       退去とデポジット返還

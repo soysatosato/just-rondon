@@ -142,6 +142,7 @@ module.exports = {
       "/housing/referencing",
       "/housing/where-to-live",
       "/housing/viewing",
+      "/housing/noise",
       "/housing/moving-out",
       "/jobs",
       "/jobs/minimum-wage",

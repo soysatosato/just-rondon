@@ -17,7 +17,7 @@ export const HOUSING_CATEGORY_LABELS: Record<HousingCategory, string> = {
   search: "物件を探す",
   contract: "契約とお金",
   decide: "見極める",
-  after: "入居後・退去",
+  after: "入居後・トラブル・退去",
 };
 
 export const HOUSING_CATEGORY_ORDER: HousingCategory[] = [
@@ -111,6 +111,14 @@ export const housingGuides: HousingGuideMeta[] = [
     label: "内見チェックリスト",
     blurb:
       "オンライン内見が普及した今こそ、足を運ぶ価値が上がっています。カビ・暖房・水圧・騒音の確認手順と、シェアで同居人を見極める質問リスト。",
+  },
+  {
+    slug: "noise",
+    category: "after",
+    eyebrow: "Noise",
+    label: "騒音トラブル：管理会社を動かす手順",
+    blurb:
+      "「うるさい」では動きません。動くのは時刻・人数・継続時間が揃ったときです。管理会社の限界と、大家を飛び越える自治体 noise team への通報まで。10ヶ月の実記録から。",
   },
   {
     slug: "moving-out",
