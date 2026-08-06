@@ -121,6 +121,20 @@ export const LONDON_RENT = {
 } as const;
 
 /**
+ * 月額 Travelcard の料金（大人・2026年4月改定）。
+ *
+ * 家賃だけを比べて外側のゾーンを選ぶと、定期代の差で逆転することがある。
+ * 「家賃＋交通費」で比較させるために、記事から必ずこの値を参照する。
+ */
+export const TRAVELCARD_MONTHLY = {
+  zone1to2: 171.7,
+  zone1to3: 201.6,
+  zone1to4: 246.6,
+  zone1to5: 293.4,
+  zone1to6: 313.4,
+} as const;
+
+/**
  * 出典。記事の GuideSources に出す。
  * 数値を書き換えるときは、必ずここのURLを開いて確認してから行う。
  */
@@ -156,6 +170,10 @@ export const HOUSING_SOURCES = [
   {
     label: "SpareRoom - UK Rental Index",
     url: "https://www.spareroom.co.uk/content/info-landlords/rentalindex/",
+  },
+  {
+    label: "Transport for London - Adult fares and Travelcard prices",
+    url: "https://tfl.gov.uk/fares/find-fares",
   },
 ] as const;
 

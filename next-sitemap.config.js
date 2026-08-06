@@ -131,6 +131,18 @@ module.exports = {
       "/visa/student",
       "/visa/family",
       "/visa/after-arrival",
+      // 住まい探しガイド。並びは components/housing/guides/guides.ts の
+      // housingGuides と一致させること。
+      "/housing",
+      "/housing/rightmove-zoopla-openrent",
+      "/housing/spareroom",
+      "/housing/japanese-listings",
+      "/housing/tenancy-types",
+      "/housing/deposits-and-fees",
+      "/housing/referencing",
+      "/housing/where-to-live",
+      "/housing/viewing",
+      "/housing/moving-out",
       "/jobs",
       "/jobs/minimum-wage",
       "/jobs/employment-contract",

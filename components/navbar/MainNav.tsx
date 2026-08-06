@@ -317,6 +317,85 @@ export default function Navbar() {
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="housing" className="border-b-0">
+                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
+                        住まい探し
+                      </AccordionTrigger>
+                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
+                        <Link
+                          href="/housing"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          住まい探しガイド トップ
+                        </Link>
+                        <Link
+                          href="/housing/rightmove-zoopla-openrent"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          物件サイトの使い分け
+                        </Link>
+                        <Link
+                          href="/housing/spareroom"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          フラットシェアを探す
+                        </Link>
+                        <Link
+                          href="/housing/japanese-listings"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          日系コミュニティ経由で探す
+                        </Link>
+                        <Link
+                          href="/housing/tenancy-types"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          契約形態の地図
+                        </Link>
+                        <Link
+                          href="/housing/deposits-and-fees"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          初期費用と違法な手数料
+                        </Link>
+                        <Link
+                          href="/housing/referencing"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          審査を通す
+                        </Link>
+                        <Link
+                          href="/housing/where-to-live"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          エリアの選び方
+                        </Link>
+                        <Link
+                          href="/housing/viewing"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          内見チェックリスト
+                        </Link>
+                        <Link
+                          href="/housing/moving-out"
+                          className="text-sm hover:text-red-600 transition"
+                          onClick={() => setOpen(false)}
+                        >
+                          退去とデポジット返還
+                        </Link>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                   <Link
                     href="/restaurants"
                     className=" hover:text-red-600 transition"
@@ -682,6 +761,71 @@ export default function Navbar() {
                       className="hover:underline text-red-600 font-medium"
                     >
                       労働問題ガイド トップ
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>住まい探し</NavigationMenuTrigger>
+                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-red-600">
+                      ロンドンで部屋を借りる
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      2026年5月の法改正で、ASTもSection
+                      21も廃止されました。物件の探し方、初期費用の上限、信用情報ゼロでの審査突破、敷金の取り戻し方まで。
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <Link
+                      href="/housing/rightmove-zoopla-openrent"
+                      className="hover:underline"
+                    >
+                      物件サイトの使い分け
+                    </Link>
+                    <Link href="/housing/spareroom" className="hover:underline">
+                      フラットシェアを探す
+                    </Link>
+                    <Link
+                      href="/housing/japanese-listings"
+                      className="hover:underline"
+                    >
+                      日系コミュニティ経由
+                    </Link>
+                    <Link
+                      href="/housing/tenancy-types"
+                      className="hover:underline"
+                    >
+                      契約形態の地図
+                    </Link>
+                    <Link
+                      href="/housing/deposits-and-fees"
+                      className="hover:underline"
+                    >
+                      初期費用と違法な手数料
+                    </Link>
+                    <Link href="/housing/referencing" className="hover:underline">
+                      審査を通す
+                    </Link>
+                    <Link
+                      href="/housing/where-to-live"
+                      className="hover:underline"
+                    >
+                      エリアの選び方
+                    </Link>
+                    <Link href="/housing/viewing" className="hover:underline">
+                      内見チェックリスト
+                    </Link>
+                    <Link href="/housing/moving-out" className="hover:underline">
+                      退去とデポジット返還
+                    </Link>
+                    <Link
+                      href="/housing"
+                      className="hover:underline text-red-600 font-medium"
+                    >
+                      住まい探しガイド トップ
                     </Link>
                   </div>
                 </NavigationMenuContent>
