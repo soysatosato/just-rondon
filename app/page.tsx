@@ -45,6 +45,35 @@ export const metadata = buildPageMetadata({
     "初めてのロンドン旅行でも安心。定番の観光スポット、美術館と必見作品、ウエストエンドのミュージカル、季節のイベント、ビザや現地で働く情報まで、日本語でまとめた総合ロンドンガイドです。",
 });
 
+// セクションごとにアクセントカラーを分け、スクロール時に今どのセクションかを判別しやすくする。
+// ブランドカラーの赤はロゴ・主要CTA・トップ直下の総合案内セクションのみで使う。
+const ACCENTS = {
+  red: {
+    badge: "bg-red-600 hover:bg-red-600",
+    iconBg: "bg-red-50 dark:bg-red-950/40",
+    iconText: "text-red-600",
+    hoverBorder: "hover:border-red-300 dark:hover:border-red-800",
+  },
+  blue: {
+    badge: "bg-sky-600 hover:bg-sky-600",
+    iconBg: "bg-sky-50 dark:bg-sky-950/40",
+    iconText: "text-sky-600",
+    hoverBorder: "hover:border-sky-300 dark:hover:border-sky-800",
+  },
+  amber: {
+    badge: "bg-amber-600 hover:bg-amber-600",
+    iconBg: "bg-amber-50 dark:bg-amber-950/40",
+    iconText: "text-amber-600",
+    hoverBorder: "hover:border-amber-300 dark:hover:border-amber-800",
+  },
+  emerald: {
+    badge: "bg-emerald-600 hover:bg-emerald-600",
+    iconBg: "bg-emerald-50 dark:bg-emerald-950/40",
+    iconText: "text-emerald-600",
+    hoverBorder: "hover:border-emerald-300 dark:hover:border-emerald-800",
+  },
+} as const;
+
 export default async function Page() {
   const now = new Date();
   const [latestColumns, upcomingEvents] = await Promise.all([
@@ -135,106 +164,13 @@ export default async function Page() {
         <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
       </div>
 
-      {/* 英国ビザ情報 */}
+      {/* ロンドン探索 */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <SectionHeader
-            eyebrow="英国ビザ情報"
-            title="目的別・英国ビザガイド"
-            description="観光のETAはもちろん、ワーホリ・就労・留学・家族ビザ・渡英後の手続きまで。日本国籍の人が実際に使うルートを、目的と期間から探せます。"
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <ExploreCard
-              href="/visa/youth-mobility-scheme"
-              title="YMS（ワーホリ）申請ガイド"
-              description="18〜30歳ならスポンサーなしで最長2年働ける唯一のルート。日本枠は年6,000人・抽選なし。"
-              icon={Backpack}
-            />
-            <ExploreCard
-              href="/visa/skilled-worker"
-              title="Skilled Worker（就労ビザ）ガイド"
-              description="スポンサー企業を得て働くための就労ビザ。対象職種や年収要件、企業の探し方まで解説。"
-              icon={Briefcase}
-            />
-            <ExploreCard
-              href="/visa/global-talent"
-              title="Global Talent（卓越人材ビザ）ガイド"
-              description="研究者・アーティスト・技術者向け。雇用主のスポンサーが不要で、最短3年で永住権に届きます。"
-              icon={Award}
-            />
-            <ExploreCard
-              href="/visa/student"
-              title="Student／Graduate ビザガイド"
-              description="CASの取り方、維持費の証明額、就労できる時間まで。卒業後のGraduateビザについても解説。"
-              icon={GraduationCap}
-            />
-            <ExploreCard
-              href="/visa/family"
-              title="家族・配偶者ビザガイド"
-              description="英国人・定住者の配偶者として暮らすためのルート。所得要件や関係の真実性の立証方法。"
-              icon={Users}
-            />
-            <ExploreCard
-              href="/visa/after-arrival"
-              title="渡英後の手続きガイド"
-              description="UKVIアカウント、share code、NINo、GP登録、銀行口座。ビザが下りてからやるべきことまとめ。"
-              icon={HomeIcon}
-            />
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/visa">英国ビザガイドをすべて見る →</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ロンドンで働く・暮らす */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="働く・暮らす"
-            title="ロンドンで働く人のための労働問題ガイド"
-            description="観光だけでなく、ロンドンで暮らし・働く日本人のための実用情報も。最低賃金からビザ、サービスチャージの未払いトラブルまで、英国の労働法を分かりやすくまとめました。"
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <ExploreCard
-              href="/jobs"
-              title="労働問題ガイド トップ"
-              description="最低賃金・労働契約・ビザと就労・職場ハラスメントまで、働き始める前後に知っておきたい基本をテーマ別に整理。"
-              icon={BriefcaseBusiness}
-            />
-            <ExploreCard
-              href="/jobs/service-charges"
-              title="サービスチャージ完全ガイド"
-              description="Tipping Act 2023の内容、Tronc制度、強制・任意の違いまで、飲食・ホテル業界で働く人が知るべき制度を網羅。"
-              icon={Receipt}
-            />
-            <ExploreCard
-              href="/jobs/service-charges/case-story"
-              title="審判所に申立てた実体験の記録"
-              description="サービスチャージ未払いをめぐり、Acas調停からEmployment Tribunalの判決・強制執行まで実際に歩んだ記録を公開。"
-              icon={Scale}
-            />
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/jobs">労働問題ガイドをすべて見る →</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ロンドン探索 */}
-      <section className="border-b text-foreground bg-background">
-        <div className="mx-auto max-w-6xl px-4 py-12">
-          <SectionHeader
             title="ロンドンをもっと探索"
             description="世界的ミュージカルから一流観光地、ユニークツアーやファミリー向けスポットまで盛りだくさん。"
+            accentClassName={ACCENTS.blue.badge}
           />
 
           <div className="grid gap-4 lg:grid-cols-4">
@@ -243,29 +179,33 @@ export default async function Page() {
               title="見逃せないロンドン観光名所"
               description="ビッグベンからバッキンガム宮殿まで、初めての旅行者が押さえておきたい定番スポットを厳選。"
               icon={MapPin}
+              accent={ACCENTS.blue}
             />
             <ExploreCard
               href="/musicals"
               title="現在上演中のおすすめミュージカル"
               description="ウエストエンドで今上演中の人気ミュージカルとチケット情報をまとめてチェック。"
               icon={Ticket}
+              accent={ACCENTS.blue}
             />
             <ExploreCard
               href="/museums/best-10-museums"
               title="ロンドンのおすすめの美術館"
               description="大英博物館やテート・モダンなど、無料で入れる名門美術館10選を紹介。"
               icon={Landmark}
+              accent={ACCENTS.blue}
             />
             {/* <ExploreCard href="/chatboard" title="ロンドンなんでも掲示板" description="旅行者同士で情報交換できる掲示板です。" /> */}
           </div>
         </div>
       </section>
 
-      <section className="border-b text-foreground bg-background">
-        <div className="mx-auto max-w-6xl px-4 py-12">
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <SectionHeader
             title="ロンドンの催し物"
             description="年中行われるフェスティバル、祝日、スポーツイベントをチェック。"
+            accentClassName={ACCENTS.blue.badge}
           />
 
           {upcomingEvents.length > 0 && (
@@ -282,7 +222,7 @@ export default async function Page() {
                     <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                       <CardContent className="p-4">
                         <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                          <span className="text-xs font-semibold text-red-600">
+                          <span className="text-xs font-semibold text-sky-600">
                             {dateLabel}
                           </span>
                           {event.isFree && (
@@ -315,29 +255,143 @@ export default async function Page() {
               href="/restaurants"
               title="ロンドンで食べるイギリス料理"
               icon={UtensilsCrossed}
+              accent={ACCENTS.blue}
             />
             <InfoPill
               href="/souvenirs"
               title="ロンドンのお土産"
               icon={ShoppingBag}
+              accent={ACCENTS.blue}
             />
             <InfoPill
               href="/sightseeing/christmas-markets"
               title="ロンドンのクリスマス"
               icon={Gift}
+              accent={ACCENTS.blue}
             />
             <InfoPill
               href="/sightseeing/kids-free-activities"
               title="子どもと楽しむ"
               icon={Baby}
+              accent={ACCENTS.blue}
             />
-            <InfoPill href="/events" title="ロンドン年間イベントカレンダー" icon={Calendar} />
+            <InfoPill
+              href="/events"
+              title="ロンドン年間イベントカレンダー"
+              icon={Calendar}
+              accent={ACCENTS.blue}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 英国ビザ情報 */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="英国ビザ情報"
+            title="目的別・英国ビザガイド"
+            description="観光のETAはもちろん、ワーホリ・就労・留学・家族ビザ・渡英後の手続きまで。日本国籍の人が実際に使うルートを、目的と期間から探せます。"
+            accentClassName={ACCENTS.amber.badge}
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <ExploreCard
+              href="/visa/youth-mobility-scheme"
+              title="YMS（ワーホリ）申請ガイド"
+              description="18〜30歳ならスポンサーなしで最長2年働ける唯一のルート。日本枠は年6,000人・抽選なし。"
+              icon={Backpack}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/visa/skilled-worker"
+              title="Skilled Worker（就労ビザ）ガイド"
+              description="スポンサー企業を得て働くための就労ビザ。対象職種や年収要件、企業の探し方まで解説。"
+              icon={Briefcase}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/visa/global-talent"
+              title="Global Talent（卓越人材ビザ）ガイド"
+              description="研究者・アーティスト・技術者向け。雇用主のスポンサーが不要で、最短3年で永住権に届きます。"
+              icon={Award}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/visa/student"
+              title="Student／Graduate ビザガイド"
+              description="CASの取り方、維持費の証明額、就労できる時間まで。卒業後のGraduateビザについても解説。"
+              icon={GraduationCap}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/visa/family"
+              title="家族・配偶者ビザガイド"
+              description="英国人・定住者の配偶者として暮らすためのルート。所得要件や関係の真実性の立証方法。"
+              icon={Users}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/visa/after-arrival"
+              title="渡英後の手続きガイド"
+              description="UKVIアカウント、share code、NINo、GP登録、銀行口座。ビザが下りてからやるべきことまとめ。"
+              icon={HomeIcon}
+              accent={ACCENTS.amber}
+            />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/visa">英国ビザガイドをすべて見る →</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ロンドンで働く・暮らす */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="働く・暮らす"
+            title="ロンドンで働く人のための労働問題ガイド"
+            description="観光だけでなく、ロンドンで暮らし・働く日本人のための実用情報も。最低賃金からビザ、サービスチャージの未払いトラブルまで、英国の労働法を分かりやすくまとめました。"
+            accentClassName={ACCENTS.emerald.badge}
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <ExploreCard
+              href="/jobs"
+              title="労働問題ガイド トップ"
+              description="最低賃金・労働契約・ビザと就労・職場ハラスメントまで、働き始める前後に知っておきたい基本をテーマ別に整理。"
+              icon={BriefcaseBusiness}
+              accent={ACCENTS.emerald}
+            />
+            <ExploreCard
+              href="/jobs/service-charges"
+              title="サービスチャージ完全ガイド"
+              description="Tipping Act 2023の内容、Tronc制度、強制・任意の違いまで、飲食・ホテル業界で働く人が知るべき制度を網羅。"
+              icon={Receipt}
+              accent={ACCENTS.emerald}
+            />
+            <ExploreCard
+              href="/jobs/service-charges/case-story"
+              title="審判所に申立てた実体験の記録"
+              description="サービスチャージ未払いをめぐり、Acas調停からEmployment Tribunalの判決・強制執行まで実際に歩んだ記録を公開。"
+              icon={Scale}
+              accent={ACCENTS.emerald}
+            />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/jobs">労働問題ガイドをすべて見る →</Link>
+            </Button>
           </div>
         </div>
       </section>
 
       {/* コラム */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <SectionHeader
             eyebrow="コラム"
@@ -366,19 +420,25 @@ export default async function Page() {
   );
 }
 
+type Accent = (typeof ACCENTS)[keyof typeof ACCENTS];
+
 function InfoPill({
   title,
   href,
   icon: Icon,
+  accent = ACCENTS.red,
 }: {
   title: string;
   href: string;
   icon?: LucideIcon;
+  accent?: Accent;
 }) {
   return (
     <Link href={href}>
-      <button className="flex w-full items-center gap-2 rounded-xl border bg-card text-card-foreground px-4 py-3 text-left text-xs font-medium shadow-sm transition hover:border-red-300 dark:hover:border-red-800 hover:shadow-md">
-        {Icon && <Icon className="h-4 w-4 shrink-0 text-red-600" />}
+      <button
+        className={`flex w-full items-center gap-2 rounded-xl border bg-card text-card-foreground px-4 py-3 text-left text-xs font-medium shadow-sm transition hover:shadow-md ${accent.hoverBorder}`}
+      >
+        {Icon && <Icon className={`h-4 w-4 shrink-0 ${accent.iconText}`} />}
         <span>{title}</span>
       </button>
     </Link>
@@ -390,11 +450,13 @@ function ExploreCard({
   href,
   description,
   icon: Icon,
+  accent = ACCENTS.red,
 }: {
   title: string;
   href: string;
   description: string;
   icon?: LucideIcon;
+  accent?: Accent;
 }) {
   return (
     <Link href={href}>
@@ -402,8 +464,8 @@ function ExploreCard({
         <CardContent className="flex h-full flex-col justify-between p-4">
           <div>
             {Icon && (
-              <div className="mb-2 inline-flex rounded-lg bg-red-50 dark:bg-red-950/40 p-2">
-                <Icon className="h-4 w-4 text-red-600" />
+              <div className={`mb-2 inline-flex rounded-lg p-2 ${accent.iconBg}`}>
+                <Icon className={`h-4 w-4 ${accent.iconText}`} />
               </div>
             )}
             <p className="text-sm font-semibold">{title}</p>
