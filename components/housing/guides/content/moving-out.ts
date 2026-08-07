@@ -119,28 +119,19 @@ const movingOut: HousingGuideArticle = {
 
 「2ヶ月前」を漠然と数えて4月10日に出すと、退去日は6月30日にずれます。1ヶ月分の家賃が余計にかかるので、**日付は正確に**計算してください。
 
-### 通知文の型
+### 通知に入れるべきこと
 
-\`\`\`
-Subject: Notice to end tenancy - [住所]
+- 対象の物件（住所・部屋番号）
+- **退去の意思**であること
+- Renters' Rights Act 2025 にもとづく2ヶ月前通知であること
+- **具体的な退去日**
+- 退去時検査（check-out inspection）の日程調整の依頼
+- 敷金返還の手続きについての確認
+- **受領確認の要求**
 
-Dear [大家/エージェント名],
+最後の項目を落とさないでください。**「通知を受け取っていない」と言われるのが、最もよくあるトラブル**です。返信が来なければ追って再送し、その記録も残します。
 
-I am writing to give notice to end my tenancy at [住所].
-
-In accordance with the Renters' Rights Act 2025, I am giving two
-months' notice. My tenancy will end on [退去日].
-
-Please confirm receipt of this notice and let me know the
-arrangements for the check-out inspection and the return of my
-deposit.
-
-Kind regards,
-[氏名]
-[日付]
-\`\`\`
-
-**受領確認（confirm receipt）を必ず求めてください。** 「通知を受け取っていない」と言われるのが、最もよくあるトラブルです。返信が来なければ、追って再送し、それも記録に残します。
+そして退去日は曖昧に書かないこと。「2ヶ月後に出ます」ではなく、上の数え方で計算した具体的な日付を明記してください。日付が特定されていないと、通知の効力そのものが争いになります。
 
 ### 固定期間の条項があっても関係ない
 

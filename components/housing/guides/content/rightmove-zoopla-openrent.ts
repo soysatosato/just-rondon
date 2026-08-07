@@ -226,26 +226,7 @@ OpenRent 自体は正規のプラットフォームで、身元確認や契約�
 - 保証人の手当て（保証人サービスを使う予定なら、その旨）
 - 内見可能な日時（複数提示できると強い）
 
-### 問い合わせメールの型
-
-\`\`\`
-Subject: Viewing request - [物件の住所] (Rightmove ref: xxxxx)
-
-Hi,
-
-I'd like to arrange a viewing for the property at [住所].
-
-- Move-in date: [日付]
-- Occupation: [職種] at [会社名], annual salary £[金額]
-- Visa status: [ビザ種別], right to rent share code available
-- Guarantor: [保証人サービス名] / UK-based guarantor
-- Availability for viewing: [複数の候補日時]
-
-Please let me know what times you have available.
-
-Best regards,
-[名前 / 電話番号]
-\`\`\`
+問い合わせの本文には、物件の掲載番号（ref）と住所を明記したうえで、この5点を箇条書きで並べてください。挨拶や意気込みは不要です。**エージェントが大家に転送できる情報の塊として書く**のが目的です。
 
 **この情報が揃っているだけで、他の問い合わせより優先されます。** エージェントの仕事は「確実に契約に至る客」を大家に出すことなので、審査に通る見込みが最初から示されている相手を選びます。
 
