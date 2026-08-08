@@ -93,6 +93,7 @@ module.exports = {
       "/about",
       "/privacy",
       "/events",
+      "/events/calendar",
       "/events/archive/2025",
       "/column",
       "/souvenirs",
@@ -233,6 +234,17 @@ module.exports = {
           `/sightseeing/christmas-markets/${cm.slug}`,
         ),
       );
+    }
+
+    // 週次ダイジェスト「今週のロンドン」のバックナンバー。
+    // 最新号は /events と同内容で、そちらを canonical にしているため出さない。
+    const briefs = await prisma.weeklyBrief.findMany({
+      where: { published: true },
+      select: { slug: true },
+      orderBy: { weekStart: "desc" },
+    });
+    for (const b of briefs.slice(1)) {
+      paths.push(await config.transform(config, `/events/week/${b.slug}`));
     }
 
     // 月別イベントページ。これまでサイトマップに1件も入っていなかった。

@@ -1,103 +1,68 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { fetchEvents2026, fetchUpcomingEvents } from "@/utils/actions/contents";
+import { CalendarRange } from "lucide-react";
+import type { Metadata } from "next";
+
+import {
+  fetchLatestBrief,
+  fetchBackIssues,
+  fetchEventsForWeek,
+} from "@/utils/actions/weekly";
+import { fetchEvents2026 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
+import { formatWeekRange } from "@/lib/weekly";
+import WeeklyBriefView from "@/components/events/WeeklyBriefView";
+import BackIssueList from "@/components/events/BackIssueList";
 import EventMonthCard from "@/components/events/EventMonthCard";
-import { getMonthSlug } from "@/lib/events";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
-export const metadata = buildPageMetadata({
+// 号は週に1本だが、ストライキ情報は数日で覆る。カレンダーより短く取る。
+export const revalidate = 60 * 10;
+
+const FALLBACK_METADATA = {
   path: "/events",
-  title: "ロンドンイベントカレンダー | 月別の祭り・マーケット・季節の行事",
+  title: "今週のロンドン | ストライキ・イベント・耳寄り情報の週間ダイジェスト",
   description:
-    "ロンドンで開催されるイベントを月別にまとめたカレンダー。春のフラワーショー、夏の野外フェス、秋の芸術イベント、冬のクリスマスマーケットまで、旅行の時期選びに役立つ季節の行事を紹介します。",
+    "ロンドンの今週の状況を毎週まとめています。地下鉄・鉄道のストライキや運休、美術館の臨時休館、その週だけの催しや無料開放など、旅行の直前に知っておきたい情報を出典つきで紹介します。",
   keywords: [
-    "ロンドン イベント",
-    "ロンドン イベントカレンダー",
-    "ロンドン 祭り",
-    "ロンドン 季節",
-    "ロンドン クリスマスマーケット",
-    "ロンドン 旅行 時期",
+    "ロンドン 今週",
+    "ロンドン ストライキ",
+    "ロンドン 地下鉄 運休",
+    "ロンドン イベント 今週",
+    "ロンドン 旅行 最新情報",
   ],
-});
+};
 
-export default async function Events2026Page() {
-  const now = new Date();
+export async function generateMetadata(): Promise<Metadata> {
+  const brief = await fetchLatestBrief();
+  if (!brief) return buildPageMetadata(FALLBACK_METADATA);
+
+  const range = formatWeekRange(brief.weekStart, brief.weekEnd).replace(
+    /\([日月火水木金土]\)/g,
+    ""
+  );
+
+  return buildPageMetadata({
+    ...FALLBACK_METADATA,
+    title: `今週のロンドン(${range}) | ストライキ・イベント・耳寄り情報`,
+    description: brief.headline.slice(0, 120),
+    modifiedTime: brief.updatedAt.toISOString(),
+  });
+}
+
+/** 号が1本も無い状態でも /events が壊れないよう、カレンダーを出しておく。 */
+async function CalendarFallback() {
   const contents = await fetchEvents2026();
-  const upcomingEvents = await fetchUpcomingEvents(6, now);
 
   return (
     <main className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-6 text-center dark:text-white">
+      <h1 className="mb-6 text-center text-3xl font-bold dark:text-white">
         ロンドンイベントカレンダー 2026
       </h1>
-
-      <p className="text-center text-muted-foreground mb-10 dark:text-gray-400">
+      <p className="mb-10 text-center text-muted-foreground dark:text-gray-400">
         四季を巡る、ロンドンの一年。気になる月を選んでください。
       </p>
-
-      {upcomingEvents.length > 0 && (
-        <div className="mb-12">
-          <h2 className="text-xl font-semibold mb-4 text-center dark:text-white">
-            開催中・近日開催のイベント
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {upcomingEvents.map((event) => {
-              const sameDay = event.startDate.getTime() === event.endDate.getTime();
-              const dateLabel = sameDay
-                ? format(event.startDate, "M月d日")
-                : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
-              // 開催中の長期イベントは開始月ではなく今月のページに送る
-              const ongoing = event.startDate <= now;
-              const linkTarget = ongoing ? now : event.startDate;
-              const monthSlug = getMonthSlug(
-                linkTarget.getUTCFullYear(),
-                linkTarget.getUTCMonth() + 1
-              );
-
-              return (
-                <Link key={event.id} href={`/events/${monthSlug}`}>
-                  <Card className="h-full rounded-2xl transition-shadow hover:shadow-md dark:bg-neutral-900 dark:border-neutral-700">
-                    <CardContent className="p-4">
-                      <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                        <span className="text-xs font-semibold text-primary">
-                          {dateLabel}
-                        </span>
-                        {ongoing && (
-                          <Badge
-                            variant="outline"
-                            className="border-primary/40 bg-primary/10 text-[10px] text-primary"
-                          >
-                            開催中
-                          </Badge>
-                        )}
-                        {event.isFree && (
-                          <Badge
-                            variant="outline"
-                            className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
-                          >
-                            無料
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm font-medium leading-snug dark:text-white">
-                        {event.title}
-                      </p>
-                      {event.venue && (
-                        <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground dark:text-gray-400">
-                          {event.venue}
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {contents.map((content, index) => (
           <EventMonthCard
@@ -107,11 +72,66 @@ export default async function Events2026Page() {
           />
         ))}
       </div>
+    </main>
+  );
+}
 
-      <p className="text-center text-sm text-muted-foreground mt-10 dark:text-gray-400">
-        <Link href="/events/archive/2025" className="underline hover:text-primary">
-          2025年のカレンダーを見る
+export default async function EventsPage() {
+  const brief = await fetchLatestBrief();
+  if (!brief) return <CalendarFallback />;
+
+  const [staples, backIssues] = await Promise.all([
+    fetchEventsForWeek(brief.weekStart, brief.weekEnd),
+    fetchBackIssues(6, brief.slug),
+  ]);
+
+  // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
+  // 毎週更新されるこの /events を正とみなしてほしいので、記事の JSON-LD も
+  // ここを id にする。
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": "https://www.just-rondon.com/events",
+    headline: brief.title,
+    description: brief.headline,
+    datePublished: brief.createdAt.toISOString(),
+    dateModified: brief.updatedAt.toISOString(),
+    inLanguage: "ja",
+    about: { "@type": "City", name: "London" },
+  };
+
+  return (
+    <main className="container mx-auto px-4 py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <WeeklyBriefView brief={brief} staples={staples} />
+
+      <Separator className="my-8 dark:bg-neutral-700" />
+
+      <BackIssueList issues={backIssues} />
+
+      <div className="rounded-2xl border border-border bg-muted/40 p-6 text-center dark:border-neutral-700 dark:bg-neutral-900">
+        <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <CalendarRange className="h-6 w-6" />
+        </span>
+        <h2 className="text-lg font-semibold dark:text-white">
+          年間のイベントを探す
+        </h2>
+        <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground dark:text-gray-400">
+          チェルシー・フラワーショーやクリスマスマーケットなど、1年前から日程が決まっている
+          恒例行事は月別カレンダーにまとめています。旅行の時期を決めるときはこちらへ。
+        </p>
+        <Link href="/events/calendar" className="mt-4 inline-block">
+          <Button>2026年のイベントカレンダーを見る</Button>
         </Link>
+      </div>
+
+      <p className="mt-8 text-center text-xs text-muted-foreground dark:text-gray-400">
+        この号は{format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。
+        運行情報や開催情報は変わることがあるため、出発前に各公式サイトで最新の状況を確認してください。
       </p>
     </main>
   );

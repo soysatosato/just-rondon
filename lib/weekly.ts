@@ -104,6 +104,31 @@ export function getWeeksAgo(weekStart: Date, now: Date = new Date()): number {
   return Math.round((currentMonday.getTime() - briefMonday.getTime()) / (7 * DAY_MS));
 }
 
+export interface IssueFreshness {
+  /** 0=今週 / 負=これから来る週 / 正=過去 */
+  weeksAgo: number;
+  /** 「今週」「来週」「3週間前」など。 */
+  label: string;
+  /** 号の内容がまだ有効か。過去号には注意バナーを出す。 */
+  isPast: boolean;
+}
+
+export function getIssueFreshness(
+  weekStart: Date,
+  now: Date = new Date()
+): IssueFreshness {
+  const weeksAgo = getWeeksAgo(weekStart, now);
+
+  let label: string;
+  if (weeksAgo === 0) label = "今週";
+  else if (weeksAgo === -1) label = "来週";
+  else if (weeksAgo < 0) label = `${-weeksAgo}週間後`;
+  else if (weeksAgo === 1) label = "先週";
+  else label = `${weeksAgo}週間前`;
+
+  return { weeksAgo, label, isPast: weeksAgo > 0 };
+}
+
 /* ------------------------------------------------------------------ *
  * 項目の分類
  * ------------------------------------------------------------------ */
