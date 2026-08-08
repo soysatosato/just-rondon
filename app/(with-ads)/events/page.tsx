@@ -11,6 +11,7 @@ import {
 import { fetchEvents2026 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import { formatWeekRange } from "@/lib/weekly";
+import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import EventMonthCard from "@/components/events/EventMonthCard";
@@ -88,17 +89,9 @@ export default async function EventsPage() {
   // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
   // 毎週更新されるこの /events を正とみなしてほしいので、記事の JSON-LD も
   // ここを id にする。
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": "https://www.just-rondon.com/events",
-    headline: brief.title,
-    description: brief.headline,
-    datePublished: brief.createdAt.toISOString(),
-    dateModified: brief.updatedAt.toISOString(),
-    inLanguage: "ja",
-    about: { "@type": "City", name: "London" },
-  };
+  const jsonLd = buildBriefJsonLd(brief, {
+    articleId: "https://www.just-rondon.com/events",
+  });
 
   return (
     <main className="container mx-auto px-4 py-10">

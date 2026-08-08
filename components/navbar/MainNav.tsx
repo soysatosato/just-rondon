@@ -422,7 +422,7 @@ export default function Navbar() {
                     className=" hover:text-red-600 transition"
                     onClick={() => setOpen(false)}
                   >
-                    イベント
+                    今週のロンドン
                   </Link>
                   <Link
                     href="/column"
@@ -860,7 +860,7 @@ export default function Navbar() {
               <NavigationMenuItem className="pr-6">
                 <NavigationMenuLink asChild>
                   <Link href="/events" className="hover:underline">
-                    イベント
+                    今週のロンドン
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>

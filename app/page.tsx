@@ -34,6 +34,8 @@ import HeroContent from "@/components/home/HeroContent";
 import SectionHeader from "@/components/home/SectionHeader";
 import ColumnCard from "@/components/column/ColumnCard";
 import { fetchColumns, fetchUpcomingEvents } from "@/utils/actions/contents";
+import { fetchLatestBrief } from "@/utils/actions/weekly";
+import { formatWeekRange, getIssueFreshness } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -75,9 +77,10 @@ const ACCENTS = {
 
 export default async function Page() {
   const now = new Date();
-  const [latestColumns, upcomingEvents] = await Promise.all([
+  const [latestColumns, upcomingEvents, latestBrief] = await Promise.all([
     fetchColumns(),
     fetchUpcomingEvents(3, now),
+    fetchLatestBrief(),
   ]);
   const columnPicks = latestColumns.slice(0, 3);
 
@@ -193,9 +196,38 @@ export default async function Page() {
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <SectionHeader
             title="ロンドンの催し物"
-            description="年中行われるフェスティバル、祝日、スポーツイベントをチェック。"
+            description="ストライキや運休から、その週だけの催しまで。毎週まとめています。"
             accentClassName={ACCENTS.blue.badge}
           />
+
+          {latestBrief && (
+            <Link href="/events" className="mb-8 block">
+              <Card className="bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <CardContent className="p-5 sm:p-6">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <Badge className="bg-sky-600 hover:bg-sky-600">
+                      {getIssueFreshness(latestBrief.weekStart, now).label}
+                    </Badge>
+                    <span className="text-xs font-semibold text-muted-foreground">
+                      {formatWeekRange(
+                        latestBrief.weekStart,
+                        latestBrief.weekEnd
+                      )}
+                    </span>
+                  </div>
+                  <p className="text-base font-semibold leading-snug sm:text-lg">
+                    {latestBrief.title}
+                  </p>
+                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    {latestBrief.headline}
+                  </p>
+                  <span className="mt-3 inline-block text-sm font-semibold text-sky-600">
+                    今週のロンドンを読む →
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          )}
 
           {upcomingEvents.length > 0 && (
             <div className="mb-8 grid gap-4 sm:grid-cols-3">
@@ -207,7 +239,7 @@ export default async function Page() {
                   : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
 
                 return (
-                  <Link key={event.id} href="/events">
+                  <Link key={event.id} href="/events/calendar">
                     <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                       <CardContent className="p-4">
                         <div className="mb-1 flex flex-wrap items-center gap-1.5">
@@ -265,7 +297,7 @@ export default async function Page() {
               accent={ACCENTS.blue}
             />
             <InfoPill
-              href="/events"
+              href="/events/calendar"
               title="ロンドン年間イベントカレンダー"
               icon={Calendar}
               accent={ACCENTS.blue}

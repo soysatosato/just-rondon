@@ -11,6 +11,7 @@ import {
 } from "@/utils/actions/weekly";
 import { buildPageMetadata } from "@/lib/seo";
 import { formatWeekRange, getIssueFreshness } from "@/lib/weekly";
+import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
@@ -73,16 +74,11 @@ export default async function WeeklyBriefPage({
 
   const freshness = getIssueFreshness(brief.weekStart);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: brief.title,
-    description: brief.headline,
-    datePublished: brief.createdAt.toISOString(),
-    dateModified: brief.updatedAt.toISOString(),
-    inLanguage: "ja",
-    about: { "@type": "City", name: "London" },
-  };
+  // 過去号の催し物を Event として出すと、終わったものを案内することになる。
+  // 記事の構造化データだけに絞る。
+  const jsonLd = freshness.isPast
+    ? buildBriefJsonLd({ ...brief, items: [] })
+    : buildBriefJsonLd(brief);
 
   return (
     <main className="container mx-auto px-4 py-10">
