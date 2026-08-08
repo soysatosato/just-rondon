@@ -1,6 +1,5 @@
 export const revalidate = 60 * 60;
 
-import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import type { LucideIcon } from "lucide-react";
@@ -84,41 +83,31 @@ export default async function Page() {
 
   return (
     <div className="bg-background">
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground">
-        <div className="relative mx-auto max-w-6xl px-4 pt-8 pb-16 sm:pb-20">
-          <div className="absolute inset-x-0 top-0 -z-10 h-full">
-            <div className="relative h-full w-full overflow-hidden rounded-2xl">
-              <Image
-                src="/just-rondon.png"
-                alt="ジャスト・ロンドン"
-                fill
-                sizes="(max-width: 768px) 100vw, 80vw"
-                className="object-cover brightness-75 dark:brightness-60"
-                priority
-              />
-            </div>
-          </div>
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden border-b bg-gradient-to-b from-red-50 via-background to-background text-foreground dark:from-red-950/20 dark:via-background dark:to-background">
+        {/* 写真の代わりに、ブランドカラーの光暈で奥行きを出す装飾 */}
+        <div className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-red-400/20 blur-3xl dark:bg-red-500/10" />
+        <div className="pointer-events-none absolute top-24 right-[8%] -z-10 h-64 w-64 rounded-full bg-sky-400/20 blur-3xl dark:bg-sky-500/10" />
+        <div className="pointer-events-none absolute top-10 left-[6%] -z-10 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-400/10" />
 
-          <div className="relative">
-            <HeroContent />
+        <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-16 sm:pt-20 sm:pb-20">
+          <HeroContent />
 
-            {/* サブテキスト */}
-            <div className="mt-12 rounded-2xl bg-card text-card-foreground p-6 text-center text-sm shadow-md shadow-slate-900/5 dark:shadow-black/40 backdrop-blur sm:mt-14">
-              <h2 className="mb-3 text-base font-semibold">
-                ロンドン観光をもっと楽しむためのガイド
-              </h2>
-              <div className="text-xs text-muted-foreground space-y-2 leading-relaxed">
-                <p>
-                  ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
-                  定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
-                  初めての方にも分かりやすく情報をまとめています。
-                </p>
-                <p>
-                  地下鉄やバスなどの移動手段、無料で楽しめる観光地、
-                  子ども連れや一人旅におすすめのスポットなど、
-                  旅行計画に役立つ実用的な情報も充実しています。
-                </p>
-              </div>
+          {/* サブテキスト */}
+          <div className="mt-12 rounded-2xl border bg-card text-card-foreground p-6 text-center text-sm shadow-sm sm:mt-14">
+            <h2 className="mb-3 text-base font-semibold">
+              ロンドン観光をもっと楽しむためのガイド
+            </h2>
+            <div className="text-xs text-muted-foreground space-y-2 leading-relaxed">
+              <p>
+                ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
+                定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
+                初めての方にも分かりやすく情報をまとめています。
+              </p>
+              <p>
+                地下鉄やバスなどの移動手段、無料で楽しめる観光地、
+                子ども連れや一人旅におすすめのスポットなど、
+                旅行計画に役立つ実用的な情報も充実しています。
+              </p>
             </div>
           </div>
         </div>

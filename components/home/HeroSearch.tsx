@@ -2,54 +2,104 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {
+  MapPin,
+  Ticket,
+  Landmark,
+  Drama,
+  Receipt,
+  BriefcaseBusiness,
+  Search,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
+  SelectGroup,
+  SelectLabel,
   SelectItem,
+  SelectSeparator,
 } from "@/components/ui/select";
 
 export default function HeroSearch() {
   const [value, setValue] = useState("");
 
   return (
-    <div className="mx-auto flex max-w-xl items-center rounded-full bg-white/95 dark:bg-slate-900/90 p-1.5 shadow-lg shadow-slate-900/20 dark:shadow-black/40 backdrop-blur">
+    <div className="mx-auto flex max-w-xl items-center gap-1.5 rounded-full border bg-white/95 dark:bg-slate-900/90 p-1.5 shadow-lg shadow-slate-900/10 dark:shadow-black/40 backdrop-blur">
+      <Search className="ml-3 h-4 w-4 shrink-0 text-muted-foreground" />
+
       <Select value={value} onValueChange={setValue}>
-        <SelectTrigger className="border-none bg-transparent text-sm text-slate-900 dark:text-slate-100 focus-visible:ring-0 w-full px-2 py-1 [&>svg]:hidden">
-          <SelectValue placeholder="選択してください…" />
+        <SelectTrigger className="h-9 border-none bg-transparent text-sm text-slate-900 dark:text-slate-100 focus-visible:ring-0 w-full px-2 py-1 [&>svg]:hidden">
+          <SelectValue placeholder="行き先やジャンルを選んで探す…" />
         </SelectTrigger>
 
         <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
-          <SelectItem value="sightseeing">観光スポットを探す</SelectItem>
-          <SelectItem value="sightseeing/all?category=tour">
-            ツアーを見る
-          </SelectItem>
-          <SelectItem value="museums">美術館を探す</SelectItem>
-          <SelectItem value="musicals">ミュージカルを探す</SelectItem>
-          {/* <SelectItem value="chatboard">掲示板を見る</SelectItem>
-          <SelectItem value="news">ニュースを見る</SelectItem> */}
-          <SelectItem value="jobs/service-charges">
-            サービスチャージについて調べる
-          </SelectItem>
-          <SelectItem value="jobs">
-            ロンドンで働く（労働問題ガイド）
-          </SelectItem>
+          <SelectGroup>
+            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              観光を探す
+            </SelectLabel>
+            <SelectItem value="sightseeing">
+              <span className="flex items-center gap-2">
+                <MapPin className="h-3.5 w-3.5 text-red-600" />
+                観光スポットを探す
+              </span>
+            </SelectItem>
+            <SelectItem value="sightseeing/all?category=tour">
+              <span className="flex items-center gap-2">
+                <Ticket className="h-3.5 w-3.5 text-red-600" />
+                ツアーを見る
+              </span>
+            </SelectItem>
+            <SelectItem value="museums">
+              <span className="flex items-center gap-2">
+                <Landmark className="h-3.5 w-3.5 text-red-600" />
+                美術館を探す
+              </span>
+            </SelectItem>
+            <SelectItem value="musicals">
+              <span className="flex items-center gap-2">
+                <Drama className="h-3.5 w-3.5 text-red-600" />
+                ミュージカルを探す
+              </span>
+            </SelectItem>
+          </SelectGroup>
+
+          <SelectSeparator />
+
+          <SelectGroup>
+            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              働く・暮らす
+            </SelectLabel>
+            <SelectItem value="jobs/service-charges">
+              <span className="flex items-center gap-2">
+                <Receipt className="h-3.5 w-3.5 text-emerald-600" />
+                サービスチャージについて調べる
+              </span>
+            </SelectItem>
+            <SelectItem value="jobs">
+              <span className="flex items-center gap-2">
+                <BriefcaseBusiness className="h-3.5 w-3.5 text-emerald-600" />
+                ロンドンで働く（労働問題ガイド）
+              </span>
+            </SelectItem>
+          </SelectGroup>
         </SelectContent>
       </Select>
 
       {value ? (
         <Button
           asChild
-          className="ml-1 rounded-full px-5 text-xs font-semibold"
+          className="mr-0.5 rounded-full px-5 text-xs font-semibold"
         >
           <Link href={`/${value}`}>Go</Link>
         </Button>
       ) : (
         <Button
           disabled
-          className="ml-1 rounded-full px-5 text-xs font-semibold opacity-40 dark:opacity-30"
+          className="mr-0.5 rounded-full px-5 text-xs font-semibold opacity-40 dark:opacity-30"
         >
           Go
         </Button>
