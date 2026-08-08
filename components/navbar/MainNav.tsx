@@ -110,7 +110,7 @@ export default function Navbar() {
                           className="text-sm hover:text-red-600 transition"
                           onClick={() => setOpen(false)}
                         >
-                          地下鉄・Oyster・空港アクセス
+                          交通ガイド（地下鉄・バス・空港）
                         </Link>
                         <Link
                           href="/sightseeing/travel-tips"

@@ -24,6 +24,12 @@ export type TravelGuideMeta = {
  *
  * next-sitemap.config.js の staticPages、/sightseeing ハブの
  * 「旅の準備」カード表示順と一致させること。
+ *
+ * transport だけは例外で、実体が TravelGuideArticle ではなく
+ * /sightseeing/transport 配下のハブ(components/sightseeing/transport/)になっている。
+ * このリストに残しているのは、/sightseeing ハブのカードと
+ * TravelGuideLayout の相互リンクに出したいから。content/index.ts に
+ * 対応する記事は無い。
  */
 export const travelGuides: TravelGuideMeta[] = [
   {
@@ -50,9 +56,9 @@ export const travelGuides: TravelGuideMeta[] = [
   {
     slug: "transport",
     eyebrow: "Getting Around",
-    label: "地下鉄・Oyster・空港アクセス",
+    label: "ロンドンの交通ガイド（全9本）",
     blurb:
-      "タッチ決済とOysterの使い分け、ゾーン制と上限額の仕組み、ヒースロー・ガトウィックなど5空港からの行き方をまとめました。",
+      "切符は買いません。運賃と上限額の仕組み、5空港からのアクセス、地下鉄・バス・シェアサイクル・タクシーの使い分け。在住者向けに定期券・自転車・車の話まで。",
   },
   {
     slug: "travel-tips",

@@ -106,6 +106,18 @@ module.exports = {
       "/sightseeing/hotels",
       "/sightseeing/transport",
       "/sightseeing/travel-tips",
+      // 交通ガイド。/sightseeing/transport をハブとする9本。
+      // 並びは components/sightseeing/transport/guides.ts の
+      // transportGuides と一致させること。
+      "/sightseeing/transport/fares",
+      "/sightseeing/transport/airports",
+      "/sightseeing/transport/tube",
+      "/sightseeing/transport/bus",
+      "/sightseeing/transport/cycling",
+      "/sightseeing/transport/taxi",
+      "/sightseeing/transport/travelcard",
+      "/sightseeing/transport/own-bike",
+      "/sightseeing/transport/car",
       "/sightseeing/harry-potter",
       // ロケ地巡り。作品ページはDBではなく
       // app/(with-ads)/sightseeing/film-locations/data.ts の filmWorks なので、
