@@ -454,6 +454,74 @@ model Event {
   @@index([startDate])
 }
 
+/// 「今週のロンドン」週次ダイジェストの1号分。
+/// Event テーブル(1年前から分かっている定番イベント)とは役割が違う。
+/// こちらは「4週間前には書けなかったこと」= ストライキ・突発イベント・耳寄り情報だけを扱う。
+model WeeklyBrief {
+  id        String   @id @default(cuid())
+  /// "2026-w33"。ISO週番号ベースで、週の月曜から一意に決まる。
+  slug      String   @unique
+  /// 週の月曜 00:00 UTC。weekEnd はその週の日曜 00:00 UTC。
+  weekStart DateTime
+  weekEnd   DateTime
+  title     String
+  /// 「今週はここに注意」の1〜2文。ページ冒頭に大きく出す。
+  headline  String
+  summary   String
+  image     String?
+  /// 調査した日時。ページに「◯月◯日 調査時点」として必ず表示する。
+  /// ストライキ情報は数日で覆るので、いつ時点の情報かを出さないと誤情報になる。
+  researchedAt DateTime
+  /// 下書き段階で公開されないようにするためのフラグ。
+  published Boolean  @default(false)
+  items     WeeklyBriefItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([weekStart])
+  @@index([published, weekStart])
+}
+
+model WeeklyBriefItem {
+  id      String @id @default(cuid())
+  briefId String
+  brief   WeeklyBrief @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  /// 支障系: strike | disruption | closure | crowd
+  /// 機会系: event | exhibition | deal | opening
+  /// 環境系: weather | holiday
+  kind     String
+  /// 支障系のみ。high(旅程の変更が要る) | medium(迂回で回避可) | low(知ると快適)
+  severity String?
+  /// なぜ今週号に載るか。thisWeek(今週起きる) | announced(今週判明した/発生は先)
+  timing   String @default("thisWeek")
+  /// confirmed | planned。ストライキ予告は直前の妥結で中止になるため planned は本文で明示する。
+  status   String @default("confirmed")
+
+  title       String
+  description String
+
+  startDate      DateTime?
+  endDate        DateTime?
+  venue          String?
+  area           String?
+  nearestStation String?
+  priceInfo      String?
+  isFree         Boolean @default(false)
+  website        String?
+
+  /// 出典URL。一次ソース(TfL・会場公式・労組公式)優先。必須。
+  source     String
+  /// 二次ソース(Time Out London 等)の場合に媒体名を出して読者に判別させる。
+  sourceName String?
+
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([briefId, displayOrder])
+}
+
 model Lyrics {
   id           String        @id @default(cuid())
   name         String
