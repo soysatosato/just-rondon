@@ -45,10 +45,18 @@ export const fetchMusicalDetails = async (slug: string) => {
   return musical;
 };
 
+// generateMetadata 専用。summary / tagline まで取るのは、description を
+// 作品ごとに書き分けるため(テンプレート文だと全作品が同じスニペットになる)。
 export const fetchMusicalIdandName = (slug: string) => {
   return db.musical.findUnique({
     where: { slug },
-    select: { id: true, name: true, engName: true },
+    select: {
+      id: true,
+      name: true,
+      engName: true,
+      summary: true,
+      tagline: true,
+    },
   });
 };
 

@@ -20,7 +20,7 @@ import { Baby, Flame, Star, Tag, Ticket } from "lucide-react";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, fitTitle, truncateDescription } from "@/lib/seo";
 import {
   attractionBreadcrumbJsonLd,
   attractionJsonLd,
@@ -31,6 +31,16 @@ const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
   loading: () => <Skeleton className="h-[400px] w-full" />,
 });
+
+/**
+ * engName はタイトルに入れない。h1 と JSON-LD で出しているうえ、
+ * 日本語タイトルの限られた文字数を英名に使う理由がない。
+ */
+const TITLE_SUFFIXES = [
+  "の見どころ・行き方・所要時間｜ロンドン観光ガイド",
+  "の見どころ・所要時間｜ロンドン観光ガイド",
+  "の見どころ・所要時間",
+];
 
 export async function generateMetadata({
   params,
@@ -47,13 +57,15 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${attraction.name} | ${
-    attraction.engName ?? "London Attraction"
-  } の見どころ・行き方・所要時間｜ロンドン観光ガイド`;
+  const title = fitTitle(attraction.name, TITLE_SUFFIXES);
 
-  const description = attraction.summary
-    ? `「${attraction.name}」の魅力や見どころ、アクセス情報を詳しく紹介。ロンドンの人気観光スポットの完全ガイド。`
-    : "ロンドン観光に役立つスポット情報を紹介します。";
+  // summary は135件すべてに入っている。ここでテンプレート文に差し替えると
+  // 全スポットが同じスニペットになるので、必ず本文側を使う。
+  const description = truncateDescription(
+    attraction.summary ??
+      attraction.tagline ??
+      "ロンドン観光に役立つスポット情報を紹介します。"
+  );
 
   // 構造化データは metadata.other ではなく body の <script> で出す(JsonLd コンポーネント)
   return buildPageMetadata({

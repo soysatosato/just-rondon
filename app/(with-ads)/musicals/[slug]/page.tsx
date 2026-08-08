@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, truncateDescription } from "@/lib/seo";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
@@ -54,9 +54,12 @@ export async function generateMetadata({
 
   return buildPageMetadata({
     path: `/musicals/${params.slug}`,
-    title: `${musical?.name}・${musical?.engName}｜ロンドン観光・ミュージカルガイド`,
+    // ミュージカルは英題で検索されることも多いので engName は残す。
+    // 観光スポットや美術館と違い、英題そのものが検索語になる。
+    title: `${musical.name}・${musical.engName}｜あらすじ・見どころ・チケット`,
     titleSuffix: false,
-    description: `${musical?.name}|${musical?.engName}・ミュージカルの見どころ、アクセス、あらすじ、歌などを紹介。ロンドン観光で絶対に訪れたいミュージカルの情報・これだけは観るべき必見作品をわかりやすくガイドします。`,
+    // Musical.summary は必須カラムなのでフォールバックは要らない。
+    description: truncateDescription(musical.summary),
     type: "article",
   });
 }

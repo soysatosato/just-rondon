@@ -24,7 +24,13 @@ import ContactDialog from "@/components/form/ContactDialog";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, fitTitle, truncateDescription } from "@/lib/seo";
+
+const TITLE_SUFFIXES = [
+  "の見どころ・所要時間・アクセス｜ロンドン美術館ガイド",
+  "の見どころ・所要時間｜ロンドン美術館ガイド",
+  "の見どころ・所要時間",
+];
 import {
   museumBreadcrumbJsonLd,
   museumJsonLd,
@@ -56,9 +62,22 @@ export async function generateMetadata({
 
   return buildPageMetadata({
     path: museumPath(params.slug),
-    title: `${museum?.name}｜ロンドン観光・美術館ガイド`,
+    // 「◯◯ 見どころ」「◯◯ 所要時間」で流入しているので、その2語を
+    // タイトルの読める範囲に入れる。engName は h1 と JSON-LD にあるため、
+    // 日本語タイトルの限られた文字数を英名に使わない。
+    title: fitTitle(museum?.name ?? "ロンドンの美術館", TITLE_SUFFIXES),
     titleSuffix: false,
-    description: `${museum?.name}|${museum?.engName}の見どころ、アクセス、注目作品、開催中の企画展などを紹介。ロンドン観光で絶対に訪れたい美術館の情報・これだけは見るべき必見作品をわかりやすくガイドします。`,
+    // 館ごとに違う説明を出す。テンプレート文に名前だけ差し込むと
+    // 全館が同じスニペットになり、順位が付いてもクリックされない。
+    //
+    // summary ではなく description を使う。summary は
+    // 「・ルネサンス絵画 ・オランダ絵画」という箇条書きで、
+    // スニペットに出すと文章として読めない。description は全47件が散文。
+    description: truncateDescription(
+      museum?.description ??
+        museum?.tagline ??
+        "ロンドンの美術館の見どころ、アクセス、注目作品、開催中の企画展を紹介します。"
+    ),
     images: museum?.image ? [museum.image] : undefined,
   });
 }

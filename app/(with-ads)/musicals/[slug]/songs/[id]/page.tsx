@@ -1,5 +1,5 @@
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
-import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildPageMetadata, truncateDescription } from "@/lib/seo";
 import { AD_SLOTS } from "@/lib/adsense";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import {
@@ -31,8 +31,13 @@ export async function generateMetadata({
   }
   return buildPageMetadata({
     path: `/musicals/${params.slug}/songs/${params.id}`,
-    title: `${song?.name}の歌詞・和訳 | ${musical?.name} (${musical?.engName})`,
-    description: `${song?.name} の歌詞と和訳を掲載。${musical?.name} (${musical?.engName})の名曲・人気曲を日本語でわかりやすく解説。ミュージカルファン必見の歌詞・翻訳ガイドサイトです。`,
+    title: `${song.name}の歌詞・和訳 | ${musical.name} (${musical.engName})`,
+    // scene は曲がどの場面で歌われるかの解説で、108曲中104曲が異なる文面。
+    // 「歌詞と和訳を掲載」のテンプレート文だと全曲が同じスニペットになり、
+    // 検索結果でどの曲のページか見分けが付かない。
+    description: truncateDescription(
+      `${song.name}（${musical.name}）の歌詞と和訳。${song.scene}`
+    ),
     type: "article",
   });
 }

@@ -50,6 +50,50 @@ export function noindexMetadata(title: string): Metadata {
   };
 }
 
+/**
+ * DB の summary 等の本文から meta description を作る。
+ *
+ * description はランキング要因ではないが、検索結果のスニペットとして
+ * そのまま出るのでクリック率を左右する。ページごとに違う具体的な中身を
+ * 出すのが目的で、テンプレート文言に名前だけ差し込んだものは
+ * 「どのページも同じことしか書いていない」スニペットになり効かない。
+ *
+ * 日本語の検索結果で表示されるのは概ね全角120文字までで、
+ * 上限で機械的に切ると文の途中で壊れる。句点まで戻して文単位で収める。
+ */
+export function truncateDescription(text: string, maxLength = 120): string {
+  const normalised = text.replace(/\s+/g, " ").trim();
+  if (normalised.length <= maxLength) return normalised;
+
+  const head = normalised.slice(0, maxLength);
+  const lastStop = head.lastIndexOf("。");
+  // 句点が全く無い(1文が長い)場合だけ、素直に切って続きがあることを示す。
+  return lastStop > 0 ? head.slice(0, lastStop + 1) : `${head}…`;
+}
+
+/**
+ * 日本語の検索結果でタイトルとして読める上限。全角34文字程度で切られる。
+ */
+export const TITLE_MAX_LENGTH = 34;
+
+/**
+ * 「スポット名＋キーワードのサフィックス」型のタイトルを、読める長さに収める。
+ *
+ * DB 由来の名前は「ワーナー・ブラザーズ スタジオツアー ロンドン」のように
+ * カタカナ表記で20文字を超えるものが多く、固定のサフィックスを付けると
+ * 実際に検索されている「見どころ」「所要時間」がそろって表示範囲の外へ落ちる。
+ * suffixes は長い順に渡し、収まるいちばん長いものを選ぶ。
+ *
+ * 名前だけで上限を超える場合はいちばん短いサフィックスで諦める。
+ * どのみち末尾は切られるが、名前自体が検索語なので先頭は守れている。
+ */
+export function fitTitle(name: string, suffixes: string[]): string {
+  const fitting = suffixes.find(
+    (suffix) => name.length + suffix.length <= TITLE_MAX_LENGTH
+  );
+  return `${name}${fitting ?? suffixes[suffixes.length - 1]}`;
+}
+
 export type OgImageInput =
   | string
   | { url: string; width?: number; height?: number; alt?: string };
