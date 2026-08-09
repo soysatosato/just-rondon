@@ -17,7 +17,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuContent,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import {
   Accordion,
@@ -25,14 +24,23 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import LinksDropdown from "./LinksDropdown";
 import { useState } from "react";
 import { MdMail } from "react-icons/md";
 
+import { NAV_SECTIONS, GROUP_COLS, MENU_WIDTH } from "./menu";
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+
+  // モバイルはアコーディオンと素のリンクを別々に並べる必要があるので、
+  // 種類ごとに分ける。NAV_SECTIONS は menu を先、link を後に並べてあるため、
+  // この分割で定義順どおりの表示になる。
+  const menuSections = NAV_SECTIONS.filter((s) => s.kind === "menu");
+  const linkSections = NAV_SECTIONS.filter((s) => s.kind === "link");
+
   return (
     <nav className="w-full">
+      {/* モバイル */}
       <div className="md:hidden">
         <div className="flex justify-between px-6 py-2">
           <Link href="/">
@@ -56,14 +64,13 @@ export default function Navbar() {
             </div>
           </Link>
           <div className="flex items-center gap-2">
-            {/* <LinksDropdown /> */}
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <Button variant="outline" className="p-2">
                   <Menu className="w-6 h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-64">
+              <SheetContent side="right" className="w-72 overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle className="flex justify-between items-center">
                     <span>Menu</span>
@@ -73,388 +80,67 @@ export default function Navbar() {
                 <nav className="flex flex-col space-y-3 mt-4">
                   <Link
                     href="/"
-                    className=" hover:text-red-600 transition"
+                    className="hover:text-red-600 transition"
                     onClick={() => setOpen(false)}
                   >
                     トップページ
                   </Link>
+
                   <Accordion type="single" collapsible>
-                    <AccordionItem value="sightseeing" className="border-b-0">
-                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
-                        ロンドン観光
-                      </AccordionTrigger>
-                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
-                        <Link
-                          href="/sightseeing"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
+                    {menuSections.map((section) => {
+                      if (section.kind !== "menu") return null;
+                      return (
+                        <AccordionItem
+                          key={section.label}
+                          value={section.label}
+                          className="border-b-0"
                         >
-                          ロンドン観光ナビ トップ
-                        </Link>
-                        <Link
-                          href="/sightseeing/itinerary"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          モデルコース（1〜5日）
-                        </Link>
-                        <Link
-                          href="/sightseeing/hotels"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          宿泊エリアの選び方
-                        </Link>
-                        <Link
-                          href="/sightseeing/transport"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          交通ガイド（地下鉄・バス・空港）
-                        </Link>
-                        <Link
-                          href="/sightseeing/travel-tips"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          旅の実用情報
-                        </Link>
-                        <Link
-                          href="/sightseeing/must-see"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          必見スポット
-                        </Link>
-                        <Link
-                          href="/sightseeing/film-locations"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          映画・ドラマのロケ地巡り
-                        </Link>
-                        <Link
-                          href="/sightseeing/eta-uk-visa-guide"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          ETA（電子渡航認証）
-                        </Link>
-                      </AccordionContent>
-                    </AccordionItem>
+                          <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-2">
+                            {section.label}
+                          </AccordionTrigger>
+                          <AccordionContent className="flex flex-col space-y-3 ml-2 mt-1 pb-3">
+                            {section.groups.map((group, index) => (
+                              <div
+                                key={group.heading ?? index}
+                                className="flex flex-col space-y-2"
+                              >
+                                {group.heading && (
+                                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                    {group.heading}
+                                  </p>
+                                )}
+                                {group.links.map((link) => (
+                                  <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="text-sm hover:text-red-600 transition"
+                                    onClick={() => setOpen(false)}
+                                  >
+                                    {link.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
                   </Accordion>
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="museums" className="border-b-0">
-                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
-                        美術館・博物館
-                      </AccordionTrigger>
-                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
-                        <Link
-                          href="/museums"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          美術館ナビ
-                        </Link>
-                        <Link
-                          href="/museums/best-10-museums"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          絶対に行くべき美術館10選
-                        </Link>
-                        <Link
-                          href="/museums/best-museums-for-kids"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          キッズ向け美術館
-                        </Link>
-                        <Link
-                          href="/museums/banksy-artworks"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          街で見つかるバンクシー
-                        </Link>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  <Link
-                    href="/musicals"
-                    className="hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    ミュージカル
-                  </Link>
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="visa" className="border-b-0">
-                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
-                        ビザ
-                      </AccordionTrigger>
-                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
-                        <Link
-                          href="/visa"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          英国ビザガイド トップ
-                        </Link>
-                        <Link
-                          href="/sightseeing/eta-uk-visa-guide"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          ETA（電子渡航認証）
-                        </Link>
-                        <Link
-                          href="/visa/youth-mobility-scheme"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          YMS（ワーホリ）
-                        </Link>
-                        <Link
-                          href="/visa/skilled-worker"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          Skilled Worker（就労）
-                        </Link>
-                        <Link
-                          href="/visa/global-talent"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          Global Talent（卓越人材）
-                        </Link>
-                        <Link
-                          href="/visa/student"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          Student／Graduate
-                        </Link>
-                        <Link
-                          href="/visa/family"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          家族・配偶者ビザ
-                        </Link>
-                        <Link
-                          href="/visa/after-arrival"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          渡英後の手続き
-                        </Link>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="jobs" className="border-b-0">
-                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
-                        働く・暮らす
-                      </AccordionTrigger>
-                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
-                        <Link
-                          href="/jobs"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          労働問題ガイド トップ
-                        </Link>
-                        <Link
-                          href="/jobs/minimum-wage"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          最低賃金・給与明細
-                        </Link>
-                        <Link
-                          href="/jobs/employment-contract"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          労働契約・就業規則
-                        </Link>
-                        <Link
-                          href="/jobs/visa-and-work"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          ビザと就労
-                        </Link>
-                        <Link
-                          href="/jobs/workplace-harassment"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          ハラスメント相談先
-                        </Link>
-                        <Link
-                          href="/jobs/service-charges"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          サービスチャージ完全ガイド
-                        </Link>
-                        <Link
-                          href="/jobs/service-charges/case-story"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          審判所申立ての実体験
-                        </Link>
-                        <Link
-                          href="/jobs/service-charges/dashboard"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          店舗別データベース
-                        </Link>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="housing" className="border-b-0">
-                      <AccordionTrigger className="font-medium hover:text-red-600 transition text-base py-0">
-                        住まい探し
-                      </AccordionTrigger>
-                      <AccordionContent className="flex flex-col space-y-2 ml-2 mt-2">
-                        <Link
-                          href="/housing"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          住まい探しガイド トップ
-                        </Link>
-                        <Link
-                          href="/housing/rightmove-zoopla-openrent"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          物件サイトの使い分け
-                        </Link>
-                        <Link
-                          href="/housing/spareroom"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          フラットシェアを探す
-                        </Link>
-                        <Link
-                          href="/housing/japanese-listings"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          日系コミュニティ経由で探す
-                        </Link>
-                        <Link
-                          href="/housing/tenancy-types"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          契約形態の地図
-                        </Link>
-                        <Link
-                          href="/housing/deposits-and-fees"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          初期費用と違法な手数料
-                        </Link>
-                        <Link
-                          href="/housing/referencing"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          審査を通す
-                        </Link>
-                        <Link
-                          href="/housing/where-to-live"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          エリアの選び方
-                        </Link>
-                        <Link
-                          href="/housing/viewing"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          内見チェックリスト
-                        </Link>
-                        <Link
-                          href="/housing/noise"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          騒音トラブル
-                        </Link>
-                        <Link
-                          href="/housing/moving-out"
-                          className="text-sm hover:text-red-600 transition"
-                          onClick={() => setOpen(false)}
-                        >
-                          退去とデポジット返還
-                        </Link>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  <Link
-                    href="/restaurants"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    イギリス料理
-                  </Link>
-                  <Link
-                    href="/souvenirs"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    お土産
-                  </Link>
-                  <Link
-                    href="/events"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    今週のロンドン
-                  </Link>
-                  <Link
-                    href="/column"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    コラム
-                  </Link>
-                  {/* <Link
-                    href="/news"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    ニュース
-                  </Link>
-                  <Link
-                    href="/matome"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    ロンドンの声・話題まとめ
-                  </Link>
-                  <Link
-                    href="/chatboard"
-                    className=" hover:text-red-600 transition"
-                    onClick={() => setOpen(false)}
-                  >
-                    掲示板
-                  </Link> */}
+
+                  {linkSections.map((section) => (
+                    <Link
+                      key={section.href}
+                      href={section.href}
+                      className="hover:text-red-600 transition"
+                      onClick={() => setOpen(false)}
+                    >
+                      {section.label}
+                    </Link>
+                  ))}
+
                   <Link
                     href="/contact"
-                    className=" hover:text-red-600 transition"
+                    className="hover:text-red-600 transition"
                     onClick={() => setOpen(false)}
                   >
                     <div className="flex gap-x-2">
@@ -469,6 +155,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* デスクトップ */}
       <div className="hidden md:flex flex-col border-b">
         <div className="flex flex-col items-center justify-center py-2">
           <Link href="/">
@@ -492,418 +179,99 @@ export default function Navbar() {
             </div>
           </Link>
         </div>
-        <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+        <div className="flex items-center justify-center px-6 py-3 max-w-7xl mx-auto">
           <NavigationMenu>
-            <NavigationMenuList className="gap-x-6">
-              <NavigationMenuItem className="pr-6">
-                <NavigationMenuTrigger>ロンドン観光</NavigationMenuTrigger>
-                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-red-600">
-                      ロンドン観光を計画する
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      どこに泊まり、どう移動し、何日で何を回るか。定番スポットの情報だけでなく、旅の準備に必要なことをまとめています。
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <Link
-                      href="/sightseeing/itinerary"
-                      className="hover:underline"
-                    >
-                      モデルコース（1〜5日）
-                    </Link>
-                    <Link
-                      href="/sightseeing/hotels"
-                      className="hover:underline"
-                    >
-                      宿泊エリアの選び方
-                    </Link>
-                    <Link
-                      href="/sightseeing/transport"
-                      className="hover:underline"
-                    >
-                      地下鉄・Oyster・空港
-                    </Link>
-                    <Link
-                      href="/sightseeing/travel-tips"
-                      className="hover:underline"
-                    >
-                      旅の実用情報
-                    </Link>
-                    <Link
-                      href="/sightseeing/must-see"
-                      className="hover:underline"
-                    >
-                      必見スポット
-                    </Link>
-                    <Link
-                      href="/sightseeing/film-locations"
-                      className="hover:underline"
-                    >
-                      ロケ地巡り
-                    </Link>
-                    <Link
-                      href="/sightseeing/eta-uk-visa-guide"
-                      className="hover:underline"
-                    >
-                      ETA（電子渡航認証）
-                    </Link>
-                    <Link
-                      href="/sightseeing/all"
-                      className="hover:underline"
-                    >
-                      観光スポット一覧
-                    </Link>
-                    <Link
-                      href="/sightseeing"
-                      className="hover:underline text-red-600 font-medium"
-                    >
-                      観光ナビ トップ
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>美術館</NavigationMenuTrigger>
-                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-red-600">美術館を探す</h4>
-                    <p className="text-sm text-gray-600">
-                      ロンドンの世界的な美術館やギャラリーを発見しよう。歴史的なコレクションから現代アートまで幅広く楽しめます。
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <Link
-                      href="/museums/british-museum"
-                      className="hover:underline"
-                    >
-                      大英博物館
-                    </Link>
-                    <Link
-                      href="/museums/national-gallery"
-                      className="hover:underline"
-                    >
-                      ナショナル・ギャラリー
-                    </Link>
-                    <Link
-                      href="/museums/tate-modern"
-                      className="hover:underline"
-                    >
-                      テート・モダン
-                    </Link>
-                    <Link
-                      href="/museums/best-10-museums"
-                      className="hover:underline"
-                    >
-                      絶対に行くべき美術館10選
-                    </Link>
-                    <Link
-                      href="/museums/best-25-museums"
-                      className="hover:underline"
-                    >
-                      おすすめの美術館
-                    </Link>
-                    <Link
-                      href="/museums/best-museum-for-kids"
-                      className="hover:underline"
-                    >
-                      キッズ向け美術館
-                    </Link>
-                    <Link
-                      href="/museums/banksy-artworks"
-                      className="hover:underline"
-                    >
-                      バンクシー作品
-                    </Link>
-                    <Link
-                      href="/museums"
-                      className="hover:underline text-red-600 font-medium"
-                    >
-                      美術館ナビ
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+            <NavigationMenuList className="gap-x-2">
+              {NAV_SECTIONS.map((section) => {
+                if (section.kind === "link") {
+                  return (
+                    <NavigationMenuItem key={section.href}>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href={section.href}
+                          className="inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                        >
+                          {section.label}
+                        </Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  );
+                }
 
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>ミュージカル</NavigationMenuTrigger>
-                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-red-600">
-                      ミュージカルを楽しむ
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      ロンドンで楽しめる人気のミュージカルや話題の舞台作品をチェックして、観劇プランを立てよう。
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <Link
-                      href="/musicals/les-miserables"
-                      className="hover:underline"
+                return (
+                  <NavigationMenuItem key={section.label}>
+                    <NavigationMenuTrigger>
+                      {section.label}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent
+                      className={`p-6 ${MENU_WIDTH[section.groups.length] ?? MENU_WIDTH[1]}`}
                     >
-                      レ・ミゼラブル
-                    </Link>
-                    <Link
-                      href="/musicals/harry-potter-cursed-child"
-                      className="hover:underline"
-                    >
-                      ハリー・ポッターと呪いの子
-                    </Link>
-                    <Link href="/musicals/wicked" className="hover:underline">
-                      ウィキッド
-                    </Link>
-                    <Link href="/musicals" className="hover:underline">
-                      ミュージカルナビ
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+                      <div className="flex gap-8">
+                        <div className="w-52 shrink-0 space-y-2">
+                          <p
+                            className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${section.accent.text}`}
+                          >
+                            {section.eyebrow}
+                          </p>
+                          <h4 className="text-base font-semibold">
+                            {section.label}
+                          </h4>
+                          <p className="text-xs leading-relaxed text-muted-foreground">
+                            {section.description}
+                          </p>
+                          <Link
+                            href={section.href}
+                            className={`inline-block pt-1 text-xs font-semibold hover:underline ${section.accent.text}`}
+                          >
+                            {section.hubLabel} →
+                          </Link>
+                        </div>
 
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>ビザ</NavigationMenuTrigger>
-                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-red-600">
-                      英国ビザを調べる
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      観光のETAから、ワーホリ、就労、留学、家族ビザ、渡英後の手続きまで。目的・期間から自分に必要なビザを見つけられます。
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <Link
-                      href="/sightseeing/eta-uk-visa-guide"
-                      className="hover:underline"
-                    >
-                      ETA（電子渡航認証）
-                    </Link>
-                    <Link href="/visa/uk-visa-guide" className="hover:underline">
-                      英国ビザ全ルート比較
-                    </Link>
-                    <Link
-                      href="/visa/youth-mobility-scheme"
-                      className="hover:underline"
-                    >
-                      YMS（ワーホリ）
-                    </Link>
-                    <Link href="/visa/skilled-worker" className="hover:underline">
-                      Skilled Worker（就労）
-                    </Link>
-                    <Link href="/visa/global-talent" className="hover:underline">
-                      Global Talent（卓越人材）
-                    </Link>
-                    <Link href="/visa/student" className="hover:underline">
-                      Student／Graduate
-                    </Link>
-                    <Link href="/visa/family" className="hover:underline">
-                      家族・配偶者ビザ
-                    </Link>
-                    <Link href="/visa/after-arrival" className="hover:underline">
-                      渡英後の手続き
-                    </Link>
-                    <Link
-                      href="/visa"
-                      className="hover:underline text-red-600 font-medium col-span-2"
-                    >
-                      英国ビザガイド トップ
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>働く・暮らす</NavigationMenuTrigger>
-                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-red-600">
-                      ロンドンで働く・暮らす
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      最低賃金、労働契約、ビザ、サービスチャージなど、ロンドンで働く日本人のための労働法ガイド。実体験に基づく記録も公開しています。
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <Link
-                      href="/jobs/minimum-wage"
-                      className="hover:underline"
-                    >
-                      最低賃金・給与明細
-                    </Link>
-                    <Link
-                      href="/jobs/employment-contract"
-                      className="hover:underline"
-                    >
-                      労働契約・就業規則
-                    </Link>
-                    <Link href="/jobs/visa-and-work" className="hover:underline">
-                      ビザと就労
-                    </Link>
-                    <Link
-                      href="/jobs/workplace-harassment"
-                      className="hover:underline"
-                    >
-                      ハラスメント相談先
-                    </Link>
-                    <Link
-                      href="/jobs/service-charges"
-                      className="hover:underline"
-                    >
-                      サービスチャージ完全ガイド
-                    </Link>
-                    <Link
-                      href="/jobs/service-charges/case-story"
-                      className="hover:underline"
-                    >
-                      審判所申立ての実体験
-                    </Link>
-                    <Link
-                      href="/jobs/service-charges/dashboard"
-                      className="hover:underline"
-                    >
-                      店舗別データベース
-                    </Link>
-                    <Link
-                      href="/jobs"
-                      className="hover:underline text-red-600 font-medium"
-                    >
-                      労働問題ガイド トップ
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>住まい探し</NavigationMenuTrigger>
-                <NavigationMenuContent className="grid grid-cols-2 gap-6 p-6 min-w-[600px]">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-red-600">
-                      ロンドンで部屋を借りる
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      2026年5月の法改正で、ASTもSection
-                      21も廃止されました。物件の探し方、初期費用の上限、信用情報ゼロでの審査突破、敷金の取り戻し方まで。
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <Link
-                      href="/housing/rightmove-zoopla-openrent"
-                      className="hover:underline"
-                    >
-                      物件サイトの使い分け
-                    </Link>
-                    <Link href="/housing/spareroom" className="hover:underline">
-                      フラットシェアを探す
-                    </Link>
-                    <Link
-                      href="/housing/japanese-listings"
-                      className="hover:underline"
-                    >
-                      日系コミュニティ経由
-                    </Link>
-                    <Link
-                      href="/housing/tenancy-types"
-                      className="hover:underline"
-                    >
-                      契約形態の地図
-                    </Link>
-                    <Link
-                      href="/housing/deposits-and-fees"
-                      className="hover:underline"
-                    >
-                      初期費用と違法な手数料
-                    </Link>
-                    <Link href="/housing/referencing" className="hover:underline">
-                      審査を通す
-                    </Link>
-                    <Link
-                      href="/housing/where-to-live"
-                      className="hover:underline"
-                    >
-                      エリアの選び方
-                    </Link>
-                    <Link href="/housing/viewing" className="hover:underline">
-                      内見チェックリスト
-                    </Link>
-                    <Link href="/housing/noise" className="hover:underline">
-                      騒音トラブル
-                    </Link>
-                    <Link href="/housing/moving-out" className="hover:underline">
-                      退去とデポジット返還
-                    </Link>
-                    <Link
-                      href="/housing"
-                      className="hover:underline text-red-600 font-medium"
-                    >
-                      住まい探しガイド トップ
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem className="pr-6">
-                <NavigationMenuLink asChild>
-                  <Link href="/restaurants" className="hover:underline">
-                    イギリス料理
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem className="pr-6">
-                <NavigationMenuLink asChild>
-                  <Link href="/souvenirs" className="hover:underline">
-                    お土産
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem className="pr-6">
-                <NavigationMenuLink asChild>
-                  <Link href="/events" className="hover:underline">
-                    今週のロンドン
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem className="pr-6">
-                <NavigationMenuLink asChild>
-                  <Link href="/column" className="hover:underline">
-                    コラム
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              {/* <NavigationMenuItem className="pr-6">
-                <NavigationMenuLink asChild>
-                  <Link href="/news" className="hover:underline">
-                    ニュース
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+                        <div
+                          className={`grid flex-1 gap-x-6 gap-y-4 ${
+                            GROUP_COLS[section.groups.length] ?? GROUP_COLS[1]
+                          }`}
+                        >
+                          {section.groups.map((group, index) => (
+                            <div key={group.heading ?? index}>
+                              {group.heading && (
+                                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                  {group.heading}
+                                </p>
+                              )}
+                              <ul className="space-y-1.5">
+                                {group.links.map((link) => (
+                                  <li key={link.href}>
+                                    <Link
+                                      href={link.href}
+                                      className="text-sm hover:underline"
+                                    >
+                                      {link.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                );
+              })}
 
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link href="/chatboard" className="hover:underline">
-                    掲示板
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem> */}
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link href="/contact" className="hover:underline">
-                    <div className="flex">
-                      <MdMail className="w-5 h-5" />
-                    </div>
+                  <Link
+                    href="/contact"
+                    aria-label="お問い合わせ"
+                    className="inline-flex h-9 items-center rounded-md px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground"
+                  >
+                    <MdMail className="w-5 h-5" />
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              {/* 
-              <NavigationMenuItem>
-                <LinksDropdown />
-              </NavigationMenuItem> */}
             </NavigationMenuList>
-            <NavigationMenuViewport />
           </NavigationMenu>
         </div>
       </div>
