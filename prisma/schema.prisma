@@ -878,7 +878,7 @@ model TweetDraft {
   body      String
   /// tip(耳寄り情報) | fact(あるあるネタ) | question(問いかけ系) など、ネタの種類。
   category  String
-  /// draft(未投稿) | posted(投稿済み)
+  /// draft(未投稿) | posted(投稿済み) | rejected(不採用)
   status    String    @default("draft")
   postedAt  DateTime?
   createdAt DateTime  @default(now())

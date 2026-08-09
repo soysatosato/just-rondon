@@ -9,3 +9,11 @@ export async function markTweetPosted(id: string) {
   });
   revalidatePath("/tweets");
 }
+
+export async function markTweetRejected(id: string) {
+  await db.tweetDraft.update({
+    where: { id },
+    data: { status: "rejected" },
+  });
+  revalidatePath("/tweets");
+}

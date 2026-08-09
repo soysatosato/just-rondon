@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { markTweetPosted } from "@/utils/actions/tweets";
+import { markTweetPosted, markTweetRejected } from "@/utils/actions/tweets";
 
 type Props = {
   id: string;
@@ -15,6 +15,7 @@ type Props = {
 
 export default function TweetDraftCard({ id, body, category, createdAt }: Props) {
   const [copied, setCopied] = useState(false);
+  const [confirmingReject, setConfirmingReject] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   async function handleCopy() {
@@ -25,6 +26,14 @@ export default function TweetDraftCard({ id, body, category, createdAt }: Props)
 
   function handleMarkPosted() {
     startTransition(() => markTweetPosted(id));
+  }
+
+  function handleReject() {
+    if (!confirmingReject) {
+      setConfirmingReject(true);
+      return;
+    }
+    startTransition(() => markTweetRejected(id));
   }
 
   return (
@@ -50,6 +59,16 @@ export default function TweetDraftCard({ id, body, category, createdAt }: Props)
           onClick={handleMarkPosted}
         >
           投稿済みにする
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="ml-auto text-destructive hover:text-destructive"
+          disabled={isPending}
+          onClick={handleReject}
+          onBlur={() => setConfirmingReject(false)}
+        >
+          {confirmingReject ? "本当に不採用にする？" : "不採用"}
         </Button>
       </CardFooter>
     </Card>
