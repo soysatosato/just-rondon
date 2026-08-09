@@ -9,20 +9,27 @@ import {
   Ticket,
   Plane,
   FileText,
-  Backpack,
   Gift,
   Baby,
   Calendar,
-  BriefcaseBusiness,
   Receipt,
-  Scale,
-  GraduationCap,
-  Users,
-  Award,
+  Crown,
+  Wand2,
+  Clapperboard,
+  Trophy,
+  Ship,
+  Route,
+  BedDouble,
+  TrainFront,
+  Compass,
   Home as HomeIcon,
   Briefcase,
   ShoppingBag,
   UtensilsCrossed,
+  BookOpen,
+  Newspaper,
+  TriangleAlert,
+  Sparkles,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,7 +42,11 @@ import SectionHeader from "@/components/home/SectionHeader";
 import ColumnCard from "@/components/column/ColumnCard";
 import { fetchColumns, fetchUpcomingEvents } from "@/utils/actions/contents";
 import { fetchLatestBrief } from "@/utils/actions/weekly";
-import { formatWeekRange, getIssueFreshness } from "@/lib/weekly";
+import {
+  formatWeekRange,
+  getIssueFreshness,
+  getKindMeta,
+} from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -46,8 +57,19 @@ export const metadata = buildPageMetadata({
     "初めてのロンドン旅行でも安心。定番の観光スポット、美術館と必見作品、ウエストエンドのミュージカル、季節のイベント、ビザや現地で働く情報まで、日本語でまとめた総合ロンドンガイドです。",
 });
 
-// セクションごとにアクセントカラーを分け、スクロール時に今どのセクションかを判別しやすくする。
-// ブランドカラーの赤はロゴ・主要CTA・トップ直下の総合案内セクションのみで使う。
+// トップページは「観光 / Things to Do / Traveller Info / Resident Info / コラム」の
+// 大区分で構成する。区分をまたぐ判断に迷わないよう、振り分けの基準は一つだけ:
+//
+//   観光       = 見る(場所そのもの)。ロンドン市内。
+//   ThingsToDo = する(体験)。ロンドン市内。
+//   Beyond London = ロンドン外の目的地。市内かどうかだけで決まるので、
+//                   ロンドン外の「見る」も「する」もこちらに入る(将来追加)。
+//   Traveller  = 旅行者の実務(ETA・日程・宿・交通)。
+//   Resident   = 在住者の実務(ビザ・住まい・仕事)。
+//   コラム     = 読み物と更新もの。
+//
+// セクションごとにアクセントカラーを分け、スクロール時に今どの区分かを判別しやすくする。
+// ブランドカラーの赤は、ロゴ・主要CTAと最上位の「観光」区分だけで使う。
 const ACCENTS = {
   red: {
     badge: "bg-red-600 hover:bg-red-600",
@@ -55,23 +77,36 @@ const ACCENTS = {
     iconText: "text-red-600",
     hoverBorder: "hover:border-red-300 dark:hover:border-red-800",
   },
-  blue: {
-    badge: "bg-sky-600 hover:bg-sky-600",
-    iconBg: "bg-sky-50 dark:bg-sky-950/40",
-    iconText: "text-sky-600",
-    hoverBorder: "hover:border-sky-300 dark:hover:border-sky-800",
-  },
   amber: {
     badge: "bg-amber-600 hover:bg-amber-600",
     iconBg: "bg-amber-50 dark:bg-amber-950/40",
     iconText: "text-amber-600",
     hoverBorder: "hover:border-amber-300 dark:hover:border-amber-800",
   },
+  blue: {
+    badge: "bg-sky-600 hover:bg-sky-600",
+    iconBg: "bg-sky-50 dark:bg-sky-950/40",
+    iconText: "text-sky-600",
+    hoverBorder: "hover:border-sky-300 dark:hover:border-sky-800",
+  },
   emerald: {
     badge: "bg-emerald-600 hover:bg-emerald-600",
     iconBg: "bg-emerald-50 dark:bg-emerald-950/40",
     iconText: "text-emerald-600",
     hoverBorder: "hover:border-emerald-300 dark:hover:border-emerald-800",
+  },
+  violet: {
+    badge: "bg-violet-600 hover:bg-violet-600",
+    iconBg: "bg-violet-50 dark:bg-violet-950/40",
+    iconText: "text-violet-600",
+    hoverBorder: "hover:border-violet-300 dark:hover:border-violet-800",
+  },
+  // Beyond London 用に確保。区分を追加するときはここを使う。
+  teal: {
+    badge: "bg-teal-600 hover:bg-teal-600",
+    iconBg: "bg-teal-50 dark:bg-teal-950/40",
+    iconText: "text-teal-600",
+    hoverBorder: "hover:border-teal-300 dark:hover:border-teal-800",
   },
 } as const;
 
@@ -84,70 +119,107 @@ export default async function Page() {
   ]);
   const columnPicks = latestColumns.slice(0, 3);
 
+  // ヒーロー直下の警告バー。ストライキ等は数日で覆るので、今週号・来週号のときだけ出す。
+  // 古い号の「注意」を出し続けると誤情報になる。
+  const freshness = latestBrief
+    ? getIssueFreshness(latestBrief.weekStart, now)
+    : null;
+  const topAlert =
+    latestBrief && freshness && freshness.weeksAgo <= 0
+      ? latestBrief.items.find(
+          (item) =>
+            getKindMeta(item.kind).group === "alert" && item.severity === "high"
+        ) ?? null
+      : null;
+
   return (
     <div className="bg-background">
+      {/* ヒーロー */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden border-b bg-gradient-to-b from-red-50 via-background to-background text-foreground dark:from-red-950/20 dark:via-background dark:to-background">
         {/* 写真の代わりに、ブランドカラーの光暈で奥行きを出す装飾 */}
         <div className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-red-400/20 blur-3xl dark:bg-red-500/10" />
         <div className="pointer-events-none absolute top-24 right-[8%] -z-10 h-64 w-64 rounded-full bg-sky-400/20 blur-3xl dark:bg-sky-500/10" />
         <div className="pointer-events-none absolute top-10 left-[6%] -z-10 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-400/10" />
 
-        <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-16 sm:pt-20 sm:pb-20">
+        <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20 sm:pb-14">
           <HeroContent />
 
-          {/* サブテキスト */}
-          <div className="mt-12 rounded-2xl border bg-card text-card-foreground p-6 text-center text-sm shadow-sm sm:mt-14">
-            <h2 className="mb-3 text-base font-semibold">
-              ロンドン観光をもっと楽しむためのガイド
-            </h2>
-            <div className="text-xs text-muted-foreground space-y-2 leading-relaxed">
-              <p>
-                ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
-                定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
-                初めての方にも分かりやすく情報をまとめています。
-              </p>
-              <p>
-                地下鉄やバスなどの移動手段、無料で楽しめる観光地、
-                子ども連れや一人旅におすすめのスポットなど、
-                旅行計画に役立つ実用的な情報も充実しています。
-              </p>
-            </div>
-          </div>
+          {topAlert && (
+            <Link href="/events" className="mx-auto mt-8 block max-w-2xl">
+              <div className="flex items-start gap-3 rounded-xl border border-red-600/30 bg-red-50/80 px-4 py-3 text-left shadow-sm transition hover:border-red-600/60 dark:bg-red-950/30">
+                <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-red-700 dark:text-red-400">
+                    {freshness?.label}の注意
+                  </p>
+                  <p className="mt-0.5 line-clamp-2 text-sm font-medium leading-snug">
+                    {topAlert.title}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
       </section>
 
-      {/* 初めてのロンドン */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr]">
-            <div>
-              <SectionHeader
-                eyebrow="初めてロンドンを訪れる方へ"
-                title="ロンドン完全ガイド"
-                description="レストラン、ホテル、美術館、シアター、ミュージカル、観光スポットなど、最高の体験を紹介します。初めてのロンドン旅行を安全・快適に。最新の旅行情報を参考に、地下鉄・バス・川・空から街を巡りましょう。"
-              />
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <InfoPill href="/sightseeing" title="ロンドン・観光スポット" icon={MapPin} />
-              <InfoPill href="/museums" title="ロンドン・美術館" icon={Landmark} />
-              <InfoPill href="/musicals" title="ロンドン・ミュージカル" icon={Ticket} />
-              <InfoPill
-                href="/sightseeing/eta-uk-visa-guide"
-                title="ロンドン・ETA（電子渡航認証）"
-                icon={Plane}
-              />
-              <InfoPill
-                href="/visa"
-                title="英国ビザガイド"
-                icon={FileText}
-              />
-              <InfoPill
-                href="/visa/youth-mobility-scheme"
-                title="ロンドン・ワーホリ"
-                icon={Backpack}
-              />
-            </div>
+      {/* 大区分ハブ。このページの背骨で、以下のセクションはこの6枠の展開。 */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-muted/40 text-foreground">
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <CategoryCard
+              href="#sightseeing"
+              eyebrow="Sightseeing"
+              title="観光"
+              description="必見スポット、美術館、王室ゆかりの地。まずどこを見るか。"
+              icon={MapPin}
+              accent={ACCENTS.red}
+            />
+            <CategoryCard
+              href="#things-to-do"
+              eyebrow="Things to Do"
+              title="体験する"
+              description="ミュージカル、食、買い物、テーマ別の街歩き。何をするか。"
+              icon={Sparkles}
+              accent={ACCENTS.amber}
+            />
+            {/*
+              Beyond London(ロンドン外の日帰り・小旅行)はこの位置に入る。
+              追加するときは下の「今週のロンドン」カードと差し替え、
+              今週のロンドンはコラム区分のカードへ寄せる。
+              リンク先は /beyond-london をトップレベルに切る前提。
+            */}
+            <CategoryCard
+              href="#traveller"
+              eyebrow="Traveller Info"
+              title="旅の準備"
+              description="ETA、モデルコース、宿泊エリア、地下鉄とバスの乗り方。"
+              icon={Plane}
+              accent={ACCENTS.blue}
+            />
+            <CategoryCard
+              href="#resident"
+              eyebrow="Resident Info"
+              title="住む・働く"
+              description="ビザ、部屋探し、労働問題。ロンドンで暮らす人の実務。"
+              icon={HomeIcon}
+              accent={ACCENTS.emerald}
+            />
+            <CategoryCard
+              href="#column"
+              eyebrow="Column"
+              title="読み物"
+              description="歴史・文化・伝統を掘り下げるコラムを毎日更新。"
+              icon={BookOpen}
+              accent={ACCENTS.violet}
+            />
+            <CategoryCard
+              href="/events"
+              eyebrow="This Week"
+              title="今週のロンドン"
+              description="ストライキ、運休、臨時休館、その週だけの催し。毎週更新。"
+              icon={Newspaper}
+              accent={ACCENTS.blue}
+            />
           </div>
         </div>
       </section>
@@ -156,57 +228,390 @@ export default async function Page() {
         <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
       </div>
 
-      {/* ロンドン探索 */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
+      {/* 観光 ── 見る(場所) */}
+      <section
+        id="sightseeing"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-background text-foreground"
+      >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <SectionHeader
-            title="ロンドンをもっと探索"
-            description="世界的ミュージカルから一流観光地、ユニークツアーやファミリー向けスポットまで盛りだくさん。"
-            accentClassName={ACCENTS.blue.badge}
+            eyebrow="Sightseeing"
+            title="ロンドンで見る"
+            description="ビッグベンやバッキンガム宮殿といった定番から、世界有数のコレクションを無料で公開する美術館まで。初めての旅行で押さえておきたい場所を集めました。"
+            accentClassName={ACCENTS.red.badge}
           />
 
-          <div className="grid gap-4 lg:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-3">
             <ExploreCard
               href="/sightseeing/must-see"
               title="見逃せないロンドン観光名所"
               description="ビッグベンからバッキンガム宮殿まで、初めての旅行者が押さえておきたい定番スポットを厳選。"
               icon={MapPin}
-              accent={ACCENTS.blue}
-            />
-            <ExploreCard
-              href="/musicals"
-              title="現在上演中のおすすめミュージカル"
-              description="ウエストエンドで今上演中の人気ミュージカルとチケット情報をまとめてチェック。"
-              icon={Ticket}
-              accent={ACCENTS.blue}
+              accent={ACCENTS.red}
             />
             <ExploreCard
               href="/museums/best-10-museums"
-              title="ロンドンのおすすめの美術館"
-              description="大英博物館やテート・モダンなど、無料で入れる名門美術館10選を紹介。"
+              title="絶対に行くべき美術館10選"
+              description="大英博物館やテート・モダンなど、無料で入れる名門美術館を厳選して紹介。"
               icon={Landmark}
-              accent={ACCENTS.blue}
+              accent={ACCENTS.red}
             />
-            {/* <ExploreCard href="/chatboard" title="ロンドンなんでも掲示板" description="旅行者同士で情報交換できる掲示板です。" /> */}
+            <ExploreCard
+              href="/sightseeing/royal-london"
+              title="ロイヤル・ロンドン"
+              description="宮殿、衛兵交代、戴冠式の舞台。王室にまつわる場所をたどるルート。"
+              icon={Crown}
+              accent={ACCENTS.red}
+            />
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <InfoPill href="/museums" title="美術館ナビ" icon={Landmark} />
+            <InfoPill
+              href="/sightseeing/all"
+              title="観光スポット一覧"
+              icon={MapPin}
+            />
+            <InfoPill
+              href="/museums/best-museums-for-kids"
+              title="キッズ向け美術館"
+              icon={Baby}
+            />
+            <InfoPill
+              href="/museums/banksy-artworks"
+              title="街で見つかるバンクシー"
+              icon={Wand2}
+            />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/sightseeing">ロンドン観光ナビを見る →</Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
+      {/* Things to Do ── する(体験) */}
+      <section
+        id="things-to-do"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-muted/40 text-foreground"
+      >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
           <SectionHeader
-            title="ロンドンの催し物"
-            description="ストライキや運休から、その週だけの催しまで。毎週まとめています。"
+            eyebrow="Things to Do"
+            title="ロンドンで体験する"
+            description="ウエストエンドの観劇、パブでのイギリス料理、映画のロケ地めぐり。場所を訪れるだけでは終わらない、この街ならではの過ごし方。"
+            accentClassName={ACCENTS.amber.badge}
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <ExploreCard
+              href="/musicals"
+              title="ウエストエンドのミュージカル"
+              description="今上演中の人気作品と、チケットを安く取るための実践的な方法をまとめて。"
+              icon={Ticket}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/restaurants"
+              title="ロンドンで食べるイギリス料理"
+              description="フィッシュ&チップスからサンデーロースト、アフタヌーンティーまで料理別に解説。"
+              icon={UtensilsCrossed}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/souvenirs"
+              title="ロンドンのお土産"
+              description="紅茶、ビスケット、雑貨。どこで買えて何が喜ばれるかを実物ベースで紹介。"
+              icon={ShoppingBag}
+              accent={ACCENTS.amber}
+            />
+          </div>
+
+          {upcomingEvents.length > 0 && (
+            <div className="mt-8">
+              <h3 className="mb-3 text-sm font-semibold text-muted-foreground">
+                これから開催されるイベント
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {upcomingEvents.map((event) => {
+                  const sameDay =
+                    event.startDate.getTime() === event.endDate.getTime();
+                  const dateLabel = sameDay
+                    ? format(event.startDate, "M月d日")
+                    : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
+
+                  return (
+                    <Link key={event.id} href="/events/calendar">
+                      <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                        <CardContent className="p-4">
+                          <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                            <span className="text-xs font-semibold text-amber-600">
+                              {dateLabel}
+                            </span>
+                            {event.isFree && (
+                              <Badge
+                                variant="outline"
+                                className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
+                              >
+                                無料
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm font-medium leading-snug">
+                            {event.title}
+                          </p>
+                          {event.venue && (
+                            <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
+                              {event.venue}
+                            </p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <InfoPill
+              href="/sightseeing/harry-potter"
+              title="ハリー・ポッターの世界"
+              icon={Wand2}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/sightseeing/film-locations"
+              title="映画・ドラマのロケ地巡り"
+              icon={Clapperboard}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/sightseeing/stadium-tours"
+              title="スタジアムツアー"
+              icon={Trophy}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/sightseeing/thames-cruise"
+              title="テムズ川クルーズ"
+              icon={Ship}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/sightseeing/kids-free-activities"
+              title="子どもと無料で楽しむ"
+              icon={Baby}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/sightseeing/christmas-markets"
+              title="クリスマスマーケット"
+              icon={Gift}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/events/calendar"
+              title="年間イベントカレンダー"
+              icon={Calendar}
+              accent={ACCENTS.amber}
+            />
+            <InfoPill
+              href="/events"
+              title="今週のロンドン"
+              icon={Newspaper}
+              accent={ACCENTS.amber}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Traveller Info ── 旅行者の実務 */}
+      <section
+        id="traveller"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-background text-foreground"
+      >
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="Traveller Info"
+            title="ロンドン旅行の準備"
+            description="出発前に済ませる手続きから、現地での移動と滞在まで。何日で何を回り、どこに泊まり、どう動くかを決めるための実務情報。"
             accentClassName={ACCENTS.blue.badge}
           />
 
+          <div className="grid gap-4 md:grid-cols-3">
+            <ExploreCard
+              href="/sightseeing/eta-uk-visa-guide"
+              title="ETA（電子渡航認証）"
+              description="日本国籍でも観光の入国前に取得が必要。申請の手順、費用、取得にかかる日数まで。"
+              icon={Plane}
+              accent={ACCENTS.blue}
+            />
+            <ExploreCard
+              href="/sightseeing/itinerary"
+              title="モデルコース（1〜5日）"
+              description="滞在日数別に回る順番を具体化。雨の日プランや子連れアレンジも用意しています。"
+              icon={Route}
+              accent={ACCENTS.blue}
+            />
+            <ExploreCard
+              href="/sightseeing/hotels"
+              title="宿泊エリアの選び方"
+              description="同じ予算でも治安と移動時間が大きく変わる。エリアごとの性格を比較して選ぶ。"
+              icon={BedDouble}
+              accent={ACCENTS.blue}
+            />
+            <ExploreCard
+              href="/sightseeing/transport"
+              title="交通ガイド"
+              description="地下鉄、バス、Oyster とタッチ決済、空港からの移動。9つのテーマに分けて解説。"
+              icon={TrainFront}
+              accent={ACCENTS.blue}
+            />
+            <ExploreCard
+              href="/sightseeing/travel-tips"
+              title="旅の実用情報"
+              description="両替とカード、チップ、治安、コンセント、通信。現地で迷いやすい点をまとめて。"
+              icon={Compass}
+              accent={ACCENTS.blue}
+            />
+            <ExploreCard
+              href="/events"
+              title="今週のロンドン"
+              description="ストライキや運休、臨時休館は旅程を直撃する。渡航前に最新号で確認を。"
+              icon={Newspaper}
+              accent={ACCENTS.blue}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Resident Info ── 在住者の実務 */}
+      <section
+        id="resident"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-muted/40 text-foreground"
+      >
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="Resident Info"
+            title="ロンドンで住む・働く"
+            description="観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、働き始めてから何を知っておくべきか。3つの柱で整理しています。"
+            accentClassName={ACCENTS.emerald.badge}
+          />
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <PillarCard
+              href="/visa"
+              title="英国ビザ"
+              description="観光の ETA から、ワーホリ・就労・留学・家族ビザまで。目的と期間から自分のルートを見つける。"
+              icon={FileText}
+              accent={ACCENTS.emerald}
+              links={[
+                { href: "/visa/youth-mobility-scheme", label: "YMS（ワーホリ）" },
+                { href: "/visa/skilled-worker", label: "Skilled Worker（就労）" },
+                { href: "/visa/student", label: "Student／Graduate" },
+                { href: "/visa/after-arrival", label: "渡英後の手続き" },
+              ]}
+            />
+            <PillarCard
+              href="/housing"
+              title="住まい探し"
+              description="2026年5月の法改正で AST も Section 21 も廃止。物件の探し方から敷金の取り戻し方まで。"
+              icon={HomeIcon}
+              accent={ACCENTS.emerald}
+              links={[
+                {
+                  href: "/housing/rightmove-zoopla-openrent",
+                  label: "物件サイトの使い分け",
+                },
+                { href: "/housing/spareroom", label: "フラットシェアを探す" },
+                {
+                  href: "/housing/deposits-and-fees",
+                  label: "初期費用と違法な手数料",
+                },
+                { href: "/housing/moving-out", label: "退去とデポジット返還" },
+              ]}
+            />
+            <PillarCard
+              href="/jobs"
+              title="働く・労働問題"
+              description="最低賃金、労働契約、サービスチャージの未払い。英国の労働法を実務に落として解説。"
+              icon={Briefcase}
+              accent={ACCENTS.emerald}
+              links={[
+                { href: "/jobs/minimum-wage", label: "最低賃金・給与明細" },
+                {
+                  href: "/jobs/employment-contract",
+                  label: "労働契約・就業規則",
+                },
+                {
+                  href: "/jobs/service-charges",
+                  label: "サービスチャージ完全ガイド",
+                },
+                {
+                  href: "/jobs/service-charges/case-story",
+                  label: "審判所申立ての実体験",
+                },
+              ]}
+            />
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <InfoPill
+              href="/visa/uk-visa-guide"
+              title="英国ビザ全ルート比較"
+              icon={FileText}
+              accent={ACCENTS.emerald}
+            />
+            <InfoPill
+              href="/housing/where-to-live"
+              title="住むエリアの選び方"
+              icon={MapPin}
+              accent={ACCENTS.emerald}
+            />
+            <InfoPill
+              href="/jobs/service-charges/dashboard"
+              title="サービスチャージ店舗別データベース"
+              icon={Receipt}
+              accent={ACCENTS.emerald}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* コラム ── 読み物と更新もの */}
+      <section
+        id="column"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-background text-foreground"
+      >
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
+          <SectionHeader
+            eyebrow="Column"
+            title="イギリスをもっと深く読む"
+            description="旅行ガイドだけでは伝えきれない、イギリスの歴史・文化・伝統をじっくり読み解くコラムを毎日更新でお届けします。"
+            accentClassName={ACCENTS.violet.badge}
+          />
+
+          {columnPicks.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {columnPicks.map((item) => (
+                <ColumnCard key={item.id} item={item} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">近日公開予定です。</p>
+          )}
+
           {latestBrief && (
-            <Link href="/events" className="mb-8 block">
+            <Link href="/events" className="mt-6 block">
               <Card className="bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                 <CardContent className="p-5 sm:p-6">
                   <div className="mb-2 flex flex-wrap items-center gap-2">
                     <Badge className="bg-sky-600 hover:bg-sky-600">
-                      {getIssueFreshness(latestBrief.weekStart, now).label}
+                      {freshness?.label}
                     </Badge>
                     <span className="text-xs font-semibold text-muted-foreground">
                       {formatWeekRange(
@@ -229,211 +634,33 @@ export default async function Page() {
             </Link>
           )}
 
-          {upcomingEvents.length > 0 && (
-            <div className="mb-8 grid gap-4 sm:grid-cols-3">
-              {upcomingEvents.map((event) => {
-                const sameDay =
-                  event.startDate.getTime() === event.endDate.getTime();
-                const dateLabel = sameDay
-                  ? format(event.startDate, "M月d日")
-                  : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
-
-                return (
-                  <Link key={event.id} href="/events/calendar">
-                    <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                      <CardContent className="p-4">
-                        <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                          <span className="text-xs font-semibold text-sky-600">
-                            {dateLabel}
-                          </span>
-                          {event.isFree && (
-                            <Badge
-                              variant="outline"
-                              className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
-                            >
-                              無料
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm font-medium leading-snug">
-                          {event.title}
-                        </p>
-                        {event.venue && (
-                          <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
-                            {event.venue}
-                          </p>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <InfoPill
-              href="/restaurants"
-              title="ロンドンで食べるイギリス料理"
-              icon={UtensilsCrossed}
-              accent={ACCENTS.blue}
-            />
-            <InfoPill
-              href="/souvenirs"
-              title="ロンドンのお土産"
-              icon={ShoppingBag}
-              accent={ACCENTS.blue}
-            />
-            <InfoPill
-              href="/sightseeing/christmas-markets"
-              title="ロンドンのクリスマス"
-              icon={Gift}
-              accent={ACCENTS.blue}
-            />
-            <InfoPill
-              href="/sightseeing/kids-free-activities"
-              title="子どもと楽しむ"
-              icon={Baby}
-              accent={ACCENTS.blue}
-            />
-            <InfoPill
-              href="/events/calendar"
-              title="ロンドン年間イベントカレンダー"
-              icon={Calendar}
-              accent={ACCENTS.blue}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* 英国ビザ情報 */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="英国ビザ情報"
-            title="目的別・英国ビザガイド"
-            description="観光のETAはもちろん、ワーホリ・就労・留学・家族ビザ・渡英後の手続きまで。日本国籍の人が実際に使うルートを、目的と期間から探せます。"
-            accentClassName={ACCENTS.amber.badge}
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <ExploreCard
-              href="/visa/youth-mobility-scheme"
-              title="YMS（ワーホリ）申請ガイド"
-              description="18〜30歳ならスポンサーなしで最長2年働ける唯一のルート。日本枠は年6,000人・抽選なし。"
-              icon={Backpack}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/visa/skilled-worker"
-              title="Skilled Worker（就労ビザ）ガイド"
-              description="スポンサー企業を得て働くための就労ビザ。対象職種や年収要件、企業の探し方まで解説。"
-              icon={Briefcase}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/visa/global-talent"
-              title="Global Talent（卓越人材ビザ）ガイド"
-              description="研究者・アーティスト・技術者向け。雇用主のスポンサーが不要で、最短3年で永住権に届きます。"
-              icon={Award}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/visa/student"
-              title="Student／Graduate ビザガイド"
-              description="CASの取り方、維持費の証明額、就労できる時間まで。卒業後のGraduateビザについても解説。"
-              icon={GraduationCap}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/visa/family"
-              title="家族・配偶者ビザガイド"
-              description="英国人・定住者の配偶者として暮らすためのルート。所得要件や関係の真実性の立証方法。"
-              icon={Users}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/visa/after-arrival"
-              title="渡英後の手続きガイド"
-              description="UKVIアカウント、share code、NINo、GP登録、銀行口座。ビザが下りてからやるべきことまとめ。"
-              icon={HomeIcon}
-              accent={ACCENTS.amber}
-            />
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/visa">英国ビザガイドをすべて見る →</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ロンドンで働く・暮らす */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-muted/40">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="働く・暮らす"
-            title="ロンドンで働く人のための労働問題ガイド"
-            description="観光だけでなく、ロンドンで暮らし・働く日本人のための実用情報も。最低賃金からビザ、サービスチャージの未払いトラブルまで、英国の労働法を分かりやすくまとめました。"
-            accentClassName={ACCENTS.emerald.badge}
-          />
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <ExploreCard
-              href="/jobs"
-              title="労働問題ガイド トップ"
-              description="最低賃金・労働契約・ビザと就労・職場ハラスメントまで、働き始める前後に知っておきたい基本をテーマ別に整理。"
-              icon={BriefcaseBusiness}
-              accent={ACCENTS.emerald}
-            />
-            <ExploreCard
-              href="/jobs/service-charges"
-              title="サービスチャージ完全ガイド"
-              description="Tipping Act 2023の内容、Tronc制度、強制・任意の違いまで、飲食・ホテル業界で働く人が知るべき制度を網羅。"
-              icon={Receipt}
-              accent={ACCENTS.emerald}
-            />
-            <ExploreCard
-              href="/jobs/service-charges/case-story"
-              title="審判所に申立てた実体験の記録"
-              description="サービスチャージ未払いをめぐり、Acas調停からEmployment Tribunalの判決・強制執行まで実際に歩んだ記録を公開。"
-              icon={Scale}
-              accent={ACCENTS.emerald}
-            />
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/jobs">労働問題ガイドをすべて見る →</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* コラム */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b text-foreground bg-background">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="コラム"
-            title="イギリスの歴史・文化・伝統を深掘りする読み物"
-            description="旅行ガイドだけでは伝えきれない、イギリスの奥深さをじっくり読み解くコラムを毎日更新でお届けします。"
-          />
-
-          {columnPicks.length > 0 ? (
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
-              {columnPicks.map((item) => (
-                <ColumnCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">近日公開予定です。</p>
-          )}
-
           <div className="mt-6 flex justify-center">
             <Button asChild variant="outline" size="sm">
               <Link href="/column">コラムをすべて見る →</Link>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* サイト概要。検索から来た読者向けの説明なので、導線を塞がないよう最下部に置く。 */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-muted/40 text-foreground">
+        <div className="mx-auto max-w-3xl px-4 py-10 text-center">
+          <h2 className="mb-3 text-base font-semibold">
+            ロンドン観光をもっと楽しむためのガイド
+          </h2>
+          <div className="space-y-2 text-xs leading-relaxed text-muted-foreground">
+            <p>
+              ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
+              定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
+              初めての方にも分かりやすく情報をまとめています。
+            </p>
+            <p>
+              地下鉄やバスなどの移動手段、無料で楽しめる観光地、
+              子ども連れや一人旅におすすめのスポットなど、
+              旅行計画に役立つ実用的な情報も充実しています。
+              あわせて、ビザ・住まい探し・労働問題など、
+              ロンドンで暮らし働く人のための実務情報も扱っています。
+            </p>
           </div>
         </div>
       </section>
@@ -442,6 +669,102 @@ export default async function Page() {
 }
 
 type Accent = (typeof ACCENTS)[keyof typeof ACCENTS];
+
+/** トップ直下の大区分カード。href はページ内アンカーか、区分そのもののハブページ。 */
+function CategoryCard({
+  href,
+  eyebrow,
+  title,
+  description,
+  icon: Icon,
+  accent,
+}: {
+  href: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  accent: Accent;
+}) {
+  return (
+    <Link href={href}>
+      <Card
+        className={`h-full border bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${accent.hoverBorder}`}
+      >
+        <CardContent className="flex h-full flex-col p-5">
+          <div className={`mb-3 inline-flex w-fit rounded-lg p-2 ${accent.iconBg}`}>
+            <Icon className={`h-5 w-5 ${accent.iconText}`} />
+          </div>
+          <p
+            className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${accent.iconText}`}
+          >
+            {eyebrow}
+          </p>
+          <p className="mt-1 text-lg font-semibold">{title}</p>
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+            {description}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+/**
+ * 子リンクを内包する太いカード。Resident Info の3本柱に使う。
+ * カード全体をリンクにすると入れ子の a タグになるため、見出しと子を別々のリンクにしている。
+ */
+function PillarCard({
+  href,
+  title,
+  description,
+  icon: Icon,
+  accent,
+  links,
+}: {
+  href: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  accent: Accent;
+  links: { href: string; label: string }[];
+}) {
+  return (
+    <Card
+      className={`h-full border bg-card text-card-foreground shadow-sm transition hover:shadow-md ${accent.hoverBorder}`}
+    >
+      <CardContent className="flex h-full flex-col p-5">
+        <div className={`mb-3 inline-flex w-fit rounded-lg p-2 ${accent.iconBg}`}>
+          <Icon className={`h-5 w-5 ${accent.iconText}`} />
+        </div>
+        <Link href={href} className="text-base font-semibold hover:underline">
+          {title}
+        </Link>
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+        <ul className="mt-4 space-y-1.5 border-t pt-4">
+          {links.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="text-xs text-muted-foreground transition hover:text-foreground hover:underline"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href={href}
+          className={`mt-4 inline-block text-xs font-semibold ${accent.iconText} hover:underline`}
+        >
+          すべて見る →
+        </Link>
+      </CardContent>
+    </Card>
+  );
+}
 
 function InfoPill({
   title,
@@ -457,7 +780,7 @@ function InfoPill({
   return (
     <Link href={href}>
       <button
-        className={`flex w-full items-center gap-2 rounded-xl border bg-card text-card-foreground px-4 py-3 text-left text-xs font-medium shadow-sm transition hover:shadow-md ${accent.hoverBorder}`}
+        className={`flex w-full items-center gap-2 rounded-xl border bg-card px-4 py-3 text-left text-xs font-medium text-card-foreground shadow-sm transition hover:shadow-md ${accent.hoverBorder}`}
       >
         {Icon && <Icon className={`h-4 w-4 shrink-0 ${accent.iconText}`} />}
         <span>{title}</span>
