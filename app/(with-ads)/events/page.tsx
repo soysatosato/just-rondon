@@ -94,7 +94,8 @@ export default async function EventsPage() {
   });
 
   return (
-    <main className="container mx-auto px-4 py-10">
+    // 本文が主役のページなので、コンテナ幅いっぱいに広げず読める行長に収める。
+    <main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -106,23 +107,29 @@ export default async function EventsPage() {
 
       <BackIssueList issues={backIssues} />
 
-      <div className="rounded-2xl border border-border bg-muted/40 p-6 text-center dark:border-neutral-700 dark:bg-neutral-900">
-        <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <CalendarRange className="h-6 w-6" />
-        </span>
-        <h2 className="text-lg font-semibold dark:text-white">
-          年間のイベントを探す
-        </h2>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground dark:text-gray-400">
-          チェルシー・フラワーショーやクリスマスマーケットなど、1年前から日程が決まっている
-          恒例行事は月別カレンダーにまとめています。旅行の時期を決めるときはこちらへ。
-        </p>
-        <Link href="/events/calendar" className="mt-4 inline-block">
-          <Button>2026年のイベントカレンダーを見る</Button>
+      <div className="rounded-2xl border border-border bg-muted/40 p-5 sm:p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <CalendarRange className="h-6 w-6" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-base font-bold sm:text-lg dark:text-white">
+              年間のイベントを探す
+            </h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+              チェルシー・フラワーショーやクリスマスマーケットなど、1年前から日程が決まっている
+              恒例行事は月別カレンダーにまとめています。旅行の時期を決めるときはこちらへ。
+            </p>
+          </div>
+        </div>
+        <Link href="/events/calendar" className="mt-4 block sm:mt-4">
+          <Button className="w-full sm:w-auto">
+            2026年のイベントカレンダーを見る
+          </Button>
         </Link>
       </div>
 
-      <p className="mt-8 text-center text-xs text-muted-foreground dark:text-gray-400">
+      <p className="mt-8 text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
         この号は{format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。
         運行情報や開催情報は変わることがあるため、出発前に各公式サイトで最新の状況を確認してください。
       </p>

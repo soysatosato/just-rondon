@@ -1,59 +1,24 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { CalendarRange, Search, CalendarDays, MapPin } from "lucide-react";
+import { CalendarRange, Search, History, CalendarCheck } from "lucide-react";
 import type { Event, WeeklyBrief, WeeklyBriefItem } from "@prisma/client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import {
   formatWeekRange,
   getIssueFreshness,
   getKindMeta,
   GROUP_META,
   GROUP_ORDER,
-  type BriefGroup,
 } from "@/lib/weekly";
 import BriefItemCard from "@/components/events/BriefItemCard";
+import BriefSectionNav from "@/components/events/BriefSectionNav";
+import StapleEventList from "@/components/events/StapleEventList";
 
 type BriefWithItems = WeeklyBrief & { items: WeeklyBriefItem[] };
 
-function StapleEventCard({ event }: { event: Event }) {
-  const sameDay = event.startDate.getTime() === event.endDate.getTime();
-  const dateLabel = sameDay
-    ? format(event.startDate, "M月d日")
-    : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
-
-  return (
-    <Card className="h-full rounded-2xl dark:border-neutral-700 dark:bg-neutral-900">
-      <CardContent className="p-4">
-        <div className="mb-1 flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary">
-            <CalendarDays className="h-3 w-3" />
-            {dateLabel}
-          </span>
-          {event.isFree && (
-            <Badge
-              variant="outline"
-              className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
-            >
-              無料
-            </Badge>
-          )}
-        </div>
-        <p className="text-sm font-medium leading-snug dark:text-white">
-          {event.title}
-        </p>
-        {event.venue && (
-          <p className="mt-1.5 flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400">
-            <MapPin className="h-3 w-3 shrink-0" />
-            <span className="line-clamp-1">{event.venue}</span>
-          </p>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
+const STAPLES_ANCHOR = "staples";
 
 export default function WeeklyBriefView({
   brief,
@@ -73,73 +38,118 @@ export default function WeeklyBriefView({
   // 項目を「注意 / 耳寄り / 前提」の3グループに束ねる。
   const grouped = GROUP_ORDER.map((group) => ({
     group,
-    items: brief.items.filter(
-      (item) => getKindMeta(item.kind).group === (group as BriefGroup)
-    ),
+    meta: GROUP_META[group],
+    items: brief.items.filter((item) => getKindMeta(item.kind).group === group),
   })).filter(({ items }) => items.length > 0);
+
+  const navSections = [
+    ...grouped.map(({ meta, items }) => ({
+      anchor: meta.anchor,
+      label: meta.shortLabel,
+      count: items.length,
+      chipClass: meta.chipClass,
+    })),
+    ...(staples.length > 0
+      ? [
+          {
+            anchor: STAPLES_ANCHOR,
+            label: "定番",
+            count: staples.length,
+            chipClass:
+              "border-border bg-muted text-muted-foreground dark:border-neutral-700 dark:text-gray-300",
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div>
-      <header className="mb-8 text-center">
-        <div className="mb-3 flex flex-wrap items-center justify-center gap-1.5">
-          <Badge
-            variant="outline"
-            className="border-primary/40 bg-primary/10 text-primary"
-          >
+      {/* 号の顔。中央揃えだと本文との間で軸がぶれるので、全体を左揃えで通す。 */}
+      <header className="mb-6">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <Badge className="bg-primary text-primary-foreground hover:bg-primary">
             {freshness.label}
           </Badge>
-          <span className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground dark:text-gray-400">
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground dark:text-gray-400">
             <CalendarRange className="h-4 w-4" />
             {formatWeekRange(brief.weekStart, brief.weekEnd)}
           </span>
         </div>
 
-        <Title className="text-2xl font-bold md:text-3xl dark:text-white">
+        <Title className="text-2xl font-bold leading-tight tracking-tight sm:text-3xl md:text-4xl dark:text-white">
           {brief.title}
         </Title>
 
-        <p className="mx-auto mt-4 max-w-2xl text-left text-base font-medium leading-relaxed dark:text-gray-100">
+        {/* 見出しの直後に、その週の要点を1本の線で引き立てて置く。 */}
+        <p className="mt-5 border-l-4 border-primary pl-4 text-[15px] font-semibold leading-relaxed sm:text-base dark:text-gray-100">
           {brief.headline}
         </p>
 
-        <p className="mx-auto mt-3 max-w-2xl text-left text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
           {brief.summary}
         </p>
 
         {/* いつ時点の情報かを出さないと、ストライキや休館の記述は誤情報になりうる。 */}
-        <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs text-muted-foreground dark:bg-neutral-800 dark:text-gray-400">
-          <Search className="h-3 w-3" />
-          {format(brief.researchedAt, "yyyy年M月d日")} 時点の調査
+        <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground dark:text-gray-500">
+          <Search className="h-3.5 w-3.5" />
+          {format(brief.researchedAt, "yyyy年M月d日")}時点の調査
         </p>
       </header>
 
       {/* 過去号は情報が古い。読者が気づかず従うのを防ぐ。 */}
       {freshness.isPast && (
-        <div className="mb-8 rounded-xl border border-amber-600/30 bg-amber-600/5 p-4 text-sm text-amber-800 dark:text-amber-300">
-          <p className="font-semibold">
-            この号は{freshness.label}の情報です
-          </p>
-          <p className="mt-1 leading-relaxed">
-            運行状況や開催情報は変わっている可能性があります。
-            <Link href="/events" className="underline underline-offset-2">
-              最新号
-            </Link>
-            を確認してください。
-          </p>
+        <div className="mb-6 flex gap-3 rounded-xl border border-amber-600/30 bg-amber-600/5 p-4">
+          <History className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+          <div className="text-sm text-amber-800 dark:text-amber-300">
+            <p className="font-semibold">この号は{freshness.label}の情報です</p>
+            <p className="mt-1 leading-relaxed">
+              運行状況や開催情報は変わっている可能性があります。
+              <Link
+                href="/events"
+                className="font-semibold underline underline-offset-2"
+              >
+                最新号
+              </Link>
+              を確認してください。
+            </p>
+          </div>
         </div>
       )}
 
-      {grouped.map(({ group, items }) => {
-        const meta = GROUP_META[group];
+      <BriefSectionNav sections={navSections} />
+
+      {grouped.map(({ group, meta, items }) => {
+        const GroupIcon = meta.icon;
         return (
-          <section key={group} className="mb-10">
-            <h2 className="text-xl font-semibold dark:text-white">
-              {meta.heading}
-            </h2>
-            <p className="mt-1 mb-4 text-xs text-muted-foreground dark:text-gray-400">
-              {meta.note}
-            </p>
-            <div className="grid gap-5">
+          <section
+            key={group}
+            id={meta.anchor}
+            // sticky なナビの下に見出しが潜り込まないよう余白を確保する。
+            className="mb-10 scroll-mt-16"
+          >
+            <div className="mb-4 flex items-start gap-3">
+              <span
+                className={cn(
+                  "mt-1 h-8 w-1 shrink-0 rounded-full",
+                  meta.accentClass
+                )}
+                aria-hidden
+              />
+              <div className="min-w-0">
+                <h2 className="flex items-center gap-2 text-lg font-bold sm:text-xl dark:text-white">
+                  <GroupIcon className="h-4 w-4 shrink-0 opacity-70" />
+                  {meta.heading}
+                  <span className="text-sm font-normal tabular-nums text-muted-foreground">
+                    {items.length}
+                  </span>
+                </h2>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+                  {meta.note}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4">
               {items.map((item) => (
                 <BriefItemCard key={item.id} item={item} />
               ))}
@@ -149,22 +159,28 @@ export default function WeeklyBriefView({
       })}
 
       {staples.length > 0 && (
-        <>
-          <Separator className="my-8 dark:bg-neutral-700" />
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold dark:text-white">
-              今週開催中の定番
-            </h2>
-            <p className="mt-1 mb-4 text-xs text-muted-foreground dark:text-gray-400">
-              毎年の恒例行事や会期の長い展覧会など、この週に開催中のもの。
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {staples.map((event) => (
-                <StapleEventCard key={event.id} event={event} />
-              ))}
+        <section id={STAPLES_ANCHOR} className="mb-10 scroll-mt-16">
+          <div className="mb-4 flex items-start gap-3">
+            <span
+              className="mt-1 h-8 w-1 shrink-0 rounded-full bg-muted-foreground/40"
+              aria-hidden
+            />
+            <div className="min-w-0">
+              <h2 className="flex items-center gap-2 text-lg font-bold sm:text-xl dark:text-white">
+                <CalendarCheck className="h-4 w-4 shrink-0 opacity-70" />
+                今週開催中の定番
+                <span className="text-sm font-normal tabular-nums text-muted-foreground">
+                  {staples.length}
+                </span>
+              </h2>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+                毎年の恒例行事や会期の長い展覧会など、この週に開催中のもの。
+              </p>
             </div>
-          </section>
-        </>
+          </div>
+
+          <StapleEventList events={staples} />
+        </section>
       )}
 
       {brief.items.length === 0 && staples.length === 0 && (

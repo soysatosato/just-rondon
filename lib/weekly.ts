@@ -262,22 +262,47 @@ export function getKindMeta(kind: string): KindMeta {
 
 export interface GroupMeta {
   heading: string;
+  /** セクションナビ用の短い名前。 */
+  shortLabel: string;
   /** セクション見出しの下に出す一言。 */
   note: string;
+  anchor: string;
+  icon: LucideIcon;
+  /** 見出し左の縦罫。セクションの性格を色で示す。 */
+  accentClass: string;
+  chipClass: string;
 }
 
 export const GROUP_META: Record<BriefGroup, GroupMeta> = {
   alert: {
     heading: "今週の注意",
+    shortLabel: "注意",
     note: "知らないと予定が崩れるもの。出発前に公式サイトで最新情報を確認してください。",
+    anchor: "alert",
+    icon: TriangleAlert,
+    accentClass: "bg-red-500",
+    chipClass:
+      "border-red-600/40 bg-red-600/10 text-red-700 dark:text-red-400",
   },
   opportunity: {
     heading: "今週の耳寄り情報",
+    shortLabel: "耳寄り",
     note: "この週だからこそ狙えるもの。",
+    anchor: "opportunity",
+    icon: Sparkles,
+    accentClass: "bg-violet-500",
+    chipClass:
+      "border-violet-600/40 bg-violet-600/10 text-violet-700 dark:text-violet-400",
   },
   context: {
     heading: "今週の前提",
+    shortLabel: "前提",
     note: "天候や祝日など、動き方に影響するもの。",
+    anchor: "context",
+    icon: CloudSun,
+    accentClass: "bg-sky-500",
+    chipClass:
+      "border-sky-600/40 bg-sky-600/10 text-sky-700 dark:text-sky-400",
   },
 };
 
