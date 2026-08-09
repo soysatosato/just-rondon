@@ -878,19 +878,10 @@ model TweetDraft {
   body      String
   /// tip(耳寄り情報) | fact(あるあるネタ) | question(問いかけ系) など、ネタの種類。
   category  String
-  /// draft(未投稿) | posted(投稿済み) | failed(投稿試行して失敗)
+  /// draft(未投稿) | posted(投稿済み)
   status    String    @default("draft")
   postedAt  DateTime?
   createdAt DateTime  @default(now())
 
   @@index([status, createdAt])
-}
-
-/// X の OAuth 2.0 refresh token は使用の都度ローテーションされ使い捨てになるため、
-/// 環境変数に固定保存できない。最新の token をここに1行だけ保持する。
-/// 初回だけ環境変数 X_REFRESH_TOKEN からseedし、以後はDBが正になる。
-model XAuthToken {
-  id           String   @id @default(cuid())
-  refreshToken String
-  updatedAt    DateTime @updatedAt
 }
