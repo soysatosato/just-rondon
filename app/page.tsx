@@ -25,6 +25,7 @@ import {
   Home as HomeIcon,
   Briefcase,
   ShoppingBag,
+  Tag,
   UtensilsCrossed,
   BookOpen,
   Newspaper,
@@ -305,7 +306,7 @@ export default async function Page() {
             accentClassName={ACCENTS.amber.badge}
           />
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <ExploreCard
               href="/musicals"
               title="ウエストエンドのミュージカル"
@@ -318,6 +319,13 @@ export default async function Page() {
               title="ロンドンで食べるイギリス料理"
               description="フィッシュ&チップスからサンデーロースト、アフタヌーンティーまで料理別に解説。"
               icon={UtensilsCrossed}
+              accent={ACCENTS.amber}
+            />
+            <ExploreCard
+              href="/brands"
+              title="イギリスのブランド"
+              description="バーバリーからドクターマーチンまで。成り立ちと、ロンドンでの買い方の両方から。"
+              icon={Tag}
               accent={ACCENTS.amber}
             />
             <ExploreCard

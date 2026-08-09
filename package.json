@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postbuild": "next-sitemap",
-    "create-column": "tsx scripts/create-column.ts"
+    "create-column": "tsx scripts/create-column.ts",
+    "seed-brands": "tsx scripts/seed-brands.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.1",

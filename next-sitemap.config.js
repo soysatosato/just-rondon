@@ -97,6 +97,7 @@ module.exports = {
       "/events/archive/2025",
       "/column",
       "/souvenirs",
+      "/brands",
       "/restaurants",
       "/sightseeing",
       "/sightseeing/all",
@@ -271,6 +272,12 @@ module.exports = {
     const dishes = await prisma.dish.findMany({ select: { slug: true } });
     for (const d of dishes) {
       paths.push(await config.transform(config, `/restaurants/${d.slug}`));
+    }
+
+    // ブランドページ。/brands ハブ自体は上の staticPages 側にある。
+    const brands = await prisma.brand.findMany({ select: { slug: true } });
+    for (const b of brands) {
+      paths.push(await config.transform(config, `/brands/${b.slug}`));
     }
 
     const columns = await prisma.content.findMany({

@@ -110,6 +110,7 @@ export const NAV_SECTIONS: NavSection[] = [
         heading: "食べる・買う",
         links: [
           { href: "/restaurants", label: "イギリス料理" },
+          { href: "/brands", label: "イギリスのブランド" },
           { href: "/souvenirs", label: "ロンドンのお土産" },
         ],
       },

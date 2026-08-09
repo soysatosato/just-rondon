@@ -383,6 +383,85 @@ model Souvenir {
   @@index([category])
 }
 
+// イギリス発のブランド1社(/brands/[slug])。
+//
+// Souvenir と軸が違う。あちらは品目単位で「誰に何を配るか」を扱うのに対し、
+// こちらはブランド単位で「その会社が何者で、ロンドンのどこで、いくらで買えるか」
+// を扱う。Twinings のように両方に登場する名前はあるが、書く内容が重ならないので
+// 統合しない。
+//
+// 本文を story と buying の2本に割っているのは、読者の来方が二通りあるため。
+// 「バーバリー 歴史」で来た人と「バーバリー ロンドン 安い」で来た人が同じ順に
+// 読むことはないので、1本の body に混ぜると必ずどちらかが読み飛ばしになる。
+model Brand {
+  id      String @id @default(cuid())
+  slug    String @unique
+  name    String
+  engName String
+  /// "fashion" | "footwear" | "outdoor" | "beauty" | "homeware" | "food"
+  category String
+  /// カード用の一言。詳細を開かなくても選べる粒度で書く。
+  blurb String
+  /// 成り立ち。markdown。創業の経緯、定番品が生まれた背景。
+  story String
+  /// 買い方の実務。markdown。日本との価格差、どの店で買うか。
+  buying String
+
+  founded Int?
+  /// 発祥地。「ロンドン・ストランド」「ノーサンバーランド州」など。
+  origin  String?
+  /// 王室御用達(Royal Warrant)を現在保持しているか。
+  /// authorised が取り消される例があるので、過去の保持は true にしない。
+  royalWarrant Boolean @default(false)
+
+  priceRange String?
+  /// ロンドンで買える場所。「リージェント・ストリート本店」「Selfridges」など。
+  buyAt      String[] @default([])
+  /// 旗艦店の住所と最寄り駅。
+  flagship   String?
+  website    String?
+  tips       String?
+
+  recommendLevel Int @default(0)
+  displayOrder   Int @default(0)
+
+  image       String?
+  /// "commons" | "rakuten" | "amazon" | "official" | "own"
+  imageSource String?
+  /// 出典・ライセンス表記。commons のときは必須。
+  imageCredit String?
+  imageLink   String?
+
+  items BrandItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+}
+
+/// ブランドの定番アイテム。「そのブランドで何を買えばいいか」に答えるためのもので、
+/// 在庫や現在価格は追わない。priceRange は幅で持ち、変動しても嘘にならない粒度にする。
+model BrandItem {
+  id      String @id @default(cuid())
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  name       String
+  engName    String?
+  /// なぜこれが定番なのかの一言。
+  note       String
+  priceRange String?
+
+  affiliateUrl String?
+  displayOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brandId, displayOrder])
+}
+
 model AttractionSection {
   id           Int        @id @default(autoincrement())
   title        String
