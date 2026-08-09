@@ -422,6 +422,14 @@ model Brand {
   website    String?
   tips       String?
 
+  /// 公式アカウントの「投稿」URL(https://www.instagram.com/p/... )。
+  /// プロフィールURLでは埋め込めない(Restaurant.instagramUrl と同じ制約)。
+  ///
+  /// ヒーロー画像と併存させるのは、Commons にあるのが店舗外観や史料の写真
+  /// ばかりで、そのブランドが「今」何を作っているのかが写らないため。
+  /// 商品そのものは公式の投稿を埋め込むのが、複製を伴わない分いちばん安全。
+  instagramUrl String?
+
   recommendLevel Int @default(0)
   displayOrder   Int @default(0)
 
@@ -539,6 +547,19 @@ model BrandItem {
   /// なぜこれが定番なのかの一言。
   note       String
   priceRange String?
+
+  /// 定番品そのものの写真。
+  ///
+  /// ブランドの魅力は結局「何が買えるか」なので、外観写真より効く。
+  /// ただし商品写真は Commons にほぼ無く、出典は公式か Commons に限る。
+  /// 通販サイトの商品画像を直リンクすると、URLが切れたときに黙って
+  /// 画像が消えるうえ、そもそも再配布の許諾がない。
+  image       String?
+  /// "commons" | "official"
+  imageSource String?
+  /// 出典・ライセンス表記。commons のときは必須。
+  imageCredit String?
+  imageLink   String?
 
   affiliateUrl String?
   displayOrder Int     @default(0)

@@ -7,6 +7,7 @@ import { AD_SLOTS } from "@/lib/adsense";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
+import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import GuideFaq from "@/components/guides/GuideFaq";
 import BrandFigure from "@/components/brands/BrandFigure";
 import { Badge } from "@/components/ui/badge";
@@ -233,7 +234,23 @@ export default async function BrandPage({
         )}
       </section>
 
-      {/* 4. 何を買うか */}
+      {/*
+        4. 公式アカウントの投稿。
+        Commons の画像は店舗外観や史料が中心で、そのブランドが「今」
+        何を作っているのかが写らない。公式の投稿を埋め込めば、写真を
+        複製せずに現行品を見せられる。
+      */}
+      {brand.instagramUrl && (
+        <section className="mt-10 space-y-3">
+          <h2 className="text-xl font-semibold">公式アカウントより</h2>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {brand.engName} の公式アカウントの投稿です。
+          </p>
+          <InstagramEmbed url={brand.instagramUrl} />
+        </section>
+      )}
+
+      {/* 5. 何を買うか */}
       {brand.items.length > 0 && (
         <section className="mt-12 space-y-5">
           <div className="space-y-2 border-b border-slate-200 pb-3 dark:border-slate-700">
@@ -251,39 +268,68 @@ export default async function BrandPage({
             {brand.items.map((item) => (
               <li
                 key={item.id}
-                className="rounded-lg border border-slate-200 p-4 dark:border-slate-800"
+                className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800"
               >
-                <div className="flex flex-wrap items-baseline gap-x-2">
-                  <h3 className="text-sm font-bold">{item.name}</h3>
-                  {item.engName && (
-                    <span className="text-xs italic text-muted-foreground">
-                      {item.engName}
-                    </span>
+                {/*
+                  定番品の写真。画像の無いアイテムと並ぶので、枠の中で
+                  高さを固定して一覧の行が崩れないようにする。
+                */}
+                {item.image && (
+                  <div className="relative aspect-[4/3] w-full bg-slate-100 dark:bg-slate-800">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                )}
+
+                <div className="p-4">
+                  <div className="flex flex-wrap items-baseline gap-x-2">
+                    <h3 className="text-sm font-bold">{item.name}</h3>
+                    {item.engName && (
+                      <span className="text-xs italic text-muted-foreground">
+                        {item.engName}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    {item.note}
+                  </p>
+                  {item.priceRange && (
+                    <p className="mt-2 text-xs font-semibold">
+                      {item.priceRange}
+                    </p>
+                  )}
+                  {item.affiliateUrl && (
+                    <a
+                      href={item.affiliateUrl}
+                      target="_blank"
+                      rel="nofollow sponsored noopener noreferrer"
+                      className="mt-2 inline-block text-xs font-medium text-sky-700 hover:underline dark:text-sky-300"
+                    >
+                      取り扱いを見る →
+                    </a>
+                  )}
+                  {item.image && (
+                    <div className="mt-2">
+                      <ImageCredit
+                        source={item.imageSource}
+                        credit={item.imageCredit}
+                        link={item.imageLink}
+                      />
+                    </div>
                   )}
                 </div>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  {item.note}
-                </p>
-                {item.priceRange && (
-                  <p className="mt-2 text-xs font-semibold">{item.priceRange}</p>
-                )}
-                {item.affiliateUrl && (
-                  <a
-                    href={item.affiliateUrl}
-                    target="_blank"
-                    rel="nofollow sponsored noopener noreferrer"
-                    className="mt-2 inline-block text-xs font-medium text-sky-700 hover:underline dark:text-sky-300"
-                  >
-                    取り扱いを見る →
-                  </a>
-                )}
               </li>
             ))}
           </ul>
         </section>
       )}
 
-      {/* 5. 主な店舗・アウトレット */}
+      {/* 6. 主な店舗・アウトレット */}
       {brand.stores.length > 0 && (
         <section className="mt-12 space-y-5">
           <div className="space-y-2 border-b border-slate-200 pb-3 dark:border-slate-700">
@@ -339,7 +385,7 @@ export default async function BrandPage({
         </section>
       )}
 
-      {/* 6. FAQ */}
+      {/* 7. FAQ */}
       {faqItems.length > 0 && <GuideFaq items={faqItems} />}
 
       {brand.website && (

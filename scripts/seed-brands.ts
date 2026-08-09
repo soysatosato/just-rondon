@@ -5,6 +5,7 @@ import {
   resolveCommonsImage,
   type CommonsImage,
 } from "./lib/commons";
+import { normaliseInstagramUrl } from "./lib/instagram";
 
 /**
  * /brands のブランドデータを投入する。
@@ -42,6 +43,13 @@ type BrandSeed = {
   priceRange?: string;
   website?: string;
   tips?: string;
+  /**
+   * 公式アカウントの「投稿」URL。プロフィールURL(instagram.com/burberry/)では
+   * 埋め込めないので、投稿を開いて「…」→「リンクをコピー」で得られる
+   * https://www.instagram.com/p/XXXXXXX/ を貼る。
+   * 検査は normaliseInstagramUrl に任せ、弾かれたものは null になる。
+   */
+  instagramUrl?: string;
   recommendLevel: number;
   stores?: {
     kind: "flagship" | "store" | "outlet" | "retailer";
@@ -64,6 +72,12 @@ type BrandSeed = {
     engName?: string;
     note: string;
     priceRange?: string;
+    /**
+     * 定番品の写真。Commons の "File:..." タイトル。
+     * ヒーローや図版と同じく、URL ではなくファイル名で持って毎回解決する。
+     * 商品写真は Commons に少ないので、見つかったものにだけ付ける。
+     */
+    commonsFile?: string;
   }[];
 };
 
@@ -547,6 +561,7 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
         engName: "M12 Twin Tipped Polo",
         note: "襟と袖口にラインが入る定番。配色の選択肢が本国では圧倒的に多い。",
         priceRange: "£75〜85",
+        commonsFile: "File:Fred Perry Shirt.jpg",
       },
       {
         name: "M3 ポロシャツ",
@@ -689,6 +704,10 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
         engName: "Orb Necklace",
         note: "ブランドの記号が最も分かりやすく出る小物。土産として渡しても伝わる。",
         priceRange: "£100〜250",
+        // 写真はベルトのバックル。同じオーブの意匠が最も大きく写っている
+        // Commons 上の1枚で、ネックレスそのものの自由な画像は無い。
+        commonsFile:
+          "File:Vivienne Westwood belt buckle on black leather belt (close-up).jpg",
       },
       {
         name: "オーブの財布・カードケース",
@@ -1139,6 +1158,7 @@ Tシャツやスウェットで £150 前後、上着やドレスは £500 以�
         engName: "1460 Original",
         note: "1960年4月1日発売。型番が発売日そのものを指している原型。",
         priceRange: "£150〜180",
+        commonsFile: "File:Dr Martens 10 Eyelet Boots.JPG",
       },
       {
         name: "1461 3ホールシューズ",
@@ -1755,6 +1775,9 @@ Beaufort の背面ポケットは、撃った鳥を入れるためのもので�
         engName: "Bedale",
         note: "乗馬用として設計された短丈。裾が割れているのは鞍にまたがるため。",
         priceRange: "£250〜320",
+        // 全体像ではなく、ワックスコットンの生地と真鍮のスタッドが分かる寄り。
+        // 型を特定できる写真が Commons に無いため、素材が伝わる1枚を選んだ。
+        commonsFile: "File:Barbour jacket 01.jpg",
       },
       {
         name: "ボーフォート",
@@ -1901,6 +1924,7 @@ Beaufort の背面ポケットは、撃った鳥を入れるためのもので�
         engName: "Original Tall",
         note: "最も知られている膝下丈。色数が多いが、スーツケースではかさばる。",
         priceRange: "£140〜",
+        commonsFile: "File:Hunter rainboots.jpg",
       },
       {
         name: "オリジナル ショート",
@@ -2188,6 +2212,7 @@ Blenheim Bouquet は1902年、マールバラ公のために作られたもの�
         engName: "Cologne",
         note: "軽い濃度で重ね付けの前提になる主力。1本目に選ぶならここから。",
         priceRange: "£60〜120",
+        commonsFile: "File:Jo Malone London Silver Birch and Lavender Cologne.jpg",
       },
       {
         name: "石鹸・ハンドクリーム",
@@ -2363,6 +2388,8 @@ Wild Strawberry のように1960年代から続くパターンがあり、後か
         engName: "Jasperware",
         note: "水色に白い浮き彫りの定番。小さいものなら持ち帰りの負担が軽い。",
         priceRange: "£40〜150",
+        commonsFile:
+          "File:Teapot, Josiah Wedgwood and Sons, c. 1840, blue jasperware - Chazen Museum of Art - DSC01980.JPG",
       },
       {
         name: "ワイルド・ストロベリー",
@@ -3038,6 +3065,7 @@ async function main() {
   let order = 0;
   let heroResolved = 0;
   let figureResolved = 0;
+  let itemImageResolved = 0;
 
   for (const b of BRANDS) {
     let hero: CommonsImage | null = null;
@@ -3060,6 +3088,7 @@ async function main() {
       priceRange: b.priceRange ?? null,
       website: b.website ?? null,
       tips: b.tips ?? null,
+      instagramUrl: normaliseInstagramUrl(b.instagramUrl, b.slug),
       recommendLevel: b.recommendLevel,
       displayOrder: order++,
       ...imageColumns(hero),
@@ -3075,13 +3104,34 @@ async function main() {
     // 消して入れ直すほうが seed の内容と DB が確実に一致する。
     await db.brandItem.deleteMany({ where: { brandId: brand.id } });
     if (b.items?.length) {
+      // 画像の解決は1件ずつ待つ必要があるので、先にまとめて解決してから
+      // createMany に渡す。解決できなかったものは画像なしで登録する
+      // ——アイテム自体の説明は画像が無くても成立するため、
+      // 図版(BrandImage)と違って行ごと捨てはしない。
+      const items = await Promise.all(
+        b.items.map(async (item) => ({
+          item,
+          image: item.commonsFile
+            ? await resolveCommonsImage(item.commonsFile)
+            : null,
+        })),
+      );
+
+      for (const { item, image } of items) {
+        if (item.commonsFile && !image) {
+          console.log(`  ! 商品画像を解決できず: ${item.commonsFile}`);
+        }
+        if (image) itemImageResolved += 1;
+      }
+
       await db.brandItem.createMany({
-        data: b.items.map((item, i) => ({
+        data: items.map(({ item, image }, i) => ({
           brandId: brand.id,
           name: item.name,
           engName: item.engName ?? null,
           note: item.note,
           priceRange: item.priceRange ?? null,
+          ...imageColumns(image),
           displayOrder: i,
         })),
       });
@@ -3144,7 +3194,8 @@ async function main() {
   }
 
   console.log(
-    `\n${BRANDS.length}件を登録。ヒーロー画像 ${heroResolved}件、本文中の図版 ${figureResolved}件を解決。`,
+    `\n${BRANDS.length}件を登録。ヒーロー画像 ${heroResolved}件、` +
+      `本文中の図版 ${figureResolved}件、商品画像 ${itemImageResolved}件を解決。`,
   );
 }
 
