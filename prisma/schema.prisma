@@ -432,12 +432,42 @@ model Brand {
   imageCredit String?
   imageLink   String?
 
-  items BrandItem[]
+  items  BrandItem[]
+  images BrandImage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([category])
+}
+
+/// 記事の途中に挟む画像。Brand.image(冒頭のヒーロー)とは別物。
+///
+/// 本文の markdown に ![](...) を直接書かないのは、Commons の画像が
+/// 作者名とライセンスの表記を要求するため。URL だけを本文に埋めると
+/// 表記が本文と分離して、差し替えたときに古い表記が残る。
+/// 画像と出典を1レコードにまとめ、表示側で必ず並べて描く。
+model BrandImage {
+  id      String @id @default(cuid())
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  /// 本文のどのセクションの後に置くか。"story" | "buying"
+  section String
+  url     String
+  /// 画像の下に出す説明。何が写っているかだけでなく、本文のどこに効くかを書く。
+  caption String
+
+  imageSource String?
+  imageCredit String?
+  imageLink   String?
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brandId, section, displayOrder])
 }
 
 /// ブランドの定番アイテム。「そのブランドで何を買えばいいか」に答えるためのもので、

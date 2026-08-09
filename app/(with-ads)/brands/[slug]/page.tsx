@@ -7,6 +7,7 @@ import { AD_SLOTS } from "@/lib/adsense";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
+import BrandFigure from "@/components/brands/BrandFigure";
 import { Badge } from "@/components/ui/badge";
 import { buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd } from "@/lib/jsonld";
@@ -67,6 +68,9 @@ export default async function BrandPage({
 
   const categoryLabel =
     BRAND_CATEGORY_LABELS[brand.category as BrandCategory] ?? null;
+
+  const storyImages = brand.images.filter((i) => i.section === "story");
+  const buyingImages = brand.images.filter((i) => i.section === "buying");
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
@@ -177,6 +181,9 @@ export default async function BrandPage({
           {brand.name}とは何なのか
         </h2>
         <MarkdownBody className="text-base">{brand.story}</MarkdownBody>
+        {storyImages.map((image) => (
+          <BrandFigure key={image.id} image={image} />
+        ))}
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="mt-8" />
@@ -184,6 +191,9 @@ export default async function BrandPage({
       <section className="mt-10">
         <h2 className="mb-1 text-xl font-semibold">ロンドンでの買い方</h2>
         <MarkdownBody className="text-base">{brand.buying}</MarkdownBody>
+        {buyingImages.map((image) => (
+          <BrandFigure key={image.id} image={image} />
+        ))}
 
         {brand.buyAt.length > 0 && (
           <div className="mt-5 flex items-start gap-2 rounded-lg bg-slate-50 p-4 dark:bg-slate-800/60">

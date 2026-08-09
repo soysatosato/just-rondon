@@ -28,5 +28,6 @@ export const fetchBrand = async (slug: string) =>
     where: { slug },
     include: {
       items: { orderBy: { displayOrder: "asc" } },
+      images: { orderBy: { displayOrder: "asc" } },
     },
   });

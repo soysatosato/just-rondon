@@ -1,10 +1,13 @@
-import type { Brand, BrandItem } from "@prisma/client";
+import type { Brand, BrandItem, BrandImage } from "@prisma/client";
 import { SITE_URL } from "@/lib/seo";
 
 export const BRAND_BASE = "/brands";
 export const BRAND_SECTION_NAME = "イギリスのブランド";
 
-export type BrandWithItems = Brand & { items: BrandItem[] };
+export type BrandWithItems = Brand & {
+  items: BrandItem[];
+  images: BrandImage[];
+};
 
 export function brandPath(slug: string): string {
   return `${BRAND_BASE}/${slug}`;
