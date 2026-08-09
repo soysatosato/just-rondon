@@ -1,4 +1,10 @@
-import type { Brand, BrandItem, BrandImage } from "@prisma/client";
+import type {
+  Brand,
+  BrandItem,
+  BrandImage,
+  BrandStore,
+  BrandFaq,
+} from "@prisma/client";
 import { SITE_URL } from "@/lib/seo";
 
 export const BRAND_BASE = "/brands";
@@ -7,7 +13,39 @@ export const BRAND_SECTION_NAME = "イギリスのブランド";
 export type BrandWithItems = Brand & {
   items: BrandItem[];
   images: BrandImage[];
+  stores: BrandStore[];
+  faqs: BrandFaq[];
 };
+
+/** 店舗の種類。並び順は読者が最初に行くべき順。 */
+export const STORE_KIND_META: Record<
+  string,
+  { label: string; badgeClass: string }
+> = {
+  flagship: {
+    label: "旗艦店",
+    badgeClass: "border-red-600/40 bg-red-600/10 text-red-700 dark:text-red-400",
+  },
+  store: {
+    label: "直営店",
+    badgeClass:
+      "border-sky-600/40 bg-sky-600/10 text-sky-700 dark:text-sky-400",
+  },
+  outlet: {
+    label: "アウトレット",
+    badgeClass:
+      "border-emerald-600/40 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400",
+  },
+  retailer: {
+    label: "取扱店",
+    badgeClass:
+      "border-slate-500/40 bg-slate-500/10 text-slate-700 dark:text-slate-300",
+  },
+};
+
+export function getStoreKindMeta(kind: string) {
+  return STORE_KIND_META[kind] ?? STORE_KIND_META.retailer;
+}
 
 export function brandPath(slug: string): string {
   return `${BRAND_BASE}/${slug}`;

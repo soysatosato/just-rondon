@@ -402,9 +402,13 @@ model Brand {
   category String
   /// カード用の一言。詳細を開かなくても選べる粒度で書く。
   blurb String
-  /// 成り立ち。markdown。創業の経緯、定番品が生まれた背景。
+  /// 特徴・魅力。markdown。ページの最初に読ませる。
+  /// 歴史より前に置くのは、読者がまず知りたいのが「何が良いのか」であって
+  /// 「いつ誰が創業したか」ではないため。年号から入ると大半が離脱する。
+  appeal String
+  /// 歴史。markdown。創業の経緯、定番品が生まれた背景。
   story String
-  /// 買い方の実務。markdown。日本との価格差、どの店で買うか。
+  /// 買い方の実務。markdown。日本との価格差、いつ買うか。
   buying String
 
   founded Int?
@@ -415,10 +419,6 @@ model Brand {
   royalWarrant Boolean @default(false)
 
   priceRange String?
-  /// ロンドンで買える場所。「リージェント・ストリート本店」「Selfridges」など。
-  buyAt      String[] @default([])
-  /// 旗艦店の住所と最寄り駅。
-  flagship   String?
   website    String?
   tips       String?
 
@@ -434,11 +434,68 @@ model Brand {
 
   items  BrandItem[]
   images BrandImage[]
+  stores BrandStore[]
+  faqs   BrandFaq[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([category])
+}
+
+/// ブランドを買える場所。旗艦店・直営店・アウトレット・取扱店。
+///
+/// 以前は Brand.buyAt(文字列配列)と Brand.flagship(1行テキスト)に分かれていたが、
+/// 同じ店が両方に出て内容がずれるため一本化した。
+///
+/// 営業時間は持たない。変わりやすく、古い時間を載せたままにすると
+/// 「行ったら閉まっていた」を引き起こす(Restaurant と同じ判断)。
+/// 開いているかは公式サイトで確認してもらう。
+model BrandStore {
+  id      String @id @default(cuid())
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  /// "flagship"(旗艦店) | "store"(直営店) | "outlet"(アウトレット) | "retailer"(取扱店・百貨店/スーパー)
+  kind String
+  name String
+  /// 番地まで。retailer で特定の店舗を指さない場合は null。
+  address        String?
+  nearestStation String?
+  /// その店ならではの事情。「ここだけ限定ブレンドがある」「間口が狭く見落としやすい」など。
+  note String?
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brandId, displayOrder])
+}
+
+/// ブランドごとのFAQ。
+///
+/// ハブ(/brands)のFAQが買い物全般の前提を扱うのに対し、こちらは
+/// そのブランドでだけ生じる疑問を扱う。サイズの選び方、持ち帰りの可否、
+/// 日本との違いなど、ブランドによって答えが変わるものだけを置く。
+///
+/// 本文の再掲になっても構わない。FAQ の構造化データは質問文で検索された
+/// ときに拾われるので、同じ情報でも到達経路が増える。
+model BrandFaq {
+  id      String @id @default(cuid())
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  question String
+  /// markdown可。JSON-LD に出す際は stripInlineMarkdown() を通すこと。
+  answer   String
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brandId, displayOrder])
 }
 
 /// 記事の途中に挟む画像。Brand.image(冒頭のヒーロー)とは別物。

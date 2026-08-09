@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Crown, MapPin, Wallet, Store } from "lucide-react";
+import { Crown, MapPin, Wallet, Train } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
+import GuideFaq from "@/components/guides/GuideFaq";
 import BrandFigure from "@/components/brands/BrandFigure";
 import { Badge } from "@/components/ui/badge";
-import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbJsonLd } from "@/lib/jsonld";
+import { buildPageMetadata, SITE_URL } from "@/lib/seo";
+import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import {
   fetchBrand,
   fetchBrandSlugs,
@@ -22,6 +23,7 @@ import {
   BRAND_SECTION_NAME,
   brandJsonLd,
   brandPath,
+  getStoreKindMeta,
   type BrandCategory,
 } from "@/components/brands/meta";
 
@@ -40,7 +42,7 @@ export async function generateMetadata({
 
   return buildPageMetadata({
     path: brandPath(brand.slug),
-    title: `${brand.name}（${brand.engName}）｜成り立ちとロンドンでの買い方`,
+    title: `${brand.name}（${brand.engName}）｜特徴と歴史、ロンドンでの買い方`,
     description: `${brand.blurb} ${brand.founded ? `${brand.founded}年創業。` : ""}ロンドンのどこで買えるか、日本との価格差、定番アイテムまで紹介します。`,
     type: "article",
     keywords: [
@@ -72,6 +74,15 @@ export default async function BrandPage({
   const storyImages = brand.images.filter((i) => i.section === "story");
   const buyingImages = brand.images.filter((i) => i.section === "buying");
 
+  // ヘッダーの要約ボックスに出す代表店。旗艦店が無ければ最初の1件で代用する。
+  const headlineStore =
+    brand.stores.find((s) => s.kind === "flagship") ?? brand.stores[0] ?? null;
+
+  const faqItems = brand.faqs.map((f) => ({
+    question: f.question,
+    answer: f.answer,
+  }));
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
       <JsonLd
@@ -80,14 +91,18 @@ export default async function BrandPage({
             { name: brand.name, path: brandPath(brand.slug) },
           ]),
           brandJsonLd(brand),
+          ...(faqItems.length > 0
+            ? [
+                faqPageJsonLd(
+                  faqItems,
+                  `${SITE_URL}${brandPath(brand.slug)}`,
+                ),
+              ]
+            : []),
         ]}
       />
 
-      <BreadCrumbs
-        name={BRAND_SECTION_NAME}
-        name2={brand.name}
-        link="brands"
-      />
+      <BreadCrumbs name={BRAND_SECTION_NAME} name2={brand.name} link="brands" />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
@@ -149,7 +164,7 @@ export default async function BrandPage({
         </figure>
       )}
 
-      {(brand.priceRange || brand.flagship) && (
+      {(brand.priceRange || headlineStore) && (
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {brand.priceRange && (
             <div className="flex items-start gap-2 rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60">
@@ -162,23 +177,39 @@ export default async function BrandPage({
               </div>
             </div>
           )}
-          {brand.flagship && (
+          {headlineStore && (
             <div className="flex items-start gap-2 rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60">
               <MapPin className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
               <div>
                 <p className="text-xs font-semibold text-muted-foreground">
-                  旗艦店
+                  {getStoreKindMeta(headlineStore.kind).label}
                 </p>
-                <p className="text-sm font-medium">{brand.flagship}</p>
+                <p className="text-sm font-medium">{headlineStore.name}</p>
+                {headlineStore.nearestStation && (
+                  <p className="text-xs text-muted-foreground">
+                    最寄り: {headlineStore.nearestStation}
+                  </p>
+                )}
               </div>
             </div>
           )}
         </div>
       )}
 
+      {/* 1. 特徴・魅力 ── 読者が最初に知りたいのは「何が良いのか」。年号から入らない。 */}
       <section className="mt-8">
         <h2 className="mb-1 text-xl font-semibold">
-          {brand.name}とは何なのか
+          {brand.name}の特徴
+        </h2>
+        <MarkdownBody className="text-base">{brand.appeal}</MarkdownBody>
+      </section>
+
+      <AdSenseUnit slot={AD_SLOTS.inArticle} className="mt-8" />
+
+      {/* 2. 歴史 */}
+      <section className="mt-10">
+        <h2 className="mb-1 text-xl font-semibold">
+          {brand.name}の歴史
         </h2>
         <MarkdownBody className="text-base">{brand.story}</MarkdownBody>
         {storyImages.map((image) => (
@@ -186,32 +217,13 @@ export default async function BrandPage({
         ))}
       </section>
 
-      <AdSenseUnit slot={AD_SLOTS.inArticle} className="mt-8" />
-
+      {/* 3. 買い方 */}
       <section className="mt-10">
         <h2 className="mb-1 text-xl font-semibold">ロンドンでの買い方</h2>
         <MarkdownBody className="text-base">{brand.buying}</MarkdownBody>
         {buyingImages.map((image) => (
           <BrandFigure key={image.id} image={image} />
         ))}
-
-        {brand.buyAt.length > 0 && (
-          <div className="mt-5 flex items-start gap-2 rounded-lg bg-slate-50 p-4 dark:bg-slate-800/60">
-            <Store className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-muted-foreground">
-                ロンドンで買える場所
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {brand.buyAt.map((place) => (
-                  <Badge key={place} variant="secondary" className="font-normal">
-                    {place}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
 
         {brand.tips && (
           <p className="mt-4 rounded-lg border-l-4 border-amber-400 bg-amber-50 py-2 pl-3 pr-2 text-sm leading-relaxed text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
@@ -221,6 +233,7 @@ export default async function BrandPage({
         )}
       </section>
 
+      {/* 4. 何を買うか */}
       {brand.items.length > 0 && (
         <section className="mt-12 space-y-5">
           <div className="space-y-2 border-b border-slate-200 pb-3 dark:border-slate-700">
@@ -252,9 +265,7 @@ export default async function BrandPage({
                   {item.note}
                 </p>
                 {item.priceRange && (
-                  <p className="mt-2 text-xs font-semibold">
-                    {item.priceRange}
-                  </p>
+                  <p className="mt-2 text-xs font-semibold">{item.priceRange}</p>
                 )}
                 {item.affiliateUrl && (
                   <a
@@ -271,6 +282,65 @@ export default async function BrandPage({
           </ul>
         </section>
       )}
+
+      {/* 5. 主な店舗・アウトレット */}
+      {brand.stores.length > 0 && (
+        <section className="mt-12 space-y-5">
+          <div className="space-y-2 border-b border-slate-200 pb-3 dark:border-slate-700">
+            <h2 className="text-xl font-semibold sm:text-2xl">
+              主な店舗・アウトレット
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              <strong className="font-semibold">
+                営業時間は載せていません。
+              </strong>
+              変わりやすく、古い情報を頼りに行くと閉まっていることがあるためです。
+              行く前に公式サイトで確認してください。
+            </p>
+          </div>
+
+          <ul className="space-y-3">
+            {brand.stores.map((store) => {
+              const kind = getStoreKindMeta(store.kind);
+              return (
+                <li
+                  key={store.id}
+                  className="rounded-lg border border-slate-200 p-4 dark:border-slate-800"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className={`font-normal ${kind.badgeClass}`}
+                    >
+                      {kind.label}
+                    </Badge>
+                    <h3 className="text-sm font-bold">{store.name}</h3>
+                  </div>
+
+                  {store.address && (
+                    <p className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
+                      <MapPin className="mt-0.5 h-3.5 w-3.5 flex-none" />
+                      {store.address}
+                    </p>
+                  )}
+                  {store.nearestStation && (
+                    <p className="mt-1 flex items-start gap-1.5 text-xs text-muted-foreground">
+                      <Train className="mt-0.5 h-3.5 w-3.5 flex-none" />
+                      {store.nearestStation}
+                    </p>
+                  )}
+                  {store.note && (
+                    <p className="mt-2 text-xs leading-relaxed">{store.note}</p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {/* 6. FAQ */}
+      {faqItems.length > 0 && <GuideFaq items={faqItems} />}
 
       {brand.website && (
         <p className="mt-8 text-sm">

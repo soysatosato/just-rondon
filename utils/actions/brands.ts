@@ -29,5 +29,7 @@ export const fetchBrand = async (slug: string) =>
     include: {
       items: { orderBy: { displayOrder: "asc" } },
       images: { orderBy: { displayOrder: "asc" } },
+      stores: { orderBy: { displayOrder: "asc" } },
+      faqs: { orderBy: { displayOrder: "asc" } },
     },
   });
