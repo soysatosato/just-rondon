@@ -236,6 +236,8 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
       },
     ],
     website: "https://www.burberry.com/",
+    // @burberry「Jingyi wears the Castleford trench coat in hunter」
+    instagramUrl: "https://www.instagram.com/p/DBWc0M3AtZg/",
     tips:
       "トレンチコートは型ごとに着丈とシルエットが違います。オンラインで型名まで決めてから現地で試着すると、店頭で迷わずに済みます。",
     recommendLevel: 5,
@@ -390,6 +392,8 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
       },
     ],
     website: "https://www.paulsmith.com/",
+    // @paulsmithdesign「Stripe, Collected.」看板のストライプそのもの。
+    instagramUrl: "https://www.instagram.com/p/DAQdhUSOCkc/",
     tips:
       "ノッティング・ヒルのピンクの建物は写真の名所です。ポートベロー・マーケットと同じ日に回すと効率よく済みます。",
     recommendLevel: 3,
@@ -543,6 +547,8 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
       },
     ],
     website: "https://www.fredperry.com/",
+    // @fredperry「The Fred Perry Shirt in Laurel Wreath Green」定番のポロそのもの。
+    instagramUrl: "https://www.instagram.com/p/C_a4EiCtN1G/",
     tips:
       "選ぶ楽しみは M12 の襟のライン(ティッピング)の配色にあります。日本では見ない組み合わせが本国の棚には普通に並びます。",
     recommendLevel: 4,
@@ -684,6 +690,8 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
       },
     ],
     website: "https://www.viviennewestwood.com/",
+    // @viviennewestwood オーブのピアスとペンダント。記事のオーブ小物に対応。
+    instagramUrl: "https://www.instagram.com/p/CKmNt1Qgu1F/",
     tips:
       "World's End の看板の時計は針が逆回転しています。King's Road は駅から遠いので、バスを使うと楽です。",
     recommendLevel: 4,
@@ -838,6 +846,8 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
       },
     ],
     website: "https://www.alexandermcqueen.com/",
+    // @alexandermcqueen ドクロ柄スカーフ。定番品なので古い投稿でも内容は古びない。
+    instagramUrl: "https://www.instagram.com/p/TagAqThZuw/",
     tips:
       "ジャケットは肩の構築が独特で、着ると体の線が変わります。写真では分からないので必ず試着してください。",
     recommendLevel: 3,
@@ -1139,6 +1149,8 @@ Tシャツやスウェットで £150 前後、上着やドレスは £500 以�
       },
     ],
     website: "https://www.drmartens.com/",
+    // @drmartensofficial「Every outfit deserves the 1460 boot.」定番の1460。
+    instagramUrl: "https://www.instagram.com/p/DDuB2n7RENc/",
     tips:
       "履き始めは必ず踵が当たります。厚手の靴下を持って試着に行くと、実際に履くときの感覚に近い状態で判断できます。",
     recommendLevel: 5,
@@ -1293,6 +1305,8 @@ Tシャツやスウェットで £150 前後、上着やドレスは £500 以�
       },
     ],
     website: "https://www.church-footwear.com/",
+    // @churchs ノーサンプトンでの製靴。記事の「靴の街」の話と直接つながる。
+    instagramUrl: "https://www.instagram.com/p/C7oxhSgIF1B/",
     tips:
       "サイズだけでなく必ずウィズ（F・G など）を確認してください。ここが合っていないと、正しい長さでも痛くなります。",
     recommendLevel: 4,
@@ -1444,6 +1458,8 @@ Tシャツやスウェットで £150 前後、上着やドレスは £500 以�
       },
     ],
     website: "https://www.mulberry.com/",
+    // @mulberryengland レザーそのものの話。記事の革小物・定番バッグに対応。
+    instagramUrl: "https://www.instagram.com/p/CFEcwpfjCk2/",
     tips:
       "革は使うほど色が深くなる前提のものです。逆に新品ほど傷が付きやすいので、気になるなら購入時に防水スプレーの要否を店員に確認してください。",
     recommendLevel: 4,
@@ -2048,6 +2064,8 @@ Blenheim Bouquet は1902年、マールバラ公のために作られたもの�
       },
     ],
     website: "https://www.penhaligons.com/",
+    // @penhaligons 公式。
+    instagramUrl: "https://www.instagram.com/p/DNP5JdItUa3/",
     tips:
       "香水は液体持ち込み制限の対象です。100ml超は預け荷物へ。割れないよう衣類で包んでください。",
     recommendLevel: 4,
@@ -2202,6 +2220,8 @@ Blenheim Bouquet は1902年、マールバラ公のために作られたもの�
       },
     ],
     website: "https://www.jomalone.co.uk/",
+    // @jomalonelondon イングリッシュ・ペア&フリージアのコロン。記事の主力商品。
+    instagramUrl: "https://www.instagram.com/p/DBbjl4Ru2q6/",
     tips:
       "店員に「重ね付けを試したい」と伝えると相性のいい2本を出してくれます。1本だけ嗅いで決めるより失敗しません。",
     recommendLevel: 4,
@@ -2518,6 +2538,8 @@ Wild Strawberry のように1960年代から続くパターンがあり、後か
       },
     ],
     website: "https://www.asprey.com/",
+    // @aspreylondon ロンドンの工房での型押し・彫刻。記事の革小物に対応。
+    instagramUrl: "https://www.instagram.com/p/DG5623jINnT/",
     tips:
       "見学だけでも入れます。マックイーン(オールド・ボンド・ストリート)とダンヒル(ブードン・ハウス)が徒歩圏なので、3軒まとめて回ると英国の老舗の作りがよく分かります。",
     recommendLevel: 3,
@@ -2686,6 +2708,8 @@ Wild Strawberry のように1960年代から続くパターンがあり、後か
       },
     ],
     website: "https://www.fortnumandmason.com/",
+    // @fortnums「A Hamper for all seasons」。クリスマス限定より通年のものを選んだ。
+    instagramUrl: "https://www.instagram.com/p/DAsyR2yv5xJ/",
     tips:
       "肉製品は日本への持ち込みが厳しく制限されます。パテやミートパイの類は買わないでください。紅茶と菓子は問題ありません。",
     recommendLevel: 5,
