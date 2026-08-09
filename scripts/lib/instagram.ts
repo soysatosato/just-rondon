@@ -17,9 +17,14 @@ export function normaliseInstagramUrl(
   // 共有リンクに付いてくる ?igsh=... などを落とす。
   const clean = raw.split("?")[0].replace(/\/+$/, "");
 
-  if (
-    !/^https:\/\/(www\.)?instagram\.com\/(p|reel)\/[A-Za-z0-9_-]+$/.test(clean)
-  ) {
+  // 検索結果や共有からは /{アカウント名}/p/{ID}/ の形も出てくる。
+  // これは /p/{ID}/ と同じ投稿を指す別表記(IDが投稿の一意キー)なので、
+  // 弾かずに正規形へ寄せる。埋め込みスクリプトは正規形を前提にしている。
+  const match = clean.match(
+    /^https:\/\/(?:www\.)?instagram\.com\/(?:[A-Za-z0-9_.]+\/)?(p|reel)\/([A-Za-z0-9_-]+)$/,
+  );
+
+  if (!match) {
     console.warn(
       `  [${label}] 埋め込めないURLなので無視した: ${raw}\n` +
         `    投稿(/p/...)か Reels(/reel/...)のURLが必要。プロフィールURLは埋め込めない。`,
@@ -27,6 +32,8 @@ export function normaliseInstagramUrl(
     return null;
   }
 
+  const [, kind, id] = match;
+
   // Instagram の埋め込みは末尾スラッシュ付きを想定している。
-  return `${clean}/`;
+  return `https://www.instagram.com/${kind}/${id}/`;
 }
