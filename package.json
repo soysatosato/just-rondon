@@ -9,7 +9,8 @@
     "lint": "next lint",
     "postbuild": "next-sitemap",
     "create-column": "tsx scripts/create-column.ts",
-    "seed-brands": "tsx scripts/seed-brands.ts"
+    "seed-brands": "tsx scripts/seed-brands.ts",
+    "check-brand-instagram": "tsx scripts/check-brand-instagram.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.1",
