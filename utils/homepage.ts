@@ -165,6 +165,18 @@ export const sections: Section[] = [
       },
     ],
   },
+  {
+    id: "british-english",
+    title: "イギリス英語",
+    items: [
+      {
+        title: "イギリス英語トップ",
+        description:
+          "イギリス英語ならではの単語・言い回し・スラングを毎日1つ紹介。",
+        href: "/british-english",
+      },
+    ],
+  },
   // {
   //   id: "news",
   //   title: "News",

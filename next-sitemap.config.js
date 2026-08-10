@@ -55,8 +55,8 @@ module.exports = {
   transform: async (config, path) => {
     const depth = path.split("/").filter(Boolean).length;
 
-    // イベントとコラムは追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
-    const isFresh = /^\/(events|column)(\/|$)/.test(path);
+    // イベント・コラム・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
+    const isFresh = /^\/(events|column|british-english)(\/|$)/.test(path);
 
     let priority;
     if (path === "/") priority = 1.0;
@@ -96,6 +96,7 @@ module.exports = {
       "/events/calendar",
       "/events/archive/2025",
       "/column",
+      "/british-english",
       "/souvenirs",
       "/brands",
       "/restaurants",
@@ -286,6 +287,16 @@ module.exports = {
     });
     for (const c of columns) {
       paths.push(await config.transform(config, `/column/${c.slug}`));
+    }
+
+    const britishEnglishEntries = await prisma.content.findMany({
+      where: { category: "british-english" },
+      select: { slug: true },
+    });
+    for (const be of britishEnglishEntries) {
+      paths.push(
+        await config.transform(config, `/british-english/${be.slug}`),
+      );
     }
 
     // for (const n of news) {

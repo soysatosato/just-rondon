@@ -29,6 +29,7 @@ export const NAV_ACCENTS = {
   sky: { text: "text-sky-600", underline: "decoration-sky-400" },
   emerald: { text: "text-emerald-600", underline: "decoration-emerald-400" },
   violet: { text: "text-violet-600", underline: "decoration-violet-400" },
+  rose: { text: "text-rose-600", underline: "decoration-rose-400" },
   // Beyond London 用に確保。
   teal: { text: "text-teal-600", underline: "decoration-teal-400" },
 } as const satisfies Record<string, NavAccent>;
@@ -245,6 +246,12 @@ export const NAV_SECTIONS: NavSection[] = [
     label: "コラム",
     href: "/column",
     accent: NAV_ACCENTS.violet,
+  },
+  {
+    kind: "link",
+    label: "イギリス英語",
+    href: "/british-english",
+    accent: NAV_ACCENTS.rose,
   },
 ];
 

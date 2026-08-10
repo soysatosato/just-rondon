@@ -42,6 +42,23 @@ export const fetchColumnBySlug = async (slug: string) => {
   return content;
 };
 
+export const fetchBritishEnglishEntries = async () => {
+  const contents = await db.content.findMany({
+    where: { category: "british-english" },
+    orderBy: { createdAt: "desc" },
+  });
+  return contents;
+};
+
+export const fetchBritishEnglishBySlug = async (slug: string) => {
+  // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
+  const content = await db.content.findFirst({
+    where: { slug, category: "british-english" },
+    include: { sections: { orderBy: { displayOrder: "asc" } } },
+  });
+  return content;
+};
+
 export const fetchEvents2026 = async () => {
   const contents = await db.content.findMany({
     where: {

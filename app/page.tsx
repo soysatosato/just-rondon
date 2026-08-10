@@ -31,6 +31,7 @@ import {
   Newspaper,
   TriangleAlert,
   Sparkles,
+  Languages,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,7 +42,12 @@ import { AD_SLOTS } from "@/lib/adsense";
 import HeroContent from "@/components/home/HeroContent";
 import SectionHeader from "@/components/home/SectionHeader";
 import ColumnCard from "@/components/column/ColumnCard";
-import { fetchColumns, fetchUpcomingEvents } from "@/utils/actions/contents";
+import BritishEnglishCard from "@/components/british-english/BritishEnglishCard";
+import {
+  fetchColumns,
+  fetchBritishEnglishEntries,
+  fetchUpcomingEvents,
+} from "@/utils/actions/contents";
 import { fetchLatestBrief } from "@/utils/actions/weekly";
 import {
   formatWeekRange,
@@ -102,6 +108,12 @@ const ACCENTS = {
     iconText: "text-violet-600",
     hoverBorder: "hover:border-violet-300 dark:hover:border-violet-800",
   },
+  rose: {
+    badge: "bg-rose-600 hover:bg-rose-600",
+    iconBg: "bg-rose-50 dark:bg-rose-950/40",
+    iconText: "text-rose-600",
+    hoverBorder: "hover:border-rose-300 dark:hover:border-rose-800",
+  },
   // Beyond London 用に確保。区分を追加するときはここを使う。
   teal: {
     badge: "bg-teal-600 hover:bg-teal-600",
@@ -113,12 +125,15 @@ const ACCENTS = {
 
 export default async function Page() {
   const now = new Date();
-  const [latestColumns, upcomingEvents, latestBrief] = await Promise.all([
-    fetchColumns(),
-    fetchUpcomingEvents(3, now),
-    fetchLatestBrief(),
-  ]);
+  const [latestColumns, latestBritishEnglish, upcomingEvents, latestBrief] =
+    await Promise.all([
+      fetchColumns(),
+      fetchBritishEnglishEntries(),
+      fetchUpcomingEvents(3, now),
+      fetchLatestBrief(),
+    ]);
   const columnPicks = latestColumns.slice(0, 3);
+  const britishEnglishPicks = latestBritishEnglish.slice(0, 3);
 
   // ヒーロー直下の警告バー。ストライキ等は数日で覆るので、今週号・来週号のときだけ出す。
   // 古い号の「注意」を出し続けると誤情報になる。
@@ -212,6 +227,14 @@ export default async function Page() {
               description="歴史・文化・伝統を掘り下げるコラムを毎日更新。"
               icon={BookOpen}
               accent={ACCENTS.violet}
+            />
+            <CategoryCard
+              href="/british-english"
+              eyebrow="British English"
+              title="イギリス英語"
+              description="単語・言い回し・スラングを毎日1つ紹介。"
+              icon={Languages}
+              accent={ACCENTS.rose}
             />
             <CategoryCard
               href="/events"
@@ -646,6 +669,31 @@ export default async function Page() {
             <Button asChild variant="outline" size="sm">
               <Link href="/column">コラムをすべて見る →</Link>
             </Button>
+          </div>
+
+          <div className="mt-12">
+            <SectionHeader
+              eyebrow="British English"
+              title="イギリス英語を1日1つ"
+              description="現地の言い回しやスラングを、由来や使い方とあわせて毎日1つ紹介します。"
+              accentClassName={ACCENTS.rose.badge}
+            />
+
+            {britishEnglishPicks.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                {britishEnglishPicks.map((item) => (
+                  <BritishEnglishCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">近日公開予定です。</p>
+            )}
+
+            <div className="mt-6 flex justify-center">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/british-english">イギリス英語をすべて見る →</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
