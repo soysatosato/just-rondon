@@ -377,6 +377,11 @@ model Souvenir {
   imageLink    String?
   affiliateUrl String?
 
+  /// ブランド公式アカウントの「投稿」URL(https://www.instagram.com/p/... )。
+  /// プロフィールURLでは埋め込めない。Instagram はプロフィール単位の
+  /// 埋め込みを廃止しており、埋め込めるのは個別の投稿と Reels だけ。
+  instagramUrl String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

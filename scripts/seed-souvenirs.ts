@@ -5,6 +5,7 @@ import {
   resolveCommonsImage,
   type CommonsImage,
 } from "./lib/commons";
+import { normaliseInstagramUrl } from "./lib/instagram";
 
 /**
  * /souvenirs のお土産データを投入する。
@@ -31,6 +32,8 @@ type SouvenirSeed = {
   recommendLevel: number;
   /** Commons の "File:..." タイトル。 */
   commonsFile?: string;
+  /** ブランド公式アカウントの投稿(https://www.instagram.com/p/... )。 */
+  instagramUrl?: string;
 };
 
 const SOUVENIRS: SouvenirSeed[] = [
@@ -53,6 +56,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     recommendLevel: 5,
     commonsFile:
       "File:Tea canisters in the Twinings Strand Heritage Shop, London, UK - 20120129.jpg",
+    // @twinings216strand 本店(216 Strand)の解説。記事の本店エピソードに対応。
+    instagramUrl: "https://www.instagram.com/p/BhZiC0kB3rT/",
   },
   {
     slug: "fortnum-and-mason-tea",
@@ -71,6 +76,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "本店の紙袋も同じ水色でかなり可愛いので、捨てずに持ち帰るとラッピングに使えます。",
     recommendLevel: 5,
     commonsFile: "File:Fortnum and Mason Christmas countdown 2025-12-15.jpg",
+    // @fortnums「A Hamper for all seasons」。通年で使える定番の一枚。
+    instagramUrl: "https://www.instagram.com/p/DAsyR2yv5xJ/",
   },
   {
     slug: "whittard-of-chelsea",
@@ -89,6 +96,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "「3個買うと割引」のような複数割引をやっていることが多く、まとめ買いのほうが単価が下がります。",
     recommendLevel: 4,
     commonsFile: "File:Whittard Chelsea 1886, Brighton.jpg",
+    // @whittard 公式。記事の主力商品であるホットチョコレートそのもの。
+    instagramUrl: "https://www.instagram.com/p/DSkIUMgjF_W/",
   },
 
   // ---------- お菓子 ----------
@@ -114,6 +123,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "スーツケースの中で潰れやすい唯一の弱点は、缶入りを選べば解決します。",
     recommendLevel: 5,
     commonsFile: "File:Walkers Shortbread cookies.jpg",
+    // @walkersshortbread タータンそのものを紹介する投稿。
+    instagramUrl: "https://www.instagram.com/p/DIGP6KUsdVo/",
   },
   {
     slug: "cadbury-dairy-milk",
@@ -134,6 +145,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "イースター前後に出る Creme Egg は季節限定で、この時期だけの土産として話題になります。",
     recommendLevel: 4,
     commonsFile: "File:Cadbury-Dairy-Milk-Caramel-Bar.jpg",
+    // @cadburydairymilk 公式。定番のシェア用パックそのもの。
+    instagramUrl: "https://www.instagram.com/p/DP86GVUjGGu/",
   },
   {
     slug: "tunnocks-teacake",
@@ -232,6 +245,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "イギリスは2021年に旅行者向けの付加価値税還付を廃止しています。免税を前提に予算を組まないでください。",
     recommendLevel: 5,
     commonsFile: "File:Neal's Yard Remedies 15 Neal's Yard 2024-05-14.jpg",
+    // @nealsyardremedies「#SundayReset essentials」。定番のセルフケア商品が並ぶ投稿。
+    instagramUrl: "https://www.instagram.com/nealsyardremedies/p/DGtXI1VyIjn/",
   },
   {
     slug: "lush",
@@ -268,6 +283,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "液体なので容量100ml超は機内持ち込み不可。空港の制限エリア内で買えば持ち込めます。",
     recommendLevel: 4,
     commonsFile: "File:Jo Malone London Silver Birch and Lavender Cologne.jpg",
+    // @jomalonelondon イングリッシュ・ペア&フリージア。記事の定番香りに対応。
+    instagramUrl: "https://www.instagram.com/p/DBbjl4Ru2q6/",
   },
   {
     slug: "penhaligons",
@@ -286,6 +303,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "店舗で香りを試すと、無料でサンプルを何種類か包んでくれることがあります。",
     recommendLevel: 3,
     commonsFile: "File:PENHALIGON'S Eau de Cologne.jpg",
+    // @penhaligons 公式。
+    instagramUrl: "https://www.instagram.com/p/DNP5JdItUa3/",
   },
 
   // ---------- 雑貨 ----------
@@ -306,6 +325,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "交通博物館のショップは入場券なしで入れます。ここだけ目当てに寄る価値があります。",
     recommendLevel: 5,
     commonsFile: "File:LondonUnderground roundel on Holborn station exit.jpg",
+    // @ltmuseum ラウンデルそのものの解説。記事の交通博物館ショップに対応。
+    instagramUrl: "https://www.instagram.com/ltmuseum/p/C53vBkZN5G6/",
   },
   {
     slug: "paddington-bear",
@@ -324,6 +345,8 @@ const SOUVENIRS: SouvenirSeed[] = [
     tips: "ぬいぐるみは体積を食うので、買うなら帰国日に。スーツケースの余白を先に確保しておくと安心です。",
     recommendLevel: 4,
     commonsFile: "File:Paddington Bear Statue @ Paddington Station.jpg",
+    // @paddingtonbear「Marmalade lovers, this one's for you!」定番のマーマレード愛。
+    instagramUrl: "https://www.instagram.com/p/DBqldtbolqN/",
   },
   {
     slug: "brown-betty-teapot",
@@ -381,6 +404,7 @@ async function main() {
       imageSource: image ? "commons" : null,
       imageCredit: image?.credit ?? null,
       imageLink: image?.link ?? null,
+      instagramUrl: normaliseInstagramUrl(s.instagramUrl, s.slug),
     };
 
     await db.souvenir.upsert({

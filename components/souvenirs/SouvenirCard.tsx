@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
+import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import {
   SOUVENIR_CATEGORY_LABELS,
   type SouvenirCategory,
@@ -119,6 +120,15 @@ export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
                 <span className="font-semibold">ひとこと: </span>
                 {souvenir.tips}
               </p>
+            )}
+
+            {souvenir.instagramUrl && (
+              <div className="mt-4">
+                <p className="mb-2 text-xs font-semibold text-muted-foreground">
+                  ブランド公式アカウントより
+                </p>
+                <InstagramEmbed url={souvenir.instagramUrl} />
+              </div>
             )}
           </div>
         </details>

@@ -11,7 +11,8 @@
     "create-column": "tsx scripts/create-column.ts",
     "create-tweets": "tsx scripts/create-tweets.ts",
     "seed-brands": "tsx scripts/seed-brands.ts",
-    "check-brand-instagram": "tsx scripts/check-brand-instagram.ts"
+    "check-brand-instagram": "tsx scripts/check-brand-instagram.ts",
+    "check-souvenir-instagram": "tsx scripts/check-souvenir-instagram.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.1",
