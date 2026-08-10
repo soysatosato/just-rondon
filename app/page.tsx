@@ -681,8 +681,8 @@ export default async function Page() {
 
             {britishEnglishPicks.length > 0 ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-                {britishEnglishPicks.map((item) => (
-                  <BritishEnglishCard key={item.id} item={item} />
+                {britishEnglishPicks.map((item, i) => (
+                  <BritishEnglishCard key={item.id} item={item} index={i} />
                 ))}
               </div>
             ) : (
