@@ -82,7 +82,7 @@ const TRAITS: Trait[] = [
 
 export default function BritishEnglishTraits() {
   return (
-    <section className="mb-12">
+    <section>
       <div className="mb-5">
         <span className="inline-block rounded-full bg-red-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
           Basics
