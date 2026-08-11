@@ -48,6 +48,7 @@ model Museum {
   museumInfo     MuseumInfo?
   openingHours   OpeningHours[]
   trivia         Trivia[]
+  highlightSpots Highlight[]    @relation("MuseumHighlightSpots")
   hasVisited     hasVisited[]
 }
 
@@ -122,6 +123,23 @@ model Trivia {
   title    String
   content  String
   Museum   Museum @relation(fields: [museumId], references: [id])
+}
+
+/// 館ごとの「これだけは見て帰る」ポイント。
+/// Artwork は画像と作者を伴う作品単位のデータで6館しか揃っていないため、
+/// 展示室・建築・体験など作品以外も指せる軽いテキストとして分けている。
+model Highlight {
+  id        String  @id @default(cuid())
+  museumId  String
+  title     String
+  /// どこにあるか（例: "Room 4"、"1階 中央ホール"）。不明なら null。
+  location  String?
+  body      String
+  /// 表示順。小さいほど先。
+  order     Int     @default(0)
+  museum    Museum  @relation("MuseumHighlightSpots", fields: [museumId], references: [id], onDelete: Cascade)
+
+  @@index([museumId])
 }
 
 model MuseumInfo {
@@ -599,6 +617,11 @@ model Content {
   website      String?
   category     String           @default("")
   route        String           @default("")
+  // コラムのテーマ分類。/column のフィルタに使う（例: ["history", "person"]）
+  tags         String[]         @default([])
+  // 連載コラムのみ設定。同じ seriesName を持つ Content が1つの連載を構成する
+  seriesName   String?
+  seriesOrder  Int?
   sections     ContentSection[]
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @default(now()) @updatedAt

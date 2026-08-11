@@ -4,165 +4,170 @@ import {
   Clock,
   BadgeCheck,
   Luggage,
-  SquareM,
+  TrainFront,
   Bus,
   BookHeadphones,
-  Languages,
   Utensils,
   ShoppingCart,
   Wifi,
-  Globe,
 } from "lucide-react";
-import Link from "next/link";
 
-export default function MuseumInfoLuxury({ museumInfo }: { museumInfo: any }) {
-  const formatFee = (fee: any) =>
-    fee === null || fee === undefined ? "ー" : `£${fee}`;
+type MuseumInfoRow = {
+  photographyAllowed: string | null;
+  reservationRequired: boolean | null;
+  cloakroomInfo: string | null;
+  nearestStation: string | null;
+  stationWalkingMinutes: number | null;
+  nearestBusStop: string | null;
+  busStopWalkingMinutes: number | null;
+  guidedTourAvailable: boolean | null;
+  guidedTourLanguages: string | null;
+  cafeteriaAvailable: boolean | null;
+  shopAvailable: boolean | null;
+  wifiAvailable: boolean | null;
+  admissionFeeAdult: number | null;
+  admissionFeeChild: number | null;
+  recommendedDuration: number | null;
+  guidedTourFee: number | null;
+};
 
-  const formatMinutes = (min: any) =>
-    min === null || min === undefined ? "" : `（徒歩${min}分）`;
+/** DB上「-」「無し」などの表記ゆれで入っている未設定値を空として扱う。 */
+const EMPTY_VALUES = new Set(["-", "ー", "―", "無し", "なし", ""]);
 
-  return (
-    <section className="max-w-4xl mx-auto px-6 py-10">
-      <h2 className="text-2xl font-semibold tracking-wide text-gray-800 dark:text-gray-100 mb-6 border-b pb-2 border-gray-300 dark:border-gray-700">
-        基本情報
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 text-gray-700 dark:text-gray-300 leading-relaxed">
-        <InfoItem
-          icon={Ticket}
-          label="大人料金"
-          value={formatFee(museumInfo.admissionFeeAdult)}
-        />
-        <InfoItem
-          icon={Ticket}
-          label="子ども料金"
-          value={formatFee(museumInfo.admissionFeeChild)}
-        />
-        <InfoItem
-          icon={Clock}
-          label="所要時間"
-          value={
-            museumInfo.recommendedDuration
-              ? `${museumInfo.recommendedDuration} min`
-              : "ー"
-          }
-        />
-        <InfoItem
-          icon={BadgeCheck}
-          label="予約"
-          value={museumInfo.reservationRequired ? "必要" : "不要"}
-        />
-        <InfoItem
-          icon={Camera}
-          label="写真撮影"
-          value={museumInfo.photographyAllowed ?? "ー"}
-        />
-        <InfoItem
-          icon={Luggage}
-          label="手荷物クローク"
-          value={museumInfo.cloakroomInfo ?? "ー"}
-        />
-        <InfoItem
-          icon={SquareM}
-          label="最寄駅"
-          value={
-            <>
-              <div className="font-medium text-gray-800 dark:text-gray-200">
-                {museumInfo.nearestStation ?? "ー"}
-              </div>
-              {museumInfo.stationWalkingMinutes && (
-                <div className="text-xs text-gray-600 dark:text-gray-400">
-                  {formatMinutes(museumInfo.stationWalkingMinutes)}
-                </div>
-              )}
-            </>
-          }
-        />
-        <InfoItem
-          icon={Bus}
-          label="最寄バス停"
-          value={
-            <>
-              <div className="font-medium text-gray-800 dark:text-gray-200">
-                {museumInfo.nearestBusStop ?? "ー"}
-              </div>
-              {museumInfo.busStopWalkingMinutes && (
-                <div className="text-xs text-gray-600 dark:text-gray-400">
-                  {formatMinutes(museumInfo.busStopWalkingMinutes)}
-                </div>
-              )}
-            </>
-          }
-        />
-        <InfoItem
-          icon={BookHeadphones}
-          label="音声ガイド"
-          value={
-            museumInfo.guidedTourAvailable
-              ? `あり${
-                  museumInfo.guidedTourFee
-                    ? `（£${museumInfo.guidedTourFee}）`
-                    : ""
-                }`
-              : "-"
-          }
-        />
-        <InfoItem
-          icon={Languages}
-          label="対応言語"
-          value={museumInfo.guidedTourLanguages ?? "ー"}
-        />
-        <InfoItem
-          icon={Utensils}
-          label="カフェ"
-          value={museumInfo.cafeteriaAvailable ? "あり" : "-"}
-        />
-        <InfoItem
-          icon={ShoppingCart}
-          label="ショップ"
-          value={museumInfo.shopAvailable ? "あり" : "-"}
-        />
-        <InfoItem
-          icon={Wifi}
-          label="Wi-Fi"
-          value={museumInfo.wifiAvailable ? "あり" : "-"}
-        />
-        {museumInfo.website && (
-          <Link
-            href={museumInfo.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 text-yellow-700 dark:text-yellow-400 hover:underline"
-          >
-            <Globe size={20} />
-            <span className="text-sm font-semibold">公式サイトを見る</span>
-          </Link>
-        )}
-      </div>
-    </section>
-  );
+function clean(value: string | null | undefined) {
+  if (!value) return null;
+  const trimmed = value.trim();
+  return EMPTY_VALUES.has(trimmed) ? null : trimmed;
 }
 
-function InfoItem({
-  icon: Icon,
-  label,
-  value,
+function formatFee(fee: number | null) {
+  if (fee === null || fee === undefined) return null;
+  return fee === 0 ? "無料" : `£${fee}`;
+}
+
+function formatDuration(min: number | null) {
+  if (!min) return null;
+  if (min < 60) return `${min}分`;
+  const hours = Math.round((min / 60) * 10) / 10;
+  return `${hours}時間`;
+}
+
+export default function MuseumInfo({
+  museumInfo,
 }: {
-  icon: React.ElementType;
-  label: string;
-  value: React.ReactNode;
+  museumInfo: MuseumInfoRow | null;
 }) {
+  // museumInfo は任意リレーション。以前は無条件に参照していたため、
+  // レコードの無い館を追加した時点でページ全体が落ちる状態だった。
+  if (!museumInfo) return null;
+
+  const station = clean(museumInfo.nearestStation);
+  const busStop = clean(museumInfo.nearestBusStop);
+  const cloakroom = clean(museumInfo.cloakroomInfo);
+  const photo = clean(museumInfo.photographyAllowed);
+  const langs = clean(museumInfo.guidedTourLanguages);
+  const adult = formatFee(museumInfo.admissionFeeAdult);
+  const child = formatFee(museumInfo.admissionFeeChild);
+  const duration = formatDuration(museumInfo.recommendedDuration);
+
+  const items: { icon: React.ElementType; label: string; value: string }[] = [];
+
+  if (adult) items.push({ icon: Ticket, label: "大人料金", value: adult });
+  if (child) items.push({ icon: Ticket, label: "子ども料金", value: child });
+  if (duration)
+    items.push({ icon: Clock, label: "滞在時間の目安", value: duration });
+
+  // reservationRequired は47館中3館しか設定が無い。false と null を同じ
+  // 「不要」として出すと、未確認の館まで断定することになるので出さない。
+  if (museumInfo.reservationRequired !== null) {
+    items.push({
+      icon: BadgeCheck,
+      label: "予約",
+      value: museumInfo.reservationRequired ? "必要" : "不要",
+    });
+  }
+
+  if (photo) items.push({ icon: Camera, label: "写真撮影", value: photo });
+  if (cloakroom)
+    items.push({ icon: Luggage, label: "荷物預かり", value: cloakroom });
+
+  if (station) {
+    const walk = museumInfo.stationWalkingMinutes;
+    items.push({
+      icon: TrainFront,
+      label: "最寄駅",
+      value: walk ? `${station}（徒歩${walk}分）` : station,
+    });
+  }
+
+  if (busStop) {
+    const walk = museumInfo.busStopWalkingMinutes;
+    items.push({
+      icon: Bus,
+      label: "最寄バス停",
+      value: walk ? `${busStop}（徒歩${walk}分）` : busStop,
+    });
+  }
+
+  if (museumInfo.guidedTourAvailable) {
+    const fee = museumInfo.guidedTourFee;
+    items.push({
+      icon: BookHeadphones,
+      label: "音声ガイド",
+      value: [
+        "あり",
+        fee ? `£${fee}` : null,
+        langs && langs !== "英語" ? langs : null,
+      ]
+        .filter(Boolean)
+        .join(" / "),
+    });
+  }
+
+  const amenities = [
+    museumInfo.cafeteriaAvailable && { icon: Utensils, label: "カフェ" },
+    museumInfo.shopAvailable && { icon: ShoppingCart, label: "ショップ" },
+    museumInfo.wifiAvailable && { icon: Wifi, label: "Wi-Fi" },
+  ].filter(Boolean) as { icon: React.ElementType; label: string }[];
+
+  if (items.length === 0 && amenities.length === 0) return null;
+
   return (
-    <div className="flex items-start gap-3">
-      <Icon size={20} className="text-yellow-600 dark:text-yellow-400" />
-      <div>
-        <div className="text-xs uppercase tracking-widest font-semibold text-gray-500 dark:text-gray-400">
-          {label}
-        </div>
-        <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
-          {value}
-        </div>
+    <section className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mb-6">
+        <span className="inline-block rounded-full bg-slate-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          Essentials
+        </span>
+        <h2 className="mt-3 text-2xl font-bold tracking-tight">基本情報</h2>
       </div>
-    </div>
+
+      <dl className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
+        {items.map(({ icon: Icon, label, value }) => (
+          <div key={label} className="flex items-start gap-3">
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            <div className="min-w-0">
+              <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                {label}
+              </dt>
+              <dd className="mt-0.5 text-sm">{value}</dd>
+            </div>
+          </div>
+        ))}
+      </dl>
+
+      {amenities.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {amenities.map(({ icon: Icon, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground"
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {label}
+            </span>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

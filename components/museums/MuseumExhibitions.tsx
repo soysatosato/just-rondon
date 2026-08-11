@@ -1,122 +1,93 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
 import { Badge } from "@/components/ui/badge";
 import { CalendarDays, Ticket } from "lucide-react";
+
+type Exhibition = {
+  id: string;
+  name: string;
+  description: string | null;
+  startDate: Date | string;
+  endDate: Date | string;
+  admission: number | null;
+};
+
+function formatDate(value: Date | string) {
+  return new Date(value).toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
 export default function MuseumExhibitions({
   exhibitions = [],
 }: {
-  exhibitions?: any[];
+  exhibitions?: Exhibition[];
 }) {
-  const singleSlide = exhibitions.length === 1;
+  if (exhibitions.length === 0) return null;
+
+  // 会期の終わった展覧会は出さない。DBの更新が止まっても
+  // 「開催中」と誤って表示し続けることが無いようにする。
+  const now = new Date();
+  const current = exhibitions.filter((e) => new Date(e.endDate) >= now);
+  if (current.length === 0) return null;
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="py-10"
-    >
-      <h2 className="text-3xl font-bold text-center mb-6">開催中の企画展</h2>
+    <section className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mb-6">
+        <span className="inline-block rounded-full bg-rose-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          Exhibitions
+        </span>
+        <h2 className="mt-3 text-2xl font-bold tracking-tight">
+          開催中の企画展
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          会期や料金は変更されることがあります。公式サイトで最新の情報をご確認ください。
+        </p>
+      </div>
 
-      {singleSlide ? (
-        // スライドが1つだけならSwiperを使わず、普通のカード表示にする
-        <div className="px-4">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between max-w-md mx-auto"
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {current.map((exhibition) => (
+          <div
+            key={exhibition.id}
+            className="rounded-xl border border-border bg-card p-5"
           >
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-gray-900">
-                {exhibitions[0].name}
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="font-bold leading-snug tracking-tight">
+                {exhibition.name}
               </h3>
-              <p className="text-gray-600 text-sm">
-                {exhibitions[0].description}
+              <Badge className="shrink-0 bg-rose-600 text-white hover:bg-rose-600">
+                開催中
+              </Badge>
+            </div>
+
+            {exhibition.description && (
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {exhibition.description}
               </p>
+            )}
 
-              <div className="text-sm text-gray-500 space-y-1 mt-2">
-                <div className="flex items-center gap-2">
-                  <CalendarDays size={16} />
+            <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <CalendarDays className="h-3.5 w-3.5 shrink-0" />
+                <span>
+                  {formatDate(exhibition.startDate)} 〜{" "}
+                  {formatDate(exhibition.endDate)}
+                </span>
+              </p>
+              {exhibition.admission !== null && (
+                <p className="flex items-center gap-2">
+                  <Ticket className="h-3.5 w-3.5 shrink-0" />
                   <span>
-                    {new Date(exhibitions[0].startDate).toLocaleDateString()} 〜{" "}
-                    {new Date(exhibitions[0].endDate).toLocaleDateString()}
+                    {exhibition.admission === 0
+                      ? "無料"
+                      : `£${exhibition.admission}`}
                   </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Ticket size={16} />
-                  <span>{exhibitions[0].admission}ポンド</span>
-                </div>
-              </div>
+                </p>
+              )}
             </div>
-
-            <div className="mt-4">
-              <Badge className="text-xs">開催中</Badge>
-            </div>
-          </motion.div>
-        </div>
-      ) : (
-        <Swiper
-          slidesPerView={1.2}
-          spaceBetween={20}
-          breakpoints={{
-            768: {
-              slidesPerView: 2.1,
-            },
-            1024: {
-              slidesPerView: 3,
-            },
-          }}
-          autoplay={{
-            delay: 5000,
-          }}
-          pagination={{
-            clickable: true,
-          }}
-          modules={[Autoplay, Pagination]}
-          className="px-4"
-        >
-          {exhibitions.map((exhibition) => (
-            <SwiperSlide key={exhibition.id}>
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 h-full flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold">{exhibition.name}</h3>
-                  <p className="text-gray-600 text-sm">
-                    {exhibition.description}
-                  </p>
-
-                  <div className="text-sm text-gray-500 space-y-1 mt-2">
-                    <div className="flex items-center gap-2">
-                      <CalendarDays size={16} />
-                      <span>
-                        {new Date(exhibition.startDate).toLocaleDateString()} 〜{" "}
-                        {new Date(exhibition.endDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Ticket size={16} />
-                      <span>{exhibition.admission}ポンド</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <Badge className="text-xs">開催中</Badge>
-                </div>
-              </motion.div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
-    </motion.section>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

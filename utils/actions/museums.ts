@@ -249,6 +249,7 @@ export const fetchMuseumDetailsBySlug = (slug: string) => {
       museumInfo: true,
       exhibition: true,
       trivia: true,
+      highlightSpots: { orderBy: { order: "asc" } },
       artworks: {
         where: {
           recommendLevel: 3,

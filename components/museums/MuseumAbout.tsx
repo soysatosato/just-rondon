@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Markdown from "react-markdown";
 
 export default function MuseumAbout({
@@ -10,24 +7,27 @@ export default function MuseumAbout({
 }) {
   if (!description) return null;
 
-  const paragraphs = description.split(/\r?\n/).filter(Boolean);
+  const paragraphs = description.split(/\r?\n/).filter((p) => p.trim());
 
   return (
-    <section className="bg-background py-20 px-4 md:px-8 lg:px-20">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <section className="mx-auto max-w-4xl px-4 py-10">
+      <div className="mb-6">
+        <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          About
+        </span>
+        <h2 className="mt-3 text-2xl font-bold tracking-tight">
+          どんなところか
+        </h2>
+      </div>
+
+      <div className="space-y-4">
         {paragraphs.map((text, i) => (
-          <motion.div
+          <div
             key={i}
-            className="relative pl-4 border-l-4 border-gradient-to-b from-pink-400 via-purple-400 to-indigo-400"
-            initial={{ opacity: 0, x: -20, scale: 0.95 }}
-            whileInView={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ delay: 0.2 * i, duration: 0.6, type: "spring" }}
-            viewport={{ once: true }}
+            className="text-sm leading-relaxed text-muted-foreground [&_a]:text-indigo-600 [&_a]:underline dark:[&_a]:text-indigo-400 [&_strong]:font-semibold [&_strong]:text-foreground"
           >
-            <div className="prose prose-sm md:prose-base text-muted-foreground leading-relaxed">
-              <Markdown>{text}</Markdown>
-            </div>
-          </motion.div>
+            <Markdown>{text}</Markdown>
+          </div>
         ))}
       </div>
     </section>

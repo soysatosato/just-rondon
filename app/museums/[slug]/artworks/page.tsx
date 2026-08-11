@@ -1,11 +1,10 @@
 import ArtworksAccordion from "@/components/artworks/ArtworksAccordion";
 import { buildPageMetadata } from "@/lib/seo";
 import ArtworksIntro from "@/components/artworks/ArtworksIntro";
-import RainCanvas from "@/components/home/RainParticles";
 import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
 import { fetchArtworks, fetchMuseumIDandName } from "@/utils/actions/museums";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 // ---------- Roomごとに分類 ----------
 const groupByRoom = (items: any[]) => {
@@ -84,17 +83,14 @@ export default async function ArtworksPage({
   params: { slug: string };
 }) {
   const museum = await fetchMuseumIDandName(params.slug);
-  if (!museum) redirect("/museums");
+  if (!museum) notFound();
   const artworks = await fetchArtworks(museum.id);
-  if (!artworks || artworks.length === 0) redirect("/museums");
+  if (!artworks || artworks.length === 0) notFound();
   const rooms = groupByRoom(artworks);
 
   return (
-    <div className="px-12 bg-background text-foreground min-h-screen">
-      <div className="fixed inset-0 z-[9999] pointer-events-none">
-        <RainCanvas />
-      </div>
-      <div className="py-4 mb-6">
+    <div className="mx-auto max-w-5xl px-4 py-4 text-foreground">
+      <div className="mb-6">
         <MuseumBreadCrumbs
           name={museum.name}
           link2={params.slug}

@@ -105,10 +105,10 @@ export default async function ArtworkDetailPage({
             </Badge>
           )}
         </div>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           {artwork?.artist}, {artwork?.year}
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground">
           {artwork?.museum.name} {artwork?.room}
         </p>
       </section>
@@ -126,8 +126,8 @@ export default async function ArtworkDetailPage({
         </div>
       )}
 
-      <section className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg shadow-inner">
-        <h2 className="text-xl font-semibold border-b pb-1 mb-2 text-gray-900 dark:text-gray-100">
+      <section className="rounded-xl border border-border bg-card p-5">
+        <h2 className="mb-2 border-b border-border pb-2 text-xl font-bold tracking-tight">
           作品の概要
         </h2>
         {artwork?.description && (
@@ -147,9 +147,9 @@ export default async function ArtworkDetailPage({
       <AdSenseUnit slot={AD_SLOTS.inArticle} />
 
       {artwork?.highlights && (
-        <section className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg md:text-xl font-semibold border-b pb-1 mb-2 text-gray-900 dark:text-gray-100">
-            ここがポイント！
+        <section className="rounded-xl border border-border bg-card p-5">
+          <h2 className="mb-2 border-b border-border pb-2 text-lg font-bold tracking-tight md:text-xl">
+            ここがポイント
           </h2>
           <ul className="space-y-2">
             {artwork.highlights.map((h, idx) => (
@@ -159,8 +159,8 @@ export default async function ArtworkDetailPage({
                 components={{
                   li: ({ children }) => (
                     <li className="flex items-start gap-2">
-                      <Sparkles className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
-                      <span className="text-gray-700 dark:text-gray-300 text-sm">
+                      <Sparkles className="mt-1 h-4 w-4 flex-shrink-0 text-amber-500" />
+                      <span className="text-sm leading-relaxed text-muted-foreground">
                         {children}
                       </span>
                     </li>

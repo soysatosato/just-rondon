@@ -93,9 +93,7 @@ export default function MuseumsMapComponent({ museums }: Props) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full justify-center 
-             text-gray-900 border-gray-900 
-             dark:text-gray-100 dark:border-gray-100"
+                  className="w-full justify-center"
                   asChild
                 >
                   <Link href={`/museums/${museum.slug}`}>詳細情報</Link>
