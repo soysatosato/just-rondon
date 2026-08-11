@@ -154,24 +154,54 @@ export const fetchMuseums = async ({
   return museums;
 };
 
-// utils/actions/museums.ts
-export async function fetchMuseumsStep10({
-  page = 1,
-  limit = 10,
-}: { page?: number; limit?: number } = {}) {
-  const offset = (page - 1) * limit;
+/**
+ * /museums ハブが必要とするものを1往復でまとめて取る。
+ * ハイライトは recommendLevel 5 の先頭6件で、10選ページの部分集合。
+ */
+export async function fetchMuseumsHubData() {
+  const [topMuseums, totalCount, freeCount, kidsCount] = await Promise.all([
+    db.museum.findMany({
+      where: { recommendLevel: 5 },
+      orderBy: { createdAt: "asc" },
+      take: 6,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        tagline: true,
+        price: true,
+        address: true,
+        image: true,
+      },
+    }),
+    db.museum.count(),
+    db.museum.count({ where: { price: 0 } }),
+    db.museum.count({ where: { isForChildren: true } }),
+  ]);
 
-  // ミュージアムを10件ずつ取得
-  const museums = await db.museum.findMany({
+  return { topMuseums, totalCount, freeCount, kidsCount };
+}
+
+/** 一覧ページ用。全件を一度に返し、絞り込みはクライアント側で行う(47件なので十分軽い)。 */
+export async function fetchAllMuseums() {
+  return db.museum.findMany({
     orderBy: [{ recommendLevel: "desc" }, { createdAt: "asc" }],
-    take: limit,
-    skip: offset,
+    select: {
+      id: true,
+      name: true,
+      engName: true,
+      slug: true,
+      tagline: true,
+      summary: true,
+      price: true,
+      address: true,
+      image: true,
+      lat: true,
+      lng: true,
+      recommendLevel: true,
+      isForChildren: true,
+    },
   });
-
-  // 総件数も取得（ページネーション用）
-  const total = await db.museum.count();
-
-  return { museums, total };
 }
 
 export const fetchMuseumIDandName = async (slug: string) => {
@@ -194,17 +224,6 @@ export const fetchTop10Museums = async () => {
     orderBy: {
       createdAt: "asc",
     },
-  });
-  return museums;
-};
-export const fetchTop25Museums = async () => {
-  const museums = await db.museum.findMany({
-    where: {
-      recommendLevel: {
-        gte: 4,
-      },
-    },
-    orderBy: [{ recommendLevel: "desc" }, { createdAt: "asc" }],
   });
   return museums;
 };

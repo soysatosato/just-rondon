@@ -43,6 +43,15 @@ const nextConfig = {
         permanent: true,
       },
 
+      // 旧「美術館25選」。recommendLevel>=4 の26館を並べるページだったが、
+      // うち10館は10選ページと丸ごと重複していた。全館一覧に
+      // 「おすすめ度が高い」絞り込みを入れて吸収したのでそちらへ送る。
+      {
+        source: "/museums/best-25-museums",
+        destination: "/museums/all-museums",
+        permanent: true,
+      },
+
       // その他は apex -> www
       {
         source: "/:path*",

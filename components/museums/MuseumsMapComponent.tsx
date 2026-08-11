@@ -1,6 +1,5 @@
 "use client";
 
-import { Museum } from "@prisma/client";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { icon } from "leaflet";
@@ -9,10 +8,21 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FaMapMarkerAlt, FaMoneyBillWave } from "react-icons/fa";
 import Link from "next/link";
-import Image from "next/image";
+
+/** 地図が実際に使う分だけ。呼び出し側が select で絞った型でも渡せるようにしている。 */
+export type MappableMuseum = {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  address: string;
+  image: string;
+  lat: number;
+  lng: number;
+};
 
 type Props = {
-  museums: Museum[];
+  museums: MappableMuseum[];
 };
 
 const iconUrl =

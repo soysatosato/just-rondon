@@ -139,6 +139,97 @@ export function museumBreadcrumbJsonLd(
   };
 }
 
+/** ハブ(/museums)自身のパンくず。個別館ページ用の museumBreadcrumbJsonLd とは別物。 */
+export function museumsHubBreadcrumbJsonLd(
+  current?: { name: string; path: string },
+) {
+  const items = [
+    { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "美術館・博物館",
+      item: `${SITE_URL}/museums`,
+    },
+  ];
+
+  if (current) {
+    items.push({
+      "@type": "ListItem",
+      position: 3,
+      name: current.name,
+      item: `${SITE_URL}${current.path}`,
+    });
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items,
+  };
+}
+
+/**
+ * 一覧ページの ItemList。館そのものの詳細は各館ページの museumJsonLd が持つので、
+ * ここでは順序と URL だけを示し、重複した記述を出さない。
+ */
+export function museumsCollectionJsonLd({
+  path,
+  name,
+  description,
+  museums,
+}: {
+  path: string;
+  name: string;
+  description: string;
+  museums: { name: string; slug: string }[];
+}) {
+  const url = `${SITE_URL}${path}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": url,
+    url,
+    name,
+    description,
+    isPartOf: {
+      "@type": "WebSite",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: museums.length,
+      itemListElement: museums.map((m, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: m.name,
+        url: `${SITE_URL}${museumPath(m.slug)}`,
+      })),
+    },
+  };
+}
+
+export function museumsFaqJsonLd(
+  items: { question: string; answer: string }[],
+  path: string,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}${path}#faq`,
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 type ArtworkForJsonLd = {
   id: string;
   title: string;

@@ -80,7 +80,6 @@ module.exports = {
       "/museums/banksy-artworks",
       "/museums/all-museums",
       "/museums/best-10-museums",
-      "/museums/best-25-museums",
       "/museums/best-museums-for-kids",
       "/musicals",
       "/musicals/west-end-tickets",

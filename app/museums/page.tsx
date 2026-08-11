@@ -1,34 +1,68 @@
-import LoadingCards from "@/components/card/LoadingCards";
-import { buildPageMetadata } from "@/lib/seo";
-import MuseumsContainer from "@/components/home/MuseumsContainer";
-import RainCanvas from "@/components/home/RainParticles";
-import { Metadata } from "next";
-import { Suspense } from "react";
+export const revalidate = 60 * 60;
 
-type HomePageProps = {
-  searchParams?: {
-    search?: string;
-  };
-};
+import { buildPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import MuseumsHub from "@/components/museums/MuseumsHub";
+import {
+  museumsCollectionJsonLd,
+  museumsFaqJsonLd,
+  museumsHubBreadcrumbJsonLd,
+} from "@/components/museums/jsonld";
+import { museumsFaqItems } from "@/components/museums/faq";
+import { fetchMuseumsHubData } from "@/utils/actions/museums";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+
+const PAGE_TITLE =
+  "ロンドンの美術館・博物館ガイド | 無料の常設展・見どころ・回り方";
+const PAGE_DESCRIPTION =
+  "大英博物館、ナショナル・ギャラリー、テート・モダン、V&A、自然史博物館。ロンドンの主要館は常設展が無料で予約も不要です。目的別のおすすめ、混雑を避ける時間帯、荷物や撮影のルール、1日の回り方まで日本語でまとめたロンドン美術館ガイド。";
+
 export const metadata = buildPageMetadata({
   path: "/museums",
-  title: "ジャスト・ロンドン | ロンドン観光・美術館・展覧会ガイド",
-  titleSuffix: false,
-  description: "初めてのロンドン観光でも安心！主要美術館の見どころや必見作品、展覧会情報、便利なアクセス方法をわかりやすく紹介する、観光客向けアートガイドサイトです。",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  keywords: [
+    "ロンドン 美術館",
+    "ロンドン 博物館",
+    "大英博物館",
+    "ナショナル・ギャラリー",
+    "テート・モダン",
+    "ロンドン 美術館 無料",
+    "ロンドン 美術館 おすすめ",
+    "V&A",
+    "自然史博物館",
+    "ロンドン 観光",
+  ],
 });
-export default function HomePage({ searchParams }: HomePageProps) {
-  const { search } = searchParams ?? {};
-  if (search === "asdasdasdaaaaaaaaaaaaaaa") return null;
+
+export default async function MuseumsHubPage() {
+  const { topMuseums, totalCount, freeCount, kidsCount } =
+    await fetchMuseumsHubData();
+
   return (
     <>
-      <section>
-        <div className="fixed inset-0 z-[9999] pointer-events-none">
-          <RainCanvas />
-        </div>
-        <Suspense fallback={<LoadingCards />}>
-          <MuseumsContainer />
-        </Suspense>
-      </section>
+      <JsonLd data={museumsHubBreadcrumbJsonLd()} />
+      <JsonLd
+        data={museumsCollectionJsonLd({
+          path: "/museums",
+          name: PAGE_TITLE,
+          description: PAGE_DESCRIPTION,
+          museums: topMuseums,
+        })}
+      />
+      <JsonLd data={museumsFaqJsonLd(museumsFaqItems, "/museums")} />
+
+      <MuseumsHub
+        topMuseums={topMuseums}
+        totalCount={totalCount}
+        freeCount={freeCount}
+        kidsCount={kidsCount}
+      />
+
+      <div className="mx-auto max-w-6xl px-4 pb-10">
+        <AdSenseUnit slot={AD_SLOTS.listing} />
+      </div>
     </>
   );
 }
