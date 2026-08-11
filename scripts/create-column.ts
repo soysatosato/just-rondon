@@ -2,6 +2,7 @@ import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
+import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
 
 type ColumnSectionInput = {
   title: string;
@@ -17,6 +18,9 @@ type ColumnPayload = {
   mainText?: string;
   image?: string;
   website?: string;
+  tags: string[];
+  seriesName?: string;
+  seriesOrder?: number;
   sections: ColumnSectionInput[];
 };
 
@@ -53,6 +57,37 @@ async function findUniqueSlug(base: string): Promise<string> {
 function validatePayload(payload: ColumnPayload) {
   if (!payload.title?.trim()) throw new Error("title is required");
   if (!payload.summary?.trim()) throw new Error("summary is required");
+
+  // タグは /column の絞り込みに直結するので必須。未知のキーは弾く。
+  if (!Array.isArray(payload.tags) || payload.tags.length === 0) {
+    throw new Error(
+      `tags must be a non-empty array. Valid tags: ${COLUMN_TAGS.map(
+        (t) => t.key,
+      ).join(", ")}`,
+    );
+  }
+  for (const tag of payload.tags) {
+    if (!isKnownTag(tag)) {
+      throw new Error(
+        `Unknown tag "${tag}". Valid tags: ${COLUMN_TAGS.map(
+          (t) => t.key,
+        ).join(", ")}`,
+      );
+    }
+  }
+
+  // 連載は名前と回数が揃って初めて意味を持つ
+  const hasName = Boolean(payload.seriesName?.trim());
+  const hasOrder = typeof payload.seriesOrder === "number";
+  if (hasName !== hasOrder) {
+    throw new Error(
+      "seriesName and seriesOrder must be provided together (or both omitted)",
+    );
+  }
+  if (hasOrder && payload.seriesOrder! < 1) {
+    throw new Error("seriesOrder must be 1 or greater");
+  }
+
   if (!Array.isArray(payload.sections) || payload.sections.length === 0) {
     throw new Error("sections must be a non-empty array");
   }
@@ -79,6 +114,23 @@ async function main() {
   const baseSlug = toSlugBase(payload.engTitle || payload.title);
   const slug = await findUniqueSlug(baseSlug);
 
+  // 同じ連載で回数が重複すると一覧の並び順が壊れるため事前に弾く
+  if (payload.seriesName) {
+    const clash = await db.content.findFirst({
+      where: {
+        category: "column",
+        seriesName: payload.seriesName,
+        seriesOrder: payload.seriesOrder,
+      },
+      select: { slug: true },
+    });
+    if (clash) {
+      throw new Error(
+        `Series "${payload.seriesName}" already has 第${payload.seriesOrder}回: ${clash.slug}`,
+      );
+    }
+  }
+
   try {
     const created = await db.content.create({
       data: {
@@ -91,6 +143,9 @@ async function main() {
         website: payload.website,
         category: "column",
         route: "/column",
+        tags: payload.tags,
+        seriesName: payload.seriesName,
+        seriesOrder: payload.seriesOrder,
         sections: {
           create: payload.sections
             .slice()

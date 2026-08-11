@@ -5,6 +5,7 @@ import type { Content, ContentSection } from "@prisma/client";
 import ColumnBreadCrumbs from "@/components/column/ColumnBreadCrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import { tagLabel } from "@/lib/column-taxonomy";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -19,23 +20,63 @@ function formatDate(date: Date) {
 
 type ColumnWithSections = Content & { sections: ContentSection[] };
 
+export type SeriesEntry = {
+  id: string;
+  title: string;
+  slug: string;
+  seriesOrder: number | null;
+};
+
 export default function ColumnDetail({
   content,
+  series = [],
 }: {
   content: ColumnWithSections;
+  series?: SeriesEntry[];
 }) {
   const sections = content.sections.slice().sort(
     (a, b) => a.displayOrder - b.displayOrder,
   );
+
+  // 連載が2本以上あるときだけ回送ナビを出す（1本しか無い連載は実質単発）
+  const hasSeries = Boolean(content.seriesName) && series.length > 1;
+  const currentIndex = hasSeries
+    ? series.findIndex((s) => s.slug === content.slug)
+    : -1;
+  const prev = currentIndex > 0 ? series[currentIndex - 1] : null;
+  const next =
+    currentIndex >= 0 && currentIndex < series.length - 1
+      ? series[currentIndex + 1]
+      : null;
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 md:py-10 space-y-10">
       <ColumnBreadCrumbs title={content.title} />
 
       <div>
-        <p className="text-sm text-muted-foreground mb-2">
-          {formatDate(content.createdAt)}
-        </p>
+        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <p className="text-sm text-muted-foreground">
+            {formatDate(content.createdAt)}
+          </p>
+          {content.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {content.tags.map((t) => (
+                <span
+                  key={t}
+                  className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                >
+                  {tagLabel(t)}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        {hasSeries && (
+          <p className="mb-3 text-sm font-semibold text-amber-700 dark:text-amber-400">
+            連載「{content.seriesName}」全 {series.length} 回 の第{" "}
+            {content.seriesOrder ?? "–"} 回
+          </p>
+        )}
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
           {content.title}
         </h1>
@@ -93,6 +134,95 @@ export default function ColumnDetail({
           </section>
         ))}
       </div>
+
+      {/* 連載の全話リスト。どの回からでも他の回に飛べるようにする */}
+      {hasSeries && (
+        <section className="rounded-2xl border border-amber-200 bg-amber-50/50 p-5 dark:border-amber-900/40 dark:bg-amber-950/10">
+          <h2 className="mb-4 text-base font-bold tracking-tight sm:text-lg">
+            連載「{content.seriesName}」全 {series.length} 回
+          </h2>
+          <ol className="space-y-2">
+            {series.map((entry) => {
+              const isCurrent = entry.slug === content.slug;
+              const inner = (
+                <>
+                  <span
+                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                      isCurrent
+                        ? "bg-slate-400 text-white dark:bg-slate-600"
+                        : "bg-amber-600 text-white"
+                    }`}
+                  >
+                    {entry.seriesOrder ?? "–"}
+                  </span>
+                  <span className="text-sm font-medium leading-relaxed">
+                    {entry.title}
+                    {isCurrent && (
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        （この記事）
+                      </span>
+                    )}
+                  </span>
+                </>
+              );
+
+              return (
+                <li key={entry.id}>
+                  {isCurrent ? (
+                    <div
+                      aria-current="page"
+                      className="flex items-start gap-3 rounded-xl bg-slate-100 px-4 py-3 dark:bg-slate-800/60"
+                    >
+                      {inner}
+                    </div>
+                  ) : (
+                    <Link
+                      href={`/column/${entry.slug}`}
+                      className="group flex items-start gap-3 rounded-xl bg-white/80 px-4 py-3 transition hover:bg-white dark:bg-slate-900/60 dark:hover:bg-slate-900"
+                    >
+                      {inner}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      )}
+
+      {/* 前後の回への移動 */}
+      {(prev || next) && (
+        <nav className="grid gap-3 sm:grid-cols-2">
+          {prev ? (
+            <Link
+              href={`/column/${prev.slug}`}
+              className="group rounded-xl border border-slate-200 p-4 transition hover:border-sky-300 dark:border-slate-700 dark:hover:border-sky-700"
+            >
+              <p className="text-xs text-muted-foreground">
+                ← 第 {prev.seriesOrder ?? "–"} 回
+              </p>
+              <p className="mt-1 line-clamp-2 text-sm font-medium group-hover:text-sky-700 dark:group-hover:text-sky-300">
+                {prev.title}
+              </p>
+            </Link>
+          ) : (
+            <span aria-hidden />
+          )}
+          {next && (
+            <Link
+              href={`/column/${next.slug}`}
+              className="group rounded-xl border border-slate-200 p-4 text-right transition hover:border-sky-300 dark:border-slate-700 dark:hover:border-sky-700"
+            >
+              <p className="text-xs text-muted-foreground">
+                第 {next.seriesOrder ?? "–"} 回 →
+              </p>
+              <p className="mt-1 line-clamp-2 text-sm font-medium group-hover:text-sky-700 dark:group-hover:text-sky-300">
+                {next.title}
+              </p>
+            </Link>
+          )}
+        </nav>
+      )}
 
       <p className="pt-4">
         <Link

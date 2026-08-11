@@ -42,6 +42,18 @@ export const fetchColumnBySlug = async (slug: string) => {
   return content;
 };
 
+// 連載コラムの詳細ページで、同じ連載の全話を回順に出すために使う。
+// seriesName が無い単発コラムでは呼んでも空配列が返る。
+export const fetchColumnSeries = async (seriesName: string | null) => {
+  if (!seriesName) return [];
+  const contents = await db.content.findMany({
+    where: { category: "column", seriesName },
+    orderBy: { seriesOrder: "asc" },
+    select: { id: true, title: true, slug: true, seriesOrder: true },
+  });
+  return contents;
+};
+
 export const fetchBritishEnglishEntries = async () => {
   const contents = await db.content.findMany({
     where: { category: "british-english" },

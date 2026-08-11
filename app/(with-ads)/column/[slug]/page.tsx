@@ -1,7 +1,7 @@
 export const revalidate = 60 * 60;
 
 import { notFound } from "next/navigation";
-import { fetchColumnBySlug } from "@/utils/actions/contents";
+import { fetchColumnBySlug, fetchColumnSeries } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import { columnArticleJsonLd, columnBreadcrumbJsonLd } from "@/components/column/jsonld";
@@ -43,11 +43,13 @@ export default async function ColumnDetailPage({ params }: Props) {
 
   if (!content) return notFound();
 
+  const series = await fetchColumnSeries(content.seriesName);
+
   return (
     <>
       <JsonLd data={columnBreadcrumbJsonLd(content)} />
       <JsonLd data={columnArticleJsonLd(content)} />
-      <ColumnDetail content={content} />
+      <ColumnDetail content={content} series={series} />
     </>
   );
 }

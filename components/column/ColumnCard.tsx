@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Content } from "@prisma/client";
+import { tagLabel } from "@/lib/column-taxonomy";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -27,9 +28,19 @@ export default function ColumnCard({ item }: { item: Content }) {
           </div>
         )}
         <CardHeader className="space-y-1 px-4 py-3">
-          <p className="text-xs text-muted-foreground">
-            {formatDate(item.createdAt)}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <p className="text-xs text-muted-foreground">
+              {formatDate(item.createdAt)}
+            </p>
+            {item.tags.slice(0, 2).map((t) => (
+              <span
+                key={t}
+                className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              >
+                {tagLabel(t)}
+              </span>
+            ))}
+          </div>
           <CardTitle className="text-base font-semibold">
             {item.title}
           </CardTitle>
