@@ -5,11 +5,22 @@ import type { ServiceCharge } from "@prisma/client";
 
 const DISTRIBUTION_ORDER = ["equal", "gradient", "fixed", "none"] as const;
 
-function StatTile({ label, value }: { label: string; value: string }) {
+function StatTile({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
   return (
-    <Card className="p-4 space-y-1">
+    <Card className="p-4">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-2xl font-semibold">{value}</p>
+      <p className="mt-1 text-2xl font-bold tabular-nums tracking-tight">
+        {value}
+      </p>
+      {sub && <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>}
     </Card>
   );
 }
@@ -42,7 +53,7 @@ export default function StoreSummary({
     count: distributionCounts[type] ?? 0,
   })).filter((row) => row.count > 0);
 
-  const amountsByPeriod = (["weekly", "monthly"] as const)
+  const amountsByPeriod = (["monthly", "weekly"] as const)
     .map((period) => {
       const values = collectedReviews
         .filter((r) => r.amountPeriod === period && r.amountValue != null)
@@ -59,41 +70,52 @@ export default function StoreSummary({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm font-medium">この店舗のサマリー</p>
+      <h2 className="text-lg font-bold tracking-tight">この店舗のまとめ</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <StatTile label="レビュー件数" value={`${totalReviews}件`} />
-        <StatTile label="サービスチャージ徴収率" value={`${collectionRate}%`} />
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatTile
+          label="回答数"
+          value={`${totalReviews}`}
+          sub="件のレビュー"
+        />
+        <StatTile
+          label="徴収率"
+          value={`${collectionRate}%`}
+          sub={`${collectedReviews.length}/${totalReviews}件が徴収あり`}
+        />
         {amountsByPeriod.map((a) => (
           <StatTile
             key={a.period}
-            label={`平均金額（${AMOUNT_PERIOD_LABEL[a.period]}・${a.count}件）`}
+            label={`平均受取額（${AMOUNT_PERIOD_LABEL[a.period]}）`}
             value={`£${Math.round(a.avg as number)}`}
+            sub={`${a.count}件の回答`}
           />
         ))}
       </div>
 
       {distributionRows.length > 0 && (
-        <Card className="p-4 space-y-3">
-          <p className="text-sm font-medium">
-            分配方法の内訳（徴収ありの回答 {collectedReviews.length}件中）
+        <Card className="p-5">
+          <p className="text-sm font-medium">分配方法の内訳</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            徴収ありの回答 {collectedReviews.length}件が対象
           </p>
-          <div className="space-y-2">
+
+          <div className="mt-4 space-y-3">
             {distributionRows.map((row) => {
               const pct = Math.round(
                 (row.count / collectedReviews.length) * 100
               );
               return (
-                <div key={row.type} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
+                <div key={row.type} className="space-y-1.5">
+                  <div className="flex items-baseline justify-between gap-3 text-xs">
                     <span className="text-foreground/90">{row.label}</span>
-                    <span className="text-muted-foreground">
-                      {row.count}件（{pct}%）
+                    <span className="shrink-0 tabular-nums text-muted-foreground">
+                      {row.count}件・{pct}%
                     </span>
                   </div>
-                  <div className="h-1.5 w-full rounded-full bg-muted">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-1.5 rounded-full bg-primary"
+                      className="h-full rounded-full bg-foreground/80"
                       style={{ width: `${pct}%` }}
                     />
                   </div>

@@ -18,7 +18,7 @@ import {
 } from "recharts";
 import { Card } from "@/components/ui/card";
 import type { ServiceChargeStats as Stats } from "@/utils/actions/jobs";
-import { AMOUNT_PERIOD_LABEL, DISTRIBUTION_LABEL } from "@/utils/labels";
+import { AMOUNT_PERIOD_LABEL } from "@/utils/labels";
 
 // Validated categorical palette (dataviz skill, fixed order — never cycled)
 const PALETTE = {
@@ -26,7 +26,6 @@ const PALETTE = {
   dark: ["#3987e5", "#d95926", "#199e70", "#c98500"],
 };
 
-// グラフの軸に収まる短縮形。正式名称は DISTRIBUTION_LABEL を参照する。
 const DISTRIBUTION_SHORT_LABEL: Record<string, string> = {
   equal: "等分配",
   gradient: "グラデーション分配",
@@ -34,24 +33,20 @@ const DISTRIBUTION_SHORT_LABEL: Record<string, string> = {
   none: "分配なし",
 };
 
+const DISTRIBUTION_FULL_LABEL: Record<string, string> = {
+  equal: "従業員に等分配されている",
+  gradient: "役職・勤務時間等に応じたグラデーション分配",
+  fixed: "時給に一定額として固定で上乗せ（大部分をオーナー側が取得）",
+  none: "分配されていない（実質オーナー側が取得）",
+};
+
 const DISTRIBUTION_ORDER = ["equal", "gradient", "fixed", "none"];
 
-function StatTile({
-  label,
-  value,
-  sub,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-}) {
+function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <Card className="p-4">
+    <Card className="p-4 space-y-1">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-1 text-3xl font-bold tabular-nums tracking-tight">
-        {value}
-      </p>
-      {sub && <p className="mt-0.5 text-xs text-muted-foreground">{sub}</p>}
+      <p className="text-2xl font-semibold">{value}</p>
     </Card>
   );
 }
@@ -83,13 +78,8 @@ export default function ServiceChargeStats({ stats }: { stats: Stats }) {
 
   if (stats.totalReviews === 0) {
     return (
-      <Card className="p-8 text-center">
-        <p className="text-sm font-medium text-foreground">
-          まだ調査データがありません
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          最初の回答をお待ちしています。
-        </p>
+      <Card className="p-6 text-center text-sm text-muted-foreground">
+        まだ調査データがありません。最初の回答をお待ちしています。
       </Card>
     );
   }
@@ -118,8 +108,7 @@ export default function ServiceChargeStats({ stats }: { stats: Stats }) {
     return {
       type,
       name: DISTRIBUTION_SHORT_LABEL[type],
-      tooltipLabel:
-        DISTRIBUTION_LABEL[type as keyof typeof DISTRIBUTION_LABEL],
+      tooltipLabel: DISTRIBUTION_FULL_LABEL[type],
       count: found?.count ?? 0,
       color: palette[i % palette.length],
     };
@@ -130,33 +119,13 @@ export default function ServiceChargeStats({ stats }: { stats: Stats }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile
-          label="回答数"
-          value={`${stats.totalReviews}`}
-          sub="件のレビュー"
-        />
-        <StatTile
-          label="登録店舗数"
-          value={`${stats.totalStores}`}
-          sub="店舗"
-        />
-        <StatTile
-          label="徴収率"
-          value={`${collectionRate}%`}
-          sub="が徴収あり"
-        />
-        {amountTiles.slice(0, 1).map((a) => (
-          <StatTile
-            key={a.period}
-            label={`平均受取額（${AMOUNT_PERIOD_LABEL[a.period as "weekly" | "monthly"]}）`}
-            value={`£${Math.round(a.avg)}`}
-            sub={`${a.count}件の回答`}
-          />
-        ))}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <StatTile label="総レビュー数" value={`${stats.totalReviews}件`} />
+        <StatTile label="登録店舗数" value={`${stats.totalStores}店舗`} />
+        <StatTile label="サービスチャージ徴収率" value={`${collectionRate}%`} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="p-4">
           <p className="text-sm font-medium mb-2">サービスチャージ徴収の有無</p>
           {collectionData.length > 0 ? (
@@ -243,15 +212,13 @@ export default function ServiceChargeStats({ stats }: { stats: Stats }) {
         </Card>
       </div>
 
-      {/* 上のタイルに載せきれなかった期間（過去データの週額など）を補足として並べる */}
-      {amountTiles.length > 1 && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {amountTiles.slice(1).map((a) => (
+      {amountTiles.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {amountTiles.map((a) => (
             <StatTile
               key={a.period}
-              label={`平均受取額（${AMOUNT_PERIOD_LABEL[a.period as "weekly" | "monthly"]}）`}
+              label={`平均サービスチャージ（${AMOUNT_PERIOD_LABEL[a.period as "weekly" | "monthly"]}・${a.count}件）`}
               value={`£${Math.round(a.avg)}`}
-              sub={`${a.count}件の回答`}
             />
           ))}
         </div>
