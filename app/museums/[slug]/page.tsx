@@ -3,6 +3,9 @@ import ShareButton from "@/components/museums/ShareButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { fetchMuseumDetailsBySlug } from "@/utils/actions/museums";
+import { fetchAttractionName } from "@/utils/actions/attractions";
+import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
+import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -76,6 +79,12 @@ export default async function MuseumDetailsPage({
   // 404 を返さないと、消えたページが延々 200 を返し続けることになる。
   if (!museum) notFound();
 
+  // 同じ館が /sightseeing 側にもある場合は、そちらの観光目線のページへ渡す。
+  const pairedAttractionSlug = attractionSlugForMuseum(params.slug);
+  const pairedAttraction = pairedAttractionSlug
+    ? await fetchAttractionName(pairedAttractionSlug)
+    : null;
+
   return (
     <div className="mx-auto max-w-5xl px-4 pb-12">
       <JsonLd data={museumBreadcrumbJsonLd(museum)} />
@@ -136,6 +145,17 @@ export default async function MuseumDetailsPage({
           <DynamicMap lat={museum.lat} lng={museum.lng} />
         </div>
       </section>
+
+      {pairedAttraction && pairedAttractionSlug && (
+        <div className="mx-4 mb-6">
+          <CrossSectionLink
+            href={`/sightseeing/${pairedAttractionSlug}`}
+            eyebrow="ロンドン観光ガイド"
+            title={`${museum.name}を観光ルートに組み込む`}
+            description="周辺スポットとの回り方や、同じエリアで一緒に回れる見どころは観光ガイド側で紹介しています。"
+          />
+        </div>
+      )}
 
       <section className="mx-4 rounded-2xl border border-border bg-card p-6 text-center">
         <h2 className="text-lg font-bold tracking-tight">

@@ -9,6 +9,9 @@ import {
   fetchAttractionDetails,
   fetchRandomAttractionsByCategory,
 } from "@/utils/actions/attractions";
+import { fetchMuseumIDandName } from "@/utils/actions/museums";
+import { museumSlugForAttraction } from "@/lib/museum-attraction-pairs";
+import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -197,6 +200,13 @@ export default async function AttractionDetail({
   );
   const categoryLabel =
     categoryLabelMap[attraction.category] ?? "観光・見どころ満載の人気スポット";
+
+  // 同じ館が /museums 側にもある場合は、そちらの詳しい解説へ渡す。
+  // 対応表に無ければ null のままで、リンクは出さない。
+  const pairedMuseumSlug = museumSlugForAttraction(params.slug);
+  const pairedMuseum = pairedMuseumSlug
+    ? await fetchMuseumIDandName(pairedMuseumSlug)
+    : null;
 
   return (
     <main className="w-full max-w-5xl mx-auto">
@@ -388,6 +398,16 @@ export default async function AttractionDetail({
 
           <div className="clear-both" />
         </div>
+
+        {pairedMuseum && pairedMuseumSlug && (
+          <CrossSectionLink
+            href={`/museums/${pairedMuseumSlug}`}
+            eyebrow="美術館・博物館ガイド"
+            title={`${pairedMuseum.name}をじっくり見る`}
+            description="注目作品、所要時間の目安、開館時間、館内の回り方は美術館ガイド側にまとめています。"
+          />
+        )}
+
         {related.length > 0 && (
           <section className="px-6 py-12 max-w-5xl mx-auto space-y-6">
             <h2 className="text-xl md:text-2xl font-semibold tracking-tight">

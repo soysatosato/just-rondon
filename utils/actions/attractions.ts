@@ -38,6 +38,17 @@ export const fetchAttractionDetails = async (slug: string) => {
   return attraction;
 };
 
+/**
+ * 相互リンクの存在確認用。リンクを1本出すために sections の本文まで
+ * 引くのは重いので、名前だけ取る。
+ */
+export const fetchAttractionName = async (slug: string) => {
+  return db.attraction.findUnique({
+    where: { slug },
+    select: { name: true },
+  });
+};
+
 function hashToUint32(input: string): number {
   let h = 2166136261; // FNV-1a 32-bit seed-ish
   for (let i = 0; i < input.length; i++) {
