@@ -448,6 +448,213 @@ export const plaqueAreas: PlaqueArea[] = [
       },
     ],
   },
+  {
+    slug: "st-johns-wood",
+    title: "セント・ジョンズ・ウッド",
+    engTitle: "St John's Wood",
+    eyebrow: "アビイ・ロードから歩く",
+    summary:
+      "ビートルズの横断歩道から2分の距離に、指揮者ビーチャムのプレートがある。音楽と絵画と科学の住宅地を、スタジオを起点に北へ歩く。",
+    routeHint: "St John's Wood 駅起点・徒歩約90分",
+    lead: [
+      "アビイ・ロードのスタジオと横断歩道は、セント・ジョンズ・ウッドという住宅地の南の端にあります。多くの人は横断歩道の写真を撮って引き返してしまいますが、そこから北へ歩き出すと、19世紀から20世紀にかけての音楽家・画家・科学者のブループラークが次々に現れます。",
+      "最初のプレートは、スタジオの玄関からわずか120メートルほどの場所にあります。指揮者サー・トマス・ビーチャム。しかも彼は、この家に住んでいた時期にアビイ・ロードのスタジオで録音していました。ビートルズがやってくる十数年前の話です。ここが、横断歩道から古いセント・ジョンズ・ウッドへ入っていく入口になります。",
+    ],
+    note: "ここで紹介する7件はすべて現在も人が暮らす私有の住宅・集合住宅で、内部を見学できる場所はひとつもありません。プレートの撮影は歩道からにとどめ、門扉の中に入る、呼び鈴を鳴らすといった行為は控えてください。閑静な住宅街で、住民の生活の場です。また、アビイ・ロードの横断歩道は現役の交通量の多い道路です。写真を撮るために車道へ出る人が絶えず、実際に危険です。車の流れを必ず確認してください。",
+    keywords: [
+      "ブループラーク セント・ジョンズ・ウッド",
+      "アビイ・ロード 行き方",
+      "Abbey Road 横断歩道",
+      "Blue Plaque St John's Wood",
+      "ビートルズ 聖地巡礼 ロンドン",
+      "ロンドン 散策 コース",
+    ],
+    plaques: [
+      {
+        slug: "abbey-road-studios",
+        name: "アビイ・ロード・スタジオ(散策の起点)",
+        engName: "Abbey Road Studios",
+        title: "散策の出発点",
+        years: "1931年開業",
+        body: `はじめに、この散策の起点についてはっきりさせておきます。**アビイ・ロード・スタジオにも、あの横断歩道にも、ブループラークはありません。**
+
+スタジオの建物と横断歩道は、どちらも2010年に「Grade II指定建造物」になりました。これは歴史的建造物を開発から守るための法的な指定制度で、English Heritage が運営するブループラークとはまったく別の仕組みです。ややこしいことに、当時はこの二つを同じ組織が担当していました(2015年に分離)。そのため「アビイ・ロードにブループラークがある」という記述をあちこちで見かけますが、正確ではありません。ちなみに横断歩道の指定は、道路の白線が指定建造物になった史上初の例でした。
+
+では玄関の左右にある2枚のプレートは何なのか。左はウェストミンスター区が独自に設置している**グリーンプラーク**で、作曲家エドワード・エルガーのもの。1931年11月12日、このスタジオの開業式でエルガー自身が指揮し、録音を行ったことを伝えています。右はステレオ録音の発明者アラン・ブラムラインを記念するEMIのプレートです。どちらも青い円形のブループラークではありません。
+
+なお、横断歩道は何度も舗装し直されていて、1969年のジャケット撮影時とまったく同じ位置にあるわけではない点も、正確を期すなら知っておいてよいでしょう。
+
+ここから北へ歩き始めます。最初の本物のブループラークまでは、わずか2分です。`,
+        address: "3 Abbey Road, St John's Wood, London NW8 9AY",
+        nearestStation: "St John's Wood 駅 徒歩約5分",
+        access:
+          "スタジオは現役の録音施設で、内部の見学はできません。外観と横断歩道のみです。",
+        tips: "横断歩道は交通量の多い現役の道路です。写真撮影の際は車の流れに十分注意してください。スタジオ前の白い塀は落書きが定期的に塗り直されており、書き込む人が絶えませんが、私有物です。",
+        mapQuery: "Abbey Road Studios London",
+        website: "https://www.abbeyroad.com/",
+      },
+      {
+        slug: "thomas-beecham",
+        name: "サー・トマス・ビーチャム",
+        engName: "Sir Thomas Beecham",
+        title: "指揮者・興行主",
+        years: "1950–1954",
+        body: `スタジオから北へ2分。この散策で最初に出会う本物のブループラークが、指揮者サー・トマス・ビーチャムのものです。そしてこの人物こそ、アビイ・ロードと古いセント・ジョンズ・ウッドをつなぐ存在でもあります。**ビーチャムはこの家に住んでいた時期、歩いて2分のアビイ・ロード・スタジオで録音していました。**ビートルズが最初にこのスタジオへ入るより十数年前のことです。
+
+ビーチャムはロンドン・フィルハーモニー管弦楽団(1932年)とロイヤル・フィルハーモニー管弦楽団(1946年)を創設した、20世紀前半のイギリス楽壇を文字通り支配した指揮者でした。ディーリアスやリヒャルト・シュトラウスの擁護者としても知られます。
+
+その活動を支えたのは、実家の財産でした。家業は「ビーチャムズ・ピル」という便秘薬。イギリス中に知れ渡った下剤で財を成した一家の御曹司が国のオーケストラを作った、という取り合わせは生涯彼につきまとう冗談の種になりました。歯に衣着せぬ毒舌家としても有名で、その語録は今もイギリスの音楽関係者に引用されています。`,
+        address: "31 Grove End Road, St John's Wood, London NW8 9NG",
+        nearestStation: "St John's Wood 駅 徒歩約4分",
+        access: "私有の住宅です。外観の見学にとどめてください。",
+        tips: "スタジオの玄関から約120メートル、徒歩2分ほどです。次のアルマ＝タデマ(44番地)はさらに1分先で、この2件は実質的に隣り合っています。",
+        mapQuery: "31 Grove End Road London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/5/5f/SIR_THOMAS_BEECHAM_C.H._1879_-_1961_Conductor_and_Impresario_lived_here.jpg",
+        imageSource: "commons",
+        imageCredit: "Spudgun67 (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:SIR_THOMAS_BEECHAM_C.H._1879_-_1961_Conductor_and_Impresario_lived_here.jpg",
+      },
+      {
+        slug: "lawrence-alma-tadema",
+        name: "サー・ローレンス・アルマ＝タデマ",
+        engName: "Sir Lawrence Alma-Tadema",
+        title: "画家",
+        years: "1886–1912",
+        body: `ビーチャムの家から同じ通りをさらに1分。オランダ生まれのヴィクトリア朝の画家、アルマ＝タデマが晩年の26年間を過ごした家です。大理石と陽光にあふれた古代ローマの情景を描き続けた画家で、その絢爛たる古代世界のイメージは、のちのハリウッドの史劇映画が「古代」をどう見せるかを決定づけました。
+
+彼はこの家を、ロンドンでも指折りに贅を尽くした画家の住まいへと改造しました。ガラス屋根のかかった玄関のロッジア、モザイクの床。入口の楣(まぐさ)にはラテン語で「**SALVE**(ようこそ)」と刻まれています。磨き上げた真鍮を張った階段を上ると、天井が半ドーム状になった画室があり、モデルに銀色がかった光が回り込むよう設計されていました。
+
+この家の前の持ち主も画家のジェイムズ・ティソでした。画室の内部は彼の死後に大きく改装されており、往時のままではありません。それでも通りから見上げる外観には、古代世界に憧れ抜いた画家の趣味がはっきりと残っています。`,
+        address: "44 Grove End Road, St John's Wood, London NW8 9NE",
+        nearestStation: "St John's Wood 駅 徒歩約4分",
+        access: "私有の住宅です。外観の見学にとどめてください。",
+        tips: "玄関まわりの装飾に注目してください。ラテン語の「SALVE」の彫り込みが、外からでも見どころになります。",
+        mapQuery: "44 Grove End Road London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/5/58/SIR_LAWRENCE_ALMA-TADEMA_O.M._1836-1912_Painter_lived_here_1886-1912.jpg",
+        imageSource: "commons",
+        imageCredit: "Spudgun67 (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:SIR_LAWRENCE_ALMA-TADEMA_O.M._1836-1912_Painter_lived_here_1886-1912.jpg",
+      },
+      {
+        slug: "marie-tussaud",
+        name: "マダム・マリー・タッソー",
+        engName: "Madame Marie Tussaud",
+        title: "蝋人形師",
+        years: "1838–1839",
+        body: `プレートの在住年に注目してください。**1838年から1839年。たったの1年ほどです。**ブループラークとしては異例に短い滞在で、しかもこのとき彼女は70代後半でした。
+
+マリー・タッソーの前半生は、蝋人形館の華やかなイメージとはかけ離れています。革命期のパリで、彼女はギロチンにかけられた直後の生首から石膏の型を取る仕事をさせられました。ロベスピエールの首もそこに含まれていたと伝えられます。その技術を携えてイギリスへ渡り、各地を巡回興行して回った末に、ロンドンに腰を据えようとしていた時期がこの家です。
+
+つまりここは、蝋人形館がベイカー・ストリートに定着する直前の、仮住まいのような住所です。マダム・タッソー館は今もすぐ近く(ベイカー・ストリート/メリルボーン・ロード)にありますから、あの行列に並ぶ予定があるなら、「創業者が実際に寝起きしていたのはこの家だ」という寄り道として効いてきます。`,
+        address: "24 Wellington Road, St John's Wood, London NW8 9SP",
+        nearestStation: "St John's Wood 駅 徒歩約4分",
+        access: "私有の建物です。外観の見学にとどめてください。",
+        tips: "ウェリントン・ロードは交通量の多い幹線道路です。これまでの静かな裏通りとは雰囲気が変わります。写真を撮る際は歩道の内側から。",
+        mapQuery: "24 Wellington Road London NW8",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/f/f2/Madame_Marie_Tussaud_%284644556910%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Simon Harriyott (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Madame_Marie_Tussaud_(4644556910).jpg",
+      },
+      {
+        slug: "thomas-henry-huxley",
+        name: "トマス・ヘンリー・ハクスリー",
+        engName: "Thomas Henry Huxley",
+        title: "生物学者",
+        years: "1872–1890",
+        body: `「ダーウィンのブルドッグ」と呼ばれた生物学者です。進化論をめぐる論争の矢面に立つことを好まなかったダーウィンに代わり、公開の場で徹底的に戦った人物でした。
+
+彼が残した言葉に「**agnostic(不可知論者)**」があります。神の存在は肯定も否定もできない、という立場を表すこの単語は、ハクスリーの造語です。信仰か無神論かという二択しかなかった時代に、第三の選択肢に名前を与えました。
+
+このプレートにはもうひとつ、プレートそのものとしての価値があります。**設置は1910年、ロンドン州議会(LCC)の時代のもの。**この散策で最も古い一枚です。ブループラーク制度の最初期に設置されたものが、100年以上そのまま残っている例で、青いプレートの歴史そのものを見ていることになります。彼がここに住んだ1872年から1890年は、科学を学校教育に組み込むべく奔走していた、最も影響力の大きかった時期にあたります。`,
+        address: "38 Marlborough Place, St John's Wood, London NW8 0PJ",
+        nearestStation: "St John's Wood 駅 徒歩約8分",
+        access: "私有の住宅です。外観の見学にとどめてください。",
+        tips: "1910年設置という古さ自体が見どころです。近年のプレートと並べると、書体や質感の違いがはっきりわかります。",
+        mapQuery: "38 Marlborough Place London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/8/84/Thomas_Henry_Huxley_%284643936205%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Simon Harriyott (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Thomas_Henry_Huxley_(4643936205).jpg",
+      },
+      {
+        slug: "bernard-spilsbury",
+        name: "サー・バーナード・スピルズベリー",
+        engName: "Sir Bernard Spilsbury",
+        title: "法医学者",
+        years: "1912–1940",
+        body: `法廷における法医学を、一種の見世物にまで押し上げた病理学者です。クリッペン医師事件、そして「浴槽の花嫁」連続殺人のジョージ・ジョゼフ・スミス事件。20世紀前半のイギリスを騒がせた事件のほとんどに、彼の鑑定が登場します。
+
+プレートの「1912–1940」という28年間が、そのままキャリアの全盛期と重なっています。彼がこの家に越してきたのは、クリッペン事件で一躍名を知られた2年後のことでした。
+
+ただ、この人物を手放しの英雄として紹介するのは公正ではありません。証言台での彼は、自らの結論に一切の揺らぎを見せないことで陪審を圧倒しました。その断定的すぎる姿勢が、今日では冤罪を生んだのではないかと指摘されています。ひとりの専門家の権威が法廷で強くなりすぎるとどうなるか、という教訓としても語られる人物です。晩年は自ら命を絶ちました。`,
+        address: "31 Marlborough Hill, St John's Wood, London NW8 0NG",
+        nearestStation: "St John's Wood 駅 徒歩約6分",
+        access: "私有の住宅です。外観の見学にとどめてください。",
+        mapQuery: "31 Marlborough Hill London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/d/de/Sir_Bernard_Spilsbury_%284643931995%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Simon Harriyott (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Sir_Bernard_Spilsbury_(4643931995).jpg",
+      },
+      {
+        slug: "melanie-klein",
+        name: "メラニー・クライン",
+        engName: "Melanie Klein",
+        title: "精神分析家・児童分析の開拓者",
+        years: "1935–1953",
+        body: `子どもの心をどう理解するか。クラインの答えは「遊びを分析する」でした。言葉で内面を語れない幼い子どもについて、遊びの中にこそ無意識が現れると考え、対象関係論と呼ばれる理論を打ち立てます。
+
+この家には興味深い符合があります。1840年ごろに建てられたこの家の内部を、モダニズム様式に改装したのは**エルンスト・フロイト**——ジークムント・フロイトの建築家の息子でした。そしてクラインは、同じフロイト家のアンナ・フロイトと、イギリス精神分析協会を二分する理論的対立の当事者だったのです。その分裂は今日まで尾を引いています。ライバルの兄に自宅を設計させた、というわけです。
+
+**ヴァージニア・ウルフもこの家を訪ねています。**ウルフはクラインを「白髪まじりの、ぶっきらぼうな婦人。大きな、輝く、想像力に富んだ目をしている」と書き残しました。弟子のハンナ・シーガルはこの家を「新しい世代の分析家と新しい理論のゆりかご」と呼んでいます。`,
+        address: "42 Clifton Hill, St John's Wood, London NW8 0QG",
+        nearestStation: "St John's Wood 駅 徒歩約11分",
+        access: "私有の住宅です。外観の見学にとどめてください。",
+        tips: "クリフトン・ヒルは長い住宅街の通りです。この先(95a番地、114番地)にもプレートがありますが、往復で20分ほど余分にかかります。時間に余裕がなければ42番地で折り返すのがおすすめです。",
+        mapQuery: "42 Clifton Hill London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/7/74/Melanie_Klein_%284643933011%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Simon Harriyott (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Melanie_Klein_(4643933011).jpg",
+      },
+      {
+        slug: "thomas-hood",
+        name: "トマス・フッド",
+        engName: "Thomas Hood",
+        title: "詩人",
+        years: "–1845",
+        body: `散策の締めくくりは、詩人トマス・フッドが亡くなった家です。プレートには「lived and died here(ここに住み、ここで死んだ)」と刻まれています。
+
+フッドは軽妙な言葉遊びの名手として知られた詩人でしたが、後世に残ったのは1843年の「**シャツの歌(The Song of the Shirt)**」でした。搾取される縫い子の労働を告発したこの詩は雑誌『パンチ』に匿名で載り、爆発的に読まれて社会改革運動の火種になります。ユーモア作家が最後に放った、怒りの一篇でした。彼自身は長い闘病と貧窮のうちに、1845年にこの家で世を去ります。
+
+そしてこのプレートには、プレートならではの後日談があります。**最初のプレートは1912年に設置されましたが、風化して1960年ごろには文字が読めなくなってしまいました。**今そこにある青いプレートは、2001年に設置された新しいものです。記念され始めてから90年近く経って作り直された一枚、というわけです。プレートもまた古びるのだという、この散策の最後にふさわしい話でしょう。`,
+        address: "28 Finchley Road, St John's Wood, London NW8 6ES",
+        nearestStation: "St John's Wood 駅 徒歩約4分",
+        access: "私有の建物です。外観の見学にとどめてください。",
+        tips: "St John's Wood 駅まで徒歩4分ほどです。ここを終点にすると、そのまま地下鉄で戻れます。",
+        mapQuery: "28 Finchley Road London NW8",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/0/06/Thomas_Hood_%284643930855%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Simon Harriyott (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Thomas_Hood_(4643930855).jpg",
+      },
+    ],
+  },
 ];
 
 export function getPlaqueArea(slug: string) {

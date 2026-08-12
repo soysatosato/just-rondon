@@ -137,6 +137,7 @@ module.exports = {
       "/sightseeing/blue-plaques/marylebone-fitzrovia",
       "/sightseeing/blue-plaques/chelsea",
       "/sightseeing/blue-plaques/westminster-st-jamess",
+      "/sightseeing/blue-plaques/st-johns-wood",
       "/sightseeing/kids-free-activities",
       "/sightseeing/must-see",
       "/sightseeing/royal-london",
