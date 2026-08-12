@@ -96,6 +96,20 @@ module.exports = {
       "/events/archive/2025",
       "/column",
       "/british-english",
+      // イギリス史。/history をハブとする全10章。並びは
+      // components/history/chapters.ts の historyChapters と一致させること
+      // (このファイルは CJS なので TS を読めない)。
+      "/history",
+      "/history/roman-britain",
+      "/history/anglo-saxons-vikings",
+      "/history/norman-conquest",
+      "/history/tudors",
+      "/history/civil-war",
+      "/history/union-and-empire",
+      "/history/industrial-revolution",
+      "/history/world-wars",
+      "/history/postwar",
+      "/history/modern-britain",
       "/souvenirs",
       "/brands",
       "/restaurants",

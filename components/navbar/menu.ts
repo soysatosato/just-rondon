@@ -248,6 +248,12 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     kind: "link",
+    label: "イギリスの歴史",
+    href: "/history",
+    accent: NAV_ACCENTS.amber,
+  },
+  {
+    kind: "link",
     label: "イギリス英語",
     href: "/british-english",
     accent: NAV_ACCENTS.rose,
