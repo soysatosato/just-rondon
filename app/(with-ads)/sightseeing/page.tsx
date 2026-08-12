@@ -34,6 +34,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import {
   faqPageJsonLd,
   filmWorkPath,
+  plaqueAreaPath,
   sightseeingBreadcrumbJsonLd,
   sightseeingHubCollectionJsonLd,
 } from "@/components/sightseeing/jsonld";
@@ -43,6 +44,7 @@ import {
   travelGuides,
 } from "@/components/sightseeing/guides/guides";
 import { filmWorks } from "./film-locations/data";
+import { plaqueAreas } from "./blue-plaques/data";
 
 const PAGE_TITLE =
   "ロンドン観光ガイド | 定番スポット・宿泊・移動手段・モデルコース";
@@ -261,6 +263,55 @@ export default async function Page() {
                   </CardTitle>
                   <CardDescription className="text-xs leading-relaxed line-clamp-2">
                     掲載中の作品一覧と、ロケ地を訪ねる前に知っておきたいこと。
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+          </div>
+        </section>
+
+        {/* ブループラーク巡り。ロケ地巡りと同じ構成のカードグリッド。 */}
+        <section className="space-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">
+              Blue Plaque Tour
+            </p>
+            <h2 className="mt-2 text-xl font-semibold">
+              ブループラーク巡り
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
+              建物の壁に埋め込まれた青いプレートが記すのは、そこに住んだ作家や音楽家、政治家たちの歴史。
+              English Heritageの公式スキームだけを、エリア別に行き方と見学の可否つきで紹介します。
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {plaqueAreas.map((area) => (
+              <Link key={area.slug} href={plaqueAreaPath(area.slug)}>
+                <Card className="h-full border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer transition hover:border-sky-400 hover:shadow-md dark:hover:border-sky-500">
+                  <CardHeader className="space-y-1">
+                    <p className="text-xs font-semibold text-sky-600">
+                      {area.eyebrow}
+                    </p>
+                    <CardTitle className="text-base">
+                      {area.title}のブループラーク
+                    </CardTitle>
+                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
+                      {area.summary}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+            <Link href="/sightseeing/blue-plaques">
+              <Card className="h-full border-dashed border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 shadow-none cursor-pointer transition hover:border-sky-400 hover:shadow-md">
+                <CardHeader className="space-y-1">
+                  <p className="text-xs font-semibold text-sky-600">Guide</p>
+                  <CardTitle className="text-base">
+                    ブループラーク巡りガイド トップ
+                  </CardTitle>
+                  <CardDescription className="text-xs leading-relaxed line-clamp-2">
+                    掲載中のエリア一覧と、プラークを巡る前に知っておきたいこと。
                   </CardDescription>
                 </CardHeader>
               </Card>

@@ -289,3 +289,88 @@ export function filmWorkJsonLd(work: {
     },
   };
 }
+
+/* -----------------------------------------------------
+   ブループラーク巡り(/sightseeing/blue-plaques)
+----------------------------------------------------- */
+
+export const BLUE_PLAQUES_BASE = `${SIGHTSEEING_BASE}/blue-plaques`;
+
+export function plaqueAreaPath(slug: string) {
+  return `${BLUE_PLAQUES_BASE}/${slug}`;
+}
+
+export function bluePlaquesHubJsonLd(
+  areas: { slug: string; title: string; summary: string }[]
+) {
+  const url = `${SITE_URL}${BLUE_PLAQUES_BASE}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${url}#collection`,
+    url,
+    name: "ロンドン ブループラーク巡り",
+    description:
+      "English Heritage の公式ブループラークをエリア別にたどるガイド。作家・音楽家・政治家・科学者ゆかりの建物を、行き方と見学の可否つきで紹介します。",
+    inLanguage: "ja",
+    publisher: SIGHTSEEING_PUBLISHER,
+    hasPart: areas.map((a) => ({
+      "@type": "Article",
+      name: `${a.title}のブループラーク`,
+      description: a.summary,
+      url: `${SITE_URL}${plaqueAreaPath(a.slug)}`,
+    })),
+  };
+}
+
+export function plaqueAreaBreadcrumbJsonLd(area: { slug: string; title: string }) {
+  return sightseeingBreadcrumbJsonLd([
+    { name: "ブループラーク巡り", path: BLUE_PLAQUES_BASE },
+    { name: area.title, path: plaqueAreaPath(area.slug) },
+  ]);
+}
+
+/**
+ * プレートの一覧を ItemList として出す。
+ *
+ * 各人物を Person ではなく ListItem 内の名前として出しているのは、
+ * film-locations の spots と同じ理由。住所自体は持たせているが、
+ * 生没年などの裏取りが必要な構造化データまでは踏み込まない。
+ */
+export function plaqueAreaJsonLd(area: {
+  slug: string;
+  title: string;
+  engTitle: string;
+  summary: string;
+  plaques: { name: string; title: string }[];
+}) {
+  const url = `${SITE_URL}${plaqueAreaPath(area.slug)}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: `${area.title}のブループラーク巡り`,
+    description: area.summary,
+    inLanguage: "ja",
+    mainEntityOfPage: url,
+    author: SIGHTSEEING_PUBLISHER,
+    publisher: SIGHTSEEING_PUBLISHER,
+    about: {
+      "@type": "Place",
+      name: area.engTitle,
+      alternateName: area.title,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: area.plaques.length,
+      itemListElement: area.plaques.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: p.name,
+        description: p.title,
+      })),
+    },
+  };
+}
