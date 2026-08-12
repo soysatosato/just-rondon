@@ -124,6 +124,92 @@ export default function MuseumBanksy() {
         )}
       </section>
 
+      {/* バンクシーとは */}
+      <section className="space-y-5">
+        <div>
+          <span className="inline-block rounded-full bg-rose-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+            Who Is Banksy
+          </span>
+          <h2 className="mt-3 text-2xl font-bold tracking-tight">
+            バンクシーとは
+          </h2>
+        </div>
+        <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            バンクシーは、
+            <span className="font-medium text-foreground">
+              正体を明かさないまま活動を続けているイギリスのストリートアーティスト
+            </span>
+            です。1990年代のブリストルで壁に描き始め、そこからロンドンへ、
+            さらに世界へ広がりました。本名も顔も公表されていません。
+            展覧会の内覧会に本人が現れることもなければ、
+            インタビューに顔を出すこともない。
+            それでいて、作品は数十万ポンドで取引されます。
+          </p>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            匿名なのは神秘性の演出ではなく、実務的な理由もあります。
+            許可なく他人の壁に描く行為は、イギリスでは器物損壊にあたります。
+            名乗り出れば訴えられる立場のまま、
+            30年近く描き続けているアーティスト、というのが実像に近いです。
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {[
+            {
+              title: "数十秒で描き切るステンシル",
+              body: "切り抜いた型紙にスプレーを吹き付ける手法です。筆で描くより圧倒的に速く、人目につく路上でも短時間で仕上げられます。輪郭がくっきりした独特の絵柄は、この「捕まる前に描き終える」という必要から生まれたものです。",
+            },
+            {
+              title: "皮肉をひとつだけ仕込む",
+              body: "作品はたいてい一目で意味がわかります。ロイヤル・ファミリーの肖像、風船を持つ少女、警備犬。そこに要素をひとつだけずらして入れ、見た人に引っかかりを残す。長い説明文を必要としないのが、街なかの作品として強い理由です。",
+            },
+            {
+              title: "ネズミという分身",
+              body: "初期から繰り返し登場するモチーフです。街の隅に住み、誰にも歓迎されず、それでも消えない。作者自身の立ち位置と重なります。ロンドンにも「ロボが好き」ネズミやトンブリッジ・ストリートのネズミが残っています。",
+            },
+            {
+              title: "場所ごと作品にする",
+              body: "壁の汚れ、消火栓、道路の黄色いライン。もとからそこにあるものを絵の一部として使います。ベスナル・グリーンの「黄色いラインの花を描く画家」はその代表で、道路標示がそのまま茎になっています。だから移設すると価値が変わってしまいます。",
+            },
+          ].map((trait) => (
+            <div
+              key={trait.title}
+              className="rounded-xl border border-border bg-card p-5"
+            >
+              <h3 className="font-semibold tracking-tight">{trait.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {trait.body}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+          <h3 className="font-semibold tracking-tight">
+            なぜロンドンで見る価値があるのか
+          </h3>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            バンクシーの作品は、美術館に収まることを前提に作られていません。
+            誰が持ち主かも、いつまで残るかも決まっていない壁の上にあります。
+            2024年8月には、9日間で9点の動物シリーズがロンドン各所に次々と現れました。
+            サイ、ゾウ、ペリカン、アイベックス。
+            発表は本人のInstagramだけ。市民が探し回り、報道が追いかけ、
+            数日で保護板が設置されたものもあれば、
+            <span className="font-medium text-foreground">
+              壁ごと切り取られて消えたものもあります
+            </span>
+            。
+          </p>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            つまりロンドンで見られるバンクシーは、
+            完成された展示ではなく、まだ決着のついていない出来事です。
+            通勤路の途中や住宅街の角に、案内板も柵もなく置かれている。
+            それを自分の足で見つけに行けるところが、この街ならではの面白さです。
+          </p>
+        </div>
+      </section>
+
       {/* 地図 */}
       <section className="space-y-5">
         <div>
