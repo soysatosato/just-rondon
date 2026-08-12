@@ -29,6 +29,12 @@ import {
   attractionJsonLd,
   attractionPath,
 } from "@/components/sightseeing/jsonld";
+import AttractionFactBar from "@/components/sightseeing/AttractionFactBar";
+import AttractionVisitFlow from "@/components/sightseeing/AttractionVisitFlow";
+import {
+  visibleSections,
+  isRedundantOverview,
+} from "@/components/sightseeing/sections";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
@@ -155,35 +161,41 @@ function AttractionBadges({ attraction }: { attraction: any }) {
   );
 }
 
+/**
+ * category は DB 上 "historic" のような英字スラッグなので、そのまま出すと
+ * 読者には意味が伝わらない。リンク先(フィルタ)はスラッグのまま、
+ * 表示だけ日本語の短いラベルに置き換える。
+ */
+const categoryChipMap: Record<string, string> = {
+  entertainment: "エンタメ・体験",
+  tour: "ツアー・街歩き",
+  garden: "庭園・公園",
+  royal: "王室・宮殿",
+  shop: "ショッピング",
+  architecture: "建築・街並み",
+  historic: "歴史・文化",
+  seasonal: "季節限定",
+  museum: "美術館・博物館",
+};
+
 function CategoryLink({ category }: { category: string }) {
   return (
     <Link
       href={`/sightseeing/all?category=${encodeURIComponent(category)}`}
-      className="inline-flex items-center gap-1 rounded-full border 
-        px-3 py-1 text-xs 
-        text-neutral-600 border-neutral-300 
+      className="inline-flex items-center gap-1 rounded-full border
+        px-3 py-1 text-xs
+        text-neutral-600 border-neutral-300
         transition
         hover:bg-neutral-100
-        dark:text-neutral-300 dark:border-neutral-700 
+        dark:text-neutral-300 dark:border-neutral-700
         dark:hover:bg-neutral-800
       "
     >
       <Tag className="h-3 w-3" />
-      {category}
+      {categoryChipMap[category] ?? category}
     </Link>
   );
 }
-
-const categoryLabelMap: Record<string, string> = {
-  entertainment: "エンターテインメント・体験型アトラクション",
-  tour: "観光ツアー・街歩き・ガイド付き体験",
-  garden: "庭園・公園・自然を楽しめる名所",
-  royal: "王室・宮殿・ロイヤルファミリーゆかりの名所",
-  shop: "ショッピング・マーケット・買い物スポット",
-  architecture: "建築・街並み・写真映えする見どころ",
-  historic: "歴史・文化・世界遺産クラスの名所",
-  seasonal: "期間限定イベント・季節限定の見どころ",
-};
 
 export default async function AttractionDetail({
   params,
@@ -198,8 +210,15 @@ export default async function AttractionDetail({
     params.slug,
     2,
   );
-  const categoryLabel =
-    categoryLabelMap[attraction.category] ?? "観光・見どころ満載の人気スポット";
+  // 料金・アクセス・開館時間はファクトバーへ移したので本文からは伏せる。
+  // ただし伏せるのはファクトバーに値が入っているときだけ(sections.ts 参照)。
+  // 冒頭の summary と中身が重複する「概要」セクションもここで落とす。
+  const bodySections = visibleSections(attraction.sections, {
+    priceAdult: attraction.priceAdult,
+    durationText: attraction.durationText,
+    nearestStation: attraction.nearestStation,
+    openingHours: attraction.openingHours,
+  }).filter((sec) => !isRedundantOverview(sec, attraction.summary));
 
   // 同じ館が /museums 側にもある場合は、そちらの詳しい解説へ渡す。
   // 対応表に無ければ null のままで、リンクは出さない。
@@ -261,29 +280,38 @@ export default async function AttractionDetail({
       </Dialog>
 
       {/* Title + Location */}
-      <section className="px-6 py-6 space-y-3">
+      <section className="px-6 py-6 space-y-4">
         <h1 className="text-xl md:text-2xl font-bold tracking-tight">
           <span>{attraction.name}</span>
           <span className="ml-4 text-base md:text-lg font-light text-muted-foreground md:ml-3 md:mb-0 leading-none uppercase tracking-wider">
             {attraction.engName}
           </span>
         </h1>
-        <p className="mt-4 text-base text-muted-foreground">
-          {attraction.name} は、ロンドンを代表する
-          {categoryLabel}
-          で、初心者からリピーターまで楽しめる場所です。
-        </p>
 
-        <div className="flex flex-wrap items-center gap-4 mt-4">
+        {/* リード文にはそのスポット固有の tagline を使う。
+            ここには以前「◯◯は、ロンドンを代表する{カテゴリ名}で、初心者から
+            リピーターまで楽しめる場所です」というテンプレート文が入っていたが、
+            135ページすべてで同じ文面になるうえ、読者が最初に読む位置で
+            何も言っていなかった。カテゴリの説明はバッジの方に任せる。 */}
+        {attraction.tagline && (
+          <p className="text-base leading-relaxed text-muted-foreground">
+            {attraction.tagline}
+          </p>
+        )}
+
+        <div className="flex flex-wrap items-center gap-4">
           <AttractionBadges attraction={attraction} />
           <CategoryLink category={attraction.category} />
         </div>
 
-        {attraction.tagline && (
-          <p className="text-sm italic text-muted-foreground">
-            {attraction.tagline}
-          </p>
-        )}
+        {/* 訪問前に知りたいこと。埋まっている項目だけが出る。 */}
+        <AttractionFactBar
+          priceAdult={attraction.priceAdult}
+          priceChild={attraction.priceChild}
+          durationText={attraction.durationText}
+          nearestStation={attraction.nearestStation}
+          openingHours={attraction.openingHours}
+        />
       </section>
       <div className="mt-4 justify-center flex">
         <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-4" />
@@ -399,6 +427,12 @@ export default async function AttractionDetail({
           <div className="clear-both" />
         </div>
 
+        {/* 着いてからの歩き方。visitFlow が入っているスポットにだけ出る。 */}
+        <AttractionVisitFlow
+          steps={attraction.visitFlow}
+          attractionName={attraction.name}
+        />
+
         {pairedMuseum && pairedMuseumSlug && (
           <CrossSectionLink
             href={`/museums/${pairedMuseumSlug}`}
@@ -443,7 +477,7 @@ export default async function AttractionDetail({
           <AdSenseUnit slot={AD_SLOTS.articleBottom} className="my-4" />
         </div>
         <div className="space-y-12">
-          {attraction.sections?.map((sec) => (
+          {bodySections.map((sec) => (
             <section
               key={sec.id}
               className="space-y-4 pb-4 border-l-4 border-neutral-300 pl-5 hover:border-neutral-500 transition-colors"

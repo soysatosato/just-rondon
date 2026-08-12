@@ -281,6 +281,58 @@ model Attraction {
   isForKids      Boolean             @default(false)
   isFree         Boolean             @default(false)
   sections       AttractionSection[]
+
+  /// -------------------------------------------------------------------
+  /// 訪問前に知りたい実用情報。すべて nullable。
+  ///
+  /// もともと sections の本文に散らばっていたものを
+  /// scripts/migrate-attraction-facts.ts で抽出して埋めている。
+  /// セクション見出しの表記ゆれ(「料金・チケット情報」「チケット情報」
+  /// 「チケット料金」「料金」がすべて同義)のせいで、読者は毎ページ
+  /// 違う位置から同じ事実を探す羽目になっていた。
+  ///
+  /// 抽出が曖昧なものは埋めずに null のままにしてある。誤った料金を
+  /// 出すくらいなら、その行を出さないほうがよい。表示側は null を
+  /// 素通りする作りにすること。
+  /// -------------------------------------------------------------------
+
+  /// 大人料金の表示用文字列(例: "£35.8〜")。無料スポットは "無料"。
+  priceAdult     String?
+  /// 子ども料金の表示用文字列。
+  priceChild     String?
+  /// 所要時間の目安(例: "3時間〜")。数値ではなく原文の幅を保つ。
+  durationText   String?
+  /// 最寄駅と徒歩分(例: "Tower Hill 徒歩5分")。
+  nearestStation String?
+  /// 開館時間(例: "9:00〜17:30 (最終入場16:30)")。季節変動は代表値。
+  openingHours   String?
+
+  /// 到着してからの流れ。心が躍る部分をここに書く。
+  ///
+  /// 既存 sections から機械的に作れないので、書けたスポットにだけ
+  /// 入れて、無いページでは丸ごと非表示にする。推測で埋めないこと
+  /// ——「入口を入ってすぐ左」のような具体は、外れると読者を
+  /// 実際に迷わせる。
+  visitFlow      AttractionVisitStep[]
+}
+
+/// visitFlow の1ステップ。到着→見どころ→見落としやすいもの、の順に並べる。
+model AttractionVisitStep {
+  id           Int        @id @default(autoincrement())
+  attractionId String
+  attraction   Attraction @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+  displayOrder Int
+
+  /// "arrival" | "highlight" | "missable" | "tip"。表示側でアイコンと色を切り替える。
+  kind         String     @default("highlight")
+  /// 見出し(例: "クラウンジュエル")。
+  title        String
+  /// 2〜3文。何が見えるか、どう感じるか。
+  body         String
+
+  createdAt    DateTime   @default(now())
+
+  @@index([attractionId, displayOrder])
 }
 
 // イギリス料理1品(/restaurants/[slug])。

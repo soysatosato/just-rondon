@@ -33,7 +33,11 @@ export const fetchAttractions = async ({
 export const fetchAttractionDetails = async (slug: string) => {
   const attraction = await db.attraction.findUnique({
     where: { slug },
-    include: { sections: true },
+    include: {
+      sections: true,
+      // 入っているスポットにだけ「着いてからの歩き方」を出す。
+      visitFlow: { orderBy: { displayOrder: "asc" } },
+    },
   });
   return attraction;
 };
