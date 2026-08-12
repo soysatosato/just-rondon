@@ -18,7 +18,11 @@ import StoreSearch, { SelectedStore } from "@/components/jobs/StoreSearch";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { DISTRIBUTION_LABEL, type DistributionType } from "@/utils/labels";
+import {
+  DISTRIBUTION_LABEL,
+  DISTRIBUTION_LEGAL_NOTE,
+  type DistributionType,
+} from "@/utils/labels";
 
 function SubmitButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
@@ -244,22 +248,40 @@ export default function SurveyPage() {
                     </p>
 
                     <RadioGroup name="distribution" className="grid gap-3">
-                      {DISTRIBUTION_ORDER.map((v) => (
-                        <div
-                          key={v}
-                          className="flex items-start space-x-3 py-1.5"
-                        >
-                          <RadioGroupItem value={v} id={`dist-${v}`} />
-                          <Label
-                            htmlFor={`dist-${v}`}
-                            className="leading-tight"
+                      {DISTRIBUTION_ORDER.map((v, i) => {
+                        const isUnlawful = v === "fixed" || v === "none";
+                        return (
+                          <div
+                            key={v}
+                            className="flex items-start space-x-3 py-1.5"
                           >
-                            <span className="block">
-                              {DISTRIBUTION_LABEL[v]}
-                            </span>
-                          </Label>
-                        </div>
-                      ))}
+                            <RadioGroupItem
+                              value={v}
+                              id={`dist-${v}`}
+                              className="mt-0.5"
+                            />
+                            <Label
+                              htmlFor={`dist-${v}`}
+                              className="leading-tight"
+                            >
+                              <span className="block">
+                                {["①", "②", "③", "④"][i]}{" "}
+                                {DISTRIBUTION_LABEL[v]}
+                              </span>
+                              <span
+                                className={cn(
+                                  "mt-1 block text-xs font-normal",
+                                  isUnlawful
+                                    ? "text-destructive"
+                                    : "text-muted-foreground",
+                                )}
+                              >
+                                {DISTRIBUTION_LEGAL_NOTE[v]}
+                              </span>
+                            </Label>
+                          </div>
+                        );
+                      })}
                     </RadioGroup>
 
                     <div className="rounded-lg border border-border/70 bg-muted/40 p-3 text-xs leading-relaxed text-muted-foreground">
@@ -267,12 +289,18 @@ export default function SurveyPage() {
                         <span className="font-medium text-foreground">
                           Employment (Allocation of Tips) Act 2023
                         </span>
-                        （Tipping Act
-                        2023）により、サービスチャージやチップは
+                        （Tipping Act 2023・2024年10月施行）により、サービスチャージやチップは
                         <span className="font-medium text-foreground">
-                          スタッフに帰属する収入
+                          全額がスタッフに帰属する収入
                         </span>
-                        と定められ、雇用主がその一部または全部を取得・控除することは違法です。分配ルールは書面化され、スタッフが閲覧できる必要があります。
+                        と定められ、雇用主が税金・国民保険料以外を差し引くことは違法です。
+                      </p>
+                      <p className="mt-2">
+                        ③は、上乗せ方式そのものが違法なのではなく、
+                        <span className="font-medium text-foreground">
+                          店が集めた総額が全額スタッフに渡っているか
+                        </span>
+                        が分かれ目になります。判断に迷う場合も、分かる範囲でお答えください。
                       </p>
                       <p className="mt-2">
                         <Link
@@ -381,7 +409,7 @@ export default function SurveyPage() {
                       rows={5}
                       className="text-sm"
                       maxLength={1000}
-                      placeholder="個人が特定される情報（氏名・連絡先等）や誹謗中傷は入力しないでください。"
+                      placeholder="個人が特定される情報は入力しないでください。"
                     />
                   </section>
                 </div>

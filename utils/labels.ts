@@ -10,6 +10,21 @@ export const DISTRIBUTION_LABEL: Record<DistributionType, string> = {
   none: "分配されていない",
 };
 
+/**
+ * 分配方法ごとの、Tipping Act 2023 に照らした位置づけ。
+ * アンケートの選択肢にのみ添える補足で、集計表示では使わない
+ * （グラフの凡例に法的評価が混ざると読みにくいため）。
+ *
+ * fixed を断定しないのは、上乗せ方式そのものが違法なのではなく、
+ * 集めた総額が全額スタッフに渡っていない場合に違法となるため。
+ */
+export const DISTRIBUTION_LEGAL_NOTE: Record<DistributionType, string> = {
+  equal: "適法",
+  gradient: "基準がポリシーに明記されていれば適法",
+  fixed: "大部分をオーナー側が取得している場合は違法の可能性が高い",
+  none: "違法の可能性が高い",
+};
+
 export type AmountPeriod = "weekly" | "monthly";
 
 export const AMOUNT_PERIOD_LABEL: Record<AmountPeriod, string> = {
