@@ -128,6 +128,8 @@ module.exports = {
       "/sightseeing/film-locations/sherlock",
       "/sightseeing/film-locations/bridgerton",
       "/sightseeing/film-locations/downton-abbey",
+      "/sightseeing/film-locations/paddington",
+      "/sightseeing/film-locations/james-bond",
       "/sightseeing/kids-free-activities",
       "/sightseeing/must-see",
       "/sightseeing/royal-london",

@@ -642,6 +642,244 @@ export const filmWorks: FilmWork[] = [
       },
     ],
   },
+  {
+    slug: "paddington",
+    title: "パディントン",
+    engTitle: "Paddington",
+    eyebrow: "Film Series",
+    years: "2014–2017",
+    summary:
+      "ペルーからやってきた小熊が住み着いたのは、ノッティング・ヒルの街並みそのもの。骨董店、博物館、パステルカラーの住宅街まで、絵本の続きを歩けるコース。",
+    routeHint: "ノッティング・ヒル周辺で半日",
+    lead: [
+      "『パディントン』が愛される理由のひとつは、舞台がほとんど実在のロンドンだということです。CGの熊が歩き回るのは、作り物のセットではなく、ノッティング・ヒルの市場、南ケンジントンの博物館、プリムローズ・ヒルの住宅街という、observedな実在の街並みです。",
+      "ここでは劇中に登場した実在の場所を、なぜその場所が選ばれたのかという背景と一緒に紹介します。私有の住宅も含まれるため、見学の可否は事前に必ず確認してください。",
+    ],
+    note: "チャルコット・クレセントは実際に人が暮らす住宅街です。外観の見学・撮影にとどめ、玄関先での長居や住人への声かけは控えてください。",
+    keywords: [
+      "パディントン ロケ地",
+      "Paddington ロケ地",
+      "ノッティングヒル ロケ地",
+      "パディントン駅",
+      "ポートベロー・ロード",
+      "自然史博物館 パディントン",
+      "映画 ロケ地 ロンドン",
+      "聖地巡礼 ロンドン",
+    ],
+    spots: [
+      {
+        slug: "marylebone-station",
+        name: "メリルボーン駅(劇中の「パディントン駅」外観)",
+        engName: "Marylebone Station",
+        scene: "小熊パディントンが到着し、ブラウン一家と出会う場面",
+        body: `物語の起点となる駅の場面。プラットフォームの撮影は実際のパディントン駅で行われていますが、街路から見上げる「パディントン駅」の堂々とした正面玄関のカットは、実はここメリルボーン駅です。
+
+本物のパディントン駅にはああした大きな正面アーチがないため、美術チームがメリルボーン駅の入口に「PADDINGTON STATION」の看板を掲げて撮影しました。駅名を偽装したロケ地、という珍しい成り立ちです。
+
+一方、本物のパディントン駅の1番線には、原作者マイケル・ボンドの立ち会いのもと2000年に除幕されたパディントン・ベアのブロンズ像が今も立っています。物語の中でブラウン一家が小熊と出会った場所として、こちらもあわせて訪ねる価値があります。`,
+        area: "メリルボーン(撮影地)/ パディントン(像の所在地)",
+        nearestStation: "Marylebone 駅(撮影地)、Paddington 駅(像)",
+        access:
+          "どちらも現役の主要駅で、自由に出入りできます。パディントン駅1番線の像は無料で見学可能。",
+        tips: "メリルボーン駅の「映画の外観」とパディントン駅の「本物の像」は徒歩15分ほど。両方回ると撮影の種明かしが体感できます。",
+        website: "https://www.paddington.com/us/heritage/the-station/",
+        mapQuery: "Marylebone Station London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/1/12/Marylebone_station_frontage_-_DSCF0473.JPG",
+        imageSource: "commons",
+        imageCredit: "Rept0n1x (CC BY-SA)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Marylebone_station_frontage_-_DSCF0473.JPG",
+      },
+      {
+        slug: "alices-antiques",
+        name: "アリスズ・アンティークス(劇中の「グルーバーさんの骨董店」)",
+        engName: "Alice's Antiques, Portobello Road",
+        scene: "パディントンの友人、グルーバーさんの骨董店",
+        body: `ポートベロー・ロードに実在する骨董店。真っ赤な外壁とごちゃごちゃとしたショーウィンドウの雑貨が、劇中の「グルーバーさんの骨董店」にそのまま採用されました。
+
+1952年からこの一族が営む店で(建物自体の商いは1887年から)、ノッティング・ヒルの顔とも言える存在です。1969年の映画『ミニミニ大作戦』にも登場しており、ロケ地としての実績は『パディントン』以前からありました。
+
+2025年秋には、店舗兼上階の住居がおよそ450万ポンドで売りに出されたと報じられました。長年のオーナー一族が手放す決断をしたためで、訪問前に営業状況を確認しておくと安心です。`,
+        area: "ノッティング・ヒル",
+        nearestStation: "Notting Hill Gate 駅、Ladbroke Grove 駅(いずれも徒歩約10分)",
+        access:
+          "外観は市場に面した通り沿いなのでいつでも見学可能。店内に入れるかは営業状況によるため、訪問前の確認を推奨します。",
+        tips: "土曜のポートベロー・ロード・マーケット開催中に訪れると、通り全体の雰囲気も一緒に楽しめます。",
+        mapQuery: "Alice's Antiques Portobello Road London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/a/a8/Alice%27s_Antique_Shop%2C_Portobello_Road%2C_Notting_Hill%2C_London_2022-08-18.jpg",
+        imageSource: "commons",
+        imageCredit: "Brokentaco (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Alice%27s_Antique_Shop,_Portobello_Road,_Notting_Hill,_London_2022-08-18.jpg",
+      },
+      {
+        slug: "natural-history-museum-paddington",
+        name: "自然史博物館",
+        engName: "Natural History Museum",
+        scene: "剥製師ミリセントの職場という設定の場面(第1作)",
+        body: `テラコッタ張りの外壁と大聖堂のようなヒンツェ・ホールを持つ、サウス・ケンジントンのヴィクトリア朝建築。第1作で、パディントンを剥製にしようとする悪役ミリセント(ニコール・キッドマン)の職場として使われました。
+
+館内での撮影は、一般公開時間を避けるため夜間に複数回にわたって行われたと報じられています。剥製師の悪役の舞台として、実在の標本コレクションを持つこの博物館ほど説得力のある場所はなかったといえます。
+
+パディントン駅、ポートベロー・ロードと同様、作り込んだセットではなく実在のロンドンの名所をそのまま使うという、このシリーズ一貫した姿勢がここにも表れています。`,
+        area: "サウス・ケンジントン",
+        nearestStation: "South Kensington 駅",
+        access: "入場無料(一部の特別展のみ有料)。一般公開時間内は自由に見学できます。",
+        tips: "平日の開館直後が比較的空いています。目玉のクジラの骨格標本「ホープ」があるヒンツェ・ホールは必見です。",
+        website: "https://www.nhm.ac.uk",
+        mapQuery: "Natural History Museum London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/7/76/Entrance_to_Natural_History_Museum%2C_Cromwell_Road%2C_London_SW7_-_geograph.org.uk_-_1034304.jpg",
+        imageSource: "commons",
+        imageCredit: "Christine Matthews (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Entrance_to_Natural_History_Museum,_Cromwell_Road,_London_SW7_-_geograph.org.uk_-_1034304.jpg",
+      },
+      {
+        slug: "chalcot-crescent",
+        name: "チャルコット・クレセント(劇中の「ウィンザー・ガーデンズ32番地」)",
+        engName: "Chalcot Crescent, Primrose Hill",
+        scene: "ブラウン一家の自宅の外観",
+        body: `物語の設定上、ブラウン家の「ウィンザー・ガーデンズ32番地」はノッティング・ヒル寄りにあることになっていますが、実際の外観撮影が行われたのはプリムローズ・ヒルのチャルコット・クレセントです。
+
+パステルカラーに塗られたジョージ王朝様式の連棟住宅と、鋳鉄のバルコニーが並ぶ通りで、絵本さながらの佇まいがこの映画の「絵本のようなロンドン」を体現しています。ロケハンの担当者いわく、実在の設定地よりも「さらに高級な」エリアが選ばれたことになります。
+
+なお室内の場面はここではなく、エルストリー・スタジオに組まれたセットで撮影されています。この通りで見られるのはあくまで外観だけです。`,
+        area: "プリムローズ・ヒル",
+        nearestStation: "Chalk Farm 駅 徒歩約9分",
+        access:
+          "実際に人が暮らす住宅街です。中に入ることはできません。通りからの外観の見学・撮影にとどめてください。",
+        tips: "近くのプリムローズ・ヒルの丘に登ればロンドンのスカイラインが一望できます。合わせて訪ねるのがおすすめです。",
+        mapQuery: "Chalcot Crescent Primrose Hill London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/f/f8/1-17_Chalcot_Crescent%2C_Primrose_Hill%2C_April_2026.jpg",
+        imageSource: "commons",
+        imageCredit: "No Swan So Fine (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:1-17_Chalcot_Crescent,_Primrose_Hill,_April_2026.jpg",
+      },
+    ],
+  },
+  {
+    slug: "james-bond",
+    title: "James Bond(007)シリーズ",
+    engTitle: "James Bond",
+    eyebrow: "Film Series",
+    years: "1962–",
+    summary:
+      "MI6本部の実物、Spectreのクライマックスの橋、そしてフレミング本人がなじんだバー。虚実が入り混じる007のロンドンを歩く。",
+    routeHint: "市内に点在・移動を含め1日",
+    lead: [
+      "007シリーズのロンドンは一筋縄ではいきません。MI6本部として映るビルは本当に現役の情報機関の本部であり、一方でボンドの行きつけとして知られる社交クラブは劇中では別の名前で登場します。実在と虚構が意図的に重ねられているのが、このシリーズのロンドンの特徴です。",
+      "ここでは長寿シリーズの中から、実際に訪ねられる場所を厳選して紹介します。政府施設や会員制クラブが含まれるため、見学の可否は事前に確認してから旅程を組んでください。",
+    ],
+    note: "SISビル(通称MI6本部ビル)は現役の情報機関の庁舎です。観光施設ではないため、外観を対岸や橋の上から眺める・撮影するにとどめ、敷地に近づいたり長時間の撮影を行ったりしないでください。",
+    keywords: [
+      "James Bond ロケ地",
+      "007 ロケ地",
+      "MI6 本部ビル",
+      "ヴォクソール・クロス",
+      "ウェストミンスター橋 スペクター",
+      "デュークス・バー",
+      "映画 ロケ地 ロンドン",
+      "聖地巡礼 ロンドン",
+    ],
+    spots: [
+      {
+        slug: "sis-building",
+        name: "SISビル(通称「MI6本部ビル」)",
+        engName: "SIS Building, Vauxhall Cross",
+        scene: "MI6本部の外観として、シリーズ5作に繰り返し登場",
+        body: `『ゴールデンアイ』『ワールド・イズ・ノット・イナフ』『ダイ・アナザー・デイ』『スカイフォール』『スペクター』と、5作にわたってMI6本部として画面に映る建物です。特撮ではなく、**実際に稼働している英国秘密情報部(MI6)の本庁舎**そのものが使われています。
+
+テムズ川沿い、ヴォクソール・ブリッジのたもとに立つこの建物は1994年築、建築家テリー・ファレルによる階段状(ジッグラト状)のデザインで、砂色と緑色の外観がひと目でそれとわかります。
+
+『ワールド・イズ・ノット・イナフ』冒頭の爆破シーンは、実際の庁舎ではなくパインウッド・スタジオに作られた50フィートの模型で撮影されました。さすがに本物の情報機関の庁舎を爆破するわけにはいかなかった、という事情です。『スカイフォール』でも同様に本部への攻撃シーンが描かれ、公開時にはSIS職員向けの特別上映会が庁舎内で行われ、その場面に歓声が上がったと伝えられています。`,
+        area: "ヴォクソール",
+        nearestStation: "Vauxhall 駅 徒歩2〜10分",
+        access:
+          "現役の情報機関庁舎のため、内部見学や敷地への立ち入りはできません。対岸やヴォクソール・ブリッジ上からの外観の見学・撮影にとどめてください。",
+        tips: "ヴォクソール・ブリッジの上、またはテムズ対岸(北岸)から見ると、建物全体の階段状のシルエットが川越しに収まります。夕方は外壁の色が暖色に映えます。",
+        mapQuery: "SIS Building Vauxhall Cross London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/3/37/Secret_Intelligence_Service_building_-_Vauxhall_Cross_-_Vauxhall_-_London_-_24042004.jpg",
+        imageSource: "commons",
+        imageCredit: "Tagishsimon (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Secret_Intelligence_Service_building_-_Vauxhall_Cross_-_Vauxhall_-_London_-_24042004.jpg",
+      },
+      {
+        slug: "westminster-bridge",
+        name: "ウェストミンスター橋",
+        engName: "Westminster Bridge",
+        scene: "『スペクター』(2015)クライマックスの舞台",
+        body: `『スペクター』終盤、ボンドがブロフェルドのヘリコプターを撃墜し、橋の上に墜落させたのちブロフェルドと対峙する、シリーズきっての緊迫したクライマックスの舞台です。
+
+撮影は実際の橋の一部と、パインウッド・スタジオの「007ステージ」に組まれた実物大のレプリカを組み合わせて行われました。ロンドンの夜景を映す35フィートの巨大スクリーンで橋を囲み、視覚効果チームが夏の撮影を冬の夜へとデジタルで変換しています。墜落するヘリコプターには実機(ユーロコプターAS365ドーファンN2、登録記号G-LCPL)が使われました。
+
+すぐ隣に国会議事堂とビッグ・ベンが立つ立地そのものが、この場面をひと目でロンドンとわかる画にしています。`,
+        area: "ウェストミンスター",
+        nearestStation: "Westminster 駅",
+        access: "終日開放されている歩行者用の橋。無料でいつでも渡れます。",
+        tips: "ビッグ・ベンと国会議事堂を画面に収めるなら夕暮れから夜がおすすめ。日中は観光客で混雑するため、早朝の方が撮影はしやすいです。",
+        mapQuery: "Westminster Bridge London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/b/b2/Westminster_Bridge_with_shadows_and_Big_Ben.jpg",
+        imageSource: "commons",
+        imageCredit: "Matt Brown (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Westminster_Bridge_with_shadows_and_Big_Ben.jpg",
+      },
+      {
+        slug: "dukes-bar",
+        name: "デュークス・バー",
+        engName: "DUKES Bar, DUKES Hotel",
+        scene: "撮影地ではなく、ボンドのマティーニの元ネタとされるバー",
+        body: `ここは映画の撮影が行われた場所ではありません。原作者イアン・フレミング本人が通っていたことで知られ、ボンドの「ステア、ノット・シェイクン(かき混ぜて、振らないで)」というマティーニの流儀のルーツとされるバーです。
+
+1908年からセント・ジェームズの路地裏で営業する老舗で、スピリッツを冷凍庫で冷やし、グラスも冷やしたうえで、シェイカーではなく客の目の前で注ぎ入れる独自の作法で知られます。フレミングがここのイタリア人バーテンダーとマティーニの技法について語り合ったことが、『カジノ・ロワイヤル』に登場するヴェスパー・マティーニのレシピに影響したと広く語られていますが、フレミング自身がこの店の名を作中で明言したわけではなく、あくまで店側や業界での言い伝えに近いものである点は留意してください。`,
+        area: "セント・ジェームズ",
+        nearestStation: "Green Park 駅 徒歩約5分",
+        access:
+          "営業中のバーで、誰でも入店できます(要予約推奨、スマートカジュアル以上のドレスコードあり)。",
+        tips: "定番はヴェスパー・マティーニ。アルコール度数が高いため、店側は非公式に「2杯まで」を勧めています。夜は予約推奨。",
+        website: "https://www.dukeshotel.com/dukesbar.html",
+        mapQuery: "DUKES Bar St James's London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/a/a3/Dukes_Hotel%2C_St_James%27s_Place%2C_June_2022_01.jpg",
+        imageSource: "commons",
+        imageCredit: "No Swan So Fine (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Dukes_Hotel,_St_James's_Place,_June_2022_01.jpg",
+      },
+      {
+        slug: "reform-club",
+        name: "リフォーム・クラブ(劇中の「ブレイズ」)",
+        engName: "The Reform Club, Pall Mall",
+        scene: "『ダイ・アナザー・デイ』(2002)フェンシングクラブ「ブレイズ」",
+        body: `『ダイ・アナザー・デイ』で、ボンドが悪役グレイブスとフェンシングで対決する会員制クラブ「ブレイズ」として使われた、パル・マルの実在の社交クラブです。「ブレイズ」自体はフレミングの原作小説(代表作は『ムーンレイカー』)にたびたび登場する架空のクラブ名で、映画版でその実写化にあたって選ばれました。
+
+建物は1841年開業、建築家チャールズ・バリーの設計で、ローマのファルネーゼ宮を手本にしたイタリア風のファサードを持ちます。実際に映画で使われたのは外観や一部の内部空間のみで、フェンシングホールや噴水のある庭園などの場面の多くはスタジオに組まれたセットだったと伝えられています。
+
+『八十日間世界一周』でフィリアス・フォッグが旅立つクラブとしても知られるなど、映像作品のロケ地としての実績は007以前から長い建物です。`,
+        area: "パル・マル / セント・ジェームズ",
+        nearestStation: "Charing Cross 駅、Piccadilly Circus 駅(いずれも徒歩5〜10分)",
+        access:
+          "会員制の私設クラブで、一般の飛び込み見学はできません。事前予約のガイドツアー、または毎年9月のオープン・ハウス・ロンドン開催時のみ内部見学が可能です。外観はパル・マル沿いからいつでも見られます。",
+        tips: "オープン・ハウス・ロンドン以外の時期は外観の見学にとどめ、アセニアム・クラブなど周辺の「クラブランド」の建物とあわせて歩くのがおすすめです。",
+        website: "https://www.reformclub.com",
+        mapQuery: "Reform Club Pall Mall London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/c/c1/104_Pall_Mall%2C_London-15249008557.jpg",
+        imageSource: "commons",
+        imageCredit: "Phil Guest (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:104_Pall_Mall,_London-15249008557.jpg",
+      },
+    ],
+  },
 ];
 
 export function getFilmWork(slug: string) {
