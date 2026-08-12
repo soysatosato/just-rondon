@@ -211,6 +211,18 @@ export const NAV_SECTIONS: NavSection[] = [
         ],
       },
       {
+        heading: "食費を抑える",
+        links: [
+          { href: "/food", label: "食費を抑えるコツ トップ" },
+          { href: "/food/meal-deal", label: "Meal Deal を使い切る" },
+          { href: "/food/loyalty-cards", label: "Clubcard・Nectar を作る" },
+          { href: "/food/discount-timing", label: "値引きと閉店前半額" },
+          { href: "/food/apps-and-coupons", label: "アプリとクーポン" },
+          { href: "/food/where-to-buy", label: "安く買える店" },
+          { href: "/food/long-stay", label: "長期滞在者の裏技" },
+        ],
+      },
+      {
         heading: "働く・労働問題",
         links: [
           { href: "/jobs", label: "労働問題ガイド トップ" },

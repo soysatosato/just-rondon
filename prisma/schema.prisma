@@ -913,3 +913,32 @@ model TweetDraft {
 
   @@index([status, createdAt])
 }
+
+/// PageComment が紐づく対象の種類。セクションを増やすときはここに1行足す。
+enum CommentTargetType {
+  FOOD_TIP
+  COLUMN
+  ATTRACTION
+  MUSEUM
+  HOUSING
+}
+
+/// 記事ページ用の汎用コメント。掲示板(Post/Comment)とは別系統で、
+/// targetType + targetKey の組で任意のページに紐づけられる。
+/// 外部キーは張らないため、対象が消えてもコメントは残る点に注意。
+model PageComment {
+  id         String            @id @default(cuid())
+  targetType CommentTargetType
+  /// 対象の識別子。slug(food/column)と uuid(attraction/museum)が混在するため String。
+  targetKey  String
+  author     String
+  content    String
+  /// 荒らし対応は物理削除ではなく論理削除で隠す。
+  isHidden   Boolean           @default(false)
+  createdAt  DateTime          @default(now())
+  ip         String?
+  sessionId  String?
+  userAgent  String?
+
+  @@index([targetType, targetKey, createdAt])
+}

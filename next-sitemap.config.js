@@ -182,6 +182,15 @@ module.exports = {
       "/housing/viewing",
       "/housing/noise",
       "/housing/moving-out",
+      // 食費節約ガイド。並びは components/food/guides/guides.ts の
+      // foodGuides と一致させること。
+      "/food",
+      "/food/meal-deal",
+      "/food/loyalty-cards",
+      "/food/discount-timing",
+      "/food/apps-and-coupons",
+      "/food/where-to-buy",
+      "/food/long-stay",
       "/jobs",
       "/jobs/minimum-wage",
       "/jobs/employment-contract",
