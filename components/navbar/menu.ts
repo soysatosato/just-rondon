@@ -10,7 +10,7 @@
  *   体験する   = する(体験)。ロンドン市内。
  *   旅の準備   = 旅行者の実務(ETA・日程・宿・交通)。
  *   住む・働く = 在住者の実務(ビザ・住まい・仕事)。
- *   コラム     = 読み物。
+ *   英国を読む = 読み物(コラム・歴史・英語表現)。
  *
  * Beyond London(ロンドン外の日帰り・小旅行)を追加するときは、
  * 「体験する」と「旅の準備」の間に NAV_SECTIONS の要素を1つ足す。
@@ -179,12 +179,6 @@ export const NAV_SECTIONS: NavSection[] = [
         heading: "ビザ",
         links: [
           { href: "/visa", label: "英国ビザガイド トップ" },
-          { href: "/visa/uk-visa-guide", label: "全ルート比較" },
-          { href: "/visa/youth-mobility-scheme", label: "YMS（ワーホリ）" },
-          { href: "/visa/skilled-worker", label: "Skilled Worker（就労）" },
-          { href: "/visa/global-talent", label: "Global Talent（卓越人材）" },
-          { href: "/visa/student", label: "Student／Graduate" },
-          { href: "/visa/family", label: "家族・配偶者ビザ" },
           { href: "/visa/after-arrival", label: "渡英後の手続き" },
         ],
       },
@@ -196,51 +190,19 @@ export const NAV_SECTIONS: NavSection[] = [
             href: "/housing/rightmove-zoopla-openrent",
             label: "物件サイトの使い分け",
           },
-          { href: "/housing/spareroom", label: "フラットシェアを探す" },
-          { href: "/housing/japanese-listings", label: "日系コミュニティ経由" },
-          { href: "/housing/tenancy-types", label: "契約形態の地図" },
-          {
-            href: "/housing/deposits-and-fees",
-            label: "初期費用と違法な手数料",
-          },
-          { href: "/housing/referencing", label: "審査を通す" },
-          { href: "/housing/where-to-live", label: "住むエリアの選び方" },
-          { href: "/housing/viewing", label: "内見チェックリスト" },
-          { href: "/housing/noise", label: "騒音トラブル" },
-          { href: "/housing/moving-out", label: "退去とデポジット返還" },
         ],
       },
       {
         heading: "食費を抑える",
-        links: [
-          { href: "/food", label: "食費を抑えるコツ トップ" },
-          { href: "/food/meal-deal", label: "Meal Deal を使い切る" },
-          { href: "/food/loyalty-cards", label: "Clubcard・Nectar を作る" },
-          { href: "/food/discount-timing", label: "値引きと閉店前半額" },
-          { href: "/food/apps-and-coupons", label: "アプリとクーポン" },
-          { href: "/food/where-to-buy", label: "安く買える店" },
-          { href: "/food/long-stay", label: "長期滞在者の裏技" },
-        ],
+        links: [{ href: "/food", label: "食費を抑えるコツ トップ" }],
       },
       {
         heading: "働く・労働問題",
         links: [
           { href: "/jobs", label: "労働問題ガイド トップ" },
-          { href: "/jobs/minimum-wage", label: "最低賃金・給与明細" },
-          { href: "/jobs/employment-contract", label: "労働契約・就業規則" },
-          { href: "/jobs/visa-and-work", label: "ビザと就労" },
-          { href: "/jobs/workplace-harassment", label: "ハラスメント相談先" },
           {
             href: "/jobs/service-charges",
             label: "サービスチャージ完全ガイド",
-          },
-          {
-            href: "/jobs/service-charges/case-story",
-            label: "審判所申立ての実体験",
-          },
-          {
-            href: "/jobs/service-charges/dashboard",
-            label: "店舗別データベース",
           },
         ],
       },
@@ -253,22 +215,23 @@ export const NAV_SECTIONS: NavSection[] = [
     accent: NAV_ACCENTS.sky,
   },
   {
-    kind: "link",
-    label: "コラム",
+    kind: "menu",
+    label: "英国を読む",
+    eyebrow: "Read",
     href: "/column",
+    hubLabel: "コラム トップ",
+    description:
+      "実務情報の先にある、じっくり読むコンテンツ。イギリスの歴史や言葉の面白さを、旅の合間や暮らしのなかで。",
     accent: NAV_ACCENTS.violet,
-  },
-  {
-    kind: "link",
-    label: "イギリスの歴史",
-    href: "/history",
-    accent: NAV_ACCENTS.amber,
-  },
-  {
-    kind: "link",
-    label: "イギリス英語",
-    href: "/british-english",
-    accent: NAV_ACCENTS.rose,
+    groups: [
+      {
+        links: [
+          { href: "/column", label: "コラム" },
+          { href: "/history", label: "イギリスの歴史" },
+          { href: "/british-english", label: "イギリス英語" },
+        ],
+      },
+    ],
   },
 ];
 

@@ -7,8 +7,12 @@ import {
   Ticket,
   Landmark,
   Drama,
-  Receipt,
+  Stamp,
+  KeyRound,
   BriefcaseBusiness,
+  Newspaper,
+  History,
+  MessageSquareText,
   Search,
 } from "lucide-react";
 
@@ -71,18 +75,64 @@ export default function HeroSearch() {
 
           <SelectGroup>
             <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              働く・暮らす
+              旅の準備
             </SelectLabel>
-            <SelectItem value="jobs/service-charges">
+            <SelectItem value="sightseeing/eta-uk-visa-guide">
               <span className="flex items-center gap-2">
-                <Receipt className="h-3.5 w-3.5 text-emerald-600" />
-                サービスチャージについて調べる
+                <Stamp className="h-3.5 w-3.5 text-sky-600" />
+                ETA（電子渡航認証）
+              </span>
+            </SelectItem>
+          </SelectGroup>
+
+          <SelectSeparator />
+
+          <SelectGroup>
+            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              住む・働く
+            </SelectLabel>
+            <SelectItem value="visa">
+              <span className="flex items-center gap-2">
+                <Stamp className="h-3.5 w-3.5 text-emerald-600" />
+                ビザガイド トップ
+              </span>
+            </SelectItem>
+            <SelectItem value="housing">
+              <span className="flex items-center gap-2">
+                <KeyRound className="h-3.5 w-3.5 text-emerald-600" />
+                住まい探しガイド トップ
               </span>
             </SelectItem>
             <SelectItem value="jobs">
               <span className="flex items-center gap-2">
                 <BriefcaseBusiness className="h-3.5 w-3.5 text-emerald-600" />
-                ロンドンで働く（労働問題ガイド）
+                労働問題ガイド トップ
+              </span>
+            </SelectItem>
+          </SelectGroup>
+
+          <SelectSeparator />
+
+          <SelectGroup>
+            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              英国を読む
+            </SelectLabel>
+            <SelectItem value="column">
+              <span className="flex items-center gap-2">
+                <Newspaper className="h-3.5 w-3.5 text-violet-600" />
+                コラム
+              </span>
+            </SelectItem>
+            <SelectItem value="history">
+              <span className="flex items-center gap-2">
+                <History className="h-3.5 w-3.5 text-violet-600" />
+                イギリスの歴史
+              </span>
+            </SelectItem>
+            <SelectItem value="british-english">
+              <span className="flex items-center gap-2">
+                <MessageSquareText className="h-3.5 w-3.5 text-violet-600" />
+                イギリス英語
               </span>
             </SelectItem>
           </SelectGroup>

@@ -30,11 +30,11 @@ export default function HeroContent() {
 
       {/*
         このサイトは旅行者と在住者の両方を扱う。読者の関心はこの2つで大きく割れるので、
-        最初にどちらかへ飛ばす。リンク先はトップページ内の大区分セクション。
+        自己申告してもらいどちらかへ飛ばす。リンク先はトップページ内の大区分セクション。
       */}
       <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Button asChild size="lg" className="rounded-full px-8">
-          <Link href="#sightseeing">旅行で行く</Link>
+          <Link href="#sightseeing">旅行者です</Link>
         </Button>
         <Button
           asChild
@@ -42,7 +42,7 @@ export default function HeroContent() {
           variant="outline"
           className="rounded-full px-8 bg-background"
         >
-          <Link href="#resident">住む・働く</Link>
+          <Link href="#resident">在住者です</Link>
         </Button>
       </div>
     </motion.div>
