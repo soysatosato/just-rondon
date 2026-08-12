@@ -25,6 +25,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import dynamic from "next/dynamic";
+import type { ServiceCharge } from "@prisma/client";
 
 import { noindexMetadata } from "@/lib/seo";
 
@@ -39,6 +40,21 @@ type Props = {
 function formatAmount(value: number | null, period: string | null): string {
   if (!value) return "-";
   return `${labelOf(AMOUNT_PERIOD_LABEL, period)} 約£${value}`;
+}
+
+// 選択式だった旧設問（賄いの回数・食材・ドリンク、労働条件、職場環境）は
+// 現在の調査では自由記述に統合された。過去の回答を持つレコードでのみ表示する。
+function hasLegacyAnswers(r: ServiceCharge): boolean {
+  return Boolean(
+    r.mealCountPerDay ||
+      r.mealRestrictions?.length ||
+      r.mealDrink ||
+      r.shiftSchedule ||
+      r.visaSupport ||
+      r.managementPresence ||
+      r.workAtmosphere ||
+      r.ethnicityRatio
+  );
 }
 
 function renderMealRestrictions(values: string[]) {
@@ -163,86 +179,132 @@ export default async function DashboardDetailPage({ params }: Props) {
                   )}
                 </section>
 
-                {/* ===== その他（開閉式） ===== */}
-                <Collapsible>
-                  <CollapsibleTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-between"
-                    >
-                      その他の情報を見る
-                      <span className="text-muted-foreground">▼</span>
-                    </Button>
-                  </CollapsibleTrigger>
-
-                  <CollapsibleContent className="mt-4 space-y-6 rounded-lg border p-4">
-                    {/* 賄い */}
-                    <section className="space-y-1">
-                      <p className="font-semibold text-base mb-3">賄い</p>
-                      <p>回数：{r.mealCountPerDay ?? "-"}</p>
-                      <p>
-                        提供されない食材：
-                        {renderMealRestrictions(r.mealRestrictions)}
-                      </p>
-
-                      {r.mealComment && (
-                        <p className="text-muted-foreground">
-                          その他：{r.mealComment}
+                {/* ===== 職場について（自由記述） ===== */}
+                {(r.mealComment || r.generalComment) && (
+                  <section className="space-y-4">
+                    {r.mealComment && (
+                      <div className="space-y-1">
+                        <p className="font-semibold">賄い</p>
+                        <p className="whitespace-pre-wrap text-muted-foreground">
+                          {r.mealComment}
                         </p>
-                      )}
-                      <p>
-                        ドリンク：
-                        {labelOf(MEAL_DRINK_LABEL, r.mealDrink)}
-                      </p>
-                    </section>
+                      </div>
+                    )}
 
-                    <Separator />
-
-                    {/* 労働条件 */}
-                    <section className="space-y-1">
-                      <p className="font-semibold text-base mb-3">
-                        労働条件・制度
-                      </p>
-                      <p>
-                        シフト：
-                        {labelOf(SHIFT_SCHEDULE_LABEL, r.shiftSchedule)}
-                      </p>
-                      <p>
-                        ビザサポート：
-                        {labelOf(VISA_SUPPORT_LABEL, r.visaSupport)}
-                      </p>
-                      <p>
-                        管理体制：
-                        {labelOf(
-                          MANAGEMENT_PRESENCE_LABEL,
-                          r.managementPresence
-                        )}
-                      </p>
-                    </section>
-
-                    <Separator />
-
-                    {/* 職場環境 */}
-                    <section className="space-y-1">
-                      <p className="font-semibold text-base mb-3">職場環境</p>
-                      <p>
-                        雰囲気：
-                        {labelOf(WORK_ATMOSPHERE_LABEL, r.workAtmosphere)}
-                      </p>
-                      <p>
-                        スタッフ構成：
-                        {labelOf(ETHNICITY_RATIO_LABEL, r.ethnicityRatio)}
-                      </p>
-
-                      {r.generalComment && (
-                        <p className="text-muted-foreground">
-                          その他：{r.generalComment}
+                    {r.generalComment && (
+                      <div className="space-y-1">
+                        <p className="font-semibold">その他</p>
+                        <p className="whitespace-pre-wrap text-muted-foreground">
+                          {r.generalComment}
                         </p>
+                      </div>
+                    )}
+                  </section>
+                )}
+
+                {/* ===== 旧設問の回答（過去データのみ・開閉式） ===== */}
+                {hasLegacyAnswers(r) && (
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full justify-between"
+                      >
+                        以前の設問への回答を見る
+                        <span className="text-muted-foreground">▼</span>
+                      </Button>
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent className="mt-4 space-y-6 rounded-lg border p-4">
+                      {(r.mealCountPerDay ||
+                        r.mealRestrictions?.length > 0 ||
+                        r.mealDrink) && (
+                        <section className="space-y-1">
+                          <p className="font-semibold text-base mb-3">賄い</p>
+                          {r.mealCountPerDay && (
+                            <p>回数：{r.mealCountPerDay}</p>
+                          )}
+                          {r.mealRestrictions?.length > 0 && (
+                            <p>
+                              提供されない食材：
+                              {renderMealRestrictions(r.mealRestrictions)}
+                            </p>
+                          )}
+                          {r.mealDrink && (
+                            <p>
+                              ドリンク：
+                              {labelOf(MEAL_DRINK_LABEL, r.mealDrink)}
+                            </p>
+                          )}
+                        </section>
                       )}
-                    </section>
-                  </CollapsibleContent>
-                </Collapsible>
+
+                      {(r.shiftSchedule ||
+                        r.visaSupport ||
+                        r.managementPresence) && (
+                        <>
+                          <Separator />
+                          <section className="space-y-1">
+                            <p className="font-semibold text-base mb-3">
+                              労働条件・制度
+                            </p>
+                            {r.shiftSchedule && (
+                              <p>
+                                シフト：
+                                {labelOf(SHIFT_SCHEDULE_LABEL, r.shiftSchedule)}
+                              </p>
+                            )}
+                            {r.visaSupport && (
+                              <p>
+                                ビザサポート：
+                                {labelOf(VISA_SUPPORT_LABEL, r.visaSupport)}
+                              </p>
+                            )}
+                            {r.managementPresence && (
+                              <p>
+                                管理体制：
+                                {labelOf(
+                                  MANAGEMENT_PRESENCE_LABEL,
+                                  r.managementPresence
+                                )}
+                              </p>
+                            )}
+                          </section>
+                        </>
+                      )}
+
+                      {(r.workAtmosphere || r.ethnicityRatio) && (
+                        <>
+                          <Separator />
+                          <section className="space-y-1">
+                            <p className="font-semibold text-base mb-3">
+                              職場環境
+                            </p>
+                            {r.workAtmosphere && (
+                              <p>
+                                雰囲気：
+                                {labelOf(
+                                  WORK_ATMOSPHERE_LABEL,
+                                  r.workAtmosphere
+                                )}
+                              </p>
+                            )}
+                            {r.ethnicityRatio && (
+                              <p>
+                                スタッフ構成：
+                                {labelOf(
+                                  ETHNICITY_RATIO_LABEL,
+                                  r.ethnicityRatio
+                                )}
+                              </p>
+                            )}
+                          </section>
+                        </>
+                      )}
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
               </CardContent>
             </Card>
           ))}

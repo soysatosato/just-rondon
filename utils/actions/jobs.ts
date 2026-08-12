@@ -97,20 +97,7 @@ export async function submitSurvey(
     const collected = formData.get("collected") === "yes";
 
     const amountValueStr = formData.get("amountValue")?.toString().trim() ?? "";
-    const amountPeriodStr =
-      formData.get("amountPeriod")?.toString().trim() ?? "";
-
     const hasAmountValue = amountValueStr !== "";
-    const hasAmountPeriod =
-      amountPeriodStr === "weekly" || amountPeriodStr === "monthly";
-
-    if (collected && hasAmountValue !== hasAmountPeriod) {
-      return {
-        ok: false,
-        message:
-          "サービスチャージ金額を入力する場合は、週額・月額のどちらかも選択してください（金額を入力しない場合は選択も不要です）。",
-      };
-    }
 
     let amountValue: number | null = null;
     if (collected && hasAmountValue) {
@@ -139,30 +126,16 @@ export async function submitSurvey(
         distributionType: collected
           ? formData.get("distribution")?.toString() ?? null
           : null,
-        amountPeriod: collected && hasAmountPeriod ? amountPeriodStr : null,
+        // 金額の設問は月額に一本化した。過去データには週額(weekly)も存在するため
+        // amountPeriod 列は残し、新規回答には常に monthly を記録する。
+        amountPeriod: collected && amountValue !== null ? "monthly" : null,
         amountValue: collected ? amountValue : null,
         serviceChargeComment:
           formData.get("serviceChargeComment")?.toString().slice(0, 1000) ||
           null,
-        mealCountPerDay: formData.get("mealCountPerDay")?.toString() || null,
-
-        mealRestrictions: formData.getAll("mealRestrictions").map(String),
 
         mealComment:
-          formData.get("mealComment")?.toString().slice(0, 500) || null,
-
-        mealDrink: formData.get("mealDrink")?.toString() || null,
-
-        shiftSchedule: formData.get("shiftSchedule")?.toString() || null,
-
-        visaSupport: formData.get("visaSupport")?.toString() || null,
-
-        managementPresence:
-          formData.get("managementPresence")?.toString() || null,
-
-        workAtmosphere: formData.get("workAtmosphere")?.toString() || null,
-
-        ethnicityRatio: formData.get("ethnicityRatio")?.toString() || null,
+          formData.get("mealComment")?.toString().slice(0, 1000) || null,
 
         generalComment:
           formData.get("generalComment")?.toString().slice(0, 1000) || null,

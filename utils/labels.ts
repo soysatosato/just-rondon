@@ -6,8 +6,8 @@ export type DistributionType = "equal" | "gradient" | "fixed" | "none";
 export const DISTRIBUTION_LABEL: Record<DistributionType, string> = {
   equal: "従業員に等分配されている",
   gradient: "役職・勤務時間等に応じたグラデーション分配",
-  fixed: "時給に一定額として固定で上乗せ（大部分をオーナー側が取得）",
-  none: "分配されていない（実質オーナー側が取得）",
+  fixed: "時給に一定額として固定で上乗せ",
+  none: "分配されていない",
 };
 
 export type AmountPeriod = "weekly" | "monthly";
