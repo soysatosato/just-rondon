@@ -73,10 +73,14 @@ export function theaterEventJsonLd(musical: Musical) {
         longitude: musical.lng,
       },
     },
+    // validFrom は公式サイトの情報を最後に確認した日。チケット販売開始日は
+    // DBになく、それより前を名乗ると確認していない期間を保証することになる。
     offers: musical.website
       ? {
           "@type": "Offer",
           url: musical.website,
+          availability: "https://schema.org/InStock",
+          validFrom: musical.updatedAt.toISOString().slice(0, 10),
         }
       : undefined,
   };

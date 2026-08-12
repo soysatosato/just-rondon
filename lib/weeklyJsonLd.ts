@@ -27,6 +27,11 @@ export function buildBriefJsonLd(
     about: { "@type": "City", name: "London" },
   };
 
+  // offers.validFrom は「その値段でいつから買えるか」。調査日を使うのは、
+  // 販売開始日をDBに持っていないため。実際に確認が取れた日より前を名乗ると
+  // 確認していない期間を保証することになる。
+  const validFrom = brief.researchedAt.toISOString().slice(0, 10);
+
   const events = brief.items
     .filter(
       (item) =>
@@ -61,6 +66,12 @@ export function buildBriefJsonLd(
           }
         : {}),
       ...(item.website ? { url: item.website } : {}),
+      // 号のビジュアルを催しの image として借りる。催し個別の画像はDBにないが、
+      // 号の画像はその週の催しを写したものなので、無関係な絵にはならない。
+      ...(brief.image ? { image: brief.image } : {}),
+      // 有料の催しは priceInfo が「大人£33、18〜24歳£21.50」のような日本語の
+      // 散文で、price に入れられる数値がない。値段を捏造するかわりに、
+      // 買える場所(website)だけを Offer として出す。
       ...(item.isFree
         ? {
             offers: {
@@ -68,9 +79,19 @@ export function buildBriefJsonLd(
               price: 0,
               priceCurrency: "GBP",
               availability: "https://schema.org/InStock",
+              validFrom,
             },
           }
-        : {}),
+        : item.website
+          ? {
+              offers: {
+                "@type": "Offer",
+                url: item.website,
+                availability: "https://schema.org/InStock",
+                validFrom,
+              },
+            }
+          : {}),
       // kind は分類なので、そのまま検索側の手がかりにしておく。
       keywords: getKindMeta(item.kind).label,
     }));
