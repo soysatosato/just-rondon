@@ -20,7 +20,9 @@ import {
 } from "@/components/sightseeing/jsonld";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { filmWorks, getFilmWork } from "../data";
+import ImageCredit from "@/components/shared/ImageCredit";
+import InstagramEmbed from "@/components/shared/InstagramEmbed";
+import { filmWorks, getFilmWork, type FilmSpot } from "../data";
 
 interface Props {
   params: { slug: string };
@@ -54,6 +56,40 @@ export async function generateMetadata({ params }: Props) {
 
 function googleMapsUrl(query: string) {
   return `https://www.google.com/maps?q=${encodeURIComponent(query)}`;
+}
+
+function SpotMedia({ spot }: { spot: FilmSpot }) {
+  if (spot.imageSource === "instagram" && spot.instagramUrl) {
+    return (
+      <div>
+        <InstagramEmbed url={spot.instagramUrl} className="mx-auto max-w-md" />
+      </div>
+    );
+  }
+
+  if (spot.image) {
+    return (
+      <div className="space-y-1.5">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl">
+          <img
+            src={spot.image}
+            alt={spot.name}
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+          />
+        </div>
+        <ImageCredit
+          source={spot.imageSource ?? null}
+          credit={spot.imageCredit ?? null}
+          link={spot.imageLink ?? null}
+        />
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export default function FilmWorkPage({ params }: Props) {
@@ -140,6 +176,8 @@ export default function FilmWorkPage({ params }: Props) {
               {spot.engName}
             </p>
           </div>
+
+          <SpotMedia spot={spot} />
 
           <div className="prose dark:prose-invert max-w-full prose-sm sm:prose-base">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>

@@ -9,9 +9,17 @@
 // mapQuery は Google マップの検索語として使う。座標ではなく施設名で引くことで、
 // 施設が移転しても壊れない。
 //
-// 画像は原則として持たせない。ロケ地の写真は権利処理が済んだものが揃わず、
-// 「画像が揃うまで公開しない」にすると1本も出せなくなる。作品スチルは
-// 当然ながら使えないので、画像なしで成立する記事として書いている。
+// 画像は Souvenir と同じ考え方で扱う。「画像が揃うまで公開しない」と
+// 1本も出せなくなるので、image は nullable。作品スチルは当然使えないので、
+// 場所そのものの写真だけを対象にしている。
+//
+// imageSource は表示側の分岐に使う。
+//   "commons"  — Wikimedia Commons のCC/PD画像。直リンクし、imageCredit を必須表示する。
+//   "instagram" — 画像は複製せず instagramUrl を埋め込む(InstagramEmbed)。
+//                  この場合 image は使わない。
+//   "ai"       — 権利処理済み写真が見つからない場所向けに生成し、Supabase storage
+//                (utils/supabase.ts の uploadImage)にアップロードして公開URLを持たせる。
+//                実在しない画角に見えないよう、雰囲気カット程度の扱いに留める。
 //
 // 作品を追加したら next-sitemap.config.js の staticPages にも1行足すこと。
 // あちらは CJS で、このファイルを読めない。
@@ -33,6 +41,14 @@ export type FilmSpot = {
   website?: string;
   /** Google マップの検索語。 */
   mapQuery: string;
+  image?: string;
+  /** "commons" | "instagram" | "ai" */
+  imageSource?: string;
+  /** 出典・ライセンス表記。commons のときは必須。 */
+  imageCredit?: string;
+  imageLink?: string;
+  /** 施設公式アカウントの「投稿」URL。imageSource が instagram のときに使う。 */
+  instagramUrl?: string;
 };
 
 export type FilmWork = {
@@ -98,6 +114,12 @@ export const filmWorks: FilmWork[] = [
           "通りは公道なので自由に歩けます。Speedy's は営業中のカフェで、客として利用可能。建物の上階は私有の住居で立ち入れません。",
         tips: "住人が実際に暮らす通りです。玄関先での長時間の撮影や、窓へのカメラ向けは控えてください。",
         mapQuery: "Speedy's Sandwich Bar & Cafe London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/c/c8/North_Gower_Street%2C_Euston_-_geograph.org.uk_-_548871.jpg",
+        imageSource: "commons",
+        imageCredit: "Stephen McKay (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:North_Gower_Street,_Euston_-_geograph.org.uk_-_548871.jpg",
       },
       {
         slug: "st-barts-hospital",
@@ -118,6 +140,12 @@ export const filmWorks: FilmWork[] = [
         tips: "隣接するスミスフィールド市場は800年以上続くロンドンの食肉市場。早朝以外は静かですが、建物自体が一見の価値ありです。",
         website: "https://www.bartshealth.nhs.uk/barts-hospital-museum",
         mapQuery: "St Bartholomew's Hospital London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/2/2e/Atrium_of_Barts%2C_St_Bartholomew%27s_Hospital%2C_City_of_London%2C_England.jpg",
+        imageSource: "commons",
+        imageCredit: "Acabashi (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Atrium_of_Barts,_St_Bartholomew's_Hospital,_City_of_London,_England.jpg",
       },
       {
         slug: "leinster-gardens",
@@ -136,6 +164,12 @@ export const filmWorks: FilmWork[] = [
         access: "公道から外観を眺めるだけの場所です。中に入ることはできません(そもそも中がありません)。",
         tips: "裏側は Porchester Terrace 側から見られます。線路の上に壁が立っているだけ、という構造が確認できます。",
         mapQuery: "23-24 Leinster Gardens London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7e/23-24_Leinster_Gardens%2C_the_%22fake_house%22_-_geograph.org.uk_-_49276.jpg",
+        imageSource: "commons",
+        imageCredit: "Hywel Williams (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:23-24_Leinster_Gardens,_the_%22fake_house%22_-_geograph.org.uk_-_49276.jpg",
       },
       {
         slug: "the-langham",
@@ -154,6 +188,11 @@ export const filmWorks: FilmWork[] = [
         tips: "向かいはBBCの本拠地であるブロードキャスティング・ハウス。BBC制作のドラマがこのホテルを使った理由の一端が分かります。",
         website: "https://www.langhamhotels.com/en/the-langham/london/",
         mapQuery: "The Langham London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/d/df/Langham_london.jpg",
+        imageSource: "commons",
+        imageCredit: "The Langham, London (CC BY-SA 3.0)",
+        imageLink: "https://commons.wikimedia.org/wiki/File:Langham_london.jpg",
       },
       {
         slug: "southbank-undercroft",
@@ -170,6 +209,12 @@ export const filmWorks: FilmWork[] = [
         access: "屋外の公共空間で、24時間自由に見学できます。入場無料。",
         tips: "滑っている人の進路に立たないこと。撮影は歓迎されますが、レール沿いの動線は空けておくのがマナーです。",
         mapQuery: "Southbank Undercroft Skate Space London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/5/5a/South_Bank_Skate_Park_-_geograph.org.uk_-_3843135.jpg",
+        imageSource: "commons",
+        imageCredit: "Chris Whippet (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:South_Bank_Skate_Park_-_geograph.org.uk_-_3843135.jpg",
       },
       {
         slug: "baker-street",
@@ -191,6 +236,12 @@ export const filmWorks: FilmWork[] = [
         tips: "駅そのものが1863年開業の世界最古の地下鉄駅のひとつ。メトロポリタン線のホームは開業当時の姿を色濃く残しています。",
         website: "https://www.sherlock-holmes.co.uk/",
         mapQuery: "Sherlock Holmes Museum Baker Street London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/3/33/221B_Baker_Street%2C_London_-_Sherlock_Holmes_Museum.jpg",
+        imageSource: "commons",
+        imageCredit: "Jordan 1972 (Public Domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:221B_Baker_Street,_London_-_Sherlock_Holmes_Museum.jpg",
       },
     ],
   },
@@ -237,6 +288,12 @@ export const filmWorks: FilmWork[] = [
         tips: "グリニッジ・パークの丘を登れば旧王立天文台と本初子午線。同じ日にまとめて回れます。",
         website: "https://www.english-heritage.org.uk/visit/places/rangers-house-the-wernher-collection/",
         mapQuery: "Ranger's House Greenwich London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/0/09/EH1218679_The_Ranger%27s_House.JPG",
+        imageSource: "commons",
+        imageCredit: "Katie Chan (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:EH1218679_The_Ranger's_House.JPG",
       },
       {
         slug: "lancaster-house",
@@ -256,6 +313,12 @@ export const filmWorks: FilmWork[] = [
           "政府の迎賓施設のため通常は非公開です。毎年9月のオープン・ハウス・フェスティバルなど、限られた機会にのみ一般公開されることがあります。外観は Stable Yard 側の道路から見られます。",
         tips: "隣はセント・ジェームズ宮殿、目の前はグリーン・パーク。王室関連の建物が集中する一角です。",
         mapQuery: "Lancaster House St James's London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/c/c3/Lancaster_House_London.jpg",
+        imageSource: "commons",
+        imageCredit: "Ricardalovesmonuments (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Lancaster_House_London.jpg",
       },
       {
         slug: "hampton-court-palace",
@@ -275,6 +338,12 @@ export const filmWorks: FilmWork[] = [
         tips: "中心部からは離れますが、テムズ川沿いを走る電車が快適です。半日は見ておきたい規模。",
         website: "https://www.hrp.org.uk/hampton-court-palace/",
         mapQuery: "Hampton Court Palace",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/1/14/Hampton_Court_Palace_20120224.JPG",
+        imageSource: "commons",
+        imageCredit: "James Park-Watt (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Hampton_Court_Palace_20120224.JPG",
       },
       {
         slug: "syon-house",
@@ -293,6 +362,12 @@ export const filmWorks: FilmWork[] = [
         tips: "隣接するロンドン・ミュージアム・オブ・ウォーターアンドスチームなど、この一帯は産業遺産が集まっています。",
         website: "https://www.syonpark.co.uk/",
         mapQuery: "Syon House Brentford London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/4/4a/Syon_House_-_the_Great_Conservatory.JPG",
+        imageSource: "commons",
+        imageCredit: "John Chapman (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Syon_House_-_the_Great_Conservatory.JPG",
       },
       {
         slug: "old-royal-naval-college",
@@ -311,6 +386,12 @@ export const filmWorks: FilmWork[] = [
         tips: "テムズ川のリバーボートで中心部から向かうと、船から見上げる正面の構図がそのまま劇中の画になります。",
         website: "https://ornc.org/",
         mapQuery: "Old Royal Naval College Greenwich",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/3/39/Painted_Hall_at_Royal_Naval_College_in_Greenwich%2C_London%2C_England%2C_UK.jpg",
+        imageSource: "commons",
+        imageCredit: "Shawn M. Kent (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Painted_Hall_at_Royal_Naval_College_in_Greenwich,_London,_England,_UK.jpg",
       },
       {
         slug: "queens-house",
@@ -330,6 +411,12 @@ export const filmWorks: FilmWork[] = [
         tips: "旧王立海軍学校、国立海洋博物館、旧王立天文台と徒歩圏内にまとまっています。",
         website: "https://www.rmg.co.uk/queens-house",
         mapQuery: "Queen's House Greenwich London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/0/0c/Greenwich_Queens_House_from_north.jpg",
+        imageSource: "commons",
+        imageCredit: "Michael Coppins (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Greenwich_Queens_House_from_north.jpg",
       },
       {
         slug: "hackney-empire",
@@ -347,6 +434,11 @@ export const filmWorks: FilmWork[] = [
         tips: "周辺はロンドンでも独特の空気を持つエリア。ブロードウェイ・マーケット(土曜)と組み合わせると回りやすいです。",
         website: "https://hackneyempire.co.uk/",
         mapQuery: "Hackney Empire London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/2/23/Hackney_empire_1.jpg",
+        imageSource: "commons",
+        imageCredit: "Tarquin Binary(Public Domain)",
+        imageLink: "https://commons.wikimedia.org/wiki/File:Hackney_empire_1.jpg",
       },
     ],
   },
@@ -393,6 +485,12 @@ export const filmWorks: FilmWork[] = [
         tips: "公開日は夏季に集中します。日程が合わない場合は、庭園のみ公開の日やイベント日を狙う手もあります。",
         website: "https://www.highclerecastle.co.uk/",
         mapQuery: "Highclere Castle Newbury",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/5/55/Highclere_Castle_%28April_2011%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Richard Munckton (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Highclere_Castle_(April_2011).jpg",
       },
       {
         slug: "bampton",
@@ -417,6 +515,12 @@ export const filmWorks: FilmWork[] = [
           "村は自由に歩けます。教会は通常開いていますが、礼拝中は見学を控えてください。公共交通の本数が少ないため、レンタカーかツアー利用が現実的です。",
         tips: "同じコッツウォルズのバーフォードやバイブリーと組み合わせると、1日で回る価値のある行程になります。",
         mapQuery: "Bampton Oxfordshire",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/f/f2/Bampton_StMaryV_south2.jpg",
+        imageSource: "commons",
+        imageCredit: "Motacilla (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Bampton_StMaryV_south2.jpg",
       },
       {
         slug: "basildon-park",
@@ -435,6 +539,12 @@ export const filmWorks: FilmWork[] = [
         access: "ナショナル・トラストの有料公開施設。開館日は季節により異なります。",
         website: "https://www.nationaltrust.org.uk/visit/london-and-south-east/basildon-park",
         mapQuery: "Basildon Park Reading",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/9/95/Basildon_House_-_geograph.org.uk_-_4638362.jpg",
+        imageSource: "commons",
+        imageCredit: "Philip Halling (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Basildon_House_-_geograph.org.uk_-_4638362.jpg",
       },
       {
         slug: "lancaster-house-downton",
@@ -451,6 +561,12 @@ export const filmWorks: FilmWork[] = [
         access:
           "英国政府の迎賓施設のため通常は非公開。毎年9月のオープン・ハウス・フェスティバルなど、限られた機会にのみ公開されます。",
         mapQuery: "Lancaster House St James's London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/c/c3/Lancaster_House_London.jpg",
+        imageSource: "commons",
+        imageCredit: "Ricardalovesmonuments (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Lancaster_House_London.jpg",
       },
       {
         slug: "bridgewater-house",
@@ -468,6 +584,12 @@ export const filmWorks: FilmWork[] = [
         nearestStation: "Green Park 駅",
         access: "個人所有の建物で内部見学は不可。公道から外観のみ見られます。",
         mapQuery: "Bridgewater House Cleveland Row London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/a/a8/Bridgewater_House_London_%281%29.jpg",
+        imageSource: "commons",
+        imageCredit: "Ricardalovesmonuments (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Bridgewater_House_London_(1).jpg",
       },
       {
         slug: "middle-temple",
@@ -488,6 +610,12 @@ export const filmWorks: FilmWork[] = [
         tips: "隣接するテンプル教会は、円形の身廊を持つテンプル騎士団の12世紀の教会。合わせて訪ねる価値があります。",
         website: "https://www.middletemple.org.uk/",
         mapQuery: "Middle Temple Hall London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/3/35/Middle_Temple_Hall_Exterior%2C_London%2C_UK_-_Diliff.jpg",
+        imageSource: "commons",
+        imageCredit: "David Iliff (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Middle_Temple_Hall_Exterior,_London,_UK_-_Diliff.jpg",
       },
       {
         slug: "the-ritz",
@@ -506,6 +634,11 @@ export const filmWorks: FilmWork[] = [
         tips: "ブリッジウォーター・ハウス、ランカスター・ハウスとは徒歩数分。ダウントンの市内ロケ地はこの一帯に集中しています。",
         website: "https://www.theritzlondon.com/",
         mapQuery: "The Ritz London Piccadilly",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/f/fd/The_Ritz_London.jpg",
+        imageSource: "commons",
+        imageCredit: "Sheila1988 (CC BY-SA 4.0)",
+        imageLink: "https://commons.wikimedia.org/wiki/File:The_Ritz_London.jpg",
       },
     ],
   },

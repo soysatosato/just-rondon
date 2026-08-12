@@ -61,9 +61,26 @@ export default function FilmLocationsHubPage() {
       </header>
 
       <section className="grid gap-6 grid-cols-1 md:grid-cols-2 max-w-full">
-        {filmWorks.map((work) => (
+        {filmWorks.map((work) => {
+          const coverSpot = work.spots.find(
+            (spot) => spot.image && spot.imageSource !== "instagram",
+          );
+
+          return (
           <Link key={work.slug} href={filmWorkPath(work.slug)} className="block">
-            <Card className="w-full min-w-0 h-full border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+            <Card className="w-full min-w-0 h-full overflow-hidden border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+              {coverSpot?.image && (
+                <div className="relative aspect-[16/9] w-full">
+                  <img
+                    src={coverSpot.image}
+                    alt={work.title}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
+                  />
+                </div>
+              )}
               <CardHeader className="space-y-2 px-4 py-3">
                 <p className="text-xs font-medium tracking-wide text-sky-600 dark:text-sky-300">
                   {work.eyebrow} · {work.years}
@@ -102,7 +119,8 @@ export default function FilmLocationsHubPage() {
               </CardContent>
             </Card>
           </Link>
-        ))}
+          );
+        })}
 
         {/* ハリー・ポッターは先に単独の特集があるので、ここからは送るだけにする。 */}
         <Link href="/sightseeing/harry-potter" className="block">
