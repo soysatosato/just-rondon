@@ -584,8 +584,10 @@ export default async function Page() {
                 key={idx}
                 className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
               >
-                {/* getFreeAttractions() が返すのは Attraction。
-                    /museums/[slug] は Museum テーブルを引くので繋がらない。 */}
+                {/* getFreeAttractions() が返すのは Attraction なので、リンク先は
+                    /sightseeing/[slug]。同じ館の /museums 側のページへは、
+                    詳細ページに置いた CrossSectionLink から渡す
+                    （lib/museum-attraction-pairs.ts の対応表）。 */}
                 <Link href={`/sightseeing/${item.slug}`}>
                   <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
                     <div className="relative h-32 w-full sm:h-40">
