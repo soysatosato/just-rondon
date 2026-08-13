@@ -1,5 +1,7 @@
 export const revalidate = 60 * 60;
 
+import Link from "next/link";
+
 import { fetchBritishEnglishEntries } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
@@ -61,6 +63,25 @@ export default async function BritishEnglishHubPage() {
           </p>
         </div>
       </header>
+
+      <Link
+        href="/british-english/scenes"
+        className="group mb-12 block rounded-2xl border border-border bg-muted/40 p-5 transition-colors hover:bg-accent/50 sm:p-6"
+      >
+        <span className="inline-block rounded-full bg-red-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          Phrasebook
+        </span>
+        <h2 className="mt-3 text-lg font-bold tracking-tight sm:text-xl">
+          場面別フレーズ集 — パブ・店・交通の逆引き
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          「これを言いたい」から引ける実戦用のページ。注文・支払い・乗り換えで
+          詰まりがちな場面の言い方と、向こうから言われる表現をまとめました。
+        </p>
+        <span className="mt-3 inline-block text-xs font-semibold text-rose-600 group-hover:underline dark:text-rose-400">
+          場面別で引く →
+        </span>
+      </Link>
 
       <section className="mb-12">
         <div className="mb-5 flex items-baseline justify-between gap-4">
