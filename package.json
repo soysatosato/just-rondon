@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "postbuild": "next-sitemap",
+    "assign-attraction-areas": "tsx scripts/assign-attraction-areas.ts",
     "create-column": "tsx scripts/create-column.ts",
     "create-tweets": "tsx scripts/create-tweets.ts",
     "seed-brands": "tsx scripts/seed-brands.ts",

@@ -143,6 +143,16 @@ module.exports = {
       "/sightseeing/transport/travelcard",
       "/sightseeing/transport/own-bike",
       "/sightseeing/transport/car",
+      "/sightseeing/areas",
+      // エリアガイド。/sightseeing/areas をハブとする6本。
+      // 並びは components/sightseeing/areas/areas.ts の
+      // areaGuides と一致させること。
+      "/sightseeing/areas/westminster",
+      "/sightseeing/areas/soho",
+      "/sightseeing/areas/southbank",
+      "/sightseeing/areas/city",
+      "/sightseeing/areas/shoreditch",
+      "/sightseeing/areas/greenwich",
       "/sightseeing/harry-potter",
       // ロケ地巡り。作品ページはDBではなく
       // app/(with-ads)/sightseeing/film-locations/data.ts の filmWorks なので、

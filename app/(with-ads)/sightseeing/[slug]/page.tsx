@@ -19,7 +19,7 @@ import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import { Badge } from "@/components/ui/badge";
-import { Baby, Flame, Star, Tag, Ticket } from "lucide-react";
+import { Baby, Flame, MapPin, Star, Tag, Ticket } from "lucide-react";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
@@ -31,6 +31,10 @@ import {
 } from "@/components/sightseeing/jsonld";
 import AttractionFactBar from "@/components/sightseeing/AttractionFactBar";
 import AttractionVisitFlow from "@/components/sightseeing/AttractionVisitFlow";
+import {
+  areaGuidePath,
+  getAreaMeta,
+} from "@/components/sightseeing/areas/areas";
 import {
   visibleSections,
   isRedundantOverview,
@@ -197,6 +201,37 @@ function CategoryLink({ category }: { category: string }) {
   );
 }
 
+/**
+ * このスポットが属する街区へのリンク。
+ *
+ * area が null のスポット(郊外、ツアー商品など)では何も出さない。
+ * エリアガイドを持たない街区に飛ばすと行き止まりになるので、
+ * areas.ts に定義のある slug のときだけリンクする。
+ */
+function AreaLink({ area }: { area: string | null }) {
+  if (!area) return null;
+
+  const meta = getAreaMeta(area);
+  if (!meta) return null;
+
+  return (
+    <Link
+      href={areaGuidePath(meta.slug)}
+      className="inline-flex items-center gap-1 rounded-full border
+        px-3 py-1 text-xs
+        text-emerald-700 border-emerald-300
+        transition
+        hover:bg-emerald-50
+        dark:text-emerald-400 dark:border-emerald-800
+        dark:hover:bg-emerald-950/40
+      "
+    >
+      <MapPin className="h-3 w-3" />
+      {meta.label}を歩く
+    </Link>
+  );
+}
+
 export default async function AttractionDetail({
   params,
 }: {
@@ -302,6 +337,7 @@ export default async function AttractionDetail({
         <div className="flex flex-wrap items-center gap-4">
           <AttractionBadges attraction={attraction} />
           <CategoryLink category={attraction.category} />
+          <AreaLink area={attraction.area} />
         </div>
 
         {/* 訪問前に知りたいこと。埋まっている項目だけが出る。 */}

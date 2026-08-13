@@ -69,6 +69,7 @@ export const NAV_SECTIONS: NavSection[] = [
         heading: "観光スポット",
         links: [
           { href: "/sightseeing/must-see", label: "必見スポット" },
+          { href: "/sightseeing/areas", label: "エリア別ガイド（街区で歩く）" },
           { href: "/sightseeing/royal-london", label: "ロイヤル・ロンドン" },
           { href: "/sightseeing/all", label: "観光スポット一覧" },
         ],
