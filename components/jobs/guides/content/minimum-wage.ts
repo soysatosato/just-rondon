@@ -1,7 +1,18 @@
 import type { JobGuideArticle } from "../types";
+import {
+  JOBS_AS_OF,
+  JOBS_UPDATED_AT,
+  MINIMUM_WAGE_PENALTY,
+  WAGE_BANDS,
+  WAGE_RATES_EFFECTIVE_FROM,
+  gbp,
+  hourlyGbp,
+} from "@/lib/jobs/rates";
 
 const minimumWage: JobGuideArticle = {
   slug: "minimum-wage",
+  dataAsOf: JOBS_AS_OF,
+  updatedAt: JOBS_UPDATED_AT,
   title: "英国の最低賃金と給与明細の見方｜National Living Wageと不当な天引き",
   engTitle: "UK National Living Wage & How to Read Your Payslip",
   summary:
@@ -23,14 +34,14 @@ const minimumWage: JobGuideArticle = {
   sections: [
     {
       title: "法定最低賃金の種類とレート",
-      body: `英国の法定最低賃金は年齢とステータスによって区分されており、毎年4月1日に改定されます。2026年4月1日からの適用レートは以下のとおりです（Low Pay Commissionの勧告にもとづき政府が決定）。
+      body: `英国の法定最低賃金は年齢とステータスによって区分されており、毎年4月1日に改定されます。${WAGE_RATES_EFFECTIVE_FROM}からの適用レートは以下のとおりです（Low Pay Commissionの勧告にもとづき政府が決定）。
 
 | 区分 | 対象 | 時給 |
 | --- | --- | --- |
-| National Living Wage | 21歳以上 | £12.71 |
-| National Minimum Wage（18-20歳） | 18〜20歳 | £10.85 |
-| National Minimum Wage（16-17歳） | 16〜17歳 | £8.00 |
-| Apprentice Rate | 見習い（Apprenticeship）中の労働者 | £8.00 |
+${WAGE_BANDS.map(
+  (band) =>
+    `| ${band.name} | ${band.appliesTo} | ${hourlyGbp(band.hourlyRate)} |`,
+).join("\n")}
 
 **ポイント**
 
@@ -84,7 +95,7 @@ const minimumWage: JobGuideArticle = {
 3. **HMRCに通報する**：最低賃金の執行はHMRC（歳入関税庁）が担当しています。ACASのPay and Work Rights Helplineを通じて、匿名での通報が可能です。雇用主に知られることを心配する必要はありません。
 4. **未払い賃金として請求する**：会社が任意に是正しない場合、Employment Tribunalへの申立て（unlawful deduction from wages、または breach of contract）が選択肢になります。手続きの流れは[サービスチャージ未払いで審判所に申立てた記録](/jobs/service-charges/case-story)で、実際の申立て手順を公開しています。
 
-HMRCが最低賃金違反を認定した場合、雇用主は未払い分の即時支払いに加え、最大で未払い額の200%（1人あたり上限£20,000）のペナルティを科される可能性があります。`,
+HMRCが最低賃金違反を認定した場合、雇用主は未払い分の即時支払いに加え、最大で未払い額の${MINIMUM_WAGE_PENALTY.percentOfArrears}%（1人あたり上限${gbp(MINIMUM_WAGE_PENALTY.capPerWorker)}）のペナルティを科される可能性があります。`,
     },
     {
       title: "参考リンク",
@@ -92,6 +103,20 @@ HMRCが最低賃金違反を認定した場合、雇用主は未払い分の即�
 - [gov.uk: Pay and work rights (Acas経由の通報窓口)](https://www.gov.uk/pay-and-work-rights)
 - [gov.uk: National Minimum Wage calculator for workers](https://www.gov.uk/am-i-getting-minimum-wage)
 - [Acas: National Minimum Wage](https://www.acas.org.uk/national-minimum-wage)`,
+    },
+  ],
+  relatedLinks: [
+    {
+      href: "/money/national-insurance-number",
+      label: "National Insurance番号の取り方｜給与から引かれる前に",
+    },
+    {
+      href: "/money/opening-an-account",
+      label: "英国の銀行口座開設｜給与の振込先を用意する",
+    },
+    {
+      href: "/money/choosing-a-bank",
+      label: "銀行の選び方｜高街銀行とネット銀行の違い",
     },
   ],
 };

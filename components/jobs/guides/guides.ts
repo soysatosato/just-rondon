@@ -99,6 +99,7 @@ export function articleJsonLd(article: JobGuideArticle) {
     description: article.description,
     inLanguage: "ja",
     mainEntityOfPage: `${SITE_URL}${guidePath(article.slug)}`,
+    dateModified: article.updatedAt,
     publisher: {
       "@type": "Organization",
       name: "ジャスト・ロンドン",

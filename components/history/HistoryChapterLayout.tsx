@@ -14,6 +14,7 @@ import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
 import ChapterNav from "./ChapterNav";
 import {
+  HISTORY_AS_OF,
   HISTORY_BASE,
   HISTORY_SECTION_NAME,
   chapterArticleJsonLd,
@@ -259,7 +260,7 @@ export default function HistoryChapterLayout({
       )}
 
       {chapter.sources && chapter.sources.length > 0 && (
-        <GuideSources sources={chapter.sources} dataAsOf="2026年8月" />
+        <GuideSources sources={chapter.sources} dataAsOf={HISTORY_AS_OF} />
       )}
 
       <ChapterNav slug={chapter.slug} />

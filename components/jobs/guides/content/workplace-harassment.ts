@@ -1,7 +1,10 @@
 import type { JobGuideArticle } from "../types";
+import { JOBS_AS_OF, JOBS_UPDATED_AT } from "@/lib/jobs/rates";
 
 const workplaceHarassment: JobGuideArticle = {
   slug: "workplace-harassment",
+  dataAsOf: JOBS_AS_OF,
+  updatedAt: JOBS_UPDATED_AT,
   title: "職場のハラスメント・トラブルの相談先｜Equality Act 2010とAcasの使い方",
   engTitle: "Workplace Harassment in the UK: Your Rights and Where to Get Help",
   summary:
@@ -82,6 +85,20 @@ const workplaceHarassment: JobGuideArticle = {
 - [Acas: Sexual harassment at work – new employer duty](https://www.acas.org.uk/sexual-harassment)
 - [EHRC: Sexual harassment and harassment at work – technical guidance](https://www.equalityhumanrights.com/guidance/sexual-harassment-and-harassment-work-technical-guidance)
 - [gov.uk: Make a claim to an employment tribunal](https://www.gov.uk/employment-tribunals)`,
+    },
+  ],
+  relatedLinks: [
+    {
+      href: "/health/gp-registration",
+      label: "GP登録｜心身の不調で受診したくなったとき",
+    },
+    {
+      href: "/health/when-you-are-ill",
+      label: "体調を崩したとき｜NHSのかかり方とsick note",
+    },
+    {
+      href: "/visa/after-arrival",
+      label: "入国後の手続き｜滞在資格と就労状況の確認",
     },
   ],
 };

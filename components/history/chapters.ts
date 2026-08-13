@@ -11,6 +11,14 @@ export const HISTORY_SECTION_NAME = "イギリスの歴史";
 export const HISTORY_UPDATED_AT = "2026-08-12";
 
 /**
+ * 出典の確認時点。GuideSources の但し書きに出る。
+ *
+ * 章冒頭に GuideFreshness は出さない(1066年の出来事に鮮度バッジは無意味)が、
+ * 「どの時点の資料を見て書いたか」は出典欄で示す必要がある。
+ */
+export const HISTORY_AS_OF = "2026年8月";
+
+/**
  * 時代区分。ハブでの束ね方。
  *
  * 王朝名ではなく「この島に何が起きたか」で切っている。

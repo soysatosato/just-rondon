@@ -5,6 +5,7 @@ import { AD_SLOTS } from "@/lib/adsense";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
+import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideDisclaimer from "./GuideDisclaimer";
 import {
   JOBS_BASE,
@@ -15,8 +16,29 @@ import {
 } from "./guides";
 import type { JobGuideArticle } from "./types";
 
+/**
+ * どの労働ガイドからも辿れるべき /jobs 配下の子ページ。
+ * 記事側の relatedLinks(区分をまたぐ導線)より後ろに並べる。
+ */
+const JOBS_CHILD_PAGES = [
+  {
+    href: "/jobs/service-charges",
+    label: "英国サービスチャージ完全ガイド｜Tipping Act 2023と従業員の権利",
+  },
+  {
+    href: "/jobs/service-charges/case-story",
+    label: "サービスチャージ未払いで審判所に申立てた記録（実体験）",
+  },
+];
+
 export default function GuideLayout({ article }: { article: JobGuideArticle }) {
   const relatedGuides = guides.filter((g) => g.slug !== article.slug);
+  const relatedPages = [
+    ...(article.relatedLinks ?? []),
+    ...JOBS_CHILD_PAGES.filter(
+      (p) => !article.relatedLinks?.some((l) => l.href === p.href),
+    ),
+  ];
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
@@ -41,6 +63,10 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
             {article.summary}
           </p>
         )}
+        <GuideFreshness
+          dataAsOf={article.dataAsOf}
+          updatedAt={article.updatedAt}
+        />
       </header>
 
       <Separator className="my-6" />
@@ -99,22 +125,16 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
-          <li>
-            <Link
-              href="/jobs/service-charges"
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
-            >
-              英国サービスチャージ完全ガイド｜Tipping Act 2023と従業員の権利
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/jobs/service-charges/case-story"
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
-            >
-              サービスチャージ未払いで審判所に申立てた記録（実体験）
-            </Link>
-          </li>
+          {relatedPages.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
 

@@ -1,7 +1,24 @@
 import type { JobGuideArticle } from "../types";
+import {
+  JOBS_AS_OF,
+  JOBS_UPDATED_AT,
+  PENSION,
+  gbp,
+  pensionContribution,
+} from "@/lib/jobs/rates";
+
+/**
+ * 拠出額の計算例で使う年収。キリのよい額なら何でもよいが、
+ * qualifying earnings の上限を超えない額にすること(超えると
+ * 「年収 − 下限」という本文の説明と合わなくなる)。
+ */
+const PENSION_EXAMPLE_SALARY = 20000;
+const pensionExample = pensionContribution(PENSION_EXAMPLE_SALARY);
 
 const workplacePension: JobGuideArticle = {
   slug: "workplace-pension",
+  dataAsOf: JOBS_AS_OF,
+  updatedAt: JOBS_UPDATED_AT,
   title:
     "英国の職場年金（Nest）の仕組みと脱退方法｜ワーホリで知らずに天引きされていた話",
   engTitle: "UK Workplace Pension (Nest) & How to Opt Out",
@@ -36,14 +53,14 @@ const workplacePension: JobGuideArticle = {
 
 | 条件 | 内容 |
 | --- | --- |
-| 年齢 | 22歳以上、State Pension ageまで |
-| 年収 | £10,000以上 |
+| 年齢 | ${PENSION.autoEnrolmentMinAge}歳以上、State Pension ageまで |
+| 年収 | ${gbp(PENSION.autoEnrolmentEarnings)}以上 |
 | 就労地 | 通常英国内で働いている |
 | 区分 | 「worker」に該当する |
 
 **ワーホリ（Youth Mobility Scheme）や学生ビザでも、この条件を満たせば対象です。** ビザの種類や滞在予定期間は関係ありません。「どうせ2年で帰国するから」という事情は、制度上いっさい考慮されません。
 
-年齢が22歳未満、または年収が£10,000未満の場合は自動加入の対象外ですが、それでも一定の条件下では自分から加入を申し出る権利があります（逆に言えば、自動では入れられません）。`,
+年齢が${PENSION.autoEnrolmentMinAge}歳未満、または年収が${gbp(PENSION.autoEnrolmentEarnings)}未満の場合は自動加入の対象外ですが、それでも一定の条件下では自分から加入を申し出る権利があります（逆に言えば、自動では入れられません）。`,
     },
     {
       title: "Nestとは何か：勝手に決められる年金の受け皿",
@@ -71,11 +88,11 @@ Nest以外にも、Smart Pension、The People's Pension、NOW: Pensionsなどが
 
 | 拠出者 | 最低率 |
 | --- | --- |
-| 従業員（あなた） | 5% |
-| 雇用主 | 3% |
-| **合計** | **8%** |
+| 従業員（あなた） | ${PENSION.employeePercent}% |
+| 雇用主 | ${PENSION.employerPercent}% |
+| **合計** | **${PENSION.totalPercent}%** |
 
-ただしこの%は、給料の全額にかかるわけではありません。**qualifying earnings（対象所得）と呼ばれる、年収£6,240超〜£50,270までの部分**にのみかかります。たとえば年収£20,000なら、対象となるのは £20,000 − £6,240 = £13,760 の部分で、あなたの負担は年間その5%＝約£688、月あたり£57前後という計算になります。
+ただしこの%は、給料の全額にかかるわけではありません。**qualifying earnings（対象所得）と呼ばれる、年収${gbp(PENSION.qualifyingEarningsLower)}超〜${gbp(PENSION.qualifyingEarningsUpper)}までの部分**にのみかかります。たとえば年収${gbp(PENSION_EXAMPLE_SALARY)}なら、対象となるのは ${gbp(PENSION_EXAMPLE_SALARY)} − ${gbp(PENSION.qualifyingEarningsLower)} = ${gbp(pensionExample.qualifying)} の部分で、あなたの負担は年間その${PENSION.employeePercent}%＝約${gbp(Math.round(pensionExample.yearly))}、月あたり${gbp(Math.round(pensionExample.monthly))}前後という計算になります。
 
 Payslipに \`ER Pension\` や \`Employer Pension\` という項目があれば、それは雇用主が出している分です。**これはあなたの給料から引かれているお金ではなく、雇用主が上乗せで払っているお金**です。脱退すると、この上乗せ分ももらえなくなります。
 
@@ -157,7 +174,7 @@ Nestからは加入時に、**脱退期間の正確な開始日と終了日を�
 
 **「少額だから諦める」の前に**
 
-金額が£10,000以下の場合、**small potルール**という制度により、55歳（2028年4月以降は57歳）到達時に一時金としてまとめて受け取れる可能性があります。ワーホリ期間中の拠出額なら、まず確実にこの範囲です。つまり「消えた」わけではなく、「受け取りが数十年後になった」というのが正確な理解です。
+金額が${gbp(PENSION.smallPotLimit)}以下の場合、**small potルール**という制度により、55歳（2028年4月以降は57歳）到達時に一時金としてまとめて受け取れる可能性があります。ワーホリ期間中の拠出額なら、まず確実にこの範囲です。つまり「消えた」わけではなく、「受け取りが数十年後になった」というのが正確な理解です。
 
 **やってはいけないこと**
 
@@ -220,6 +237,20 @@ Nestはオンラインで完結する制度なので、**日本に帰国して�
 - [Nest: What happens to my pot if I'm moving abroad?](https://www.nestpensions.org.uk/schemeweb/memberhelpcentre/changes-in-circumstances/moving-abroad.html)
 - [The Pensions Regulator: Automatic re-enrolment](https://www.thepensionsregulator.gov.uk/en/document-library/automatic-enrolment-detailed-guidance/11-automatic-re-enrolment-putting-workers-back-into-pension-scheme-membership)
 - [MoneyHelper: Automatic enrolment](https://www.moneyhelper.org.uk/en/pensions-and-retirement/auto-enrolment)`,
+    },
+  ],
+  relatedLinks: [
+    {
+      href: "/money/national-insurance-number",
+      label: "National Insurance番号｜年金記録が紐づく番号",
+    },
+    {
+      href: "/money/sending-money-from-japan",
+      label: "日本への送金・日本からの送金｜帰国時に年金をどうするか",
+    },
+    {
+      href: "/visa/after-arrival",
+      label: "入国後の手続き｜就労開始までに済ませること",
     },
   ],
 };

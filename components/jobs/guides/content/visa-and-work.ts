@@ -1,7 +1,15 @@
 import type { JobGuideArticle } from "../types";
+import { JOBS_AS_OF, JOBS_UPDATED_AT } from "@/lib/jobs/rates";
+import {
+  SPONSOR_COSTS,
+  VISA_THRESHOLDS,
+  gbp as visaGbp,
+} from "@/lib/visa/rates";
 
 const visaAndWork: JobGuideArticle = {
   slug: "visa-and-work",
+  dataAsOf: JOBS_AS_OF,
+  updatedAt: JOBS_UPDATED_AT,
   title: "ビザと就労の接点｜学生ビザ・Graduateビザで働ける範囲とSkilled Workerへの切り替え",
   engTitle: "UK Visas and the Right to Work: Student, Graduate & Skilled Worker",
   summary:
@@ -55,17 +63,17 @@ const visaAndWork: JobGuideArticle = {
 
 - 雇用主がHome Officeのスポンサーライセンスを保有し、**Certificate of Sponsorship（CoS）**を発行していること
 - 職種がSkilled Worker visaの対象職種リストに含まれていること
-- 給与が、**一般的な最低給与要件（£41,700/年）と、職種ごとの「going rate（相場賃金）」のいずれか高い方**を満たしていること
+- 給与が、**一般的な最低給与要件（${visaGbp(VISA_THRESHOLDS.skilledWorker.general)}/年）と、職種ごとの「going rate（相場賃金）」のいずれか高い方**を満たしていること
 
 **給与要件の例外・割引**
 
 | ケース | 目安の最低給与 |
 | --- | --- |
-| 一般的な最低給与要件 | £41,700/年 |
-| New entrant（就業初期のキャリア）割引 | £33,400/年 |
-| Shortage occupation（人材不足職種） | going rateから20%割引 |
-| ヘルスケア関連職 | 職種により£25,000/年から |
-| 関連分野の博士号（PhD）を持つ場合 | £37,500/年から |
+| 一般的な最低給与要件 | ${visaGbp(VISA_THRESHOLDS.skilledWorker.general)}/年 |
+| New entrant（就業初期のキャリア）割引 | ${visaGbp(VISA_THRESHOLDS.skilledWorker.discounted)}/年 |
+| Shortage occupation（人材不足職種） | going rateから${VISA_THRESHOLDS.skilledWorker.shortageDiscountPercent}%割引 |
+| ヘルスケア関連職 | 職種により${visaGbp(VISA_THRESHOLDS.skilledWorker.healthcareFloor)}/年から |
+| 関連分野の博士号（PhD）を持つ場合 | ${visaGbp(VISA_THRESHOLDS.skilledWorker.phdFloor)}/年から |
 
 上記はいずれも制度改定の対象になりやすい数値です。切り替えを検討する際は、必ず[gov.uk: Skilled Worker visa](https://www.gov.uk/skilled-worker-visa)で最新の閾値と対象職種を確認してください。
 
@@ -80,7 +88,7 @@ const visaAndWork: JobGuideArticle = {
       body: `就労時間・就労内容の制限に違反した場合、以下のようなリスクがあります。
 
 - **本人**：ビザの取消し（curtailment）、退去、将来の英国ビザ申請における拒否リスクの上昇
-- **雇用主**：不法就労者を雇用したとして、**1人あたり最大£60,000の民事制裁金**、スポンサーライセンスの取消し、悪質な場合は刑事責任
+- **雇用主**：不法就労者を雇用したとして、**1人あたり最大${visaGbp(SPONSOR_COSTS.illegalWorkingPenaltyPerWorker)}の民事制裁金**、スポンサーライセンスの取消し、悪質な場合は刑事責任
 
 雇用主には、雇用開始前に労働者の就労資格（right to work）を確認する法的義務があります。オンラインのright to workチェック（シェアコード発行）を求められた場合は、正規の手続きとして協力しましょう。逆に、**この確認を一切求めずに現金払いのみで働かせようとする求人は、リスクが高いサインの一つ**です。`,
     },
@@ -90,6 +98,24 @@ const visaAndWork: JobGuideArticle = {
 - [gov.uk: Graduate visa](https://www.gov.uk/graduate-visa)
 - [gov.uk: Skilled Worker visa](https://www.gov.uk/skilled-worker-visa)
 - [gov.uk: Prove your right to work to an employer](https://www.gov.uk/prove-right-to-work)`,
+    },
+  ],
+  relatedLinks: [
+    {
+      href: "/visa/student",
+      label: "学生ビザ｜就労時間の上限と学期中・休暇中の扱い",
+    },
+    {
+      href: "/visa/skilled-worker",
+      label: "Skilled Workerビザ｜スポンサー付き就労への切り替え",
+    },
+    {
+      href: "/visa/youth-mobility-scheme",
+      label: "Youth Mobility Scheme｜2年間ほぼ自由に働けるビザ",
+    },
+    {
+      href: "/visa/after-arrival",
+      label: "入国後の手続き｜BRP・eVisa・Right to Workの確認",
     },
   ],
 };

@@ -1,7 +1,10 @@
 import type { JobGuideArticle } from "../types";
+import { JOBS_AS_OF, JOBS_UPDATED_AT } from "@/lib/jobs/rates";
 
 const employmentContract: JobGuideArticle = {
   slug: "employment-contract",
+  dataAsOf: JOBS_AS_OF,
+  updatedAt: JOBS_UPDATED_AT,
   title: "英国の労働契約・就業規則の基本｜written statement・試用期間・解雇と退職",
   engTitle: "UK Employment Contracts: Written Statements, Probation & Dismissal",
   summary:
@@ -93,6 +96,20 @@ const employmentContract: JobGuideArticle = {
 - [gov.uk: Statement of employment particulars](https://www.gov.uk/employment-contracts-and-conditions/written-statement-of-employment-particulars)
 - [gov.uk: Redundancy pay calculator](https://www.gov.uk/calculate-your-redundancy-pay)
 - [Acas: Notice periods](https://www.acas.org.uk/notice-periods)`,
+    },
+  ],
+  relatedLinks: [
+    {
+      href: "/housing/referencing",
+      label: "入居審査（referencing）｜雇用契約書と給与明細が要る場面",
+    },
+    {
+      href: "/money/passing-the-checks",
+      label: "銀行の本人確認を通す｜住所証明と在職証明の集め方",
+    },
+    {
+      href: "/visa/after-arrival",
+      label: "入国後の手続き｜Right to Workの提示",
     },
   ],
 };
