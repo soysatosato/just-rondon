@@ -46,7 +46,7 @@ const employmentContract: JobGuideArticle = {
 - 通知期間（notice period）
 - 苦情申し立て（grievance）・懲戒（disciplinary）手続きの案内先
 
-書面が交付されないこと自体を理由に解雇された場合、勤続期間に関わらず**自動的に不当解雇（automatically unfair dismissal）**とみなされる可能性があります。`,
+書面が交付されないこと自体を理由に解雇された場合、勤続期間に関わらず**自動的に不当解雇（automatically unfair dismissal）** とみなされる可能性があります。`,
     },
     {
       title: "試用期間（probation period）の注意点",

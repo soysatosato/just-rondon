@@ -96,7 +96,7 @@ const travelcard: TransportGuideArticle = {
       callout: {
         tone: "warn",
         title: "Oyster を使っているなら話が変わります",
-        body: "**週の上限額はタッチ決済にしか適用されません。**Oyster カードのペイ・アズ・ユー・ゴーで毎日乗ると、上限なく積み上がっていきます。Oyster を使い続ける理由（Railcard 割引、学生割引など）があるなら、7 Day Travelcard を Oyster に載せる意味があります。",
+        body: "**週の上限額はタッチ決済にしか適用されません**。Oyster カードのペイ・アズ・ユー・ゴーで毎日乗ると、上限なく積み上がっていきます。Oyster を使い続ける理由（Railcard 割引、学生割引など）があるなら、7 Day Travelcard を Oyster に載せる意味があります。",
       },
     },
     {
@@ -127,7 +127,7 @@ Zone 1–2 の1日上限は ${gbp(CAPS.zone1to2.daily)}、週の上限は ${gbp(
 | 週3日 | ${gbp(hybridWeekly(3))} | ${gbp(hybridWeekly(3) * WORKING_WEEKS)} | 都度払いのほうが ${gbp(TRAVELCARD.zone1to2.annual - hybridWeekly(3) * WORKING_WEEKS)} 安い |
 | 週2日 | ${gbp(hybridWeekly(2))} | ${gbp(hybridWeekly(2) * WORKING_WEEKS)} | 都度払いのほうが ${gbp(TRAVELCARD.zone1to2.annual - hybridWeekly(2) * WORKING_WEEKS)} 安い |
 
-**週4日以下の出社なら、年間 Travelcard は損です。**ハイブリッド勤務が定着した現在、これに当てはまる人はかなり多いはずです。
+**週4日以下の出社なら、年間 Travelcard は損です**。ハイブリッド勤務が定着した現在、これに当てはまる人はかなり多いはずです。
 
 もちろん、週末も頻繁に地下鉄で出かけるなら話は変わります。**Travelcard は平日も週末も無制限**なので、休日の外出が多い人は週4日出社でも元が取れることがあります。自分の実際の移動を1ヶ月分振り返って判断してください。`,
       tips: [
@@ -231,7 +231,7 @@ Zone 1–2 のオフピーク1日上限 ${gbp(CAPS.zone1to2.daily)} が、約 £
 | 7 Day Bus & Tram Pass | ${gbp(BUS.pass7Day)}（週上限と同額） |
 | **月額 Bus & Tram Pass** | **${gbp(BUS.passMonthly)}** |
 
-7日券はバスの週上限（${gbp(BUS.weeklyCap)}）と同額なので、これも買う意味がありません。**効くのは月額です。**${gbp(BUS.passMonthly)} は、週上限で1ヶ月払うより約 ${gbp(Math.round((BUS.weeklyCap * 4.33 - BUS.passMonthly) * 100) / 100)} 安くなります。
+7日券はバスの週上限（${gbp(BUS.weeklyCap)}）と同額なので、これも買う意味がありません。**効くのは月額です**。${gbp(BUS.passMonthly)} は、週上限で1ヶ月払うより約 ${gbp(Math.round((BUS.weeklyCap * 4.33 - BUS.passMonthly) * 100) / 100)} 安くなります。
 
 さらに、バス通勤の最大の利点は**ゾーンが関係ない**ことです。Zone 5 から Zone 1 まで通っても運賃は同じ。地下鉄で Zone 1–5 の年間 Travelcard（${gbp(TRAVELCARD.zone1to5.annual)}）を買うのと比べると、桁が違います。
 
@@ -249,7 +249,7 @@ Zone 1–2 のオフピーク1日上限 ${gbp(CAPS.zone1to2.daily)} が、約 £
 
 ロンドンの教育機関にフルタイムで在籍している18歳以上の学生は、**Travelcard と Bus & Tram Pass が30%引き**になります。
 
-Zone 1–2 の年間 Travelcard が ${gbp(TRAVELCARD.zone1to2.annual)} → 約 ${gbp(Math.round(TRAVELCARD.zone1to2.annual * 0.7))} です。**在学中は必ず申請してください。**申請は TfL のサイトから、学校の認証を経て行います。発行に数週間かかるので、入学が決まったら早めに動いてください。
+Zone 1–2 の年間 Travelcard が ${gbp(TRAVELCARD.zone1to2.annual)} → 約 ${gbp(Math.round(TRAVELCARD.zone1to2.annual * 0.7))} です。**在学中は必ず申請してください**。申請は TfL のサイトから、学校の認証を経て行います。発行に数週間かかるので、入学が決まったら早めに動いてください。
 
 なお、この割引は Travelcard とパスにかかるもので、**都度払い（PAYG）には効きません**。学生は「定期を買ったほうが得」という、一般の在住者とは逆の結論になります。
 
@@ -297,7 +297,7 @@ Zip Oyster はロンドンの住所と写真が必要で、発行に数週間か
 
 ### まずやること
 
-TfL のサイトで自分のカードを登録し、**過去1〜2ヶ月の実際の支払額を見てください。**見積もりではなく実績です。これを年換算した金額と、年間 Travelcard の ${gbp(TRAVELCARD.zone1to2.annual)}（該当ゾーン）を比べれば、答えは自動的に出ます。
+TfL のサイトで自分のカードを登録し、**過去1〜2ヶ月の実際の支払額を見てください**。見積もりではなく実績です。これを年換算した金額と、年間 Travelcard の ${gbp(TRAVELCARD.zone1to2.annual)}（該当ゾーン）を比べれば、答えは自動的に出ます。
 
 住む場所を検討している段階なら、家賃と定期代を合わせた総額で比較する必要があります。[エリアの選び方と、家賃と交通費の総額](/housing/where-to-live)で扱っています。`,
       callout: {
@@ -310,7 +310,7 @@ TfL のサイトで自分のカードを登録し、**過去1〜2ヶ月の実際
   faq: [
     {
       question: "7 Day Travelcard は買うべきですか？",
-      answer: `**タッチ決済を使っているなら、買う必要はありません。**週の上限額が 7 Day Travelcard とまったく同額に設定されているうえ、上限額なら実際に乗った分しか請求されません。Oyster カードを使っている場合（Oyster の PAYG には週上限が効きません）や、学生割引を効かせたい場合だけ、7日券に意味があります。`,
+      answer: `**タッチ決済を使っているなら、買う必要はありません**。週の上限額が 7 Day Travelcard とまったく同額に設定されているうえ、上限額なら実際に乗った分しか請求されません。Oyster カードを使っている場合（Oyster の PAYG には週上限が効きません）や、学生割引を効かせたい場合だけ、7日券に意味があります。`,
     },
     {
       question: "年間 Travelcard は得ですか？",
@@ -328,11 +328,11 @@ TfL のサイトで自分のカードを登録し、**過去1〜2ヶ月の実際
     {
       question: "会社が定期代を出してくれますか？",
       answer:
-        "**日本のような「通勤手当」の慣行は英国にはありません。**交通費は原則として自己負担です。代わりに多くの企業が **season ticket loan**（定期券購入のための無利子の給与前貸し）を用意しており、会社が年間定期を立て替えて毎月の給与から天引きされます。人事に確認してください。ただし年度途中で退職すると残額の一括返済を求められます。",
+        "**日本のような「通勤手当」の慣行は英国にはありません**。交通費は原則として自己負担です。代わりに多くの企業が **season ticket loan**（定期券購入のための無利子の給与前貸し）を用意しており、会社が年間定期を立て替えて毎月の給与から天引きされます。人事に確認してください。ただし年度途中で退職すると残額の一括返済を求められます。",
     },
     {
       question: "Zone 1 を通らない通勤なら安くなりますか？",
-      answer: `**大幅に安くなります。**たとえば Zone 1–4 の年間 Travelcard は ${gbp(TRAVELCARD.zone1to4.annual)} ですが、Zone 2–4 なら ${gbp(TRAVELCARD_OUTER.zone2to4.annual)} と、${gbp(TRAVELCARD.zone1to4.annual - TRAVELCARD_OUTER.zone2to4.annual)} 違います。職場も自宅も Zone 1 の外にあるなら、必ず Zone 1 を含まない Travelcard の価格を確認してください。`,
+      answer: `**大幅に安くなります**。たとえば Zone 1–4 の年間 Travelcard は ${gbp(TRAVELCARD.zone1to4.annual)} ですが、Zone 2–4 なら ${gbp(TRAVELCARD_OUTER.zone2to4.annual)} と、${gbp(TRAVELCARD.zone1to4.annual - TRAVELCARD_OUTER.zone2to4.annual)} 違います。職場も自宅も Zone 1 の外にあるなら、必ず Zone 1 を含まない Travelcard の価格を確認してください。`,
     },
   ],
   sources: [

@@ -41,7 +41,7 @@ const workplaceHarassment: JobGuideArticle = {
     },
     {
       title: "2024年10月〜：雇用主のセクハラ防止義務",
-      body: `2024年10月26日、**Worker Protection (Amendment of Equality Act 2010) Act 2023**が施行され、雇用主には**セクシュアルハラスメントを防止するための「合理的な措置」を積極的に取る義務（positive duty）**が新たに課されました。
+      body: `2024年10月26日、**Worker Protection (Amendment of Equality Act 2010) Act 2023**が施行され、雇用主には**セクシュアルハラスメントを防止するための「合理的な措置」を積極的に取る義務（positive duty）** が新たに課されました。
 
 これは、実際にハラスメントの申し立てが起きてから対応する「事後対応型」から、**申し立てがなくても事前にリスクを評価し、予防策を講じる「予防型」への転換**を意味します。具体的には、ハラスメント防止ポリシーの整備、研修の実施、相談窓口の設置などが「合理的な措置」の例として挙げられています。
 
@@ -51,7 +51,7 @@ const workplaceHarassment: JobGuideArticle = {
     },
     {
       title: "社内での申し立て（grievance）の進め方",
-      body: `多くの場合、いきなりEmployment Tribunalに申し立てるのではなく、まず社内の**grievance procedure（苦情申し立て手続き）**を利用することが推奨されます。
+      body: `多くの場合、いきなりEmployment Tribunalに申し立てるのではなく、まず社内の**grievance procedure（苦情申し立て手続き）** を利用することが推奨されます。
 
 1. **記録を残す**：日時、場所、発言内容、居合わせた人をできるだけ具体的にメモしておく。可能であればメールやメッセージなど、時系列がわかる証拠を保存する。
 2. **社内手続きを確認する**：written statementや従業員ハンドブックに記載されているgrievance procedureの手順（誰に、どの形式で申し立てるか）を確認する。

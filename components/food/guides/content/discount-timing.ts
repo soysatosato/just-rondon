@@ -90,7 +90,7 @@ const discountTiming: FoodGuideArticle = {
 | ${CLOSING_DISCOUNTS.supermarketFirstRound} | 25〜50%引き。品揃えは広い |
 | ${CLOSING_DISCOUNTS.supermarketFinalRound} | **最も安い**。ただし残り物のみ |
 
-1回目は選べる量が多く、2回目は安いが選べません。**「安さ優先なら閉店前、品揃え優先なら夕方」**という切り分けになります。
+1回目は選べる量が多く、2回目は安いが選べません。**「安さ優先なら閉店前、品揃え優先なら夕方」** という切り分けになります。
 
 ### 店ごとの時刻を掴む
 

@@ -61,7 +61,7 @@ const visaAndWork: JobGuideArticle = {
 
 **主な要件（2026年時点の目安）**
 
-- 雇用主がHome Officeのスポンサーライセンスを保有し、**Certificate of Sponsorship（CoS）**を発行していること
+- 雇用主がHome Officeのスポンサーライセンスを保有し、**Certificate of Sponsorship（CoS）** を発行していること
 - 職種がSkilled Worker visaの対象職種リストに含まれていること
 - 給与が、**一般的な最低給与要件（${visaGbp(VISA_THRESHOLDS.skilledWorker.general)}/年）と、職種ごとの「going rate（相場賃金）」のいずれか高い方**を満たしていること
 

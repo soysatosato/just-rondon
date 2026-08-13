@@ -13,7 +13,7 @@ const longStay: FoodGuideArticle = {
   title: "長期滞在者の食費の裏技｜賄い・水・朝食・学生割引",
   engTitle: "Cutting Food Costs on a Long Stay in London",
   audience: "数ヶ月以上ロンドンに滞在する人。ワーホリ・留学生",
-  summary: `飲食店で働くと**賄い（staff meal）**が出ることが多く、勤務日の食事が1食まるごと不要になります。加えて、水を買わない・朝食を家で済ませるという地味な習慣が、月単位では最も大きく効きます。ボトル水を1日1本買うだけで月${gbp(
+  summary: `飲食店で働くと**賄い（staff meal）** が出ることが多く、勤務日の食事が1食まるごと不要になります。加えて、水を買わない・朝食を家で済ませるという地味な習慣が、月単位では最も大きく効きます。ボトル水を1日1本買うだけで月${gbp(
     WATER_SAVING.perMonth30Days
   )}前後の出費になります。`,
   description:
