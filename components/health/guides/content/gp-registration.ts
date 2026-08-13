@@ -248,6 +248,8 @@ GP の予約が数日先でも、緊急時はそちらを待つ必要はあり�
     { href: "/health/ihs-and-entitlement", label: "IHS と、自分がどこまで無料か" },
     { href: "/health/prescription-costs", label: "処方箋料を下げる（PPC の損益分岐）" },
     { href: "/visa", label: "ビザガイド" },
+    { href: "/housing/where-to-live", label: "住むエリアの選び方｜登録できるGPは住所で決まる" },
+    { href: "/sightseeing/travel-tips", label: "旅行者としてのNHS｜短期滞在で体調を崩したら" },
   ],
 };
 

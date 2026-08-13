@@ -231,7 +231,11 @@ const travelTips: TravelGuideArticle = {
 
 ### 常用薬
 
-処方薬を持ち込む場合、**英文の処方箋または薬剤情報**があると入国時に説明しやすくなります。念のため、機内持ち込み手荷物に入れておいてください。`,
+処方薬を持ち込む場合、**英文の処方箋または薬剤情報**があると入国時に説明しやすくなります。念のため、機内持ち込み手荷物に入れておいてください。
+
+### 6ヶ月以上滞在する場合
+
+ここが変わります。学生ビザや就労ビザで**6ヶ月を超える滞在**をする人は、ビザ申請時に **IHS（医療付加金）**を払っており、その対価として NHS を居住者と同じ条件で使えます。旅行保険ではなく NHS が受け皿になるので、渡英後にやることも別です。[IHS と NHS を使える条件](/health/ihs-and-entitlement)、そして到着したらまず[GP（かかりつけ医）に登録する](/health/gp-registration)ところから始めてください。`,
       callout: {
         tone: "warn",
         title: "海外旅行保険は実質必須です",
@@ -448,6 +452,14 @@ const travelTips: TravelGuideArticle = {
     {
       href: "/jobs/service-charges",
       label: "英国サービスチャージ完全ガイド",
+    },
+    {
+      href: "/health/ihs-and-entitlement",
+      label: "IHSとNHS｜6ヶ月以上滞在する人の医療",
+    },
+    {
+      href: "/money/opening-an-account",
+      label: "英国の銀行口座開設｜長期滞在するなら",
     },
   ],
 };

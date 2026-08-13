@@ -193,6 +193,10 @@ GOV.UK の「View and prove your immigration status」から、目的として�
       label: "日本から送金する（手数料の本当の内訳）",
     },
     { href: "/housing", label: "住まい探しガイド" },
+    {
+      href: "/sightseeing/transport/fares",
+      label: "交通運賃とタッチ決済｜現地カードに切り替える理由",
+    },
   ],
 };
 

@@ -112,7 +112,11 @@ ${CONTACTLESS_BRANDS.map((b) => `| ${b} | ○ |`).join("\n")}
 
 Oyster は駅の券売機、TfL Visitor Centre、一部のコンビニ（Oyster Ticket Stop の表示がある店）で買えます。${gbp(PAYMENT.oysterCardFee)} のうち ${gbp(PAYMENT.oysterInitialCredit)} は初期チャージとして使えるので、実質の手数料は ${gbp(PAYMENT.oysterCardFee - PAYMENT.oysterInitialCredit)} です。
 
-帰国時、残高が ${gbp(PAYMENT.oysterInstantRefundLimit)} 未満なら駅の券売機でその場で返金を受けられます。それ以上ある場合は、オンライン申請か Visitor Centre での手続きになります。**カード代の ${gbp(PAYMENT.oysterCardFee)} 自体は返ってきません。**`,
+帰国時、残高が ${gbp(PAYMENT.oysterInstantRefundLimit)} 未満なら駅の券売機でその場で返金を受けられます。それ以上ある場合は、オンライン申請か Visitor Centre での手続きになります。**カード代の ${gbp(PAYMENT.oysterCardFee)} 自体は返ってきません。**
+
+### 長期滞在する場合
+
+ここまでは旅行者向けの話です。**住み始めると前提が変わります。**日本のカードを使い続けると海外事務手数料が毎日積み上がるうえ、週の上限額の計算も1枚に固定し続ける必要があります。英国の銀行口座を開いて現地のデビットカードに切り替えるのが結局いちばん安く、[銀行の選び方](/money/choosing-a-bank)と[口座開設の手順](/money/opening-an-account)にまとめてあります。通学・通勤で毎日乗るなら、[定期券とRailcardの損得](/sightseeing/transport/travelcard)で上限額と定期券のどちらが得かを先に確認してください。`,
       callout: {
         tone: "tip",
         title: "Visitor Oyster は買わなくていい",
@@ -311,6 +315,14 @@ TfL のウェブサイトでカードを登録すると、乗車履歴と課金�
     {
       href: "/sightseeing/travel-tips",
       label: "ロンドン旅行の実用情報｜両替・カード・治安・eSIM",
+    },
+    {
+      href: "/housing/where-to-live",
+      label: "住むエリアの選び方｜家賃と交通費の総額で考える",
+    },
+    {
+      href: "/money/choosing-a-bank",
+      label: "銀行の選び方｜コンタクトレス決済に使うカードを決める",
     },
   ],
 };
