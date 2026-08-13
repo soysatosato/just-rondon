@@ -30,6 +30,13 @@ export const RATES_UPDATED_AT = "2026-08-04";
 export const VISA_FEES = {
   /** 電子渡航認証。2026年4月8日に £16 から改定。 */
   eta: 20,
+  /**
+   * 改定前の ETA 手数料。
+   * 記事で「£20 でなければ代行サイト」と警告する際、読者が古い £16 の
+   * 情報源に当たっている可能性に触れるために必要。次の改定時は
+   * eta の旧値をここへ落とす。
+   */
+  etaPrevious: 16,
   /** Standard Visitor(最長6ヶ月)。日本国籍は原則ETAで足りるので通常不要。 */
   standardVisitor6m: 135,
   student: 558,
@@ -101,6 +108,12 @@ export const VISA_THRESHOLDS = {
     general: 41700,
     /** New entrant(就業初期)・博士号保持者などの割引後の最低年収。 */
     discounted: 33400,
+    /** 関連分野の博士号(PhD)保持者に適用される下限。 */
+    phdFloor: 37500,
+    /** ヘルスケア・教育関連職の下限。職種により上振れする。 */
+    healthcareFloor: 25000,
+    /** Shortage occupation の going rate 割引率(%)。 */
+    shortageDiscountPercent: 20,
     /** スポンサーが証明しない場合に本人が示す生活資金。 */
     maintenance: 1270,
   },
@@ -142,6 +155,11 @@ export const SPONSOR_COSTS = {
   /** スポンサーライセンス申請料。2026年4月8日改定。 */
   licenceLarge: 1682,
   licenceSmall: 611,
+  /**
+   * 不法就労者を雇用した場合の民事制裁金。労働者1人あたりの上限。
+   * 2024年2月に £20,000 から3倍に引き上げられた。
+   */
+  illegalWorkingPenaltyPerWorker: 60000,
 } as const;
 
 /**
@@ -160,6 +178,8 @@ export const VISA_KEY_DATES = {
   graduate18MonthsFrom: "2027-01-01",
   /** ETA が全面施行され、未取得だと搭乗を拒否されるようになった日。 */
   etaFullyEnforcedFrom: "2026-02-25",
+  /** 申請料の一斉改定日(6〜7%増)。ETA は £16 → £20。 */
+  feeRevision: "2026-04-08",
   /** BRP(在留カード)が一斉失効し、eVisa へ完全移行した日。 */
   brpExpiredOn: "2024-12-31",
 } as const;
