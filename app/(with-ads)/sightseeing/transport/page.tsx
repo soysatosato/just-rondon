@@ -40,7 +40,7 @@ import {
 } from "@/lib/transport/rates";
 
 const TITLE = "ロンドンの交通ガイド｜地下鉄・バス・自転車・タクシーの完全版";
-const DESCRIPTION = `ロンドンの移動手段を9本の記事で網羅。切符を買わずにタッチ決済で乗る方法、1日${gbp(CAPS.zone1to2.daily)}の上限額、5空港からのアクセス、シェアサイクルと配車アプリの使い分け。さらに在住者向けに、定期券の損得、自転車の買い方、車とバイクの維持費まで${TRANSPORT_AS_OF}時点の公式データで解説します。`;
+const DESCRIPTION = `ロンドンの移動手段を10本の記事で網羅。切符を買わずにタッチ決済で乗る方法、1日${gbp(CAPS.zone1to2.daily)}の上限額、5空港からのアクセス、ロンドンの外に出るときの鉄道切符の買い方、シェアサイクルと配車アプリの使い分け。さらに在住者向けに、定期券の損得、自転車の買い方、車とバイクの維持費まで${TRANSPORT_AS_OF}時点の公式データで解説します。`;
 
 export const metadata = buildPageMetadata({
   path: TRANSPORT_BASE,

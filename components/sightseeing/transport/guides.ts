@@ -79,6 +79,14 @@ export const transportGuides: TransportGuideMeta[] = [
       "ヒースロー・ガトウィック・スタンステッド・ルートン・シティ。所要時間と料金を並べたうえで、荷物の量と到着時刻から選び方を決めます。深夜着の対処法も。",
   },
   {
+    slug: "national-rail",
+    category: "basics",
+    eyebrow: "National Rail",
+    label: "英国の鉄道切符の買い方",
+    blurb:
+      "ロンドンの外に出ると、タッチ決済の世界が終わります。Advance・Off-Peak・Anytime の違いと、同じ区間で3〜4倍の差がつく理由。Oyster が使える境界も。",
+  },
+  {
     slug: "tube",
     category: "modes",
     eyebrow: "Tube & Rail",

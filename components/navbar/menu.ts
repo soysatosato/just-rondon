@@ -6,15 +6,18 @@
  *
  * 区分はトップページの大区分と同じで、振り分けの基準もひとつだけ:
  *
- *   観光       = 見る(場所そのもの)。ロンドン市内。
- *   体験する   = する(体験)。ロンドン市内。
- *   旅の準備   = 旅行者の実務(ETA・日程・宿・交通)。
- *   住む・働く = 在住者の実務(ビザ・住まい・仕事)。
- *   英国を読む = 読み物(コラム・歴史・英語表現)。
+ *   観光             = 見る(場所そのもの)。ロンドン市内。
+ *   体験する         = する(体験)。ロンドン市内。
+ *   ロンドンの外へ   = ロンドン外の目的地。市内かどうかだけで決まるので、
+ *                      ロンドン外なら「見る」も「する」もこちらに入る。
+ *   旅の準備         = 旅行者の実務(ETA・日程・宿・交通)。
+ *   住む・働く       = 在住者の実務(ビザ・住まい・仕事)。
+ *   英国を読む       = 読み物(コラム・歴史・英語表現)。
  *
- * Beyond London(ロンドン外の日帰り・小旅行)を追加するときは、
- * 「体験する」と「旅の準備」の間に NAV_SECTIONS の要素を1つ足す。
- * ロンドン外なら「見る」も「する」もそちらに入る。
+ * 鉄道切符の買い方だけは /sightseeing/transport 配下に置いている。
+ * 券種の話はロンドン市内と地続きの運賃制度で、transport ハブの
+ * basics(運賃と空港)に収まるため。一方 BritRail Pass は
+ * 非居住者専用で「周遊する人」だけが必要なので Beyond London に置く。
  */
 
 /** アクセント色はトップページのセクションと揃える。Tailwind が拾えるよう文字列で持つ。 */
@@ -30,7 +33,7 @@ export const NAV_ACCENTS = {
   emerald: { text: "text-emerald-600", underline: "decoration-emerald-400" },
   violet: { text: "text-violet-600", underline: "decoration-violet-400" },
   rose: { text: "text-rose-600", underline: "decoration-rose-400" },
-  // Beyond London 用に確保。
+  // Beyond London(ロンドンの外へ)。
   teal: { text: "text-teal-600", underline: "decoration-teal-400" },
 } as const satisfies Record<string, NavAccent>;
 
@@ -141,6 +144,46 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     kind: "menu",
+    label: "ロンドンの外へ",
+    eyebrow: "Beyond London",
+    href: "/beyond-london",
+    hubLabel: "Beyond London トップ",
+    description:
+      "ロンドンを拠点にしたまま、朝出て夜には戻れる範囲へ。街の紹介より先に「どの駅から何分で、往復いくらで、Oysterが使えるのか」を書いています。",
+    accent: NAV_ACCENTS.teal,
+    groups: [
+      {
+        heading: "出る前に",
+        links: [
+          {
+            href: "/sightseeing/transport/national-rail",
+            label: "鉄道切符の買い方",
+          },
+          {
+            href: "/beyond-london/britrail-pass",
+            label: "BritRail Pass の損得",
+          },
+        ],
+      },
+      {
+        heading: "日帰りで行ける",
+        links: [
+          { href: "/beyond-london/windsor", label: "ウィンザー" },
+          { href: "/beyond-london/oxford", label: "オックスフォード" },
+          { href: "/beyond-london/cambridge", label: "ケンブリッジ" },
+          {
+            href: "/beyond-london/bath-stonehenge",
+            label: "バースとストーンヘンジ",
+          },
+          { href: "/beyond-london/cotswolds", label: "コッツウォルズ" },
+          { href: "/beyond-london/brighton", label: "ブライトン" },
+          { href: "/beyond-london/canterbury", label: "カンタベリー" },
+        ],
+      },
+    ],
+  },
+  {
+    kind: "menu",
     label: "旅の準備",
     eyebrow: "Traveller Info",
     href: "/sightseeing/travel-tips",
@@ -160,6 +203,10 @@ export const NAV_SECTIONS: NavSection[] = [
           {
             href: "/sightseeing/transport",
             label: "交通ガイド（地下鉄・バス・空港）",
+          },
+          {
+            href: "/sightseeing/transport/national-rail",
+            label: "鉄道切符の買い方（ロンドン外へ）",
           },
           { href: "/sightseeing/travel-tips", label: "旅の実用情報" },
           { href: "/events", label: "今週のロンドン（運休・ストライキ）" },

@@ -200,12 +200,14 @@ export default async function Page() {
               icon={Sparkles}
               accent={ACCENTS.amber}
             />
-            {/*
-              Beyond London(ロンドン外の日帰り・小旅行)はこの位置に入る。
-              追加するときは下の「今週のロンドン」カードと差し替え、
-              今週のロンドンはコラム区分のカードへ寄せる。
-              リンク先は /beyond-london をトップレベルに切る前提。
-            */}
+            <CategoryCard
+              href="/beyond-london"
+              eyebrow="Beyond London"
+              title="ロンドンの外へ"
+              description="日帰りで行ける7つの行き先。街の紹介より先に、行き方から。"
+              icon={TrainFront}
+              accent={ACCENTS.teal}
+            />
             <CategoryCard
               href="#traveller"
               eyebrow="Traveller Info"

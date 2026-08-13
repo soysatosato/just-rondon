@@ -110,6 +110,20 @@ module.exports = {
       "/history/world-wars",
       "/history/postwar",
       "/history/modern-britain",
+      // Beyond London。/beyond-london をハブとする8本
+      // (移動の実務1本＋日帰り圏7本)。並びは
+      // components/beyond-london/destinations.ts の beyondDestinations と
+      // 一致させること(このファイルは CJS なので TS を読めない)。
+      // 週末1泊圏(ヨーク・エディンバラ等)を足すときはここにも追記する。
+      "/beyond-london",
+      "/beyond-london/britrail-pass",
+      "/beyond-london/windsor",
+      "/beyond-london/oxford",
+      "/beyond-london/cambridge",
+      "/beyond-london/bath-stonehenge",
+      "/beyond-london/cotswolds",
+      "/beyond-london/brighton",
+      "/beyond-london/canterbury",
       "/souvenirs",
       "/brands",
       "/restaurants",
@@ -136,11 +150,12 @@ module.exports = {
       "/sightseeing/tipping-and-payment",
       "/sightseeing/travel-tips",
       "/sightseeing/step-free",
-      // 交通ガイド。/sightseeing/transport をハブとする9本。
+      // 交通ガイド。/sightseeing/transport をハブとする10本。
       // 並びは components/sightseeing/transport/guides.ts の
       // transportGuides と一致させること。
       "/sightseeing/transport/fares",
       "/sightseeing/transport/airports",
+      "/sightseeing/transport/national-rail",
       "/sightseeing/transport/tube",
       "/sightseeing/transport/bus",
       "/sightseeing/transport/cycling",

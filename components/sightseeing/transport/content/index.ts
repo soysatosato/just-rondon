@@ -4,6 +4,7 @@ import bus from "./bus";
 import car from "./car";
 import cycling from "./cycling";
 import fares from "./fares";
+import nationalRail from "./national-rail";
 import ownBike from "./own-bike";
 import taxi from "./taxi";
 import travelcard from "./travelcard";
@@ -19,6 +20,7 @@ import tube from "./tube";
 export const transportGuideArticles: Record<string, TransportGuideArticle> = {
   fares,
   airports,
+  "national-rail": nationalRail,
   tube,
   bus,
   cycling,
@@ -31,6 +33,7 @@ export const transportGuideArticles: Record<string, TransportGuideArticle> = {
 export {
   fares,
   airports,
+  nationalRail,
   tube,
   bus,
   cycling,
