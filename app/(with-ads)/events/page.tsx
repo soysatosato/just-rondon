@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { CalendarRange } from "lucide-react";
+import { CalendarRange, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 
 import {
-  fetchLatestBrief,
+  fetchBriefsForEventsPage,
   fetchBackIssues,
   fetchEventsForWeek,
 } from "@/utils/actions/weekly";
@@ -36,7 +36,8 @@ const FALLBACK_METADATA = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const brief = await fetchLatestBrief();
+  // 本文と同じ号を指すようにする(来週号が出ていても本体は今週号)。
+  const { brief } = await fetchBriefsForEventsPage();
   if (!brief) return buildPageMetadata(FALLBACK_METADATA);
 
   const range = formatWeekRange(brief.weekStart, brief.weekEnd).replace(
@@ -78,12 +79,15 @@ async function CalendarFallback() {
 }
 
 export default async function EventsPage() {
-  const brief = await fetchLatestBrief();
+  const { brief, upcoming } = await fetchBriefsForEventsPage();
   if (!brief) return <CalendarFallback />;
 
   const [staples, backIssues] = await Promise.all([
     fetchEventsForWeek(brief.weekStart, brief.weekEnd),
-    fetchBackIssues(6, brief.slug),
+    // 来週号は先頭で案内するので、過去号一覧からは外す。
+    fetchBackIssues(6, brief.slug).then((issues) =>
+      upcoming ? issues.filter((i) => i.slug !== upcoming.slug) : issues
+    ),
   ]);
 
   // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
@@ -100,6 +104,25 @@ export default async function EventsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {upcoming && (
+        <Link
+          href={`/events/week/${upcoming.slug}`}
+          className="mb-6 flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3 transition-colors hover:bg-muted dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+        >
+          <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+            来週号
+          </span>
+          <span className="min-w-0 flex-1 text-sm leading-snug dark:text-gray-200">
+            {formatWeekRange(upcoming.weekStart, upcoming.weekEnd).replace(
+              /\([日月火水木金土]\)/g,
+              ""
+            )}
+            の号を先に読む
+          </span>
+          <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+        </Link>
+      )}
 
       <WeeklyBriefView brief={brief} staples={staples} />
 

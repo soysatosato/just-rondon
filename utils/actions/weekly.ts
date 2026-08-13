@@ -1,6 +1,7 @@
 "use server";
 
 import db from "../db";
+import { getISOWeekStart } from "../../lib/weekly";
 
 /**
  * 週次ダイジェスト「今週のロンドン」のデータ取得。
@@ -16,6 +17,38 @@ export const fetchLatestBrief = async () => {
     orderBy: { weekStart: "desc" },
     include: { items: { orderBy: { displayOrder: "asc" } } },
   });
+};
+
+/**
+ * /events の主役となる号と、その上に併記する「先の週」の号。
+ *
+ * 来週号を公開した時点で今週号が最新から外れるが、今週ロンドンに居る人には
+ * 今週号のほうが要る。今週の号があればそれを本体に据え、来週号は先頭の
+ * リンクとして案内する。今週号がまだ無ければ従来どおり最新号を本体にする。
+ */
+export const fetchBriefsForEventsPage = async () => {
+  const thisWeekStart = getISOWeekStart(new Date());
+
+  const [current, upcoming] = await Promise.all([
+    db.weeklyBrief.findFirst({
+      where: { published: true, weekStart: thisWeekStart },
+      include: { items: { orderBy: { displayOrder: "asc" } } },
+    }),
+    db.weeklyBrief.findFirst({
+      where: { published: true, weekStart: { gt: thisWeekStart } },
+      orderBy: { weekStart: "asc" },
+      select: { slug: true, title: true, headline: true, weekStart: true, weekEnd: true },
+    }),
+  ]);
+
+  if (current) return { brief: current, upcoming };
+
+  const latest = await db.weeklyBrief.findFirst({
+    where: { published: true },
+    orderBy: { weekStart: "desc" },
+    include: { items: { orderBy: { displayOrder: "asc" } } },
+  });
+  return { brief: latest, upcoming: null };
 };
 
 export const fetchBriefBySlug = async (slug: string) => {
