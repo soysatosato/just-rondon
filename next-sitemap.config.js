@@ -127,7 +127,10 @@ module.exports = {
       "/sightseeing/itinerary/layover",
       "/sightseeing/hotels",
       "/sightseeing/transport",
+      "/sightseeing/budget",
+      "/sightseeing/tipping-and-payment",
       "/sightseeing/travel-tips",
+      "/sightseeing/step-free",
       // 交通ガイド。/sightseeing/transport をハブとする9本。
       // 並びは components/sightseeing/transport/guides.ts の
       // transportGuides と一致させること。

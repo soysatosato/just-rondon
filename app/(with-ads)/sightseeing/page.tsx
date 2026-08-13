@@ -197,7 +197,7 @@ export default async function Page() {
             </p>
             <h2 className="mt-2 text-xl font-semibold">旅の準備</h2>
             <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              ETA（渡航認証）の申請、どこに泊まるか、どう移動するか、何日で何を回るか。
+              ETA（渡航認証）の申請、どこに泊まるか、どう移動するか、何日で何を回るか、予算はいくらか。
               観光スポットを選ぶ前に決めておきたいことを、テーマ別のガイドにまとめました。
             </p>
           </div>
