@@ -191,6 +191,23 @@ module.exports = {
       "/food/apps-and-coupons",
       "/food/where-to-buy",
       "/food/long-stay",
+      // 医療・NHSガイド。並びは components/health/guides/guides.ts の
+      // healthGuides と一致させること。
+      "/health",
+      "/health/gp-registration",
+      "/health/ihs-and-entitlement",
+      "/health/when-you-are-ill",
+      "/health/pharmacy-and-prescriptions",
+      "/health/dentist-and-optician",
+      "/health/prescription-costs",
+      // お金・銀行ガイド。並びは components/money/guides/guides.ts の
+      // moneyGuides と一致させること。
+      "/money",
+      "/money/opening-an-account",
+      "/money/passing-the-checks",
+      "/money/choosing-a-bank",
+      "/money/sending-money-from-japan",
+      "/money/national-insurance-number",
       "/jobs",
       "/jobs/minimum-wage",
       "/jobs/employment-contract",

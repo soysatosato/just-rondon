@@ -172,7 +172,7 @@ export const NAV_SECTIONS: NavSection[] = [
     href: "/visa",
     hubLabel: "英国ビザガイド トップ",
     description:
-      "観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、働き始めてから何を知っておくべきか。",
+      "観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、口座をどう開くか、体調を崩したらどこに行くか。",
     accent: NAV_ACCENTS.emerald,
     groups: [
       {
@@ -190,6 +190,20 @@ export const NAV_SECTIONS: NavSection[] = [
             href: "/housing/rightmove-zoopla-openrent",
             label: "物件サイトの使い分け",
           },
+        ],
+      },
+      {
+        heading: "お金・銀行",
+        links: [
+          { href: "/money", label: "お金・銀行ガイド トップ" },
+          { href: "/money/opening-an-account", label: "渡英直後に開ける口座" },
+        ],
+      },
+      {
+        heading: "医療・NHS",
+        links: [
+          { href: "/health", label: "医療・NHS ガイド トップ" },
+          { href: "/health/gp-registration", label: "GP に登録する" },
         ],
       },
       {

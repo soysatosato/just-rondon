@@ -32,6 +32,8 @@ import {
   TriangleAlert,
   Sparkles,
   Languages,
+  Stethoscope,
+  Wallet,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -529,7 +531,7 @@ export default async function Page() {
           <SectionHeader
             eyebrow="Resident Info"
             title="ロンドンで住む・働く"
-            description="観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、働き始めてから何を知っておくべきか。3つの柱で整理しています。"
+            description="観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、口座をどう開くか、体調を崩したらどこに行くか。渡英直後から必要になる実務を整理しています。"
             accentClassName={ACCENTS.emerald.badge}
           />
 
@@ -585,6 +587,57 @@ export default async function Page() {
                 {
                   href: "/jobs/service-charges/case-story",
                   label: "審判所申立ての実体験",
+                },
+              ]}
+            />
+          </div>
+
+          {/*
+            医療とお金は、ビザ・住まい・仕事と同じ「渡英直後に必ず要る」層だが、
+            上の3枠が制度の重さで先に来るため、2枚目の行として置く。
+          */}
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <PillarCard
+              href="/money"
+              title="お金・銀行"
+              description="口座開設が詰まる原因は住所証明。信用スコアではありません。開ける口座、日本からの送金、NIN の取り方まで。"
+              icon={Wallet}
+              accent={ACCENTS.emerald}
+              links={[
+                {
+                  href: "/money/opening-an-account",
+                  label: "渡英直後に開ける口座",
+                },
+                { href: "/money/passing-the-checks", label: "審査の通し方" },
+                {
+                  href: "/money/sending-money-from-japan",
+                  label: "日本からの送金と手数料",
+                },
+                {
+                  href: "/money/national-insurance-number",
+                  label: "National Insurance number",
+                },
+              ]}
+            />
+            <PillarCard
+              href="/health"
+              title="医療・NHS"
+              description="GP 登録に身分証も住所証明も要りません。救急と我慢の間にある 111、処方箋料を頭打ちにする方法まで。"
+              icon={Stethoscope}
+              accent={ACCENTS.emerald}
+              links={[
+                { href: "/health/gp-registration", label: "GP に登録する" },
+                {
+                  href: "/health/when-you-are-ill",
+                  label: "体調を崩したときの行き先",
+                },
+                {
+                  href: "/health/ihs-and-entitlement",
+                  label: "IHS とどこまで無料か",
+                },
+                {
+                  href: "/health/prescription-costs",
+                  label: "処方箋料を下げる",
                 },
               ]}
             />
