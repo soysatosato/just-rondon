@@ -1,8 +1,11 @@
 import type { TravelGuideArticle } from "../types";
+import { TRAVEL_GUIDE_AS_OF, TRAVEL_GUIDE_UPDATED_AT } from "../guides";
+import { VISA_FEES, gbp } from "@/lib/visa/rates";
 
 /**
- * ETA の金額は gov.uk 公式で確認済み(2026年8月時点 £20)。
- * 2026年4月8日に £16 から改定されたばかりなので、次の改定に注意。
+ * ETA の金額は lib/visa/rates.ts で一元管理している(gbp(VISA_FEES.eta))。
+ * 現金の目安(£20〜50)やチップ(£1〜2)は公式の改定がある数字ではなく
+ * 体感の相場なので、あえて定数にせず本文に置いている。
  *
  * 為替レートは意図的に一切書かない。書いた瞬間に古くなるうえ、
  * 読者が誤った予算を立てる原因になるため。
@@ -26,8 +29,8 @@ const travelTips: TravelGuideArticle = {
     "イギリス 電源プラグ",
     "ロンドン 服装",
   ],
-  dataAsOf: "2026年8月",
-  updatedAt: "2026-08-02",
+  dataAsOf: TRAVEL_GUIDE_AS_OF,
+  updatedAt: TRAVEL_GUIDE_UPDATED_AT,
   mainText: `ロンドン旅行の準備で厄介なのは、**数年前の情報がもう通用しない項目がいくつもある**ことです。
 
 - 旅行者向けの**免税（VAT還付）制度は廃止済み**
@@ -46,7 +49,7 @@ const travelTips: TravelGuideArticle = {
 
 | 項目 | 内容（2026年8月時点） |
 |---|---|
-| 費用 | **£20** |
+| 費用 | **${gbp(VISA_FEES.eta)}** |
 | 有効期間 | 2年間（またはパスポートの有効期限まで） |
 | 滞在可能日数 | 1回につき最長6ヶ月 |
 | 申請方法 | 公式アプリまたは GOV.UK のオンライン申請 |

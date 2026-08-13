@@ -23,30 +23,72 @@ import {
 } from "./guides";
 import type { TravelGuideArticle } from "./types";
 
+/** 記事末尾に並べる子ページのカード1枚ぶん。 */
+export type TravelGuideChildLink = {
+  href: string;
+  eyebrow: string;
+  label: string;
+  blurb: string;
+};
+
 export default function TravelGuideLayout({
   article,
+  parent,
+  childGuides,
+  childGuidesHeading = "この記事の分岐版",
+  extraJsonLd,
 }: {
   article: TravelGuideArticle;
+  /** 子ページのとき、1段上のガイド。パンくずと戻り導線に使う。 */
+  parent?: { name: string; slug: string };
+  /** 親ページなら下にぶら下がる記事、子ページなら自分を含む兄弟の一覧。 */
+  childGuides?: TravelGuideChildLink[];
+  childGuidesHeading?: string;
+  extraJsonLd?: object[];
 }) {
-  const relatedGuides = travelGuides.filter((g) => g.slug !== article.slug);
   const meta = getTravelGuideMeta(article.slug);
   const pageUrl = `${SITE_URL}${travelGuidePath(article.slug)}`;
   const hasDaySections = article.sections.some((s) => /^day-\d+$/.test(s.id));
 
+  /*
+    子ページでは「ほかの旅行ガイド」(ETA・宿・交通…)を出さない。
+    分岐版を読んでいる人が次に見たいのは同じ分岐の別パターンか親であって、
+    トップレベルのガイド5本ではないため。代わりに兄弟ページを出す。
+  */
+  const siblings = parent
+    ? (childGuides ?? []).filter((c) => c.href !== travelGuidePath(article.slug))
+    : [];
+  const relatedGuides = parent
+    ? []
+    : travelGuides.filter((g) => g.slug !== article.slug);
+
   return (
     <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
-      <JsonLd data={travelGuideBreadcrumbJsonLd(article)} />
+      <JsonLd data={travelGuideBreadcrumbJsonLd(article, parent)} />
       <JsonLd data={travelGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
       {hasDaySections && <JsonLd data={itineraryItemListJsonLd(article)} />}
+      {extraJsonLd?.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
-      <BreadCrumbs
-        name="観光ガイド"
-        link="sightseeing"
-        name2={meta?.label ?? article.title}
-      />
+      {parent ? (
+        <BreadCrumbs
+          name="観光ガイド"
+          link="sightseeing"
+          name2={parent.name}
+          link2={`sightseeing/${parent.slug}`}
+          name3={meta?.label ?? article.title}
+        />
+      ) : (
+        <BreadCrumbs
+          name="観光ガイド"
+          link="sightseeing"
+          name2={meta?.label ?? article.title}
+        />
+      )}
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
@@ -123,36 +165,66 @@ export default function TravelGuideLayout({
         <GuideSources sources={article.sources} dataAsOf={article.dataAsOf} />
       )}
 
-      <section className="mt-12">
-        <h2 className="text-lg font-semibold">ほかの旅行ガイド</h2>
-        <div className="mt-4 space-y-3">
-          {relatedGuides.map((g) => (
-            <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-emerald-400 dark:hover:border-emerald-500">
-                <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-emerald-600">
-                    {g.eyebrow}
-                  </span>
-                  <span className="mt-1 block text-base font-semibold">
-                    {g.label}
-                  </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {g.blurb}
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/*
+        親では分岐版へ降りるカード、子では兄弟の分岐版へ移るカード。
+        どちらも FAQ・出典の後、トップレベルのガイド一覧より前に置く。
+      */}
+      {!parent && childGuides && childGuides.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-lg font-semibold">{childGuidesHeading}</h2>
+          <div className="mt-4 space-y-3">
+            {childGuides.map((c) => (
+              <GuideCard key={c.href} {...c} />
+            ))}
+          </div>
+        </section>
+      )}
 
-      {article.relatedLinks && article.relatedLinks.length > 0 && (
+      {siblings.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-lg font-semibold">ほかの分岐版</h2>
+          <div className="mt-4 space-y-3">
+            {siblings.map((c) => (
+              <GuideCard key={c.href} {...c} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {relatedGuides.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-lg font-semibold">ほかの旅行ガイド</h2>
+          <div className="mt-4 space-y-3">
+            {relatedGuides.map((g) => (
+              <GuideCard
+                key={g.slug}
+                href={travelGuidePath(g.slug)}
+                eyebrow={g.eyebrow}
+                label={g.label}
+                blurb={g.blurb}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {(parent || (article.relatedLinks && article.relatedLinks.length > 0)) && (
         <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4 sm:p-6 space-y-2">
           <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
             関連ページ
           </h2>
           <ul className="space-y-2 text-sm">
-            {article.relatedLinks.map((link) => (
+            {parent && (
+              <li>
+                <Link
+                  href={travelGuidePath(parent.slug)}
+                  className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                >
+                  {parent.name}
+                </Link>
+              </li>
+            )}
+            {article.relatedLinks?.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -168,5 +240,23 @@ export default function TravelGuideLayout({
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
     </main>
+  );
+}
+
+function GuideCard({ href, eyebrow, label, blurb }: TravelGuideChildLink) {
+  return (
+    <Link href={href} className="block">
+      <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-emerald-400 dark:hover:border-emerald-500">
+        <CardContent className="p-5">
+          <span className="block text-xs font-semibold text-emerald-600">
+            {eyebrow}
+          </span>
+          <span className="mt-1 block text-base font-semibold">{label}</span>
+          <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            {blurb}
+          </span>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

@@ -119,6 +119,12 @@ module.exports = {
       // travelGuides と一致させること。
       "/sightseeing/eta-uk-visa-guide",
       "/sightseeing/itinerary",
+      // モデルコースの分岐版。並びは
+      // components/sightseeing/guides/itinerary-variants.ts の
+      // itineraryVariants と一致させること。
+      "/sightseeing/itinerary/rainy-day",
+      "/sightseeing/itinerary/with-kids",
+      "/sightseeing/itinerary/layover",
       "/sightseeing/hotels",
       "/sightseeing/transport",
       "/sightseeing/travel-tips",

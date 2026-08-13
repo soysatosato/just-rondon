@@ -8,6 +8,16 @@ import type { TravelGuideArticle } from "./types";
 
 export { SITE_URL, SIGHTSEEING_BASE };
 
+/**
+ * 全記事共通の基準時点と更新日。
+ *
+ * 記事ごとに散らすと、1本だけ直して他が古いまま残る。実際この方式に
+ * するまで、同じ内容の旅行ガイドに3種類の更新日が並んでいた。
+ * ETA の料金や開館情報を触ったら、ここを1行直す。
+ */
+export const TRAVEL_GUIDE_AS_OF = "2026年8月";
+export const TRAVEL_GUIDE_UPDATED_AT = "2026-08-13";
+
 export type TravelGuideMeta = {
   slug: string;
   /** 英語ラベル。カードの eyebrow に使う。 */
@@ -44,7 +54,7 @@ export const travelGuides: TravelGuideMeta[] = [
     eyebrow: "Itineraries",
     label: "ロンドン モデルコース（1〜5日）",
     blurb:
-      "初めてのロンドンで外さない王道ルートを1日目から5日目まで。滞在日数別の圧縮版、雨の日プラン、子連れ・予算重視のアレンジも。",
+      "初めてのロンドンで外さない王道ルートを1日目から5日目まで。滞在日数別の圧縮版に加えて、雨の日・子連れ・乗り継ぎ半日の分岐版を別ページで用意しています。",
   },
   {
     slug: "hotels",
@@ -92,9 +102,21 @@ export function buildTravelGuideMetadata(article: TravelGuideArticle) {
   });
 }
 
-export function travelGuideBreadcrumbJsonLd(article: TravelGuideArticle) {
+/**
+ * 子ページ(例 itinerary/rainy-day)は親を1段挟んだパンくずにする。
+ * parent を渡さなければ従来どおり 観光ガイド → 記事 の2段。
+ */
+export function travelGuideBreadcrumbJsonLd(
+  article: TravelGuideArticle,
+  parent?: { name: string; slug: string }
+) {
   const meta = getTravelGuideMeta(article.slug);
+  const trail = parent
+    ? [{ name: parent.name, path: travelGuidePath(parent.slug) }]
+    : [];
+
   return sightseeingBreadcrumbJsonLd([
+    ...trail,
     {
       name: meta?.label ?? article.title,
       path: travelGuidePath(article.slug),

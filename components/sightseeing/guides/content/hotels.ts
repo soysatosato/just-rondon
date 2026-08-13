@@ -1,4 +1,5 @@
 import type { TravelGuideArticle } from "../types";
+import { TRAVEL_GUIDE_AS_OF, TRAVEL_GUIDE_UPDATED_AT } from "../guides";
 
 /**
  * 宿泊費の相場は季節・曜日・イベントで倍以上動くため、断定的な金額は書かない。
@@ -21,8 +22,8 @@ const hotels: TravelGuideArticle = {
     "ロンドン 格安ホテル",
     "ロンドン 家族 ホテル",
   ],
-  dataAsOf: "2026年8月",
-  updatedAt: "2026-08-02",
+  dataAsOf: TRAVEL_GUIDE_AS_OF,
+  updatedAt: TRAVEL_GUIDE_UPDATED_AT,
   mainText: `ロンドンのホテル選びで失敗する原因は、ほぼ例外なく「安さだけを見てエリアを軽視した」ことです。
 
 ロンドンは東京23区より広く、中心部から外れると移動に片道1時間かかることも珍しくありません。1泊 £30 安い宿を選んだ結果、毎日往復2時間を失い、交通費も増える——これが典型的な失敗パターンです。

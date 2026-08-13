@@ -27,6 +27,11 @@ export type TravelGuideSource = GuideSourceLink;
 export type TravelGuideRelatedLink = GuideRelatedLink;
 
 export type TravelGuideArticle = {
+  /**
+   * URL の末尾。子ページは `itinerary/rainy-day` のように
+   * 親 slug からの相対パスをスラッシュ区切りで持つ。
+   * travelGuidePath() がそのまま /sightseeing に連結する。
+   */
   slug: string;
   title: string;
   engTitle: string;
