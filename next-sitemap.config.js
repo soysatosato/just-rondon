@@ -196,6 +196,7 @@ module.exports = {
       "/jobs/employment-contract",
       "/jobs/visa-and-work",
       "/jobs/workplace-harassment",
+      "/jobs/workplace-pension",
       "/jobs/service-charges",
       "/jobs/service-charges/case-story",
       "/jobs/service-charges/case-story/background",

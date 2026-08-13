@@ -39,6 +39,12 @@ export const guides: GuideMeta[] = [
     blurb:
       "Equality Act 2010が守る範囲、2024年10月に始まった雇用主のセクハラ防止義務、Acas・Citizens Adviceの使い方。",
   },
+  {
+    slug: "workplace-pension",
+    label: "職場年金（Nest）の仕組みと脱退方法",
+    blurb:
+      "知らないうちにPayslipから引かれる年金の正体、返金される1か月の期限、電話・オンラインでの具体的な脱退手順、期限を過ぎた場合の選択肢。",
+  },
 ];
 
 export function guidePath(slug: string) {
