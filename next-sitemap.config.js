@@ -113,6 +113,11 @@ module.exports = {
       "/souvenirs",
       "/brands",
       "/restaurants",
+      // レストラン/パブのガイド。料理ページ(/restaurants/<dish>)はDB由来で
+      // 下の additionalPaths が出すので、静的なガイドだけここに書く。
+      // 並びは components/restaurants/guides/guides.ts の
+      // restaurantGuides と一致させること。
+      "/restaurants/pub-etiquette",
       "/sightseeing",
       "/sightseeing/all",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の

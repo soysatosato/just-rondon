@@ -183,6 +183,30 @@ export default async function RestaurantsPage() {
         ))}
       </div>
 
+      {/*
+        店に入る前に読む記事。料理を選ぶより手前の話なので、
+        「あわせて読みたい」の一覧ではなくカードで独立させている。
+        カウンター注文を知らないと、どの店を選んでも最初の一杯に
+        たどり着けないため。
+      */}
+      <Link href="/restaurants/pub-etiquette" className="mt-12 block">
+        <Card className="border-slate-200 transition hover:border-sky-400 dark:border-slate-800 dark:hover:border-sky-500">
+          <CardContent className="p-5">
+            <span className="block text-xs font-semibold text-sky-700 dark:text-sky-300">
+              Pub Etiquette
+            </span>
+            <span className="mt-1 block text-base font-semibold">
+              パブの作法｜カウンターで注文する、席で待たない
+            </span>
+            <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+              イギリスのパブでは、席に着いても誰も注文を取りに来ません。
+              入店から会計までの流れ、パイントの頼み方、ラウンド制、
+              チップの要不要までまとめました。
+            </span>
+          </CardContent>
+        </Card>
+      </Link>
+
       <GuideFaq items={FAQ} />
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
