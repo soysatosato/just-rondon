@@ -1,4 +1,5 @@
 import type { RestaurantGuideArticle } from "../types";
+import mustVisit from "./must-visit";
 import pubEtiquette from "./pub-etiquette";
 
 /**
@@ -15,7 +16,8 @@ import pubEtiquette from "./pub-etiquette";
  * 料理に同じ slug を作らないこと。
  */
 export const restaurantGuideArticles: Record<string, RestaurantGuideArticle> = {
+  "must-visit": mustVisit,
   "pub-etiquette": pubEtiquette,
 };
 
-export { pubEtiquette };
+export { mustVisit, pubEtiquette };

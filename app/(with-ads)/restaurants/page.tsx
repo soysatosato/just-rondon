@@ -18,6 +18,10 @@ import {
   dishListJsonLd,
   dishPath,
 } from "@/components/restaurants/meta";
+import {
+  restaurantGuidePath,
+  restaurantGuides,
+} from "@/components/restaurants/guides/guides";
 
 const TITLE = "ロンドンで食べるイギリス料理｜料理別に店を選ぶガイド";
 const DESCRIPTION =
@@ -188,24 +192,29 @@ export default async function RestaurantsPage() {
         「あわせて読みたい」の一覧ではなくカードで独立させている。
         カウンター注文を知らないと、どの店を選んでも最初の一杯に
         たどり着けないため。
+
+        guides.ts の restaurantGuides から引くので、記事を足せば
+        ここにも自動で並ぶ。並び順もあちらに従う。
       */}
-      <Link href="/restaurants/pub-etiquette" className="mt-12 block">
-        <Card className="border-slate-200 transition hover:border-sky-400 dark:border-slate-800 dark:hover:border-sky-500">
-          <CardContent className="p-5">
-            <span className="block text-xs font-semibold text-sky-700 dark:text-sky-300">
-              Pub Etiquette
-            </span>
-            <span className="mt-1 block text-base font-semibold">
-              パブの作法｜カウンターで注文する、席で待たない
-            </span>
-            <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
-              イギリスのパブでは、席に着いても誰も注文を取りに来ません。
-              入店から会計までの流れ、パイントの頼み方、ラウンド制、
-              チップの要不要までまとめました。
-            </span>
-          </CardContent>
-        </Card>
-      </Link>
+      <section className="mt-12 space-y-3">
+        {restaurantGuides.map((g) => (
+          <Link key={g.slug} href={restaurantGuidePath(g.slug)} className="block">
+            <Card className="border-slate-200 transition hover:border-sky-400 dark:border-slate-800 dark:hover:border-sky-500">
+              <CardContent className="p-5">
+                <span className="block text-xs font-semibold text-sky-700 dark:text-sky-300">
+                  {g.eyebrow}
+                </span>
+                <span className="mt-1 block text-base font-semibold">
+                  {g.label}
+                </span>
+                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                  {g.blurb}
+                </span>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </section>
 
       <GuideFaq items={FAQ} />
 

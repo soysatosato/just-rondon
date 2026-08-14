@@ -30,6 +30,13 @@ export type RestaurantGuideMeta = {
  */
 export const restaurantGuides: RestaurantGuideMeta[] = [
   {
+    slug: "must-visit",
+    eyebrow: "Must-Visit",
+    label: "絶対行くべき超人気店",
+    blurb:
+      "予約が取れない、行列が絶えない。そう言われる店の多くは、仕組みを知っていれば入れます。予約が開放される日時、並ぶべき時間帯、人数による裏道まで店ごとに解説します。",
+  },
+  {
     slug: "pub-etiquette",
     eyebrow: "Pub Etiquette",
     label: "パブの作法",

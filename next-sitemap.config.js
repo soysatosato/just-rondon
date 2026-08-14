@@ -134,6 +134,7 @@ module.exports = {
       // 下の additionalPaths が出すので、静的なガイドだけここに書く。
       // 並びは components/restaurants/guides/guides.ts の
       // restaurantGuides と一致させること。
+      "/restaurants/must-visit",
       "/restaurants/pub-etiquette",
       "/sightseeing",
       "/sightseeing/all",
