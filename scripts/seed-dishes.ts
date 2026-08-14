@@ -98,6 +98,7 @@ const DISHES: DishSeed[] = [
         website: "https://www.theritzlondon.com/",
         bookingRequired: true,
         commonsFile: "File:The Ritz London.jpg",
+        instagramUrl: "https://www.instagram.com/theritzlondon/p/BnY57qkjmuX/",
       },
       {
         slug: "fortnum-and-mason-tea-salon",
@@ -113,6 +114,7 @@ const DISHES: DishSeed[] = [
         priceRange: "£70〜",
         website: "https://www.fortnumandmason.com/",
         bookingRequired: true,
+        instagramUrl: "https://www.instagram.com/fortnums/p/CxfhKgGMb_G/",
       },
       {
         slug: "sketch-afternoon-tea",
@@ -128,6 +130,7 @@ const DISHES: DishSeed[] = [
         priceRange: "£70〜",
         website: "https://sketch.london/",
         bookingRequired: true,
+        instagramUrl: "https://www.instagram.com/p/254oGcn3ws/",
       },
     ],
   },
@@ -239,6 +242,7 @@ const DISHES: DishSeed[] = [
         priceRange: "£25〜35",
         website: "https://theblacklock.com/",
         bookingRequired: true,
+        instagramUrl: "https://www.instagram.com/p/DRHHJsqjDVa/",
       },
       {
         slug: "hawksmoor-sunday-roast",
@@ -390,13 +394,19 @@ greasy spoon の対極にある選択肢で、値段も相応。朝から人が�
 
 名物は黒豆を長時間煮込んだ **black daal** と、朝に出る **bacon naan roll**。日本人の口にも合いやすい味付けで、辛さで身構える必要がありません。
 
-コヴェント・ガーデン、キングス・クロス、ショーディッチ、カーナビーなど複数店舗。**とにかく混むので予約を強く推奨**します。`,
+コヴェント・ガーデン、キングス・クロス、ショーディッチ、カーナビーなど複数店舗。
+
+予約の条件が独特で、**17時45分までは人数を問わず予約できますが、それ以降は6名以上でないと予約できません**。少人数で夜に行くなら並ぶことになります（待ち時間の目安は30分〜1時間、チャイが無償で出ます）。早い時間に予約するか、朝食の時間帯を狙うのが現実的です。`,
         area: "コヴェント・ガーデン / キングス・クロス / ショーディッチ ほか",
         nearestStation: "Covent Garden / King's Cross",
         priceRange: "£20〜35",
         website: "https://www.dishoom.com/",
-        bookingRequired: true,
+        // 「要予約」にはしない。夜は少人数だとそもそも予約できず、
+        // 席の多くがウォークイン用に確保されているため、
+        // バッジを出すと「予約しないと入れない」と誤読させる。
+        bookingRequired: false,
         commonsFile: "File:Dishoom King's Cross interior 1.jpg",
+        instagramUrl: "https://www.instagram.com/p/DE94-kpPY3O/",
       },
       {
         slug: "tayyabs",
@@ -414,6 +424,7 @@ greasy spoon の対極にある選択肢で、値段も相応。朝から人が�
         priceRange: "£15〜25",
         website: "https://tayyabs.co.uk/",
         commonsFile: "File:Tayyabs, Whitechapel, London (3103113765).jpg",
+        instagramUrl: "https://www.instagram.com/p/CI2zDHenL7M/",
       },
       {
         slug: "brick-lane-curry-houses",
