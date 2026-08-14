@@ -242,6 +242,13 @@ module.exports = {
       "/health/pharmacy-and-prescriptions",
       "/health/dentist-and-optician",
       "/health/prescription-costs",
+      // トラブル対応ガイド。並びは components/trouble/guides/guides.ts の
+      // troubleGuides と一致させること。
+      "/trouble",
+      "/trouble/pickpocket",
+      "/trouble/lost-passport",
+      "/trouble/lost-property",
+      "/trouble/police-report",
       // お金・銀行ガイド。並びは components/money/guides/guides.ts の
       // moneyGuides と一致させること。
       "/money",

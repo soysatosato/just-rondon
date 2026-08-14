@@ -224,6 +224,7 @@ export const NAV_SECTIONS: NavSection[] = [
             label: "鉄道切符の買い方（ロンドン外へ）",
           },
           { href: "/sightseeing/travel-tips", label: "旅の実用情報" },
+          { href: "/trouble", label: "トラブル対応（盗難・紛失）" },
           { href: "/events", label: "今週のロンドン（運休・ストライキ）" },
         ],
       },
@@ -284,6 +285,16 @@ export const NAV_SECTIONS: NavSection[] = [
           },
         ],
       },
+      {
+        // 「旅の準備」にも同じリンクを置いている。トラブルは旅行者と在住者の
+        // どちらにも起きるうえ、被害直後の人は区分を選んでから探す余裕がない。
+        // 重複を許してでも、両方の導線から1クリックで届くようにしている。
+        heading: "トラブル対応",
+        links: [
+          { href: "/trouble", label: "トラブル対応ガイド トップ" },
+          { href: "/trouble/police-report", label: "警察に届け出る" },
+        ],
+      },
     ],
   },
   {
@@ -313,11 +324,22 @@ export const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-/** ドロップダウンの列数と幅。Tailwind が静的に拾えるよう、動的生成せず対応表で持つ。 */
+/**
+ * ドロップダウンの列数と幅。Tailwind が静的に拾えるよう、動的生成せず対応表で持つ。
+ *
+ * 4以上は3列に丸める。「住む・働く」のように束が増えた区分で1列に落ちると、
+ * ドロップダウンが縦に伸びて画面に収まらなくなるため。
+ * 参照側の `?? GROUP_COLS[1]` は 0 件のときだけ効くフォールバックとして残す。
+ */
 export const GROUP_COLS: Record<number, string> = {
   1: "grid-cols-1",
   2: "grid-cols-2",
   3: "grid-cols-3",
+  4: "grid-cols-2",
+  5: "grid-cols-3",
+  6: "grid-cols-3",
+  7: "grid-cols-3",
+  8: "grid-cols-3",
 };
 
 // NavigationMenuContent は md 以上で md:w-auto が効くため、w-* ではなく min-w-* で指定する。
@@ -325,4 +347,9 @@ export const MENU_WIDTH: Record<number, string> = {
   1: "min-w-[520px]",
   2: "min-w-[680px]",
   3: "min-w-[900px]",
+  4: "min-w-[680px]",
+  5: "min-w-[900px]",
+  6: "min-w-[900px]",
+  7: "min-w-[900px]",
+  8: "min-w-[900px]",
 };
