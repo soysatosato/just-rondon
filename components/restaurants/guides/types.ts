@@ -18,7 +18,23 @@ import type {
 } from "@/components/guides/types";
 
 export type RestaurantGuideCallout = GuideCalloutData;
-export type RestaurantGuideSection = GuideSectionData;
+
+/**
+ * 店を紹介するセクション。
+ *
+ * 共通の GuideSectionData に instagramUrl を足している。共通側に
+ * 入れないのは、/sightseeing と /visa には店の写真という概念がなく、
+ * あちらの型を広げる理由がないため。
+ *
+ * 埋め込めるのは個別投稿(/p/)と Reels(/reel/)だけで、プロフィールURLは
+ * 埋め込めない。また必ず「その店の公式アカウントの投稿」を貼ること。
+ * 検索で出てくる投稿はレビュアーやファンのアカウントであることが多く、
+ * それを店の写真として出すと誤認させる。貼る前に
+ * scripts/inspect-instagram.ts でアカウント名を確認する。
+ */
+export type RestaurantGuideSection = GuideSectionData & {
+  instagramUrl?: string;
+};
 export type RestaurantGuideFaq = GuideFaqItem;
 export type RestaurantGuideSource = GuideSourceLink;
 export type RestaurantGuideRelatedLink = GuideRelatedLink;

@@ -13,6 +13,7 @@ import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
+import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import {
   RESTAURANT_BASE,
   RESTAURANT_SECTION_NAME,
@@ -117,6 +118,19 @@ export default function RestaurantGuideLayout({
                 </p>
               )}
               <MarkdownBody>{section.body}</MarkdownBody>
+
+              {/*
+                店自身の投稿を埋め込む。写真を複製しないので、権利の面で
+                最も安全に「その店の実物」を出せる。RestaurantCard と同じ考え方。
+              */}
+              {section.instagramUrl && (
+                <div className="pt-2">
+                  <p className="mb-2 text-xs font-semibold text-muted-foreground">
+                    店の公式アカウントより
+                  </p>
+                  <InstagramEmbed url={section.instagramUrl} />
+                </div>
+              )}
 
               {section.tips && section.tips.length > 0 && (
                 <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
