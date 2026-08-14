@@ -15,13 +15,11 @@ import {
   SOCIAL_CATEGORY_LABELS,
   SOCIAL_CATEGORY_ORDER,
   SOCIAL_SECTION_NAME,
-  publishedSocialGuides,
-  publishedSocialGuidesByCategory,
   socialGuidePath,
   socialGuides,
+  socialGuidesByCategory,
   socialHubCollectionJsonLd,
 } from "@/components/social/guides/guides";
-import { socialGuideArticles } from "@/components/social/guides/content";
 import { SOCIAL_AS_OF, SOCIAL_UPDATED_AT } from "@/lib/social/facts";
 
 const TITLE = "ロンドンで友だちを作る・恋愛する｜出会いと人間関係ガイド";
@@ -42,9 +40,6 @@ export const metadata = buildPageMetadata({
     "海外 孤独",
   ],
 });
-
-const publishedSlugs = Object.keys(socialGuideArticles);
-const published = publishedSocialGuides(publishedSlugs);
 
 /**
  * 入口を「渡英してどのくらいか」で切る。
@@ -151,7 +146,6 @@ export default function SocialHubPage() {
         data={socialHubCollectionJsonLd({
           name: TITLE,
           description: DESCRIPTION,
-          publishedSlugs,
         })}
       />
       <JsonLd data={faqPageJsonLd(FAQ_ITEMS, pageUrl)} />
@@ -192,19 +186,9 @@ export default function SocialHubPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {STAGES.map((s) => {
-            const isPublished = publishedSlugs.includes(
-              s.href.replace(`${SOCIAL_BASE}/`, "")
-            );
-
-            const body = (
-              <Card
-                className={`h-full border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 ${
-                  isPublished
-                    ? "transition hover:border-sky-400 dark:hover:border-sky-500"
-                    : ""
-                }`}
-              >
+          {STAGES.map((s) => (
+            <Link key={s.href} href={s.href} className="block">
+              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                 <CardContent className="flex h-full flex-col p-5">
                   <span className="inline-flex w-fit rounded bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600 dark:bg-neutral-800 dark:text-gray-400">
                     {s.stage}
@@ -218,27 +202,13 @@ export default function SocialHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span
-                    className={`mt-4 text-sm font-medium ${
-                      isPublished
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-400 dark:text-gray-500"
-                    }`}
-                  >
-                    {isPublished ? `${s.cta} →` : "準備中"}
+                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                    {s.cta} →
                   </span>
                 </CardContent>
               </Card>
-            );
-
-            return isPublished ? (
-              <Link key={s.href} href={s.href} className="block">
-                {body}
-              </Link>
-            ) : (
-              <div key={s.href}>{body}</div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -261,7 +231,7 @@ export default function SocialHubPage() {
 
 そして決め手は「趣味が合うこと」ではなく、**同じ人と繰り返し会うこと**です。パブで3時間盛り上がっても次はありませんが、毎週火曜の同じ場所に3ヶ月通えば、あるとき誰かが「このあと軽く飲む？」と言い出します。
 
-**友だちになるための会話をするのではなく、会い続けた結果として友だちになる。**順番が逆なのです。
+**友だちになるための会話をするのではなく、会い続けた結果として友だちになる**。順番が逆なのです。
 
 もうひとつ、日本語圏の人がつまずくのが「フレンドリー」と「友だちになる」を同じものとして読んでしまうこと。初対面の会話が弾むのは礼儀であって、関係が進んだ合図ではありません。見分け方は単純で、**相手の言葉に日時が入っているかどうか**だけです。`}
         </MarkdownBody>
@@ -275,16 +245,13 @@ export default function SocialHubPage() {
             出会いと人間関係のガイド一覧
           </h2>
           <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            全{socialGuides.length}本の構成で、現在{published.length}
-            本を公開しています。友人・恋愛・日本人コミュニティの3つで分けています。
+            現在{socialGuides.length}
+            本。友人・恋愛・日本人コミュニティの3つで分けています。
           </p>
         </div>
 
         {SOCIAL_CATEGORY_ORDER.map((category) => {
-          const guides = publishedSocialGuidesByCategory(
-            category,
-            publishedSlugs
-          );
+          const guides = socialGuidesByCategory(category);
           if (guides.length === 0) return null;
 
           return (

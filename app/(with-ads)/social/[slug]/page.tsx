@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SocialGuideLayout from "@/components/social/guides/SocialGuideLayout";
-import { buildSocialGuideMetadata } from "@/components/social/guides/guides";
+import {
+  buildSocialGuideMetadata,
+  socialGuideSlugs,
+} from "@/components/social/guides/guides";
 import { socialGuideArticles } from "@/components/social/guides/content";
 import { buildPageMetadata } from "@/lib/seo";
 
-/**
- * 本文がある記事だけを生成する。
- * guides.ts の socialGuides は9本の構成を先に持っているが、
- * 未執筆のものはページ化しない(socialGuideSlugs を使わない理由)。
- */
 export function generateStaticParams() {
-  return Object.keys(socialGuideArticles).map((slug) => ({ slug }));
+  return socialGuideSlugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

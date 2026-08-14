@@ -254,12 +254,17 @@ module.exports = {
       "/trouble/insurance-claim",
       "/trouble/embassy",
       // 出会い・人間関係ガイド。並びは components/social/guides/guides.ts の
-      // socialGuides と一致させること。
-      // 全9本の構成のうち、本文が存在するものだけをここに載せる
-      // (未執筆の URL を載せるとクロールされて 404 になる)。
-      // 記事を追加したら content/index.ts と同時にここも足すこと。
+      // socialGuides と一致させること。全9本で完結。
       "/social",
       "/social/how-brits-make-friends",
+      "/social/where-to-meet-people",
+      "/social/keeping-friendships",
+      "/social/dating-apps",
+      "/social/dating-culture",
+      "/social/dating-safety",
+      "/social/where-japanese-gather",
+      "/social/japanese-events",
+      "/social/community-distance",
       // お金・銀行ガイド。並びは components/money/guides/guides.ts の
       // moneyGuides と一致させること。
       "/money",

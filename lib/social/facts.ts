@@ -111,14 +111,40 @@ export const MEETING_CHANNELS = [
 ] as const;
 
 /**
- * 日本人コミュニティの年次イベント。
+ * 日本関連の年次イベント。
  *
  * 日程は毎年動くので月のみ持つ。日付を書くと必ず古くなる。
+ * 記事側でも「毎年◯月ごろ」と書き、確定日を書かないこと。
+ *
+ * 2026年8月14日に各公式サイトで確認した実績:
+ * - HYPER JAPAN Festival 2026: 7月24〜26日, Olympia London
+ * - Japan Matsuri 2026: 10月4日(日), Trafalgar Square
+ *
+ * 過去に冬開催の回があった Hyper Japan は、近年 7月の年1回開催。
+ * 「夏と冬の年2回」と書かないこと。
  */
 export const JAPANESE_EVENTS = [
-  { name: "Hyper Japan", month: "7月・冬", note: "英国最大級の日本文化イベント" },
-  { name: "Japan Matsuri", month: "9月頃", note: "屋外開催の日本祭り。無料" },
-  { name: "盆踊り・夏祭り", month: "7〜8月", note: "日本人会や寺院が主催" },
+  {
+    name: "HYPER JAPAN Festival",
+    month: "7月",
+    venue: "Olympia London",
+    paid: true,
+    note: "英国最大級の日本文化イベント。屋内・有料。物販と飲食の出展が中心",
+  },
+  {
+    name: "Japan Matsuri",
+    month: "10月",
+    venue: "Trafalgar Square",
+    paid: false,
+    note: "屋外開催の日本祭り。入場無料。ステージと屋台",
+  },
+  {
+    name: "盆踊り・夏祭り",
+    month: "7〜8月",
+    venue: "主催により異なる",
+    paid: false,
+    note: "日本人会や寺院、地域の団体が主催。規模は小さめ",
+  },
 ] as const;
 
 /**
@@ -155,5 +181,17 @@ export const SOCIAL_SOURCES = [
   {
     label: "Meetup - London のグループ検索",
     url: "https://www.meetup.com/cities/gb/london/",
+  },
+  {
+    label: "Japan Matsuri（公式）",
+    url: "https://japanmatsuri.com/",
+  },
+  {
+    label: "HYPER JAPAN Festival（公式）",
+    url: "https://hyperjapan.co.uk/festival/",
+  },
+  {
+    label: "在英国日本国大使館 - 日英イベントカレンダー",
+    url: "https://www.uk.emb-japan.go.jp/JAPANUKEvent/index.html",
   },
 ] as const;

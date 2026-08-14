@@ -146,34 +146,7 @@ export function getSocialGuideMeta(slug: string) {
   return socialGuides.find((g) => g.slug === slug) ?? null;
 }
 
-/**
- * 本文が存在する slug の集合。
- *
- * このセクションは9本の構成を先に確定させ、本文を順次追加していく。
- * socialGuides(構成)と socialGuideArticles(本文)がずれている間、
- * ハブが未執筆ページへのリンクを出すと 404 を踏ませることになるので、
- * 公開judgeをここに集約する。
- *
- * 循環 import を避けるため content/index.ts からは読まず、
- * ハブとレイアウトが呼び出し側で articles を渡す形にしている。
- *
- * 全9本が揃ったらこの関数と published 系のフィルタは削除してよい。
- */
-export function publishedSocialGuides(publishedSlugs: readonly string[]) {
-  const set = new Set(publishedSlugs);
-  return socialGuides.filter((g) => set.has(g.slug));
-}
-
-export function publishedSocialGuidesByCategory(
-  category: SocialCategory,
-  publishedSlugs: readonly string[]
-) {
-  return publishedSocialGuides(publishedSlugs).filter(
-    (g) => g.category === category
-  );
-}
-
-/** 構成上のすべての slug。sitemap や進捗の確認に使う。 */
+/** /social/[slug] が実際に生成するページ。 */
 export const socialGuideSlugs = socialGuides.map((g) => g.slug);
 
 export function socialGuidesByCategory(category: SocialCategory) {
@@ -222,16 +195,10 @@ export function socialGuideArticleJsonLd(article: SocialGuideArticle) {
   };
 }
 
-/**
- * /social ハブが持つガイド記事の一覧を CollectionPage として出す。
- *
- * hasPart には公開済みの記事だけを入れる。未執筆の URL を構造化データに
- * 載せるとクロールされて 404 になるため、publishedSlugs で絞る。
- */
+/** /social ハブが持つガイド記事の一覧を CollectionPage として出す。 */
 export function socialHubCollectionJsonLd(meta: {
   name: string;
   description: string;
-  publishedSlugs: readonly string[];
 }) {
   const url = `${SITE_URL}${SOCIAL_BASE}`;
 
@@ -243,7 +210,7 @@ export function socialHubCollectionJsonLd(meta: {
     name: meta.name,
     description: meta.description,
     inLanguage: "ja",
-    hasPart: publishedSocialGuides(meta.publishedSlugs).map((g) => ({
+    hasPart: socialGuides.map((g) => ({
       "@type": "Article",
       name: g.label,
       description: g.blurb,
