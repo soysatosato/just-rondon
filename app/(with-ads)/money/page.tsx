@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
+import FxRateWidget from "@/components/live/FxRateWidget";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import {
@@ -207,6 +208,15 @@ export default function MoneyHubPage() {
           </Link>
           から始めてください。
         </p>
+      </div>
+
+      {/*
+        参考レートはここにだけ置く。
+        lib/money/rates.ts は「率だけを持ち実額は書かない」方針なので、
+        変動する数字は記事本文に混ぜず、出典と日付を添えたこの枠に隔離する。
+      */}
+      <div className="mt-8">
+        <FxRateWidget />
       </div>
 
       <Separator className="my-8" />
