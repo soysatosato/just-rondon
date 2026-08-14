@@ -1,6 +1,7 @@
 import type { TroubleGuideArticle } from "../types";
 import {
   EMERGENCY_CONTACTS,
+  FRAUD_REPORTING,
   POLICE_REPORT,
   TROUBLE_AS_OF,
   TROUBLE_SOURCES,
@@ -14,13 +15,14 @@ const policeReport: TroubleGuideArticle = {
   audience: "被害を届け出たい人。保険請求に受理番号が必要な人",
   summary: `物が戻ってこなくても、届け出る理由があります。保険の請求も、パスポートの再発給も、携帯会社への申告も、警察の受理番号（crime reference number）を前提に組まれているからです。${EMERGENCY_CONTACTS.emergency} と ${EMERGENCY_CONTACTS.nonEmergency} とオンラインの使い分けから説明します。`,
   description:
-    "イギリスで警察に被害を届け出る方法を解説。999と101とオンライン通報の使い分け、crime reference numberの発行タイミングと使い道、通訳の依頼、Action Fraudへの詐欺通報まで。通報は無料です。",
+    "イギリスで警察に被害を届け出る方法を解説。999と101とオンライン通報の使い分け、crime reference numberの発行タイミングと使い道、通訳の依頼、Report Fraud（旧Action Fraud）への詐欺通報まで。通報は無料です。",
   keywords: [
     "イギリス 警察 通報",
     "crime reference number とは",
     "ロンドン 101 警察",
     "イギリス 盗難 届出",
-    "Action Fraud 詐欺 通報",
+    "Report Fraud 詐欺 通報",
+    "Action Fraud 変更",
     "ロンドン 警察署 日本語",
   ],
   dataAsOf: TROUBLE_AS_OF,
@@ -68,7 +70,7 @@ const policeReport: TroubleGuideArticle = {
     },
     {
       label: "詐欺の通報",
-      value: `Action Fraud（${EMERGENCY_CONTACTS.actionFraud}）`,
+      value: `${FRAUD_REPORTING.serviceName}（${EMERGENCY_CONTACTS.reportFraud}）`,
     },
     {
       label: "銀行を名乗る不審な連絡",
@@ -81,7 +83,7 @@ const policeReport: TroubleGuideArticle = {
   ],
   mainText: `「届け出ても、どうせ戻ってこない」——これはある程度まで事実です。ロンドンで盗まれた物の回収率は高くありません。警察も、すべての窃盗を捜査できるわけではないと認めています。
 
-それでも届け出る理由があります。**crime reference number（犯罪受理番号）**です。
+それでも届け出る理由があります。**crime reference number（犯罪受理番号）** です。
 
 この番号は、被害を受けたことの公的な記録です。そして英国の各種手続きは、この番号があることを前提に設計されています。
 
@@ -107,7 +109,7 @@ const policeReport: TroubleGuideArticle = {
 | 身に危険が迫っている | **${EMERGENCY_CONTACTS.emergency}** |
 | 数時間前に盗まれた財布の届出 | **${EMERGENCY_CONTACTS.nonEmergency}** / オンライン |
 | 帰宅したら部屋が荒らされていた（犯人はいない） | **${EMERGENCY_CONTACTS.nonEmergency}** / オンライン |
-| 詐欺の被害に気づいた | **Action Fraud**（${EMERGENCY_CONTACTS.actionFraud}） |
+| 詐欺の被害に気づいた | **${FRAUD_REPORTING.serviceName}**（${EMERGENCY_CONTACTS.reportFraud}） |
 
 判断の軸は被害の大きさではなく、**時間**です。「いま起きているか、もう終わったか」だけで決まります。100万円盗まれても、それが昨日のことなら ${EMERGENCY_CONTACTS.nonEmergency} です。
 
@@ -162,7 +164,7 @@ const policeReport: TroubleGuideArticle = {
 
 ### 英語が不安な場合
 
-**通訳を頼めます。**電話がつながったら「I need a Japanese interpreter」と伝えてください。費用は自己負担ではありません。
+**通訳を頼めます**。電話がつながったら「I need a Japanese interpreter」と伝えてください。費用は自己負担ではありません。
 
 オンラインなら翻訳ツールを使って構いません。**完璧な英語である必要はなく、事実が伝われば十分**です。`,
       tips: [
@@ -205,16 +207,25 @@ ${POLICE_REPORT.responseHours}時間を過ぎても連絡がないなら、**${E
         title: "保険の請求期限に注意してください",
         body: `多くの保険が「被害から24時間以内に警察へ届け出ること」「一定日数以内に保険会社へ連絡すること」を条件にしています。
 
-**警察の番号が出るのを待ってから保険会社に連絡する、という順番だと間に合わないことがあります。**先に保険会社へ「被害に遭い、警察に通報済み。受理番号は追って連絡する」と伝えておいてください。これで期限の問題はほぼ回避できます。`,
+**警察の番号が出るのを待ってから保険会社に連絡する、という順番だと間に合わないことがあります**。先に保険会社へ「被害に遭い、警察に通報済み。受理番号は追って連絡する」と伝えておいてください。これで期限の問題はほぼ回避できます。`,
       },
     },
     {
       id: "fraud",
       title: "詐欺の場合は窓口が違う",
-      subtitle: "Action Fraud と 159",
-      body: `**詐欺（fraud）は、通常の窃盗とは別の窓口**が担当します。イングランド・ウェールズ・北アイルランドでは **Action Fraud** が受け付けています。
+      subtitle: `${FRAUD_REPORTING.serviceName} と 159`,
+      body: `**詐欺（fraud）は、通常の窃盗とは別の窓口**が担当します。${FRAUD_REPORTING.coverage}では **${FRAUD_REPORTING.serviceName}** が受け付けています。
 
-電話：**${EMERGENCY_CONTACTS.actionFraud}**
+電話：**${EMERGENCY_CONTACTS.reportFraud}**
+サイト：[${FRAUD_REPORTING.url}](${FRAUD_REPORTING.url})
+
+### 名称が変わっています（${FRAUD_REPORTING.formerName} → ${FRAUD_REPORTING.serviceName}）
+
+${FRAUD_REPORTING.replacedOn}に、それまでの **${FRAUD_REPORTING.formerName}** が **${FRAUD_REPORTING.serviceName}** に置き換わりました（運営は ${FRAUD_REPORTING.operator}）。
+
+日本語で書かれた情報はまだ旧名のものが大半なので、検索して ${FRAUD_REPORTING.formerName} にたどり着いても心配は要りません。**電話番号は変わっておらず**、旧サイトも新サイトに転送されます。
+
+**スコットランドは対象外**です。スコットランドでの被害は **${FRAUD_REPORTING.scotland}** に通報してください。
 
 ### 159 という短縮番号
 
@@ -236,7 +247,7 @@ ${POLICE_REPORT.responseHours}時間を過ぎても連絡がないなら、**${E
       tips: [
         "詐欺の被害に遭ったら、まず銀行に連絡して取引の停止を依頼する",
         "やり取りのSMS・メール・画面は消さずに保存する。証拠になる",
-        "スコットランドでは、詐欺の通報先が Police Scotland（101）になる",
+        `スコットランドでは、詐欺の通報先が ${FRAUD_REPORTING.scotland} になる`,
       ],
     },
     {
@@ -266,36 +277,36 @@ ${POLICE_REPORT.responseHours}時間を過ぎても連絡がないなら、**${E
 - 被害の内容をまとめたメモ
 - すでに通報済みなら、その参照番号
 
-**日本語の通訳が必要なら、窓口でもその旨を伝えてください。**手配されるまで時間がかかることがあるので、可能なら事前に電話で伝えておくとスムーズです。`,
+**日本語の通訳が必要なら、窓口でもその旨を伝えてください**。手配されるまで時間がかかることがあるので、可能なら事前に電話で伝えておくとスムーズです。`,
     },
   ],
   faq: [
     {
       question: "警察に届け出るのにお金はかかりますか？",
-      answer: `**かかりません。**オンライン・電話・窓口のいずれも${POLICE_REPORT.cost}で、crime reference number の発行にも費用はかかりません。手数料を請求されるようなことがあれば、それ自体が詐欺を疑うべき状況です。`,
+      answer: `**かかりません**。オンライン・電話・窓口のいずれも${POLICE_REPORT.cost}で、crime reference number の発行にも費用はかかりません。手数料を請求されるようなことがあれば、それ自体が詐欺を疑うべき状況です。`,
     },
     {
       question: "crime reference number はいつもらえますか？",
-      answer: `**通報した直後とは限りません。**オンライン通報ではまず受付の参照番号が出て、報告が正式な犯罪報告として受理された段階で crime reference number が発行されます。目安として${POLICE_REPORT.responseHours}時間以内に警察から連絡が来ます。過ぎても連絡がなければ、${EMERGENCY_CONTACTS.nonEmergency} に確認してください。`,
+      answer: `**通報した直後とは限りません**。オンライン通報ではまず受付の参照番号が出て、報告が正式な犯罪報告として受理された段階で crime reference number が発行されます。目安として${POLICE_REPORT.responseHours}時間以内に警察から連絡が来ます。過ぎても連絡がなければ、${EMERGENCY_CONTACTS.nonEmergency} に確認してください。`,
     },
     {
       question: "英語が話せません。通報できますか？",
       answer:
-        "**できます。**電話では通訳を依頼でき、費用は自己負担ではありません。「I need a Japanese interpreter」と伝えてください。また、すでに終わった被害であればオンライン通報が使えます。文章を推敲でき、翻訳ツールも使えるので、電話より負担が小さいことが多いです。",
+        "**できます**。電話では通訳を依頼でき、費用は自己負担ではありません。「I need a Japanese interpreter」と伝えてください。また、すでに終わった被害であればオンライン通報が使えます。文章を推敲でき、翻訳ツールも使えるので、電話より負担が小さいことが多いです。",
     },
     {
       question: "旅行者ですが、帰国後に保険を請求したい場合はどうしますか？",
       answer:
-        "**滞在中に必ず届け出てください。**帰国後に英国の警察へ遡って届け出るのは非常に困難で、保険請求に必要な番号を取得できなくなる可能性があります。帰国日が迫っていても、オンラインなら数十分で出せます。",
+        "**滞在中に必ず届け出てください**。帰国後に英国の警察へ遡って届け出るのは非常に困難で、保険請求に必要な番号を取得できなくなる可能性があります。帰国日が迫っていても、オンラインなら数十分で出せます。",
     },
     {
       question: "届け出ても捜査してもらえないと聞きました。意味がありますか？",
       answer:
-        "**手続きのために意味があります。**すべての窃盗が捜査されるわけではないのは事実ですが、crime reference number は保険請求・パスポート再発給・携帯会社への申告の前提になります。物の回収ではなく、そのあとの手続きを動かすために届け出ると考えてください。",
+        "**手続きのために意味があります**。すべての窃盗が捜査されるわけではないのは事実ですが、crime reference number は保険請求・パスポート再発給・携帯会社への申告の前提になります。物の回収ではなく、そのあとの手続きを動かすために届け出ると考えてください。",
     },
     {
       question: "詐欺に遭いました。101 でいいですか？",
-      answer: `**詐欺は Action Fraud（${EMERGENCY_CONTACTS.actionFraud}）が窓口です。**イングランド・ウェールズ・北アイルランドではこちらが担当します（スコットランドは Police Scotland）。また、銀行を名乗る不審な連絡を受けたら、いったん切って **${EMERGENCY_CONTACTS.bankFraud}** にかけ直してください。自分の銀行の詐欺対応窓口に安全につながります。`,
+      answer: `**詐欺は ${FRAUD_REPORTING.serviceName}（${EMERGENCY_CONTACTS.reportFraud}）が窓口です**。${FRAUD_REPORTING.replacedOn}に ${FRAUD_REPORTING.formerName} から名称が変わりましたが、番号は同じで旧サイトも転送されます。対象は${FRAUD_REPORTING.coverage}で、スコットランドは ${FRAUD_REPORTING.scotland} です。また、銀行を名乗る不審な連絡を受けたら、いったん切って **${EMERGENCY_CONTACTS.bankFraud}** にかけ直してください。自分の銀行の詐欺対応窓口に安全につながります。`,
     },
   ],
   sources: [...TROUBLE_SOURCES],

@@ -23,10 +23,13 @@ import {
 import {
   EMBASSY,
   EMERGENCY_CONTACTS,
+  FRAUD_REIMBURSEMENT,
+  FRAUD_REPORTING,
   POLICE_REPORT,
   TFL_LOST_PROPERTY,
   TROUBLE_AS_OF,
   TROUBLE_UPDATED_AT,
+  gbpLarge,
 } from "@/lib/trouble/contacts";
 
 const TITLE = "ロンドンのトラブル対応ガイド｜盗難・紛失・警察への届出";
@@ -88,41 +91,72 @@ const SCENARIOS: {
     cta: "探し方の分岐を見る",
   },
   {
-    situation: "保険を請求したいが、何が要るか分からない",
+    situation: "詐欺に遭った・送金してしまった",
+    answer: "返金の対象になりえます",
+    detail: `だまされて自分で振り込んだ場合でも、${FRAUD_REIMBURSEMENT.mandatoryFrom}から銀行に返金義務があります（上限${gbpLarge(
+      FRAUD_REIMBURSEMENT.appMaxGbp
+    )}）。「自分で振り込んだから無理」と諦めないでください。`,
+    href: "/trouble/scams",
+    cta: "返金の請求方法を見る",
+  },
+  {
+    situation: "警察に届け出たい・受理番号が要る",
     answer: "crime reference number",
     detail: `警察の受理番号がないと、保険請求もパスポート再発給も進みません。${EMERGENCY_CONTACTS.emergency} と ${EMERGENCY_CONTACTS.nonEmergency} の使い分けから説明します。`,
     href: "/trouble/police-report",
     cta: "届出の手順を見る",
+  },
+  {
+    situation: "保険で補償を受けたい",
+    answer: "順番を外さないこと",
+    detail:
+      "請求が通らない理由の多くは、補償の中身ではなく手続きの順番です。受理番号を待ってから保険会社に連絡すると、期限を過ぎることがあります。",
+    href: "/trouble/insurance-claim",
+    cta: "請求の手順を見る",
+  },
+  {
+    situation: "大使館に相談すべきか迷っている",
+    answer: "できることの線を先に知る",
+    detail:
+      "パスポートの発給と領事面会はできます。弁護士費用の負担と裁判の通訳はできません。範囲を知っておくと、無駄足を踏まずに済みます。",
+    href: "/trouble/embassy",
+    cta: "できること・できないことを見る",
   },
 ];
 
 const FAQ_ITEMS = [
   {
     question: `${EMERGENCY_CONTACTS.emergency} と ${EMERGENCY_CONTACTS.nonEmergency} はどう使い分けますか？`,
-    answer: `**判断の軸は「いま危険かどうか」だけです。**犯人がその場にいる、けがをした、身に危険が迫っている——このいずれかなら **${EMERGENCY_CONTACTS.emergency}**。すでに終わった盗難の届出は **${EMERGENCY_CONTACTS.nonEmergency}** かオンラインです。被害額の大きさではなく時間で決まります。ただし迷う状況で ${EMERGENCY_CONTACTS.emergency} にかけることを躊躇しないでください。オペレーターが適切な窓口に振り分けてくれます。`,
+    answer: `**判断の軸は「いま危険かどうか」だけです**。犯人がその場にいる、けがをした、身に危険が迫っている——このいずれかなら **${EMERGENCY_CONTACTS.emergency}**。すでに終わった盗難の届出は **${EMERGENCY_CONTACTS.nonEmergency}** かオンラインです。被害額の大きさではなく時間で決まります。ただし迷う状況で ${EMERGENCY_CONTACTS.emergency} にかけることを躊躇しないでください。オペレーターが適切な窓口に振り分けてくれます。`,
   },
   {
     question: "警察に届け出るのにお金はかかりますか？",
-    answer: `**かかりません。**オンライン・電話・窓口のいずれも${POLICE_REPORT.cost}で、crime reference number の発行にも費用はかかりません。「番号を取るのにお金がかかる」という誤解が流布していますが事実ではなく、費用を請求されたらそれ自体が詐欺を疑うべき状況です。`,
+    answer: `**かかりません**。オンライン・電話・窓口のいずれも${POLICE_REPORT.cost}で、crime reference number の発行にも費用はかかりません。「番号を取るのにお金がかかる」という誤解が流布していますが事実ではなく、費用を請求されたらそれ自体が詐欺を疑うべき状況です。`,
   },
   {
     question: "盗まれた物は戻ってきますか？",
     answer:
-      "**正直に言えば、ほとんど戻りません。**とくにスマートフォンや現金の回収率は高くありません。それでも届け出る理由は、**保険請求とパスポート再発給に警察の受理番号が必要**だからです。物を取り戻すためではなく、そのあとの手続きを動かすために届け出ると考えてください。",
+      "**正直に言えば、ほとんど戻りません**。とくにスマートフォンや現金の回収率は高くありません。それでも届け出る理由は、**保険請求とパスポート再発給に警察の受理番号が必要**だからです。物を取り戻すためではなく、そのあとの手続きを動かすために届け出ると考えてください。",
   },
   {
     question: "英語が話せません。それでも手続きできますか？",
     answer:
-      "**できます。**警察に通訳を依頼でき、費用は自己負担ではありません。電話がつながったら「I need a Japanese interpreter」と伝えてください。また、すでに終わった被害ならオンライン通報が使えます。文章を推敲でき翻訳ツールも使えるので、電話より負担が小さいことが多いです。大使館では日本語で相談できます。",
+      "**できます**。警察に通訳を依頼でき、費用は自己負担ではありません。電話がつながったら「I need a Japanese interpreter」と伝えてください。また、すでに終わった被害ならオンライン通報が使えます。文章を推敲でき翻訳ツールも使えるので、電話より負担が小さいことが多いです。大使館では日本語で相談できます。",
   },
   {
     question: "銀行から電話がかかってきました。本物でしょうか？",
-    answer: `**いったん切って ${EMERGENCY_CONTACTS.bankFraud} にかけ直してください。**これは主要銀行が参加する短縮番号で、自分の銀行の詐欺対応窓口に安全につながります。銀行が暗証番号やパスワードの全体を聞くことはなく、「安全な口座に資金を移して」と言うこともありません。どちらも詐欺の典型的な文句です。かけ直すときは別の端末を使うか、同じ端末なら10分ほど待ってからにしてください。`,
+    answer: `**いったん切って ${EMERGENCY_CONTACTS.bankFraud} にかけ直してください**。これは主要銀行が参加する短縮番号で、自分の銀行の詐欺対応窓口に安全につながります。銀行が暗証番号やパスワードの全体を聞くことはなく、「安全な口座に資金を移して」と言うこともありません。どちらも詐欺の典型的な文句です。かけ直すときは別の端末を使うか、同じ端末なら10分ほど待ってからにしてください。`,
+  },
+  {
+    question: "詐欺で自分から送金してしまいました。もう戻りませんか？",
+    answer: `**諦めるのは早いです**。${FRAUD_REIMBURSEMENT.mandatoryFrom}から、だまされて送金した被害（APP詐欺）にも銀行の返金義務が課されています。上限は${gbpLarge(
+      FRAUD_REIMBURSEMENT.appMaxGbp
+    )}で、原則${FRAUD_REIMBURSEMENT.appRefundWorkingDays}営業日以内の返金です。日本の感覚だと「自分で振り込んだ以上どうにもならない」と考えがちですが、**英国ではそうではありません**。まず銀行に返金を請求してください。`,
   },
   {
     question: "旅行中です。帰国が近いのですが、何を優先すべきですか？",
     answer:
-      "**カードの停止と、パスポートの確認です。**パスポートが無事なら帰国はできるので、まずカードを止めて被害の拡大を止めます。パスポートも失っている場合は、警察への届出と大使館への連絡が最優先です。保険を請求するつもりなら、**滞在中に必ず警察へ届け出てください**。帰国後に遡って届け出るのは非常に困難です。",
+      "**カードの停止と、パスポートの確認です**。パスポートが無事なら帰国はできるので、まずカードを止めて被害の拡大を止めます。パスポートも失っている場合は、警察への届出と大使館への連絡が最優先です。保険を請求するつもりなら、**滞在中に必ず警察へ届け出てください**。帰国後に遡って届け出るのは非常に困難です。",
   },
 ];
 
@@ -191,6 +225,12 @@ export default function TroubleHubPage() {
             ｜銀行を名乗る不審な連絡。いったん切って、この番号にかけ直します
           </li>
         </ul>
+        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          詐欺の通報は <strong>{EMERGENCY_CONTACTS.reportFraud}</strong>（
+          {FRAUD_REPORTING.serviceName}）。
+          {FRAUD_REPORTING.replacedOn}に {FRAUD_REPORTING.formerName}{" "}
+          から名称が変わりましたが、番号は同じです。
+        </p>
         <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
           英語に不安があれば、つながってから「I need a Japanese interpreter」と
           伝えれば通訳が入ります。費用はかかりません。

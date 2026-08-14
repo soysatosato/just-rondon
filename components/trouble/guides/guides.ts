@@ -51,7 +51,7 @@ export type TroubleGuideMeta = {
  * next-sitemap.config.js の staticPages と、/trouble ハブのカード表示順を
  * このリストと一致させること。
  *
- * 未着手: stalking-harassment / scams / insurance-claim / embassy。
+ * 未着手: stalking-harassment のみ。書き方の設計をユーザーと詰めてから着手する。
  * 追加するときはこのリストに足し、sitemap とハブの順序も同時に更新する。
  */
 export const troubleGuides: TroubleGuideMeta[] = [
@@ -80,12 +80,36 @@ export const troubleGuides: TroubleGuideMeta[] = [
       "盗まれたのではなく置き忘れたなら、探す場所は警察ではありません。TfL の遺失物センターは保管3ヶ月。バスは最初の3日だけ営業所に直接聞くほうが早い、という分岐まで。",
   },
   {
+    slug: "scams",
+    category: "harm",
+    eyebrow: "Scams",
+    label: "詐欺に遭ったら（銀行の返金義務）",
+    blurb:
+      "自分で振り込んでしまっても、諦めるのはまだ早い。2024年10月から銀行に返金義務が課されました。上限£85,000。そして159という、知らないと損をする番号の話。",
+  },
+  {
     slug: "police-report",
     category: "procedure",
     eyebrow: "Crime Reference",
     label: "警察に届け出る（crime reference number）",
     blurb:
       "物が戻らなくても届け出る理由があります。保険請求も、大使館の渡航書も、この番号がないと進みません。999 と 101 とオンラインの使い分けを、はっきりさせます。",
+  },
+  {
+    slug: "insurance-claim",
+    category: "procedure",
+    eyebrow: "Insurance",
+    label: "保険に請求する（旅行保険・カード付帯）",
+    blurb:
+      "請求が通らない理由は、補償の中身ではなく手続きの順番にあります。受理番号を待つと期限を過ぎる、という落とし穴と、免責額を先に計算すべき理由。",
+  },
+  {
+    slug: "embassy",
+    category: "procedure",
+    eyebrow: "Embassy",
+    label: "大使館にできること・できないこと",
+    blurb:
+      "パスポートの発給と領事面会はできます。弁護士費用の負担と裁判の通訳はできません。線を先に知っておくほうが、いざというとき確実に頼れます。",
   },
 ];
 

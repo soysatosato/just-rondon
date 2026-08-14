@@ -248,7 +248,10 @@ module.exports = {
       "/trouble/pickpocket",
       "/trouble/lost-passport",
       "/trouble/lost-property",
+      "/trouble/scams",
       "/trouble/police-report",
+      "/trouble/insurance-claim",
+      "/trouble/embassy",
       // お金・銀行ガイド。並びは components/money/guides/guides.ts の
       // moneyGuides と一致させること。
       "/money",
