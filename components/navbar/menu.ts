@@ -183,6 +183,18 @@ export const NAV_SECTIONS: NavSection[] = [
           { href: "/beyond-london/canterbury", label: "カンタベリー" },
         ],
       },
+      {
+        heading: "週末に1泊で",
+        links: [
+          { href: "/beyond-london/york", label: "ヨーク" },
+          { href: "/beyond-london/edinburgh", label: "エディンバラ" },
+          { href: "/beyond-london/lake-district", label: "湖水地方" },
+          {
+            href: "/beyond-london/penzance",
+            label: "ペンザンス（寝台列車）",
+          },
+        ],
+      },
     ],
   },
   {

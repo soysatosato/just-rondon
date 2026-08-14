@@ -115,6 +115,40 @@ export type BeyondHighlight = {
 /** 二層構成。ハブでの束ね方。 */
 export type BeyondTier = "dayTrip" | "weekender";
 
+/**
+ * 「宿と夜」。週末1泊圏(tier: "weekender")の記事だけが持つ。
+ *
+ * なぜ1泊圏にだけ必要か:
+ * 日帰りは「行って帰る」だけなので gettingThere で足りる。
+ * 1泊すると判断が3つ増える——どこに泊まるか、夜に何をするか、
+ * 何時の列車で帰るか。この3つは日本語の情報がとりわけ薄く、
+ * 「宿は現地で探せばいい」と書いてあることすらある。
+ *
+ * 型で必須にしていない(? 付き)のは、DestinationArticle が
+ * 日帰り圏と共用の型だから。tier: "weekender" の記事では
+ * 必ず埋めること——ハブの週末セクションに並ぶ記事がこれを
+ * 欠いていると、1泊圏として成立しない。
+ *
+ * 宿の固有名詞は書かない。開業・閉業・改装で古くなるうえ、
+ * 価格帯も季節で動く。「どのエリアに取るか」と「何を基準に選ぶか」
+ * までに留める(/sightseeing/hotels が市内で取っているのと同じ方針)。
+ */
+export type StayAndNight = {
+  /** どのエリアに宿を取るか。地区名と、その理由。 */
+  whereToStay: string;
+  /** 宿の相場観。幅で書く。固有名詞は出さない。 */
+  priceBand: string;
+  /** 夜に何ができるか。1泊する価値がここに出る。 */
+  atNight: string;
+  /** 翌日の帰り方。何時台に出れば何時にロンドンに着くか。 */
+  gettingBack: string;
+  /**
+   * 宿泊税など、その土地だけの上乗せ。
+   * エディンバラのように制度が始まったばかりの土地では必須。
+   */
+  levyNote?: string;
+};
+
 export type DestinationArticle = {
   kind: "destination";
   slug: string;
@@ -133,6 +167,8 @@ export type DestinationArticle = {
   gettingThere: GettingThere;
   /** 現地での回り方。必須。 */
   onArrival: OnArrival;
+  /** 宿と夜。tier: "weekender" の記事は必ず埋めること。 */
+  stayAndNight?: StayAndNight;
   /** 見どころ。2〜5件。 */
   highlights: BeyondHighlight[];
   sections: BeyondSection[];

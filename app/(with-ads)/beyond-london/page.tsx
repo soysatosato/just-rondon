@@ -24,7 +24,7 @@ import {
 import { RAIL_AS_OF, RAIL_UPDATED_AT } from "@/lib/beyond-london/rates";
 
 const TITLE = "Beyond London｜ロンドンから日帰り・週末で行く英国";
-const DESCRIPTION = `ロンドンから日帰りで行ける7つの行き先を、行き方から書いたガイド。どの駅から何分で、往復いくらで、Oysterが使えるのか。日本語の日帰り情報がほとんど書かない「行き方」を軸にまとめました。BritRail Passの損得判定つき。${RAIL_AS_OF}時点の情報です。`;
+const DESCRIPTION = `ロンドンから日帰りで行ける7つの行き先と、週末1泊で行ける4つの行き先を、行き方から書いたガイド。どの駅から何分で、往復いくらで、Oysterが使えるのか。日本語の情報がほとんど書かない「行き方」と「宿と夜」を軸にまとめました。BritRail Passの損得判定つき。${RAIL_AS_OF}時点の情報です。`;
 
 export const metadata = buildPageMetadata({
   path: BEYOND_BASE,
@@ -43,7 +43,7 @@ export const metadata = buildPageMetadata({
 
 const INTRO = `ロンドンは、それだけで何日でも過ごせる街です。それでも数日いると、**「イギリスの他の場所も見てみたい」** と思う瞬間が来ます。
 
-このセクションは、そのためのものです。ロンドンを拠点にしたまま、**朝出て夜には戻れる範囲**にどんな場所があるのかをまとめています。
+このセクションは、そのためのものです。**朝出て夜には戻れる範囲**と、**週末に1泊すれば届く範囲**——このふたつに分けて、行き先をまとめています。
 
 書き方には一つだけ決めごとがあります。**必ず「行き方」から書く**ことです。
 
@@ -55,7 +55,17 @@ const FAQ = [
   {
     question: "ロンドンから日帰りできる範囲はどのくらいですか？",
     answer:
-      "**片道2時間以内**が現実的な目安です。このセクションで扱っている7か所はすべてこの範囲に収まっており、朝出て夜にはロンドンに戻れます。エディンバラやヨークなど、それ以上遠い行き先は1泊する前提で考えてください。",
+      "**片道2時間以内**が現実的な目安です。「日帰りで行ける」に並べた7か所はすべてこの範囲で、朝出て夜にはロンドンに戻れます。[ヨーク](/beyond-london/york)・[エディンバラ](/beyond-london/edinburgh)・[湖水地方](/beyond-london/lake-district)・[ペンザンス](/beyond-london/penzance)はそれ以上遠いので、1泊する前提で組んでください。",
+  },
+  {
+    question: "1泊するなら、どこがいいですか？",
+    answer:
+      "**距離と目的で決まります**。最も近いのは[ヨーク](/beyond-london/york)（片道2時間）で、日帰りもできますが夜の街が泊まる理由になります。[エディンバラ](/beyond-london/edinburgh)は唯一の「別の国」で、制度も紙幣も変わります。[湖水地方](/beyond-london/lake-district)は自然、[ペンザンス](/beyond-london/penzance)は最も遠いかわりに寝台列車で行けます。",
+  },
+  {
+    question: "宿泊税はかかりますか？",
+    answer:
+      "**エディンバラだけかかります**。2026年7月24日から宿泊費の5%が上乗せされる制度が始まりました（英国初）。ロンドンをはじめイングランドの都市にはまだありません。予約サイトの表示価格に含まれていないことがあるので、[エディンバラの記事](/beyond-london/edinburgh)で詳しく扱っています。",
   },
   {
     question: "日帰り先でも Oyster やタッチ決済は使えますか？",
@@ -131,48 +141,36 @@ export default function BeyondHubPage() {
                 </p>
               </div>
 
-              {/*
-                週末1泊圏はまだ記事を持たない。空欄のカード列を出すより、
-                準備中と明示するほうが読者を迷わせない。
-              */}
-              {items.length === 0 ? (
-                <Card className="border-dashed border-gray-300 bg-gray-50 dark:border-neutral-700 dark:bg-neutral-900">
-                  <CardContent className="p-5 text-sm text-gray-600 dark:text-gray-400">
-                    ヨーク、エディンバラ、湖水地方、ハドリアヌスの長城を準備中です。
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {items.map((d) => (
-                    <Link
-                      key={d.slug}
-                      href={beyondPath(d.slug)}
-                      className="block"
-                    >
-                      <Card className="border-gray-300 bg-white shadow-sm transition hover:border-teal-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-teal-500">
-                        <CardContent className="p-5">
-                          <span className="block text-xs font-semibold text-teal-600">
-                            {d.eyebrow}
+              <div className="space-y-3">
+                {items.map((d) => (
+                  <Link
+                    key={d.slug}
+                    href={beyondPath(d.slug)}
+                    className="block"
+                  >
+                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-teal-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-teal-500">
+                      <CardContent className="p-5">
+                        <span className="block text-xs font-semibold text-teal-600">
+                          {d.eyebrow}
+                        </span>
+                        <span className="mt-1 block text-base font-semibold">
+                          {d.label}
+                        </span>
+                        {(d.county || d.journeyTime) && (
+                          <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+                            {[d.county, d.journeyTime]
+                              .filter(Boolean)
+                              .join(" ・ ")}
                           </span>
-                          <span className="mt-1 block text-base font-semibold">
-                            {d.label}
-                          </span>
-                          {(d.county || d.journeyTime) && (
-                            <span className="mt-1 block text-xs text-gray-500 dark:text-gray-400">
-                              {[d.county, d.journeyTime]
-                                .filter(Boolean)
-                                .join(" ・ ")}
-                            </span>
-                          )}
-                          <span className="mt-2 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                            {d.blurb}
-                          </span>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              )}
+                        )}
+                        <span className="mt-2 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                          {d.blurb}
+                        </span>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
             </section>
           );
         })}

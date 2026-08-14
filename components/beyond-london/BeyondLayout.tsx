@@ -28,6 +28,7 @@ import {
 import BeyondBreakEven from "./BeyondBreakEven";
 import BeyondGettingThere from "./BeyondGettingThere";
 import BeyondHighlights from "./BeyondHighlights";
+import BeyondStayAndNight from "./BeyondStayAndNight";
 import { isDestination, type BeyondArticle } from "./types";
 
 export default function BeyondLayout({ article }: { article: BeyondArticle }) {
@@ -116,6 +117,14 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
           gettingThere={destination.gettingThere}
           onArrival={destination.onArrival}
         />
+      )}
+
+      {/*
+        1泊圏は「どう行くか」の次に「どこに泊まって夜どうするか」が来る。
+        見どころより先に決まる判断なので、この位置に置く。
+      */}
+      {destination?.stayAndNight && (
+        <BeyondStayAndNight data={destination.stayAndNight} />
       )}
 
       {/* 損得記事は結論を同じ位置に置く。 */}

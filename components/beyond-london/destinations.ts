@@ -60,9 +60,11 @@ export type BeyondMeta = {
  * 英国では当日券が Advance の3〜4倍になることがあり、
  * ここを知らずに動くと日帰り1回で数十ポンド損をする。
  *
- * 週末1泊圏(weekender)はまだ記事を持たない。ハブでは
- * 「準備中」として枠だけ見せ、記事が揃った時点でここに足す。
- * 空の配列を返す期間があるので、ハブ側は0件を許容すること。
+ * 週末1泊圏(weekender)は所要時間の短い順ではなく、
+ * ヨーク → エディンバラ → 湖水地方 → ペンザンスの順で並べる。
+ * 最初の2つが同じ東海岸本線上にあり、読者が「ヨークで1泊して
+ * さらに北へ」と続けて読めるため。ペンザンスを最後に置くのは、
+ * 唯一の寝台列車という別枠の提案だから。
  *
  * next-sitemap.config.js の staticPages と、
  * /beyond-london ハブのカード表示順をこのリストと一致させること。
@@ -145,6 +147,46 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間",
     blurb:
       "英国国教会の総本山。ヘンリー8世がローマと断絶した宗教改革の帰結が、この大聖堂ひとつで見て取れます。",
+  },
+  {
+    slug: "york",
+    category: "weekender",
+    eyebrow: "York",
+    label: "ヨーク",
+    county: "ノース・ヨークシャー州",
+    journeyTime: "約2時間",
+    blurb:
+      "ローマの軍団基地、ヴァイキングの王国、中世の大聖堂が徒歩30分の範囲に積み重なっています。日帰りもできますが、観光客が帰ったあとの夜が泊まる理由です。",
+  },
+  {
+    slug: "edinburgh",
+    category: "weekender",
+    eyebrow: "Edinburgh",
+    label: "エディンバラ",
+    county: "スコットランド",
+    journeyTime: "約4時間20分",
+    blurb:
+      "唯一の「別の国」。紙幣も法律も教育制度も変わります。2026年7月に英国初の宿泊税が始まったので、予算の立て方も他とは違います。",
+  },
+  {
+    slug: "lake-district",
+    category: "weekender",
+    eyebrow: "The Lake District",
+    label: "湖水地方",
+    county: "カンブリア州",
+    journeyTime: "約3時間20分",
+    blurb:
+      "「車がないと無理」と書かれがちですが、ウィンダミア湖の東岸に絞れば船とバスで回れます。その線引きから書きます。",
+  },
+  {
+    slug: "penzance",
+    category: "weekender",
+    eyebrow: "Penzance & Cornwall",
+    label: "ペンザンスとコーンウォール",
+    county: "コーンウォール州",
+    journeyTime: "約5時間（寝台なら夜行）",
+    blurb:
+      "このセクションで最も遠く、英国で数少ない寝台列車で行ける行き先。海に浮かぶ城と、崖を削った野外劇場が待っています。",
   },
 ];
 

@@ -233,6 +233,61 @@ export const LONG_DISTANCE_ROUTES = [
 ] as const;
 
 /* -----------------------------------------------------
+   夜行列車(Night Riviera)
+   出典: GWR / seat61
+
+   ロンドンからコーンウォールへの唯一の寝台列車。
+   1泊圏の記事で「移動しながら寝る」という選択肢を出せる
+   数少ない路線なので、独立して持つ。
+
+   注意: 「£30の清掃料」という記述が二次情報に見られるが、
+   これは犬を同伴した場合のコンパートメント清掃料であり、
+   全乗客に課されるものではない。記事に書くときは混同しないこと。
+----------------------------------------------------- */
+
+export const NIGHT_RIVIERA = {
+  route: "ロンドン・パディントン ⇄ ペンザンス",
+  operator: "GWR",
+  /** 土曜夜は運休。週6日運行。 */
+  runsNightly: "土曜夜をのぞく毎晩",
+  boardingFrom: "22:30頃から乗車可能",
+  departure: "23:45頃（日曜は23:50頃）",
+  arrival: "翌7:50頃",
+  /** 個室の追加料金。通常の運賃に上乗せされる。需要で変動する。 */
+  singleCabinFrom: 49,
+  twinCabinPerPersonFrom: 29.5,
+  /** 座席車もある。個室を取らずに乗ることは可能。 */
+  seatedAvailable: true,
+  /** パディントン・トゥルーロ・ペンザンスのラウンジでシャワーが使える。 */
+  loungeStations: ["パディントン", "トゥルーロ", "ペンザンス"],
+  breakfastIncluded: true,
+  official: "https://www.gwr.com/travelling-with-us/night-riviera-sleeper",
+} as const;
+
+/* -----------------------------------------------------
+   宿泊税(Visitor Levy)
+
+   イングランドにはまだ無いが、スコットランドでは始まっている。
+   ロンドンの宿の記事(/sightseeing/hotels)は「ロンドンには無い」と
+   書いているので、1泊圏でスコットランドに出る記事では
+   必ず差分を示すこと。
+
+   出典: City of Edinburgh Council
+----------------------------------------------------- */
+
+export const EDINBURGH_LEVY = {
+  /** 施行日。2026年7月24日から。 */
+  startedOn: "2026-07-24",
+  /** 宿泊費に対する率。VAT 前の金額に対してかかる。 */
+  rate: "5%",
+  /** 課税対象になる連泊の上限。 */
+  cappedAtNights: 5,
+  /** 駐車場・食事・交通費は対象外。 */
+  appliesTo: "宿泊費のみ（駐車場・食事・交通費は対象外）",
+  official: "https://www.edinburgh.gov.uk/business/visitor-levy-edinburgh",
+} as const;
+
+/* -----------------------------------------------------
    行き先の入場料
 
    ロンドン市内のスポットは DB の Attraction が料金を持つが、
@@ -293,6 +348,31 @@ export const ADMISSIONS = {
     fromApprox: 17,
     toApprox: 19,
     official: "https://brightonmuseums.org.uk/visit/royal-pavilion-garden/",
+  },
+  edinburghCastle: {
+    label: "エディンバラ城",
+    fromApprox: 20,
+    toApprox: 24,
+    official: "https://www.edinburghcastle.scot/",
+  },
+  yorkMinster: {
+    label: "ヨーク・ミンスター",
+    fromApprox: 16,
+    toApprox: 20,
+    /** チケットは1年間有効。塔に登る場合は追加料金。 */
+    official: "https://yorkminster.org/visit/plan-your-visit/",
+  },
+  jorvik: {
+    label: "JORVIK ヴァイキング・センター（ヨーク）",
+    fromApprox: 14,
+    toApprox: 16,
+    official: "https://www.jorvikvikingcentre.co.uk/visit/tickets-and-prices/",
+  },
+  stMichaelsMount: {
+    label: "セント・マイケルズ・マウント（コーンウォール）",
+    fromApprox: 15,
+    toApprox: 20,
+    official: "https://www.stmichaelsmount.co.uk/",
   },
 } as const;
 
@@ -361,5 +441,13 @@ export const RAIL_SOURCES = [
   {
     label: "Railcard – 公式（1/3割引の対象と価格）",
     url: "https://www.railcard.co.uk/",
+  },
+  {
+    label: "GWR – Night Riviera Sleeper（寝台列車の公式）",
+    url: NIGHT_RIVIERA.official,
+  },
+  {
+    label: "City of Edinburgh Council – Visitor Levy（宿泊税の公式）",
+    url: EDINBURGH_LEVY.official,
   },
 ];

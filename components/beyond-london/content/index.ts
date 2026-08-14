@@ -5,8 +5,12 @@ import britrailPass from "./britrail-pass";
 import cambridge from "./cambridge";
 import canterbury from "./canterbury";
 import cotswolds from "./cotswolds";
+import edinburgh from "./edinburgh";
+import lakeDistrict from "./lake-district";
 import oxford from "./oxford";
+import penzance from "./penzance";
 import windsor from "./windsor";
+import york from "./york";
 
 /**
  * slug → 記事。
@@ -24,6 +28,10 @@ export const beyondArticles: Record<string, BeyondArticle> = {
   cotswolds,
   brighton,
   canterbury,
+  york,
+  edinburgh,
+  "lake-district": lakeDistrict,
+  penzance,
 };
 
 export {
@@ -35,4 +43,8 @@ export {
   cotswolds,
   brighton,
   canterbury,
+  york,
+  edinburgh,
+  lakeDistrict,
+  penzance,
 };
