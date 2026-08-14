@@ -176,7 +176,10 @@ export const NAV_SECTIONS: NavSection[] = [
             label: "バースとストーンヘンジ",
           },
           { href: "/beyond-london/cotswolds", label: "コッツウォルズ" },
-          { href: "/beyond-london/brighton", label: "ブライトン" },
+          {
+            href: "/beyond-london/brighton",
+            label: "ブライトンとセブンシスターズ",
+          },
           { href: "/beyond-london/canterbury", label: "カンタベリー" },
         ],
       },
