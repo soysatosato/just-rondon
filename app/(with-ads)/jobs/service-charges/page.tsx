@@ -145,7 +145,7 @@ export default function ServiceChargeGuidePage() {
         )}
 
         <p className="text-xs text-muted-foreground">
-          最終更新：{content.lastReviewed}
+          {content.lastReviewed}時点の情報
         </p>
       </header>
 
