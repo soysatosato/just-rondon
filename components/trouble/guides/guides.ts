@@ -51,8 +51,11 @@ export type TroubleGuideMeta = {
  * next-sitemap.config.js の staticPages と、/trouble ハブのカード表示順を
  * このリストと一致させること。
  *
- * 未着手: stalking-harassment のみ。書き方の設計をユーザーと詰めてから着手する。
- * 追加するときはこのリストに足し、sitemap とハブの順序も同時に更新する。
+ * 全8本で完結。追加するときはこのリストに足し、
+ * sitemap とハブの順序も同時に更新する。
+ *
+ * stalking-harassment だけは記事の設計が他と違う(安全の確保が手続きより先)。
+ * 詳細は content/stalking-harassment.ts の冒頭コメントを参照。
  */
 export const troubleGuides: TroubleGuideMeta[] = [
   {
@@ -78,6 +81,14 @@ export const troubleGuides: TroubleGuideMeta[] = [
     label: "落とし物を探す（地下鉄・バス・タクシー）",
     blurb:
       "盗まれたのではなく置き忘れたなら、探す場所は警察ではありません。TfL の遺失物センターは保管3ヶ月。バスは最初の3日だけ営業所に直接聞くほうが早い、という分岐まで。",
+  },
+  {
+    slug: "stalking-harassment",
+    category: "harm",
+    eyebrow: "Stalking",
+    label: "つきまとい・ストーカー被害に遭ったら",
+    blurb:
+      "我慢して耐えるものではありません。通報するか決める前から相談できる専門窓口があります。声を出せないまま999を呼ぶ方法と、安全を確保してから記録を取る順番。",
   },
   {
     slug: "scams",

@@ -26,6 +26,8 @@ import {
   FRAUD_REIMBURSEMENT,
   FRAUD_REPORTING,
   POLICE_REPORT,
+  SILENT_SOLUTION,
+  STALKING_SUPPORT,
   TFL_LOST_PROPERTY,
   TROUBLE_AS_OF,
   TROUBLE_UPDATED_AT,
@@ -89,6 +91,13 @@ const SCENARIOS: {
     detail: `TfL の遺失物センターが扱います。保管は${TFL_LOST_PROPERTY.holdMonths}ヶ月。ただしバスは最初の${TFL_LOST_PROPERTY.busDirectContactDays}日だけ、営業所に直接聞くほうが早いことがあります。`,
     href: "/trouble/lost-property",
     cta: "探し方の分岐を見る",
+  },
+  {
+    situation: "つきまとわれている・嫌がらせが続いている",
+    answer: "専門の相談窓口があります",
+    detail: `通報するか決める前の段階から相談できます（${STALKING_SUPPORT[0].name}・${STALKING_SUPPORT[0].phone}・無料）。声を出せないまま ${EMERGENCY_CONTACTS.emergency} を呼ぶ方法もあります。`,
+    href: "/trouble/stalking-harassment",
+    cta: "相談先と安全の確保を見る",
   },
   {
     situation: "詐欺に遭った・送金してしまった",
@@ -234,6 +243,19 @@ export default function TroubleHubPage() {
         <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
           英語に不安があれば、つながってから「I need a Japanese interpreter」と
           伝えれば通訳が入ります。費用はかかりません。
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <strong>声を出せない状況</strong>なら、携帯から{" "}
+          {EMERGENCY_CONTACTS.emergency} にかけ、自動音声のあとに{" "}
+          <strong>{SILENT_SOLUTION.pressDigits}</strong> を押すと警察につながります。
+          押さないと通話は切られます（
+          <Link
+            href="/trouble/stalking-harassment"
+            className="text-blue-700 underline hover:opacity-80 dark:text-blue-300"
+          >
+            詳しい手順
+          </Link>
+          ）。
         </p>
       </div>
 

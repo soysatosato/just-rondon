@@ -6,6 +6,7 @@ import lostProperty from "./lost-property";
 import pickpocket from "./pickpocket";
 import policeReport from "./police-report";
 import scams from "./scams";
+import stalkingHarassment from "./stalking-harassment";
 
 /**
  * slug → 記事。
@@ -18,6 +19,7 @@ export const troubleGuideArticles: Record<string, TroubleGuideArticle> = {
   pickpocket,
   "lost-passport": lostPassport,
   "lost-property": lostProperty,
+  "stalking-harassment": stalkingHarassment,
   scams,
   "police-report": policeReport,
   "insurance-claim": insuranceClaim,
@@ -28,6 +30,7 @@ export {
   pickpocket,
   lostPassport,
   lostProperty,
+  stalkingHarassment,
   scams,
   policeReport,
   insuranceClaim,

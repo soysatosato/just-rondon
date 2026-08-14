@@ -248,6 +248,7 @@ module.exports = {
       "/trouble/pickpocket",
       "/trouble/lost-passport",
       "/trouble/lost-property",
+      "/trouble/stalking-harassment",
       "/trouble/scams",
       "/trouble/police-report",
       "/trouble/insurance-claim",

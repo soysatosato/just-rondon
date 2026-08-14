@@ -185,6 +185,75 @@ export const TRAVEL_DOCUMENT_REQUIREMENTS = [
 ] as const;
 
 /**
+ * 話せないまま 999 を呼ぶ仕組み(Silent Solution)。
+ *
+ * 数値と同格で厳密に管理する。ここを誤って書くと命に関わるため、
+ * IOPC の公式資料(Make Yourself Heard)の記述から外れないこと。
+ *
+ * 誤解が2つ広まっており、記事では必ず打ち消す:
+ * 1. 「無言でかければ警察が来る」→ 来ない。55 を押さなければ通話は切られる。
+ * 2. 「55 を押せば居場所が分かる」→ 分からない。位置の追跡はできない。
+ *
+ * さらに固定電話は Silent Solution の対象外で、別の仕組みになる。
+ * 「55」だけを覚えて固定電話でかけると期待した動作にならない。
+ */
+export const SILENT_SOLUTION = {
+  /** 押す番号。携帯からの通話のみ。 */
+  pressDigits: "55",
+  /** 自動音声が流れる長さ(秒)。 */
+  automatedMessageSeconds: 20,
+  /** 固定電話は対象外。受話器を置いても回線が保たれる秒数。 */
+  landlineHoldSeconds: 45,
+  /** 55 を押しても位置は追跡されない。記事で必ず明示する。 */
+  tracksLocation: false,
+} as const;
+
+/**
+ * ストーカー・つきまとい被害の相談先。
+ *
+ * 警察以外の窓口を厚く持つのは、警察に通報する前段で
+ * 「これは通報に値するのか」を相談したい人が多いため。
+ * 専門窓口は安全計画(safety planning)まで一緒に立ててくれる。
+ *
+ * 番号・時間は 2026年8月14日に各団体の公表情報で確認。
+ * 開設時間は変わりうるので、記事では「変わることがある」と添えること。
+ */
+export const STALKING_SUPPORT = [
+  {
+    name: "National Stalking Helpline",
+    operator: "Suzy Lamplugh Trust",
+    phone: "0808 802 0300",
+    hours: "月・水 9:30〜20:00／火・木・金 9:30〜16:00",
+    note: "ストーカー被害の専門窓口。安全計画や法的な選択肢の相談に乗ってくれます。通話料無料。",
+    url: "https://www.suzylamplugh.org/",
+  },
+  {
+    name: "Paladin（National Stalking Advocacy Service）",
+    operator: "Paladin",
+    phone: "020 3866 4107",
+    hours: "平日（時間は公式サイトで確認）",
+    note: "危険度が高い事案の伴走支援。専門の担当者(ISAC)が付き、警察や裁判所とのやり取りを支えます。",
+    url: "https://www.paladinservice.co.uk/",
+  },
+  {
+    name: "Victim Support",
+    operator: "Victim Support",
+    phone: "0808 168 9111",
+    hours: "24時間・年中無休",
+    note: "犯罪被害全般の相談窓口。警察に通報していなくても使えます。",
+    url: "https://www.victimsupport.org.uk/",
+  },
+  {
+    name: "National Domestic Abuse Helpline",
+    operator: "Refuge",
+    phone: "0808 2000 247",
+    hours: "24時間・年中無休",
+    note: "元パートナーや同居していた相手が関わる場合。通訳の手配を頼めます。",
+    url: "https://www.nationaldahelpline.org.uk/",
+  },
+] as const;
+
+/**
  * 大使館・総領事館ができること／できないこと。
  *
  * 期待値の調整がこのセクションで最も効く場所。
