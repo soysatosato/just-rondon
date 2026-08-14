@@ -382,7 +382,7 @@ const pubEtiquette: RestaurantGuideArticle = {
     },
   ],
   relatedLinks: [
-    { href: "/restaurants", label: "ロンドンで食べるイギリス料理" },
+    { href: "/restaurants", label: "ロンドンのレストラン" },
     { href: "/sightseeing/tipping-and-payment", label: "チップと支払いの基準" },
     { href: "/british-english", label: "イギリス英語の言い回し" },
     { href: "/sightseeing/areas/soho", label: "ソーホー（古いパブが集まるエリア）" },

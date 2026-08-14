@@ -343,8 +343,8 @@ export default async function Page() {
             />
             <ExploreCard
               href="/restaurants"
-              title="ロンドンで食べるイギリス料理"
-              description="フィッシュ&チップスからサンデーロースト、アフタヌーンティーまで料理別に解説。"
+              title="ロンドンのレストラン"
+              description="フィッシュ&チップスからアフタヌーンティー、ラーメンや飲茶まで料理別に解説。"
               icon={UtensilsCrossed}
               accent={ACCENTS.amber}
             />

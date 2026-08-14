@@ -198,7 +198,7 @@ export default function RestaurantGuideLayout({
               href={RESTAURANT_BASE}
               className="text-blue-600 hover:opacity-80 dark:text-blue-400"
             >
-              ロンドンで食べるイギリス料理 トップ
+              ロンドンのレストラン トップ
             </Link>
           </li>
           {article.relatedLinks?.map((link) => (

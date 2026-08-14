@@ -2,7 +2,7 @@ import type { Dish, Restaurant } from "@prisma/client";
 import { SITE_URL } from "@/lib/seo";
 
 export const RESTAURANT_BASE = "/restaurants";
-export const RESTAURANT_SECTION_NAME = "イギリス料理とお店";
+export const RESTAURANT_SECTION_NAME = "レストランとお店";
 
 export type DishWithRestaurants = Dish & { restaurants: Restaurant[] };
 
@@ -54,7 +54,7 @@ export function dishListJsonLd(dishes: Dish[]) {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "@id": `${pageUrl}#dishes`,
-    name: "ロンドンで食べるイギリス料理",
+    name: "ロンドンのレストラン",
     numberOfItems: dishes.length,
     itemListOrder: "https://schema.org/ItemListOrderAscending",
     itemListElement: dishes.map((d, i) => ({
