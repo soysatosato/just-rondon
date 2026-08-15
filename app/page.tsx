@@ -42,6 +42,7 @@ import { Badge } from "@/components/ui/badge";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import HeroContent from "@/components/home/HeroContent";
+import LiveStrip from "@/components/live/LiveStrip";
 import SectionHeader from "@/components/home/SectionHeader";
 import ColumnCard from "@/components/column/ColumnCard";
 import BritishEnglishCard from "@/components/british-english/BritishEnglishCard";
@@ -162,8 +163,14 @@ export default async function Page() {
         <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20 sm:pb-14">
           <HeroContent />
 
+          {/*
+            天気・運行状況・為替の要約。詳細は各ページのウィジェットが持ち、
+            ここは「今日どうか」を一目で渡して送り出すだけに絞っている。
+          */}
+          <LiveStrip />
+
           {topAlert && (
-            <Link href="/events" className="mx-auto mt-8 block max-w-2xl">
+            <Link href="/events" className="mx-auto mt-4 block max-w-2xl">
               <div className="flex items-start gap-3 rounded-xl border border-red-600/30 bg-red-50/80 px-4 py-3 text-left shadow-sm transition hover:border-red-600/60 dark:bg-red-950/30">
                 <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
                 <div className="min-w-0">
