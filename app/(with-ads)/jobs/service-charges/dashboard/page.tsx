@@ -147,8 +147,8 @@ export default async function DashboardPage({ searchParams }: Props) {
           <ServiceChargeStats stats={stats} />
         </section>
 
-        {/* 導線（回答 → 制度解説の順で1つにまとめる） */}
-        <section className="mt-12 grid gap-3 sm:grid-cols-2">
+        {/* 導線（回答 → 制度解説 → 実例の順で1つにまとめる） */}
+        <section className="mt-12 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl border border-border bg-muted/40 p-5">
             <p className="font-semibold text-foreground">
               あなたの職場の情報を登録する
@@ -178,6 +178,25 @@ export default async function DashboardPage({ searchParams }: Props) {
             >
               <Link href="/jobs/service-charges">
                 サービスチャージの仕組み
+              </Link>
+            </Button>
+          </div>
+
+          <div className="rounded-xl border border-border p-5">
+            <p className="font-semibold text-foreground">
+              未払いで申立てた実例を見る
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              Acasでの相談からEmployment
+              Tribunalの判決、強制執行まで。実際の計算方法も公開しています。
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              className="mt-4 w-full sm:w-auto"
+            >
+              <Link href="/jobs/service-charges/case-story">
+                裁判記録を見る
               </Link>
             </Button>
           </div>
