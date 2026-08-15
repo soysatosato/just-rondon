@@ -201,6 +201,42 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Button>
           </div>
         </section>
+
+        {/* あわせて読む */}
+        <section className="mt-12">
+          <p className="text-sm font-semibold text-foreground">あわせて読む</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <Link
+              href="/jobs/minimum-wage"
+              className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
+            >
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                給与明細の見方
+              </p>
+              <p className="mt-1.5 font-semibold text-foreground">
+                最低賃金と給与明細のチェック方法
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                サービスチャージは最低賃金に算入されません。違法な天引きの見分け方も解説。
+              </p>
+            </Link>
+
+            <Link
+              href="/jobs/employment-contract"
+              className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
+            >
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                労働契約の基本
+              </p>
+              <p className="mt-1.5 font-semibold text-foreground">
+                雇用契約・就業規則で確認すべきこと
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                written statementや試用期間、解雇・退職の通知期間について。
+              </p>
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   );
