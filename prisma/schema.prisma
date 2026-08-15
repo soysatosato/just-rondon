@@ -199,6 +199,16 @@ model Musical {
   recommendLevel Int      @default(0)
   mustSee        Boolean
   original       String   @default("")
+  /// isOnShow と上演劇場を人が最後に確認した日。
+  ///
+  /// updatedAt では代用できない。あちらは説明文の推敲でも動くので、
+  /// 「文章を直しただけ」と「公演中かを確かめた」が区別できない。
+  /// 終演済みの作品が上演中として残り続ける事故を防ぐのが目的なので、
+  /// 確認したという行為だけを別に記録する。
+  ///
+  /// null は「一度も確認していない」。scripts/check-musical-freshness.ts
+  /// で棚卸しし、確認できたものだけ日付を入れる。
+  lastVerifiedAt DateTime?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   songs          Song[]

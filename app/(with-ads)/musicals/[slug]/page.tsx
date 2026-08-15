@@ -103,6 +103,7 @@ export default async function musicalDetailsPage({
 
         <MusicalInfo
           isOnShow={musical.isOnShow}
+          lastVerifiedAt={musical.lastVerifiedAt}
           original={musical.original}
           recommendLevel={musical.recommendLevel}
         />

@@ -13,6 +13,7 @@
     "create-tweets": "tsx scripts/create-tweets.ts",
     "seed-brands": "tsx scripts/seed-brands.ts",
     "check-brand-instagram": "tsx scripts/check-brand-instagram.ts",
+    "check-musical-freshness": "tsx scripts/check-musical-freshness.ts",
     "check-souvenir-instagram": "tsx scripts/check-souvenir-instagram.ts"
   },
   "dependencies": {
