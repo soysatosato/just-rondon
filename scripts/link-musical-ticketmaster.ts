@@ -114,6 +114,15 @@ const LINKS: Record<string, { attractionId: string; tmName: string; theatre: str
     tmName: "Oliver! (Touring)",
     theatre: "Gielgud Theatre",
   },
+  hadestown: {
+    // この attraction は436件のうち363件が Lyric Theatre, London で、
+    // 残りは米国ツアー(Pittsburgh, Boston ほか)。fetchPerformances が
+    // city=London で絞るので、ロンドン公演だけが入る。
+    // "Hadestown (NY)"[K8vZ9179Y97] はブロードウェイなので採らない。
+    attractionId: "K8vZ917bgM0",
+    tmName: "Hadestown (Touring)",
+    theatre: "Lyric Theatre",
+  },
 };
 
 /**
@@ -141,6 +150,9 @@ const NO_STOCK = [
 const RELOCATED = [
   "six", // Arts Theatre -> Vaudeville Theatre
   "oliver", // Barbican Theatre -> Gielgud Theatre
+  "hadestown", // Walter Kerr Theatre(ブロードウェイ) -> Lyric Theatre
+  "disneys-hercules", // Lyric Theatre -> Theatre Royal Drury Lane
+  "mj-the-musical", // Lyric Theatre -> Prince Edward Theatre(終演済み)
 ];
 
 async function main() {
