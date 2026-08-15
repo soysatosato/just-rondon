@@ -1,0 +1,60 @@
+# ミュージカルの公演日程を Ticketmaster から取り込む。
+#
+# Vercel Cron ではなく Actions に置いている理由:
+# 21作品ぶんの取り込みに10分以上かかり、Vercel Function の上限
+# (Hobby 60秒 / Pro 300秒)を確実に超えるため。この処理は Web リクエスト
+# ではなく単なるバッチなので、Function として置く必然性もない。
+name: Sync musical performances
+
+on:
+  schedule:
+    # 毎日 03:20 UTC。ロンドンの深夜〜早朝にあたり、公演中の時間帯を避ける。
+    # 00分ちょうどは GitHub 全体でジョブが集中して遅延しやすいのでずらす。
+    - cron: "20 3 * * *"
+  # 手元から手動で流したいとき用(Actions タブの Run workflow)。
+  workflow_dispatch:
+
+# 同時実行を防ぐ。前回が長引いているところに次が重なると、
+# 同じ eventId を二重に upsert しにいって無駄な負荷になる。
+concurrency:
+  group: sync-musical-performances
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # 通常は10〜15分。ぶら下がったまま無料枠を消費し続けるのを防ぐ。
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # スクリプトは PrismaClient を直接使うので、生成しておく必要がある。
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Sync performances
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npx tsx scripts/sync-musical-performances.ts
+
+      # 同期そのものとは別に、終演していそうな作品を洗い出してログに残す。
+      # 取り込みが成功していても、公演0件の作品は人が確認する必要がある。
+      # ここが失敗しても同期の成否は変えたくないので continue-on-error。
+      - name: Report stale listings
+        if: always()
+        continue-on-error: true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npx tsx scripts/check-musical-freshness.ts --stale
