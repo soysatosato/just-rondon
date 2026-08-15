@@ -31,22 +31,39 @@ const LEVEL_STYLE: Record<SeverityLevel, { dot: string; text: string }> = {
     dot: "bg-red-500",
     text: "text-red-700 dark:text-red-300",
   },
+  closed: {
+    dot: "bg-gray-400",
+    text: "text-gray-500 dark:text-gray-400",
+  },
 };
 
+/**
+ * 路線名と状況ラベルは、狭い画面では1行に収まらない。
+ * 「Hammersmith & City」+「一部区間で運転見合わせ」で 375px を超える。
+ *
+ * ラベルを折り返させるのではなく、名前とラベルを縦に積む。折り返すと
+ * 「一部区間で運転見/合わせ」のように意味の切れ目を無視して割れるし、
+ * 行の高さが路線ごとにばらついて一覧として読みにくくなる。
+ * sm 以上は横幅に余裕があるので、従来どおり1行に並べる。
+ */
 function StatusRow({ line }: { line: LineStatus }) {
   const style = LEVEL_STYLE[line.level];
 
   return (
     <li className="flex flex-col gap-1 py-2.5">
-      <div className="flex items-center gap-2.5">
+      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2.5">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span
+            aria-hidden="true"
+            className={`size-2.5 shrink-0 rounded-full ${style.dot}`}
+          />
+          <span className="min-w-0 break-words font-medium text-gray-900 dark:text-gray-100">
+            {line.name}
+          </span>
+        </div>
         <span
-          aria-hidden="true"
-          className={`size-2.5 shrink-0 rounded-full ${style.dot}`}
-        />
-        <span className="font-medium text-gray-900 dark:text-gray-100">
-          {line.name}
-        </span>
-        <span className={`ml-auto text-sm font-semibold ${style.text}`}>
+          className={`pl-[1.25rem] text-sm font-semibold sm:ml-auto sm:pl-0 ${style.text}`}
+        >
           {line.label}
         </span>
       </div>
@@ -107,9 +124,16 @@ export default function TflStatusWidget() {
     );
   }
 
-  const disrupted = data.lines.filter((l) => l.level !== "good");
+  const disrupted = data.lines.filter(
+    (l) => l.level !== "good" && l.level !== "closed"
+  );
+  const closed = data.lines.filter((l) => l.level === "closed");
   const normal = data.lines.filter((l) => l.level === "good");
+  // 既定で開くのは「乱れている路線」だけ。平常運転と運行時間外は、
+  // 数だけ伝えて畳んでおく。深夜は closed が15本を超えるので、
+  // これを開いたまま出すとウィジェットが画面何枚ぶんにもなる。
   const visible = showAll ? data.lines : disrupted;
+  const collapsed = normal.length + closed.length;
 
   return (
     <Card className="border-gray-200 dark:border-gray-800">
@@ -122,13 +146,25 @@ export default function TflStatusWidget() {
         </div>
 
         {disrupted.length === 0 ? (
-          <p className="mt-3 flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
-            <span
-              aria-hidden="true"
-              className="size-2.5 shrink-0 rounded-full bg-emerald-500"
-            />
-            全路線が平常運転です。
-          </p>
+          // 深夜は「平常運転」と言い切れない(動いていないので)。
+          // 運行時間外の路線が多数派のときは、そう書く。
+          closed.length > normal.length ? (
+            <p className="mt-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <span
+                aria-hidden="true"
+                className="size-2.5 shrink-0 rounded-full bg-gray-400"
+              />
+              いまは運行時間外です。乱れは出ていません。
+            </p>
+          ) : (
+            <p className="mt-3 flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
+              <span
+                aria-hidden="true"
+                className="size-2.5 shrink-0 rounded-full bg-emerald-500"
+              />
+              全路線が平常運転です。
+            </p>
+          )
         ) : (
           <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
             {disrupted.length}路線に乱れが出ています。
@@ -143,7 +179,7 @@ export default function TflStatusWidget() {
           </ul>
         )}
 
-        {normal.length > 0 && (
+        {collapsed > 0 && (
           <button
             type="button"
             onClick={() => setShowAll((v) => !v)}
@@ -151,7 +187,9 @@ export default function TflStatusWidget() {
           >
             {showAll
               ? "乱れている路線だけ表示"
-              : `平常運転の${normal.length}路線も表示`}
+              : closed.length > normal.length
+                ? `運行時間外の${closed.length}路線も表示`
+                : `残り${collapsed}路線も表示`}
           </button>
         )}
 

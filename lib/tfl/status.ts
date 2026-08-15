@@ -26,8 +26,16 @@ type TflLineStatusResponse = {
   lineStatuses?: TflLineStatusEntry[];
 };
 
-/** 表示上の深刻度。UIの色分けはこの3段階だけに寄せる。 */
-export type SeverityLevel = "good" | "minor" | "severe";
+/**
+ * 表示上の深刻度。UIの色分けはこの4段階だけに寄せる。
+ *
+ * "closed" は「運行時間外」専用。地下鉄は毎晩1時前後から5時ごろまで
+ * 止まるので、深夜に開くと全線が Service Closed で返ってくる。これを
+ * severe(乱れ)に混ぜると、平常どおり終電後なだけの路線が15本並んで
+ * 「今夜はロンドン中で異常が起きている」と読めてしまう。異常ではない
+ * ので、別の段階として扱う。
+ */
+export type SeverityLevel = "good" | "minor" | "severe" | "closed";
 
 export type LineStatus = {
   id: string;
@@ -80,7 +88,7 @@ const SEVERITY_LEVEL: Record<number, SeverityLevel> = {
   17: "minor", // Issues Reported
   18: "good", // No Issues
   19: "minor", // Information
-  20: "severe", // Service Closed (運行時間外)
+  20: "closed", // Service Closed (運行時間外。異常ではない)
 };
 
 /**
@@ -189,7 +197,13 @@ export async function fetchTflStatus(): Promise<TflStatusResult> {
   });
 
   // 乱れている路線を上に。同じ深刻度なら TfL の返す順(おおむね五十音/アルファベット順)を保つ。
-  const levelOrder: Record<SeverityLevel, number> = { severe: 0, minor: 1, good: 2 };
+  // closed(運行時間外)は異常ではないので、good より下に置く。
+  const levelOrder: Record<SeverityLevel, number> = {
+    severe: 0,
+    minor: 1,
+    good: 2,
+    closed: 3,
+  };
   lines.sort((a, b) => levelOrder[a.level] - levelOrder[b.level]);
 
   return { lines, fetchedAt: new Date().toISOString() };

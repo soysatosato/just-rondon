@@ -39,6 +39,7 @@ const DOT_COLOR: Record<SeverityLevel, string> = {
   good: "bg-emerald-500",
   minor: "bg-amber-500",
   severe: "bg-red-500",
+  closed: "bg-gray-400",
 };
 
 /** 失敗を null に倒す。1本落ちても残り2本は出したいので個別に握りつぶす。 */
@@ -97,13 +98,23 @@ export default function LiveStrip() {
   if (!tfl && !weather && !fx) return null;
 
   const today = weather?.days.find((d) => d.isToday) ?? weather?.days[0] ?? null;
-  const disrupted = tfl?.lines.filter((l) => l.level !== "good") ?? [];
+  // 運行時間外(closed)は乱れに数えない。深夜に「15路線に乱れ」と出ると、
+  // 終電後なだけなのに事故が起きているように読める。
+  const disrupted =
+    tfl?.lines.filter((l) => l.level !== "good" && l.level !== "closed") ?? [];
+  const closedCount =
+    tfl?.lines.filter((l) => l.level === "closed").length ?? 0;
+  const normalCount = tfl?.lines.filter((l) => l.level === "good").length ?? 0;
+  const offHours = closedCount > normalCount;
+
   // 帯に出す点の色は、最も深刻な路線に合わせる。severe が1本でもあれば赤。
   const worstLevel: SeverityLevel = disrupted.some((l) => l.level === "severe")
     ? "severe"
     : disrupted.length > 0
       ? "minor"
-      : "good";
+      : offHours
+        ? "closed"
+        : "good";
 
   const items: { key: string; href: string; node: React.ReactNode }[] = [];
 
@@ -138,9 +149,11 @@ export default function LiveStrip() {
             className={`size-2 shrink-0 rounded-full ${DOT_COLOR[worstLevel]}`}
           />
           <span className="font-semibold">
-            {disrupted.length === 0
-              ? "全線平常"
-              : `${disrupted.length}路線に乱れ`}
+            {disrupted.length > 0
+              ? `${disrupted.length}路線に乱れ`
+              : offHours
+                ? "運行時間外"
+                : "全線平常"}
           </span>
         </>
       ),
