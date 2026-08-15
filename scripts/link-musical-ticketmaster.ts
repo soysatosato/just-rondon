@@ -114,6 +114,37 @@ const LINKS: Record<string, { attractionId: string; tmName: string; theatre: str
     tmName: "Oliver! (Touring)",
     theatre: "Gielgud Theatre",
   },
+  "my-neighbour-totoro": {
+    // National Theatre 直販だと思っていたが、Gillian Lynne へ移って
+    // TM に在庫が出ていた。劇場が変わると在庫の有無も変わる。
+    attractionId: "K8vZ917Q_u0",
+    tmName: "My Neighbour Totoro",
+    theatre: "Gillian Lynne Theatre",
+  },
+  "the-play-that-goes-wrong": {
+    // "(Touring)"[K8vZ917pKs0] と "(NY)"[K8vZ917qo07] は別公演。
+    attractionId: "K8vZ917o5sf",
+    tmName: "The Play That Goes Wrong",
+    theatre: "Duchess Theatre",
+  },
+  titanique: {
+    // "(NY)"[K8vZ917qp-0] はブロードウェイ、"La parodie musicale" は仏語版。
+    attractionId: "K8vZ917qa5V",
+    tmName: "Titanique",
+    theatre: "Criterion Theatre",
+  },
+  "magic-mike-live": {
+    attractionId: "K8vZ917flwV",
+    tmName: "Magic Mike Live",
+    theatre: "The Theatre at the Hippodrome Casino",
+  },
+  cabaret: {
+    // 同名の別 attraction [K8vZpaFK5e] と、New Cross Inn の
+    // "Hell-Bent Cabaret" が紛らわしい。会場が Playhouse であることで確定。
+    attractionId: "K8vZ9171h0V",
+    tmName: "Cabaret",
+    theatre: "Playhouse Theatre (Kit Kat Club)",
+  },
   hadestown: {
     // この attraction は436件のうち363件が Lyric Theatre, London で、
     // 残りは米国ツアー(Pittsburgh, Boston ほか)。fetchPerformances が
@@ -132,12 +163,7 @@ const LINKS: Record<string, { attractionId: string; tmName: string; theatre: str
  * 未調査と区別するために残す。ここにある作品は日程を表示しない。
  */
 const NO_STOCK = [
-  "operation-mincemeat", // Donmar Warehouse 直販
-  "my-neighbour-totoro", // National Theatre 直販
-  "titanique", // The Vaults 直販
-  "the-choir-of-man", // Arts Theatre 直販
-  "the-play-that-goes-wrong", // Old Vic 直販
-  "cabaret", // Kit Kat Club 直販
+  "operation-mincemeat", // Fortune Theatre。TM の在庫は米国公演のみ
   "witness-for-the-prosecution", // County Hall 直販
 ];
 
@@ -153,6 +179,14 @@ const RELOCATED = [
   "hadestown", // Walter Kerr Theatre(ブロードウェイ) -> Lyric Theatre
   "disneys-hercules", // Lyric Theatre -> Theatre Royal Drury Lane
   "mj-the-musical", // Lyric Theatre -> Prince Edward Theatre(終演済み)
+  "operation-mincemeat", // Donmar Warehouse -> Fortune Theatre
+  "my-neighbour-totoro", // National Theatre -> Gillian Lynne Theatre
+  "the-play-that-goes-wrong", // Old Vic -> Duchess Theatre
+  "titanique", // The Vaults -> Criterion Theatre
+  "come-alive", // London Palladium -> Empress Museum, Earls Court
+  "all-my-sons", // Apollo Theatre -> Wyndham's Theatre(終演済み)
+  "the-importance-of-being-earnest", // Vaudeville -> Noël Coward(終演済み)
+  "starlight-express", // Apollo Victoria -> Troubadour Wembley Park(終演済み)
 ];
 
 async function main() {
