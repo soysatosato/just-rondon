@@ -14,6 +14,8 @@
     "seed-brands": "tsx scripts/seed-brands.ts",
     "check-brand-instagram": "tsx scripts/check-brand-instagram.ts",
     "check-musical-freshness": "tsx scripts/check-musical-freshness.ts",
+    "link-musical-ticketmaster": "tsx scripts/link-musical-ticketmaster.ts",
+    "sync-musical-performances": "tsx scripts/sync-musical-performances.ts",
     "check-souvenir-instagram": "tsx scripts/check-souvenir-instagram.ts"
   },
   "dependencies": {

@@ -6,7 +6,9 @@ import { Metadata } from "next";
 import {
   fetchMusicalDetails,
   fetchMusicalIdandName,
+  fetchMusicalPerformances,
 } from "@/utils/actions/musicals";
+import MusicalSchedule from "@/components/musicals/MusicalSchedule";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
 import {
   Card,
@@ -72,6 +74,8 @@ export default async function musicalDetailsPage({
   const musical = await fetchMusicalDetails(params.slug);
   if (!musical) redirect("/");
 
+  const performances = await fetchMusicalPerformances(musical.id);
+
   return (
     <div>
       <JsonLd data={musicalBreadcrumbJsonLd(musical)} />
@@ -106,6 +110,11 @@ export default async function musicalDetailsPage({
           lastVerifiedAt={musical.lastVerifiedAt}
           original={musical.original}
           recommendLevel={musical.recommendLevel}
+        />
+
+        <MusicalSchedule
+          performances={performances}
+          fetchedAt={performances[0]?.updatedAt ?? null}
         />
 
         <MusicalSceneDescription

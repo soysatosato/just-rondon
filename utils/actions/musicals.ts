@@ -45,6 +45,33 @@ export const fetchMusicalDetails = async (slug: string) => {
   return musical;
 };
 
+/**
+ * 作品ページに出す公演日程。
+ *
+ * 未来ぶんだけを返す。同期は日次なので、当日ぶんが昼の実行で
+ * 消えないよう当日の 00:00(ロンドン)以降を対象にする。
+ * 取り込みのない作品(TM に在庫がない)は空配列になる。
+ */
+export const fetchMusicalPerformances = async (musicalId: string) => {
+  // 「今日」の判定はロンドン基準。日本時間の朝はまだロンドンは前日で、
+  // UTC で切ると前夜の公演がまだ終わっていないのに消える。
+  const londonToday = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Europe/London" }),
+  );
+  londonToday.setHours(0, 0, 0, 0);
+
+  return db.musicalPerformance.findMany({
+    where: {
+      musicalId,
+      startsAt: { gte: londonToday },
+      // 中止・延期の公演は日程として出さない。
+      status: { notIn: ["cancelled", "postponed"] },
+    },
+    orderBy: { startsAt: "asc" },
+    select: { startsAt: true, timeTba: true, url: true, status: true, updatedAt: true },
+  });
+};
+
 // generateMetadata 専用。summary / tagline まで取るのは、description を
 // 作品ごとに書き分けるため(テンプレート文だと全作品が同じスニペットになる)。
 export const fetchMusicalIdandName = (slug: string) => {

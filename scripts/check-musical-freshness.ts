@@ -50,7 +50,15 @@ function formatAge(lastVerifiedAt: Date | null): string {
 
 async function list(staleOnly: boolean) {
   const musicals = await prisma.musical.findMany({
-    select: { slug: true, engName: true, theatreName: true, isOnShow: true, lastVerifiedAt: true },
+    select: {
+      slug: true,
+      engName: true,
+      theatreName: true,
+      isOnShow: true,
+      lastVerifiedAt: true,
+      ticketmasterAttractionId: true,
+      _count: { select: { performances: true } },
+    },
   });
 
   const sorted = musicals
@@ -72,7 +80,19 @@ async function list(staleOnly: boolean) {
     console.log(
       `${flag} ${formatAge(m.lastVerifiedAt).padStart(6)} | ${status} | ${m.engName} @ ${m.theatreName}`,
     );
-    console.log(`        ${m.slug}`);
+
+    // Ticketmaster に日程がある作品は、その事実が上演中である裏づけになる。
+    // 逆に紐づけ済みなのに日程が0件なら、終演したか劇場が変わった疑いがある。
+    if (m.ticketmasterAttractionId) {
+      const count = m._count.performances;
+      console.log(
+        count > 0
+          ? `        ${m.slug}  (TM: ${count}公演あり)`
+          : `        ${m.slug}  (TM: 紐づけ済みだが公演0件 → 終演の可能性)`,
+      );
+    } else {
+      console.log(`        ${m.slug}`);
+    }
   }
 
   console.log(`\n要確認 ${stale.length} / 全 ${musicals.length} 件(基準: ${STALE_DAYS}日)`);

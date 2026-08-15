@@ -209,9 +209,48 @@ model Musical {
   /// null は「一度も確認していない」。scripts/check-musical-freshness.ts
   /// で棚卸しし、確認できたものだけ日付を入れる。
   lastVerifiedAt DateTime?
+  /// Ticketmaster の attraction ID。公演日程の取得キー。
+  ///
+  /// 名寄せで自動的に埋めてはいけない。TM 側の名称は "Hadestown (Touring)"
+  /// のようにロンドン公演かどうかを表さず、劇場も一致してしまうことがある
+  /// (実際 Lyric Theatre のツアー公演が MJ The Musical に一致した)。
+  /// 別公演の日程を正しい作品として出す事故になるので、
+  /// scripts/link-musical-ticketmaster.ts で人が確認した組だけを入れる。
+  ///
+  /// null は「TM に在庫がない」または「未確認」。日程は表示しない。
+  ticketmasterAttractionId String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   songs          Song[]
+  performances   MusicalPerformance[]
+}
+
+/// Ticketmaster から取り込んだ公演1回分。
+///
+/// 上演スケジュールは日次で作り直す前提の派生データなので、
+/// 人が書いた Musical とは別テーブルに置く。同期が失敗しても
+/// 作品ページ本体は無傷で残る。
+model MusicalPerformance {
+  id        String   @id @default(cuid())
+  musicalId String
+  musical   Musical  @relation(fields: [musicalId], references: [id], onDelete: Cascade)
+
+  /// TM のイベントID。再同期時の重複防止に使う。
+  eventId   String   @unique
+  /// 現地時刻での開演日時。TM は localDate/localTime を分けて返すので、
+  /// ロンドンの現地時刻として組み立てて保存する。
+  startsAt  DateTime
+  /// 開演時刻が未定の公演があるため、日付だけ確定しているケースを区別する。
+  timeTba   Boolean  @default(false)
+  /// 購入ページ。作品共通ではなく公演ごとに異なる。
+  url       String?
+  /// onsale | offsale | cancelled | postponed | rescheduled
+  status    String   @default("onsale")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([musicalId, startsAt])
 }
 
 model Song {
