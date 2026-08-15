@@ -101,12 +101,18 @@ const LINKS: Record<string, { attractionId: string; tmName: string; theatre: str
     theatre: "Apollo Victoria Theatre",
   },
   six: {
-    // 注意: DB の劇場は Arts Theatre だが、TM の在庫は Vaudeville Theatre。
-    // SIX は Vaudeville へ移っている。DB 側の劇場名が古い可能性が高いので、
-    // 日程を出す前に上演劇場の確認が要る(check-musical-freshness で拾う)。
+    // Arts Theatre から Vaudeville へ移転済み(2026-08-15 に確認し DB を更新)。
     attractionId: "K8vZ917pTE0",
     tmName: "SIX The Musical",
     theatre: "Vaudeville Theatre",
+  },
+  oliver: {
+    // "(Touring)" 付きだが実データは Gielgud Theatre, London の243公演。
+    // 同名の "Oliver"[K8vZ9171NiV] は米国の地方公演なので採ってはいけない。
+    // 名前だけで選ぶと確実に間違える例。
+    attractionId: "K8vZ917Gxt7",
+    tmName: "Oliver! (Touring)",
+    theatre: "Gielgud Theatre",
   },
 };
 
@@ -124,6 +130,17 @@ const NO_STOCK = [
   "the-play-that-goes-wrong", // Old Vic 直販
   "cabaret", // Kit Kat Club 直販
   "witness-for-the-prosecution", // County Hall 直販
+];
+
+/**
+ * 劇場が変わっていた作品(2026-08-15 に TM の在庫で確認し DB を更新済み)。
+ *
+ * 鮮度の問題が劇場名にも及んでいた実例として残す。上演作品そのものが
+ * 入れ替わることがあるので、棚卸しでは作品名と劇場の組を見る必要がある。
+ */
+const RELOCATED = [
+  "six", // Arts Theatre -> Vaudeville Theatre
+  "oliver", // Barbican Theatre -> Gielgud Theatre
 ];
 
 async function main() {
@@ -153,6 +170,7 @@ async function main() {
   }
 
   console.log(`\n紐づけ ${slugs.length}件 / 在庫なし ${NO_STOCK.length}件`);
+  console.log(`うち劇場を修正済み: ${RELOCATED.join(", ")}`);
   const total = await prisma.musical.count();
   console.log(`未調査: ${total - slugs.length - NO_STOCK.length}件`);
   if (dryRun) console.log("\n--dry のため書き込んでいません。");
