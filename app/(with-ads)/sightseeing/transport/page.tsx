@@ -9,7 +9,6 @@ import MarkdownBody from "@/components/jobs/MarkdownBody";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import TflStatusWidget from "@/components/live/TflStatusWidget";
-import WeatherWidget from "@/components/live/WeatherWidget";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import {
   faqPageJsonLd,
@@ -270,14 +269,15 @@ export default function TransportHubPage() {
       </div>
 
       {/*
-        運行状況と天気は、記事本文と違って毎日変わる。
+        運行状況は記事本文と違って毎日変わる。
         滞在中の読者がこのページを繰り返し開く理由になるので、
         目次(状況を選ぶセクション)より前に置いている。
-        外部APIが落ちているときは各ウィジェットが自分で消える。
+        外部APIが落ちているときはウィジェットが自分で消える。
+        天気はこのページのテーマ(交通)と直接関係がないため、
+        トップページのLiveStripのみに表示する。
       */}
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <div className="mt-8">
         <TflStatusWidget />
-        <WeatherWidget />
       </div>
 
       <Separator className="my-8" />

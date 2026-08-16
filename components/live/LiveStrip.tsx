@@ -9,11 +9,12 @@ import type { FxRate } from "@/lib/fx/rate";
 /**
  * トップページのヒーロー直下に置く「今日のロンドン」1行帯。
  *
- * 各ページにある詳細ウィジェット(TflStatusWidget / WeatherWidget /
- * FxRateWidget)とは役割が違う。あちらは腰を据えて読む人向けで、
- * こちらは訪問直後の読者に「今日は雨か」「止まっている線はあるか」
- * 「ポンドはいくらか」を一目で渡し、詳しく知りたければ各ページへ送る。
- * したがって数字は各1個までに絞り、詳細は出さない。
+ * 他ページにある詳細ウィジェット(TflStatusWidget / FxRateWidget)とは
+ * 役割が違う。あちらは腰を据えて読む人向けで、こちらは訪問直後の読者に
+ * 「今日は雨か」「止まっている線はあるか」「ポンドはいくらか」を一目で
+ * 渡し、詳しく知りたければ各ページへ送る。したがって数字は各1個までに
+ * 絞り、詳細は出さない。天気だけは単体の詳細ページがないため、この帯が
+ * 唯一の表示場所になる(リンクなし)。
  *
  * 設計上の判断:
  *
@@ -116,12 +117,14 @@ export default function LiveStrip() {
         ? "closed"
         : "good";
 
-  const items: { key: string; href: string; node: React.ReactNode }[] = [];
+  const items: { key: string; href: string | null; node: React.ReactNode }[] =
+    [];
 
   if (today) {
     items.push({
       key: "weather",
-      href: "/sightseeing/transport",
+      // 天気単体の詳細ページがないため、他項目と違いリンクさせない。
+      href: null,
       node: (
         <>
           <span aria-hidden="true" className="text-base leading-none">
@@ -182,12 +185,18 @@ export default function LiveStrip() {
       {items.map((item, i) => (
         <div key={item.key} className="flex shrink-0 items-center gap-1 sm:gap-2">
           {i > 0 && <Divider />}
-          <Link
-            href={item.href}
-            className="flex items-center gap-1.5 rounded-full px-1.5 py-1 transition hover:bg-muted sm:px-2"
-          >
-            {item.node}
-          </Link>
+          {item.href ? (
+            <Link
+              href={item.href}
+              className="flex items-center gap-1.5 rounded-full px-1.5 py-1 transition hover:bg-muted sm:px-2"
+            >
+              {item.node}
+            </Link>
+          ) : (
+            <div className="flex items-center gap-1.5 rounded-full px-1.5 py-1 sm:px-2">
+              {item.node}
+            </div>
+          )}
         </div>
       ))}
     </div>
