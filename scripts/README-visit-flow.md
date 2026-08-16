@@ -79,8 +79,13 @@ DB上は `address` が `"-"` になっている。
 - ロイヤル・ミュージアムズ・グリニッジ デイパス (`royal-museums-greenwich-day-pass`)
 - クリスマス・ライト・ロンドン・バスツアー (`christmas-lights-london-bus-tour-2025`)
 
-これらに必要なのは歩き方ではなく「どのパスが誰に向くか」の比較。
-別の形で扱う。
+これらに必要なのは歩き方ではなく「どのパスが誰に向くか」の判断材料。
+`scripts/update-pass-products.ts` で本文側に書く。
+
+とくにロンドンパスは、**ロンドンの主要な博物館・美術館がもともと無料**
+（大英博物館、ナショナル・ギャラリー、V&A、テート、自然史博物館、
+サイエンス・ミュージアム）である点を必ず書くこと。これを省くと
+「100以上の施設」という宣伝文句だけで読者に判断させることになる。
 
 ### 終了・閉鎖した催し
 
@@ -100,13 +105,19 @@ DB上は `address` が `"-"` になっている。
 
 日程が古いまま歩き方だけ足すと読者が混乱するので、**年次情報の更新が先**。
 
-- `christmas-lights-london-bus-tour-2025`
-- `chelsea-winter-village-2025`
-- `rhs-chelsea-flower-show-2026`
+| slug | 現在の掲載 | 更新スクリプト |
+| --- | --- | --- |
+| `hyde-park-winter-wonderland-2025` | 2026年版 | `update-winter-wonderland-2026.ts` |
+| `chelsea-winter-village-2025` | 2026年版 | `update-seasonal-events-2026.ts` |
+| `rhs-chelsea-flower-show-2026` | 2027年版 | `update-seasonal-events-2026.ts` |
+| `christmas-lights-london-bus-tour-2025` | 2026年版 | `update-pass-products.ts` |
 
-更新の型は `scripts/update-winter-wonderland-2026.ts` を参照。
 **slug は変えない**（変えると既存URLが404になり検索流入を失う）。
-表示名と本文だけを毎年更新する。
+表示名と本文だけを毎年更新する。slug の年号と表示年がずれるのは想定どおり。
+
+毎年の作業: 各スクリプトの冒頭コメントにある日程を公式サイトで確認して
+差し替え、`--apply` で再実行する。いずれも二重適用を防ぐ `done` 判定が
+入っているので、流し直しても壊れない。
 
 ## 事実が古くなったとき
 
