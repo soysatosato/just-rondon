@@ -24,12 +24,15 @@ export default function AttractionFactBar({
   durationText,
   nearestStation,
   openingHours,
+  website,
 }: {
   priceAdult: string | null;
   priceChild: string | null;
   durationText: string | null;
   nearestStation: string | null;
   openingHours: string | null;
+  /** 公式サイト。下の注意書きから直接飛ばすために受け取る。 */
+  website?: string | null;
 }) {
   // 大人と子どもが同額(どちらも「無料」など)なら1行にまとめる。
   // 同じ値を2行並べても情報が増えない。
@@ -78,9 +81,25 @@ export default function AttractionFactBar({
       </dl>
 
       {/* 料金と開館時間は改定される。ここの値がいつでも正しいと約束はできない
-          ので、必ず公式サイトを見に行ける状態にしておく(リンクは呼び出し側)。 */}
+          ので、必ず公式サイトを見に行ける状態にしておく。 */}
       <p className="mt-4 border-t border-border/60 pt-3 text-xs text-muted-foreground">
-        料金・開館時間は変更されることがあります。訪問前に公式サイトで最新情報をご確認ください。
+        料金・開館時間は変更されることがあります。訪問前に
+        {website ? (
+          <>
+            {" "}
+            <a
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+            >
+              公式サイト
+            </a>{" "}
+          </>
+        ) : (
+          "公式サイト"
+        )}
+        で最新情報をご確認ください。
       </p>
     </section>
   );

@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import dynamic from "next/dynamic";
 import {
   fetchAttractionDetails,
   fetchNearbyAttractions,
@@ -14,10 +13,7 @@ import { fetchMuseumIDandName } from "@/utils/actions/museums";
 import { museumSlugForAttraction } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import { redirect } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import ReactMarkdown from "react-markdown";
-import { Skeleton } from "@/components/ui/skeleton";
+import MarkdownBody from "@/components/jobs/MarkdownBody";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Baby, Flame, MapPin, Star, Tag, Ticket } from "lucide-react";
@@ -32,6 +28,8 @@ import {
 } from "@/components/sightseeing/jsonld";
 import AttractionFactBar from "@/components/sightseeing/AttractionFactBar";
 import AttractionVisitFlow from "@/components/sightseeing/AttractionVisitFlow";
+import AttractionLocation from "@/components/sightseeing/AttractionLocation";
+import AttractionSpotRail from "@/components/sightseeing/AttractionSpotRail";
 import {
   areaGuidePath,
   getAreaMeta,
@@ -39,13 +37,10 @@ import {
 import {
   visibleSections,
   isRedundantOverview,
+  orderForReading,
+  sectionAnchor,
 } from "@/components/sightseeing/sections";
 import { categoryChipMap } from "@/components/sightseeing/categories";
-
-const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[400px] w-full" />,
-});
 
 /**
  * engName はタイトルに入れない。h1 と JSON-LD で出しているうえ、
@@ -217,6 +212,43 @@ function AreaLink({ area }: { area: string | null }) {
   );
 }
 
+/**
+ * 本文セクションの目次。
+ *
+ * セクションが3本以上あるときだけ出す。2本しかないページで目次を出しても
+ * 下にスクロールすれば全部見えるので、場所を取るだけになる。
+ */
+function SectionToc({
+  sections,
+}: {
+  sections: { id: number; title: string }[];
+}) {
+  if (sections.length < 3) return null;
+
+  return (
+    <nav
+      aria-label="このページの内容"
+      className="rounded-2xl border border-border bg-muted/40 p-5"
+    >
+      <p className="text-sm font-semibold text-muted-foreground">
+        このページの内容
+      </p>
+      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+        {sections.map((sec) => (
+          <li key={sec.id}>
+            <a
+              href={`#sec-${sec.id}`}
+              className="text-sm text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
+            >
+              {sec.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 export default async function AttractionDetail({
   params,
 }: {
@@ -240,15 +272,19 @@ export default async function AttractionDetail({
   const relatedWithoutNearby = related.filter(
     (spot) => !nearbySlugs.has(spot.slug),
   );
+
   // 料金・アクセス・開館時間はファクトバーへ移したので本文からは伏せる。
   // ただし伏せるのはファクトバーに値が入っているときだけ(sections.ts 参照)。
   // 冒頭の summary と中身が重複する「概要」セクションもここで落とす。
-  const bodySections = visibleSections(attraction.sections, {
-    priceAdult: attraction.priceAdult,
-    durationText: attraction.durationText,
-    nearestStation: attraction.nearestStation,
-    openingHours: attraction.openingHours,
-  }).filter((sec) => !isRedundantOverview(sec, attraction.summary));
+  // 残ったものは入力順ではなく「見どころ→歴史→その他」の読み物順に並べる。
+  const bodySections = orderForReading(
+    visibleSections(attraction.sections, {
+      priceAdult: attraction.priceAdult,
+      durationText: attraction.durationText,
+      nearestStation: attraction.nearestStation,
+      openingHours: attraction.openingHours,
+    }).filter((sec) => !isRedundantOverview(sec, attraction.summary)),
+  );
 
   // 同じ館が /museums 側にもある場合は、そちらの詳しい解説へ渡す。
   // 対応表に無ければ null のままで、リンクは出さない。
@@ -258,9 +294,10 @@ export default async function AttractionDetail({
     : null;
 
   return (
-    <main className="w-full max-w-5xl mx-auto">
+    <main className="mx-auto w-full max-w-5xl">
       <JsonLd data={attractionBreadcrumbJsonLd(attraction)} />
       <JsonLd data={attractionJsonLd(attraction)} />
+
       <div className="mb-4">
         <BreadCrumbs
           name="観光ガイド"
@@ -272,17 +309,18 @@ export default async function AttractionDetail({
           }
         />
       </div>
+
       {/* Hero image full width */}
       <Dialog>
         {/* 通常表示（クリックで開く） */}
         <DialogTrigger asChild>
-          <div className="relative w-full aspect-[3/1] overflow-hidden">
+          <div className="relative aspect-[16/9] w-full overflow-hidden md:aspect-[3/1]">
             {/* RecommendLevel Overlay */}
-            {attraction.recommendLevel && (
+            {attraction.recommendLevel ? (
               <div className="absolute bottom-4 right-4 z-10">
                 <RecommendLevel level={attraction.recommendLevel} />
               </div>
-            )}
+            ) : null}
 
             {/* このページのLCP要素。priority を付けないと最後に読み込まれる */}
             <Image
@@ -297,11 +335,11 @@ export default async function AttractionDetail({
         </DialogTrigger>
 
         {/* 拡大表示 */}
-        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/80 border-none">
+        <DialogContent className="max-h-[95vh] max-w-[95vw] border-none bg-black/80 p-0">
           <img
             src={attraction.image}
             alt={`${attraction.name}｜ロンドン観光スポット`}
-            className="w-full h-full object-contain"
+            className="h-full w-full object-contain"
             loading="lazy"
             decoding="async"
             fetchPriority="low"
@@ -309,31 +347,39 @@ export default async function AttractionDetail({
         </DialogContent>
       </Dialog>
 
-      {/* Title + Location */}
-      <section className="px-6 py-6 space-y-4">
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-          <span>{attraction.name}</span>
-          <span className="ml-4 text-base md:text-lg font-light text-muted-foreground md:ml-3 md:mb-0 leading-none uppercase tracking-wider">
-            {attraction.engName}
-          </span>
-        </h1>
+      {/*
+        ここから記事本体。以前は本文が地図・関連スポット・広告2つの後ろに
+        あり、読者がこのページに来た理由(見どころ)が最下部に埋まっていた。
+        読み物を先に出し、地図と回遊リンクは読み終えた後に置く。
+      */}
+      <article className="mx-auto max-w-3xl space-y-10 px-6 py-8">
+        <header className="space-y-4">
+          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+            {attraction.name}
+            {attraction.engName ? (
+              <span className="ml-3 text-base font-light uppercase tracking-wider text-muted-foreground md:text-lg">
+                {attraction.engName}
+              </span>
+            ) : null}
+          </h1>
 
-        {/* リード文にはそのスポット固有の tagline を使う。
-            ここには以前「◯◯は、ロンドンを代表する{カテゴリ名}で、初心者から
-            リピーターまで楽しめる場所です」というテンプレート文が入っていたが、
-            135ページすべてで同じ文面になるうえ、読者が最初に読む位置で
-            何も言っていなかった。カテゴリの説明はバッジの方に任せる。 */}
-        {attraction.tagline && (
-          <p className="text-base leading-relaxed text-muted-foreground">
-            {attraction.tagline}
-          </p>
-        )}
+          {/* リード文にはそのスポット固有の tagline を使う。
+              ここには以前「◯◯は、ロンドンを代表する{カテゴリ名}で、初心者から
+              リピーターまで楽しめる場所です」というテンプレート文が入っていたが、
+              135ページすべてで同じ文面になるうえ、読者が最初に読む位置で
+              何も言っていなかった。カテゴリの説明はバッジの方に任せる。 */}
+          {attraction.tagline && (
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              {attraction.tagline}
+            </p>
+          )}
 
-        <div className="flex flex-wrap items-center gap-4">
-          <AttractionBadges attraction={attraction} />
-          <CategoryLink category={attraction.category} />
-          <AreaLink area={attraction.area} />
-        </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <AttractionBadges attraction={attraction} />
+            <CategoryLink category={attraction.category} />
+            <AreaLink area={attraction.area} />
+          </div>
+        </header>
 
         {/* 訪問前に知りたいこと。埋まっている項目だけが出る。 */}
         <AttractionFactBar
@@ -342,126 +388,57 @@ export default async function AttractionDetail({
           durationText={attraction.durationText}
           nearestStation={attraction.nearestStation}
           openingHours={attraction.openingHours}
+          website={attraction.website}
         />
-      </section>
-      <div className="mt-4 justify-center flex">
-        <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-4" />
-      </div>
 
-      <Tabs
-        defaultValue="overview"
-        className="bg-gray-50 dark:bg-gray-800 rounded-xl border mx-6 p-4 space-y-4"
-      >
-        <TabsList>
-          {/* Render Overview tab only if address or website exists */}
-          {(attraction.address !== "-" || attraction.website) && (
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-          )}
-          {/* Render Map tab only if address exists */}
-          {attraction.address !== "-" && (
-            <TabsTrigger value="location">Map</TabsTrigger>
-          )}
-        </TabsList>
-
-        {/* Overview Content */}
-        {(attraction.address !== "-" || attraction.website) && (
-          <TabsContent value="overview">
-            <div className="space-y-4 text-gray-800 dark:text-gray-100 text-sm">
-              <div>
-                <p className="font-semibold">場所</p>
-                {attraction.address &&
-                attraction.address !== "-" &&
-                attraction.engName ? (
-                  <Link
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      attraction.engName,
-                    )}&query_place_id=${attraction.lat},${attraction.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-300 hover:underline"
-                  >
-                    {attraction.address}
-                  </Link>
-                ) : (
-                  <span>--</span>
-                )}
-              </div>
-
-              <div>
-                <p className="font-semibold">公式サイト</p>
-                {attraction.website ? (
-                  <Link
-                    href={attraction.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 dark:text-blue-300  hover:underline"
-                  >
-                    {attraction.website}
-                  </Link>
-                ) : (
-                  <span>--</span>
-                )}
-              </div>
-            </div>
-          </TabsContent>
+        {/* summary は導入文として本文の書体で出す。以前は丸いアイコン付きの
+            白い箱に入れていたが、/overview.png が135ページすべてで同じ位置に
+            出るだけで、読む助けにはなっていなかった。 */}
+        {attraction.summary && (
+          <p className="whitespace-pre-line border-l-4 border-neutral-300 pl-5 text-[17px] font-light leading-relaxed text-neutral-800 dark:border-neutral-700 dark:text-neutral-300">
+            {attraction.summary}
+          </p>
         )}
 
-        {/* Map Content */}
-        {attraction.address !== "-" && (
-          <TabsContent value="location">
-            <div className="my-8 space-y-2">
-              <Card>
-                <CardContent className="space-y-1">
-                  <DynamicMap lat={attraction.lat} lng={attraction.lng} />
-                  <div className="mt-2 text-xs md:text-sm">
-                    {attraction.engName && (
-                      <Link
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                          attraction.engName,
-                        )}&query_place_id=${attraction.lat},${attraction.lng}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline"
-                      >
-                        {attraction.address}
-                      </Link>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        )}
-      </Tabs>
+        <SectionToc sections={bodySections} />
 
-      {/* About section */}
-      <section className="px-6 py-12 max-w-3xl mx-auto space-y-10">
-        <div className="p-10 rounded-3xl shadow-md bg-white dark:bg-gray-800">
-          <div className="relative float-left mr-6 mb-4 w-28 h-28">
-            {/* 元画像は1.5MB。next/image に通して112pxのAVIF/WebPを配信する */}
-            <Image
-              src="/overview.png"
-              alt="Overview Icon"
-              width={112}
-              height={112}
-              className="absolute inset-0 w-full h-full object-contain drop-shadow-md dark:bg-neutral-100"
-              loading="lazy"
-            />
-          </div>
-
-          {attraction.summary && (
-            <p className="text-[18px] leading-relaxed text-neutral-800 dark:text-neutral-300  font-light whitespace-pre-line">
-              {attraction.summary}
-            </p>
-          )}
-
-          <div className="clear-both" />
+        {/* 本文。見どころが最初に来る。 */}
+        <div className="space-y-12">
+          {bodySections.map((sec) => (
+            <section
+              key={sec.id}
+              id={sectionAnchor(sec)}
+              className="scroll-mt-24 space-y-3"
+            >
+              <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
+                {sec.title}
+              </h2>
+              {/* prose 系クラスはこのプロジェクトでは効かない
+                  (@tailwindcss/typography が入っていない)。
+                  見出し・箇条書き・表の見た目は MarkdownBody が持っている。 */}
+              <MarkdownBody>{sec.description ?? ""}</MarkdownBody>
+            </section>
+          ))}
         </div>
 
         {/* 着いてからの歩き方。visitFlow が入っているスポットにだけ出る。 */}
         <AttractionVisitFlow
           steps={attraction.visitFlow}
           attractionName={attraction.name}
+        />
+
+        {/* 広告は本文を読み終えた位置に置く。以前は本文の前に2つあった。 */}
+        <div className="flex justify-center">
+          <AdSenseUnit slot={AD_SLOTS.inArticle} />
+        </div>
+
+        <AttractionLocation
+          name={attraction.name}
+          engName={attraction.engName}
+          address={attraction.address}
+          lat={attraction.lat}
+          lng={attraction.lng}
+          website={attraction.website}
         />
 
         {pairedMuseum && pairedMuseumSlug && (
@@ -472,118 +449,35 @@ export default async function AttractionDetail({
             description="注目作品、所要時間の目安、開館時間、館内の回り方は美術館ガイド側にまとめています。"
           />
         )}
+      </article>
 
-        {nearby.length > 0 && (
-          <section className="px-6 py-12 max-w-5xl mx-auto space-y-6">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
-              {attraction.name}の近くで一緒に回れるスポット
-            </h2>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">
-              徒歩圏内にある観光スポットです。同じ日にまとめて回ると効率よく歩けます。
-            </p>
+      {/* 回遊リンクは本文より広く使う。記事を読み終えた読者の次の一手。 */}
+      <div className="mx-auto max-w-5xl space-y-12 px-6 pb-12">
+        <AttractionSpotRail
+          heading={`${attraction.name}の近くで一緒に回れるスポット`}
+          description="徒歩圏内にある観光スポットです。同じ日にまとめて回ると効率よく歩けます。"
+          spots={nearby.map((spot) => ({
+            slug: spot.slug,
+            name: spot.name,
+            image: spot.image,
+            distanceKm: spot.distanceKm,
+            durationText: spot.durationText,
+          }))}
+        />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {nearby.map((spot) => (
-                <Link
-                  key={spot.slug}
-                  href={`/sightseeing/${spot.slug}`}
-                  className="block group"
-                >
-                  <div className="rounded-lg overflow-hidden shadow hover:shadow-md transition">
-                    <img
-                      src={spot.image}
-                      alt={`${spot.name}｜ロンドン観光スポット`}
-                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </div>
-                  <p className="mt-2 text-sm font-medium group-hover:underline">
-                    {spot.name}
-                  </p>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    徒歩圏 約{spot.distanceKm.toFixed(1)}km
-                    {spot.durationText ? `・所要 ${spot.durationText}` : ""}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+        <AttractionSpotRail
+          heading="同じカテゴリーの観光スポット"
+          spots={relatedWithoutNearby.map((spot) => ({
+            slug: spot.slug,
+            name: spot.name,
+            image: spot.image,
+          }))}
+        />
 
-        {relatedWithoutNearby.length > 0 && (
-          <section className="px-6 py-12 max-w-5xl mx-auto space-y-6">
-            <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
-              同じカテゴリーの観光スポット
-            </h2>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {relatedWithoutNearby.map((spot) => (
-                <Link
-                  key={spot.slug}
-                  href={`/sightseeing/${spot.slug}`}
-                  className="block group"
-                >
-                  <div className="rounded-lg overflow-hidden shadow hover:shadow-md transition">
-                    <img
-                      src={spot.image}
-                      alt={`${spot.name}｜ロンドン観光スポット`}
-                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </div>
-                  <p className="mt-2 text-sm font-medium group-hover:underline">
-                    {spot.name}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-        <div className="mt-4 justify-center flex">
-          <AdSenseUnit slot={AD_SLOTS.articleBottom} className="my-4" />
+        <div className="flex justify-center">
+          <AdSenseUnit slot={AD_SLOTS.articleBottom} />
         </div>
-        <div className="space-y-12">
-          {bodySections.map((sec) => (
-            <section
-              key={sec.id}
-              className="space-y-4 pb-4 border-l-4 border-neutral-300 pl-5 hover:border-neutral-500 transition-colors"
-            >
-              <h2 className="text-xl md:text-2xl font-semibold tracking-tight flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-neutral-400 inline-block"></span>
-                {sec.title}
-              </h2>
-
-              <div className="prose prose-neutral max-w-none text-sm leading-relaxed">
-                <ReactMarkdown
-                  components={{
-                    p: ({ node, ...props }) => (
-                      <p className="mb-6 last:mb-0" {...props} />
-                    ),
-                    h3: ({ node, ...props }) => (
-                      <h3
-                        className="text-xl font-semibold mt-8 mb-4"
-                        {...props}
-                      />
-                    ),
-                    ul: ({ node, ...props }) => (
-                      <ul
-                        className="list-disc list-outside mb-6 last:mb-0"
-                        {...props}
-                      />
-                    ),
-                  }}
-                >
-                  {sec.description}
-                </ReactMarkdown>
-              </div>
-            </section>
-          ))}
-        </div>
-      </section>
+      </div>
     </main>
   );
 }
