@@ -12,9 +12,6 @@ import {
   Train,
   Users,
 } from "lucide-react";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -34,6 +31,7 @@ import {
   THEATRES_BASE,
 } from "@/components/musicals/theatres/theatres";
 import TheatrePerformances from "@/components/musicals/theatres/TheatrePerformances";
+import TheatreNotes from "@/components/musicals/theatres/TheatreNotes";
 import { formatRuntime } from "@/components/musicals/facts";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
@@ -217,37 +215,12 @@ export default async function TheatreDetailPage({
           multipleShows={onShow.length > 1}
         />
 
-        {theatre.notes && (
-          <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-            <h2 className="mb-4 text-xl font-semibold sm:text-2xl">
-              この劇場で知っておきたいこと
-            </h2>
-            <div className="space-y-3">
-              <Markdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  p: ({ ...props }) => (
-                    <p
-                      className="text-sm leading-relaxed text-foreground sm:text-base"
-                      {...props}
-                    />
-                  ),
-                  li: ({ ...props }) => (
-                    <li
-                      className="ml-5 list-disc text-sm text-foreground sm:text-base"
-                      {...props}
-                    />
-                  ),
-                  strong: ({ ...props }) => (
-                    <strong className="font-semibold" {...props} />
-                  ),
-                }}
-              >
-                {theatre.notes}
-              </Markdown>
-            </div>
-          </section>
-        )}
+        <TheatreNotes
+          intro={theatre.intro}
+          seatingNotes={theatre.seatingNotes}
+          visitNotes={theatre.visitNotes}
+          notes={theatre.notes}
+        />
 
         <section className="space-y-2">
           <h2 className="text-xl font-semibold sm:text-2xl">場所</h2>
