@@ -103,6 +103,10 @@ const nextConfig = {
   },
 
   images: {
+    // 2026-08: Vercel Image Optimization の枠を使い切り、最適化エンドポイントが
+    // 402 (OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED) を返すため一時的に無効化。
+    // 課金期間のリセットを確認したら unoptimized を外すこと。
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
