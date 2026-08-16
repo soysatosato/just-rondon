@@ -230,9 +230,38 @@ model Musical {
   engName        String
   slug           String   @unique
   tagline        String?
+  /// 幕ごとのシーン運び(markdown)。あらすじ3層のうち「物語の流れ」にあたる。
+  ///
+  /// 結末は含めない。まだ観るか決めていない読者が最初に開くページなので、
+  /// 結末は storyEnding に切り出して折りたたみの中にだけ置く。
   description    String
   summary        String
   blurb          String?
+
+  /// 「どんな話か」を語る地の文(markdown、2〜3段落)。
+  ///
+  /// あらすじ3層の入口。箇条書きのシーン運び(description)は
+  /// 出来事の記録としては正確でも、固有名詞が並ぶだけで作品の
+  /// 魅力が伝わらない。何に心を動かされる話なのかを先に地の文で
+  /// 示し、読者が固有名詞を受け取れる状態を作る。
+  ///
+  /// 結末は書かない。null は未執筆で、表示側は層ごと出さない。
+  storyHook      String?
+  /// 主な登場人物。あらすじ3層のうち「誰の話か」にあたる。
+  ///
+  /// MusicalCharacter[] の JSON。形は components/musicals/story.ts が
+  /// 持つ。別テーブルにしないのは、人物が作品ページの外で使われず、
+  /// 並び順そのものが原稿の一部(主人公から関係の遠い順)だから。
+  ///
+  /// null は未執筆で、表示側は層ごと出さない。
+  characters     Json?
+  /// 結末(markdown)。折りたたみの中にだけ出す。
+  ///
+  /// description から切り出して分けているのは、観るか迷っている読者と
+  /// 予習してから観たい読者で、読みたいものが正反対だから。既定は閉。
+  ///
+  /// null は「切り出し済みでない」。表示側は折りたたみごと出さない。
+  storyEnding    String?
   highlights     String[]
   /// 上演劇場。移行が済むまで theatreName と併存する。
   ///

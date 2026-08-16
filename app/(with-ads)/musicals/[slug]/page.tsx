@@ -11,6 +11,7 @@ import {
 } from "@/utils/actions/musicals";
 import MusicalSchedule from "@/components/musicals/MusicalSchedule";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
+import { parseCharacters } from "@/components/musicals/story";
 import {
   Card,
   CardContent,
@@ -108,6 +109,17 @@ export default async function musicalDetailsPage({
 
         <AdSenseUnit slot={AD_SLOTS.inArticle} />
 
+        {/* あらすじを実用情報より先に置く。読者はまず「観たいか」を決め、
+            そのあとで「いつ観るか」を調べる。上演時間や日程を先に見せると、
+            まだ興味を持っていない読者に予定の話を始めることになる。 */}
+        <MusicalSceneDescription
+          name={musical.name}
+          description={musical.description}
+          storyHook={musical.storyHook}
+          characters={parseCharacters(musical.characters)}
+          storyEnding={musical.storyEnding}
+        />
+
         <MusicalInfo
           isOnShow={musical.isOnShow}
           lastVerifiedAt={musical.lastVerifiedAt}
@@ -130,11 +142,6 @@ export default async function musicalDetailsPage({
         <MusicalSchedule
           performances={performances}
           fetchedAt={performances[0]?.updatedAt ?? null}
-        />
-
-        <MusicalSceneDescription
-          name={musical.name}
-          description={musical.description}
         />
 
         <div id="theatre-info" className="space-y-2">
