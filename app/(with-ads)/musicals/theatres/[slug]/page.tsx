@@ -3,7 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowRight, MapPin, Theater, Train, Users } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  ExternalLink,
+  MapPin,
+  Theater,
+  Train,
+  Users,
+} from "lucide-react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -20,6 +28,7 @@ import {
 } from "@/utils/actions/theatres";
 import {
   buildTheatreMetadata,
+  operatorSite,
   theatreBreadcrumbJsonLd,
   theatreJsonLd,
   THEATRES_BASE,
@@ -70,6 +79,7 @@ export default async function TheatreDetailPage({
   const performances = await fetchTheatrePerformances(theatre.id);
   const onShow = theatre.musicals.filter((m) => m.isOnShow);
   const pastShows = theatre.musicals.filter((m) => !m.isOnShow);
+  const operatorUrl = theatre.operator ? operatorSite(theatre.operator) : null;
 
   return (
     <>
@@ -101,7 +111,7 @@ export default async function TheatreDetailPage({
             {theatre.nameJa}
           </p>
 
-          <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <HeaderFact icon={MapPin} label="住所" value={theatre.address} />
             {theatre.nearestStation && (
               <HeaderFact
@@ -115,6 +125,32 @@ export default async function TheatreDetailPage({
                 icon={Users}
                 label="客席数"
                 value={`約${theatre.capacity.toLocaleString("ja-JP")}席`}
+              />
+            )}
+            {theatre.operator && (
+              <HeaderFact
+                icon={Building2}
+                label="運営"
+                value={
+                  operatorUrl ? (
+                    <>
+                      <a
+                        href={operatorUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                      >
+                        {theatre.operator}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        このグループの公式サイトで購入できます
+                      </span>
+                    </>
+                  ) : (
+                    theatre.operator
+                  )
+                }
               />
             )}
           </dl>
@@ -284,7 +320,7 @@ function HeaderFact({
 }: {
   icon: React.ElementType;
   label: string;
-  value: string;
+  value: React.ReactNode;
 }) {
   return (
     <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-3">

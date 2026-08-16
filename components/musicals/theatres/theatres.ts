@@ -19,6 +19,29 @@ export function theatrePath(slug: string) {
 }
 
 /**
+ * 劇場グループごとの公式チケット販売サイト。
+ *
+ * operator を出すのは会社名を知らせるためではなく、「どこで買えば
+ * 公式か」を読者に渡すため。検索結果の上位に転売サイトが並ぶことは
+ * /musicals/west-end-tickets でも警告しているが、警告だけでは
+ * 読者は正解にたどり着けない。劇場ページから公式の入口を直接指す。
+ *
+ * ここに無い operator(独立系・小規模な運営会社)は劇場ごとに窓口が
+ * 違うため、URL を持たせず名前だけ出す。誤った販売先を指すくらいなら
+ * 作品ページの website に委ねるほうが安全。
+ */
+const OPERATOR_SITES: Record<string, string> = {
+  "ATG Tickets": "https://www.atgtickets.com/",
+  "LW Theatres": "https://lwtheatres.co.uk/",
+  "Delfont Mackintosh Theatres": "https://www.delfontmackintosh.co.uk/",
+  "Nimax Theatres": "https://www.nimaxtheatres.com/",
+};
+
+export function operatorSite(operator: string): string | null {
+  return OPERATOR_SITES[operator] ?? null;
+}
+
+/**
  * 劇場ページの metadata。
  *
  * タイトルに英語名を必ず入れる。読者が検索するのは "Sondheim Theatre 座席"
