@@ -7,9 +7,12 @@
 
 | ファイル | 対象 | 件数 |
 | --- | --- | --- |
-| `seed-visit-flow.ts` | recommendLevel 5 | 11 |
-| `seed-visit-flow-level4.ts` | recommendLevel 4 | 26 |
-| `seed-visit-flow-level3.ts` | recommendLevel 3 | 作業中 |
+| `seed-visit-flow.ts` | recommendLevel 5 | 11 / 11 |
+| `seed-visit-flow-level4.ts` | recommendLevel 4 | 26 / 27 |
+| `seed-visit-flow-level3.ts` | recommendLevel 3 | 54 / 63 |
+
+差分の9件・1件は下の「歩き方を書かないもの」に該当するため意図的に空。
+level 2（26件）と level 1（8件）は未着手。
 
 投入ロジックは3ファイルとも同一。分けているのは出典コメントが1ファイルに
 収まらなくなったためだけなので、ロジックを直すときは全部を直すこと。
@@ -77,6 +80,16 @@ DB上は `address` が `"-"` になっている。
 
 これらに必要なのは歩き方ではなく「どのパスが誰に向くか」の比較。
 別の形で扱う。
+
+### 終了・閉鎖した催し
+
+行けない場所に「着いてからの歩き方」を書いても意味がないので対象外。
+代わりに `fix-stale-attraction-notes.ts` で本文の冒頭に終了・閉鎖を明示する。
+
+- ジュラシック・ワールド：エクスペリエンス — 2026年1月4日で開催終了
+- ピーター・ハリソン・プラネタリウム — 改修のため閉鎖中（再開見込み2028年春）
+
+再開したら歩き方を追加すること。
 
 ### 年号付きの季節イベント
 
