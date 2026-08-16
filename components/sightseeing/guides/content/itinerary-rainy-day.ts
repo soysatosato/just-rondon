@@ -230,6 +230,19 @@ const itineraryRainyDay: TravelGuideArticle = {
         "**混みます。**雨の日は誰もが同じことを考えるためです。対策は**開館直後に入ること**の一択で、大英博物館やナショナル・ギャラリーは開館10分前に着いておくと入口の待ち時間がかなり違います。",
     },
   ],
+  attractionSlugs: [
+    "british-museum-london",
+    "national-gallery-london",
+    "tate-modern",
+    "tate-britain",
+    "imperial-war-museum",
+    "leadenhall-market-london",
+    "changing-the-guard-buckingham-palace",
+    "london-eye",
+    "the-view-from-the-shard",
+    "st-pauls-cathedral",
+    "tower-of-london",
+  ],
   sources: [
     {
       label: "Met Office – 英国気象庁の天気予報",

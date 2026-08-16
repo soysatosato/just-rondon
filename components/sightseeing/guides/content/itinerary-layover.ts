@@ -308,6 +308,11 @@ const itineraryLayover: TravelGuideArticle = {
         "**観光は中止してください**。乗り継ぎ便は途中で乗り遅れると、その先の区間もすべて無効になることがあります。市内滞在の予定時間が2時間を切ったら、空港内で過ごす判断に切り替えるのが安全です。観光は「余った時間のおまけ」と考えておくと、判断を誤りません。",
     },
   ],
+  attractionSlugs: [
+    "buckingham-palace",
+    "national-gallery-london",
+    "british-museum-london",
+  ],
   sources: [
     {
       label: "GOV.UK – 英国のETA（電子渡航認証）",

@@ -360,6 +360,21 @@ const itinerary: TravelGuideArticle = {
         "**行きたい施設を先に決めてから判断してください**。ロンドンの主要博物館は無料なので、有料施設（ロンドン塔、ロンドン・アイ、ウィンザー城など）をどれだけ回るかで元が取れるかが変わります。有料施設を1日2〜3ヶ所以上回る予定があるなら検討の価値があります。",
     },
   ],
+  attractionSlugs: [
+    "changing-the-guard-buckingham-palace",
+    "british-museum-london",
+    "westminster-abbey",
+    "tower-of-london",
+    "london-eye",
+    "buckingham-palace",
+    "national-gallery-london",
+    "tate-modern",
+    "millennium-bridge",
+    "st-pauls-cathedral",
+    "windsor-castle",
+    "leadenhall-market-london",
+    "kensington-palace",
+  ],
   sources: [
     {
       label: "Visit London – 公式観光情報",

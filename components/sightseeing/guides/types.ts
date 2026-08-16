@@ -51,4 +51,16 @@ export type TravelGuideArticle = {
   faq?: TravelGuideFaq[];
   sources?: TravelGuideSource[];
   relatedLinks?: TravelGuideRelatedLink[];
+  /**
+   * 本文で触れた観光スポットの slug。記事末に写真付きのカードで出す。
+   *
+   * モデルコースは大英博物館やロンドン塔を本文で名前を出しておきながら、
+   * 各スポットの詳細ページへ渡す導線がどこにもなかった。読者は施設名を
+   * 改めて検索し直すことになる。
+   *
+   * 本文の markdown を機械的にリンクへ置換する手もあるが、既存のリンク内の
+   * 文字列まで壊すおそれがあるため、記事ごとに手で並べる。順番は本文で
+   * 登場する順。存在しない slug は表示時に黙って捨てる。
+   */
+  attractionSlugs?: string[];
 };

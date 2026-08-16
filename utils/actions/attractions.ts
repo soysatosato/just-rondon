@@ -163,6 +163,78 @@ export const fetchNearbyAttractions = async (
     .slice(0, limit);
 };
 
+/**
+ * 指定した slug のスポットを、渡された順序のまま返す。
+ *
+ * モデルコース記事の末尾に「この記事で紹介したスポット」を出すために使う。
+ * 記事側の並び(本文の登場順)が意味を持つので、DB の返却順ではなく
+ * 引数の順に並べ直す。該当しない slug は黙って捨てる。
+ */
+export const fetchAttractionsBySlugs = async (slugs: string[]) => {
+  if (slugs.length === 0) return [];
+
+  const found = await db.attraction.findMany({
+    where: { slug: { in: slugs } },
+    select: {
+      slug: true,
+      name: true,
+      image: true,
+      durationText: true,
+      priceAdult: true,
+      isFree: true,
+    },
+  });
+
+  const bySlug = new Map(found.map((spot) => [spot.slug, spot]));
+  return slugs
+    .map((slug) => bySlug.get(slug))
+    .filter((spot): spot is NonNullable<typeof spot> => Boolean(spot));
+};
+
+/**
+ * 入場無料のスポットをカテゴリー別にまとめる。/sightseeing/free 用。
+ *
+ * /sightseeing/all にも free フィルターはあるが、あちらは組み合わせ爆発を
+ * 避けるため noindex にしてある。「ロンドン 観光 無料」で検索した人が
+ * 着地できる静的なURLが無かったので、専用ページを用意している。
+ */
+export const fetchFreeAttractionsByCategory = unstable_cache(
+  async () => {
+    const free = await db.attraction.findMany({
+      where: { isFree: true },
+      select: {
+        slug: true,
+        name: true,
+        image: true,
+        category: true,
+        summary: true,
+        tagline: true,
+        durationText: true,
+        nearestStation: true,
+        recommendLevel: true,
+      },
+      orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+    });
+
+    const groups = new Map<string, typeof free>();
+    for (const spot of free) {
+      const key = spot.category || "other";
+      groups.set(key, [...(groups.get(key) ?? []), spot]);
+    }
+
+    // 件数の多いカテゴリーから見せる。同数ならカテゴリー名で安定させる。
+    return [...groups.entries()]
+      .map(([category, spots]) => ({ category, spots }))
+      .sort(
+        (a, b) =>
+          b.spots.length - a.spots.length ||
+          a.category.localeCompare(b.category),
+      );
+  },
+  ["free-attractions-by-category"],
+  { revalidate: 60 * 60 * 24 },
+);
+
 export const fetchMustSeeAttractions = unstable_cache(
   async () =>
     db.attraction.findMany({

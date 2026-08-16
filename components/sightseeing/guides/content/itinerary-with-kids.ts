@@ -278,6 +278,12 @@ const itineraryWithKids: TravelGuideArticle = {
         "**自然史博物館と科学博物館**です。サウス・ケンジントン駅から**地下通路で直結**しており、地上に出ずに行けます。どちらも無料で半日過ごせます。詳しくは[雨の日のロンドン](/sightseeing/itinerary/rainy-day)へ。",
     },
   ],
+  attractionSlugs: [
+    "tower-of-london",
+    "british-museum-london",
+    "london-zoo",
+    "london-transport-museum",
+  ],
   sources: [
     {
       label: "Transport for London – 子どもの運賃と無料乗車",

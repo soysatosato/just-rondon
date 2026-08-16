@@ -577,6 +577,14 @@ export default async function Page() {
             （一部エリアや特別展示は有料の場合あり）。
             予算を抑えながらも、ロンドンらしい文化や街の雰囲気を存分に味わえるのが魅力です。
           </p>
+          <p className="text-sm">
+            <Link
+              href="/sightseeing/free"
+              className="text-blue-700 hover:underline dark:text-blue-400"
+            >
+              入場無料のスポットをジャンル別にすべて見る →
+            </Link>
+          </p>
 
           <CardCarousel>
             {freeAttractions.map((item, idx) => (

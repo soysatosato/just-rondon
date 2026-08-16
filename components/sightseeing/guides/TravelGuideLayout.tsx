@@ -13,6 +13,7 @@ import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
+import GuideAttractionCards from "./GuideAttractionCards";
 import {
   getTravelGuideMeta,
   itineraryItemListJsonLd,
@@ -156,6 +157,11 @@ export default function TravelGuideLayout({
           </Card>
         ))}
       </div>
+
+      {/* 本文を読み終えた直後、FAQ より前に個別スポットへの導線を置く。 */}
+      {article.attractionSlugs && article.attractionSlugs.length > 0 && (
+        <GuideAttractionCards slugs={article.attractionSlugs} />
+      )}
 
       {article.faq && article.faq.length > 0 && (
         <GuideFaq items={article.faq} />

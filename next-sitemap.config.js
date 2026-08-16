@@ -147,6 +147,9 @@ module.exports = {
       "/restaurants/pub-etiquette",
       "/sightseeing",
       "/sightseeing/all",
+      // 入場無料スポットの一覧。/sightseeing/all の free フィルターは
+      // noindex なので、検索の受け皿としてこの静的URLを別に持つ。
+      "/sightseeing/free",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
       // travelGuides と一致させること。
       "/sightseeing/eta-uk-visa-guide",
