@@ -262,6 +262,18 @@ model Musical {
   ///
   /// null は「切り出し済みでない」。表示側は折りたたみごと出さない。
   storyEnding    String?
+  /// 見どころと裏話。MusicalAppeal[] の JSON。
+  ///
+  /// あらすじが「何が起きるか」を答えるのに対し、こちらは
+  /// 「なぜ観る価値があるか」を答える。筋を知っただけでは伝わらない、
+  /// 劇場でしか起きないこと(舞台機構・生の歌唱・客席の反応)と、
+  /// 知っていると見え方が変わる制作の背景を持つ。
+  ///
+  /// kind で見どころ("highlight")と裏話("trivia")を区別する。
+  /// 形は components/musicals/story.ts が持つ。
+  ///
+  /// null は未執筆で、表示側は層ごと出さない。
+  appeals        Json?
   highlights     String[]
   /// 上演劇場。移行が済むまで theatreName と併存する。
   ///

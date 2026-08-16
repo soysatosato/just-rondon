@@ -10,6 +10,11 @@
  *   何に心を動かされる話なのかを書く。結末には触れない。
  * - characters は筋ではなく人物を説明する。「〜する人」ではなく
  *   「〜を抱えている人」。並び順は主人公から関係の遠い順。
+ * - appeals は「劇場でしか起きないこと」を書く。あらすじを繰り返さない。
+ *   舞台機構・生の歌唱・客席の反応など、映像や粗筋では代えられない
+ *   ものだけを挙げる。kind:"trivia" には裏付けの取れた事実だけを置く
+ *   (下の出典コメントを参照)。曖昧な伝聞は書かない——読者が現地で
+ *   確かめられる話なので、外すと信用がそのまま損なわれる。
  * - SCENES はクライマックスの手前で止める。結末は ENDING に置く。
  *
  * 実行:
@@ -19,13 +24,17 @@
  */
 
 import { PrismaClient } from "@prisma/client";
-import type { MusicalCharacter } from "../components/musicals/story";
+import type {
+  MusicalAppeal,
+  MusicalCharacter,
+} from "../components/musicals/story";
 
 const prisma = new PrismaClient();
 
 type Story = {
   storyHook: string;
   characters: MusicalCharacter[];
+  appeals: MusicalAppeal[];
   /** description を差し替える原稿。結末を含まないところまで。 */
   scenes: string;
   storyEnding: string;
@@ -74,6 +83,47 @@ const STORIES: Record<string, Story> = {
         role: "国の頂点",
         oneLiner:
           "エメラルド・シティに君臨する偉大な魔法使い。会ってみると、驚くほど普通の男である。",
+      },
+    ],
+    // 裏話の出典:
+    // - 時計仕掛けの龍と、階段に叩きつけた時計の逸話
+    //   https://www.denvercenter.org/news-center/qa-with-wicked-set-designers-eugene-lee-and-edward-pierce/
+    // - Defying Gravity の油圧リフトと衣装による隠蔽
+    //   https://www.controlbooth.com/threads/defying-gravity-effect-wicked.21750/
+    // - 「For Good」が作曲者の娘との会話から生まれたこと
+    //   https://www.biography.com/movies-tv/a69473511/wicked-for-good-song-meaning-stephen-schwartz
+    // - ロンドン公演は2006年9月27日開幕、2024年4月に6,762回で西エンド史上10位
+    //   https://playbill.com/article/wicked-becomes-10th-longest-running-production-in-west-end-history-april-24
+    appeals: [
+      {
+        kind: "highlight",
+        title: "第一幕の幕切れ、エルファバが宙に浮く数十秒",
+        body: "「Defying Gravity」で、エルファバは箒を手に舞台の上へせり上がっていきます。約60台のムービングライトとスモーク、風の演出が同時に襲いかかり、歌声がそれを突き抜けてくる。ここで一度幕が下りるので、休憩に入った客席がしばらく呆然としているのが分かります。この作品を象徴する場面で、映像では音圧が再現できません。",
+      },
+      {
+        kind: "trivia",
+        title: "舞台を囲む龍は、階段に叩きつけられた時計から生まれた",
+        body: "客席に入ると、額縁の上に巨大な機械仕掛けの龍がいることに気づきます。公演中は煙を吐き、首と翼を動かします。美術のユージン・リーは、この「時計仕掛けの龍」の意匠を得るために時計を階段から投げ落とし、飛び出した歯車を設計図に貼りつけたと語っています。開演前に見上げておくと、装置全体が巨大な時計盤だと分かります。",
+      },
+      {
+        kind: "highlight",
+        title: "主役二人の声質が正反対に書き分けられている",
+        body: "エルファバは低音から張り上げるベルト、グリンダは高音のソプラノで書かれており、二人が同時に歌うと声の色がはっきり分かれます。英語の歌詞を細かく追えなくても、どちらが何を抱えているかが音だけで伝わる設計です。「Defying Gravity」の終盤で二人の声が交差する箇所は、その書き分けが最も効く瞬間です。",
+      },
+      {
+        kind: "trivia",
+        title: "別れの歌「For Good」は、作曲家が娘に聞いた話から生まれた",
+        body: "スティーヴン・シュワルツは、娘のジェシカが幼なじみと複雑な友情を抱えていたことを知り、「もう二度と会えないとしたら、その子に何と言う?」と尋ねました。娘の答えにあった「大切な人が人生に現れるのには理由があって、それがすぐには分からないこともある」という言葉が、そのまま冒頭の一節になっています。卒業式や葬儀で歌われる定番曲になったのは、この出発点があったからです。",
+      },
+      {
+        kind: "highlight",
+        title: "『オズの魔法使い』の記憶が、観ながら書き換えられていく",
+        body: "カカシ、ブリキの木こり、臆病なライオン、ルビーの靴——童話でおなじみのものが、この作品では「なぜそうなったか」の答えとして次々に現れます。原典を知っている人ほど、伏線が回収されるたびに客席がどよめくのが分かります。予習は『オズの魔法使い』のあらすじを思い出しておくだけで十分です。",
+      },
+      {
+        kind: "trivia",
+        title: "ロンドン公演は2006年から続いている",
+        body: "アポロ・ヴィクトリア劇場での開幕は2006年9月27日。2024年4月には6,762回目の公演を迎え、ウエストエンド史上10番目の長期公演になりました。同じ劇場で20年近く同じ演目をかけ続けているため、舞台機構は劇場そのものに造り込まれています。ツアー公演では再現しきれない部分がある、というのはそういう意味です。",
       },
     ],
     scenes: `## 第一幕：出会いと決別
@@ -186,10 +236,12 @@ async function main() {
     }
 
     if (dry) {
+      const highlights = story.appeals.filter((a) => a.kind === "highlight");
       console.log(
         `- ${musical.name}: hook ${story.storyHook.length}字 / ` +
-          `人物 ${story.characters.length}人 / scenes ${story.scenes.length}字 / ` +
-          `ending ${story.storyEnding.length}字`,
+          `人物 ${story.characters.length}人 / ` +
+          `見どころ ${highlights.length}件・裏話 ${story.appeals.length - highlights.length}件 / ` +
+          `scenes ${story.scenes.length}字 / ending ${story.storyEnding.length}字`,
       );
       continue;
     }
@@ -199,6 +251,7 @@ async function main() {
       data: {
         storyHook: story.storyHook,
         characters: story.characters,
+        appeals: story.appeals,
         description: story.scenes,
         storyEnding: story.storyEnding,
       },

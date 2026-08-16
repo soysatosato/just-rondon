@@ -11,7 +11,7 @@ import {
 } from "@/utils/actions/musicals";
 import MusicalSchedule from "@/components/musicals/MusicalSchedule";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
-import { parseCharacters } from "@/components/musicals/story";
+import { parseAppeals, parseCharacters } from "@/components/musicals/story";
 import {
   Card,
   CardContent,
@@ -117,6 +117,7 @@ export default async function musicalDetailsPage({
           description={musical.description}
           storyHook={musical.storyHook}
           characters={parseCharacters(musical.characters)}
+          appeals={parseAppeals(musical.appeals)}
           storyEnding={musical.storyEnding}
         />
 

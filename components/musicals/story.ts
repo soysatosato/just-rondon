@@ -41,3 +41,37 @@ export function parseCharacters(value: unknown): MusicalCharacter[] {
   if (!value.every(isCharacter)) return [];
   return value;
 }
+
+/** 見どころ("highlight")か、裏話("trivia")か。 */
+export type MusicalAppealKind = "highlight" | "trivia";
+
+/**
+ * 見どころ・裏話1件。appeals カラムの JSON 要素。
+ *
+ * 二種類を別カラムにせず kind で分けているのは、原稿を書くときに
+ * 両者が交互に出てくるほうが読ませやすいため。並び順が原稿の一部になる。
+ */
+export type MusicalAppeal = {
+  kind: MusicalAppealKind;
+  /** 見出し。「第一幕の幕切れで拍手が鳴りやまない」のように、体言止めにしない。 */
+  title: string;
+  /** 2〜4文の解説。なぜそう言えるかの具体(舞台機構、初演の経緯)を必ず含める。 */
+  body: string;
+};
+
+function isAppeal(value: unknown): value is MusicalAppeal {
+  if (typeof value !== "object" || value === null) return false;
+  const a = value as Record<string, unknown>;
+  return (
+    (a.kind === "highlight" || a.kind === "trivia") &&
+    typeof a.title === "string" &&
+    typeof a.body === "string"
+  );
+}
+
+/** appeals カラムを読む。壊れていれば層ごと捨てる(parseCharacters と同じ方針)。 */
+export function parseAppeals(value: unknown): MusicalAppeal[] {
+  if (!Array.isArray(value)) return [];
+  if (!value.every(isAppeal)) return [];
+  return value;
+}

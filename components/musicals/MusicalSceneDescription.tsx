@@ -1,32 +1,39 @@
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { EyeOff, Users } from "lucide-react";
+import { EyeOff, ListOrdered, Sparkles, Theater, Users } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import type { MusicalCharacter } from "./story";
+import type { MusicalAppeal, MusicalCharacter } from "./story";
 
 /**
- * あらすじ。hook(惹き) → characters(誰の話か) → scenes(流れ) →
- * ending(折りたたみ) の順に、読者が降りる深さを選べるように積む。
+ * あらすじ。hook(惹き) → characters(誰の話か) → appeals(なぜ観るか) と
+ * 開いた状態で積み、筋を追う二層(流れ・結末)は折りたたむ。
+ *
+ * 流れを畳んでいるのは、作品を選んでいる段階の読者に必要なのが
+ * 「どんな話か」までで、幕ごとのシーン運びは予習の道具だから。
+ * 出しっぱなしにすると、長い箇条書きがページを占領して、その下にある
+ * 上演時間や日程まで読者が届かなくなる。
  *
  * 層ごとに埋まっていない作品があるので、それぞれ無ければ丸ごと出さない。
- * 移行前の作品は scenes だけが出て、従来と同じ見え方になる。
+ * 移行前の作品は流れの折りたたみだけが出る。
  */
 export default function MusicalSceneDescription({
   description,
   name,
   storyHook,
   characters,
+  appeals,
   storyEnding,
 }: {
   description: string;
   name: string;
   storyHook: string | null;
   characters: MusicalCharacter[];
+  appeals: MusicalAppeal[];
   storyEnding: string | null;
 }) {
   return (
@@ -36,8 +43,8 @@ export default function MusicalSceneDescription({
           {name} はどんな物語か
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          英語で観る前に、物語の芯と登場人物をつかんでおくための紹介です。
-          結末はページの一番下に、開いた人だけが読める形で置いています。
+          物語の芯と見どころの紹介です。幕ごとのあらすじと結末は、
+          読みたい人だけが開ける形で下にまとめています。
         </p>
       </div>
 
@@ -91,15 +98,35 @@ export default function MusicalSceneDescription({
         </div>
       )}
 
-      <div>
-        <h3 className="text-lg font-bold text-foreground">物語の流れ</h3>
-        <div className="mt-4 space-y-1">
+      {appeals.length > 0 && (
+        <div>
+          <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
+            <Sparkles className="h-4 w-4 text-primary" />
+            この作品の見どころ
+          </h3>
+          <div className="mt-4 space-y-3">
+            {appeals.map((appeal) => (
+              <AppealCard key={appeal.title} appeal={appeal} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 筋を追う二層は、どちらも既定で閉じる。観るかどうかを決める段階の
+          読者にとっては、ここから下は読まなくてよい情報。開いた読者だけが
+          結末まで一続きに読めるよう、流れと結末は隣り合わせに置く。 */}
+      <Accordion type="single" collapsible className="space-y-3">
+        <FoldedStory
+          value="flow"
+          icon={ListOrdered}
+          label="物語の流れを読む"
+          note="幕ごとのシーン運び。結末は含みません"
+        >
           <Markdown
             remarkPlugins={[remarkGfm]}
             components={{
               // ページの h1 は MusicalHero が作品名で描画しているので、
-              // 原稿の # は h3 まで下げる。見出しの階層と字面の階層を
-              // 合わせないと、幕の見出しが「物語の流れ」より大きく見える。
+              // 原稿の見出しは深さによらず同じ字面にそろえる。
               h1: ({ ...props }) => <SceneHeading {...props} />,
               h2: ({ ...props }) => <SceneHeading {...props} />,
               h3: ({ ...props }) => <SceneHeading {...props} />,
@@ -118,54 +145,108 @@ export default function MusicalSceneDescription({
                   {...props}
                 />
               ),
-              // 原稿の --- は幕の区切りに使われている。見出し側で
-              // 間隔を作っているので、線は引かず余白だけ残す。
+              // 原稿の --- は幕の区切り。見出し側で間隔を作っているので
+              // 線は引かず余白だけ残す。
               hr: () => <div className="h-2" />,
             }}
           >
             {description}
           </Markdown>
-        </div>
-      </div>
+        </FoldedStory>
 
-      {storyEnding && (
-        <Accordion type="single" collapsible>
-          <AccordionItem
+        {storyEnding && (
+          <FoldedStory
             value="ending"
-            className="rounded-xl border border-border bg-muted/30 px-4 border-b"
+            icon={EyeOff}
+            label="結末を読む"
+            note="ネタバレを含みます"
           >
-            <AccordionTrigger className="hover:no-underline">
-              <span className="flex items-center gap-2 font-bold text-foreground">
-                <EyeOff className="h-4 w-4 text-primary" />
-                結末を読む（ネタバレ）
-              </span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <Markdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  p: ({ ...props }) => (
-                    <p
-                      className="text-sm sm:text-base leading-relaxed text-foreground [&+p]:mt-3"
-                      {...props}
-                    />
-                  ),
-                  li: ({ ...props }) => (
-                    <li
-                      className="ml-5 list-disc text-sm sm:text-base leading-relaxed text-foreground marker:text-primary/50"
-                      {...props}
-                    />
-                  ),
-                  ul: ({ ...props }) => <ul className="space-y-2" {...props} />,
-                }}
-              >
-                {storyEnding}
-              </Markdown>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      )}
+            <Markdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ ...props }) => (
+                  <p
+                    className="text-sm sm:text-base leading-relaxed text-foreground [&+p]:mt-3"
+                    {...props}
+                  />
+                ),
+                li: ({ ...props }) => (
+                  <li
+                    className="ml-5 list-disc text-sm sm:text-base leading-relaxed text-foreground marker:text-primary/50"
+                    {...props}
+                  />
+                ),
+                ul: ({ ...props }) => <ul className="space-y-2" {...props} />,
+              }}
+            >
+              {storyEnding}
+            </Markdown>
+          </FoldedStory>
+        )}
+      </Accordion>
     </section>
+  );
+}
+
+/** 見どころ1件。裏話は色を変えて、劇中の話ではないことを字面で示す。 */
+function AppealCard({ appeal }: { appeal: MusicalAppeal }) {
+  const isTrivia = appeal.kind === "trivia";
+  return (
+    <div
+      className={
+        isTrivia
+          ? "rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4 sm:p-5"
+          : "rounded-xl border border-border bg-card p-4 sm:p-5"
+      }
+    >
+      <h4 className="flex items-start gap-2 font-bold text-foreground">
+        {isTrivia && (
+          <Theater className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        )}
+        <span>
+          {isTrivia && (
+            <span className="mr-2 text-xs font-bold text-primary">裏話</span>
+          )}
+          {appeal.title}
+        </span>
+      </h4>
+      <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">
+        {appeal.body}
+      </p>
+    </div>
+  );
+}
+
+/** 既定で閉じている、筋を追うための層。 */
+function FoldedStory({
+  value,
+  icon: Icon,
+  label,
+  note,
+  children,
+}: {
+  value: string;
+  icon: React.ElementType;
+  label: string;
+  note: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <AccordionItem
+      value={value}
+      className="rounded-xl border border-border bg-muted/30 px-4 sm:px-5"
+    >
+      <AccordionTrigger className="hover:no-underline">
+        <span className="flex items-center gap-2.5">
+          <Icon className="h-4 w-4 shrink-0 text-primary" />
+          <span className="font-bold text-foreground">{label}</span>
+          <span className="text-xs font-normal text-muted-foreground">
+            {note}
+          </span>
+        </span>
+      </AccordionTrigger>
+      <AccordionContent className="pb-5">{children}</AccordionContent>
+    </AccordionItem>
   );
 }
 
