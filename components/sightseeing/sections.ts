@@ -26,6 +26,25 @@ const DURATION_SECTION = /所要時間|滞在時間|見学時間/;
 /** 「所要時間・年齢制限」のように、実用情報と他の話が同居する見出し。 */
 const MIXED_SECTION = /年齢制限|注意|持ち物|服装|予約/;
 
+/**
+ * 「着いてからの歩き方」(visitFlow)と役割が重なる見出し。
+ *
+ * どちらも「何を見るか」を扱う。visitFlow が入っているページでは、
+ * 見どころ節は同じ対象を名前だけ並べた劣化版になる——ウェストミンスター
+ * 寺院なら、節が「ポエッツ・コーナー：チョーサー、シェイクスピア…」と
+ * 列挙し、その200字ほど下で歩き方が同じ場所を「床石を踏まないと通れない
+ * ほど密集している」と書く。読者は同じ話を2回読むことになる。
+ *
+ * そこで visitFlow を持つページでは、この見出しの節を伏せて歩き方に
+ * 一本化する。isRedundantOverview が summary と「概要」に対してやって
+ * いるのと同じ考え方で、対象が違うだけ。
+ *
+ * 伏せるのは visitFlow が実際に入っているときだけ。歩き方の無いページで
+ * これを隠すと、見どころが本文から丸ごと消える。
+ */
+const VISIT_FLOW_SECTION =
+  /見どころ|見られるもの|必見|ハイライト|展示されている|景観|体験内容|有名な展示|主な展示|現在開催中の展示/;
+
 export function visibleSections(
   sections: SectionLike[],
   facts: {
@@ -33,12 +52,19 @@ export function visibleSections(
     durationText: string | null;
     nearestStation: string | null;
     openingHours: string | null;
+    /** 「着いてからの歩き方」のステップ数。0なら見どころ節を伏せない。 */
+    visitFlowSteps?: number;
   },
 ): SectionLike[] {
   return sections
     .filter((s) => (s.description ?? "").trim().length > 0)
     .filter((s) => {
       const t = s.title;
+
+      // 歩き方が入っているページでは、見どころ節は同じ対象の劣化版になる。
+      // ここだけは MIXED_SECTION より先に判定する——「見どころ・注意点」の
+      // ような複合見出しでも、歩き方があるなら歩き方を優先したいため。
+      if (facts.visitFlowSteps && VISIT_FLOW_SECTION.test(t)) return false;
 
       // 実用情報以外の話も含む見出しは、隠すと本文が欠ける。常に残す。
       if (MIXED_SECTION.test(t)) return true;

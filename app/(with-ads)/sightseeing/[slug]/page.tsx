@@ -283,6 +283,8 @@ export default async function AttractionDetail({
       durationText: attraction.durationText,
       nearestStation: attraction.nearestStation,
       openingHours: attraction.openingHours,
+      // 歩き方があるページでは見どころ節を伏せる(sections.ts 参照)。
+      visitFlowSteps: attraction.visitFlow.length,
     }).filter((sec) => !isRedundantOverview(sec, attraction.summary)),
   );
 
@@ -402,7 +404,18 @@ export default async function AttractionDetail({
 
         <SectionToc sections={bodySections} />
 
-        {/* 本文。見どころが最初に来る。 */}
+        {/*
+          着いてからの歩き方。visitFlow が入っているスポットにだけ出る。
+
+          本文セクションより前に置く。歩き方があるページでは見どころ節を
+          伏せている(sections.ts)ので、ここがそのページの「何を見るか」を
+          担う。残った本文は歴史や豆知識で、読む順としては後ろでよい。
+        */}
+        <AttractionVisitFlow
+          steps={attraction.visitFlow}
+          attractionName={attraction.name}
+        />
+
         <div className="space-y-12">
           {bodySections.map((sec) => (
             <section
@@ -420,12 +433,6 @@ export default async function AttractionDetail({
             </section>
           ))}
         </div>
-
-        {/* 着いてからの歩き方。visitFlow が入っているスポットにだけ出る。 */}
-        <AttractionVisitFlow
-          steps={attraction.visitFlow}
-          attractionName={attraction.name}
-        />
 
         {/* 広告は本文を読み終えた位置に置く。以前は本文の前に2つあった。 */}
         <div className="flex justify-center">
