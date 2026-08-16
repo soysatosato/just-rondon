@@ -144,6 +144,24 @@ const FIXES: Fix[] = [
       "### “現実を忘れて没入する町”ファントム・ピークとは？\n" +
       "Phantom Peak は、**オープンワールド型の没入体験タウン**です。",
   },
+  {
+    sectionId: 678,
+    note:
+      "ザ・ムーンウォーカーズ: ライトルームでの公演は2026年4月12日で終了。" +
+      "同じ会場では現在『Prehistoric Planet』(〜2026年9月1日)や" +
+      "『David Bowie: You're Not Alone』(〜2027年1月10日)が上演されている。" +
+      "ページは開催中として料金まで載せているため、終了を明示する。" +
+      "https://lightroom.uk/whats-on/",
+    find:
+      "The Moonwalkers は、ライトルーム（King’s Cross）で開催されている没入型宇宙展で、  \n",
+    replace:
+      "> **【重要】この公演は2026年4月12日で終了しました。**\n" +
+      "> 会場のライトルーム（King's Cross）では、現在は別の演目が上演されています。" +
+      "同じ会場の[プリヒストリック・プラネット](/sightseeing/prehistoric-planet-london)などをご検討ください。\n" +
+      "> 最新の演目は[ライトルーム公式サイト](https://lightroom.uk/whats-on/)でご確認ください。\n" +
+      "\n" +
+      "The Moonwalkers は、ライトルーム（King’s Cross）で開催されていた没入型宇宙展で、  \n",
+  },
 ];
 
 async function main() {
