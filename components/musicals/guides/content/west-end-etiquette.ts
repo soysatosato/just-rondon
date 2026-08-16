@@ -1,4 +1,8 @@
 import type { MusicalGuideArticle } from "../types";
+import {
+  MUSICAL_GUIDE_AS_OF,
+  MUSICAL_GUIDE_UPDATED_AT,
+} from "../guides";
 
 const westEndEtiquette: MusicalGuideArticle = {
   slug: "west-end-etiquette",
@@ -20,6 +24,7 @@ const westEndEtiquette: MusicalGuideArticle = {
 この記事では、服装や開演時間の目安、劇場街へのアクセス、当日気をつけたいマナーについて整理します。作品や劇場ごとに細かい違いがあるため、正確な情報は各作品のチケットや劇場の案内で確認してください。`,
   sections: [
     {
+      id: "what-to-wear",
       title: "服装について",
       body: `ウエストエンドの劇場には、厳格なドレスコードは基本的にありません。普段着やスマートカジュアルで訪れる人が多く、フォーマルな装いをしなくても入場できないということはほぼありません。
 
@@ -30,6 +35,7 @@ const westEndEtiquette: MusicalGuideArticle = {
 - 大きな荷物やスーツケースは持ち込みが制限される、あるいはクロークに預ける必要がある場合があります。荷物が多い場合は事前にホテルなどに預けておくことをおすすめします。`,
     },
     {
+      id: "timings",
       title: "開演時間・上演時間の目安",
       body: `ウエストエンドの公演は、多くの作品で以下のような時間割になっている傾向がありますが、**必ず購入したチケットや作品の公式ページで正確な時間を確認してください。**
 
@@ -40,6 +46,7 @@ const westEndEtiquette: MusicalGuideArticle = {
 開演時間に遅れた場合、キリのよい場面転換や休憩まで席に案内してもらえないことがあります。余裕を持って劇場に到着することをおすすめします。`,
     },
     {
+      id: "getting-there",
       title: "劇場街とアクセス",
       body: `ウエストエンドの劇場の多くは、Shaftesbury Avenue、Strand、Drury Laneなどの通りを中心に、コヴェント・ガーデン（Covent Garden）からレスター・スクエア（Leicester Square）、ピカデリー・サーカス（Piccadilly Circus）にかけてのエリアに集中しています。
 
@@ -55,6 +62,7 @@ const westEndEtiquette: MusicalGuideArticle = {
 多くの劇場は歴史的な建物を利用しており、入口や座席までの通路が狭い場合があります。開演直前は混雑しやすいため、**開演の20〜30分前には到着しておく**とスムーズです。`,
     },
     {
+      id: "etiquette",
       title: "劇場でのマナー",
       body: `- **上演中の撮影・録画・録音は禁止**されているのが一般的です。開演前のロビーや客席での記念撮影は問題ないことが多いですが、上演が始まったらカメラやスマートフォンはしまいましょう。
 - **遅刻した場合**、係員の案内があるまで客席に入れず、ロビーのモニターで待つよう案内されることがあります。
@@ -63,12 +71,15 @@ const westEndEtiquette: MusicalGuideArticle = {
 - 上演中の私語や飲食（持ち込み不可の場合が多い）にも注意しましょう。飲み物は休憩時間にロビーのバーで購入できることが一般的です。`,
     },
     {
+      id: "accessibility",
       title: "アクセシビリティ",
       body: `多くのウエストエンドの劇場では、車椅子対応席や、特定の公演日に手話通訳付き公演、音声ガイド付き公演、字幕付き公演などを実施しています。ただし対応内容や実施日は劇場・作品ごとに異なります。
 
 配慮が必要な場合は、予約時または事前に劇場のアクセス窓口（Access Line）に問い合わせておくことをおすすめします。多くの公式サイトに専用の案内ページが用意されています。`,
     },
   ],
+  dataAsOf: MUSICAL_GUIDE_AS_OF,
+  updatedAt: MUSICAL_GUIDE_UPDATED_AT,
 };
 
 export default westEndEtiquette;

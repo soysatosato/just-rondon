@@ -82,8 +82,14 @@ module.exports = {
       "/museums/best-10-museums",
       "/museums/best-museums-for-kids",
       "/musicals",
+      // 観劇ガイド。並びは components/musicals/guides/guides.ts の
+      // guides と一致させること。
       "/musicals/west-end-tickets",
+      "/musicals/pre-theatre-dining",
       "/musicals/west-end-etiquette",
+      "/musicals/first-time-theatre",
+      "/musicals/shows-without-english",
+      "/musicals/theatre-with-kids",
       // 劇場ガイドのハブ。各劇場ページ(/musicals/theatres/<slug>)は
       // DB 由来なので下の additionalPaths が出す。
       "/musicals/theatres",

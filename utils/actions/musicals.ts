@@ -8,6 +8,40 @@ export const fetchAllMusicals = async () => {
   });
 };
 
+/**
+ * /musicals トップの絞り込みに使う一覧。
+ *
+ * 全カラムを返す fetchAllMusicals と分けているのは、こちらが
+ * クライアントコンポーネントへ丸ごと渡る配列だから。description は
+ * 1作品あたり最大2600字あり、31作品ぶんを JSON に載せると
+ * 初期表示のためだけに数十KBを送ることになる。絞り込みに要る
+ * フィールドだけを選ぶ。
+ */
+export const fetchMusicalsForBrowse = async () => {
+  return db.musical.findMany({
+    orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      engName: true,
+      summary: true,
+      image: true,
+      highlights: true,
+      mustSee: true,
+      recommendLevel: true,
+      isOnShow: true,
+      address: true,
+      runtimeMinutes: true,
+      intervalMinutes: true,
+      minAgeGuidance: true,
+      englishForm: true,
+      theatre: { select: { slug: true, name: true, nameJa: true } },
+      theatreName: true,
+    },
+  });
+};
+
 export const fetchTopMusicals = async (limit: number = 3) => {
   return db.musical.findMany({
     where: { mustSee: true },

@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
-import type { Musical } from "@prisma/client";
+import type { BrowseMusical } from "./browse-types";
+import MusicalFinder from "./MusicalFinder";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -44,7 +45,7 @@ import RecommendStars from "@/components/musicals/shared/RecommendStars";
 type SortOption = "recommend" | "name";
 type ViewMode = "grid" | "list";
 
-function MusicalPosterCard({ musical }: { musical: Musical }) {
+function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
   return (
     <Link
       href={`/musicals/${musical.slug}`}
@@ -89,7 +90,11 @@ function MusicalPosterCard({ musical }: { musical: Musical }) {
   );
 }
 
-export default function MusicalHomePage({ musicals }: { musicals: Musical[] }) {
+export default function MusicalHomePage({
+  musicals,
+}: {
+  musicals: BrowseMusical[];
+}) {
   const [search, setSearch] = useState("");
   const [mustSeeOnly, setMustSeeOnly] = useState(false);
   // 現状は全31作品が isOnShow: true のため、このトグルは今のところ
@@ -300,6 +305,13 @@ export default function MusicalHomePage({ musicals }: { musicals: Musical[] }) {
             <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
           </Link>
         </section>
+
+        {/*
+          ===== 条件から探す =====
+          作品名を知らない読者はキーワード検索を使えない。
+          「英語が不安」「子連れ」「時間がない」の3軸で絞り込ませる。
+        */}
+        <MusicalFinder musicals={musicals} />
 
         {/* ===== Must See スポットライト ===== */}
         {spotlightMusicals.length > 0 && !isFiltering && (

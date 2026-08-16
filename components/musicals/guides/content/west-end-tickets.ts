@@ -1,4 +1,8 @@
 import type { MusicalGuideArticle } from "../types";
+import {
+  MUSICAL_GUIDE_AS_OF,
+  MUSICAL_GUIDE_UPDATED_AT,
+} from "../guides";
 
 const westEndTickets: MusicalGuideArticle = {
   slug: "west-end-tickets",
@@ -22,6 +26,7 @@ const westEndTickets: MusicalGuideArticle = {
 この記事では、チケットの購入経路の基本的な考え方と、代表的な節約術、料金相場の目安を整理します。細かい制度は作品や劇場、時期によって変わるため、最終的な予約は必ず各作品・劇場の公式サイトで内容を確認してから行ってください。`,
   sections: [
     {
+      id: "how-to-buy",
       title: "チケットの購入方法",
       body: `ウエストエンドの劇場の多くは、ATG Tickets、LW Theatres、Delfont Mackintosh Theatres、Nimax Theatresといった大手劇場グループが運営しており、各作品には必ず公式サイトの予約ページがあります。まずは観たい作品名で検索し、公式サイトまたは劇場公式のボックスオフィス経由で予約するのが最も確実です。
 
@@ -36,6 +41,7 @@ const westEndTickets: MusicalGuideArticle = {
 - 作品によっては独自の公式抽選（デジタルロッタリー）や当日限定オファーを実施している場合があります。仕組みは作品ごとに異なるため、観たい作品が決まったらその作品の公式サイトで最新情報を確認するのがもっとも確実です。`,
     },
     {
+      id: "saving-money",
       title: "お得に観る方法（節約術）",
       body: `ウエストエンドには、正規料金より安く観劇できるいくつかの代表的な方法があります。ただし、対象作品や実施条件は劇場・作品ごとに異なるため、事前に公式情報を確認したうえで利用してください。
 
@@ -46,6 +52,7 @@ const westEndTickets: MusicalGuideArticle = {
 - **曜日・時間帯による価格変動**：同じ作品でも、平日と週末、マチネー（昼公演）とソワレ（夜公演）で価格が異なることが一般的です。日程に融通が利く場合は、複数の日程・時間帯の料金を比較してみるとよいでしょう。`,
     },
     {
+      id: "price-guide",
       title: "料金相場の目安",
       body: `ウエストエンドのチケット料金は、作品の人気度、座席の位置(ストール/サークル/バルコニーなど)、公演日時によって大きく変動します。以下はあくまで**目安・参考情報**であり、正確な金額ではありません。実際の料金は必ず購入時に公式サイトで確認してください。
 
@@ -58,6 +65,7 @@ const westEndTickets: MusicalGuideArticle = {
 人気作品やプレミアム席は高額になりやすく、逆に平日や早い時間帯の公演、上階の席は比較的手頃な傾向があります。「安く観たい」場合は座席位置と日程の両方を柔軟に検討するのがポイントです。`,
     },
     {
+      id: "prepare",
       title: "観劇前の準備 — あらすじや曲を予習しよう",
       body: `ウエストエンドの作品の多くは英語で上演されるため、事前にあらすじや登場人物、主要な楽曲を知っておくと、当日の理解度や楽しみ方が大きく変わります。
 
@@ -66,6 +74,8 @@ const westEndTickets: MusicalGuideArticle = {
 当日の劇場での過ごし方やマナーについては、[劇場の楽しみ方・マナーガイド](/musicals/west-end-etiquette)でまとめています。`,
     },
   ],
+  dataAsOf: MUSICAL_GUIDE_AS_OF,
+  updatedAt: MUSICAL_GUIDE_UPDATED_AT,
 };
 
 export default westEndTickets;

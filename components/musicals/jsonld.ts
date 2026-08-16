@@ -3,7 +3,11 @@ import type { Musical } from "@prisma/client";
 import { SITE_URL } from "@/lib/seo";
 export { SITE_URL };
 
-export function collectionPageJsonLd(musicals: Musical[]) {
+// 一覧に出すのは名前・URL・画像だけ。全カラムを要求すると、
+// 呼び出し側が JSON-LD のためだけに description まで取る羽目になる。
+export function collectionPageJsonLd(
+  musicals: Pick<Musical, "name" | "slug" | "image">[],
+) {
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
