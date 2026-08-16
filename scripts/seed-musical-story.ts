@@ -30,6 +30,7 @@ import { PrismaClient } from "@prisma/client";
 import { ACCLAIMED_STORIES } from "./story-content/acclaimed";
 import { ADAPTATION_STORIES } from "./story-content/adaptations";
 import { FAMILY_STORIES } from "./story-content/family";
+import { FINAL_STORIES } from "./story-content/final";
 import { FLAGSHIP_STORIES } from "./story-content/flagship";
 import { MODERN_STORIES } from "./story-content/modern";
 import { PLAY_STORIES } from "./story-content/plays";
@@ -46,6 +47,7 @@ const STORIES: Record<string, Story> = {
   ...FAMILY_STORIES,
   ...ADAPTATION_STORIES,
   ...REMAINING_STORIES,
+  ...FINAL_STORIES,
 };
 
 async function main() {
