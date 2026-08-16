@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import {
@@ -18,7 +19,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import MusicalInfo from "@/components/musicals/MusicalInfo";
+import MusicalPracticalFacts from "@/components/musicals/MusicalPracticalFacts";
 import MusicalHero from "@/components/musicals/MusicalHero";
+import { theatrePath } from "@/components/musicals/theatres/theatres";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
@@ -112,6 +115,18 @@ export default async function musicalDetailsPage({
           recommendLevel={musical.recommendLevel}
         />
 
+        <MusicalPracticalFacts
+          name={musical.name}
+          facts={{
+            runtimeMinutes: musical.runtimeMinutes,
+            intervalMinutes: musical.intervalMinutes,
+            minAgeGuidance: musical.minAgeGuidance,
+            englishForm: musical.englishForm,
+            englishNote: musical.englishNote,
+          }}
+          factsVerifiedAt={musical.factsVerifiedAt}
+        />
+
         <MusicalSchedule
           performances={performances}
           fetchedAt={performances[0]?.updatedAt ?? null}
@@ -133,11 +148,32 @@ export default async function musicalDetailsPage({
                   <Theater className="h-5 w-5" />
                 </span>
                 <div>
-                  <CardTitle>{musical.theatreName}</CardTitle>
-                  <CardDescription>{musical.address}</CardDescription>
+                  {/* theatre は移行済みの作品だけが持つ。未紐付けの作品は
+                      theatreName の文字列にフォールバックする。 */}
+                  <CardTitle>
+                    {musical.theatre?.name ?? musical.theatreName}
+                  </CardTitle>
+                  <CardDescription>
+                    {musical.theatre?.address ?? musical.address}
+                  </CardDescription>
                 </div>
               </CardHeader>
-              <DynamicMap lat={musical.lat} lng={musical.lng} />
+              {musical.theatre && (
+                <p className="px-6 text-sm text-muted-foreground">
+                  座席の選び方や最寄り駅は
+                  <Link
+                    href={theatrePath(musical.theatre.slug)}
+                    className="mx-1 text-primary underline hover:opacity-80"
+                  >
+                    {musical.theatre.name}の劇場ガイド
+                  </Link>
+                  にまとめています。
+                </p>
+              )}
+              <DynamicMap
+                lat={musical.theatre?.lat ?? musical.lat}
+                lng={musical.theatre?.lng ?? musical.lng}
+              />
             </CardContent>
           </Card>
         </div>

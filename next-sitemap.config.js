@@ -84,6 +84,9 @@ module.exports = {
       "/musicals",
       "/musicals/west-end-tickets",
       "/musicals/west-end-etiquette",
+      // 劇場ガイドのハブ。各劇場ページ(/musicals/theatres/<slug>)は
+      // DB 由来なので下の additionalPaths が出す。
+      "/musicals/theatres",
       // "/news",
       // "/chatboard",
       // "/chatboard/create",
@@ -333,6 +336,12 @@ module.exports = {
         );
       }
     }
+    // 劇場ページ。ハブ(/musicals/theatres)は上の staticPages 側にある。
+    const theatres = await prisma.theatre.findMany({ select: { slug: true } });
+    for (const t of theatres) {
+      paths.push(await config.transform(config, `/musicals/theatres/${t.slug}`));
+    }
+
     const attractions = await prisma.attraction.findMany({
       select: { slug: true },
     });

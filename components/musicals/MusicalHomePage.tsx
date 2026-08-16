@@ -247,7 +247,7 @@ export default function MusicalHomePage({ musicals }: { musicals: Musical[] }) {
 
       <div className="mx-auto mt-12 max-w-7xl space-y-16 px-4">
         {/* ===== ガイドへの導線 ===== */}
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Link
             href="/musicals/west-end-tickets"
             className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-primary hover:shadow-md"
@@ -278,6 +278,23 @@ export default function MusicalHomePage({ musicals }: { musicals: Musical[] }) {
               </span>
               <span className="mt-0.5 block text-sm text-muted-foreground">
                 服装や開演時間、アクセス、当日のマナーを解説します。
+              </span>
+            </span>
+            <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+          </Link>
+          <Link
+            href="/musicals/theatres"
+            className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-primary hover:shadow-md"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MapPin className="h-6 w-6" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-base font-semibold">
+                劇場ガイド
+              </span>
+              <span className="mt-0.5 block text-sm text-muted-foreground">
+                最寄り駅、座席の選び方、いま上演中の作品を劇場ごとに。
               </span>
             </span>
             <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />

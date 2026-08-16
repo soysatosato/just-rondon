@@ -40,7 +40,21 @@ export const fetchMusicals = async ({
 export const fetchMusicalDetails = async (slug: string) => {
   const musical = await db.musical.findUnique({
     where: { slug },
-    include: { songs: { select: { id: true } } },
+    include: {
+      songs: { select: { id: true } },
+      // 未紐付けの作品では null。表示側は theatreName にフォールバックする。
+      theatre: {
+        select: {
+          slug: true,
+          name: true,
+          nameJa: true,
+          address: true,
+          lat: true,
+          lng: true,
+          nearestStation: true,
+        },
+      },
+    },
   });
   return musical;
 };

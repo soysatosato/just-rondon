@@ -179,6 +179,51 @@ model News {
   updatedAt   DateTime @updatedAt
 }
 
+/// ウエストエンドの劇場。
+///
+/// Musical から theatreName / address / lat / lng を切り出したもの。
+/// 作品と劇場を 1:1 で持つと、作品が移動したときに劇場の情報
+/// (座席の癖、最寄駅、バリアフリー)まで一緒に動いてしまう。実際
+/// Six と Oliver! は移動しており、Hadestown も Lyric に入り直している。
+/// 劇場は作品より寿命が長いので、別テーブルに置いて作品から参照する。
+///
+/// 1劇場に複数作品がぶら下がる状態(前の作品が終わり次が入るまでの
+/// 期間や、同一劇場での入れ替え)も、この形なら壊れずに表せる。
+model Theatre {
+  id       String @id @default(cuid())
+  slug     String @unique
+  /// 英語の正式名称。"Sondheim Theatre" のように Theatre まで含める。
+  name     String
+  /// 日本語表記。検索されるのは英語名だが、本文中では日本語で呼ぶ。
+  nameJa   String
+  address  String
+  lat      Float
+  lng      Float
+
+  /// 最寄り駅。"Piccadilly Circus (Bakerloo, Piccadilly)" のように
+  /// 路線まで書く。/sightseeing/transport から来た読者が乗り換えを
+  /// 判断できる粒度にする。
+  nearestStation String?
+  /// 客席数。座席の選び方を書くときの前提になる(500席の劇場と
+  /// 2000席の劇場では「後方席」の意味がまるで違う)。
+  capacity       Int?
+  /// 劇場を運営するグループ。ATG / LW Theatres / Delfont Mackintosh /
+  /// Nimax など。公式チケットの購入先を見分ける手がかりになるため、
+  /// /musicals/west-end-tickets の記述と揃えて使う。
+  operator       String?
+  /// この劇場ならではの実務メモ。座席の見切れ、階段の多さ、
+  /// クロークの有無など。markdown 可。
+  notes          String?
+
+  /// 劇場情報を人が最後に確認した日。Musical.lastVerifiedAt と同じ理由で
+  /// updatedAt とは別に持つ。null は「一度も確認していない」。
+  lastVerifiedAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  musicals  Musical[]
+}
+
 model Musical {
   id             String   @id @default(uuid())
   name           String
@@ -189,6 +234,12 @@ model Musical {
   summary        String
   blurb          String?
   highlights     String[]
+  /// 上演劇場。移行が済むまで theatreName と併存する。
+  ///
+  /// null は「まだ Theatre に紐付けていない」。表示側は theatre を
+  /// 優先し、無ければ theatreName にフォールバックすること。
+  theatreId      String?
+  theatre        Theatre? @relation(fields: [theatreId], references: [id])
   theatreName    String
   address        String
   lat            Float
@@ -199,6 +250,43 @@ model Musical {
   recommendLevel Int      @default(0)
   mustSee        Boolean
   original       String   @default("")
+
+  /// 上演時間(分)。休憩を含む総所要時間。
+  ///
+  /// 滞在日程を組むうえで読者が予約前に必ず調べる情報だが、これまで
+  /// サイト内のどこにも無かった。null は「未確認」で、表示side は
+  /// 項目ごと出さない。推定値を入れてはいけない——「2時間半で終わる」
+  /// と読んで夕食を予約した読者が、3時間の公演で間に合わなくなる。
+  runtimeMinutes    Int?
+  /// 休憩(interval)の有無と長さ(分)。0 は「休憩なしで通す」、
+  /// null は未確認。runtimeMinutes に含まれる内数。
+  intervalMinutes   Int?
+  /// 劇場が案内する推奨年齢の下限。"6歳以上" なら 6。
+  ///
+  /// 法的な入場制限ではなく劇場の推奨なので、断定せず
+  /// 「劇場の推奨」として出すこと。null は未確認。
+  minAgeGuidance    Int?
+
+  /// 英語のハードルを判断する材料。断定的な「難易度」ではなく、
+  /// 読者が自分で判断するための事実を持つ。
+  ///
+  /// 星やスコアで表さないのは、英語力は読者ごとに違い、同じ作品でも
+  /// 「原作を知っているか」で体感が変わるため。サイトが一次元の
+  /// 難易度を宣言すると、外れたときに読者の一晩を無駄にする。
+  /// 代わりに form と note で根拠を出し、判断は読者に残す。
+  ///
+  /// "sung-through"(ほぼ全編歌) / "dialogue-heavy"(台詞中心) /
+  /// "balanced"(歌と台詞が半々) / "non-verbal"(台詞にほぼ依存しない)。
+  /// null は未確認。
+  englishForm       String?
+  /// 上の form を補う一文。「原作アニメが日本で広く知られており
+  /// 筋を追いやすい」「早口のラップで情報量が多い」など、
+  /// なぜそう言えるかの根拠を必ず含めること。
+  englishNote       String?
+  /// 上演時間・年齢・英語まわりを人が最後に確認した日。
+  /// isOnShow の確認(lastVerifiedAt)とは別物なので分けて持つ。
+  /// 作品が同じでも演出改訂で上演時間は変わる。
+  factsVerifiedAt   DateTime?
   /// isOnShow と上演劇場を人が最後に確認した日。
   ///
   /// updatedAt では代用できない。あちらは説明文の推敲でも動くので、

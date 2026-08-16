@@ -1,4 +1,8 @@
 import { CalendarDays, ExternalLink } from "lucide-react";
+import {
+  formatPerformanceDate as formatDate,
+  formatPerformanceTime as formatTime,
+} from "./schedule-format";
 
 export type SchedulePerformance = {
   startsAt: Date;
@@ -9,42 +13,6 @@ export type SchedulePerformance = {
 
 /** 表示する公演数。1〜2週間ぶんを想定。全部出すと数百件になる。 */
 const VISIBLE_COUNT = 8;
-
-const WEEKDAY_JA = ["日", "月", "火", "水", "木", "金", "土"];
-
-/**
- * ロンドン現地時刻での表示に揃える。
- *
- * 読者は日本から見るが、劇場に着く時刻はロンドンの時計で決まる。
- * 閲覧環境のタイムゾーンで描くと、日本から見たとき 19:30 の公演が
- * 翌日 03:30 と出てしまう。
- */
-function formatDate(date: Date): string {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    weekday: "short",
-  }).formatToParts(date);
-  const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
-  // 曜日は Intl の英語略称ではなく日本語に置き換える。
-  const weekdayIndex = new Date(
-    Number(get("year")),
-    Number(get("month")) - 1,
-    Number(get("day")),
-  ).getDay();
-  return `${Number(get("month"))}月${Number(get("day"))}日(${WEEKDAY_JA[weekdayIndex]})`;
-}
-
-function formatTime(date: Date): string {
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
-}
 
 export default function MusicalSchedule({
   performances,
