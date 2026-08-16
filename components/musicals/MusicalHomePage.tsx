@@ -56,6 +56,7 @@ function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
           src={musical.image}
           alt={musical.name}
           fill
+          sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
@@ -153,6 +154,7 @@ export default function MusicalHomePage({
                 alt=""
                 fill
                 priority={i === 0}
+                sizes="(min-width: 640px) 25vw, 50vw"
                 className="object-cover"
               />
             </div>
@@ -389,6 +391,7 @@ export default function MusicalHomePage({
                           src={musical.image}
                           alt={musical.name}
                           fill
+                          sizes="36px"
                           className="object-cover"
                         />
                       </div>
