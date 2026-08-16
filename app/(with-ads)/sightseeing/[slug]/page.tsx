@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import dynamic from "next/dynamic";
 import {
   fetchAttractionDetails,
+  fetchNearbyAttractions,
   fetchRandomAttractionsByCategory,
 } from "@/utils/actions/attractions";
 import { fetchMuseumIDandName } from "@/utils/actions/museums";
@@ -240,10 +241,20 @@ export default async function AttractionDetail({
   const attraction = await fetchAttractionDetails(params.slug);
   if (!attraction) redirect("/");
 
-  const related = await fetchRandomAttractionsByCategory(
-    attraction.category,
-    params.slug,
-    2,
+  // 近隣スポットは徒歩導線、同カテゴリーは興味の近さ。役割が違うので両方出す。
+  const [nearby, related] = await Promise.all([
+    fetchNearbyAttractions(
+      { lat: attraction.lat, lng: attraction.lng },
+      params.slug,
+      4,
+    ),
+    fetchRandomAttractionsByCategory(attraction.category, params.slug, 2),
+  ]);
+
+  // 近隣枠に出したスポットを同カテゴリー枠で繰り返さない。
+  const nearbySlugs = new Set(nearby.map((spot) => spot.slug));
+  const relatedWithoutNearby = related.filter(
+    (spot) => !nearbySlugs.has(spot.slug),
   );
   // 料金・アクセス・開館時間はファクトバーへ移したので本文からは伏せる。
   // ただし伏せるのはファクトバーに値が入っているときだけ(sections.ts 参照)。
@@ -478,14 +489,53 @@ export default async function AttractionDetail({
           />
         )}
 
-        {related.length > 0 && (
+        {nearby.length > 0 && (
+          <section className="px-6 py-12 max-w-5xl mx-auto space-y-6">
+            <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
+              {attraction.name}の近くで一緒に回れるスポット
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              徒歩圏内にある観光スポットです。同じ日にまとめて回ると効率よく歩けます。
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {nearby.map((spot) => (
+                <Link
+                  key={spot.slug}
+                  href={`/sightseeing/${spot.slug}`}
+                  className="block group"
+                >
+                  <div className="rounded-lg overflow-hidden shadow hover:shadow-md transition">
+                    <img
+                      src={spot.image}
+                      alt={`${spot.name}｜ロンドン観光スポット`}
+                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform"
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
+                  </div>
+                  <p className="mt-2 text-sm font-medium group-hover:underline">
+                    {spot.name}
+                  </p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    徒歩圏 約{spot.distanceKm.toFixed(1)}km
+                    {spot.durationText ? `・所要 ${spot.durationText}` : ""}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {relatedWithoutNearby.length > 0 && (
           <section className="px-6 py-12 max-w-5xl mx-auto space-y-6">
             <h2 className="text-xl md:text-2xl font-semibold tracking-tight">
               同じカテゴリーの観光スポット
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {related.map((spot) => (
+              {relatedWithoutNearby.map((spot) => (
                 <Link
                   key={spot.slug}
                   href={`/sightseeing/${spot.slug}`}

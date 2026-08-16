@@ -80,6 +80,89 @@ export const fetchRandomAttractionsByCategory = async (
   });
 };
 
+/**
+ * 徒歩圏の近隣スポット。カテゴリー違いでも拾うのが狙いで、
+ * 「ロンドン塔の次はタワーブリッジ」のような実際の回り方に沿った導線を作る。
+ *
+ * 距離は緯度経度から算出するだけで、area は触らない(area は手動付与の運用)。
+ * Prisma で距離順に並べる手段がないため、緯度経度で粗く矩形に絞ってから
+ * アプリ側で並べ替える。135件規模なので取得コストは問題にならない。
+ */
+const NEARBY_MAX_KM = 2.5;
+
+/**
+ * 「近くで一緒に回れる」に馴染まないスポット。
+ *
+ * 観光パスや市内を巡回するバスツアーは Attraction として登録されているが、
+ * 特定の場所を指さないため、緯度経度が便宜的な一点でしかない。距離順に出すと
+ * 「大英博物館の近く = ロンドンパス」のような無意味な案内になる。
+ * スタジアムツアーのように実在の場所を持つ tour は除外しない。
+ */
+const NEARBY_EXCLUDED_SLUGS = new Set([
+  "the-london-pass",
+  "merlin-london-attractions-pass",
+  "golden-pass-london",
+  "hop-on-hop-off-bus-tour-london",
+  "the-ghost-bus-tours",
+  "the-total-london-experience-tour",
+]);
+
+/** 緯度1度 ≒ 111km。ロンドン(北緯51.5度)の経度1度 ≒ 69km。 */
+const KM_PER_LAT_DEG = 111;
+const KM_PER_LNG_DEG_LONDON = 69;
+
+export const fetchNearbyAttractions = async (
+  origin: { lat: number; lng: number },
+  excludeSlug: string,
+  limit = 4,
+) => {
+  const latPad = NEARBY_MAX_KM / KM_PER_LAT_DEG;
+  const lngPad = NEARBY_MAX_KM / KM_PER_LNG_DEG_LONDON;
+
+  const candidates = await db.attraction.findMany({
+    where: {
+      slug: { not: excludeSlug },
+      lat: { gte: origin.lat - latPad, lte: origin.lat + latPad },
+      lng: { gte: origin.lng - lngPad, lte: origin.lng + lngPad },
+    },
+    select: {
+      slug: true,
+      name: true,
+      image: true,
+      category: true,
+      lat: true,
+      lng: true,
+      durationText: true,
+      recommendLevel: true,
+    },
+  });
+
+  // 中心部のスポットは徒歩圏に20件以上ある。純粋な距離順だと、数十m近いだけの
+  // 小さなスポットが有名どころを押し出してしまうので、おすすめ度で少し補正する。
+  // recommendLevel 1 につき 150m ぶん近いものとして扱う程度の弱い重み。
+  const RECOMMEND_BONUS_KM = 0.15;
+
+  return candidates
+    .map((spot) => {
+      const dLat = (spot.lat - origin.lat) * KM_PER_LAT_DEG;
+      const dLng = (spot.lng - origin.lng) * KM_PER_LNG_DEG_LONDON;
+      const distanceKm = Math.sqrt(dLat * dLat + dLng * dLng);
+      return {
+        ...spot,
+        distanceKm,
+        // 表示は実距離、並べ替えだけスコアを使う。
+        score: distanceKm - (spot.recommendLevel ?? 0) * RECOMMEND_BONUS_KM,
+      };
+    })
+    .filter(
+      (spot) =>
+        spot.distanceKm <= NEARBY_MAX_KM &&
+        !NEARBY_EXCLUDED_SLUGS.has(spot.slug),
+    )
+    .sort((a, b) => a.score - b.score)
+    .slice(0, limit);
+};
+
 export const fetchMustSeeAttractions = unstable_cache(
   async () =>
     db.attraction.findMany({
