@@ -34,7 +34,8 @@ export const fetchAttractionDetails = async (slug: string) => {
   const attraction = await db.attraction.findUnique({
     where: { slug },
     include: {
-      sections: true,
+      // 読み物本文。AttractionSection の後継。
+      stories: { orderBy: { displayOrder: "asc" } },
       // 入っているスポットにだけ「着いてからの歩き方」を出す。
       visitFlow: { orderBy: { displayOrder: "asc" } },
     },

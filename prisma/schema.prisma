@@ -530,7 +530,64 @@ model Attraction {
   /// 実際に迷わせる。
   visitFlow      AttractionVisitStep[]
 
+  /// 読み物本文。AttractionSection の後継(移行中)。
+  stories        AttractionStory[]
+
   @@index([area])
+}
+
+/// 観光スポットの読み物1本。AttractionSection の後継。
+///
+/// 旧 AttractionSection は title が自由文字列だったため、135スポットで
+/// 172種類の見出しが生まれ、うち138種類は1件しか使われていなかった
+/// (「アクセス」「アクセス方法」「所在地」「場所」がすべて同義)。
+/// 表示側は見出しを正規表現で推測するしかなく、実際
+/// isRedundantOverview() は145件の「概要」に対して0件しか検出できていない。
+///
+/// そこで kind を固定値に限定し、表示用の見出しは飾りとして分離する。
+/// 並び順・重複判定・非表示の判断はすべて kind で行う。
+///
+/// 事実(料金・アクセス・開館時間・所要時間)はここに入れない。
+/// Attraction のカラムが持つ。本文に事実を書くとファクトバーと二重になり、
+/// 改定のたびに両方直す必要が出る。実際、旧 sections では393節・約61,000字が
+/// ファクトバーと重複し、表示側で伏せられたまま誰にも読まれていなかった。
+model AttractionStory {
+  id           Int        @id @default(autoincrement())
+  attractionId String
+  attraction   Attraction @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+
+  /// "highlight" | "history" | "trivia" | "practical" | "context"
+  ///
+  /// ★ 自由入力しないこと。172種類の見出しが生まれた原因はここが
+  /// 自由文字列だったことにある。増やすときは components/sightseeing の
+  /// 並び順と既定ラベルも同時に直す。
+  kind         String
+  /// 表示用の見出し。null なら kind ごとの既定ラベルを使う。
+  /// 「なぜ中世の城のような外観なのか」のような、そのスポット固有の
+  /// 見出しにだけ値を入れる。
+  heading      String?
+  /// 本文。markdown。MarkdownBody で描画する。
+  body         String
+
+  /// 節に添える画像。当面はほぼ null。
+  ///
+  /// URL 単体で持たないのは、Commons の画像が作者名とライセンスの表記を
+  /// 要求するため。URL だけを持つと表記が本文と分離し、差し替えたときに
+  /// 古い表記が残る。BrandImage / Souvenir と同じ扱いにそろえている。
+  imageUrl     String?
+  /// "commons" | "official" | "own" 等。表示側の分岐に使う。
+  imageSource  String?
+  /// 出典・ライセンス表記。commons のときは必須。
+  imageCredit  String?
+  imageLink    String?
+  /// 画像の下に出す説明。何が写っているかと、本文のどこに効くかを書く。
+  imageCaption String?
+
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([attractionId, displayOrder])
 }
 
 /// visitFlow の1ステップ。到着→見どころ→見落としやすいもの、の順に並べる。
@@ -862,6 +919,13 @@ model BrandItem {
   @@index([brandId, displayOrder])
 }
 
+/// ★ 移行中: AttractionStory に置き換える。新規に書き足さないこと。
+///
+/// title が自由文字列であることが構造上の欠陥で、同じ話題に172種類の
+/// 見出しが生まれた。移行の経緯と割り当ては
+/// scripts/PLAN-attraction-story.md と scripts/survey-attraction-sections.ts
+/// を参照。表示側が AttractionStory へ切り替わり、本番で問題がないことを
+/// 確認できたら、このモデルは別途削除する。
 model AttractionSection {
   id           Int        @id @default(autoincrement())
   title        String

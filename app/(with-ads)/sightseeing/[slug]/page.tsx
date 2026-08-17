@@ -35,11 +35,11 @@ import {
   getAreaMeta,
 } from "@/components/sightseeing/areas/areas";
 import {
-  visibleSections,
-  isRedundantOverview,
-  orderForReading,
-  sectionAnchor,
-} from "@/components/sightseeing/sections";
+  visibleStories,
+  withUniqueHeadings,
+  storyAnchor,
+  type StoryLike,
+} from "@/components/sightseeing/stories";
 import { categoryChipMap } from "@/components/sightseeing/categories";
 
 /**
@@ -219,11 +219,11 @@ function AreaLink({ area }: { area: string | null }) {
  * 下にスクロールすれば全部見えるので、場所を取るだけになる。
  */
 function SectionToc({
-  sections,
+  entries,
 }: {
-  sections: { id: number; title: string }[];
+  entries: { story: StoryLike; heading: string }[];
 }) {
-  if (sections.length < 3) return null;
+  if (entries.length < 3) return null;
 
   return (
     <nav
@@ -234,13 +234,13 @@ function SectionToc({
         このページの内容
       </p>
       <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
-        {sections.map((sec) => (
-          <li key={sec.id}>
+        {entries.map(({ story, heading }) => (
+          <li key={story.id}>
             <a
-              href={`#sec-${sec.id}`}
+              href={`#${storyAnchor(story)}`}
               className="text-sm text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
             >
-              {sec.title}
+              {heading}
             </a>
           </li>
         ))}
@@ -273,19 +273,19 @@ export default async function AttractionDetail({
     (spot) => !nearbySlugs.has(spot.slug),
   );
 
-  // 料金・アクセス・開館時間はファクトバーへ移したので本文からは伏せる。
-  // ただし伏せるのはファクトバーに値が入っているときだけ(sections.ts 参照)。
-  // 冒頭の summary と中身が重複する「概要」セクションもここで落とす。
-  // 残ったものは入力順ではなく「見どころ→歴史→その他」の読み物順に並べる。
-  const bodySections = orderForReading(
-    visibleSections(attraction.sections, {
-      priceAdult: attraction.priceAdult,
-      durationText: attraction.durationText,
-      nearestStation: attraction.nearestStation,
-      openingHours: attraction.openingHours,
-      // 歩き方があるページでは見どころ節を伏せる(sections.ts 参照)。
+  /*
+    読み物を kind の順(見どころ→歴史→固有の話→豆知識→訪問のヒント)に並べる。
+
+    料金・アクセス・開館時間・所要時間は AttractionStory に入れていない。
+    ファクトバーが持つので、本文で二重に書く必要がない
+    (移行時の扱いは scripts/migrate-sections-to-stories.ts を参照)。
+    歩き方があるページでは highlight を伏せる判定も stories.ts 側にある。
+  */
+  // 同じ既定ラベルが並んだときに番号を振る(stories.ts 参照)。
+  const bodyStories = withUniqueHeadings(
+    visibleStories(attraction.stories, {
       visitFlowSteps: attraction.visitFlow.length,
-    }).filter((sec) => !isRedundantOverview(sec, attraction.summary)),
+    }),
   );
 
   // 同じ館が /museums 側にもある場合は、そちらの詳しい解説へ渡す。
@@ -402,14 +402,14 @@ export default async function AttractionDetail({
           </p>
         )}
 
-        <SectionToc sections={bodySections} />
+        <SectionToc entries={bodyStories} />
 
         {/*
           着いてからの歩き方。visitFlow が入っているスポットにだけ出る。
 
-          本文セクションより前に置く。歩き方があるページでは見どころ節を
-          伏せている(sections.ts)ので、ここがそのページの「何を見るか」を
-          担う。残った本文は歴史や豆知識で、読む順としては後ろでよい。
+          本文より前に置く。歩き方があるページでは highlight を伏せている
+          (stories.ts)ので、ここがそのページの「何を見るか」を担う。
+          残った本文は歴史や豆知識で、読む順としては後ろでよい。
         */}
         <AttractionVisitFlow
           steps={attraction.visitFlow}
@@ -417,19 +417,57 @@ export default async function AttractionDetail({
         />
 
         <div className="space-y-12">
-          {bodySections.map((sec) => (
+          {bodyStories.map(({ story, heading }) => (
             <section
-              key={sec.id}
-              id={sectionAnchor(sec)}
+              key={story.id}
+              id={storyAnchor(story)}
               className="scroll-mt-24 space-y-3"
             >
               <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
-                {sec.title}
+                {heading}
               </h2>
               {/* prose 系クラスはこのプロジェクトでは効かない
                   (@tailwindcss/typography が入っていない)。
                   見出し・箇条書き・表の見た目は MarkdownBody が持っている。 */}
-              <MarkdownBody>{sec.description ?? ""}</MarkdownBody>
+              <MarkdownBody>{story.body}</MarkdownBody>
+
+              {/* 画像は当面ほぼ null。Commons の画像は作者名とライセンスの
+                  表記が要るので、URL だけでは描かず出典とセットで出す。 */}
+              {story.imageUrl && (
+                <figure className="mt-4">
+                  <Image
+                    src={story.imageUrl}
+                    alt={story.imageCaption ?? heading}
+                    width={1200}
+                    height={800}
+                    sizes="(max-width: 768px) 100vw, 768px"
+                    className="h-auto w-full rounded-xl border border-border"
+                    loading="lazy"
+                  />
+                  {(story.imageCaption || story.imageCredit) && (
+                    <figcaption className="mt-2 text-xs text-muted-foreground">
+                      {story.imageCaption}
+                      {story.imageCredit && (
+                        <>
+                          {story.imageCaption ? " ／ " : ""}
+                          {story.imageLink ? (
+                            <a
+                              href={story.imageLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="underline underline-offset-2"
+                            >
+                              {story.imageCredit}
+                            </a>
+                          ) : (
+                            story.imageCredit
+                          )}
+                        </>
+                      )}
+                    </figcaption>
+                  )}
+                </figure>
+              )}
             </section>
           ))}
         </div>
