@@ -569,6 +569,18 @@ model AttractionStory {
   /// 本文。markdown。MarkdownBody で描画する。
   body         String
 
+  /// "migrated" | "authored"
+  ///
+  /// 移行スクリプトが作り直してよい行かどうかの目印。
+  /// migrate-sections-to-stories.ts は旧 AttractionSection から機械的に
+  /// 作り直す都合上、スポット単位で deleteMany してから createMany する。
+  /// この目印がないと、手で書き直した本文まで巻き添えで消える
+  /// (実際に level 5 / level 4 の書き直しが1度消えている)。
+  ///
+  /// 移行スクリプト側は source: "migrated" の行だけを消すこと。
+  /// seed-attraction-stories-*.ts が書く行は "authored" にする。
+  source       String   @default("migrated")
+
   /// 節に添える画像。当面はほぼ null。
   ///
   /// URL 単体で持たないのは、Commons の画像が作者名とライセンスの表記を

@@ -8,11 +8,21 @@
  * 旧 AttractionSection は読まないだけで削除しない。表示側を切り替えたあと、
  * 本番で問題が無いことを確認してから別途消す。
  *
- * 冪等。投入前にそのスポットの AttractionStory を全削除して作り直すので、
+ * 冪等。投入前にそのスポットの AttractionStory を作り直すので、
  * 何度流しても同じ結果になる。
  *
+ * ★ authored を1本でも持つスポットには触らない。
+ *   seed-attraction-stories-*.ts が書き直したスポットは、旧 sections を
+ *   すでに読み直した後なので、移行としてやることが無い。作り直すなら
+ *   seed 側を流す。消すのも source: "migrated" の行だけに限定している。
+ *
+ *   以前はスポット単位で全削除して作り直していたため、最寄駅を29件
+ *   補完したあとにこのスクリプトを流し直した際、level 5 と level 4 の
+ *   書き直し(合計 約28,000字)を消している。手で書いた本文を足すときは
+ *   必ず source: "authored" で入れること。
+ *
  * 接続先が遠い(Supabase)ため、135スポットを1件ずつ処理すると2分では
- * 終わらない。--resume を付けると、既に AttractionStory を持つスポットを
+ * 終わらない。--resume を付けると、既に migrated の行を持つスポットを
  * 飛ばして続きから流せる。途中で切れても同じコマンドで再開できる。
  *   npx tsx scripts/migrate-sections-to-stories.ts --apply --resume
  *
@@ -225,7 +235,12 @@ async function main() {
   // --resume: 既に投入済みのスポットを飛ばす。途中で切れたときの再開用。
   const done = new Set<string>();
   if (RESUME) {
-    const rows = await db.attractionStory.groupBy({ by: ["attractionId"] });
+    // authored しか持たないスポットを「投入済み」と数えないよう、
+    // migrated の行があるかどうかで判定する。
+    const rows = await db.attractionStory.groupBy({
+      by: ["attractionId"],
+      where: { source: "migrated" },
+    });
     rows.forEach((r) => done.add(r.attractionId));
     console.log(`--resume: ${done.size}スポットは投入済みとして飛ばします\n`);
   }
@@ -234,6 +249,7 @@ async function main() {
   let moved = 0;
   let dropped = 0;
   let skipped = 0;
+  let authoredSkipped = 0;
   const emptied: string[] = [];
 
   for (const a of attractions) {
@@ -241,6 +257,21 @@ async function main() {
       skipped++;
       continue;
     }
+    // 書き直し済み(authored がある)スポットには手を出さない。
+    //
+    // source を見て削除を避けるだけでは足りない。ここで旧 sections から
+    // 作り直すと、authored の隣に古い history / highlight がもう一度
+    // 積まれ、同じ話題の節が2本並ぶ(実際 tower-of-london で再現した)。
+    // 書き直し済みということは旧 sections はすでに読み直された後なので、
+    // 移行としてやることは無い。作り直すなら seed-attraction-stories-*.ts を流す。
+    const authored = await db.attractionStory.count({
+      where: { attractionId: a.id, source: "authored" },
+    });
+    if (authored > 0) {
+      authoredSkipped++;
+      continue;
+    }
+
     const rows: { kind: StoryKind; heading: string | null; body: string }[] = [];
     const log: string[] = [];
 
@@ -270,7 +301,14 @@ async function main() {
     if (!APPLY) continue;
 
     // 作り直し。何度流しても同じ結果になるようにする。
-    await db.attractionStory.deleteMany({ where: { attractionId: a.id } });
+    //
+    // ★ source: "migrated" の行だけを消すこと。
+    // seed-attraction-stories-*.ts で手で書いた本文は "authored" で入っており、
+    // ここで巻き添えにすると書き直しが消える。実際、最寄駅の補完後に
+    // このスクリプトを流し直して level 5 / level 4 の書き直しを消している。
+    await db.attractionStory.deleteMany({
+      where: { attractionId: a.id, source: "migrated" },
+    });
     if (rows.length) {
       await db.attractionStory.createMany({
         data: rows.map((r, i) => ({
@@ -279,6 +317,7 @@ async function main() {
           heading: r.heading,
           body: r.body,
           displayOrder: i + 1,
+          source: "migrated",
         })),
       });
     }
@@ -288,6 +327,9 @@ async function main() {
     console.log(
       `対象 ${attractions.length}スポット` +
         (skipped ? ` (うち${skipped}件は投入済みで飛ばした)` : "") +
+        (authoredSkipped
+          ? ` (うち${authoredSkipped}件は書き直し済みなので触っていない)`
+          : "") +
         ` / 移行 ${moved}節 / 破棄 ${dropped}節\n`,
     );
     console.log("=== 内訳 ===");

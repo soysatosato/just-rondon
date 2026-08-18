@@ -1673,6 +1673,10 @@ async function main() {
     );
 
     if (apply) {
+      // 冪等にするため、そのスポットのぶんを消してから作り直す。
+      // ここで書く本文は source: "authored"。移行スクリプトは
+      // source: "migrated" の行しか消さないので、
+      // migrate-sections-to-stories.ts を流し直しても巻き添えにならない。
       await prisma.$transaction([
         prisma.attractionStory.deleteMany({
           where: { attractionId: attraction.id },
@@ -1684,6 +1688,7 @@ async function main() {
             heading: s.heading,
             body: s.body,
             displayOrder: i + 1,
+            source: "authored",
           })),
         }),
       ]);
