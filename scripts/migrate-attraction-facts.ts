@@ -10,6 +10,17 @@
  * 料金や開館時間は読者が実際にその金額・時刻を前提に行動する情報なので、
  * 誤った値を出すのは無記載より悪い。パターンに素直に当てはまるものだけを
  * 拾い、外れたら null のままにして dry-run のレポートに未抽出として出す。
+ *
+ * --- 到達点(2026-08時点) ---
+ *   priceAdult 126 / priceChild 109 / durationText 110 /
+ *   nearestStation 113 / openingHours 50  (いずれも /135)
+ *
+ * openingHours が半分に届かないのはパターン不足ではない。未抽出85件のうち
+ * 62件はそもそも開館時間の節を持たず(ツアー商品・季節イベント等)、
+ * 残る23件を調べたところ「HH:MM〜HH:MM」の確定した時刻を書いているものは
+ * 0件だった。「曜日・季節により変動」「完全予約制」「公式で確認」といった
+ * 記述ばかりで、これらは構造化カラムに入れるべき値を持っていない。
+ * ここを無理に埋めると、変動制の施設に固定時刻を掲げることになる。
  */
 
 import db from "@/utils/db";
@@ -188,6 +199,67 @@ function extractStation(text: string): string | null {
 
     const walk = line.match(/徒歩\s*(?:約)?\s*(\d+)\s*分/);
     return walk ? `${name} 徒歩${walk[1]}分` : name;
+  }
+
+  return extractStationFromList(text);
+}
+
+/**
+ * 「見出し + 箇条書き」形式のアクセス節から最寄駅を拾う。
+ *
+ *   ### 地下鉄
+ *   - South Kensington（徒歩5分）
+ *   - Gloucester Road
+ *
+ * 上の extractStation() は1行の中にラベルと駅名が同居する形を想定して
+ * いるので、この書き方だと駅名の行に「駅」もラベルも無く、拾えない。
+ * nearestStation が空の51件のうち38件がこの形式だった。
+ *
+ * 拾うのは見出し直後の最初の項目だけにする。以降の行は「徒歩圏内の
+ * ほかの駅」であって最寄駅ではないため(ロンドン・アイの
+ * 「チャリングクロス、ウェストミンスター、エンバンクメント」など)。
+ */
+const STATION_HEADING =
+  /^[\s>]*(?:#{1,6}\s*)?[-*・\s]*(?:\*\*)?\s*(?:最寄(?:り)?(?:の)?駅|地下鉄|チューブ|Tube|Underground|鉄道|国鉄|電車|DLR|公共交通機関|アクセス)/i;
+
+function extractStationFromList(text: string): string | null {
+  const lines = normalize(text).split("\n");
+
+  for (let i = 0; i < lines.length; i++) {
+    if (!STATION_HEADING.test(lines[i].trim())) continue;
+    // 見出し行自体に駅名が続いている場合は上の pass が拾っているはずなので、
+    // ここでは見出しの「次」以降を見る。
+    for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+      const line = lines[j].trim();
+      if (!line) continue;
+      // 次の見出しに当たったら、この見出しの配下は終わり。
+      if (/^#{1,6}\s/.test(line)) break;
+      const m = line.match(/^[-*・]\s*(?:\*\*)?\s*([^:,、。()（）*]+?)\s*(?:\*\*)?\s*(?:[（(].*)?$/);
+      if (!m) continue;
+
+      const name = m[1].replace(/\s+駅$/, "駅").trim();
+      // 駅名として短すぎる/長すぎるものと、路線名だけの行を弾く。
+      if (name.length < 2 || name.length > 30) continue;
+      if (/^(?:地下鉄|最寄|鉄道|バス|徒歩|各|複数|線|Bus)/i.test(name)) continue;
+      // 「1, 12, 59」のようなバス路線の羅列を弾く。
+      if (/^[\d\s,、/]+$/.test(name)) continue;
+
+      /*
+        駅名ではない説明文を弾く。この pass は見出しの直後の箇条書きを
+        無条件に拾うので、アクセス節が散文で書かれていると
+        「テムズ川沿い」「ロンドン・オーバーグラウンド」
+        「ハムステッド周辺から徒歩移動が基本」のような行を掴んでしまう。
+        駅名は固有名詞なので、助詞や説明語を含む時点で駅名ではない。
+      */
+      if (/[はがをにでへとやのも]\s*$/.test(name)) continue;
+      if (/沿い|周辺|基本|方面|付近|徒歩移動|利用|便利|アクセス/.test(name)) continue;
+      // 路線名そのもの(「ロンドン・オーバーグラウンド」等)を弾く。
+      // 駅名として実在しない、交通機関の種別を指す語。
+      if (/^(?:ロンドン・?)?(?:オーバーグラウンド|アンダーグラウンド|ナショナル・?レール|エリザベス・?ライン|DLR|テムズリンク)$/i.test(name)) continue;
+
+      const walk = line.match(/徒歩\s*(?:約)?\s*(\d+)\s*分/);
+      return walk ? `${name} 徒歩${walk[1]}分` : name;
+    }
   }
   return null;
 }
