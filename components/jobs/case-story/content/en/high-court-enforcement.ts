@@ -5,15 +5,16 @@ export const highCourtEnforcement: CaseStoryArticle = {
   title: "When you win and still do not get paid",
   engTitle: "勝っても払われないとき",
   summary:
-    "A judgment does not pay itself. What comes next is the part most guides leave out: transferring to the High Court, the costs, the respondent's pushback, and the money actually arriving.",
+    "A judgment does not pay itself. What comes next is the part most guides leave out: transferring to the High Court, the costs, the respondent's pushback, and their application to stay enforcement being dismissed.",
   description:
-    "A record of enforcing an unpaid Employment Tribunal judgment by transferring it to a High Court writ: how the costs work, what the enforcement agent did, the respondent's demand to halt enforcement, and the instalment agreement.",
+    "A record of enforcing an unpaid Employment Tribunal judgment by transferring it to a High Court writ: how the costs work, what the enforcement agent did, the respondent's application to stay enforcement and its dismissal in August 2026, and the instalment agreement.",
   keywords: [
     "Employment Tribunal judgment not paid",
     "High Court Enforcement",
     "enforcing a judgment UK",
     "writ of control",
     "HCEO fees",
+    "stay of execution dismissed",
   ],
   mainText: `This is the part I most wanted to write down.
 
@@ -149,6 +150,48 @@ That is precisely why enforcement did not stop. If a court makes an order, that 
 **Keep the other side's assertions separate from facts you can verify.** In this situation, that was the thing that actually mattered.`,
     },
     {
+      title: "The court dismissed the application to stay enforcement",
+      subtitle: "\"We have applied\" did not persuade the court either",
+      body: `There is a sequel to this.
+
+The respondent did make **formal applications to the court to stay enforcement**, on form N244 (application notice). From the records I have, these came in two parts.
+
+| Date | What was sought |
+|---|---|
+| 11 June 2026 | A stay of enforcement of the Employment Tribunal judgment |
+| 28 July 2026 | Pending the listing of that application, suspension of the **warrant of execution** |
+
+The second application set out circumstances I had not been able to see from my side.
+
+> On 24 July 2026 the bailiff attended the defendant's premises and threatened to remove property. Mr Mossman, on behalf of the defendant, **offered a payment plan under protest to avoid the bailiff taking possession of any property**. £1,000 was paid on 24 July, with a further £1,000 due every fortnight. The defendant **seeks to recover any payment made under the payment plan** should the judgment be set aside.
+
+In other words, the "£1,000 recovered" and the "£1,000 fortnightly instalment agreement" described above were, from the respondent's side, **a qualified payment made to stop the agent's visit**. The same events sit differently in each party's record.
+
+**Then, on 6 August 2026, District Judge Keating at the Croydon District Registry dismissed the application.** (The order was sealed on 11 August.)
+
+The reasons on the order read as follows.
+
+> According to the evidence of the Defendant's director, the Defendant **knew of the Employment Tribunal Judgment on 3 April 2026**.
+>
+> **By the time of his statement on 2 June 2026 there is no evidence that Defendant had actually made an application to the Employment Tribunal to set aside, vary or appeal the Employment Tribunal Judgment.**
+>
+> Accordingly, **the application is dismissed**.
+
+In the previous section I wrote that what was established was only the fact that the respondent said so. **The court reached the same conclusion.**
+
+The respondent had maintained throughout that a set-aside application was on foot. The court's finding was that **no evidence that such an application existed was ever produced**.
+
+What this shows is practically significant.
+
+- **An assertion that an application has been made does not, by itself, stop enforcement.** It did not work on the HCEO, and **it did not work on the court either**
+- A party seeking a stay has to **show with evidence that the application actually exists**
+- The more time has passed since you learned of the judgment, **the harder it gets to explain why you did nothing until now**
+
+Note that the order was made **without a hearing**, using the court's case management powers under Part 3 of the Civil Procedure Rules. That leaves the respondent able to apply to set aside or vary the order under Part 23.10 **within 7 days of service**.
+
+**As things stand, no order stopping enforcement has been made.** Enforcement continues.`,
+    },
+    {
       title: "Recovered money does not reach you immediately",
       subtitle: "The 14-day statutory embargo period",
       body: `One more mechanism that is confusing if you do not know about it.
@@ -171,6 +214,8 @@ Worth knowing in advance so you do not misjudge the timing.`,
       body: `As enforcement continued, the respondent proposed a payment arrangement.
 
 **£1,000 every two weeks.**
+
+As set out in the section above, the respondent later told the court that these payments were made **under protest** and that they would seek their return if the judgment were set aside. **I did not know that was how they characterised it when I agreed.** If you are considering instalments, how the other side is characterising the payments is worth establishing.
 
 I agreed, and told the HCEO so.
 
@@ -214,6 +259,7 @@ Before agreeing to instalments, I checked the following:
 - **An agent attending in person produces results far faster than paperwork**
 - **An assertion that a set-aside application has been made does not stop enforcement.** Stopping it requires a court order
 - **Treat the other side's assertions as assertions until they are verified.** With no copy of the application and no notice from the court, all that is established is that it was said
+- **The court took the same view.** On 6 August 2026 the application to stay enforcement was dismissed, there being no evidence that the application had actually been made
 - Recovered money is **held for 14 days** before being paid out
 - Interest **keeps accruing daily**. The passage of time is not against you
 

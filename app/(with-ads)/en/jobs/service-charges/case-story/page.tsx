@@ -67,7 +67,7 @@ const timeline = [
   },
   {
     phase: "Enforcement",
-    text: "Nothing was paid by the deadline. The judgment was transferred to a High Court writ and an enforcement agent attended. The respondent said they had applied to set the judgment aside and asked for enforcement to stop, but enforcement does not stop without a court order. It ended in an agreement to pay £1,000 every two weeks.",
+    text: "Nothing was paid by the deadline. The judgment was transferred to a High Court writ and an enforcement agent attended. The respondent said they had applied to set the judgment aside and asked for enforcement to stop; the court dismissed that application on 6 August 2026. It ended in an agreement to pay £1,000 every two weeks.",
   },
 ];
 
@@ -199,11 +199,12 @@ export default function CaseStoryIndexPageEn() {
           and effort.
         </p>
         <p className="mt-3 text-sm leading-relaxed text-amber-800 dark:text-amber-300">
-          The respondent says they have applied to the court to set this judgment
-          aside. However, no copy of any such application has reached me or the
-          High Court Enforcement Officer handling enforcement, and there has been
-          no notice from the court. All that is established is the fact that they
-          say so.
+          The respondent said they had applied to the court to set this judgment
+          aside. However, no copy of any such application reached me or the High
+          Court Enforcement Officer handling enforcement. The stay of enforcement
+          they sought was dismissed by the court on 6 August 2026, on the basis
+          that there was no evidence any set-aside application had actually been
+          made.
         </p>
       </section>
 

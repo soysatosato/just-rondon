@@ -236,11 +236,15 @@ So I cannot confirm whether an application was actually made. There is only the 
 
 As a matter of procedure, a respondent can apply to set aside a Rule 22 judgment — one entered without a response. If granted, the case would be heard afresh.
 
+**The court has since ruled on this point.**
+
+The respondent applied to the court for a stay of enforcement. **On 6 August 2026 that application was dismissed.** The reasons given were that the defendant knew of the judgment on 3 April 2026, and that **by the date of his statement on 2 June 2026 there was no evidence that an application to set aside had actually been made to the Employment Tribunal**.
+
 With that in mind, when reading this record:
 
 - **the £4,007.55 judgment stands**, and enforcement has proceeded
 - if an application to set aside was in fact made and were granted, **that decision could be overturned**
-- but as things stand, **I have received nothing that supports it**
+- but **the application to stay enforcement was dismissed**, the court finding no evidence that any such application existed
 
 This distinction becomes a live issue in the enforcement chapter that follows.`,
     },

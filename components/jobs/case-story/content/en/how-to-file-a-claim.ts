@@ -202,9 +202,9 @@ Whatever happens from here, **there is a tribunal decision on the record about h
 
 If someone in the same position can use this record to produce their own numbers, writing it was worth it.
 
-> For completeness: the respondent **says** they have applied to the court to set this judgment aside.
-> But no copy of any application has reached me or the HCEO handling enforcement, and there has been no notice from the court.
-> **All that is established is the fact that they say so.** If an application was in fact made and were granted, the outcome could change. I am recording that honestly too.`,
+> For completeness: the respondent **said** they had applied to the court to set this judgment aside.
+> No copy of any application ever reached me or the HCEO handling enforcement. The stay of enforcement they sought was **dismissed by the court on 6 August 2026**, on the basis that there was no evidence any set-aside application had actually been made.
+> If an application was in fact made and were granted, the outcome could change. I am recording that honestly too.`,
     },
   ],
 };
