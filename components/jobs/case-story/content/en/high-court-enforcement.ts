@@ -7,7 +7,7 @@ export const highCourtEnforcement: CaseStoryArticle = {
   summary:
     "A judgment does not pay itself. What comes next is the part most guides leave out: transferring to the High Court, the costs, the respondent's pushback, and their application to stay enforcement being dismissed.",
   description:
-    "A record of enforcing an unpaid Employment Tribunal judgment by transferring it to a High Court writ: how the costs work, what the enforcement agent did, the respondent's application to stay enforcement and its dismissal in August 2026, and the instalment agreement.",
+    "A record of enforcing an unpaid Employment Tribunal judgment by transferring it to a High Court writ: how the costs work, what the enforcement agent did, the respondent's application to stay enforcement and its dismissal, and the instalment agreement.",
   keywords: [
     "Employment Tribunal judgment not paid",
     "High Court Enforcement",
@@ -156,24 +156,24 @@ That is precisely why enforcement did not stop. If a court makes an order, that 
 
 The respondent did make **formal applications to the court to stay enforcement**, on form N244 (application notice). From the records I have, these came in two parts.
 
-| Date | What was sought |
+| When | What was sought |
 |---|---|
-| 11 June 2026 | A stay of enforcement of the Employment Tribunal judgment |
-| 28 July 2026 | Pending the listing of that application, suspension of the **warrant of execution** |
+| **About two months** after they learned of the judgment | A stay of enforcement of the Employment Tribunal judgment |
+| **Some six weeks later** | Pending the listing of that application, suspension of the **warrant of execution** |
 
 The second application set out circumstances I had not been able to see from my side.
 
-> On 24 July 2026 the bailiff attended the defendant's premises and threatened to remove property. Mr Mossman, on behalf of the defendant, **offered a payment plan under protest to avoid the bailiff taking possession of any property**. £1,000 was paid on 24 July, with a further £1,000 due every fortnight. The defendant **seeks to recover any payment made under the payment plan** should the judgment be set aside.
+> The bailiff attended the defendant's premises and threatened to remove property. Mr Mossman, on behalf of the defendant, **offered a payment plan under protest to avoid the bailiff taking possession of any property**. £1,000 was paid that day, with a further £1,000 due every fortnight. The defendant **seeks to recover any payment made under the payment plan** should the judgment be set aside.
 
 In other words, the "£1,000 recovered" and the "£1,000 fortnightly instalment agreement" described above were, from the respondent's side, **a qualified payment made to stop the agent's visit**. The same events sit differently in each party's record.
 
-**Then, on 6 August 2026, District Judge Keating at the Croydon District Registry dismissed the application.** (The order was sealed on 11 August.)
+**Then, some ten days after that second application, District Judge Keating at the Croydon District Registry dismissed it.** (The sealed order followed a few days later.)
 
 The reasons on the order read as follows.
 
-> According to the evidence of the Defendant's director, the Defendant **knew of the Employment Tribunal Judgment on 3 April 2026**.
+> According to the evidence of the Defendant's director, the Defendant **knew of the Employment Tribunal Judgment** shortly after it was given.
 >
-> **By the time of his statement on 2 June 2026 there is no evidence that Defendant had actually made an application to the Employment Tribunal to set aside, vary or appeal the Employment Tribunal Judgment.**
+> **By the time of his statement some two months later there is no evidence that Defendant had actually made an application to the Employment Tribunal to set aside, vary or appeal the Employment Tribunal Judgment.**
 >
 > Accordingly, **the application is dismissed**.
 
@@ -259,7 +259,7 @@ Before agreeing to instalments, I checked the following:
 - **An agent attending in person produces results far faster than paperwork**
 - **An assertion that a set-aside application has been made does not stop enforcement.** Stopping it requires a court order
 - **Treat the other side's assertions as assertions until they are verified.** With no copy of the application and no notice from the court, all that is established is that it was said
-- **The court took the same view.** On 6 August 2026 the application to stay enforcement was dismissed, there being no evidence that the application had actually been made
+- **The court took the same view.** The application to stay enforcement was dismissed, there being no evidence that any set-aside application had actually been made
 - Recovered money is **held for 14 days** before being paid out
 - Interest **keeps accruing daily**. The passage of time is not against you
 

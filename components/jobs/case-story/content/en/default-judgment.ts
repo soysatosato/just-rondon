@@ -238,7 +238,7 @@ As a matter of procedure, a respondent can apply to set aside a Rule 22 judgment
 
 **The court has since ruled on this point.**
 
-The respondent applied to the court for a stay of enforcement. **On 6 August 2026 that application was dismissed.** The reasons given were that the defendant knew of the judgment on 3 April 2026, and that **by the date of his statement on 2 June 2026 there was no evidence that an application to set aside had actually been made to the Employment Tribunal**.
+The respondent applied to the court for a stay of enforcement. **That application was dismissed.** The reasons given were that the defendant learned of the judgment soon after it was given, and that **by the date of his statement some two months later there was no evidence that an application to set aside had actually been made to the Employment Tribunal**.
 
 With that in mind, when reading this record:
 
