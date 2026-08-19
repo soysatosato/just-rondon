@@ -40,6 +40,10 @@ const ASSIGNMENTS: Record<string, string[]> = {
    */
   southbank: [
     "london-eye",
+    // 食のマーケット。バラ・マーケットからテート・モダンへ川沿いに歩ける。
+    "borough-market",
+    // タワーブリッジとロンドン橋の間に係留。南岸の遊歩道に面している。
+    "hms-belfast",
     "sea-life-london-aquarium",
     "london-dungeon",
     "shreks-adventure-london",
@@ -78,6 +82,10 @@ const ASSIGNMENTS: Record<string, string[]> = {
     "banqueting-house-london",
     "household-cavalry-museum",
     "st-jamess-palace",
+    // 宮殿とホース・ガーズの間。衛兵交代式の行列がこの公園を通る。
+    "st-jamess-park",
+    // ストランド沿い。テンプルから官庁街へ抜ける動線に乗る。
+    "somerset-house",
     "clarence-house-london",
     "spencer-house-london",
     "royal-academy-of-arts",
@@ -94,6 +102,8 @@ const ASSIGNMENTS: Record<string, string[]> = {
    * ミュージカル観劇の前後に歩く時間帯が主戦場になる。
    */
   soho: [
+    // 広場そのもの。交通博物館とロイヤル・オペラ・ハウスが面する。
+    "covent-garden",
     "british-museum-london",
     "london-transport-museum",
     "royal-ballet-opera-london",
@@ -151,6 +161,8 @@ const ASSIGNMENTS: Record<string, string[]> = {
    * 往復の交通時間があるので、半日ではなく1日の単位になりやすい。
    */
   greenwich: [
+    // 天文台が建つ丘。この公園の斜面がグリニッジの眺めそのもの。
+    "greenwich-park",
     "royal-observatory-greenwich",
     "peter-harrison-planetarium-greenwich",
     "old-royal-naval-college",
@@ -168,6 +180,16 @@ const ASSIGNMENTS: Record<string, string[]> = {
  * - 市内でも回遊に乗らないもの(ハイドパーク周辺、ケンジントン、
  *   バタシー発電所、帝国戦争博物館など): 6エリアのいずれからも
  *   歩いて外れる。エリアを増やすより null が正しい。
+ *
+ *   ただし null の中に、エリアを足せば成立しそうな塊が2つある:
+ *     サウス・ケンジントン … 自然史・科学・V&A・ロイヤル・アルバート・
+ *       ホール・ケンジントン宮殿・サーペンタイン。半径1km以内に6件以上
+ *     ハムステッド／ハイゲート … ヒース・ケンウッド・ハイゲート墓地・
+ *       フェントン・ゴールダーズヒル。徒歩で繋がる
+ *   どちらも AreaSlug と areas.ts の記事本体を足す作業になるので、
+ *   スポットを足すたびに増やさず、まとめて判断すること。
+ *   リージェンツ・パークとリッチモンド・パークは、周囲に組める相手が
+ *   少ないので当面 null のままでよい。
  * - 出発地が固定されないツアー・パス類(ロンドンパス、バスツアー各種):
  *   街区に属さない商品なので、エリアに紐付けると誤誘導になる。
  */
