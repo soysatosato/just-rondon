@@ -42,7 +42,7 @@ const SPOT_SELECT = {
 
 export async function getAreaSpots(area: AreaSlug): Promise<AreaSpot[]> {
   return db.attraction.findMany({
-    where: { area },
+    where: { area, isPublished: true },
     select: SPOT_SELECT,
     orderBy: [
       { mustSee: "desc" },
@@ -60,7 +60,7 @@ export async function getAreaSpots(area: AreaSlug): Promise<AreaSpot[]> {
 export async function getAreaSpotCounts(): Promise<Record<string, number>> {
   const rows = await db.attraction.groupBy({
     by: ["area"],
-    where: { area: { not: null } },
+    where: { area: { not: null }, isPublished: true },
     _count: true,
   });
 
@@ -85,7 +85,7 @@ export async function getSpotsBySlugs(
   if (slugs.length === 0) return new Map();
 
   const rows = await db.attraction.findMany({
-    where: { slug: { in: slugs } },
+    where: { slug: { in: slugs }, isPublished: true },
     select: SPOT_SELECT,
   });
 

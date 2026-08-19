@@ -115,6 +115,7 @@ async function getAttractionPool() {
   // 👇 DBアクセスはここ1回だけ
   cachedPool = await db.attraction.findMany({
     where: {
+      isPublished: true,
       OR: [
         { recommendLevel: 5 },
         { mustSee: true },
@@ -275,7 +276,7 @@ export async function getTodaysPicks(limit = 3) {
 
   // ① pivot以降から取得（ここで終わることが多い）
   const first = await db.attraction.findMany({
-    where: { slug: { gte: pivot } },
+    where: { slug: { gte: pivot }, isPublished: true },
     orderBy: { slug: "asc" },
     take: limit,
   });
@@ -291,7 +292,7 @@ export async function getTodaysPicks(limit = 3) {
 
   // ② 足りない分だけ先頭から補完
   const second = await db.attraction.findMany({
-    where: { slug: { lt: pivot } },
+    where: { slug: { lt: pivot }, isPublished: true },
     orderBy: { slug: "asc" },
     take: limit - first.length,
   });

@@ -478,6 +478,17 @@ model Attraction {
   updatedAt      DateTime            @updatedAt
   category       String              @default("")
   mustSee        Boolean             @default(false)
+
+  /// 一覧・詳細ページに出すかどうか。false で非公開になる。
+  ///
+  /// 期間限定の催しが終わったときに使う。行を消すと本文も visitFlow も
+  /// 巻き添えで消え、あとから「何を載せていたか」が追えなくなるため、
+  /// 削除ではなくこのフラグで伏せる。会期が再開したら true に戻す。
+  ///
+  /// ★ 表示側のクエリで明示的に絞ること(utils/actions/attractions.ts,
+  /// utils/sightseeing.ts, utils/areas.ts)。スクリプトは非公開の行も
+  /// 見えている必要があるので、db クライアント側では絞っていない。
+  isPublished    Boolean             @default(true)
   isForKids      Boolean             @default(false)
   isFree         Boolean             @default(false)
   sections       AttractionSection[]

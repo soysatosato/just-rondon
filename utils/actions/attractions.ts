@@ -5,7 +5,7 @@ import type { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
 const getTotalCount = unstable_cache(
-  async () => db.attraction.count(),
+  async () => db.attraction.count({ where: { isPublished: true } }),
   ["attraction-total-count"],
   { revalidate: 60 * 60 * 24 }, // 1時間
 );
@@ -22,6 +22,7 @@ export const fetchAttractions = async ({
 
   // ページごとの取得
   const attractions = await db.attraction.findMany({
+    where: { isPublished: true },
     skip: (page - 1) * limit,
     take: limit,
     orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
@@ -31,8 +32,9 @@ export const fetchAttractions = async ({
 };
 
 export const fetchAttractionDetails = async (slug: string) => {
-  const attraction = await db.attraction.findUnique({
-    where: { slug },
+  const attraction = await db.attraction.findFirst({
+    // 非公開(終了した期間限定の催し等)は詳細ページも出さない。
+    where: { slug, isPublished: true },
     include: {
       // 読み物本文。AttractionSection の後継。
       stories: { orderBy: { displayOrder: "asc" } },
@@ -48,8 +50,8 @@ export const fetchAttractionDetails = async (slug: string) => {
  * 引くのは重いので、名前だけ取る。
  */
 export const fetchAttractionName = async (slug: string) => {
-  return db.attraction.findUnique({
-    where: { slug },
+  return db.attraction.findFirst({
+    where: { slug, isPublished: true },
     select: { name: true },
   });
 };
@@ -74,6 +76,7 @@ export const fetchRandomAttractionsByCategory = async (
   return db.attraction.findMany({
     where: {
       category,
+      isPublished: true,
       slug: { not: excludeSlug, gte: pivot },
     },
     orderBy: { slug: "asc" },
@@ -122,6 +125,7 @@ export const fetchNearbyAttractions = async (
 
   const candidates = await db.attraction.findMany({
     where: {
+      isPublished: true,
       slug: { not: excludeSlug },
       lat: { gte: origin.lat - latPad, lte: origin.lat + latPad },
       lng: { gte: origin.lng - lngPad, lte: origin.lng + lngPad },
@@ -175,7 +179,7 @@ export const fetchAttractionsBySlugs = async (slugs: string[]) => {
   if (slugs.length === 0) return [];
 
   const found = await db.attraction.findMany({
-    where: { slug: { in: slugs } },
+    where: { slug: { in: slugs }, isPublished: true },
     select: {
       slug: true,
       name: true,
@@ -202,7 +206,7 @@ export const fetchAttractionsBySlugs = async (slugs: string[]) => {
 export const fetchFreeAttractionsByCategory = unstable_cache(
   async () => {
     const free = await db.attraction.findMany({
-      where: { isFree: true },
+      where: { isFree: true, isPublished: true },
       select: {
         slug: true,
         name: true,
@@ -239,7 +243,7 @@ export const fetchFreeAttractionsByCategory = unstable_cache(
 export const fetchMustSeeAttractions = unstable_cache(
   async () =>
     db.attraction.findMany({
-      where: { mustSee: true },
+      where: { mustSee: true, isPublished: true },
       orderBy: { createdAt: "asc" },
     }),
   ["must-see-attractions"],
@@ -255,7 +259,7 @@ export async function fetchAllAttractions({
   limit?: number;
   filters?: any;
 }) {
-  const where: any = {};
+  const where: any = { isPublished: true };
 
   if (filters.rec) where.recommendLevel = filters.rec;
   if (filters.mustSee) where.mustSee = true;
