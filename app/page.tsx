@@ -28,6 +28,7 @@ import {
   Tag,
   UtensilsCrossed,
   BookOpen,
+  Radio,
   Newspaper,
   TriangleAlert,
   Sparkles,
@@ -46,9 +47,11 @@ import LiveStrip from "@/components/live/LiveStrip";
 import SectionHeader from "@/components/home/SectionHeader";
 import ColumnCard from "@/components/column/ColumnCard";
 import BritishEnglishCard from "@/components/british-english/BritishEnglishCard";
+import ModernBritainCard from "@/components/modern-britain/ModernBritainCard";
 import {
   fetchColumns,
   fetchBritishEnglishEntries,
+  fetchModernBritainEntries,
   fetchUpcomingEvents,
 } from "@/utils/actions/contents";
 import { fetchLatestBrief } from "@/utils/actions/weekly";
@@ -117,6 +120,13 @@ const ACCENTS = {
     iconText: "text-rose-600",
     hoverBorder: "hover:border-rose-300 dark:hover:border-rose-800",
   },
+  // 「いまのイギリス」。読み物だがコラム(violet)と別枠なので色も分ける。
+  indigo: {
+    badge: "bg-indigo-600 hover:bg-indigo-600",
+    iconBg: "bg-indigo-50 dark:bg-indigo-950/40",
+    iconText: "text-indigo-600",
+    hoverBorder: "hover:border-indigo-300 dark:hover:border-indigo-800",
+  },
   // Beyond London 用に確保。区分を追加するときはここを使う。
   teal: {
     badge: "bg-teal-600 hover:bg-teal-600",
@@ -128,14 +138,21 @@ const ACCENTS = {
 
 export default async function Page() {
   const now = new Date();
-  const [latestColumns, latestBritishEnglish, upcomingEvents, latestBrief] =
-    await Promise.all([
-      fetchColumns(),
-      fetchBritishEnglishEntries(),
-      fetchUpcomingEvents(3, now),
-      fetchLatestBrief(),
-    ]);
+  const [
+    latestColumns,
+    latestModernBritain,
+    latestBritishEnglish,
+    upcomingEvents,
+    latestBrief,
+  ] = await Promise.all([
+    fetchColumns(),
+    fetchModernBritainEntries(),
+    fetchBritishEnglishEntries(),
+    fetchUpcomingEvents(3, now),
+    fetchLatestBrief(),
+  ]);
   const columnPicks = latestColumns.slice(0, 3);
+  const modernBritainPicks = latestModernBritain.slice(0, 3);
   const britishEnglishPicks = latestBritishEnglish.slice(0, 3);
 
   // ヒーロー直下の警告バー。ストライキ等は数日で覆るので、今週号・来週号のときだけ出す。
@@ -238,6 +255,14 @@ export default async function Page() {
               description="歴史・文化・伝統を掘り下げるコラムを毎日更新。"
               icon={BookOpen}
               accent={ACCENTS.violet}
+            />
+            <CategoryCard
+              href="/modern-britain"
+              eyebrow="Modern Britain"
+              title="いまのイギリス"
+              description="物価、食、習慣、世相。現代の暮らしを毎日1本。"
+              icon={Radio}
+              accent={ACCENTS.indigo}
             />
             <CategoryCard
               href="/british-english"
@@ -731,6 +756,31 @@ export default async function Page() {
             <Button asChild variant="outline" size="sm">
               <Link href="/column">コラムをすべて見る →</Link>
             </Button>
+          </div>
+
+          <div className="mt-12">
+            <SectionHeader
+              eyebrow="Modern Britain"
+              title="いまのイギリスを1日1本"
+              description="物価、定番の食べ物、習慣、世相。歴史になる前のイギリスを毎日1本お届けします。"
+              accentClassName={ACCENTS.indigo.badge}
+            />
+
+            {modernBritainPicks.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                {modernBritainPicks.map((item, i) => (
+                  <ModernBritainCard key={item.id} item={item} index={i} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">近日公開予定です。</p>
+            )}
+
+            <div className="mt-6 flex justify-center">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/modern-britain">いまのイギリスをすべて見る →</Link>
+              </Button>
+            </div>
           </div>
 
           <div className="mt-12">

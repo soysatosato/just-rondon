@@ -55,8 +55,8 @@ module.exports = {
   transform: async (config, path) => {
     const depth = path.split("/").filter(Boolean).length;
 
-    // イベント・コラム・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
-    const isFresh = /^\/(events|column|british-english)(\/|$)/.test(path);
+    // イベント・コラム・いまのイギリス・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
+    const isFresh = /^\/(events|column|modern-britain|british-english)(\/|$)/.test(path);
 
     let priority;
     if (path === "/") priority = 1.0;
@@ -104,6 +104,7 @@ module.exports = {
       "/events/calendar",
       "/events/archive/2025",
       "/column",
+      "/modern-britain",
       "/british-english",
       // イギリス史。/history をハブとする全10章。並びは
       // components/history/chapters.ts の historyChapters と一致させること
@@ -212,6 +213,22 @@ module.exports = {
       "/sightseeing/royal-london",
       "/sightseeing/christmas-markets",
       "/sightseeing/stadium-tours",
+      "/sightseeing/football",
+      // プレミアリーグ観戦ガイド。/sightseeing/football をハブとする12本。
+      // 並びは components/sightseeing/football/guides.ts の
+      // footballGuides と一致させること。
+      "/sightseeing/football/tickets",
+      "/sightseeing/football/resale-warning",
+      "/sightseeing/football/planning",
+      "/sightseeing/football/matchday",
+      "/sightseeing/football/getting-there",
+      "/sightseeing/football/etiquette",
+      "/sightseeing/football/which-club",
+      "/sightseeing/football/stadiums",
+      "/sightseeing/football/north-london-derby",
+      "/sightseeing/football/pub-watching",
+      "/sightseeing/football/lower-leagues",
+      "/sightseeing/football/stadium-tours",
       "/sightseeing/thames-cruise",
       // ビザガイド。並びは components/visa/guides/guides.ts の
       // visaGuides と一致させること。ETA は本体が /sightseeing 側にあるため
@@ -421,6 +438,14 @@ module.exports = {
     });
     for (const c of columns) {
       paths.push(await config.transform(config, `/column/${c.slug}`));
+    }
+
+    const modernBritainEntries = await prisma.content.findMany({
+      where: { category: "modern-britain" },
+      select: { slug: true },
+    });
+    for (const mb of modernBritainEntries) {
+      paths.push(await config.transform(config, `/modern-britain/${mb.slug}`));
     }
 
     const britishEnglishEntries = await prisma.content.findMany({

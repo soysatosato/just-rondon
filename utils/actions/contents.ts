@@ -71,6 +71,29 @@ export const fetchBritishEnglishBySlug = async (slug: string) => {
   return content;
 };
 
+/**
+ * 「いまのイギリス」。コラムが過去の由来を掘るのに対し、こちらは現代の
+ * 生活・世相を1本ずつ扱う。category を分けているのは、同じ読み物でも
+ * 「過去 vs 現在」で読者の期待が違い、/column の一覧に混ぜると
+ * 連載の性格がぼやけるため。
+ */
+export const fetchModernBritainEntries = async () => {
+  const contents = await db.content.findMany({
+    where: { category: "modern-britain" },
+    orderBy: { createdAt: "desc" },
+  });
+  return contents;
+};
+
+export const fetchModernBritainBySlug = async (slug: string) => {
+  // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
+  const content = await db.content.findFirst({
+    where: { slug, category: "modern-britain" },
+    include: { sections: { orderBy: { displayOrder: "asc" } } },
+  });
+  return content;
+};
+
 export const fetchEvents2026 = async () => {
   const contents = await db.content.findMany({
     where: {

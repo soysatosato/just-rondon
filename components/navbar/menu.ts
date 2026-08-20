@@ -12,7 +12,7 @@
  *                      ロンドン外なら「見る」も「する」もこちらに入る。
  *   旅の準備         = 旅行者の実務(ETA・日程・宿・交通)。
  *   住む・働く       = 在住者の実務(ビザ・住まい・仕事)。
- *   英国を読む       = 読み物(コラム・歴史・英語表現)。
+ *   英国を読む       = 読み物(コラム・現代の世相・歴史・英語表現)。
  *
  * 鉄道切符の買い方だけは /sightseeing/transport 配下に置いている。
  * 券種の話はロンドン市内と地続きの運賃制度で、transport ハブの
@@ -126,6 +126,10 @@ export const NAV_SECTIONS: NavSection[] = [
           {
             href: "/sightseeing/film-locations",
             label: "映画・ドラマのロケ地巡り",
+          },
+          {
+            href: "/sightseeing/football",
+            label: "プレミアリーグ観戦",
           },
           { href: "/sightseeing/stadium-tours", label: "スタジアムツアー" },
           { href: "/sightseeing/thames-cruise", label: "テムズ川クルーズ" },
@@ -316,6 +320,7 @@ export const NAV_SECTIONS: NavSection[] = [
       {
         links: [
           { href: "/column", label: "コラム" },
+          { href: "/modern-britain", label: "いまのイギリス" },
           { href: "/history", label: "イギリスの歴史" },
           { href: "/british-english", label: "イギリス英語" },
         ],

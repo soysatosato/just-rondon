@@ -166,6 +166,18 @@ export const sections: Section[] = [
     ],
   },
   {
+    id: "modern-britain",
+    title: "いまのイギリス",
+    items: [
+      {
+        title: "いまのイギリストップ",
+        description:
+          "現代のイギリスの暮らしと世相を毎日1本。物価、定番の食、習慣、テレビまで。",
+        href: "/modern-britain",
+      },
+    ],
+  },
+  {
     id: "british-english",
     title: "イギリス英語",
     items: [

@@ -12,6 +12,7 @@ import {
   BriefcaseBusiness,
   Newspaper,
   History,
+  Radio,
   MessageSquareText,
   Search,
 } from "lucide-react";
@@ -121,6 +122,12 @@ export default function HeroSearch() {
               <span className="flex items-center gap-2">
                 <Newspaper className="h-3.5 w-3.5 text-violet-600" />
                 コラム
+              </span>
+            </SelectItem>
+            <SelectItem value="modern-britain">
+              <span className="flex items-center gap-2">
+                <Radio className="h-3.5 w-3.5 text-violet-600" />
+                いまのイギリス
               </span>
             </SelectItem>
             <SelectItem value="history">

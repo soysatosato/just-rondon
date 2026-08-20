@@ -1,0 +1,185 @@
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import type { Content, ContentSection } from "@prisma/client";
+import ModernBritainBreadCrumbs from "@/components/modern-britain/ModernBritainBreadCrumbs";
+import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { AD_SLOTS } from "@/lib/adsense";
+
+const proseClass =
+  "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-indigo-600 dark:prose-strong:text-indigo-400 prose-li:marker:text-indigo-400";
+
+const SECTION_ACCENTS = [
+  {
+    badge:
+      "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
+    rail: "bg-indigo-500",
+  },
+  {
+    badge: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/50 dark:text-cyan-300",
+    rail: "bg-cyan-500",
+  },
+  {
+    badge:
+      "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/50 dark:text-fuchsia-300",
+    rail: "bg-fuchsia-500",
+  },
+  {
+    badge: "bg-lime-100 text-lime-700 dark:bg-lime-950/50 dark:text-lime-300",
+    rail: "bg-lime-500",
+  },
+];
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
+type ModernBritainWithSections = Content & { sections: ContentSection[] };
+
+export default function ModernBritainDetail({
+  content,
+}: {
+  content: ModernBritainWithSections;
+}) {
+  const sections = content.sections
+    .slice()
+    .sort((a, b) => a.displayOrder - b.displayOrder);
+
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
+      <ModernBritainBreadCrumbs title={content.title} />
+
+      <header className="relative mt-6 overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-background to-cyan-50 px-6 py-9 dark:border-indigo-900/50 dark:from-indigo-950/25 dark:via-background dark:to-cyan-950/15 sm:px-10 sm:py-11">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-16 h-56 w-56 rounded-full bg-indigo-400/20 blur-3xl dark:bg-indigo-500/10"
+        />
+
+        <div className="relative">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+              Modern Britain
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {formatDate(content.createdAt)}
+            </span>
+          </div>
+
+          <h1 className="text-xl font-bold leading-snug tracking-tight sm:text-3xl">
+            {content.title}
+          </h1>
+
+          {content.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {content.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-white/70 px-2.5 py-1 text-[11px] font-medium text-indigo-700 dark:bg-slate-900/60 dark:text-indigo-300"
+                >
+                  {modernBritainTagLabel(tag)}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
+
+      {content.summary && (
+        <div className="mt-8 rounded-2xl border-l-4 border-indigo-500 bg-muted/50 px-5 py-4">
+          <div
+            className={`${proseClass} prose-p:my-0 text-[15px] font-medium leading-relaxed`}
+          >
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {content.summary}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+
+      {content.image && (
+        <div className="relative mt-8 h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
+          <img
+            src={content.image}
+            alt={content.title}
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+          />
+        </div>
+      )}
+
+      {content.mainText && (
+        <section className={`mt-8 ${proseClass}`}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {content.mainText}
+          </ReactMarkdown>
+        </section>
+      )}
+
+      <div className="mt-10">
+        <AdSenseUnit slot={AD_SLOTS.inArticle} />
+      </div>
+
+      <div className="mt-10 space-y-8">
+        {sections.map((sec, i) => {
+          const accent = SECTION_ACCENTS[i % SECTION_ACCENTS.length];
+          return (
+            <section
+              key={sec.id}
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-7"
+            >
+              <div className="mb-4 flex items-start gap-3">
+                <span
+                  aria-hidden
+                  className={`mt-1 h-8 w-1.5 shrink-0 rounded-full ${accent.rail}`}
+                />
+                <div className="min-w-0">
+                  <span
+                    className={`mb-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${accent.badge}`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h2 className="text-lg font-bold leading-snug tracking-tight sm:text-2xl">
+                    {sec.title}
+                  </h2>
+                  {sec.subtitle && (
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {sec.subtitle}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {sec.description && (
+                <div className={proseClass}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {sec.description}
+                  </ReactMarkdown>
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+
+      <div className="mt-10 rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/50 px-6 py-7 text-center dark:border-indigo-900/60 dark:bg-indigo-950/20">
+        <p className="text-sm font-bold">明日も、いまのイギリスを1本。</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          歴史になる前の話を、その日のうちに。
+        </p>
+        <Link
+          href="/modern-britain"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+        >
+          ← いまのイギリスをすべて見る
+        </Link>
+      </div>
+    </div>
+  );
+}
