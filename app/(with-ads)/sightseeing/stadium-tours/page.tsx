@@ -177,6 +177,38 @@ export default function tadiumToursListPage() {
           </div>
         );
       })}
+
+      {/*
+        ツアーを探している読者の一定数は、本当は試合そのものを観たい。
+        観戦はチケットの取り方から準備が要るので、ここから観戦ガイドへ送る。
+      */}
+      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          実際の試合を観たい場合
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          プレミアリーグには一般販売がほとんどなく、チケットの入手には
+          3ヶ月前からの準備が要ります。転売サイトで買った席では入場できません。
+        </p>
+        <ul className="mt-3 space-y-2 text-sm">
+          <li>
+            <Link
+              href="/sightseeing/football"
+              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+            >
+              プレミアリーグ観戦ガイド（全12本）
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/sightseeing/football/tickets"
+              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+            >
+              チケットの取り方のすべて
+            </Link>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }
