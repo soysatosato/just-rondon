@@ -78,6 +78,21 @@ const westEndEtiquette: MusicalGuideArticle = {
 配慮が必要な場合は、予約時または事前に劇場のアクセス窓口（Access Line）に問い合わせておくことをおすすめします。多くの公式サイトに専用の案内ページが用意されています。`,
     },
   ],
+  relatedLinks: [
+    {
+      href: "/musicals/west-end-tickets",
+      label: "チケットの取り方と節約術",
+    },
+    { href: "/musicals/theatres", label: "ウエストエンドの劇場ガイド" },
+    {
+      href: "/musicals/first-time-theatre",
+      label: "はじめての観劇ガイド",
+    },
+    {
+      href: "/sightseeing/transport/tube",
+      label: "地下鉄の乗り方（劇場街へのアクセス）",
+    },
+  ],
   dataAsOf: MUSICAL_GUIDE_AS_OF,
   updatedAt: MUSICAL_GUIDE_UPDATED_AT,
 };

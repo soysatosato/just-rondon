@@ -74,6 +74,18 @@ const westEndTickets: MusicalGuideArticle = {
 当日の劇場での過ごし方やマナーについては、[劇場の楽しみ方・マナーガイド](/musicals/west-end-etiquette)でまとめています。`,
     },
   ],
+  relatedLinks: [
+    {
+      href: "/musicals/west-end-etiquette",
+      label: "劇場のマナー（服装・開演時間・アクセス）",
+    },
+    { href: "/musicals/theatres", label: "ウエストエンドの劇場ガイド" },
+    { href: "/musicals", label: "上演中のミュージカル一覧" },
+    {
+      href: "/musicals/pre-theatre-dining",
+      label: "観劇前の食事（プレシアター・メニュー）",
+    },
+  ],
   dataAsOf: MUSICAL_GUIDE_AS_OF,
   updatedAt: MUSICAL_GUIDE_UPDATED_AT,
 };
