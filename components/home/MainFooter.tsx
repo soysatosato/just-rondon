@@ -13,6 +13,7 @@ export default function MainFooter() {
           <Link href="/sightseeing/itinerary">ロンドン モデルコース</Link>
           <Link href="/jobs">労働問題ガイド</Link>
           <Link href="/about">サイト概要</Link>
+          <Link href="/terms">利用規約</Link>
           <Link href="/privacy">プライバシーポリシー</Link>
           <Link href="/">Top Pageへ</Link>
         </div>

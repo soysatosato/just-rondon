@@ -1,0 +1,113 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  path: "/terms",
+  title: "利用規約",
+  description:
+    "ジャスト・ロンドンをご利用いただく際の条件を定めた利用規約です。掲載情報の取り扱い、禁止事項、免責事項、著作権について説明します。",
+});
+
+type Section = {
+  title: string;
+  content: string[];
+};
+
+const sections: Section[] = [
+  {
+    title: "適用",
+    content: [
+      "本規約は、ジャスト・ロンドン（以下「当サイト」といいます）の利用に関する条件を定めるものです。",
+      "利用者の皆様には、本規約に同意いただいた上で当サイトをご利用いただきます。",
+    ],
+  },
+  {
+    title: "禁止事項",
+    content: [
+      "当サイトの利用にあたり、以下の行為を禁止します。",
+      "・法令または公序良俗に違反する行為",
+      "・当サイトの運営を妨害する行為",
+      "・他の利用者または第三者の権利を侵害する行為",
+      "・当サイトに掲載された文章、画像、その他の著作物を無断で転載・複製・改変する行為",
+      "・その他、当サイトが不適切と判断する行為",
+    ],
+  },
+  {
+    title: "掲載情報について",
+    content: [
+      "当サイトに掲載する情報については、可能な限り正確な内容を提供するよう努めていますが、その正確性、安全性、完全性を保証するものではありません。",
+      "施設情報、価格、営業時間、制度、イベント情報などは変更される場合があるため、必要に応じて公式情報もあわせてご確認ください。",
+    ],
+  },
+  {
+    title: "免責事項",
+    content: [
+      "当サイトの利用によって利用者に生じたあらゆる損害について、当サイトは一切の責任を負いません。",
+      "当サイトからリンクやバナー等によって他のサイトに移動された場合、移動先サイトで提供される情報、サービス等について当サイトは一切の責任を負いません。",
+    ],
+  },
+  {
+    title: "著作権について",
+    content: [
+      "当サイトに掲載している文章、画像、その他の著作物の著作権は、当サイトまたは正当な権利を有する第三者に帰属します。",
+      "無断転載・無断使用を禁止します。",
+    ],
+  },
+  {
+    title: "本規約の変更",
+    content: [
+      "当サイトは、必要と判断した場合には、利用者に通知することなく本規約の内容を変更できるものとします。",
+      "変更後の利用規約は、本ページに掲載した時点で効力を生じるものとします。",
+    ],
+  },
+  {
+    title: "準拠法・裁判管轄",
+    content: [
+      "本規約の解釈にあたっては、日本法を準拠法とします。",
+      "当サイトに関して紛争が生じた場合には、当サイト運営者の所在地を管轄する裁判所を専属的合意管轄とします。",
+    ],
+  },
+];
+
+export default function TermsPage() {
+  return (
+    <main className="min-h-screen px-4 py-10 md:px-6">
+      <div className="mx-auto max-w-3xl">
+        <Card className="border-border bg-card shadow-sm">
+          <CardHeader className="space-y-3">
+            {/* 本文が h2 から始まるため、ページの h1 をここで明示する。 */}
+            <CardTitle asChild>
+              <h1 className="text-center text-2xl font-bold tracking-tight md:text-4xl">
+                利用規約
+              </h1>
+            </CardTitle>
+            <p className="text-center text-sm leading-6 text-muted-foreground md:text-base">
+              当サイトのご利用にあたっての条件についてご説明します。
+            </p>
+          </CardHeader>
+
+          <CardContent className="space-y-8">
+            {sections.map((section) => (
+              <section key={section.title} className="space-y-3">
+                <h2 className="text-lg font-semibold tracking-tight md:text-xl">
+                  {section.title}
+                </h2>
+
+                <div className="space-y-3">
+                  {section.content.map((paragraph, index) => (
+                    <p
+                      key={`${section.title}-${index}`}
+                      className="text-sm leading-7 text-foreground md:text-base"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </main>
+  );
+}
