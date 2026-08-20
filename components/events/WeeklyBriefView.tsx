@@ -35,7 +35,7 @@ export default function WeeklyBriefView({
   const freshness = getIssueFreshness(brief.weekStart, now);
   const Title = asHeading ? "h1" : "h2";
 
-  // 項目を「注意 / 耳寄り / 前提」の3グループに束ねる。
+  // 項目を「耳寄り / 注意 / 前提」の3グループに束ねる。
   const grouped = GROUP_ORDER.map((group) => ({
     group,
     meta: GROUP_META[group],

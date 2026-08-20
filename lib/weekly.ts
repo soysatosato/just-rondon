@@ -306,7 +306,11 @@ export const GROUP_META: Record<BriefGroup, GroupMeta> = {
   },
 };
 
-export const GROUP_ORDER: BriefGroup[] = ["alert", "opportunity", "context"];
+/**
+ * 読者が号を開く動機はまず「今週なにがあるか」なので、耳寄り情報を先頭に置く。
+ * 支障系は影響が大きいものだけを載せる運用にしたぶん、件数が少なく後ろでも埋もれない。
+ */
+export const GROUP_ORDER: BriefGroup[] = ["opportunity", "alert", "context"];
 
 export interface SeverityMeta {
   label: string;
