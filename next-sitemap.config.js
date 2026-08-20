@@ -55,7 +55,7 @@ module.exports = {
   transform: async (config, path) => {
     const depth = path.split("/").filter(Boolean).length;
 
-    // イベント・コラム・いまのイギリス・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
+    // イベント・コラム・時事論考・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
     const isFresh = /^\/(events|column|modern-britain|british-english)(\/|$)/.test(path);
 
     let priority;

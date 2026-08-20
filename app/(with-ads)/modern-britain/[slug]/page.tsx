@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: Props) {
 
   if (!content) {
     return {
-      title: "いまのイギリス | ジャスト・ロンドン",
-      description: "現代のイギリスの暮らしと世相を紹介します。",
+      title: "英国のいまを論じる | ジャスト・ロンドン",
+      description: "最新の英国ニュースの背景と意味を掘り下げて論じます。",
       robots: { index: false, follow: false },
     };
   }
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props) {
   return buildPageMetadata({
     path: `/modern-britain/${params.slug}`,
     title: content.title,
-    description: trimmed || `${content.title}について紹介します。`,
+    description: trimmed || `${content.title}について掘り下げて論じます。`,
     type: "article",
     publishedTime: content.createdAt.toISOString(),
     modifiedTime: content.updatedAt.toISOString(),

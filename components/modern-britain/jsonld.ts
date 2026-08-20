@@ -50,7 +50,7 @@ export function modernBritainBreadcrumbJsonLd(content: {
       {
         "@type": "ListItem",
         position: 2,
-        name: "いまのイギリス",
+        name: "英国のいまを論じる",
         item: `${SITE_URL}${MODERN_BRITAIN_BASE}`,
       },
       {
@@ -72,7 +72,7 @@ export function modernBritainHubBreadcrumbJsonLd() {
       {
         "@type": "ListItem",
         position: 2,
-        name: "いまのイギリス",
+        name: "英国のいまを論じる",
         item: `${SITE_URL}${MODERN_BRITAIN_BASE}`,
       },
     ],
@@ -89,9 +89,9 @@ export function modernBritainHubCollectionJsonLd(
     "@type": "CollectionPage",
     "@id": `${url}#collection`,
     url,
-    name: "いまのイギリス | 現代の暮らしと世相を毎日1本",
+    name: "英国のいまを論じる | 最新ニュースの背景を掘り下げる時事コラム",
     description:
-      "いまのイギリス人が何に金を払い、何に怒り、何を当たり前だと思っているのか。現代の暮らしと世相を毎日1本紹介します。",
+      "最新の英国ニュースを出典付きで紹介し、その背景・原因・英国社会への影響、制度や歴史との関係まで掘り下げて論じます。",
     inLanguage: "ja",
     publisher: MODERN_BRITAIN_PUBLISHER,
     hasPart: items.map((item) => ({

@@ -1,5 +1,7 @@
 export const revalidate = 60 * 60;
 
+import Link from "next/link";
+
 import { fetchModernBritainEntries } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
@@ -13,15 +15,15 @@ import { AD_SLOTS } from "@/lib/adsense";
 
 export const metadata = buildPageMetadata({
   path: "/modern-britain",
-  title: "いまのイギリス | 現代の暮らしと世相を毎日1本",
+  title: "英国のいまを論じる | 最新ニュースの背景を掘り下げる時事コラム",
   description:
-    "いまのイギリス人が何に金を払い、何に怒り、何を当たり前だと思っているのか。値上げ、定番の食べ物、テレビ、日常の習慣まで、現代のイギリスを毎日1本お届けします。",
+    "最新の英国ニュースを出典付きで紹介し、その背景・原因・英国社会への影響、制度や歴史との関係まで掘り下げて論じます。要約では終わらない、いまのイギリスの読み解き。",
   keywords: [
-    "イギリス 生活",
-    "イギリス 現在",
-    "ロンドン 暮らし",
-    "イギリス 物価",
-    "イギリス 文化 現代",
+    "イギリス ニュース 解説",
+    "英国 時事",
+    "イギリス 社会 問題",
+    "英国 政治 経済 解説",
+    "イギリス 制度",
   ],
 });
 
@@ -45,21 +47,60 @@ export default async function ModernBritainHubPage() {
 
         <div className="relative">
           <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-            Modern Britain
+            Britain, Argued
           </span>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-            歴史になる前の
+            そのニュースは、
             <br className="sm:hidden" />
             <span className="text-indigo-600 dark:text-indigo-400">
-              イギリスの話
+              何を意味するのか
             </span>
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            いまのイギリス人が何に金を払い、何に怒り、何を当たり前だと思っているのか。
-            観光ガイドには載らない現代の暮らしと世相を、毎日1本。
+            最新の英国ニュースを出典付きで取り上げ、その背景と原因、英国社会への影響、
+            制度や歴史とのつながりまで掘り下げます。要約では終わらせません。
           </p>
         </div>
       </header>
+
+      {/* 読者に「これは要約ではなく論考だ」と最初に伝える。/events(予定表)との
+          違いが分からないと、同じニュースを扱う2セクションに見えてしまうため。 */}
+      <section className="mb-12 rounded-2xl border border-border bg-muted/40 p-5 sm:p-6">
+        <h2 className="text-sm font-bold tracking-tight sm:text-base">
+          このセクションの読み方
+        </h2>
+        <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+          <li>
+            <span className="font-semibold text-foreground">出典を必ず示します。</span>{" "}
+            事実と数字には報道機関や公的統計（ONS・各省庁・規制当局）への
+            リンクを付け、いつ時点の数字かも明記します。
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">
+              要約では終わりません。
+            </span>{" "}
+            何が起きたかは入口です。なぜ起きたか、英国社会に何をもたらすか、
+            制度や歴史とどうつながるかまで掘り下げます。
+          </li>
+          <li>
+            <span className="font-semibold text-foreground">
+              書き手の見方を明示します。
+            </span>{" "}
+            中立を装った要約ではなく、賛否のある論点には立場を書きます。
+            批判の対象は制度や意思決定であって、個人ではありません。
+          </li>
+        </ul>
+        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+          今週の予定（ストライキ・臨時休館・催し）を知りたい場合は{" "}
+          <Link
+            href="/events"
+            className="font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+          >
+            今週のロンドン
+          </Link>{" "}
+          をご覧ください。こちらは「それが何を意味するのか」を扱います。
+        </p>
+      </section>
 
       <section className="mb-12">
         <div className="mb-5 flex items-baseline justify-between gap-4">
@@ -68,7 +109,7 @@ export default async function ModernBritainHubPage() {
               Archive
             </span>
             <h2 className="mt-3 text-xl font-bold tracking-tight sm:text-2xl">
-              これまでの1日1本
+              これまでの論考
             </h2>
           </div>
           {entries.length > 0 && (

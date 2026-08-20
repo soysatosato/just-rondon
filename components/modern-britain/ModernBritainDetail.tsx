@@ -63,7 +63,7 @@ export default function ModernBritainDetail({
         <div className="relative">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-              Modern Britain
+              Britain, Argued
             </span>
             <span className="text-xs text-muted-foreground">
               {formatDate(content.createdAt)}
@@ -169,15 +169,15 @@ export default function ModernBritainDetail({
       </div>
 
       <div className="mt-10 rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/50 px-6 py-7 text-center dark:border-indigo-900/60 dark:bg-indigo-950/20">
-        <p className="text-sm font-bold">明日も、いまのイギリスを1本。</p>
+        <p className="text-sm font-bold">英国のいまを、もう一本読む。</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          歴史になる前の話を、その日のうちに。
+          ニュースの奥にある背景と、その意味を掘り下げています。
         </p>
         <Link
           href="/modern-britain"
           className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
         >
-          ← いまのイギリスをすべて見る
+          ← 論考をすべて見る
         </Link>
       </div>
     </div>

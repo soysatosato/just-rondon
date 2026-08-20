@@ -27,10 +27,10 @@ export default function ModernBritainBreadCrumbs({
         <BreadcrumbItem>
           {title ? (
             <BreadcrumbLink asChild>
-              <Link href="/modern-britain">いまのイギリス</Link>
+              <Link href="/modern-britain">英国のいまを論じる</Link>
             </BreadcrumbLink>
           ) : (
-            <BreadcrumbPage>いまのイギリス</BreadcrumbPage>
+            <BreadcrumbPage>英国のいまを論じる</BreadcrumbPage>
           )}
         </BreadcrumbItem>
 

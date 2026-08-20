@@ -167,12 +167,12 @@ export const sections: Section[] = [
   },
   {
     id: "modern-britain",
-    title: "いまのイギリス",
+    title: "英国のいまを論じる",
     items: [
       {
-        title: "いまのイギリストップ",
+        title: "英国のいまを論じる トップ",
         description:
-          "現代のイギリスの暮らしと世相を毎日1本。物価、定番の食、習慣、テレビまで。",
+          "最新の英国ニュースを出典付きで掘り下げ、その背景と意味を論じる時事コラム。",
         href: "/modern-britain",
       },
     ],

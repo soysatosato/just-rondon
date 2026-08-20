@@ -120,7 +120,7 @@ const ACCENTS = {
     iconText: "text-rose-600",
     hoverBorder: "hover:border-rose-300 dark:hover:border-rose-800",
   },
-  // 「いまのイギリス」。読み物だがコラム(violet)と別枠なので色も分ける。
+  // 「英国のいまを論じる」。読み物だがコラム(violet)と別枠なので色も分ける。
   indigo: {
     badge: "bg-indigo-600 hover:bg-indigo-600",
     iconBg: "bg-indigo-50 dark:bg-indigo-950/40",
@@ -258,9 +258,9 @@ export default async function Page() {
             />
             <CategoryCard
               href="/modern-britain"
-              eyebrow="Modern Britain"
-              title="いまのイギリス"
-              description="物価、食、習慣、世相。現代の暮らしを毎日1本。"
+              eyebrow="Britain, Argued"
+              title="英国のいまを論じる"
+              description="最新の英国ニュースを、出典付きで掘り下げて論じる。"
               icon={Radio}
               accent={ACCENTS.indigo}
             />
@@ -760,9 +760,9 @@ export default async function Page() {
 
           <div className="mt-12">
             <SectionHeader
-              eyebrow="Modern Britain"
-              title="いまのイギリスを1日1本"
-              description="物価、定番の食べ物、習慣、世相。歴史になる前のイギリスを毎日1本お届けします。"
+              eyebrow="Britain, Argued"
+              title="英国のいまを論じる"
+              description="最新の英国ニュースを出典付きで紹介し、その背景・原因・社会への影響まで掘り下げて論じます。"
               accentClassName={ACCENTS.indigo.badge}
             />
 
@@ -778,7 +778,7 @@ export default async function Page() {
 
             <div className="mt-6 flex justify-center">
               <Button asChild variant="outline" size="sm">
-                <Link href="/modern-britain">いまのイギリスをすべて見る →</Link>
+                <Link href="/modern-britain">論考をすべて見る →</Link>
               </Button>
             </div>
           </div>

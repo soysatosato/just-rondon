@@ -72,10 +72,11 @@ export const fetchBritishEnglishBySlug = async (slug: string) => {
 };
 
 /**
- * 「いまのイギリス」。コラムが過去の由来を掘るのに対し、こちらは現代の
- * 生活・世相を1本ずつ扱う。category を分けているのは、同じ読み物でも
- * 「過去 vs 現在」で読者の期待が違い、/column の一覧に混ぜると
- * 連載の性格がぼやけるため。
+ * 「英国のいまを論じる」。最新の英国ニュースを起点に、背景と意味を
+ * 掘り下げる時事論考。category を分けているのは、同じ読み物でも
+ * 「過去(column) vs いま」で読者の期待が違い、/column の一覧に混ぜると
+ * 連載の性格がぼやけるため。予定表である /events とも役割が違う
+ * (あちらは「今週何があるか」、こちらは「それが何を意味するか」)。
  */
 export const fetchModernBritainEntries = async () => {
   const contents = await db.content.findMany({

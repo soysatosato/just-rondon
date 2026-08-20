@@ -8,7 +8,7 @@ export default function MainFooter() {
         <div className="flex flex-wrap gap-3">
           <Link href="/contact">お問い合わせ</Link>
           <Link href="/column">コラム</Link>
-          <Link href="/modern-britain">いまのイギリス</Link>
+          <Link href="/modern-britain">英国のいまを論じる</Link>
           <Link href="/british-english">イギリス英語</Link>
           <Link href="/sightseeing/itinerary">ロンドン モデルコース</Link>
           <Link href="/jobs">労働問題ガイド</Link>

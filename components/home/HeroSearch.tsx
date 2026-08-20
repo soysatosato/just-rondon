@@ -127,7 +127,7 @@ export default function HeroSearch() {
             <SelectItem value="modern-britain">
               <span className="flex items-center gap-2">
                 <Radio className="h-3.5 w-3.5 text-violet-600" />
-                いまのイギリス
+                英国のいまを論じる
               </span>
             </SelectItem>
             <SelectItem value="history">
