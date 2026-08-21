@@ -12,6 +12,32 @@ import { AD_SLOTS } from "@/lib/adsense";
 const proseClass =
   "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-foreground prose-li:marker:text-indigo-400";
 
+// 本文はMarkdownで管理しているので、記法側では target を指定できない。
+// 出典は外部の報道記事なので、読者を記事から連れ去らないよう別タブで開く。
+const markdownComponents = {
+  // node は react-markdown が渡す内部プロパティ。DOMに流すと
+  // node="[object Object]" という属性が出力されるので捨てる。
+  a: ({
+    href,
+    children,
+    node: _node,
+    ...rest
+  }: React.ComponentPropsWithoutRef<"a"> & { node?: unknown }) => {
+    const isExternal = /^https?:\/\//.test(href ?? "");
+    return (
+      <a
+        href={href}
+        {...rest}
+        {...(isExternal
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
+      >
+        {children}
+      </a>
+    );
+  },
+};
+
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
@@ -75,7 +101,7 @@ export default function ModernBritainDetail({
           <div
             className={`${proseClass} prose-p:my-0 text-[15px] font-medium leading-relaxed`}
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
               {content.summary}
             </ReactMarkdown>
           </div>
@@ -97,7 +123,7 @@ export default function ModernBritainDetail({
 
       {content.mainText && (
         <section className={`mt-8 ${proseClass}`}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
             {content.mainText}
           </ReactMarkdown>
         </section>
@@ -153,7 +179,7 @@ export default function ModernBritainDetail({
 
               {sec.description && (
                 <div className={proseClass}>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                     {sec.description}
                   </ReactMarkdown>
                 </div>
