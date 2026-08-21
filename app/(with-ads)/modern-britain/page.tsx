@@ -66,39 +66,21 @@ export default async function ModernBritainHubPage() {
       {/* 読者に「これは要約ではなく論考だ」と最初に伝える。/events(予定表)との
           違いが分からないと、同じニュースを扱う2セクションに見えてしまうため。 */}
       <section className="mb-12 rounded-2xl border border-border bg-muted/40 p-5 sm:p-6">
-        <h2 className="text-sm font-bold tracking-tight sm:text-base">
-          このセクションの読み方
-        </h2>
-        <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
-          <li>
-            <span className="font-semibold text-foreground">出典を必ず示します。</span>{" "}
-            事実と数字には報道機関や公的統計（ONS・各省庁・規制当局）への
-            リンクを付け、いつ時点の数字かも明記します。
-          </li>
-          <li>
-            <span className="font-semibold text-foreground">
-              要約では終わりません。
-            </span>{" "}
-            何が起きたかは入口です。なぜ起きたか、英国社会に何をもたらすか、
-            制度や歴史とどうつながるかまで掘り下げます。
-          </li>
-          <li>
-            <span className="font-semibold text-foreground">
-              書き手の見方を明示します。
-            </span>{" "}
-            中立を装った要約ではなく、賛否のある論点には立場を書きます。
-            批判の対象は制度や意思決定であって、個人ではありません。
-          </li>
-        </ul>
-        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-          今週の予定（ストライキ・臨時休館・催し）を知りたい場合は{" "}
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          ニュースそのものより、その先を書いています。出典（報道機関やONS・各省庁の統計）は
+          必ず明記したうえで、なぜそれが起きたのか、英国社会にどう波及するのか、
+          過去の制度や歴史とどうつながるのかまで掘り下げます。賛否のある論点には
+          こちらの立場も書きますが、批判するのは制度や意思決定であって個人ではありません。
+        </p>
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          ストライキや臨時休館など今週の予定を知りたいときは{" "}
           <Link
             href="/events"
             className="font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
           >
             今週のロンドン
           </Link>{" "}
-          をご覧ください。こちらは「それが何を意味するのか」を扱います。
+          へ。ここはあくまで「それが何を意味するのか」を扱う場所です。
         </p>
       </section>
 
