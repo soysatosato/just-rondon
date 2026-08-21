@@ -57,32 +57,21 @@ export default async function ModernBritainHubPage() {
             </span>
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            最新の英国ニュースを出典付きで取り上げ、その背景と原因、英国社会への影響、
-            制度や歴史とのつながりまで掘り下げます。要約では終わらせません。
+            見出しだけを追っていても、その先で暮らしがどう変わるのかは見えてこない。
+            出典を明記したうえで、なぜ起きたのか、何につながるのかを掘る。
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            今週のストライキや臨時休館なら{" "}
+            <Link
+              href="/events"
+              className="font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
+            >
+              今週のロンドン
+            </Link>{" "}
+            へ。
           </p>
         </div>
       </header>
-
-      {/* 読者に「これは要約ではなく論考だ」と最初に伝える。/events(予定表)との
-          違いが分からないと、同じニュースを扱う2セクションに見えてしまうため。 */}
-      <section className="mb-12 rounded-2xl border border-border bg-muted/40 p-5 sm:p-6">
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          ニュースそのものより、その先を書いています。出典（報道機関やONS・各省庁の統計）は
-          必ず明記したうえで、なぜそれが起きたのか、英国社会にどう波及するのか、
-          過去の制度や歴史とどうつながるのかまで掘り下げます。賛否のある論点には
-          こちらの立場も書きますが、批判するのは制度や意思決定であって個人ではありません。
-        </p>
-        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-          ストライキや臨時休館など今週の予定を知りたいときは{" "}
-          <Link
-            href="/events"
-            className="font-semibold text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400"
-          >
-            今週のロンドン
-          </Link>{" "}
-          へ。ここはあくまで「それが何を意味するのか」を扱う場所です。
-        </p>
-      </section>
 
       <section className="mb-12">
         <div className="mb-5 flex items-baseline justify-between gap-4">
