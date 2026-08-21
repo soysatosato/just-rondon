@@ -19,8 +19,6 @@ import {
  *    状況を悪化させうるうえ、安全な対処は個別事情に強く依存する。
  *    このサイトが一般論で指示してよい領域ではないので、専門窓口に送る。
  *
- * 3. 被害者の属性で窓口を振り分けない。
- *    利用できる窓口を並列に示し、読者自身が選べる形にする。
  */
 const stalkingHarassment: TroubleGuideArticle = {
   slug: "stalking-harassment",
@@ -83,8 +81,14 @@ const stalkingHarassment: TroubleGuideArticle = {
       label: "24時間の窓口",
       value: `${STALKING_SUPPORT[2].name}（${STALKING_SUPPORT[2].phone}）`,
     },
-    { label: "警察への相談", value: `${EMERGENCY_CONTACTS.nonEmergency} またはオンライン` },
-    { label: "法的な位置づけ", value: "ストーカー行為・ハラスメントは犯罪です" },
+    {
+      label: "警察への相談",
+      value: `${EMERGENCY_CONTACTS.nonEmergency} またはオンライン`,
+    },
+    {
+      label: "法的な位置づけ",
+      value: "ストーカー行為・ハラスメントは犯罪です",
+    },
     {
       label: "してほしくないこと",
       value: "相手に直接警告する・ひとりで抱え込む",
@@ -150,13 +154,13 @@ ${SILENT_SOLUTION.pressDigits} を押しても、警察があなたの位置を�
       body: `**通報するほどのことなのか分からない**——この段階で相談できる窓口があります。むしろ、そこを一緒に整理するための窓口です。
 
 ${STALKING_SUPPORT.map(
-    (s) => `### ${s.name}
+  (s) => `### ${s.name}
 
 - **電話**：${s.phone}
 - **対応時間**：${s.hours}
 - ${s.note}
-- [${s.url}](${s.url})`
-  ).join("\n\n")}
+- [${s.url}](${s.url})`,
+).join("\n\n")}
 
 ### どこにかければいいか
 

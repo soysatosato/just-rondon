@@ -53,10 +53,6 @@ export type SocialGuideMeta = {
  * dating-safety は後回しにできる話ではないので、
  * カテゴリ内に必ず1本立てて /trouble に接続する。
  *
- * community-distance は、このセクションで唯一
- * 「入るべきか」を扱う回。人の属性ではなく距離の取り方を主語にすること。
- * 詳細は content/community-distance.ts の冒頭コメントを参照。
- *
  * next-sitemap.config.js の staticPages と、/social ハブのカード表示順を
  * このリストと一致させること。
  *

@@ -57,8 +57,7 @@ export default async function ModernBritainHubPage() {
             </span>
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            見出しだけを追っていても、その先で暮らしがどう変わるのかは見えてこない。
-            出典を明記したうえで、なぜ起きたのか、何につながるのかを掘る。
+            ニュースは、社会の表面に浮かんだ一つの現象にすぎない。その下には、歴史があり、制度があり、人々の価値観がある。いま英国で起きていることを手がかりに、その奥にある「英国という国」の姿を読み解く。
           </p>
           <p className="mt-3 text-xs text-muted-foreground">
             今週のストライキや臨時休館なら{" "}

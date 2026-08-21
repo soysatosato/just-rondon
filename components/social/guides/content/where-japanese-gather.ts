@@ -16,18 +16,12 @@ import {
  * 同じ「日本人コミュニティ」でも交わらない層がある。
  * 自分がどこに行けば話の合う相手がいるかは、
  * 場所の名前だけではわからない。
- *
- * 注意:
- * 層の説明を「駐妻は〜」のような属性の decoration にしない。
- * 書くのは「その場に集まる人の生活条件」であって、人物評ではない。
- * 経済状況や配偶者の職業で人を分類する書き方は避ける。
  */
 const whereJapaneseGather: SocialGuideArticle = {
   slug: "where-japanese-gather",
   title: "日本人はどこに集まっているか",
   engTitle: "Where to Find the Japanese Community in London",
-  audience:
-    "渡英して間もなく、日本語で話せる相手や情報源を探している人",
+  audience: "渡英して間もなく、日本語で話せる相手や情報源を探している人",
   summary:
     "mixb、日本人会、Facebook グループ、日系のスーパー、大学のサークル。場所の名前を並べるだけなら検索で足りますが、問題はどこに行けば自分と話の合う人がいるかです。滞在の形によって集まる場所が違うので、そこから整理します。",
   description:
