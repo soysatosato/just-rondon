@@ -7,25 +7,21 @@ const ACCENTS = [
   {
     stripe: "bg-indigo-500",
     wrap: "hover:border-indigo-300 dark:hover:border-indigo-800",
-    num: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
     more: "text-indigo-600 dark:text-indigo-400",
   },
   {
     stripe: "bg-cyan-500",
     wrap: "hover:border-cyan-300 dark:hover:border-cyan-800",
-    num: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/50 dark:text-cyan-300",
     more: "text-cyan-600 dark:text-cyan-400",
   },
   {
     stripe: "bg-fuchsia-500",
     wrap: "hover:border-fuchsia-300 dark:hover:border-fuchsia-800",
-    num: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/50 dark:text-fuchsia-300",
     more: "text-fuchsia-600 dark:text-fuchsia-400",
   },
   {
     stripe: "bg-lime-500",
     wrap: "hover:border-lime-300 dark:hover:border-lime-800",
-    num: "bg-lime-100 text-lime-700 dark:bg-lime-950/50 dark:text-lime-300",
     more: "text-lime-600 dark:text-lime-400",
   },
 ];
@@ -55,12 +51,9 @@ export default function ModernBritainCard({
         <div className={`h-1.5 w-full ${accent.stripe}`} />
 
         <div className="px-5 pb-5 pt-4">
+          {/* 並びは createdAt の降順なので、通し番号を振ると記事を足すたびに
+              全カードの番号がずれる。日付だけを出す。 */}
           <div className="mb-3 flex items-center gap-2">
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${accent.num}`}
-            >
-              #{String(index + 1).padStart(2, "0")}
-            </span>
             <span className="text-[11px] text-muted-foreground">
               {formatDate(item.createdAt)}
             </span>

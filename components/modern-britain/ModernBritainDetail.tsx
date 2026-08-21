@@ -7,29 +7,10 @@ import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 
+// 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
+// 全部インディゴにすると、1段落に何度も出てくる強調が蛍光ペンだらけに見える。
 const proseClass =
-  "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-indigo-600 dark:prose-strong:text-indigo-400 prose-li:marker:text-indigo-400";
-
-const SECTION_ACCENTS = [
-  {
-    badge:
-      "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
-    rail: "bg-indigo-500",
-  },
-  {
-    badge: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/50 dark:text-cyan-300",
-    rail: "bg-cyan-500",
-  },
-  {
-    badge:
-      "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-950/50 dark:text-fuchsia-300",
-    rail: "bg-fuchsia-500",
-  },
-  {
-    badge: "bg-lime-100 text-lime-700 dark:bg-lime-950/50 dark:text-lime-300",
-    rail: "bg-lime-500",
-  },
-];
+  "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-foreground prose-li:marker:text-indigo-400";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -126,24 +107,38 @@ export default function ModernBritainDetail({
         <AdSenseUnit slot={AD_SLOTS.inArticle} />
       </div>
 
+      {/* 記事は「第1部=ニュース紹介(1本)」「第2部=論考(1〜2本)」の2部構成。
+          全セクションを同じ見た目で並べると、事実の紹介と書き手の主張が
+          地続きに見えてしまう。先頭は色を落とした地の面で「報道の引用」、
+          2本目以降はカードを立てて「書き手の論」と読み分けさせる。 */}
       <div className="mt-10 space-y-8">
         {sections.map((sec, i) => {
-          const accent = SECTION_ACCENTS[i % SECTION_ACCENTS.length];
+          const isReport = i === 0;
           return (
             <section
               key={sec.id}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-7"
+              className={
+                isReport
+                  ? "rounded-2xl border border-slate-200 bg-muted/40 p-5 dark:border-slate-800 sm:p-7"
+                  : "rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-7"
+              }
             >
               <div className="mb-4 flex items-start gap-3">
                 <span
                   aria-hidden
-                  className={`mt-1 h-8 w-1.5 shrink-0 rounded-full ${accent.rail}`}
+                  className={`mt-1 h-8 w-1.5 shrink-0 rounded-full ${
+                    isReport ? "bg-slate-400 dark:bg-slate-600" : "bg-indigo-500"
+                  }`}
                 />
                 <div className="min-w-0">
                   <span
-                    className={`mb-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${accent.badge}`}
+                    className={`mb-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] ${
+                      isReport
+                        ? "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                        : "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300"
+                    }`}
                   >
-                    {String(i + 1).padStart(2, "0")}
+                    {isReport ? "News" : "Argument"}
                   </span>
                   <h2 className="text-lg font-bold leading-snug tracking-tight sm:text-2xl">
                     {sec.title}
@@ -169,10 +164,7 @@ export default function ModernBritainDetail({
       </div>
 
       <div className="mt-10 rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/50 px-6 py-7 text-center dark:border-indigo-900/60 dark:bg-indigo-950/20">
-        <p className="text-sm font-bold">英国のいまを、もう一本読む。</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          ニュースの奥にある背景と、その意味を掘り下げています。
-        </p>
+        <p className="text-sm font-bold">英国のいまを、もう一本。</p>
         <Link
           href="/modern-britain"
           className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
