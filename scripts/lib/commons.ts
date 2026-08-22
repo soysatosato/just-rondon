@@ -18,6 +18,10 @@ export type CommonsImage = {
 /** Commons のキャプションは HTML で返ってくるのでタグを落とす。 */
 function stripHtml(html: string): string {
   return html
+    // display:none の要素は非表示の重複テキストとして混入することがある
+    // (例: "Unknown author" が可視テキストと隠しspanの両方に入っている)。
+    // タグを消す前に中身ごと除去する。
+    .replace(/<span[^>]*style="[^"]*display:\s*none[^"]*"[^>]*>.*?<\/span>/gis, "")
     .replace(/<[^>]*>/g, "")
     .replace(/\s+/g, " ")
     .trim();

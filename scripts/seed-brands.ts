@@ -61,12 +61,16 @@ type BrandSeed = {
   faqs?: { question: string; answer: string }[];
   /** ヒーロー画像。Commons の "File:..." タイトル。 */
   commonsFile?: string;
-  /** 本文中の図版。 */
-  images?: {
-    section: "story" | "buying";
-    commonsFile: string;
-    caption: string;
-  }[];
+  /**
+   * 本文中の図版。
+   * commonsFile … Wikimedia Commons から解決する(通常はこちら)。
+   * url         … 自前でホストしている画像を直接指定する。この場合は
+   *               imageSource/imageCredit/imageLink を持たない。
+   */
+  images?: (
+    | { section: "story" | "buying"; commonsFile: string; caption: string }
+    | { section: "story" | "buying"; url: string; caption: string }
+  )[];
   items?: {
     name: string;
     engName?: string;
@@ -397,8 +401,25 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
     tips:
       "ノッティング・ヒルのピンクの建物は写真の名所です。ポートベロー・マーケットと同じ日に回すと効率よく済みます。",
     recommendLevel: 3,
-    commonsFile: "File:Paul Smith on Westbourne Grove - geograph.org.uk - 6289469.jpg",
+    commonsFile: "File:Paul Smith Stripes.jpg",
     images: [
+      {
+        section: "story",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/PaulSmith_1.jpeg",
+        caption: "創業者ポール・スミス本人。",
+      },
+      {
+        section: "story",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/PaulSmith_2.jpeg",
+        caption:
+          "多色のストライプ（Signature Stripe）。ブランドを指す記号として単独で通用する。",
+      },
+      {
+        section: "story",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/PaulSmith_3.jpeg",
+        caption:
+          "シマウマのモチーフ。縞を持つ動物として、ストライプの記号をもう一度言い直している。",
+      },
       {
         section: "buying",
         commonsFile: "File:Paul Smith shop, Park Street, Southwark-4230224727.jpg",
@@ -3191,6 +3212,23 @@ async function main() {
     await db.brandImage.deleteMany({ where: { brandId: brand.id } });
     if (b.images?.length) {
       for (const [i, fig] of b.images.entries()) {
+        if ("url" in fig) {
+          figureResolved += 1;
+          await db.brandImage.create({
+            data: {
+              brandId: brand.id,
+              section: fig.section,
+              url: fig.url,
+              caption: fig.caption,
+              imageSource: null,
+              imageCredit: null,
+              imageLink: null,
+              displayOrder: i,
+            },
+          });
+          continue;
+        }
+
         const image = await resolveCommonsImage(fig.commonsFile);
         // 解決できなかった図版は作らない。URL の無いレコードを残すと
         // 表示側で空の figure が出てしまう。
