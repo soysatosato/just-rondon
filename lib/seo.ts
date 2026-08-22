@@ -210,8 +210,9 @@ export function buildPageMetadata({
       title,
       description,
       images: ogImages.map((i) => i.url),
-      site: TWITTER_HANDLE,
-      creator: TWITTER_HANDLE,
+      // X運用を一旦停止中のため site/creator は非表示
+      // site: TWITTER_HANDLE,
+      // creator: TWITTER_HANDLE,
     },
   };
 }

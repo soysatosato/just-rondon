@@ -1,6 +1,6 @@
 // app/metadata.ts
 import { Metadata } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, TWITTER_HANDLE } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 /**
  * ルートレイアウトのデフォルト metadata。
@@ -47,8 +47,9 @@ export const defaultMetadata: Metadata = {
     description:
       "美術館や展覧会、ミュージカル・イベント・映画プレミア、最新ニュースなどロンドン観光の情報をわかりやすく紹介する総合ガイドサイト。",
     images: [DEFAULT_OG_IMAGE],
-    site: TWITTER_HANDLE,
-    creator: TWITTER_HANDLE,
+    // X運用を一旦停止中のため site/creator は非表示
+    // site: TWITTER_HANDLE,
+    // creator: TWITTER_HANDLE,
   },
   icons: {
     // faviconとしてのSVGは各ブラウザが対応しているのでこちらはそのまま
