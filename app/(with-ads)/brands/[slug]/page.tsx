@@ -10,6 +10,7 @@ import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import GuideFaq from "@/components/guides/GuideFaq";
 import BrandFigure from "@/components/brands/BrandFigure";
+import { splitMarkdownSections } from "@/components/brands/splitMarkdownSections";
 import { Badge } from "@/components/ui/badge";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
@@ -74,6 +75,8 @@ export default async function BrandPage({
 
   const storyImages = brand.images.filter((i) => i.section === "story");
   const buyingImages = brand.images.filter((i) => i.section === "buying");
+  const storyBlocks = splitMarkdownSections(brand.story);
+  const buyingBlocks = splitMarkdownSections(brand.buying);
 
   // ヘッダーの要約ボックスに出す代表店。旗艦店が無ければ最初の1件で代用する。
   const headlineStore =
@@ -212,8 +215,15 @@ export default async function BrandPage({
         <h2 className="mb-1 text-xl font-semibold">
           {brand.name}の歴史
         </h2>
-        <MarkdownBody className="text-base">{brand.story}</MarkdownBody>
-        {storyImages.map((image) => (
+        {storyBlocks.map((block, i) => (
+          <div key={i}>
+            <MarkdownBody className="text-base">{block}</MarkdownBody>
+            {storyImages[i] && (
+              <BrandFigure key={storyImages[i].id} image={storyImages[i]} />
+            )}
+          </div>
+        ))}
+        {storyImages.slice(storyBlocks.length).map((image) => (
           <BrandFigure key={image.id} image={image} />
         ))}
       </section>
@@ -221,8 +231,15 @@ export default async function BrandPage({
       {/* 3. 買い方 */}
       <section className="mt-10">
         <h2 className="mb-1 text-xl font-semibold">ロンドンでの買い方</h2>
-        <MarkdownBody className="text-base">{brand.buying}</MarkdownBody>
-        {buyingImages.map((image) => (
+        {buyingBlocks.map((block, i) => (
+          <div key={i}>
+            <MarkdownBody className="text-base">{block}</MarkdownBody>
+            {buyingImages[i] && (
+              <BrandFigure key={buyingImages[i].id} image={buyingImages[i]} />
+            )}
+          </div>
+        ))}
+        {buyingImages.slice(buyingBlocks.length).map((image) => (
           <BrandFigure key={image.id} image={image} />
         ))}
 
