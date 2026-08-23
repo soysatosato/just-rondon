@@ -269,7 +269,8 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
     tips:
       "トレンチコートは型ごとに着丈とシルエットが違います。オンラインで型名まで決めてから現地で試着すると、店頭で迷わずに済みます。",
     recommendLevel: 5,
-    commonsFile: "File:Burberry Regent Street window.jpg",
+    heroUrl:
+      "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/Burberry2.jpeg",
     images: [
       {
         section: "story",
@@ -284,13 +285,6 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
         caption:
           "エクエストリアン・ナイト・デバイス。構えた槍は「改革」を意味する。",
         afterBlock: 1,
-      },
-      {
-        section: "story",
-        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/Burberry2.jpeg",
-        caption:
-          "バーバリー・チェック。もとはコートの裏地で、表に出すために設計された柄ではなかった。",
-        afterBlock: 3,
       },
       {
         section: "buying",
