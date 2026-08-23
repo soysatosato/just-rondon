@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { fetchColumnBySlug, fetchColumnSeries } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
+import ViewTracker from "@/components/analytics/ViewTracker";
 import { columnArticleJsonLd, columnBreadcrumbJsonLd } from "@/components/column/jsonld";
 import ColumnDetail from "@/components/column/ColumnDetail";
 
@@ -50,6 +51,9 @@ export default async function ColumnDetailPage({ params }: Props) {
       <JsonLd data={columnBreadcrumbJsonLd(content)} />
       <JsonLd data={columnArticleJsonLd(content)} />
       <ColumnDetail content={content} series={series} />
+
+      {/* 閲覧の記録(内部データ)。何も描画しない。 */}
+      <ViewTracker targetType="column" slug={content.slug} />
     </>
   );
 }

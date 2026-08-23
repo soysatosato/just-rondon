@@ -132,3 +132,28 @@ export const fetchUpcomingEvents = async (limit = 6, from: Date = new Date()) =>
     take: limit,
   });
 };
+
+/**
+ * 読み物の「人気の記事」を取り出す。
+ *
+ * 並べ替えキーは views(累計閲覧数)。閲覧数そのものは読者に出さない
+ * 内部データで、ここでは順位付けにしか使わない。
+ *
+ * views=0 を除くのは、集計を始める前からある記事と「まだ誰も見ていない
+ * 記事」を区別できないため。0 の行を混ぜると、単に古いだけの記事が
+ * 「人気」として並ぶ。件数が足りないときは少なく返す。
+ *
+ * 同数のときは新しい順にする。閲覧数が伸びる前の新着が、古い記事の
+ * 後ろに埋もれ続けるのを避けるため。
+ */
+export const fetchPopularContents = async (
+  category: "column" | "british-english" | "modern-britain",
+  take = 5,
+) => {
+  const contents = await db.content.findMany({
+    where: { category, views: { gt: 0 } },
+    orderBy: [{ views: "desc" }, { createdAt: "desc" }],
+    take,
+  });
+  return contents;
+};

@@ -4,9 +4,9 @@ import db from "@/utils/db";
 /**
  * 閲覧の記録 API。
  *
- * 詳細ページ(観光スポット・美術館・ミュージカル)から、表示のたびに
- * クライアントが叩く。数字自体は読者に出さず、「人気のスポット」
- * 「最近見られたスポット」の並べ替えキーとして貯める。
+ * 詳細ページ(観光スポット・美術館・ミュージカル・コラム・イギリス英語・
+ * いまのイギリス)から、表示のたびにクライアントが叩く。数字自体は読者に
+ * 出さず、「人気のスポット」「人気の記事」の並べ替えキーとして貯める。
  *
  * サーバーコンポーネントの本体で数えない理由:
  * 詳細ページは revalidate=3600 の ISR でキャッシュされるため、
@@ -17,11 +17,19 @@ import db from "@/utils/db";
  * 実数より少なめに出るほうが、ボットで水増しされるより望ましい。
  */
 
-/** 加算対象。キーはクライアントから来るので、ここに無い値は弾く。 */
+/**
+ * 加算対象。キーはクライアントから来るので、ここに無い値は弾く。
+ *
+ * column / britishEnglish / modernBritain は、いずれも Content テーブルの
+ * 1行を指す。値はその行の category に対応する。
+ */
 const TARGETS = {
   attraction: "attraction",
   museum: "museum",
   musical: "musical",
+  column: "column",
+  britishEnglish: "british-english",
+  modernBritain: "modern-britain",
 } as const;
 
 type TargetType = keyof typeof TARGETS;
@@ -156,7 +164,19 @@ async function incrementView(targetType: TargetType, slug: string) {
   if (targetType === "museum") {
     return db.museum.updateMany({ where: { slug }, data });
   }
-  return db.musical.updateMany({ where: { slug }, data });
+  if (targetType === "musical") {
+    return db.musical.updateMany({ where: { slug }, data });
+  }
+
+  /*
+    読み物3種は Content テーブルを共有していて、slug は表全体では一意でない
+    (category が違えば同じ slug があり得る)。category で絞らないと、
+    別セクションの同名 slug に加算してしまう。
+  */
+  return db.content.updateMany({
+    where: { slug, category: TARGETS[targetType] },
+    data,
+  });
 }
 
 /**

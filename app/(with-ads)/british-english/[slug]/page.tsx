@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { fetchBritishEnglishBySlug } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
+import ViewTracker from "@/components/analytics/ViewTracker";
 import {
   britishEnglishArticleJsonLd,
   britishEnglishBreadcrumbJsonLd,
@@ -53,6 +54,9 @@ export default async function BritishEnglishDetailPage({ params }: Props) {
       <JsonLd data={britishEnglishBreadcrumbJsonLd(content)} />
       <JsonLd data={britishEnglishArticleJsonLd(content)} />
       <BritishEnglishDetail content={content} />
+
+      {/* 閲覧の記録(内部データ)。何も描画しない。 */}
+      <ViewTracker targetType="britishEnglish" slug={content.slug} />
     </>
   );
 }

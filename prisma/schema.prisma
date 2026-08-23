@@ -1037,6 +1037,24 @@ model Content {
   sections     ContentSection[]
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @default(now()) @updatedAt
+
+  /// -------------------------------------------------------------------
+  /// 閲覧の記録。読者には出さない内部データ。
+  ///
+  /// コラム・イギリス英語・いまのイギリスの「人気の記事」の並べ替えに使う。
+  /// 用途と注意点は Attraction.views と同じ。加算は /api/views から行う。
+  ///
+  /// このテーブルは slug が全体で一意ではない(category が違えば同じ slug が
+  /// あり得る)。加算時は必ず category と slug の両方で絞ること。
+  /// -------------------------------------------------------------------
+
+  /// 累計閲覧数。ランキングの並べ替えキー。
+  views        Int              @default(0)
+  /// 最終閲覧日時。null は一度も見られていない(集計開始前の行を含む)。
+  lastViewedAt DateTime?
+
+  @@index([category, views])
+  @@index([category, lastViewedAt])
 }
 
 model ContentSection {
