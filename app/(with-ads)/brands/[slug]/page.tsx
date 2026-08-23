@@ -73,10 +73,42 @@ export default async function BrandPage({
   const categoryLabel =
     BRAND_CATEGORY_LABELS[brand.category as BrandCategory] ?? null;
 
+  const appealImages = brand.images.filter((i) => i.section === "appeal");
   const storyImages = brand.images.filter((i) => i.section === "story");
   const buyingImages = brand.images.filter((i) => i.section === "buying");
+  const appealBlocks = splitMarkdownSections(brand.appeal);
   const storyBlocks = splitMarkdownSections(brand.story);
   const buyingBlocks = splitMarkdownSections(brand.buying);
+
+  // displayOrder は「何番目のブロックの直後に置くか」。
+  // ブロック数を超える値は最後のブロックに繰り込む。
+  const groupImagesByBlock = (
+    images: typeof brand.images,
+    blockCount: number,
+  ) => {
+    const groups: (typeof brand.images)[] = Array.from(
+      { length: blockCount },
+      () => [],
+    );
+    for (const image of images) {
+      const index = Math.min(image.displayOrder, blockCount - 1);
+      groups[Math.max(index, 0)]?.push(image);
+    }
+    return groups;
+  };
+
+  const appealImageGroups = groupImagesByBlock(
+    appealImages,
+    Math.max(appealBlocks.length, 1),
+  );
+  const storyImageGroups = groupImagesByBlock(
+    storyImages,
+    Math.max(storyBlocks.length, 1),
+  );
+  const buyingImageGroups = groupImagesByBlock(
+    buyingImages,
+    Math.max(buyingBlocks.length, 1),
+  );
 
   // ヘッダーの要約ボックスに出す代表店。旗艦店が無ければ最初の1件で代用する。
   const headlineStore =
@@ -205,7 +237,14 @@ export default async function BrandPage({
         <h2 className="mb-1 text-xl font-semibold">
           {brand.name}の特徴
         </h2>
-        <MarkdownBody className="text-base">{brand.appeal}</MarkdownBody>
+        {appealBlocks.map((block, i) => (
+          <div key={i}>
+            <MarkdownBody className="text-base">{block}</MarkdownBody>
+            {appealImageGroups[i]?.map((image) => (
+              <BrandFigure key={image.id} image={image} />
+            ))}
+          </div>
+        ))}
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="mt-8" />
@@ -218,13 +257,10 @@ export default async function BrandPage({
         {storyBlocks.map((block, i) => (
           <div key={i}>
             <MarkdownBody className="text-base">{block}</MarkdownBody>
-            {storyImages[i] && (
-              <BrandFigure key={storyImages[i].id} image={storyImages[i]} />
-            )}
+            {storyImageGroups[i]?.map((image) => (
+              <BrandFigure key={image.id} image={image} />
+            ))}
           </div>
-        ))}
-        {storyImages.slice(storyBlocks.length).map((image) => (
-          <BrandFigure key={image.id} image={image} />
         ))}
       </section>
 
@@ -234,13 +270,10 @@ export default async function BrandPage({
         {buyingBlocks.map((block, i) => (
           <div key={i}>
             <MarkdownBody className="text-base">{block}</MarkdownBody>
-            {buyingImages[i] && (
-              <BrandFigure key={buyingImages[i].id} image={buyingImages[i]} />
-            )}
+            {buyingImageGroups[i]?.map((image) => (
+              <BrandFigure key={image.id} image={image} />
+            ))}
           </div>
-        ))}
-        {buyingImages.slice(buyingBlocks.length).map((image) => (
-          <BrandFigure key={image.id} image={image} />
         ))}
 
         {brand.tips && (

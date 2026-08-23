@@ -66,10 +66,23 @@ type BrandSeed = {
    * commonsFile … Wikimedia Commons から解決する(通常はこちら)。
    * url         … 自前でホストしている画像を直接指定する。この場合は
    *               imageSource/imageCredit/imageLink を持たない。
+   * afterBlock  … そのセクション本文を `## ` 見出しで分割したときの、
+   *               何番目のブロック(0-indexed)の直後に置くか。省略時は 0
+   *               (最初のブロック=見出し前の導入文、または見出しが無い全文)。
    */
   images?: (
-    | { section: "story" | "buying"; commonsFile: string; caption: string }
-    | { section: "story" | "buying"; url: string; caption: string }
+    | {
+        section: "appeal" | "story" | "buying";
+        commonsFile: string;
+        caption: string;
+        afterBlock?: number;
+      }
+    | {
+        section: "appeal" | "story" | "buying";
+        url: string;
+        caption: string;
+        afterBlock?: number;
+      }
   )[];
   items?: {
     name: string;
@@ -407,18 +420,21 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
         section: "story",
         url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/PaulSmith_1.jpeg",
         caption: "創業者ポール・スミス本人。",
+        afterBlock: 0,
       },
       {
         section: "story",
         url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/PaulSmith_2.jpeg",
         caption:
           "多色のストライプ（Signature Stripe）。ブランドを指す記号として単独で通用する。",
+        afterBlock: 2,
       },
       {
-        section: "story",
+        section: "appeal",
         url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/PaulSmith_3.jpeg",
         caption:
           "シマウマのモチーフ。縞を持つ動物として、ストライプの記号をもう一度言い直している。",
+        afterBlock: 1,
       },
       {
         section: "buying",
@@ -3211,7 +3227,8 @@ async function main() {
 
     await db.brandImage.deleteMany({ where: { brandId: brand.id } });
     if (b.images?.length) {
-      for (const [i, fig] of b.images.entries()) {
+      for (const fig of b.images) {
+        const afterBlock = fig.afterBlock ?? 0;
         if ("url" in fig) {
           figureResolved += 1;
           await db.brandImage.create({
@@ -3223,7 +3240,7 @@ async function main() {
               imageSource: null,
               imageCredit: null,
               imageLink: null,
-              displayOrder: i,
+              displayOrder: afterBlock,
             },
           });
           continue;
@@ -3246,7 +3263,7 @@ async function main() {
             imageSource: "commons",
             imageCredit: image.credit,
             imageLink: image.link,
-            displayOrder: i,
+            displayOrder: afterBlock,
           },
         });
       }
