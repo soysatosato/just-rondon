@@ -1,13 +1,17 @@
 /**
- * DB内のコラム(category="column")本文で、太字(**)が描画されない箇所を直す。
+ * DB内の本文で、太字(**)が描画されない箇所を直す。
  *
  * 壊れる条件・直し方は scripts/fix-markdown-bold.ts と同じ
  * (CommonMark の right-flanking 判定に日本語の句読点が引っかかるケース)。
- * あちらはソースコード中の静的文字列が対象で、こちらは
- * Content.summary / Content.mainText / ContentSection.description が対象。
+ * あちらはソースコード中の静的文字列が対象で、こちらは以下のDBフィールドが対象:
  *
- * 実行: npx tsx scripts/fix-column-markdown-bold.ts --dry
- *      npx tsx scripts/fix-column-markdown-bold.ts
+ *   - Content.summary / Content.mainText / ContentSection.description
+ *     (category: column / british-english / modern-britain)
+ *   - WeeklyBriefItem.description
+ *     (WeeklyBrief.headline / summary はプレーンテキスト表示なので対象外)
+ *
+ * 実行: npx tsx scripts/fix-content-markdown-bold.ts --dry
+ *      npx tsx scripts/fix-content-markdown-bold.ts
  */
 
 import "dotenv/config";
@@ -93,14 +97,15 @@ type Target = {
   apply: (fixed: string) => Promise<void>;
 };
 
-async function main() {
-  const dry = process.argv.includes("--dry");
+const CONTENT_CATEGORIES = ["column", "british-english", "modern-britain"];
 
+async function collectContentTargets(): Promise<Target[]> {
   const contents = await db.content.findMany({
-    where: { category: "column" },
+    where: { category: { in: CONTENT_CATEGORIES } },
     select: {
       id: true,
       slug: true,
+      category: true,
       summary: true,
       mainText: true,
       sections: { select: { id: true, description: true, displayOrder: true } },
@@ -110,9 +115,10 @@ async function main() {
   const targets: Target[] = [];
 
   for (const c of contents) {
+    const path = `/${c.category}/${c.slug}`;
     if (c.summary) {
       targets.push({
-        label: `/column/${c.slug} summary`,
+        label: `${path} summary`,
         text: c.summary,
         apply: async (fixed) => {
           await db.content.update({ where: { id: c.id }, data: { summary: fixed } });
@@ -121,7 +127,7 @@ async function main() {
     }
     if (c.mainText) {
       targets.push({
-        label: `/column/${c.slug} mainText`,
+        label: `${path} mainText`,
         text: c.mainText,
         apply: async (fixed) => {
           await db.content.update({ where: { id: c.id }, data: { mainText: fixed } });
@@ -131,7 +137,7 @@ async function main() {
     for (const sec of c.sections) {
       if (!sec.description) continue;
       targets.push({
-        label: `/column/${c.slug} section#${sec.displayOrder}`,
+        label: `${path} section#${sec.displayOrder}`,
         text: sec.description,
         apply: async (fixed) => {
           await db.contentSection.update({
@@ -142,6 +148,36 @@ async function main() {
       });
     }
   }
+
+  return targets;
+}
+
+async function collectWeeklyBriefTargets(): Promise<Target[]> {
+  const items = await db.weeklyBriefItem.findMany({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      brief: { select: { slug: true } },
+    },
+  });
+
+  return items.map((item) => ({
+    label: `/events/week/${item.brief.slug} item "${item.title}"`,
+    text: item.description,
+    apply: async (fixed) => {
+      await db.weeklyBriefItem.update({ where: { id: item.id }, data: { description: fixed } });
+    },
+  }));
+}
+
+async function main() {
+  const dry = process.argv.includes("--dry");
+
+  const targets = [
+    ...(await collectContentTargets()),
+    ...(await collectWeeklyBriefTargets()),
+  ];
 
   let fixedCount = 0;
   const skipped: { label: string; text: string }[] = [];
