@@ -8,6 +8,17 @@ declare global {
   }
 }
 
+/**
+ * 忍者AdMax の配信を止めるためのフラグ。
+ *
+ * AdSense の審査中は false にしておく。AdSense 枠が1つも表示されていない状態で
+ * 他社広告だけが配信されていると、審査時の心証を損ねるため。
+ * 審査通過後に true へ戻せば、コードを触らずに配信を再開できる。
+ *
+ * false の間は AdMaxSwitch が何も描画せず、外部スクリプトも読み込まない。
+ */
+export const ADMAX_ENABLED = false;
+
 const SCRIPT_SRC = "https://adm.shinobi.jp/st/t.js";
 
 export type AdMaxType = "banner" | "overlay" | "switch";
@@ -41,6 +52,7 @@ export function unregisterAdMax(admax_id: string, type: AdMaxType) {
 
 export function loadAdMaxScript(): Promise<void> {
   if (typeof window === "undefined") return Promise.resolve();
+  if (!ADMAX_ENABLED) return Promise.resolve();
 
   if (window.__admaxScriptPromise__) {
     return window.__admaxScriptPromise__;

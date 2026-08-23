@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { loadAdMaxScript, registerAdMax, unregisterAdMax } from "@/lib/admax";
+import {
+  ADMAX_ENABLED,
+  loadAdMaxScript,
+  registerAdMax,
+  unregisterAdMax,
+} from "@/lib/admax";
 
 type Props = {
   id?: string;
@@ -13,6 +18,8 @@ export default function AdMaxSwitch({
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (!ADMAX_ENABLED) return;
+
     let cancelled = false;
 
     async function init() {
@@ -42,6 +49,10 @@ export default function AdMaxSwitch({
       }
     };
   }, [id]);
+
+  // 審査中は枠ごと描画しない。空の div が残ると、広告が読み込めていない
+  // 抜け殻のように見えてしまうため。
+  if (!ADMAX_ENABLED) return null;
 
   return (
     <div className="my-4 flex w-full justify-center">
