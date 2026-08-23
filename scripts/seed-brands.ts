@@ -949,14 +949,28 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
     tips:
       "ジャケットは肩の構築が独特で、着ると体の線が変わります。写真では分からないので必ず試着してください。",
     recommendLevel: 3,
-    commonsFile:
-      "File:Alexander McQueen, 27 Old Bond Street, Mayfair, April 2024.jpg",
+    heroUrl:
+      "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/mcqueen1.jpeg",
     images: [
       {
         section: "story",
         commonsFile: "File:Alexander McQueen by FashionWirePress.jpg",
         caption:
           "リー・アレキサンダー・マックイーン。タクシー運転手の息子で、16歳でサヴィル・ロウの徒弟になった。",
+        afterBlock: 0,
+      },
+      {
+        section: "appeal",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/mcqueen3.jpeg",
+        caption:
+          "ドクロのリング。2003年の海賊がテーマのコレクションから広まったモチーフ。",
+        afterBlock: 1,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/mcqueen2.jpeg",
+        caption: "McQueen の文字が象徴的な財布。",
+        afterBlock: 3,
       },
     ],
     items: [
