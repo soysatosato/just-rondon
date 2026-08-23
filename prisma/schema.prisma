@@ -50,6 +50,21 @@ model Museum {
   trivia         Trivia[]
   highlightSpots Highlight[]    @relation("MuseumHighlightSpots")
   hasVisited     hasVisited[]
+
+  /// -------------------------------------------------------------------
+  /// 閲覧の記録。読者には出さない内部データ。
+  ///
+  /// 用途と注意点は Attraction.views と同じ。加算は /api/views から行う。
+  /// 詳細ページが ISR キャッシュされるため、サーバー側では数えない。
+  /// -------------------------------------------------------------------
+
+  /// 累計閲覧数。ランキングの並べ替えキー。
+  views        Int       @default(0)
+  /// 最終閲覧日時。null は一度も見られていない。
+  lastViewedAt DateTime?
+
+  @@index([views])
+  @@index([lastViewedAt])
 }
 
 model Artwork {
@@ -129,15 +144,15 @@ model Trivia {
 /// Artwork は画像と作者を伴う作品単位のデータで6館しか揃っていないため、
 /// 展示室・建築・体験など作品以外も指せる軽いテキストとして分けている。
 model Highlight {
-  id        String  @id @default(cuid())
-  museumId  String
-  title     String
+  id       String  @id @default(cuid())
+  museumId String
+  title    String
   /// どこにあるか（例: "Room 4"、"1階 中央ホール"）。不明なら null。
-  location  String?
-  body      String
+  location String?
+  body     String
   /// 表示順。小さいほど先。
-  order     Int     @default(0)
-  museum    Museum  @relation("MuseumHighlightSpots", fields: [museumId], references: [id], onDelete: Cascade)
+  order    Int     @default(0)
+  museum   Museum  @relation("MuseumHighlightSpots", fields: [museumId], references: [id], onDelete: Cascade)
 
   @@index([museumId])
 }
@@ -190,15 +205,15 @@ model News {
 /// 1劇場に複数作品がぶら下がる状態(前の作品が終わり次が入るまでの
 /// 期間や、同一劇場での入れ替え)も、この形なら壊れずに表せる。
 model Theatre {
-  id       String @id @default(cuid())
-  slug     String @unique
+  id      String @id @default(cuid())
+  slug    String @unique
   /// 英語の正式名称。"Sondheim Theatre" のように Theatre まで含める。
-  name     String
+  name    String
   /// 日本語表記。検索されるのは英語名だが、本文中では日本語で呼ぶ。
-  nameJa   String
-  address  String
-  lat      Float
-  lng      Float
+  nameJa  String
+  address String
+  lat     Float
+  lng     Float
 
   /// 最寄り駅。"Piccadilly Circus (Bakerloo, Piccadilly)" のように
   /// 路線まで書く。/sightseeing/transport から来た読者が乗り換えを
@@ -224,18 +239,18 @@ model Theatre {
   /// 実務情報だけが並ぶページは読者が劇場を選ぶ手がかりにならない
   /// ——同じ「1200席・徒歩3分」でも、1900年代の装飾が残る劇場と
   /// 改装済みの劇場では観劇の体験がまるで違う。
-  intro          String?
+  intro        String?
   /// 座席の選び方(markdown)。
   ///
   /// 読者が劇場ページに来る最大の動機。区画ごとの見え方、見切れ、
   /// 傾斜、双眼鏡の要否を書く。capacity だけでは席を選べない。
-  seatingNotes   String?
+  seatingNotes String?
   /// 当日の動き方(markdown)。
   ///
   /// 入口の分かりにくさ、階段とエレベーターの有無、クローク、
   /// トイレの混み方、開演前の過ごし方。座席選び(予約時に読む)とは
   /// 読むタイミングが違うので分けている。
-  visitNotes     String?
+  visitNotes   String?
 
   /// 劇場情報を人が最後に確認した日。Musical.lastVerifiedAt と同じ理由で
   /// updatedAt とは別に持つ。null は「一度も確認していない」。
@@ -247,18 +262,18 @@ model Theatre {
 }
 
 model Musical {
-  id             String   @id @default(uuid())
-  name           String
-  engName        String
-  slug           String   @unique
-  tagline        String?
+  id          String  @id @default(uuid())
+  name        String
+  engName     String
+  slug        String  @unique
+  tagline     String?
   /// 幕ごとのシーン運び(markdown)。あらすじ3層のうち「物語の流れ」にあたる。
   ///
   /// 結末は含めない。まだ観るか決めていない読者が最初に開くページなので、
   /// 結末は storyEnding に切り出して折りたたみの中にだけ置く。
-  description    String
-  summary        String
-  blurb          String?
+  description String
+  summary     String
+  blurb       String?
 
   /// 「どんな話か」を語る地の文(markdown、2〜3段落)。
   ///
@@ -320,15 +335,15 @@ model Musical {
   /// サイト内のどこにも無かった。null は「未確認」で、表示side は
   /// 項目ごと出さない。推定値を入れてはいけない——「2時間半で終わる」
   /// と読んで夕食を予約した読者が、3時間の公演で間に合わなくなる。
-  runtimeMinutes    Int?
+  runtimeMinutes  Int?
   /// 休憩(interval)の有無と長さ(分)。0 は「休憩なしで通す」、
   /// null は未確認。runtimeMinutes に含まれる内数。
-  intervalMinutes   Int?
+  intervalMinutes Int?
   /// 劇場が案内する推奨年齢の下限。"6歳以上" なら 6。
   ///
   /// 法的な入場制限ではなく劇場の推奨なので、断定せず
   /// 「劇場の推奨」として出すこと。null は未確認。
-  minAgeGuidance    Int?
+  minAgeGuidance  Int?
 
   /// 英語のハードルを判断する材料。断定的な「難易度」ではなく、
   /// 読者が自分で判断するための事実を持つ。
@@ -341,15 +356,15 @@ model Musical {
   /// "sung-through"(ほぼ全編歌) / "dialogue-heavy"(台詞中心) /
   /// "balanced"(歌と台詞が半々) / "non-verbal"(台詞にほぼ依存しない)。
   /// null は未確認。
-  englishForm       String?
+  englishForm              String?
   /// 上の form を補う一文。「原作アニメが日本で広く知られており
   /// 筋を追いやすい」「早口のラップで情報量が多い」など、
   /// なぜそう言えるかの根拠を必ず含めること。
-  englishNote       String?
+  englishNote              String?
   /// 上演時間・年齢・英語まわりを人が最後に確認した日。
   /// isOnShow の確認(lastVerifiedAt)とは別物なので分けて持つ。
   /// 作品が同じでも演出改訂で上演時間は変わる。
-  factsVerifiedAt   DateTime?
+  factsVerifiedAt          DateTime?
   /// isOnShow と上演劇場を人が最後に確認した日。
   ///
   /// updatedAt では代用できない。あちらは説明文の推敲でも動くので、
@@ -359,7 +374,7 @@ model Musical {
   ///
   /// null は「一度も確認していない」。scripts/check-musical-freshness.ts
   /// で棚卸しし、確認できたものだけ日付を入れる。
-  lastVerifiedAt DateTime?
+  lastVerifiedAt           DateTime?
   /// Ticketmaster の attraction ID。公演日程の取得キー。
   ///
   /// 名寄せで自動的に埋めてはいけない。TM 側の名称は "Hadestown (Touring)"
@@ -370,10 +385,25 @@ model Musical {
   ///
   /// null は「TM に在庫がない」または「未確認」。日程は表示しない。
   ticketmasterAttractionId String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  songs          Song[]
-  performances   MusicalPerformance[]
+  createdAt                DateTime             @default(now())
+  updatedAt                DateTime             @updatedAt
+  songs                    Song[]
+  performances             MusicalPerformance[]
+
+  /// -------------------------------------------------------------------
+  /// 閲覧の記録。読者には出さない内部データ。
+  ///
+  /// 用途と注意点は Attraction.views と同じ。加算は /api/views から行う。
+  /// 詳細ページが ISR キャッシュされるため、サーバー側では数えない。
+  /// -------------------------------------------------------------------
+
+  /// 累計閲覧数。ランキングの並べ替えキー。
+  views        Int       @default(0)
+  /// 最終閲覧日時。null は一度も見られていない。
+  lastViewedAt DateTime?
+
+  @@index([views])
+  @@index([lastViewedAt])
 }
 
 /// Ticketmaster から取り込んだ公演1回分。
@@ -382,21 +412,21 @@ model Musical {
 /// 人が書いた Musical とは別テーブルに置く。同期が失敗しても
 /// 作品ページ本体は無傷で残る。
 model MusicalPerformance {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   musicalId String
-  musical   Musical  @relation(fields: [musicalId], references: [id], onDelete: Cascade)
+  musical   Musical @relation(fields: [musicalId], references: [id], onDelete: Cascade)
 
   /// TM のイベントID。再同期時の重複防止に使う。
-  eventId   String   @unique
+  eventId  String   @unique
   /// 現地時刻での開演日時。TM は localDate/localTime を分けて返すので、
   /// ロンドンの現地時刻として組み立てて保存する。
-  startsAt  DateTime
+  startsAt DateTime
   /// 開演時刻が未定の公演があるため、日付だけ確定しているケースを区別する。
-  timeTba   Boolean  @default(false)
+  timeTba  Boolean  @default(false)
   /// 購入ページ。作品共通ではなく公演ごとに異なる。
-  url       String?
+  url      String?
   /// onsale | offsale | cancelled | postponed | rescheduled
-  status    String   @default("onsale")
+  status   String   @default("onsale")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -462,10 +492,10 @@ model Contact {
 }
 
 model Attraction {
-  id             String              @id @default(uuid())
-  name           String              @unique
+  id             String   @id @default(uuid())
+  name           String   @unique
   engName        String?
-  slug           String              @unique
+  slug           String   @unique
   tagline        String?
   summary        String?
   address        String
@@ -473,11 +503,11 @@ model Attraction {
   lng            Float
   image          String
   website        String?
-  recommendLevel Int?                @default(0)
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  category       String              @default("")
-  mustSee        Boolean             @default(false)
+  recommendLevel Int?     @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  category       String   @default("")
+  mustSee        Boolean  @default(false)
 
   /// 一覧・詳細ページに出すかどうか。false で非公開になる。
   ///
@@ -488,10 +518,10 @@ model Attraction {
   /// ★ 表示側のクエリで明示的に絞ること(utils/actions/attractions.ts,
   /// utils/sightseeing.ts, utils/areas.ts)。スクリプトは非公開の行も
   /// 見えている必要があるので、db クライアント側では絞っていない。
-  isPublished    Boolean             @default(true)
-  isForKids      Boolean             @default(false)
-  isFree         Boolean             @default(false)
-  sections       AttractionSection[]
+  isPublished Boolean             @default(true)
+  isForKids   Boolean             @default(false)
+  isFree      Boolean             @default(false)
+  sections    AttractionSection[]
 
   /// -------------------------------------------------------------------
   /// 訪問前に知りたい実用情報。すべて nullable。
@@ -531,7 +561,7 @@ model Attraction {
   /// 地区の象徴」であるスポットを、境界線では表現できないため。
   /// 付与は scripts/assign-attraction-areas.ts で行う。
   /// -------------------------------------------------------------------
-  area           String?
+  area String?
 
   /// 到着してからの流れ。心が躍る部分をここに書く。
   ///
@@ -539,12 +569,32 @@ model Attraction {
   /// 入れて、無いページでは丸ごと非表示にする。推測で埋めないこと
   /// ——「入口を入ってすぐ左」のような具体は、外れると読者を
   /// 実際に迷わせる。
-  visitFlow      AttractionVisitStep[]
+  visitFlow AttractionVisitStep[]
 
   /// 読み物本文。AttractionSection の後継(移行中)。
-  stories        AttractionStory[]
+  stories AttractionStory[]
+
+  /// -------------------------------------------------------------------
+  /// 閲覧の記録。読者には出さない内部データ。
+  ///
+  /// 「人気のスポット」「最近見られたスポット」の並べ替えに使う。
+  /// 表示中の数字として出す想定はないので、多少の取りこぼしは許容する
+  /// (ボットの除外やセッション単位の連投抑止で、実数より少なめに出る)。
+  ///
+  /// 加算は /api/views の POST から行う。詳細ページは ISR
+  /// (revalidate=3600)でキャッシュされるため、サーバーコンポーネントの
+  /// 本体で数えると1ページあたり1時間に1回しか増えず、ランキングとして
+  /// 使いものにならない。閲覧のたびにクライアントから叩くこと。
+  /// -------------------------------------------------------------------
+
+  /// 累計閲覧数。ランキングの並べ替えキー。
+  views        Int       @default(0)
+  /// 最終閲覧日時。null は一度も見られていない(集計開始前の行を含む)。
+  lastViewedAt DateTime?
 
   @@index([area])
+  @@index([views])
+  @@index([lastViewedAt])
 }
 
 /// 観光スポットの読み物1本。AttractionSection の後継。
@@ -572,13 +622,13 @@ model AttractionStory {
   /// ★ 自由入力しないこと。172種類の見出しが生まれた原因はここが
   /// 自由文字列だったことにある。増やすときは components/sightseeing の
   /// 並び順と既定ラベルも同時に直す。
-  kind         String
+  kind    String
   /// 表示用の見出し。null なら kind ごとの既定ラベルを使う。
   /// 「なぜ中世の城のような外観なのか」のような、そのスポット固有の
   /// 見出しにだけ値を入れる。
-  heading      String?
+  heading String?
   /// 本文。markdown。MarkdownBody で描画する。
-  body         String
+  body    String
 
   /// "migrated" | "authored"
   ///
@@ -590,7 +640,7 @@ model AttractionStory {
   ///
   /// 移行スクリプト側は source: "migrated" の行だけを消すこと。
   /// seed-attraction-stories-*.ts が書く行は "authored" にする。
-  source       String   @default("migrated")
+  source String @default("migrated")
 
   /// 節に添える画像。当面はほぼ null。
   ///
@@ -621,13 +671,13 @@ model AttractionVisitStep {
   displayOrder Int
 
   /// "arrival" | "highlight" | "missable" | "tip"。表示側でアイコンと色を切り替える。
-  kind         String     @default("highlight")
+  kind  String @default("highlight")
   /// 見出し(例: "クラウンジュエル")。
-  title        String
+  title String
   /// 2〜3文。何が見えるか、どう感じるか。
-  body         String
+  body  String
 
-  createdAt    DateTime   @default(now())
+  createdAt DateTime @default(now())
 
   @@index([attractionId, displayOrder])
 }

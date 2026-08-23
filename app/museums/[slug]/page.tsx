@@ -6,6 +6,7 @@ import { fetchMuseumDetailsBySlug } from "@/utils/actions/museums";
 import { fetchAttractionName } from "@/utils/actions/attractions";
 import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
+import ViewTracker from "@/components/analytics/ViewTracker";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -177,6 +178,9 @@ export default async function MuseumDetailsPage({
       <div className="mt-10">
         <AdSenseUnit slot={AD_SLOTS.articleBottom} />
       </div>
+
+      {/* 閲覧の記録(内部データ)。何も描画しない。 */}
+      <ViewTracker targetType="museum" slug={museum.slug} />
     </div>
   );
 }

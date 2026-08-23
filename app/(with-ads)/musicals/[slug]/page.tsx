@@ -24,6 +24,7 @@ import MusicalPracticalFacts from "@/components/musicals/MusicalPracticalFacts";
 import MusicalHero from "@/components/musicals/MusicalHero";
 import { theatrePath } from "@/components/musicals/theatres/theatres";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
+import ViewTracker from "@/components/analytics/ViewTracker";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -186,6 +187,9 @@ export default async function musicalDetailsPage({
           </Card>
         </div>
       </div>
+
+      {/* 閲覧の記録(内部データ)。何も描画しない。 */}
+      <ViewTracker targetType="musical" slug={musical.slug} />
     </div>
   );
 }

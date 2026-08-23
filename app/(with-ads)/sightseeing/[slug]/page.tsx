@@ -41,6 +41,7 @@ import {
   type StoryLike,
 } from "@/components/sightseeing/stories";
 import { categoryChipMap } from "@/components/sightseeing/categories";
+import ViewTracker from "@/components/analytics/ViewTracker";
 
 /**
  * engName はタイトルに入れない。h1 と JSON-LD で出しているうえ、
@@ -523,6 +524,9 @@ export default async function AttractionDetail({
           <AdSenseUnit slot={AD_SLOTS.articleBottom} />
         </div>
       </div>
+
+      {/* 閲覧の記録(内部データ)。何も描画しない。 */}
+      <ViewTracker targetType="attraction" slug={attraction.slug} />
     </main>
   );
 }
