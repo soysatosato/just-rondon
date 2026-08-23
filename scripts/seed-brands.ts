@@ -59,8 +59,15 @@ type BrandSeed = {
     note?: string;
   }[];
   faqs?: { question: string; answer: string }[];
-  /** ヒーロー画像。Commons の "File:..." タイトル。 */
+  /**
+   * ヒーロー画像。
+   * commonsFile … Wikimedia Commons から解決する(通常はこちら)。
+   * heroUrl     … 自前でホストしている画像を直接指定する。この場合は
+   *               imageSource/imageCredit/imageLink を持たない。
+   *               commonsFile と両方指定した場合は heroUrl を優先する。
+   */
   commonsFile?: string;
+  heroUrl?: string;
   /**
    * 本文中の図版。
    * commonsFile … Wikimedia Commons から解決する(通常はこちら)。
@@ -764,15 +771,34 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
     tips:
       "World's End の看板の時計は針が逆回転しています。King's Road は駅から遠いので、バスを使うと楽です。",
     recommendLevel: 4,
-    commonsFile:
-      "File:Vivienne Westwood store. 430 King's Road, Chelsea, London, UK. ( 1 ).jpg",
+    heroUrl:
+      "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/vivienne1.jpeg",
     images: [
+      {
+        section: "story",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/vivienne4.jpeg",
+        caption: "ヴィヴィアン・ウエストウッド本人。",
+        afterBlock: 0,
+      },
       {
         section: "story",
         commonsFile:
           "File:Clock on World's End shop of Vivienne Westwood 4 June 2011.jpg",
         caption:
           "World's End の看板の時計。針が逆回転することで知られる。1971年から同じ番地にある。",
+        afterBlock: 1,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/vivienne2.jpeg",
+        caption: "店舗の外観。",
+        afterBlock: 1,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/vivienne3.jpeg",
+        caption: "オーブのネックレス。ブランドの記号が最も分かりやすく出る小物。",
+        afterBlock: 4,
       },
     ],
     items: [
@@ -3161,10 +3187,22 @@ async function main() {
   let itemImageResolved = 0;
 
   for (const b of BRANDS) {
-    let hero: CommonsImage | null = null;
-    if (b.commonsFile) {
-      hero = await resolveCommonsImage(b.commonsFile);
-      if (hero) heroResolved += 1;
+    let heroColumns: ReturnType<typeof imageColumns>;
+    if (b.heroUrl) {
+      heroColumns = {
+        image: b.heroUrl,
+        imageSource: null,
+        imageCredit: null,
+        imageLink: null,
+      };
+      heroResolved += 1;
+    } else {
+      let hero: CommonsImage | null = null;
+      if (b.commonsFile) {
+        hero = await resolveCommonsImage(b.commonsFile);
+        if (hero) heroResolved += 1;
+      }
+      heroColumns = imageColumns(hero);
     }
 
     const data = {
@@ -3184,7 +3222,7 @@ async function main() {
       instagramUrl: normaliseInstagramUrl(b.instagramUrl, b.slug),
       recommendLevel: b.recommendLevel,
       displayOrder: order++,
-      ...imageColumns(hero),
+      ...heroColumns,
     };
 
     const brand = await db.brand.upsert({
@@ -3304,7 +3342,7 @@ async function main() {
       }
     }
 
-    console.log(`✓ ${b.name}${hero ? "" : "（ヒーロー画像なし）"}`);
+    console.log(`✓ ${b.name}${heroColumns.image ? "" : "（ヒーロー画像なし）"}`);
   }
 
   console.log(
