@@ -1,6 +1,4 @@
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { absoluteUrl, buildPageMetadata, truncateDescription } from "@/lib/seo";
-import { AD_SLOTS } from "@/lib/adsense";
 import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
 import {
   fetchMusicalIdandName,
@@ -39,6 +37,9 @@ export async function generateMetadata({
       `${song.name}（${musical.name}）の歌詞と和訳。${song.scene}`
     ),
     type: "article",
+    // 歌詞は第三者の著作物で、ページの大半をそれが占める。
+    // 検索インデックスからは外し、観劇前の下調べ導線としてのみ残す。
+    noindex: true,
   });
 }
 
@@ -112,8 +113,6 @@ export default async function SongDetailsPage({
             ></iframe>
           </div>
         )}
-        <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-4" />
-
         {/* 歌詞 */}
         <div className="prose prose-lg prose-indigo mx-auto">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>

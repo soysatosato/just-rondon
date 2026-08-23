@@ -13,8 +13,6 @@ import remarkGfm from "remark-gfm";
 import { Sparkles } from "lucide-react";
 import ContactDialog from "@/components/form/ContactDialog";
 import JsonLd from "@/components/seo/JsonLd";
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
-import { AD_SLOTS } from "@/lib/adsense";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 import {
   artworkJsonLd,
@@ -34,6 +32,10 @@ export async function generateMetadata({
     titleSuffix: false,
     description: `${artwork?.title}・${artwork?.artist}（${artwork?.museum.name}所蔵）の見どころ・ハイライトを徹底解説。ロンドン観光で絶対に見るべき美術館・注目作品の情報をわかりやすくガイドします。`,
     images: artwork?.image ? [artwork.image] : undefined,
+    // 作品ページはDBから機械的に量産され、1件あたりの固有本文が数百字しかない。
+    // サイト全体(1,199URL)の4割を占めるため、インデックスさせると
+    // 記事コンテンツの評価まで薄まる。館内の回遊導線としては残すので follow は維持。
+    noindex: true,
   });
 }
 
@@ -144,7 +146,6 @@ export default async function ArtworkDetailPage({
         )}
       </section>
 
-      <AdSenseUnit slot={AD_SLOTS.inArticle} />
 
       {artwork?.highlights && (
         <section className="rounded-xl border border-border bg-card p-5">

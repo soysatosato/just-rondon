@@ -337,30 +337,26 @@ module.exports = {
     }
 
     const museums = await prisma.museum.findMany({
-      select: { slug: true, artworks: { select: { id: true } } },
+      select: { slug: true },
     });
 
     for (const m of museums) {
       paths.push(await config.transform(config, `/museums/${m.slug}`));
       paths.push(await config.transform(config, `/museums/${m.slug}/artworks`));
-      for (const a of m.artworks) {
-        paths.push(
-          await config.transform(config, `/museums/${m.slug}/artworks/${a.id}`),
-        );
-      }
+      // 作品詳細(/artworks/{id})は sitemap に出さない。DB から機械的に量産され、
+      // 1件あたりの固有本文が数百字しかないページが 490 件あり、
+      // sitemap 全体の 4 割を占めて記事コンテンツの評価を薄めていた。
+      // ページ側で noindex を宣言済み。一覧からは辿れるので回遊導線は残る。
     }
     const musicals = await prisma.musical.findMany({
-      select: { slug: true, songs: { select: { id: true } } },
+      select: { slug: true },
     });
 
     for (const mu of musicals) {
       paths.push(await config.transform(config, `/musicals/${mu.slug}`));
       paths.push(await config.transform(config, `/musicals/${mu.slug}/songs`));
-      for (const s of mu.songs) {
-        paths.push(
-          await config.transform(config, `/musicals/${mu.slug}/songs/${s.id}`),
-        );
-      }
+      // 曲詳細(/songs/{id})は sitemap に出さない。ページの大半を占める歌詞が
+      // 第三者の著作物のため。ページ側で noindex を宣言済み。
     }
     // 劇場ページ。ハブ(/musicals/theatres)は上の staticPages 側にある。
     const theatres = await prisma.theatre.findMany({ select: { slug: true } });
