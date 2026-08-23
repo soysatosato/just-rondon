@@ -63,3 +63,7 @@ public/robots.txt
 public/sitemap.xml
 public/sitemap-*.xml
 scripts/.tmp/
+
+# DBバックアップ(ローカル保存。原稿を含むためコミットしない)
+/backups/
+just-rondon-backups/
