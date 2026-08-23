@@ -1266,14 +1266,33 @@ Tシャツやスウェットで £150 前後、上着やドレスは £500 以�
     tips:
       "履き始めは必ず踵が当たります。厚手の靴下を持って試着に行くと、実際に履くときの感覚に近い状態で判断できます。",
     recommendLevel: 5,
-    commonsFile:
-      "File:Pair of brown Dr Martens 1460 boots with the sole of one boot showing.jpg",
+    heroUrl:
+      "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/drmartens2.jpg",
     images: [
+      {
+        section: "appeal",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/drmartens1.jpg",
+        caption: "看板のロゴ。",
+        afterBlock: 1,
+      },
+      {
+        section: "story",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/drmartens3.jpg",
+        caption: "1460 8ホールブーツ。1960年4月1日の発売日がそのまま型番になっている。",
+        afterBlock: 2,
+      },
       {
         section: "buying",
         commonsFile: "File:Dr Martens Shop 240 Camden High Street 2008-05-06.jpg",
         caption:
           "カムデン・ハイストリートの店舗。周辺の店でも扱いがあり、比較しながら選べる。",
+        afterBlock: 0,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/drmartens4.jpeg",
+        caption: "黄色いウェルトステッチが見える1足。",
+        afterBlock: 2,
       },
     ],
     items: [
