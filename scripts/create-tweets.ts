@@ -16,14 +16,25 @@ type TweetInput = {
   category: string;
 };
 
+// X はURLを t.co に短縮するので、実際に消費される字数は URL の実長では
+// なく一律23字。自サイトへの導線を貼ると生の本文は140字を超えるが、
+// 投稿欄では超えていないので、生の長さで弾くと貼れなくなる。
+const TCO_LENGTH = 23;
+const URL_PATTERN = /https?:\/\/\S+/g;
+
+export function tweetLength(body: string) {
+  return body.replace(URL_PATTERN, "x".repeat(TCO_LENGTH)).length;
+}
+
 function validatePayload(items: TweetInput[]) {
   if (!Array.isArray(items) || items.length === 0) {
     throw new Error("payload must be a non-empty array of tweets");
   }
   for (const [i, t] of items.entries()) {
     if (!t.body?.trim()) throw new Error(`items[${i}].body is required`);
-    if (t.body.length > 140) {
-      throw new Error(`items[${i}].body exceeds 140 characters (${t.body.length})`);
+    const len = tweetLength(t.body);
+    if (len > 140) {
+      throw new Error(`items[${i}].body exceeds 140 characters (${len} incl. URLs as ${TCO_LENGTH})`);
     }
     if (!t.category?.trim()) throw new Error(`items[${i}].category is required`);
   }
