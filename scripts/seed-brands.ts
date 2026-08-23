@@ -622,13 +622,22 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
     tips:
       "選ぶ楽しみは M12 の襟のライン(ティッピング)の配色にあります。日本では見ない組み合わせが本国の棚には普通に並びます。",
     recommendLevel: 4,
-    commonsFile: "File:Fred Perry statue at Wimbledon by David Hillas.jpg",
+    heroUrl:
+      "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/fredperry2.jpeg",
     images: [
       {
         section: "story",
         commonsFile: "File:Fred Perry 01.jpg",
         caption:
           "フレッド・ペリー。1934年から36年までウィンブルドンを3連覇し、次の英国人優勝者が出るまで77年かかった。",
+        afterBlock: 0,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/fredperry1.jpeg",
+        caption:
+          "月桂樹の冠を刺繍したポロシャツ。貼り付けのワッペンと違い、洗っても剥がれない。",
+        afterBlock: 2,
       },
     ],
     items: [
