@@ -50,6 +50,19 @@ export default function ModernBritainCard({
       >
         <div className={`h-1.5 w-full ${accent.stripe}`} />
 
+        {item.image && (
+          <div className="relative h-32 w-full sm:h-40">
+            <img
+              src={item.image}
+              alt={item.title}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
+        )}
+
         <div className="px-5 pb-5 pt-4">
           {/* 並びは createdAt の降順なので、通し番号を振ると記事を足すたびに
               全カードの番号がずれる。日付だけを出す。 */}
