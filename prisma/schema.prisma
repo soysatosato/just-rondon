@@ -899,6 +899,9 @@ model BrandImage {
   imageCredit String?
   imageLink   String?
 
+  /// 表示アスペクト比。"landscape"(16:9、既定) | "portrait"(3:4)
+  orientation String @default("landscape")
+
   /// そのセクション本文を `## ` 見出しで分割したときの、何番目のブロックの
   /// 直後に置くか(0-indexed)。見出しが無い/ブロック数を超える場合は
   /// 最後のブロックの後に出す。

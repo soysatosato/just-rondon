@@ -9,9 +9,13 @@ import ImageCredit from "@/components/shared/ImageCredit";
  * 画像だけを本文に流用できる形にはしない。
  */
 export default function BrandFigure({ image }: { image: BrandImage }) {
+  const aspectClass =
+    image.orientation === "portrait" ? "aspect-[3/4]" : "aspect-[16/9]";
   return (
     <figure className="my-6">
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
+      <div
+        className={`relative ${aspectClass} w-full overflow-hidden rounded-xl`}
+      >
         <img
           src={image.url}
           alt={image.caption}

@@ -69,6 +69,8 @@ type BrandSeed = {
    * afterBlock  … そのセクション本文を `## ` 見出しで分割したときの、
    *               何番目のブロック(0-indexed)の直後に置くか。省略時は 0
    *               (最初のブロック=見出し前の導入文、または見出しが無い全文)。
+   * orientation … 表示アスペクト比。省略時は landscape(16:9)。
+   *               縦長の写真(人物の全身、トレンチコートなど)は portrait(3:4)。
    */
   images?: (
     | {
@@ -76,12 +78,14 @@ type BrandSeed = {
         commonsFile: string;
         caption: string;
         afterBlock?: number;
+        orientation?: "landscape" | "portrait";
       }
     | {
         section: "appeal" | "story" | "buying";
         url: string;
         caption: string;
         afterBlock?: number;
+        orientation?: "landscape" | "portrait";
       }
   )[];
   items?: {
@@ -265,6 +269,34 @@ Heritage と呼ばれる定番のトレンチは、**Kensington / Chelsea / Wate
         commonsFile: "File:Thomas Burberry.jpg",
         caption:
           "創業者トーマス・バーバリー。21歳で洋品店を開き、23年後にギャバジンを発表した。",
+        afterBlock: 0,
+      },
+      {
+        section: "appeal",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/Burberry1.jpeg",
+        caption:
+          "エクエストリアン・ナイト・デバイス。構えた槍は「改革」を意味する。",
+        afterBlock: 1,
+      },
+      {
+        section: "story",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/Burberry2.jpeg",
+        caption:
+          "バーバリー・チェック。もとはコートの裏地で、表に出すために設計された柄ではなかった。",
+        afterBlock: 3,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/Burberry3.jpeg",
+        caption: "店舗の外観。",
+        afterBlock: 1,
+      },
+      {
+        section: "buying",
+        url: "https://yxwqtsgsvufdgmtkcvxu.supabase.co/storage/v1/object/public/londonnn/Burberry4.jpeg",
+        caption: "ヘリテージ トレンチコート。",
+        afterBlock: 3,
+        orientation: "portrait",
       },
     ],
     items: [
@@ -3229,6 +3261,7 @@ async function main() {
     if (b.images?.length) {
       for (const fig of b.images) {
         const afterBlock = fig.afterBlock ?? 0;
+        const orientation = fig.orientation ?? "landscape";
         if ("url" in fig) {
           figureResolved += 1;
           await db.brandImage.create({
@@ -3240,6 +3273,7 @@ async function main() {
               imageSource: null,
               imageCredit: null,
               imageLink: null,
+              orientation,
               displayOrder: afterBlock,
             },
           });
@@ -3263,6 +3297,7 @@ async function main() {
             imageSource: "commons",
             imageCredit: image.credit,
             imageLink: image.link,
+            orientation,
             displayOrder: afterBlock,
           },
         });
