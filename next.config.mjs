@@ -52,6 +52,16 @@ const nextConfig = {
         permanent: true,
       },
 
+      // ウォーキー・トーキーはスカイガーデンと同じ建物・同じ訪問体験で、
+      // 2件のスポットとして重複登録されていた。スカイガーデン側に統合し、
+      // 建物名の URL はそちらへ送る。予約サイトもスカイガーデンの名前で
+      // 出ているため、読者が探しているのは実質こちら。
+      {
+        source: "/sightseeing/20-fenchurch-street-walkie-talkie",
+        destination: "/sightseeing/sky-garden-london",
+        permanent: true,
+      },
+
       // その他は apex -> www
       {
         source: "/:path*",
