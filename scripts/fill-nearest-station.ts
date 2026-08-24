@@ -20,12 +20,25 @@
  * - --dry で差分だけ出す。既定は dry ではないが、必ず先に --dry で
  *   確認すること。
  *
+ * 【2相に分けている理由】
+ * TfL への問い合わせは1件あたり1.5秒待つので、144件で30分を超える。
+ * その間ずっと Prisma の接続を開けたまま1件ずつ書き戻すと、Supabase の
+ * pooler が待機中の接続を切り、P1017 (Server has closed the connection)
+ * で落ちる。実際に7件書いたところで落ちた。
+ *
+ * そこで「TfL から全件集める(DBに触らない)」→「まとめて書く(数秒)」の
+ * 順にする。収集結果は JSON に落としてあるので、書き込みで失敗しても
+ * TfL を叩き直さずに再開できる。
+ *
  * 実行: npx tsx scripts/fill-nearest-station.ts --dry
  *      npx tsx scripts/fill-nearest-station.ts
  *      npx tsx scripts/fill-nearest-station.ts --only-empty
+ *      npx tsx scripts/fill-nearest-station.ts --from-cache  (収集を省く)
  */
 
 import "dotenv/config";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { PrismaClient } from "@prisma/client";
 import { findNearestStation } from "../lib/tfl/nearest-station";
 
@@ -34,6 +47,13 @@ const prisma = new PrismaClient();
 const DRY = process.argv.includes("--dry");
 /** 空欄だけ埋める。既存の手書きを一切触りたくないときに使う。 */
 const ONLY_EMPTY = process.argv.includes("--only-empty");
+/** 収集済みの JSON から書き込みだけやり直す。 */
+const FROM_CACHE = process.argv.includes("--from-cache");
+
+/** 収集結果の置き場。TfL を叩き直さずに書き込みを再開するために使う。 */
+const CACHE_PATH = path.join(__dirname, ".nearest-station-cache.json");
+
+type Collected = { id: string; name: string; before: string | null; label: string; metres: number };
 
 /**
  * TfL への間隔(ms)。無登録枠は1分50回。1スポットあたり最大4回
@@ -133,64 +153,93 @@ async function main() {
     `対象 ${attractions.length}件${DRY ? " (dry run)" : ""}${ONLY_EMPTY ? " / 空欄のみ" : ""}\n`
   );
 
-  let updated = 0;
-  let unchanged = 0;
-  let skipped = 0;
-  let ambiguous = 0;
+  let collected: Collected[];
 
-  for (const a of attractions) {
-    // 座標が入口を指していない行は、人の記述を残して触らない。
-    const key = `${a.lat},${a.lng}`;
-    const reason = AMBIGUOUS_LOCATION.test(a.name)
-      ? "移動型/複数拠点"
-      : PLACEHOLDER_COORDS.has(key)
-        ? "座標が中心部の既定値"
-        : a.lat > LONDON_NORTH_LIMIT
-          ? "ロンドン圏外(TfL の索引外)"
-          : shared.has(key)
-            ? "座標を他スポットと共有"
-            : null;
+  if (FROM_CACHE) {
+    collected = JSON.parse(fs.readFileSync(CACHE_PATH, "utf8")) as Collected[];
+    console.log(`収集済み ${collected.length}件を ${CACHE_PATH} から読み込み\n`);
+  } else {
+    // --- 第1相: TfL から集める。ここでは DB に触らない。 ---
+    // 接続を開けたまま30分待つと Supabase の pooler に切られるため、
+    // この間 Prisma は使わない。
+    collected = [];
+    let unchanged = 0;
+    let skipped = 0;
+    let ambiguous = 0;
 
-    if (reason) {
-      console.log(`  KEEP  ${a.name} — ${reason} (現在: ${a.nearestStation ?? "空"})`);
-      ambiguous++;
-      continue;
-    }
+    for (const a of attractions) {
+      // 座標が入口を指していない行は、人の記述を残して触らない。
+      const key = `${a.lat},${a.lng}`;
+      const reason = AMBIGUOUS_LOCATION.test(a.name)
+        ? "移動型/複数拠点"
+        : PLACEHOLDER_COORDS.has(key)
+          ? "座標が中心部の既定値"
+          : a.lat > LONDON_NORTH_LIMIT
+            ? "ロンドン圏外(TfL の索引外)"
+            : shared.has(key)
+              ? "座標を他スポットと共有"
+              : null;
 
-    const station = await findNearestStation(a.lat, a.lng);
+      if (reason) {
+        console.log(`  KEEP  ${a.name} — ${reason} (現在: ${a.nearestStation ?? "空"})`);
+        ambiguous++;
+        continue;
+      }
 
-    if (!station) {
-      // 半径内に駅なし。既存の手書きを残す。
-      console.log(`  SKIP  ${a.name} — 半径内に駅なし (現在: ${a.nearestStation ?? "空"})`);
-      skipped++;
+      const station = await findNearestStation(a.lat, a.lng);
+
+      if (!station) {
+        // 半径内に駅なし。既存の手書きを残す。
+        console.log(`  SKIP  ${a.name} — 半径内に駅なし (現在: ${a.nearestStation ?? "空"})`);
+        skipped++;
+        await sleep(THROTTLE_MS);
+        continue;
+      }
+
+      if (a.nearestStation === station.label) {
+        unchanged++;
+        await sleep(THROTTLE_MS);
+        continue;
+      }
+
+      console.log(
+        `  SET   ${a.name}\n        ${a.nearestStation ?? "(空)"} → ${station.label}  [経路${station.walkMetres}m]`
+      );
+      collected.push({
+        id: a.id,
+        name: a.name,
+        before: a.nearestStation,
+        label: station.label,
+        metres: station.walkMetres,
+      });
+
       await sleep(THROTTLE_MS);
-      continue;
-    }
-
-    if (a.nearestStation === station.label) {
-      unchanged++;
-      await sleep(THROTTLE_MS);
-      continue;
     }
 
     console.log(
-      `  SET   ${a.name}\n        ${a.nearestStation ?? "(空)"} → ${station.label}  [経路${station.walkMetres}m]`
+      `\n収集 ${collected.length} / 変更なし ${unchanged} / 駅なし ${skipped} / 座標が曖昧 ${ambiguous}`
     );
 
-    if (!DRY) {
-      await prisma.attraction.update({
-        where: { id: a.id },
-        data: { nearestStation: station.label },
-      });
-    }
-    updated++;
-
-    await sleep(THROTTLE_MS);
+    // 書き込みで落ちても TfL を叩き直さずに済むよう、必ず残す。
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(collected, null, 2));
   }
 
-  console.log(
-    `\n${DRY ? "[dry] " : ""}更新 ${updated} / 変更なし ${unchanged} / 駅なし ${skipped} / 座標が曖昧 ${ambiguous}`
-  );
+  if (DRY) {
+    console.log(`\n[dry] 書き込みは行わない(収集結果は ${CACHE_PATH})`);
+    return;
+  }
+
+  // --- 第2相: まとめて書く。接続を長く開けないよう一気に流す。 ---
+  let written = 0;
+  for (const c of collected) {
+    await prisma.attraction.update({
+      where: { id: c.id },
+      data: { nearestStation: c.label },
+    });
+    written++;
+  }
+
+  console.log(`\n書き込み ${written}件`);
 }
 
 main()

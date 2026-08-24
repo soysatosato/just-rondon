@@ -67,3 +67,6 @@ scripts/.tmp/
 # DBバックアップ(ローカル保存。原稿を含むためコミットしない)
 /backups/
 just-rondon-backups/
+
+# TfL 最寄駅の収集結果（再取得すれば作り直せる作業ファイル）
+scripts/.nearest-station-cache.json
