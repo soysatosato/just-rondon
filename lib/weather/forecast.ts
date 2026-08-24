@@ -178,3 +178,31 @@ export function selectForecastForWeek(
   // ISO 日付は辞書順と時系列順が一致するので、文字列比較で足りる。
   return forecast.days.filter((day) => day.date >= start && day.date <= end);
 }
+
+/**
+ * 号の会期ぶんの予報を、失敗を握りつぶして取る。
+ *
+ * 週次ダイジェストは /events と /events/week/[slug] の2箇所から
+ * 同じビューを描くので、「過去号は取りに行かない」「落ちても
+ * ページ全体は落とさない」の判断をここ1箇所に置く。
+ *
+ * 予報が出ないより、号そのものが出ないほうが読者には害が大きい。
+ * したがって例外は必ず空配列に倒す。
+ */
+export async function fetchForecastForWeek(
+  weekStart: Date,
+  weekEnd: Date,
+  /** 過去号かどうか。true なら取得自体を行わない。 */
+  isPast: boolean
+): Promise<DailyForecast[]> {
+  // 終わった週の予報は無価値だし、Open-Meteo は過去日を返さない。
+  if (isPast) return [];
+
+  try {
+    const forecast = await fetchLondonForecast();
+    return selectForecastForWeek(forecast, weekStart, weekEnd);
+  } catch (error) {
+    console.error("[weather] week forecast", error);
+    return [];
+  }
+}

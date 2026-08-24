@@ -12,6 +12,7 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import { formatWeekRange, getIssueFreshness } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
+import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
@@ -67,12 +68,14 @@ export default async function WeeklyBriefPage({
   const brief = await fetchBriefBySlug(params.slug);
   if (!brief) return notFound();
 
-  const [staples, backIssues] = await Promise.all([
+  const freshness = getIssueFreshness(brief.weekStart);
+
+  const [staples, backIssues, forecast] = await Promise.all([
     fetchEventsForWeek(brief.weekStart, brief.weekEnd),
     fetchBackIssues(6, brief.slug),
+    // 過去号では取りに行かない。終わった週の予報は出しても意味がない。
+    fetchForecastForWeek(brief.weekStart, brief.weekEnd, freshness.isPast),
   ]);
-
-  const freshness = getIssueFreshness(brief.weekStart);
 
   // 過去号の催し物を Event として出すと、終わったものを案内することになる。
   // 記事の構造化データだけに絞る。
@@ -95,7 +98,7 @@ export default async function WeeklyBriefPage({
         </Link>
       </div>
 
-      <WeeklyBriefView brief={brief} staples={staples} />
+      <WeeklyBriefView brief={brief} staples={staples} forecast={forecast} />
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
 

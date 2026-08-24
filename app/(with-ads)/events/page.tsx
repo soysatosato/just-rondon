@@ -12,6 +12,7 @@ import { fetchEvents2026 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import { formatWeekRange } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
+import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import EventMonthCard from "@/components/events/EventMonthCard";
@@ -82,12 +83,14 @@ export default async function EventsPage() {
   const { brief, upcoming } = await fetchBriefsForEventsPage();
   if (!brief) return <CalendarFallback />;
 
-  const [staples, backIssues] = await Promise.all([
+  const [staples, backIssues, forecast] = await Promise.all([
     fetchEventsForWeek(brief.weekStart, brief.weekEnd),
     // 来週号は先頭で案内するので、過去号一覧からは外す。
     fetchBackIssues(6, brief.slug).then((issues) =>
       upcoming ? issues.filter((i) => i.slug !== upcoming.slug) : issues
     ),
+    // ここに出るのは常に最新号なので、過去号扱いにはならない。
+    fetchForecastForWeek(brief.weekStart, brief.weekEnd, false),
   ]);
 
   // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
@@ -124,7 +127,7 @@ export default async function EventsPage() {
         </Link>
       )}
 
-      <WeeklyBriefView brief={brief} staples={staples} />
+      <WeeklyBriefView brief={brief} staples={staples} forecast={forecast} />
 
       <Separator className="my-8 dark:bg-neutral-700" />
 

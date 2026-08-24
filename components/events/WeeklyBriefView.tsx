@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { CalendarRange, Search, History, CalendarCheck } from "lucide-react";
+import { CalendarRange, Search, History, CalendarCheck, CloudSun } from "lucide-react";
 import type { Event, WeeklyBrief, WeeklyBriefItem } from "@prisma/client";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,8 @@ import {
 import BriefItemCard from "@/components/events/BriefItemCard";
 import BriefSectionNav from "@/components/events/BriefSectionNav";
 import StapleEventList from "@/components/events/StapleEventList";
+import WeekForecast from "@/components/events/WeekForecast";
+import type { DailyForecast } from "@/lib/weather/forecast";
 
 type BriefWithItems = WeeklyBrief & { items: WeeklyBriefItem[] };
 
@@ -23,17 +25,30 @@ const STAPLES_ANCHOR = "staples";
 export default function WeeklyBriefView({
   brief,
   staples,
+  /**
+   * 会期と重なる日の天気予報。過去号や取得失敗時は空配列を渡す
+   * ——このコンポーネントは中身の有無だけを見て出し分ける。
+   */
+  forecast = [],
   /** h1 として出すか(=そのページの主役か)。 */
   asHeading = true,
   now = new Date(),
 }: {
   brief: BriefWithItems;
   staples: Event[];
+  forecast?: DailyForecast[];
   asHeading?: boolean;
   now?: Date;
 }) {
   const freshness = getIssueFreshness(brief.weekStart, now);
   const Title = asHeading ? "h1" : "h2";
+
+  // 会期の日数。予報が会期を覆えているかの判定にだけ使う。
+  // 両端を含めるので +1(月曜〜日曜なら7)。
+  const weekLength =
+    Math.round(
+      (brief.weekEnd.getTime() - brief.weekStart.getTime()) / 86_400_000
+    ) + 1;
 
   // 項目を「耳寄り / 注意 / 前提」の3グループに束ねる。
   const grouped = GROUP_ORDER.map((group) => ({
@@ -157,6 +172,28 @@ export default function WeeklyBriefView({
           </section>
         );
       })}
+
+      {forecast.length > 0 && (
+        <section className="mb-10">
+          <div className="mb-4 flex items-start gap-3">
+            <span
+              className="mt-1 h-8 w-1 shrink-0 rounded-full bg-muted-foreground/40"
+              aria-hidden
+            />
+            <div className="min-w-0">
+              <h2 className="flex items-center gap-2 text-lg font-bold sm:text-xl dark:text-white">
+                <CloudSun className="h-4 w-4 shrink-0 opacity-70" />
+                今週の天気
+              </h2>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+                屋外の催しに行く日を決める前に、降水確率を見ておく。
+              </p>
+            </div>
+          </div>
+
+          <WeekForecast days={forecast} weekLength={weekLength} />
+        </section>
+      )}
 
       {staples.length > 0 && (
         <section id={STAPLES_ANCHOR} className="mb-10 scroll-mt-16">
