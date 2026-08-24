@@ -142,3 +142,39 @@ export async function fetchLondonForecast(): Promise<ForecastResult> {
 
   return { days, fetchedAt: new Date().toISOString() };
 }
+
+/**
+ * -------------------------------------------------------------------
+ * 週次ダイジェスト向けの切り出し。
+ *
+ * 週間予報は既に7日ぶん取れているのに、これまでトップの1行帯が
+ * 「今日」だけを使って残りを捨てていた。号の会期(weekStart〜weekEnd)と
+ * 重なる日だけを抜き出して、催しの一覧の隣に置くために足した層。
+ *
+ * 予報は Open-Meteo の forecast_days=7 が上限なので、号の後半が
+ * 予報範囲の外に出ることがある(来週号を早めに出した場合など)。
+ * その場合は取れた日だけを返す。足りない日を推測で埋めない。
+ * -------------------------------------------------------------------
+ */
+
+/** ロンドン基準の ISO 日付 (YYYY-MM-DD) に落とす。 */
+function toLondonIsoDate(date: Date): string {
+  return date.toLocaleDateString("en-CA", { timeZone: "Europe/London" });
+}
+
+/**
+ * 週の範囲に重なる予報日だけを返す。
+ *
+ * 範囲が予報のどこにも重ならなければ空配列。呼び出し側は空なら
+ * ブロックごと出さないこと——「予報なし」と書くより、何も出ないほうがよい。
+ */
+export function selectForecastForWeek(
+  forecast: ForecastResult,
+  weekStart: Date,
+  weekEnd: Date
+): DailyForecast[] {
+  const start = toLondonIsoDate(weekStart);
+  const end = toLondonIsoDate(weekEnd);
+  // ISO 日付は辞書順と時系列順が一致するので、文字列比較で足りる。
+  return forecast.days.filter((day) => day.date >= start && day.date <= end);
+}
