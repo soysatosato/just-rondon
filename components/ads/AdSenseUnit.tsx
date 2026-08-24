@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { ADSENSE_CLIENT } from "@/lib/adsense";
+import { allowsAds } from "@/lib/ad-placement";
 
 type Props = {
   /** lib/adsense.ts の AD_SLOTS から渡す。空文字なら何も描画しない。 */
@@ -24,7 +25,13 @@ export default function AdSenseUnit({
   const pathname = usePathname();
   const insRef = useRef<HTMLModElement | null>(null);
 
+  // フォーム・送信完了・ダッシュボードには出さない(AdSense ポリシー)。
+  // 判定は lib/ad-placement.ts に集約している。
+  const allowed = Boolean(slot) && allowsAds(pathname);
+
   useEffect(() => {
+    if (!allowed) return;
+
     const el = insRef.current;
     if (!el) return;
 
@@ -39,9 +46,9 @@ export default function AdSenseUnit({
     } catch {
       // TagError をレンダリングツリーに波及させない
     }
-  }, [pathname, slot]);
+  }, [pathname, slot, allowed]);
 
-  if (!slot) return null;
+  if (!allowed) return null;
 
   return (
     <div className={className} style={{ minHeight: reservedHeight }}>
