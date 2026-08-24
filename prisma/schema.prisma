@@ -51,6 +51,9 @@ model Museum {
   highlightSpots Highlight[]    @relation("MuseumHighlightSpots")
   hasVisited     hasVisited[]
 
+  /// 館内をどの順に歩くか。Attraction.visitFlow と同じ役割。
+  visitFlow      MuseumVisitStep[]
+
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
   ///
@@ -680,6 +683,39 @@ model AttractionVisitStep {
   createdAt DateTime @default(now())
 
   @@index([attractionId, displayOrder])
+}
+
+/// 美術館の館内をどの順に歩くか。AttractionVisitStep の美術館版。
+///
+/// Highlight(これだけは見て帰る)が「何を見るか」を答えるのに対し、
+/// こちらは「どう回るか」を答える。両者を分けているのは、読者が読む
+/// タイミングが違うため——見どころは行くかどうかを決める段階で、
+/// 歩き方は着いてから読む。
+///
+/// 47館すべてが description 300字前後・Highlight 3件・Trivia 2件という
+/// 同じ型で止まっており、観光スポット側(本文3,000字超 + 歩き方6ステップ)
+/// と比べて明らかに薄かった。館内での動き方は Highlight では表せない
+/// (どの入口から入るか、どの順に回るか、何時に行列が伸びるか)ので、
+/// スポット側で機能している構造をそのまま持ち込む。
+///
+/// ★ body はプレーンテキストで描画する。MuseumVisitFlow.tsx は
+///   ReactMarkdown を通していないので、** やリンク記法は記号のまま出る。
+model MuseumVisitStep {
+  id           Int    @id @default(autoincrement())
+  museumId     String
+  museum       Museum @relation(fields: [museumId], references: [id], onDelete: Cascade)
+  displayOrder Int
+
+  /// "arrival" | "highlight" | "missable" | "tip"。表示側でアイコンと色を切り替える。
+  kind  String @default("highlight")
+  /// 見出し(例: "グレート・コートから入る")。
+  title String
+  /// 2〜4文。何が見えるか、なぜその順なのか。
+  body  String
+
+  createdAt DateTime @default(now())
+
+  @@index([museumId, displayOrder])
 }
 
 // イギリス料理1品(/restaurants/[slug])。

@@ -18,6 +18,7 @@ import MuseumAbout from "@/components/museums/MuseumAbout";
 import MuseumInfo from "@/components/museums/MuseumInfo";
 import MuseumExhibitions from "@/components/museums/MuseumExhibitions";
 import MuseumHighlightSpots from "@/components/museums/MuseumHighlightSpots";
+import MuseumVisitFlow from "@/components/museums/MuseumVisitFlow";
 import MuseumHighlightedArtworks from "@/components/museums/MuseumHighlightedArtworks";
 import { MuseumTrivia } from "@/components/museums/MuseumTrivia";
 import JsonLd from "@/components/seo/JsonLd";
@@ -116,6 +117,10 @@ export default async function MuseumDetailsPage({
         highlights={museum.highlightSpots}
         museumName={museum.name}
       />
+
+      {/* 見どころ(何を見るか)のすぐ後に、館内の動線(どう回るか)を置く。
+          読者が「行く」と決めた直後に読む順番になる。 */}
+      <MuseumVisitFlow steps={museum.visitFlow} museumName={museum.name} />
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
 
