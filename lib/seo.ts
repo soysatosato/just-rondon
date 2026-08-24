@@ -84,14 +84,15 @@ export const TITLE_MAX_LENGTH = 34;
  * 実際に検索されている「見どころ」「所要時間」がそろって表示範囲の外へ落ちる。
  * suffixes は長い順に渡し、収まるいちばん長いものを選ぶ。
  *
- * 名前だけで上限を超える場合はいちばん短いサフィックスで諦める。
- * どのみち末尾は切られるが、名前自体が検索語なので先頭は守れている。
+ * どのサフィックスも収まらない場合は、名前だけを返してサフィックスを諦める。
+ * 短いものを無理に付けると「〜の見どころ・所要時」のように語尾が欠けた
+ * タイトルが検索結果に出てしまい、名前だけを出すより明らかに印象が悪い。
  */
 export function fitTitle(name: string, suffixes: string[]): string {
   const fitting = suffixes.find(
     (suffix) => name.length + suffix.length <= TITLE_MAX_LENGTH
   );
-  return `${name}${fitting ?? suffixes[suffixes.length - 1]}`;
+  return fitting ? `${name}${fitting}` : name;
 }
 
 export type OgImageInput =
