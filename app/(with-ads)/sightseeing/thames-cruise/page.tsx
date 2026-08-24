@@ -51,8 +51,11 @@ export default function ThamesRiverCruisesListPage() {
           />
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
         </div>
+        {/* 見出しに年号を入れない（royal-london と同じ理由）。
+            クルーズの航路と船種は年で変わらないので、年号は
+            古びるだけで読者の判断材料にならない。 */}
         <h1 className="text-xl text-blue-200 font-extrabold tracking-tight">
-          2025年版・テムズ川クルーズ特集
+          テムズ川クルーズ特集
         </h1>
 
         <p className="text-sm text-blue-100 leading-relaxed max-w-2xl mx-auto px-2 pb-6">

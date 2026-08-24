@@ -48,7 +48,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月12日 〜 2026年1月3日",
+        description: "例年11月中旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -60,7 +60,7 @@ export const christmasMarkets: ChristmasMarket[] = [
     summary:
       "テムズ川沿いのアルプス風シャレーとストリートフードが魅力。ロンドンで最も雰囲気の良い冬の散策スポット。",
     mainText:
-      "サウスバンクは、川沿いのロケーションと温かな雰囲気で人気の高いクリスマスマーケット。アルプス風のシャレーが並び、ホットワイン、チュロス、チーズ料理、焼き菓子などが楽しめる。アート展示、ライトインスタレーション、野外イベント、パフォーマンスが同時に行われ、**“食 × 芸術 × 川の景色”**が混ざり合うロンドンらしいスポット。\n\n併設の**Winter Festival**では、無料ショー、ポップアップバー、屋台文化を満喫できる“Between the Bridges”なども魅力。ロンドンアイや国会議事堂にも近く、観光と合わせやすい。",
+      "サウスバンクは、川沿いのロケーションと温かな雰囲気で人気の高いクリスマスマーケット。アルプス風のシャレーが並び、ホットワイン、チュロス、チーズ料理、焼き菓子などが楽しめる。アート展示、ライトインスタレーション、野外イベント、パフォーマンスが同時に行われ、**食 × 芸術 × 川の景色**が混ざり合うロンドンらしいスポット。\n\n併設の**Winter Festival**では、無料ショー、ポップアップバー、屋台文化を満喫できる“Between the Bridges”なども魅力。ロンドンアイや国会議事堂にも近く、観光と合わせやすい。",
     image:
       "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/winter-cmarket.jpg",
     website: "https://www.southbankcentre.co.uk/activity/winter-market/",
@@ -85,7 +85,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月3日 〜 2026年1月上旬",
+        description: "例年11月上旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -97,7 +97,7 @@ export const christmasMarkets: ChristmasMarket[] = [
     summary:
       "タワーブリッジの絶景を臨む、ロンドンでも最も景観の良いクリスマスマーケット。2階建てアプレスキーテラスが名物。",
     mainText:
-      "**Winter by the River** は、ロンドンで最も景観が美しいと言われるクリスマスマーケット。タワーブリッジを背景に木製シャレーが並び、職人ギフト、ホリデードリンク、焼き菓子、ストリートフードが揃う。\n\n2025年は特に話題のスポットが **The Glasshouse Terrace**。2階建てのアプレスキー風会場で、加熱された屋上テラスからは“タワーブリッジ × テムズ川 × クリスマスイルミ”という究極の景色を楽しめる。ライブ音楽、カーリングバー、Aperolバーなど大人が楽しめる要素も豊富。",
+      "**Winter by the River** は、ロンドンで最も景観が美しいと言われるクリスマスマーケット。タワーブリッジを背景に木製シャレーが並び、職人ギフト、ホリデードリンク、焼き菓子、ストリートフードが揃う。\n\n近年とくに話題なのが **The Glasshouse Terrace**。2階建てのアプレスキー風会場で、加熱された屋上テラスからは“タワーブリッジ × テムズ川 × クリスマスイルミ”という究極の景色を楽しめる。ライブ音楽、カーリングバー、Aperolバーなど大人が楽しめる要素も豊富。",
     image:
       "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/Winter-By-The-River_cm.jpeg",
     website:
@@ -123,7 +123,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月11日 〜 2026年1月4日",
+        description: "例年11月中旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -161,7 +161,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月9日 〜 2026年1月2日",
+        description: "例年11月上旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -198,7 +198,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月21日 〜 2025年12月22日",
+        description: "例年11月下旬 〜 12月下旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -236,7 +236,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       {
         title: "期間",
         description:
-          "2025年11月13日 〜 2025年12月28日（※クリスマス当日休業 / クリスマスイブは短縮営業）",
+          "例年11月中旬 〜 12月下旬（※クリスマス当日休業 / クリスマスイブは短縮営業。正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -273,7 +273,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月14日 〜 2026年1月1日（※クリスマス当日は休業）",
+        description: "例年11月中旬 〜 1月上旬（※クリスマス当日は休業。正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -311,7 +311,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月29日 〜 2026年1月上旬",
+        description: "例年11月下旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -323,7 +323,7 @@ export const christmasMarkets: ChristmasMarket[] = [
     summary:
       "ウェストエンドの中心で楽しむにぎやかなクリスマスマーケット。スピーゲルテントと大人向けショー“LA CLIQUE”が名物。",
     mainText:
-      "**レスター・スクエア**は、ロンドンの劇場街の中心に位置するクリスマスのホットスポット。木製シャレーには雑貨、ギフト、ホリデーフードが並び、夜の散策にぴったり。中心には1920年代スタイルの伝統的な**スピーゲルテント**が特設され、人気ショー *La Clique* による大人向けのキャバレー・サーカス・コメディが上演される。\n\n2025年は初めて**アイススケートリンクが設置**され、ひときわ華やかな雰囲気に。周囲の劇場と光に囲まれ、ロンドンらしい冬のナイトアウトを楽しむには最高のロケーション。混雑は避けられないが、それも含めて“ウェストエンドのクリスマスらしさ”を体験できる。",
+      "**レスター・スクエア**は、ロンドンの劇場街の中心に位置するクリスマスのホットスポット。木製シャレーには雑貨、ギフト、ホリデーフードが並び、夜の散策にぴったり。中心には1920年代スタイルの伝統的な**スピーゲルテント**が特設され、人気ショー *La Clique* による大人向けのキャバレー・サーカス・コメディが上演される。\n\n近年は**アイススケートリンクも設置**され、ひときわ華やかな雰囲気に。周囲の劇場と光に囲まれ、ロンドンらしい冬のナイトアウトを楽しむには最高のロケーション。混雑は避けられないが、それも含めて“ウェストエンドのクリスマスらしさ”を体験できる。",
     image:
       "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/leistersqcm.jpeg",
     website:
@@ -344,12 +344,12 @@ export const christmasMarkets: ChristmasMarket[] = [
       {
         title: "周辺でできること",
         description:
-          "近くの **パラディウム劇場の『Sleeping Beauty』** が2025年の人気演目。劇場街なので、夜の観劇と組み合わせると満足度が高い。",
+          "近くの **パラディウム劇場のパントマイム公演** が冬の人気演目。劇場街なので、夜の観劇と組み合わせると満足度が高い。",
         displayOrder: 3,
       },
       {
         title: "期間",
-        description: "2025年11月5日 〜 2026年1月5日",
+        description: "例年11月上旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],
@@ -386,7 +386,7 @@ export const christmasMarkets: ChristmasMarket[] = [
       },
       {
         title: "期間",
-        description: "2025年11月7日 〜 2026年1月5日",
+        description: "例年11月上旬 〜 1月上旬（正確な日程は公式サイトで確認）",
         displayOrder: 4,
       },
     ],

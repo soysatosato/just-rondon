@@ -24,9 +24,9 @@ type SectionGroup = {
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/christmas-markets",
-  title: "ロンドンのクリスマスマーケット特集 2025 | おすすめスポット・開催情報まとめ | ジャスト・ロンドン",
+  title: "ロンドンのクリスマスマーケット特集 | おすすめスポット・開催情報まとめ | ジャスト・ロンドン",
   titleSuffix: false,
-  description: "ロンドンのクリスマスマーケット2025年最新版。サウスバンク、ウィンターワンダーランド、ロンドンブリッジなど、各マーケットの開催期間、見どころ、アクセス、おすすめポイントをわかりやすく紹介します。",
+  description: "ロンドンのクリスマスマーケットを厳選紹介。サウスバンク、ウィンターワンダーランド、ロンドンブリッジなど、各マーケットの開催期間、見どころ、アクセス、おすすめポイントをわかりやすく紹介します。",
   keywords: [
     "ロンドン",
     "クリスマスマーケット",
@@ -68,8 +68,11 @@ export default function ChristmasMarketsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0" />
 
+        {/* 見出しに年号を入れない。毎年書き換える運用が続かず、
+            2026年になっても「2025」と出ていた。会期は各マーケットの
+            「期間」節が例年の時期＋公式確認の形で持つ。 */}
         <h1 className="relative text-xl font-bold my-4 z-10 text-white">
-          ロンドン クリスマスマーケット 2025
+          ロンドン クリスマスマーケット
         </h1>
         <p className="relative text-gray-100 z-10 text-sm leading-relaxed">
           ロンドンのクリスマスマーケットをまとめて一覧化。
