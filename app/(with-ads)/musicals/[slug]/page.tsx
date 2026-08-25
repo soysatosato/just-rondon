@@ -84,7 +84,7 @@ export default async function musicalDetailsPage({
   return (
     <div>
       <JsonLd data={musicalBreadcrumbJsonLd(musical)} />
-      <JsonLd data={theaterEventJsonLd(musical)} />
+      <JsonLd data={theaterEventJsonLd(musical, performances)} />
       <MusicalBreadCrumbs
         name={
           musical.name.length > 7
