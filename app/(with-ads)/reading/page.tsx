@@ -189,7 +189,6 @@ export default async function ReadingHubPage() {
     .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime())
     .slice(0, 8);
 
-  const totalCount = columns.length + modernBritain.length + britishEnglish.length;
   const firstChapter = historyChapters[0];
 
   return (
@@ -210,11 +209,10 @@ export default async function ReadingHubPage() {
               英国を読む
             </h1>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-            旅行ガイドだけでは伝えきれない、イギリスの歴史・文化・言葉の面白さ。
-            現在
-            <span className="font-bold text-foreground">{totalCount}本</span>
-            の読み物と、通史全10章を公開しています。
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+            ガイドブックが終わるところから、イギリスは面白くなる。
+            <br className="hidden sm:block" />
+            歴史を辿り、いまを論じ、言葉を味わう。
           </p>
         </div>
       </header>
@@ -407,21 +405,14 @@ export default async function ReadingHubPage() {
                     href={cat.base}
                     className="group block border-b border-slate-100 p-5 dark:border-slate-800"
                   >
-                    <div className="flex items-baseline justify-between gap-3">
-                      <div className="min-w-0">
-                        <p
-                          className={`break-words text-[10px] font-bold uppercase tracking-[0.2em] ${cat.text}`}
-                        >
-                          {cat.eyebrow}
-                        </p>
-                        <h3 className="mt-1 text-lg font-bold tracking-tight">
-                          {cat.label}
-                        </h3>
-                      </div>
-                      <span className="shrink-0 text-xs font-semibold tabular-nums text-muted-foreground">
-                        {items.length}本
-                      </span>
-                    </div>
+                    <p
+                      className={`break-words text-[10px] font-bold uppercase tracking-[0.2em] ${cat.text}`}
+                    >
+                      {cat.eyebrow}
+                    </p>
+                    <h3 className="mt-1 text-lg font-bold tracking-tight">
+                      {cat.label}
+                    </h3>
                     <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                       {cat.blurb}
                     </p>
@@ -473,21 +464,14 @@ export default async function ReadingHubPage() {
                 href={HISTORY_BASE}
                 className="block border-b border-slate-100 p-5 dark:border-slate-800"
               >
-                <div className="flex items-baseline justify-between gap-3">
-                  <div className="min-w-0">
-                    <p
-                      className={`break-words text-[10px] font-bold uppercase tracking-[0.2em] ${HISTORY_STYLE.text}`}
-                    >
-                      {HISTORY_STYLE.eyebrow}
-                    </p>
-                    <h3 className="mt-1 text-lg font-bold tracking-tight">
-                      イギリスの歴史 全10章
-                    </h3>
-                  </div>
-                  <span className="shrink-0 text-xs font-semibold tabular-nums text-muted-foreground">
-                    {historyChapters.length}章
-                  </span>
-                </div>
+                <p
+                  className={`break-words text-[10px] font-bold uppercase tracking-[0.2em] ${HISTORY_STYLE.text}`}
+                >
+                  {HISTORY_STYLE.eyebrow}
+                </p>
+                <h3 className="mt-1 text-lg font-bold tracking-tight">
+                  イギリスの歴史 全10章
+                </h3>
                 <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                   ローマ帝国のブリタニア征服からEU離脱まで。今のロンドンがなぜこうなっているかを、通して辿ります。
                 </p>
