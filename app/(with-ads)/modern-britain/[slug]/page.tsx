@@ -1,7 +1,10 @@
 export const revalidate = 60 * 60;
 
 import { notFound } from "next/navigation";
-import { fetchModernBritainBySlug } from "@/utils/actions/contents";
+import {
+  fetchAdjacentContents,
+  fetchModernBritainBySlug,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
@@ -47,11 +50,16 @@ export default async function ModernBritainDetailPage({ params }: Props) {
 
   if (!content) return notFound();
 
+  const { prev, next } = await fetchAdjacentContents("modern-britain", {
+    id: content.id,
+    createdAt: content.createdAt,
+  });
+
   return (
     <>
       <JsonLd data={modernBritainBreadcrumbJsonLd(content)} />
       <JsonLd data={modernBritainArticleJsonLd(content)} />
-      <ModernBritainDetail content={content} />
+      <ModernBritainDetail content={content} prev={prev} next={next} />
 
       {/* 閲覧の記録(内部データ)。何も描画しない。 */}
       <ViewTracker targetType="modernBritain" slug={content.slug} />

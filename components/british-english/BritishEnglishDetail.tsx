@@ -5,6 +5,8 @@ import type { Content, ContentSection } from "@prisma/client";
 import BritishEnglishBreadCrumbs from "@/components/british-english/BritishEnglishBreadCrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import AdjacentContentNav from "@/components/content/AdjacentContentNav";
+import type { AdjacentContent } from "@/utils/actions/contents";
 
 const proseClass =
   "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-rose-600 dark:prose-a:text-rose-400 prose-strong:text-rose-600 dark:prose-strong:text-rose-400 prose-li:marker:text-rose-400";
@@ -41,8 +43,12 @@ type BritishEnglishWithSections = Content & { sections: ContentSection[] };
 
 export default function BritishEnglishDetail({
   content,
+  prev = null,
+  next = null,
 }: {
   content: BritishEnglishWithSections;
+  prev?: AdjacentContent | null;
+  next?: AdjacentContent | null;
 }) {
   const sections = content.sections
     .slice()
@@ -161,6 +167,15 @@ export default function BritishEnglishDetail({
             </section>
           );
         })}
+      </div>
+
+      <div className="mt-10">
+        <AdjacentContentNav
+          basePath="/british-english"
+          prev={prev}
+          next={next}
+          accent="rose"
+        />
       </div>
 
       <div className="mt-10 rounded-2xl border border-dashed border-rose-300 bg-rose-50/50 px-6 py-7 text-center dark:border-rose-900/60 dark:bg-rose-950/20">

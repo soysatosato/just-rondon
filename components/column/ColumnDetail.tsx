@@ -6,6 +6,8 @@ import ColumnBreadCrumbs from "@/components/column/ColumnBreadCrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { tagLabel } from "@/lib/column-taxonomy";
+import AdjacentContentNav from "@/components/content/AdjacentContentNav";
+import type { AdjacentContent } from "@/utils/actions/contents";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -30,9 +32,13 @@ export type SeriesEntry = {
 export default function ColumnDetail({
   content,
   series = [],
+  prev = null,
+  next = null,
 }: {
   content: ColumnWithSections;
   series?: SeriesEntry[];
+  prev?: AdjacentContent | null;
+  next?: AdjacentContent | null;
 }) {
   const sections = content.sections.slice().sort(
     (a, b) => a.displayOrder - b.displayOrder,
@@ -43,8 +49,8 @@ export default function ColumnDetail({
   const currentIndex = hasSeries
     ? series.findIndex((s) => s.slug === content.slug)
     : -1;
-  const prev = currentIndex > 0 ? series[currentIndex - 1] : null;
-  const next =
+  const seriesPrev = currentIndex > 0 ? series[currentIndex - 1] : null;
+  const seriesNext =
     currentIndex >= 0 && currentIndex < series.length - 1
       ? series[currentIndex + 1]
       : null;
@@ -190,38 +196,48 @@ export default function ColumnDetail({
         </section>
       )}
 
-      {/* 前後の回への移動 */}
-      {(prev || next) && (
-        <nav className="grid gap-3 sm:grid-cols-2">
-          {prev ? (
-            <Link
-              href={`/column/${prev.slug}`}
-              className="group rounded-xl border border-slate-200 p-4 transition hover:border-sky-300 dark:border-slate-700 dark:hover:border-sky-700"
-            >
-              <p className="text-xs text-muted-foreground">
-                ← 第 {prev.seriesOrder ?? "–"} 回
-              </p>
-              <p className="mt-1 line-clamp-2 text-sm font-medium group-hover:text-sky-700 dark:group-hover:text-sky-300">
-                {prev.title}
-              </p>
-            </Link>
-          ) : (
-            <span aria-hidden />
-          )}
-          {next && (
-            <Link
-              href={`/column/${next.slug}`}
-              className="group rounded-xl border border-slate-200 p-4 text-right transition hover:border-sky-300 dark:border-slate-700 dark:hover:border-sky-700"
-            >
-              <p className="text-xs text-muted-foreground">
-                第 {next.seriesOrder ?? "–"} 回 →
-              </p>
-              <p className="mt-1 line-clamp-2 text-sm font-medium group-hover:text-sky-700 dark:group-hover:text-sky-300">
-                {next.title}
-              </p>
-            </Link>
-          )}
-        </nav>
+      {/* 前後の回への移動(連載中のみ)。連載でない単発コラムは、
+          代わりにコラム全体での前後記事ナビを出す。 */}
+      {hasSeries ? (
+        (seriesPrev || seriesNext) && (
+          <nav className="grid gap-3 sm:grid-cols-2">
+            {seriesPrev ? (
+              <Link
+                href={`/column/${seriesPrev.slug}`}
+                className="group rounded-xl border border-slate-200 p-4 transition hover:border-sky-300 dark:border-slate-700 dark:hover:border-sky-700"
+              >
+                <p className="text-xs text-muted-foreground">
+                  ← 第 {seriesPrev.seriesOrder ?? "–"} 回
+                </p>
+                <p className="mt-1 line-clamp-2 text-sm font-medium group-hover:text-sky-700 dark:group-hover:text-sky-300">
+                  {seriesPrev.title}
+                </p>
+              </Link>
+            ) : (
+              <span aria-hidden />
+            )}
+            {seriesNext && (
+              <Link
+                href={`/column/${seriesNext.slug}`}
+                className="group rounded-xl border border-slate-200 p-4 text-right transition hover:border-sky-300 dark:border-slate-700 dark:hover:border-sky-700"
+              >
+                <p className="text-xs text-muted-foreground">
+                  第 {seriesNext.seriesOrder ?? "–"} 回 →
+                </p>
+                <p className="mt-1 line-clamp-2 text-sm font-medium group-hover:text-sky-700 dark:group-hover:text-sky-300">
+                  {seriesNext.title}
+                </p>
+              </Link>
+            )}
+          </nav>
+        )
+      ) : (
+        <AdjacentContentNav
+          basePath="/column"
+          prev={prev}
+          next={next}
+          accent="sky"
+        />
       )}
 
       <p className="pt-4">

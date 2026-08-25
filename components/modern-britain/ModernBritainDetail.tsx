@@ -6,6 +6,8 @@ import ModernBritainBreadCrumbs from "@/components/modern-britain/ModernBritainB
 import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import AdjacentContentNav from "@/components/content/AdjacentContentNav";
+import type { AdjacentContent } from "@/utils/actions/contents";
 
 // 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
 // 全部インディゴにすると、1段落に何度も出てくる強調が蛍光ペンだらけに見える。
@@ -50,8 +52,12 @@ type ModernBritainWithSections = Content & { sections: ContentSection[] };
 
 export default function ModernBritainDetail({
   content,
+  prev = null,
+  next = null,
 }: {
   content: ModernBritainWithSections;
+  prev?: AdjacentContent | null;
+  next?: AdjacentContent | null;
 }) {
   const sections = content.sections
     .slice()
@@ -187,6 +193,15 @@ export default function ModernBritainDetail({
             </section>
           );
         })}
+      </div>
+
+      <div className="mt-10">
+        <AdjacentContentNav
+          basePath="/modern-britain"
+          prev={prev}
+          next={next}
+          accent="indigo"
+        />
       </div>
 
       <div className="mt-10 rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/50 px-6 py-7 text-center dark:border-indigo-900/60 dark:bg-indigo-950/20">

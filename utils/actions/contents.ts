@@ -54,6 +54,48 @@ export const fetchColumnSeries = async (seriesName: string | null) => {
   return contents;
 };
 
+export type AdjacentContent = {
+  title: string;
+  slug: string;
+};
+
+/**
+ * 一覧ページと同じ並び順(createdAt desc)での、現在記事の前後1件。
+ * createdAt が同値のレコードがあっても取りこぼさないよう、id をタイブレークに使う。
+ */
+export const fetchAdjacentContents = async (
+  category: "column" | "british-english" | "modern-britain",
+  current: { id: string; createdAt: Date },
+): Promise<{ prev: AdjacentContent | null; next: AdjacentContent | null }> => {
+  const [newer, older] = await Promise.all([
+    db.content.findFirst({
+      where: {
+        category,
+        OR: [
+          { createdAt: { gt: current.createdAt } },
+          { createdAt: current.createdAt, id: { gt: current.id } },
+        ],
+      },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      select: { title: true, slug: true },
+    }),
+    db.content.findFirst({
+      where: {
+        category,
+        OR: [
+          { createdAt: { lt: current.createdAt } },
+          { createdAt: current.createdAt, id: { lt: current.id } },
+        ],
+      },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      select: { title: true, slug: true },
+    }),
+  ]);
+
+  // 一覧が createdAt desc(新しい順)なので、「次」は自分より新しい記事。
+  return { prev: older, next: newer };
+};
+
 export const fetchBritishEnglishEntries = async () => {
   const contents = await db.content.findMany({
     where: { category: "british-english" },

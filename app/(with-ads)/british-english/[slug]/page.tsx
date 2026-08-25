@@ -1,7 +1,10 @@
 export const revalidate = 60 * 60;
 
 import { notFound } from "next/navigation";
-import { fetchBritishEnglishBySlug } from "@/utils/actions/contents";
+import {
+  fetchAdjacentContents,
+  fetchBritishEnglishBySlug,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
@@ -49,11 +52,16 @@ export default async function BritishEnglishDetailPage({ params }: Props) {
 
   if (!content) return notFound();
 
+  const { prev, next } = await fetchAdjacentContents("british-english", {
+    id: content.id,
+    createdAt: content.createdAt,
+  });
+
   return (
     <>
       <JsonLd data={britishEnglishBreadcrumbJsonLd(content)} />
       <JsonLd data={britishEnglishArticleJsonLd(content)} />
-      <BritishEnglishDetail content={content} />
+      <BritishEnglishDetail content={content} prev={prev} next={next} />
 
       {/* 閲覧の記録(内部データ)。何も描画しない。 */}
       <ViewTracker targetType="britishEnglish" slug={content.slug} />

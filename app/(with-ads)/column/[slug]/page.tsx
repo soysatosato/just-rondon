@@ -1,7 +1,11 @@
 export const revalidate = 60 * 60;
 
 import { notFound } from "next/navigation";
-import { fetchColumnBySlug, fetchColumnSeries } from "@/utils/actions/contents";
+import {
+  fetchAdjacentContents,
+  fetchColumnBySlug,
+  fetchColumnSeries,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
@@ -45,12 +49,16 @@ export default async function ColumnDetailPage({ params }: Props) {
   if (!content) return notFound();
 
   const series = await fetchColumnSeries(content.seriesName);
+  const { prev, next } = await fetchAdjacentContents("column", {
+    id: content.id,
+    createdAt: content.createdAt,
+  });
 
   return (
     <>
       <JsonLd data={columnBreadcrumbJsonLd(content)} />
       <JsonLd data={columnArticleJsonLd(content)} />
-      <ColumnDetail content={content} series={series} />
+      <ColumnDetail content={content} series={series} prev={prev} next={next} />
 
       {/* 閲覧の記録(内部データ)。何も描画しない。 */}
       <ViewTracker targetType="column" slug={content.slug} />
