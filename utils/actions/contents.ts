@@ -199,3 +199,24 @@ export const fetchPopularContents = async (
   });
   return contents;
 };
+
+/**
+ * 読み物ハブ(/reading)の「いま読まれている記事」。
+ *
+ * fetchPopularContents との違いはカテゴリを跨ぐこと。ハブでは
+ * コラム・イギリス英語・いまのイギリスを同じ土俵で並べたいので、
+ * 3カテゴリまとめて views の降順に取る。
+ *
+ * views=0 を除く理由と同数時の扱いは fetchPopularContents と同じ。
+ */
+export const fetchPopularReadingContents = async (take = 5) => {
+  const contents = await db.content.findMany({
+    where: {
+      category: { in: ["column", "british-english", "modern-britain"] },
+      views: { gt: 0 },
+    },
+    orderBy: [{ views: "desc" }, { createdAt: "desc" }],
+    take,
+  });
+  return contents;
+};

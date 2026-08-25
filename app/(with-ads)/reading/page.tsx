@@ -4,10 +4,6 @@ import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { Card, CardContent } from "@/components/ui/card";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
-import SectionHeader from "@/components/home/SectionHeader";
-import ColumnCard from "@/components/column/ColumnCard";
-import ModernBritainCard from "@/components/modern-britain/ModernBritainCard";
-import BritishEnglishCard from "@/components/british-english/BritishEnglishCard";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -17,6 +13,7 @@ import {
   fetchColumns,
   fetchModernBritainEntries,
   fetchBritishEnglishEntries,
+  fetchPopularReadingContents,
 } from "@/utils/actions/contents";
 import { historyChapters, HISTORY_BASE } from "@/components/history/chapters";
 
@@ -39,70 +36,61 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-// アクセントカラーは各セクション自身の詳細ページ・ナビの色と揃える。
-const ACCENTS = {
-  violet: {
-    badge: "bg-violet-600 hover:bg-violet-600",
-    hoverBorder: "hover:border-violet-300 dark:hover:border-violet-800",
+/**
+ * カテゴリの見た目定義。色は各セクションの詳細ページ・ナビと揃える。
+ * ハブ内では「どのセクションの記事か」を色だけで判別させるので、
+ * 4色は最後まで一貫して使う。
+ */
+const CATEGORY = {
+  column: {
+    base: "/column",
+    label: "コラム",
+    eyebrow: "Column",
+    blurb: "イギリスの歴史・文化・伝統をじっくり読み解きます。",
     text: "text-violet-600 dark:text-violet-400",
-    stripe: "bg-violet-500",
-    chip: "bg-violet-100 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300",
+    bg: "bg-violet-600",
+    chip: "bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300",
+    ring: "hover:border-violet-400 dark:hover:border-violet-700",
+    glow: "from-violet-500/15",
   },
-  indigo: {
-    badge: "bg-indigo-600 hover:bg-indigo-600",
-    hoverBorder: "hover:border-indigo-300 dark:hover:border-indigo-800",
+  "modern-britain": {
+    base: "/modern-britain",
+    label: "英国のいま",
+    eyebrow: "Britain, Argued",
+    blurb: "最新の英国ニュースを出典付きで紹介し、背景まで掘り下げます。",
     text: "text-indigo-600 dark:text-indigo-400",
-    stripe: "bg-indigo-500",
-    chip: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
+    bg: "bg-indigo-600",
+    chip: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300",
+    ring: "hover:border-indigo-400 dark:hover:border-indigo-700",
+    glow: "from-indigo-500/15",
   },
-  amber: {
-    badge: "bg-amber-600 hover:bg-amber-600",
-    hoverBorder: "hover:border-amber-300 dark:hover:border-amber-800",
-    text: "text-amber-700 dark:text-amber-500",
-    stripe: "bg-amber-500",
-    chip: "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300",
-  },
-  rose: {
-    badge: "bg-rose-600 hover:bg-rose-600",
-    hoverBorder: "hover:border-rose-300 dark:hover:border-rose-800",
+  "british-english": {
+    base: "/british-english",
+    label: "イギリス英語",
+    eyebrow: "British English",
+    blurb: "現地の言い回しやスラングを、由来や使い方とあわせて紹介します。",
     text: "text-rose-600 dark:text-rose-400",
-    stripe: "bg-rose-500",
-    chip: "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300",
+    bg: "bg-rose-600",
+    chip: "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300",
+    ring: "hover:border-rose-400 dark:hover:border-rose-700",
+    glow: "from-rose-500/15",
   },
 } as const;
 
-type Accent = (typeof ACCENTS)[keyof typeof ACCENTS];
+type CategoryKey = keyof typeof CATEGORY;
 
-const SECTIONS = [
-  {
-    href: "/column",
-    eyebrow: "Column",
-    title: "コラム",
-    description: "イギリスの歴史・文化・伝統をじっくり読み解きます。",
-    accent: ACCENTS.violet,
-  },
-  {
-    href: "/modern-britain",
-    eyebrow: "Britain, Argued",
-    title: "英国のいまを論じる",
-    description: "最新の英国ニュースを出典付きで紹介し、背景まで掘り下げます。",
-    accent: ACCENTS.indigo,
-  },
-  {
-    href: HISTORY_BASE,
-    eyebrow: "A History of Britain",
-    title: "イギリスの歴史 全10章",
-    description: "ローマ帝国のブリタニア征服からEU離脱まで、通史を辿ります。",
-    accent: ACCENTS.amber,
-  },
-  {
-    href: "/british-english",
-    eyebrow: "British English",
-    title: "イギリス英語",
-    description: "現地の言い回しやスラングを、由来や使い方とあわせて紹介します。",
-    accent: ACCENTS.rose,
-  },
-];
+const HISTORY_STYLE = {
+  label: "イギリスの歴史",
+  eyebrow: "A History of Britain",
+  text: "text-amber-700 dark:text-amber-500",
+  bg: "bg-amber-600",
+  chip: "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300",
+  ring: "hover:border-amber-400 dark:hover:border-amber-700",
+};
+
+function isCategoryKey(value: string): value is CategoryKey {
+  return value in CATEGORY;
+}
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -112,83 +100,58 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-/**
- * トップ記事は「読み物3セクション(コラム・いまの英国・イギリス英語)の
- * 最新1本を日付順に並べ、その先頭」。歴史は日々更新されないので混ぜない。
- * セクションを跨いで最新順に並べることで、どのセクションを更新しても
- * ハブの前段が動き、「新しい読み物がある」ことが一目で伝わる。
- */
-type Pick = {
-  item: Content;
-  href: string;
-  sectionLabel: string;
-  eyebrow: string;
-  accent: Accent;
-  /** イギリス英語だけ、見出しより英単語のほうが引きが強い */
-  display: "title" | "engTitle";
-};
-
-function buildFeed(
-  columns: Content[],
-  modernBritain: Content[],
-  britishEnglish: Content[]
-): Pick[] {
-  const groups: {
-    items: Content[];
-    base: string;
-    sectionLabel: string;
-    eyebrow: string;
-    accent: Accent;
-    display: Pick["display"];
-  }[] = [
-    {
-      items: columns,
-      base: "/column",
-      sectionLabel: "コラム",
-      eyebrow: "Column",
-      accent: ACCENTS.violet,
-      display: "title",
-    },
-    {
-      items: modernBritain,
-      base: "/modern-britain",
-      sectionLabel: "英国のいまを論じる",
-      eyebrow: "Britain, Argued",
-      accent: ACCENTS.indigo,
-      display: "title",
-    },
-    {
-      items: britishEnglish,
-      base: "/british-english",
-      sectionLabel: "イギリス英語",
-      eyebrow: "British English",
-      accent: ACCENTS.rose,
-      display: "engTitle",
-    },
-  ];
-
-  return groups
-    .flatMap(({ items, base, sectionLabel, eyebrow, accent, display }) =>
-      items.slice(0, 2).map((item) => ({
-        item,
-        href: `${base}/${item.slug}`,
-        sectionLabel,
-        eyebrow,
-        accent,
-        display,
-      }))
-    )
-    .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime());
+/** 「3日前」のような相対表記。新着であることを日付より強く伝える。 */
+function relativeDays(date: Date, now: number) {
+  const days = Math.floor((now - date.getTime()) / 86_400_000);
+  if (days <= 0) return "今日";
+  if (days === 1) return "昨日";
+  if (days < 7) return `${days}日前`;
+  if (days < 30) return `${Math.floor(days / 7)}週間前`;
+  return formatDate(date);
 }
 
-function pickHeading(pick: Pick) {
-  return pick.display === "engTitle" && pick.item.engTitle
-    ? pick.item.engTitle
-    : pick.item.title;
+type Entry = {
+  item: Content;
+  href: string;
+  cat: (typeof CATEGORY)[CategoryKey];
+  /** イギリス英語は見出しより英単語のほうが引きが強い */
+  isEnglish: boolean;
+};
+
+function toEntry(item: Content): Entry | null {
+  if (!isCategoryKey(item.category)) return null;
+  const cat = CATEGORY[item.category];
+  return {
+    item,
+    href: `${cat.base}/${item.slug}`,
+    cat,
+    isEnglish: item.category === "british-english",
+  };
+}
+
+function headingOf(entry: Entry) {
+  return entry.isEnglish && entry.item.engTitle
+    ? entry.item.engTitle
+    : entry.item.title;
 }
 
 function readingHubCollectionJsonLd() {
   const url = `${SITE_URL}${PAGE_PATH}`;
+  const parts = [
+    ...Object.values(CATEGORY).map((c) => ({
+      "@type": "CollectionPage" as const,
+      name: c.label,
+      description: c.blurb,
+      url: `${SITE_URL}${c.base}`,
+    })),
+    {
+      "@type": "CollectionPage" as const,
+      name: "イギリスの歴史 全10章",
+      description:
+        "ローマ帝国のブリタニア征服からEU離脱まで、通史を辿ります。",
+      url: `${SITE_URL}${HISTORY_BASE}`,
+    },
+  ];
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -197,310 +160,369 @@ function readingHubCollectionJsonLd() {
     name: TITLE,
     description: DESCRIPTION,
     inLanguage: "ja",
-    hasPart: SECTIONS.map((s) => ({
-      "@type": "CollectionPage",
-      name: s.title,
-      description: s.description,
-      url: `${SITE_URL}${s.href}`,
-    })),
+    hasPart: parts,
   };
 }
 
 export default async function ReadingHubPage() {
-  const [latestColumns, latestModernBritain, latestBritishEnglish] =
-    await Promise.all([
-      fetchColumns(),
-      fetchModernBritainEntries(),
-      fetchBritishEnglishEntries(),
-    ]);
+  const [columns, modernBritain, britishEnglish, popular] = await Promise.all([
+    fetchColumns(),
+    fetchModernBritainEntries(),
+    fetchBritishEnglishEntries(),
+    fetchPopularReadingContents(5),
+  ]);
 
-  const columnPicks = latestColumns.slice(0, 3);
-  const modernBritainPicks = latestModernBritain.slice(0, 3);
-  const britishEnglishPicks = latestBritishEnglish.slice(0, 3);
+  const now = Date.now();
+
+  // 「いま読まれている」。views 最大の1本を主役に据える。
+  const popularEntries = popular
+    .map(toEntry)
+    .filter((e): e is Entry => e !== null);
+  const lead = popularEntries[0];
+  const ranked = popularEntries.slice(1, 5);
+
+  // 「新着」。カテゴリを跨いで createdAt の降順。views とは別軸なので、
+  // 主役と重複しても構わない（別の切り口で同じ記事が出るのは自然）。
+  const timeline = [...columns, ...modernBritain, ...britishEnglish]
+    .map(toEntry)
+    .filter((e): e is Entry => e !== null)
+    .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime())
+    .slice(0, 8);
+
+  const totalCount = columns.length + modernBritain.length + britishEnglish.length;
   const firstChapter = historyChapters[0];
 
-  const feed = buildFeed(
-    latestColumns,
-    latestModernBritain,
-    latestBritishEnglish
-  );
-  const [lead, ...rest] = feed;
-  const alsoNew = rest.slice(0, 3);
-
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
+    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd data={breadcrumbJsonLd({ name: PAGE_NAME, path: PAGE_PATH })} />
       <JsonLd data={readingHubCollectionJsonLd()} />
 
       <BreadCrumbs name={PAGE_NAME} />
 
-      <header className="mt-6 space-y-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-muted-foreground">
-          Reading Britain
-        </p>
-        <h1 className="text-2xl font-bold leading-tight md:text-4xl">
-          英国を読む
-        </h1>
-        <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
-          旅行ガイドだけでは伝えきれない、イギリスの歴史・文化・言葉の面白さを、
-          旅の合間や暮らしのなかでじっくり読めるコンテンツにまとめました。
-        </p>
+      {/* 新聞の題字のように、罫線で挟んだヘッダ。 */}
+      <header className="mt-6 border-y-2 border-foreground/80 py-5">
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+              Reading Britain
+            </p>
+            <h1 className="mt-1.5 text-3xl font-bold leading-none tracking-tight md:text-5xl">
+              英国を読む
+            </h1>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+            旅行ガイドだけでは伝えきれない、イギリスの歴史・文化・言葉の面白さ。
+            現在
+            <span className="font-bold text-foreground">{totalCount}本</span>
+            の読み物と、通史全10章を公開しています。
+          </p>
+        </div>
       </header>
 
-      {/* 前段は全セクション横断の最新記事。まず一本、いま読むべきものを出す。 */}
-      {lead && (
-        <section className="mt-8">
-          <Link href={lead.href} className="group block">
-            <Card
-              className={`overflow-hidden border-slate-200 bg-white shadow-sm transition-all duration-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/60 ${lead.accent.hoverBorder}`}
-            >
-              <div className={`h-1.5 w-full ${lead.accent.stripe}`} />
-              <div className="grid gap-0 md:grid-cols-5">
-                {lead.item.image && (
-                  <div className="relative h-48 w-full md:order-last md:col-span-2 md:h-full md:min-h-[15rem]">
+      {/* ------------------------------------------------------------------
+          前段。左に「いま最も読まれている1本」、右に新着タイムライン。
+          views と createdAt という別軸を横に並べることで、
+          「定番から入る / 新しいものから入る」の二択をひと画面で見せる。
+         ------------------------------------------------------------------ */}
+      <section className="mt-8 grid gap-6 lg:grid-cols-12">
+        {/* 主役: views 最大 */}
+        {lead && (
+          <div className="lg:col-span-7">
+            <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="inline-block h-2 w-2 rounded-full bg-red-500" />
+              Most Read ・ いま最も読まれている
+            </p>
+
+            <Link href={lead.href} className="group block">
+              <article
+                className={`relative h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/60 ${lead.cat.ring}`}
+              >
+                {lead.item.image ? (
+                  <div className="relative h-56 w-full sm:h-72">
                     <img
                       src={lead.item.image}
                       alt={lead.item.title}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       fetchPriority="high"
                       decoding="async"
                     />
+                    {/* 画像の上に見出しを重ねる。カード内に文字を置くより、
+                        雑誌の表紙に近い密度が出る。 */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white ${lead.cat.bg}`}
+                        >
+                          {lead.cat.label}
+                        </span>
+                        <span className="text-[11px] font-medium text-white/80">
+                          {formatDate(lead.item.createdAt)}
+                        </span>
+                      </div>
+                      <h2 className="mt-2.5 text-2xl font-bold leading-snug tracking-tight text-white drop-shadow sm:text-3xl">
+                        {headingOf(lead)}
+                      </h2>
+                      {lead.isEnglish && lead.item.engTitle && (
+                        <p className="mt-1 text-sm font-semibold text-white/85">
+                          {lead.item.title}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`bg-gradient-to-br ${lead.cat.glow} to-transparent p-6`}
+                  >
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white ${lead.cat.bg}`}
+                    >
+                      {lead.cat.label}
+                    </span>
+                    <h2 className="mt-3 text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+                      {headingOf(lead)}
+                    </h2>
                   </div>
                 )}
-                <CardContent
-                  className={`p-5 sm:p-7 ${lead.item.image ? "md:col-span-3" : "md:col-span-5"}`}
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white ${lead.accent.badge}`}
-                    >
-                      最新記事
-                    </span>
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${lead.accent.chip}`}
-                    >
-                      {lead.sectionLabel}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      {formatDate(lead.item.createdAt)}
-                    </span>
-                  </div>
 
-                  <h2 className="mt-3 text-xl font-bold leading-snug tracking-tight sm:text-2xl md:text-[28px]">
-                    {pickHeading(lead)}
-                  </h2>
-                  {lead.display === "engTitle" && lead.item.engTitle && (
-                    <p className="mt-1.5 text-sm font-semibold text-muted-foreground">
-                      {lead.item.title}
-                    </p>
-                  )}
-
-                  {lead.item.summary && (
-                    <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {lead.item.summary && (
+                  <div className="p-5 sm:p-6">
+                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
                       {lead.item.summary}
                     </p>
-                  )}
-
-                  <span
-                    className={`mt-5 inline-block text-sm font-semibold transition-transform duration-200 group-hover:translate-x-0.5 ${lead.accent.text}`}
-                  >
-                    この記事を読む →
-                  </span>
-                </CardContent>
-              </div>
-            </Card>
-          </Link>
-
-          {/* トップ記事の次に新しいものを、セクション横断のまま3本。 */}
-          {alsoNew.length > 0 && (
-            <ul className="mt-4 grid gap-3 sm:grid-cols-3">
-              {alsoNew.map((pick) => (
-                <li key={`${pick.href}`}>
-                  <Link href={pick.href} className="group block h-full">
-                    <Card
-                      className={`h-full border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 ${pick.accent.hoverBorder}`}
+                    <span
+                      className={`mt-4 inline-block text-sm font-bold transition-transform duration-200 group-hover:translate-x-1 ${lead.cat.text}`}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${pick.accent.chip}`}
-                          >
-                            {pick.sectionLabel}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            {formatDate(pick.item.createdAt)}
-                          </span>
-                        </div>
-                        <p className="mt-2 line-clamp-3 text-sm font-semibold leading-snug">
-                          {pickHeading(pick)}
-                        </p>
-                      </CardContent>
-                    </Card>
+                      この記事を読む →
+                    </span>
+                  </div>
+                )}
+              </article>
+            </Link>
+
+            {/* 2〜5位。順位を数字で見せて、主役との連続性を出す。 */}
+            {ranked.length > 0 && (
+              <ol className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900/60">
+                {ranked.map((entry, i) => (
+                  <li key={entry.href}>
+                    <Link
+                      href={entry.href}
+                      className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    >
+                      <span className="w-6 shrink-0 text-center text-lg font-black tabular-nums text-slate-300 dark:text-slate-700">
+                        {i + 2}
+                      </span>
+                      <span
+                        className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${entry.cat.chip}`}
+                      >
+                        {entry.cat.label}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+                        {headingOf(entry)}
+                      </span>
+                      <span
+                        className={`shrink-0 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${entry.cat.text}`}
+                      >
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        )}
+
+        {/* 新着タイムライン: createdAt 降順、カテゴリ横断。
+            縦線に沿って点を打つことで、一覧ではなく「更新の流れ」に見せる。 */}
+        <div className={lead ? "lg:col-span-5" : "lg:col-span-12"}>
+          <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+            Latest ・ 新着順
+          </p>
+
+          <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60 sm:p-5">
+            <ul className="relative space-y-4 border-l border-dashed border-slate-300 pl-5 dark:border-slate-700">
+              {timeline.map((entry) => (
+                <li key={entry.href} className="relative">
+                  <span
+                    className={`absolute -left-[27px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white dark:ring-slate-900 ${entry.cat.bg}`}
+                  />
+                  <Link href={entry.href} className="group block">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`text-[10px] font-bold ${entry.cat.text}`}>
+                        {entry.cat.label}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {relativeDays(entry.item.createdAt, now)}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 line-clamp-2 text-sm font-semibold leading-snug transition-colors group-hover:text-foreground/70">
+                      {headingOf(entry)}
+                    </p>
                   </Link>
                 </li>
               ))}
             </ul>
-          )}
-        </section>
-      )}
-
-      {/* 4区分への入り口。前段で1本読ませたあと、どこを深掘りするかを選んでもらう。 */}
-      <section className="mt-10">
-        <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
-          4つの読み物から選ぶ
-        </h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {SECTIONS.map((s) => (
-            <Link key={s.href} href={s.href} className="group block">
-              <Card
-                className={`h-full border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 ${s.accent.hoverBorder}`}
-              >
-                <CardContent className="flex items-start gap-3 p-4">
-                  <span
-                    className={`mt-1 h-10 w-1 shrink-0 rounded-full ${s.accent.stripe}`}
-                  />
-                  <div className="min-w-0">
-                    <p
-                      className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${s.accent.text}`}
-                    >
-                      {s.eyebrow}
-                    </p>
-                    <h3 className="mt-1 text-base font-bold leading-snug tracking-tight">
-                      {s.title}
-                    </h3>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {s.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          </div>
         </div>
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />
 
-      {/* コラム最新3件 */}
-      <section className="mt-4">
-        <SectionHeader
-          eyebrow="Column"
-          title="コラムの新着"
-          description="イギリスの歴史・文化・伝統をじっくり読み解きます。"
-          accentClassName={ACCENTS.violet.badge}
-        />
-        {columnPicks.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {columnPicks.map((item) => (
-              <ColumnCard key={item.id} item={item} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">近日公開予定です。</p>
-        )}
-        <div className="mt-6 flex justify-center">
-          <Link
-            href="/column"
-            className="text-sm font-semibold text-violet-600 hover:opacity-80 dark:text-violet-400"
-          >
-            コラムをすべて見る →
-          </Link>
+      {/* ------------------------------------------------------------------
+          4つの読み物への入り口。カードを並べるのではなく、
+          各セクションの最新1本を「窓」として見せることで、
+          リンク集ではなく中身のプレビューにする。
+         ------------------------------------------------------------------ */}
+      <section>
+        <div className="mb-5 border-b border-foreground/20 pb-2">
+          <h2 className="text-lg font-bold tracking-tight sm:text-xl">
+            4つの読み物
+          </h2>
         </div>
-      </section>
 
-      {/* 英国のいまを論じる最新3件 */}
-      <section className="mt-12">
-        <SectionHeader
-          eyebrow="Britain, Argued"
-          title="英国のいまを論じる、新着"
-          description="最新の英国ニュースを出典付きで紹介し、背景・原因・社会への影響まで掘り下げます。"
-          accentClassName={ACCENTS.indigo.badge}
-        />
-        {modernBritainPicks.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {modernBritainPicks.map((item, i) => (
-              <ModernBritainCard key={item.id} item={item} index={i} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">近日公開予定です。</p>
-        )}
-        <div className="mt-6 flex justify-center">
-          <Link
-            href="/modern-britain"
-            className="text-sm font-semibold text-indigo-600 hover:opacity-80 dark:text-indigo-400"
+        <div className="grid gap-4 md:grid-cols-2">
+          {(Object.keys(CATEGORY) as CategoryKey[]).map((key) => {
+            const cat = CATEGORY[key];
+            const items =
+              key === "column"
+                ? columns
+                : key === "modern-britain"
+                  ? modernBritain
+                  : britishEnglish;
+            const newest = items[0] ? toEntry(items[0]) : null;
+
+            return (
+              <Card
+                key={key}
+                className={`overflow-hidden border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 ${cat.ring}`}
+              >
+                <CardContent className="p-0">
+                  <Link
+                    href={cat.base}
+                    className="group block border-b border-slate-100 p-5 dark:border-slate-800"
+                  >
+                    <div className="flex items-baseline justify-between gap-3">
+                      <div>
+                        <p
+                          className={`text-[10px] font-bold uppercase tracking-[0.2em] ${cat.text}`}
+                        >
+                          {cat.eyebrow}
+                        </p>
+                        <h3 className="mt-1 text-lg font-bold tracking-tight">
+                          {cat.label}
+                        </h3>
+                      </div>
+                      <span className="shrink-0 text-xs font-semibold tabular-nums text-muted-foreground">
+                        {items.length}本
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                      {cat.blurb}
+                    </p>
+                  </Link>
+
+                  {newest && (
+                    <Link
+                      href={newest.href}
+                      className="group flex items-start gap-3 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                    >
+                      {newest.item.image && (
+                        <img
+                          src={newest.item.image}
+                          alt=""
+                          className="h-14 w-14 shrink-0 rounded-md object-cover"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )}
+                      <span className="min-w-0">
+                        <span className="text-[10px] font-semibold text-muted-foreground">
+                          最新
+                        </span>
+                        <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
+                          {headingOf(newest)}
+                        </span>
+                      </span>
+                    </Link>
+                  )}
+
+                  <Link
+                    href={cat.base}
+                    className={`block border-t border-slate-100 px-5 py-2.5 text-right text-xs font-bold dark:border-slate-800 ${cat.text}`}
+                  >
+                    {cat.label}をすべて見る →
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+
+          {/* 歴史だけは新着でも人気順でもなく「第1章から順に読む」ものなので、
+              他の3つと同じ形にせず、全10章の並びそのものを見せる。 */}
+          <Card
+            className={`overflow-hidden border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 md:col-span-2 ${HISTORY_STYLE.ring}`}
           >
-            論考をすべて見る →
-          </Link>
-        </div>
-      </section>
+            <CardContent className="p-0">
+              <Link
+                href={HISTORY_BASE}
+                className="block border-b border-slate-100 p-5 dark:border-slate-800"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <div>
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-[0.2em] ${HISTORY_STYLE.text}`}
+                    >
+                      {HISTORY_STYLE.eyebrow}
+                    </p>
+                    <h3 className="mt-1 text-lg font-bold tracking-tight">
+                      イギリスの歴史 全10章
+                    </h3>
+                  </div>
+                  <span className="shrink-0 text-xs font-semibold tabular-nums text-muted-foreground">
+                    {historyChapters.length}章
+                  </span>
+                </div>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                  ローマ帝国のブリタニア征服からEU離脱まで。今のロンドンがなぜこうなっているかを、通して辿ります。
+                </p>
+              </Link>
 
-      {/* 歴史は日々更新される読み物ではないので、最新3件ではなく
-          「全10章のうち第1章」を入口として1枚だけ見せる。 */}
-      <section className="mt-12">
-        <SectionHeader
-          eyebrow="A History of Britain"
-          title="イギリスの歴史 全10章"
-          description="ローマ帝国のブリタニア征服からEU離脱まで。今のロンドンがなぜこうなっているかを、通して辿ります。"
-          accentClassName={ACCENTS.amber.badge}
-        />
-        <Link href={`${HISTORY_BASE}/${firstChapter.slug}`} className="block">
-          <Card className="border-slate-200 bg-white shadow-sm transition hover:border-amber-300 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-amber-800">
-            <CardContent className="p-5 sm:p-6">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="text-xs font-bold text-amber-700 dark:text-amber-500">
-                  第{firstChapter.number}章
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {firstChapter.period}
-                </span>
+              {/* 章を横スクロールの帯にして、通史の長さを体感させる。 */}
+              <div className="overflow-x-auto">
+                <ol className="flex min-w-max gap-2 p-4">
+                  {historyChapters.map((ch) => (
+                    <li key={ch.slug}>
+                      <Link
+                        href={`${HISTORY_BASE}/${ch.slug}`}
+                        className="group flex h-full w-40 flex-col rounded-lg border border-slate-200 p-3 transition hover:border-amber-400 hover:bg-amber-50/50 dark:border-slate-800 dark:hover:border-amber-700 dark:hover:bg-amber-950/20"
+                      >
+                        <span
+                          className={`text-[10px] font-bold ${HISTORY_STYLE.text}`}
+                        >
+                          第{ch.number}章
+                        </span>
+                        <span className="mt-0.5 text-[10px] text-muted-foreground">
+                          {ch.period}
+                        </span>
+                        <span className="mt-1.5 line-clamp-3 text-xs font-semibold leading-snug">
+                          {ch.label}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <p className="mt-1.5 text-base font-semibold leading-snug sm:text-lg">
-                {firstChapter.label}
-              </p>
-              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                {firstChapter.blurb}
-              </p>
-              <span className="mt-3 inline-block text-sm font-semibold text-amber-700 dark:text-amber-500">
+
+              <Link
+                href={`${HISTORY_BASE}/${firstChapter.slug}`}
+                className={`block border-t border-slate-100 px-5 py-2.5 text-right text-xs font-bold dark:border-slate-800 ${HISTORY_STYLE.text}`}
+              >
                 第1章から読む →
-              </span>
+              </Link>
             </CardContent>
           </Card>
-        </Link>
-        <div className="mt-6 flex justify-center">
-          <Link
-            href={HISTORY_BASE}
-            className="text-sm font-semibold text-amber-700 hover:opacity-80 dark:text-amber-500"
-          >
-            全10章の目次を見る →
-          </Link>
-        </div>
-      </section>
-
-      {/* イギリス英語最新3件 */}
-      <section className="mt-12">
-        <SectionHeader
-          eyebrow="British English"
-          title="イギリス英語、新着"
-          description="現地の言い回しやスラングを、由来や使い方とあわせて紹介します。"
-          accentClassName={ACCENTS.rose.badge}
-        />
-        {britishEnglishPicks.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {britishEnglishPicks.map((item, i) => (
-              <BritishEnglishCard key={item.id} item={item} index={i} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">近日公開予定です。</p>
-        )}
-        <div className="mt-6 flex justify-center">
-          <Link
-            href="/british-english"
-            className="text-sm font-semibold text-rose-600 hover:opacity-80 dark:text-rose-400"
-          >
-            イギリス英語をすべて見る →
-          </Link>
         </div>
       </section>
 
