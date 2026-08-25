@@ -311,8 +311,8 @@ export const NAV_SECTIONS: NavSection[] = [
     kind: "menu",
     label: "英国を読む",
     eyebrow: "Read",
-    href: "/column",
-    hubLabel: "コラム トップ",
+    href: "/reading",
+    hubLabel: "英国を読む トップ",
     description:
       "実務情報の先にある、じっくり読むコンテンツ。イギリスの歴史や言葉の面白さを、旅の合間や暮らしのなかで。",
     accent: NAV_ACCENTS.violet,

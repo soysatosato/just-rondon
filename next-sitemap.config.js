@@ -56,7 +56,7 @@ module.exports = {
     const depth = path.split("/").filter(Boolean).length;
 
     // イベント・コラム・時事論考・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
-    const isFresh = /^\/(events|column|modern-britain|british-english)(\/|$)/.test(path);
+    const isFresh = /^\/(events|reading|column|modern-britain|british-english)(\/|$)/.test(path);
 
     let priority;
     if (path === "/") priority = 1.0;
@@ -103,6 +103,8 @@ module.exports = {
       "/events",
       "/events/calendar",
       "/events/archive/2025",
+      // 「英国を読む」ハブ。column/modern-britain/history/british-english を束ねる。
+      "/reading",
       "/column",
       "/modern-britain",
       "/british-english",
