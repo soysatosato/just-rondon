@@ -99,6 +99,16 @@ export default function Navbar() {
                             {section.label}
                           </AccordionTrigger>
                           <AccordionContent className="flex flex-col space-y-3 ml-2 mt-1 pb-3">
+                            {/* 区分そのもののハブへ。デスクトップのドロップダウンには
+                                前からあるが、モバイルは groups しか出しておらず、
+                                /reading などのハブに辿り着けなかった。 */}
+                            <Link
+                              href={section.href}
+                              className={`text-sm font-semibold ${section.accent.text}`}
+                              onClick={() => setOpen(false)}
+                            >
+                              {section.hubLabel} →
+                            </Link>
                             {section.groups.map((group, index) => (
                               <div
                                 key={group.heading ?? index}
