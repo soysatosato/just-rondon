@@ -268,6 +268,22 @@ export default async function Page() {
         ) ?? null
       : null;
 
+  // 今週号の帯に出す抜粋。号のタイトルだけでは「今週は何があるのか」が
+  // 伝わらないので、実際の項目を数件見せる。支障(alert)を先に、
+  // 催し(opportunity)を後に置く。ヒーロー直下に出している topAlert とは
+  // 重複させない。
+  const briefPreview = (() => {
+    if (!latestBrief) return [];
+    const rest = latestBrief.items.filter((item) => item.id !== topAlert?.id);
+    const rank = (item: (typeof rest)[number]) => {
+      const group = getKindMeta(item.kind).group;
+      if (group === "alert") return 0;
+      if (group === "opportunity") return 1;
+      return 2;
+    };
+    return [...rest].sort((a, b) => rank(a) - rank(b)).slice(0, 4);
+  })();
+
   return (
     <div className="bg-background">
       {/* ヒーロー */}
@@ -303,6 +319,94 @@ export default async function Page() {
           )}
         </div>
       </section>
+
+      {/* 今週のロンドン。読み物セクションの中に埋めていたが、
+          週で入れ替わる唯一の情報なので、ヒーロー直後の独立した帯に出す。
+          号のタイトルだけでなく実際の項目を数件見せて、
+          「今週は何があるのか」をこの場で分からせる。 */}
+      {latestBrief && (
+        <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-sky-50/70 text-foreground dark:bg-sky-950/20">
+          <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+            <div className="grid gap-6 lg:grid-cols-12">
+              <div className="min-w-0 lg:col-span-5">
+                <p className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-sky-700 dark:text-sky-400">
+                  <span className="relative flex h-2 w-2 shrink-0">
+                    {/* 今週号のときだけ点滅させる。過去号で光らせると、
+                        古い情報を最新のものとして押し出すことになる。 */}
+                    {!freshness?.isPast && (
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-500 opacity-75" />
+                    )}
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-600" />
+                  </span>
+                  {freshness?.isPast
+                    ? "London Weekly ・ ロンドン週報"
+                    : "This Week ・ 今週のロンドン"}
+                </p>
+                <h2 className="mt-2 break-words text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+                  {latestBrief.title}
+                </h2>
+                <p className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
+                  {formatWeekRange(latestBrief.weekStart, latestBrief.weekEnd)}
+                  {freshness?.isPast && (
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold">
+                      {freshness.label}の号
+                    </span>
+                  )}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  {latestBrief.headline}
+                </p>
+                <Button asChild size="lg" className="mt-5 bg-sky-600 hover:bg-sky-700">
+                  <Link href="/events">
+                    {freshness?.isPast ? "最新号を読む" : "今週号を読む"} →
+                  </Link>
+                </Button>
+              </div>
+
+              {/* 中身を見せる。支障を先、催しを後に並べる。 */}
+              {briefPreview.length > 0 && (
+                <ul className="min-w-0 divide-y divide-border overflow-hidden rounded-xl border bg-card shadow-sm lg:col-span-7">
+                  {briefPreview.map((item) => {
+                    const meta = getKindMeta(item.kind);
+                    const Icon = meta.icon;
+                    return (
+                      <li key={item.id} className="min-w-0">
+                        <Link
+                          href="/events"
+                          className="group flex min-w-0 items-start gap-3 p-4 transition-colors hover:bg-muted/50"
+                        >
+                          <span
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${meta.iconWrapClass}`}
+                          >
+                            <Icon className="h-4 w-4" />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="flex flex-wrap items-center gap-2">
+                              <span
+                                className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${meta.badgeClass}`}
+                              >
+                                {meta.label}
+                              </span>
+                              {item.isFree && (
+                                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                                  無料
+                                </span>
+                              )}
+                            </span>
+                            <span className="mt-1 block line-clamp-2 text-sm font-semibold leading-snug">
+                              {item.title}
+                            </span>
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 大区分ハブ。このページの背骨で、以下のセクションはこの6枠の展開。 */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-muted/40 text-foreground">
@@ -895,35 +999,6 @@ export default async function Page() {
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">近日公開予定です。</p>
-          )}
-
-          {latestBrief && (
-            <Link href="/events" className="mt-6 block">
-              <Card className="bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                <CardContent className="p-5 sm:p-6">
-                  <div className="mb-2 flex flex-wrap items-center gap-2">
-                    <Badge className="bg-sky-600 hover:bg-sky-600">
-                      {freshness?.label}
-                    </Badge>
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      {formatWeekRange(
-                        latestBrief.weekStart,
-                        latestBrief.weekEnd
-                      )}
-                    </span>
-                  </div>
-                  <p className="text-base font-semibold leading-snug sm:text-lg">
-                    {latestBrief.title}
-                  </p>
-                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                    {latestBrief.headline}
-                  </p>
-                  <span className="mt-3 inline-block text-sm font-semibold text-sky-600">
-                    今週のロンドンを読む →
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
           )}
 
           {/* 4区分それぞれへの導線。カード列の代わりに横並びの帯にする。 */}
