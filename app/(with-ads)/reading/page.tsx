@@ -227,9 +227,9 @@ export default async function ReadingHubPage() {
       <section className="mt-8 grid gap-6 lg:grid-cols-12">
         {/* 主役: views 最大 */}
         {lead && (
-          <div className="lg:col-span-7">
-            <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-              <span className="inline-block h-2 w-2 rounded-full bg-red-500" />
+          <div className="min-w-0 lg:col-span-7">
+            <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-red-500" />
               Most Read ・ いま最も読まれている
             </p>
 
@@ -260,7 +260,7 @@ export default async function ReadingHubPage() {
                           {formatDate(lead.item.createdAt)}
                         </span>
                       </div>
-                      <h2 className="mt-2.5 text-2xl font-bold leading-snug tracking-tight text-white drop-shadow sm:text-3xl">
+                      <h2 className="mt-2.5 break-words text-xl font-bold leading-snug tracking-tight text-white drop-shadow sm:text-3xl">
                         {headingOf(lead)}
                       </h2>
                       {lead.isEnglish && lead.item.engTitle && (
@@ -279,7 +279,7 @@ export default async function ReadingHubPage() {
                     >
                       {lead.cat.label}
                     </span>
-                    <h2 className="mt-3 text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+                    <h2 className="mt-3 break-words text-xl font-bold leading-snug tracking-tight sm:text-3xl">
                       {headingOf(lead)}
                     </h2>
                   </div>
@@ -304,24 +304,28 @@ export default async function ReadingHubPage() {
             {ranked.length > 0 && (
               <ol className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900/60">
                 {ranked.map((entry, i) => (
-                  <li key={entry.href}>
+                  <li key={entry.href} className="min-w-0">
                     <Link
                       href={entry.href}
-                      className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                      className="group flex min-w-0 items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
                     >
-                      <span className="w-6 shrink-0 text-center text-lg font-black tabular-nums text-slate-300 dark:text-slate-700">
+                      <span className="w-5 shrink-0 text-center text-lg font-black tabular-nums text-slate-300 dark:text-slate-700 sm:w-6">
                         {i + 2}
                       </span>
-                      <span
-                        className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${entry.cat.chip}`}
-                      >
-                        {entry.cat.label}
+                      {/* 狭い画面ではチップと見出しを2段にする。1行に並べると
+                          日本語の見出しが truncate で数文字しか残らない。 */}
+                      <span className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+                        <span
+                          className={`w-fit shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${entry.cat.chip}`}
+                        >
+                          {entry.cat.label}
+                        </span>
+                        <span className="min-w-0 flex-1 text-sm font-semibold leading-snug line-clamp-2 sm:truncate">
+                          {headingOf(entry)}
+                        </span>
                       </span>
-                      <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-                        {headingOf(entry)}
-                      </span>
                       <span
-                        className={`shrink-0 text-xs opacity-0 transition-opacity group-hover:opacity-100 ${entry.cat.text}`}
+                        className={`hidden shrink-0 text-xs opacity-0 transition-opacity group-hover:opacity-100 sm:inline ${entry.cat.text}`}
                       >
                         →
                       </span>
@@ -335,20 +339,20 @@ export default async function ReadingHubPage() {
 
         {/* 新着タイムライン: createdAt 降順、カテゴリ横断。
             縦線に沿って点を打つことで、一覧ではなく「更新の流れ」に見せる。 */}
-        <div className={lead ? "lg:col-span-5" : "lg:col-span-12"}>
-          <p className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+        <div className={`min-w-0 ${lead ? "lg:col-span-5" : "lg:col-span-12"}`}>
+          <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
             Latest ・ 新着順
           </p>
 
           <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60 sm:p-5">
-            <ul className="relative space-y-4 border-l border-dashed border-slate-300 pl-5 dark:border-slate-700">
+            <ul className="relative ml-1 space-y-4 border-l border-dashed border-slate-300 pl-5 dark:border-slate-700">
               {timeline.map((entry) => (
-                <li key={entry.href} className="relative">
+                <li key={entry.href} className="relative min-w-0">
                   <span
-                    className={`absolute -left-[27px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white dark:ring-slate-900 ${entry.cat.bg}`}
+                    className={`absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white dark:ring-slate-900 ${entry.cat.bg}`}
                   />
-                  <Link href={entry.href} className="group block">
+                  <Link href={entry.href} className="group block min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className={`text-[10px] font-bold ${entry.cat.text}`}>
                         {entry.cat.label}
@@ -404,9 +408,9 @@ export default async function ReadingHubPage() {
                     className="group block border-b border-slate-100 p-5 dark:border-slate-800"
                   >
                     <div className="flex items-baseline justify-between gap-3">
-                      <div>
+                      <div className="min-w-0">
                         <p
-                          className={`text-[10px] font-bold uppercase tracking-[0.2em] ${cat.text}`}
+                          className={`break-words text-[10px] font-bold uppercase tracking-[0.2em] ${cat.text}`}
                         >
                           {cat.eyebrow}
                         </p>
@@ -470,9 +474,9 @@ export default async function ReadingHubPage() {
                 className="block border-b border-slate-100 p-5 dark:border-slate-800"
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <p
-                      className={`text-[10px] font-bold uppercase tracking-[0.2em] ${HISTORY_STYLE.text}`}
+                      className={`break-words text-[10px] font-bold uppercase tracking-[0.2em] ${HISTORY_STYLE.text}`}
                     >
                       {HISTORY_STYLE.eyebrow}
                     </p>
