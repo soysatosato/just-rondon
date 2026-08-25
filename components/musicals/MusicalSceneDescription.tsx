@@ -20,6 +20,13 @@ import type { MusicalAppeal, MusicalCharacter } from "./story";
  *
  * 層ごとに埋まっていない作品があるので、それぞれ無ければ丸ごと出さない。
  * 移行前の作品は流れの折りたたみだけが出る。
+ *
+ * 見出しと折りたたみのラベルには「あらすじ」を必ず含める。title は
+ * 以前から「あらすじ・見どころ・チケット」と名乗っていた一方、本文側の
+ * 字面は「どんな物語か」「物語の流れ」で、ページ内に「あらすじ」が
+ * 一度も出てこなかった。実際に「レミゼラブル あらすじ」で 562 回・
+ * 「レミゼラブル 内容」で 340 回表示されながらクリックがほぼ 0、
+ * 順位も 22〜28 位に留まっていたため、読者の検索語に字面を合わせる。
  */
 export default function MusicalSceneDescription({
   description,
@@ -40,7 +47,7 @@ export default function MusicalSceneDescription({
     <section className="space-y-8">
       <div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground leading-snug">
-          {name} はどんな物語か
+          {name} のあらすじと見どころ
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           物語の芯と見どころの紹介です。幕ごとのあらすじと結末は、
@@ -119,7 +126,7 @@ export default function MusicalSceneDescription({
         <FoldedStory
           value="flow"
           icon={ListOrdered}
-          label="物語の流れを読む"
+          label="あらすじ(幕ごとの流れ)"
           note="幕ごとのシーン運び。結末は含みません"
         >
           <Markdown
