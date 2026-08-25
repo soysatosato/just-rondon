@@ -179,17 +179,17 @@ export default function Navbar() {
             </div>
           </Link>
         </div>
-        <div className="flex items-center justify-center px-6 py-3 max-w-7xl mx-auto">
-          <NavigationMenu>
-            <NavigationMenuList className="gap-x-2">
+        <div className="flex items-center justify-center overflow-x-auto px-6 py-3 max-w-7xl mx-auto">
+          <NavigationMenu className="max-w-none shrink-0">
+            <NavigationMenuList className="flex-nowrap gap-x-2">
               {NAV_SECTIONS.map((section) => {
                 if (section.kind === "link") {
                   return (
-                    <NavigationMenuItem key={section.href}>
+                    <NavigationMenuItem key={section.href} className="shrink-0">
                       <NavigationMenuLink asChild>
                         <Link
                           href={section.href}
-                          className="inline-flex h-9 items-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                          className="inline-flex h-9 items-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
                         >
                           {section.label}
                         </Link>
@@ -199,8 +199,8 @@ export default function Navbar() {
                 }
 
                 return (
-                  <NavigationMenuItem key={section.label}>
-                    <NavigationMenuTrigger>
+                  <NavigationMenuItem key={section.label} className="shrink-0">
+                    <NavigationMenuTrigger className="whitespace-nowrap">
                       {section.label}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent
