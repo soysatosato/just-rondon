@@ -1,6 +1,7 @@
 export const revalidate = 60 * 60;
 
 import Link from "next/link";
+import type { Content } from "@prisma/client";
 import { Card, CardContent } from "@/components/ui/card";
 import BreadCrumbs from "@/components/home/BreadCrumbs";
 import SectionHeader from "@/components/home/SectionHeader";
@@ -43,20 +44,34 @@ const ACCENTS = {
   violet: {
     badge: "bg-violet-600 hover:bg-violet-600",
     hoverBorder: "hover:border-violet-300 dark:hover:border-violet-800",
+    text: "text-violet-600 dark:text-violet-400",
+    stripe: "bg-violet-500",
+    chip: "bg-violet-100 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300",
   },
   indigo: {
     badge: "bg-indigo-600 hover:bg-indigo-600",
     hoverBorder: "hover:border-indigo-300 dark:hover:border-indigo-800",
+    text: "text-indigo-600 dark:text-indigo-400",
+    stripe: "bg-indigo-500",
+    chip: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
   },
   amber: {
     badge: "bg-amber-600 hover:bg-amber-600",
     hoverBorder: "hover:border-amber-300 dark:hover:border-amber-800",
+    text: "text-amber-700 dark:text-amber-500",
+    stripe: "bg-amber-500",
+    chip: "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300",
   },
   rose: {
     badge: "bg-rose-600 hover:bg-rose-600",
     hoverBorder: "hover:border-rose-300 dark:hover:border-rose-800",
+    text: "text-rose-600 dark:text-rose-400",
+    stripe: "bg-rose-500",
+    chip: "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300",
   },
 } as const;
+
+type Accent = (typeof ACCENTS)[keyof typeof ACCENTS];
 
 const SECTIONS = [
   {
@@ -88,6 +103,89 @@ const SECTIONS = [
     accent: ACCENTS.rose,
   },
 ];
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
+/**
+ * トップ記事は「読み物3セクション(コラム・いまの英国・イギリス英語)の
+ * 最新1本を日付順に並べ、その先頭」。歴史は日々更新されないので混ぜない。
+ * セクションを跨いで最新順に並べることで、どのセクションを更新しても
+ * ハブの前段が動き、「新しい読み物がある」ことが一目で伝わる。
+ */
+type Pick = {
+  item: Content;
+  href: string;
+  sectionLabel: string;
+  eyebrow: string;
+  accent: Accent;
+  /** イギリス英語だけ、見出しより英単語のほうが引きが強い */
+  display: "title" | "engTitle";
+};
+
+function buildFeed(
+  columns: Content[],
+  modernBritain: Content[],
+  britishEnglish: Content[]
+): Pick[] {
+  const groups: {
+    items: Content[];
+    base: string;
+    sectionLabel: string;
+    eyebrow: string;
+    accent: Accent;
+    display: Pick["display"];
+  }[] = [
+    {
+      items: columns,
+      base: "/column",
+      sectionLabel: "コラム",
+      eyebrow: "Column",
+      accent: ACCENTS.violet,
+      display: "title",
+    },
+    {
+      items: modernBritain,
+      base: "/modern-britain",
+      sectionLabel: "英国のいまを論じる",
+      eyebrow: "Britain, Argued",
+      accent: ACCENTS.indigo,
+      display: "title",
+    },
+    {
+      items: britishEnglish,
+      base: "/british-english",
+      sectionLabel: "イギリス英語",
+      eyebrow: "British English",
+      accent: ACCENTS.rose,
+      display: "engTitle",
+    },
+  ];
+
+  return groups
+    .flatMap(({ items, base, sectionLabel, eyebrow, accent, display }) =>
+      items.slice(0, 2).map((item) => ({
+        item,
+        href: `${base}/${item.slug}`,
+        sectionLabel,
+        eyebrow,
+        accent,
+        display,
+      }))
+    )
+    .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime());
+}
+
+function pickHeading(pick: Pick) {
+  return pick.display === "engTitle" && pick.item.engTitle
+    ? pick.item.engTitle
+    : pick.item.title;
+}
 
 function readingHubCollectionJsonLd() {
   const url = `${SITE_URL}${PAGE_PATH}`;
@@ -121,6 +219,14 @@ export default async function ReadingHubPage() {
   const britishEnglishPicks = latestBritishEnglish.slice(0, 3);
   const firstChapter = historyChapters[0];
 
+  const feed = buildFeed(
+    latestColumns,
+    latestModernBritain,
+    latestBritishEnglish
+  );
+  const [lead, ...rest] = feed;
+  const alsoNew = rest.slice(0, 3);
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
       <JsonLd data={breadcrumbJsonLd({ name: PAGE_NAME, path: PAGE_PATH })} />
@@ -128,39 +234,149 @@ export default async function ReadingHubPage() {
 
       <BreadCrumbs name={PAGE_NAME} />
 
-      <header className="mt-6 space-y-4">
+      <header className="mt-6 space-y-3">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-muted-foreground">
+          Reading Britain
+        </p>
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           英国を読む
         </h1>
-        <p className="text-base leading-relaxed text-muted-foreground">
+        <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
           旅行ガイドだけでは伝えきれない、イギリスの歴史・文化・言葉の面白さを、
           旅の合間や暮らしのなかでじっくり読めるコンテンツにまとめました。
         </p>
       </header>
 
-      {/* 4区分への入り口。まずどこから読むかを選んでもらう。 */}
-      <section className="mt-8 grid gap-4 sm:grid-cols-2">
-        {SECTIONS.map((s) => (
-          <Link key={s.href} href={s.href} className="block">
+      {/* 前段は全セクション横断の最新記事。まず一本、いま読むべきものを出す。 */}
+      {lead && (
+        <section className="mt-8">
+          <Link href={lead.href} className="group block">
             <Card
-              className={`h-full border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 ${s.accent.hoverBorder}`}
+              className={`overflow-hidden border-slate-200 bg-white shadow-sm transition-all duration-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/60 ${lead.accent.hoverBorder}`}
             >
-              <CardContent className="p-5">
-                <span
-                  className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white ${s.accent.badge}`}
+              <div className={`h-1.5 w-full ${lead.accent.stripe}`} />
+              <div className="grid gap-0 md:grid-cols-5">
+                {lead.item.image && (
+                  <div className="relative h-48 w-full md:order-last md:col-span-2 md:h-full md:min-h-[15rem]">
+                    <img
+                      src={lead.item.image}
+                      alt={lead.item.title}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      fetchPriority="high"
+                      decoding="async"
+                    />
+                  </div>
+                )}
+                <CardContent
+                  className={`p-5 sm:p-7 ${lead.item.image ? "md:col-span-3" : "md:col-span-5"}`}
                 >
-                  {s.eyebrow}
-                </span>
-                <h2 className="mt-3 text-lg font-bold leading-snug tracking-tight">
-                  {s.title}
-                </h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  {s.description}
-                </p>
-              </CardContent>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-white ${lead.accent.badge}`}
+                    >
+                      最新記事
+                    </span>
+                    <span
+                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${lead.accent.chip}`}
+                    >
+                      {lead.sectionLabel}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">
+                      {formatDate(lead.item.createdAt)}
+                    </span>
+                  </div>
+
+                  <h2 className="mt-3 text-xl font-bold leading-snug tracking-tight sm:text-2xl md:text-[28px]">
+                    {pickHeading(lead)}
+                  </h2>
+                  {lead.display === "engTitle" && lead.item.engTitle && (
+                    <p className="mt-1.5 text-sm font-semibold text-muted-foreground">
+                      {lead.item.title}
+                    </p>
+                  )}
+
+                  {lead.item.summary && (
+                    <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                      {lead.item.summary}
+                    </p>
+                  )}
+
+                  <span
+                    className={`mt-5 inline-block text-sm font-semibold transition-transform duration-200 group-hover:translate-x-0.5 ${lead.accent.text}`}
+                  >
+                    この記事を読む →
+                  </span>
+                </CardContent>
+              </div>
             </Card>
           </Link>
-        ))}
+
+          {/* トップ記事の次に新しいものを、セクション横断のまま3本。 */}
+          {alsoNew.length > 0 && (
+            <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+              {alsoNew.map((pick) => (
+                <li key={`${pick.href}`}>
+                  <Link href={pick.href} className="group block h-full">
+                    <Card
+                      className={`h-full border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 ${pick.accent.hoverBorder}`}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${pick.accent.chip}`}
+                          >
+                            {pick.sectionLabel}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">
+                            {formatDate(pick.item.createdAt)}
+                          </span>
+                        </div>
+                        <p className="mt-2 line-clamp-3 text-sm font-semibold leading-snug">
+                          {pickHeading(pick)}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+
+      {/* 4区分への入り口。前段で1本読ませたあと、どこを深掘りするかを選んでもらう。 */}
+      <section className="mt-10">
+        <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+          4つの読み物から選ぶ
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {SECTIONS.map((s) => (
+            <Link key={s.href} href={s.href} className="group block">
+              <Card
+                className={`h-full border-slate-200 bg-white shadow-sm transition dark:border-slate-800 dark:bg-slate-900/60 ${s.accent.hoverBorder}`}
+              >
+                <CardContent className="flex items-start gap-3 p-4">
+                  <span
+                    className={`mt-1 h-10 w-1 shrink-0 rounded-full ${s.accent.stripe}`}
+                  />
+                  <div className="min-w-0">
+                    <p
+                      className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${s.accent.text}`}
+                    >
+                      {s.eyebrow}
+                    </p>
+                    <h3 className="mt-1 text-base font-bold leading-snug tracking-tight">
+                      {s.title}
+                    </h3>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      {s.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />
