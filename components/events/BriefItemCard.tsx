@@ -16,15 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getKindMeta, getSeverityMeta, getTimingLabel } from "@/lib/weekly";
 
-/**
- * この字数を超える本文は折りたたむ。
- *
- * 実データの本文は300〜1400字で、中央値がおよそ530字。しきい値を中央値より
- * 下に置くことで大半の項目が畳まれ、一覧のスクロール量が減る。300字台の短い
- * 項目まで畳むと、開く手間だけ増えて読める量が変わらないため下限は残す。
- */
-const COLLAPSE_THRESHOLD = 400;
-
 function formatPeriod(start: Date | null, end: Date | null): string | null {
   if (!start && !end) return null;
   if (start && end) {
@@ -62,9 +53,17 @@ export default function BriefItemCard({
   // 旅程を組み替える必要があるものは、他の項目に埋もれさせない。
   const isCritical = item.severity === "high";
 
-  // 主役カードは開いた状態で見せる。畳むと大きくした意味が無くなる。
-  const isCollapsible =
-    !featured && item.description.length > COLLAPSE_THRESHOLD;
+  /*
+   * 本文は長さによらず一律で畳む。
+   *
+   * 字数でしきい値を切ると、隣り合うカードで畳まれているものと全文の
+   * ものが混ざり、一覧の見た目が不揃いになる。3行のプレビューを常に
+   * 見せる形なら、短い項目は3行に収まってそのまま全部読めるので、
+   * 一律にしても読者が失うものは無い。
+   *
+   * 主役カードだけは開いたまま出す。畳むと大きくした意味が無くなる。
+   */
+  const isCollapsible = !featured;
 
   const facts = [
     { icon: CalendarDays, label: formatPeriod(item.startDate, item.endDate) },
@@ -205,17 +204,49 @@ export default function BriefItemCard({
 
         {isCollapsible ? (
           /*
-           * 長い本文の折りたたみ。details/summary で組むのでクライアントJSは
-           * 要らず、Ctrl+F の検索でも中身が拾える(閉じていてもブラウザが開く)。
-           * group/body で開閉状態を子に伝え、矢印の向きと文言を切り替える。
+           * 長い本文の折りたたみ。
+           *
+           * summary に文言だけを置くと、閉じている間は本文が1文字も見えず、
+           * 開くかどうかを見出しだけで決めることになる。そこで本文自体を
+           * summary の中に入れ、閉じているあいだは3行で切って見せる。
+           * 読者は書き出しを読んでから開くかを判断できる。
+           *
+           * details/summary なのでクライアントJSは要らない。閉じていても
+           * DOM には全文があるため、Ctrl+F の検索にも掛かる。
+           * group/body で開閉状態を子に伝え、行数の制限と矢印の向きを切り替える。
+           *
+           * summary は既定で display:list-item のため、中のブロック要素が
+           * 縦に積めない。list-none と併せて block にしておく。
            */
           <details className="group/body mt-3">
-            <summary className="flex cursor-pointer list-none items-center gap-1 text-xs font-semibold text-primary underline-offset-2 hover:underline [&::-webkit-details-marker]:hidden">
-              <ChevronDown className="h-3.5 w-3.5 shrink-0 transition-transform group-open/body:rotate-180" />
-              <span className="group-open/body:hidden">続きを読む</span>
-              <span className="hidden group-open/body:inline">閉じる</span>
+            <summary className="block cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              {/*
+               * 閉じているあいだの高さを3行ぶんに抑える。
+               *
+               * line-clamp ではなく max-height で切っている。本文は
+               * markdown から <p> が複数生まれるブロック構造で、
+               * line-clamp は自身の行ボックスにしか効かないため、
+               * 段落が分かれていると3行で止まらない。
+               *
+               * prose-sm は 0.875rem × 1.714 = 1.5rem/行。3行で 4.5rem
+               * になるが、prose は先頭の <p> にも上マージンを付けるため、
+               * そのぶん本文が押し下がって3行に満たなくなる。先頭の
+               * マージンを潰したうえで 4.5rem に切る。下端はグラデーションで
+               * 消して「まだ続く」ことを示す。
+               */}
+              <div className="relative max-h-[4.5rem] overflow-hidden [&_>div>*:first-child]:mt-0 group-open/body:max-h-none group-open/body:overflow-visible">
+                {body}
+                <div
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-card to-transparent group-open/body:hidden dark:from-neutral-900"
+                  aria-hidden
+                />
+              </div>
+              <span className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-primary underline-offset-2 hover:underline">
+                <ChevronDown className="h-3.5 w-3.5 shrink-0 transition-transform group-open/body:rotate-180" />
+                <span className="group-open/body:hidden">続きを読む</span>
+                <span className="hidden group-open/body:inline">閉じる</span>
+              </span>
             </summary>
-            <div className="mt-3">{body}</div>
           </details>
         ) : (
           <div className="mt-3">{body}</div>
