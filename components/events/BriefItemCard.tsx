@@ -8,6 +8,7 @@ import {
   ExternalLink,
   TriangleAlert,
   ChevronDown,
+  CalendarX,
 } from "lucide-react";
 import type { WeeklyBriefItem } from "@prisma/client";
 
@@ -40,9 +41,18 @@ export default function BriefItemCard({
    * 文字だけのカードが延々と続くのを避けて「その週の顔」を作る。
    */
   featured = false,
+  /** 今週で会期が終わるか。日付から算出した結果を呼び出し側が渡す。 */
+  endingThisWeek = false,
+  /**
+   * 日別タイムラインからの着地点にする日付 (YYYY-MM-DD)。
+   * その日に始まる項目のうち先頭のものにだけ付く。
+   */
+  anchorDate,
 }: {
   item: WeeklyBriefItem;
   featured?: boolean;
+  endingThisWeek?: boolean;
+  anchorDate?: string;
 }) {
   const kind = getKindMeta(item.kind);
   const severity = getSeverityMeta(item.severity);
@@ -78,6 +88,9 @@ export default function BriefItemCard({
 
   return (
     <article
+      id={anchorDate ? `day-${anchorDate}` : undefined}
+      // sticky なセクションナビの下に潜り込まないよう余白を確保する。
+      style={anchorDate ? { scrollMarginTop: "4rem" } : undefined}
       className={cn(
         "overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-md dark:bg-neutral-900",
         isCritical
@@ -130,6 +143,17 @@ export default function BriefItemCard({
               className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
             >
               無料
+            </Badge>
+          )}
+
+          {/*
+           * 「今週を逃すと見られない」は最も行動を促す情報なので、
+           * 他のバッジより強い塗りにして一覧の中で拾えるようにする。
+           */}
+          {endingThisWeek && (
+            <Badge className="gap-1 bg-rose-600 text-[10px] text-white hover:bg-rose-600">
+              <CalendarX className="h-3 w-3" />
+              今週で見納め
             </Badge>
           )}
         </div>

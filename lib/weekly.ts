@@ -352,3 +352,135 @@ export const TIMING_LABEL: Record<BriefTiming, string> = {
 export function getTimingLabel(timing: string): string | null {
   return TIMING_LABEL[timing as BriefTiming] ?? null;
 }
+
+/* ------------------------------------------------------------------ *
+ * 曜日別の並び
+ *
+ * 号は種類別(耳寄り/注意/前提)に束ねているが、読者が実際に知りたいのは
+ * 「土曜は何があるか」であることが多い。同じ日に重なって物理的に両立しない
+ * 催しがあっても、種類別の並びからは気づけない。
+ * ------------------------------------------------------------------ */
+
+/** その日に該当する項目。 */
+export interface DaySlot {
+  /** ISO 日付 (YYYY-MM-DD)。予報の date と突き合わせる鍵になる。 */
+  date: string;
+  /** 「9/5」形式。 */
+  label: string;
+  /** 「土」。 */
+  weekday: string;
+  /** 土日は色を変えて週末を拾いやすくする。 */
+  isWeekend: boolean;
+  /** その日に始まる・その日だけの項目の件数。 */
+  count: number;
+}
+
+/** UTC の日付だけを YYYY-MM-DD で返す。DBの日付は UTC 0時で揃っている。 */
+function toISODate(d: Date): string {
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+/**
+ * 号の会期を1日ずつに割り、その日に「起きる」項目の件数を数える。
+ *
+ * 件数の数え方には幅がある。会期の長い展覧会(ひと月続くもの)を毎日に
+ * 数えると、どの日も件数が同じになって曜日の差が消える。ここでは
+ * 「その日に始まるもの」と「その日で終わるもの」だけを数える。読者にとって
+ * 行動を促されるのはその2つ——始まる日は新しく行けるようになった日で、
+ * 終わる日は逃すと二度と見られない日だから。
+ *
+ * timing が announced の項目(発生が会期より先)は会期内に日付を持たないので
+ * 自然に除外される。
+ */
+export function buildDaySlots(
+  weekStart: Date,
+  weekEnd: Date,
+  items: { startDate: Date | null; endDate: Date | null; timing: string }[]
+): DaySlot[] {
+  const slots: DaySlot[] = [];
+
+  for (
+    let t = weekStart.getTime();
+    t <= weekEnd.getTime();
+    t += 24 * 60 * 60 * 1000
+  ) {
+    const d = new Date(t);
+    const dow = d.getUTCDay();
+
+    const date = toISODate(d);
+    const count = items.filter((item) => {
+      if (item.timing === "announced") return false;
+      const s = item.startDate ? toISODate(item.startDate) : null;
+      const e = item.endDate ? toISODate(item.endDate) : null;
+      return s === date || e === date;
+    }).length;
+
+    slots.push({
+      date,
+      label: `${d.getUTCMonth() + 1}/${d.getUTCDate()}`,
+      weekday: JP_WEEKDAY[dow],
+      isWeekend: dow === 0 || dow === 6,
+      count,
+    });
+  }
+
+  return slots;
+}
+
+/**
+ * 「見納め」バッジを出しうる kind。
+ *
+ * 会期が今週で閉じることが読者の行動につながるのは、展示や店のように
+ * 「閉じたら二度と見られない」ものに限られる。運休・工事が今週で終わるのは
+ * むしろ朗報で、締切ではない。催し(event)は週末2日間の開催が「終わる」と
+ * 判定されてしまうため含めない——単発の催しは日付そのものが締切として
+ * 既にカードに出ている。
+ */
+const ENDING_BADGE_KINDS: ReadonlySet<string> = new Set([
+  "exhibition",
+  "opening",
+  "deal",
+]);
+
+/**
+ * 項目が今週で見納めかどうか。
+ *
+ * DBには【今週で終了】をタイトルに手書きする運用が既にあるが、文字列なので
+ * 色も付かずソートもできない。日付から機械的に判定して、最も行動を促す
+ * 情報をバッジとして出す。
+ *
+ * 判定を日付だけに頼れない事情がある。endDate は「その号の会期に合わせて
+ * 切り詰めた終わり」であることが多く、実際にはまだ続くものが weekEnd で
+ * 終わって見える。既存4号で日付だけの判定を流したところ、ひと月続く
+ * トータリー・テムズや、週末の運休までが「見納め」になった。
+ *
+ * そこで二重に絞る:
+ * 1. kind が ENDING_BADGE_KINDS のもの(閉じたら見られなくなるもの)だけ。
+ * 2. 会期が2日以上あって、その終わりが今週内にあるもの。
+ *
+ * それでも「まだ続くのに weekEnd で切られた展示」は拾ってしまう。号を書く
+ * ときに、実際の閉幕日が先にあるなら endDate にその日を入れておけば
+ * 正しく外れる。
+ */
+export function isEndingThisWeek(
+  item: {
+    kind: string;
+    startDate: Date | null;
+    endDate: Date | null;
+    timing: string;
+  },
+  weekStart: Date,
+  weekEnd: Date
+): boolean {
+  if (item.timing === "announced") return false;
+  if (!ENDING_BADGE_KINDS.has(item.kind)) return false;
+  if (!item.endDate) return false;
+
+  const end = item.endDate.getTime();
+  if (end < weekStart.getTime() || end > weekEnd.getTime()) return false;
+
+  // 単日開催は「見納め」ではない。
+  if (item.startDate && item.startDate.getTime() === end) return false;
+
+  return true;
+}

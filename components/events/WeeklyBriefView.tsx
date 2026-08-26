@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { CalendarRange, Search, History, CalendarCheck, CloudSun } from "lucide-react";
+import {
+  CalendarRange,
+  Search,
+  History,
+  CalendarCheck,
+  RefreshCw,
+} from "lucide-react";
 import type { Event, WeeklyBrief, WeeklyBriefItem } from "@prisma/client";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
+  buildDaySlots,
   formatWeekRange,
   getIssueFreshness,
   getKindMeta,
+  isEndingThisWeek,
   GROUP_META,
   GROUP_ORDER,
   type BriefGroup,
@@ -16,7 +24,7 @@ import {
 import BriefItemCard from "@/components/events/BriefItemCard";
 import BriefSectionNav from "@/components/events/BriefSectionNav";
 import StapleEventList from "@/components/events/StapleEventList";
-import WeekForecast from "@/components/events/WeekForecast";
+import WeekTimeline from "@/components/events/WeekTimeline";
 import type { DailyForecast } from "@/lib/weather/forecast";
 
 type BriefWithItems = WeeklyBrief & { items: WeeklyBriefItem[] };
@@ -43,13 +51,6 @@ export default function WeeklyBriefView({
 }) {
   const freshness = getIssueFreshness(brief.weekStart, now);
   const Title = asHeading ? "h1" : "h2";
-
-  // 会期の日数。予報が会期を覆えているかの判定にだけ使う。
-  // 両端を含めるので +1(月曜〜日曜なら7)。
-  const weekLength =
-    Math.round(
-      (brief.weekEnd.getTime() - brief.weekStart.getTime()) / 86_400_000
-    ) + 1;
 
   // 項目を「耳寄り / 注意 / 前提」の3グループに束ねる。
   const grouped = GROUP_ORDER.map((group) => ({
@@ -80,6 +81,49 @@ export default function WeeklyBriefView({
   const FEATURED_MIN_ITEMS = 5;
   const featuredCount = (group: BriefGroup, itemCount: number) =>
     group === "opportunity" && itemCount >= FEATURED_MIN_ITEMS ? 1 : 0;
+
+  // 日別タイムライン。項目が無い号では列だけ並んでも意味が無いので出さない。
+  const daySlots =
+    brief.items.length > 0
+      ? buildDaySlots(brief.weekStart, brief.weekEnd, brief.items)
+      : [];
+
+  /*
+   * タイムラインの各日から飛ぶ先を決める。
+   *
+   * カードは種類別に並んでいるので、ある日に始まる項目は一覧の各所に散る。
+   * その日の先頭の1件にだけ id を振り、そこへ着地させる。id が重複すると
+   * ブラウザは最初の1つしか拾わないため、割り当ては必ず一意にする。
+   *
+   * 表示順(グループ順→displayOrder)で最初に現れたものを代表にしたいので、
+   * grouped と同じ順序で舐める。
+   */
+  const anchorByItemId = new Map<string, string>();
+  const claimedDates = new Set<string>();
+  const slotDates = new Set(daySlots.map((s) => s.date));
+  const utcDate = (d: Date) =>
+    `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+
+  for (const { items } of grouped) {
+    for (const item of items) {
+      if (item.timing === "announced") continue;
+
+      /*
+       * 件数の数え方(buildDaySlots)と同じ規則で日付を拾う。開始日だけを
+       * 見ていると、会期が数ヶ月前に始まって今週で閉じる展示に飛び先が
+       * 無くなる。w33 は「8/16 に 3件」と出るのに、3件とも開始は3〜7月で、
+       * 開始日だけでは着地点がひとつも作れなかった。
+       */
+      for (const d of [item.startDate, item.endDate]) {
+        if (!d) continue;
+        const date = utcDate(d);
+        if (!slotDates.has(date) || claimedDates.has(date)) continue;
+        claimedDates.add(date);
+        anchorByItemId.set(item.id, date);
+        break; // 1項目が2日ぶんの着地点を兼ねると、片方が飛べなくなる。
+      }
+    }
+  }
 
   const navSections = [
     ...grouped.map(({ meta, items }) => ({
@@ -128,11 +172,21 @@ export default function WeeklyBriefView({
           {brief.summary}
         </p>
 
-        {/* いつ時点の情報かを出さないと、ストライキや休館の記述は誤情報になりうる。 */}
-        <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground dark:text-gray-500">
-          <Search className="h-3.5 w-3.5" />
-          {format(brief.researchedAt, "yyyy年M月d日")}時点の調査
-        </p>
+        {/*
+         * いつ時点の情報かを出さないと、ストライキや休館の記述は誤情報になりうる。
+         * あわせて更新の頻度も出す。次にいつ来ればいいかが分からないと、
+         * 読み終えた読者はそのまま離れてしまう。
+         */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground dark:text-gray-500">
+          <span className="inline-flex items-center gap-1.5">
+            <Search className="h-3.5 w-3.5" />
+            {format(brief.researchedAt, "yyyy年M月d日")}時点の調査
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <RefreshCw className="h-3.5 w-3.5" />
+            毎週更新(翌週分を前の週にお届け)
+          </span>
+        </div>
       </header>
 
       {/* 過去号は情報が古い。読者が気づかず従うのを防ぐ。 */}
@@ -156,6 +210,17 @@ export default function WeeklyBriefView({
       )}
 
       <BriefSectionNav sections={navSections} />
+
+      {/*
+       * 曜日の並びは一覧より前に置く。読者はまず「土曜は何があるか」を
+       * 知りたいことが多く、種類別のカードの並びからはそれが読めない。
+       * 天気を同じ列に重ねているので、行く日を決める前に傘の要否も分かる。
+       */}
+      <WeekTimeline
+        slots={daySlots}
+        forecast={forecast}
+        linkableDates={claimedDates}
+      />
 
       {grouped.map(({ group, meta, items }) => {
         const GroupIcon = meta.icon;
@@ -194,34 +259,18 @@ export default function WeeklyBriefView({
                   key={item.id}
                   item={item}
                   featured={index < featuredCount(group, items.length)}
+                  endingThisWeek={isEndingThisWeek(
+                    item,
+                    brief.weekStart,
+                    brief.weekEnd
+                  )}
+                  anchorDate={anchorByItemId.get(item.id)}
                 />
               ))}
             </div>
           </section>
         );
       })}
-
-      {forecast.length > 0 && (
-        <section className="mb-10">
-          <div className="mb-4 flex items-start gap-3">
-            <span
-              className="mt-1 h-8 w-1 shrink-0 rounded-full bg-muted-foreground/40"
-              aria-hidden
-            />
-            <div className="min-w-0">
-              <h2 className="flex items-center gap-2 text-lg font-bold sm:text-xl dark:text-white">
-                <CloudSun className="h-4 w-4 shrink-0 opacity-70" />
-                今週の天気
-              </h2>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
-                屋外の催しに行く日を決める前に、降水確率を見ておく。
-              </p>
-            </div>
-          </div>
-
-          <WeekForecast days={forecast} weekLength={weekLength} />
-        </section>
-      )}
 
       {staples.length > 0 && (
         <section id={STAPLES_ANCHOR} className="mb-10 scroll-mt-16">
