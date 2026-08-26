@@ -46,13 +46,13 @@ import HeroContent from "@/components/home/HeroContent";
 import HeroSlideshow from "@/components/home/HeroSlideshow";
 import LiveStrip from "@/components/live/LiveStrip";
 import SectionHeader from "@/components/home/SectionHeader";
+import Reveal, { RevealGroup, RevealItem } from "@/components/home/Reveal";
 import {
   fetchColumns,
   fetchBritishEnglishEntries,
   fetchModernBritainEntries,
   fetchUpcomingEvents,
   fetchHeroSlides,
-  fetchSiteStats,
 } from "@/utils/actions/contents";
 import { fetchLatestBrief } from "@/utils/actions/weekly";
 import {
@@ -214,7 +214,6 @@ export default async function Page() {
     upcomingEvents,
     latestBrief,
     heroSlides,
-    siteStats,
   ] = await Promise.all([
     fetchColumns(),
     fetchModernBritainEntries(),
@@ -222,7 +221,6 @@ export default async function Page() {
     fetchUpcomingEvents(3, now),
     fetchLatestBrief(),
     fetchHeroSlides(),
-    fetchSiteStats(),
   ]);
   // 読み物はカテゴリごとに3枚ずつ並べるのをやめ、横断の1リストにする。
   // 各カテゴリの新しい方から2本ずつ拾い、全体を新着順に並べ替える。
@@ -304,7 +302,7 @@ export default async function Page() {
         <HeroSlideshow slides={heroSlides} />
 
         <div className="relative mx-auto max-w-6xl px-4 pt-16 pb-16 sm:pt-24 sm:pb-24">
-          <HeroContent stats={siteStats} />
+          <HeroContent />
         </div>
       </section>
 
@@ -346,7 +344,7 @@ export default async function Page() {
       {latestBrief && (
         <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-sky-50/70 text-foreground dark:bg-sky-950/20">
           <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
-            <div className="grid gap-6 lg:grid-cols-12">
+            <Reveal className="grid gap-6 lg:grid-cols-12">
               <div className="min-w-0 lg:col-span-5">
                 <p className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-sky-700 dark:text-sky-400">
                   <span className="relative flex h-2 w-2 shrink-0">
@@ -422,7 +420,7 @@ export default async function Page() {
                   })}
                 </ul>
               )}
-            </div>
+            </Reveal>
           </div>
         </section>
       )}
@@ -430,80 +428,98 @@ export default async function Page() {
       {/* 大区分ハブ。このページの背骨で、以下のセクションはこの6枠の展開。 */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-muted/40 text-foreground">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <CategoryCard
-              href="#sightseeing"
-              eyebrow="Sightseeing"
-              title="観光"
-              description="必見スポット、美術館、王室ゆかりの地。まずどこを見るか。"
-              icon={MapPin}
-              accent={ACCENTS.red}
-            />
-            <CategoryCard
-              href="#things-to-do"
-              eyebrow="Things to Do"
-              title="体験する"
-              description="ミュージカル、食、買い物、テーマ別の街歩き。何をするか。"
-              icon={Sparkles}
-              accent={ACCENTS.amber}
-            />
-            <CategoryCard
-              href="/beyond-london"
-              eyebrow="Beyond London"
-              title="ロンドンの外へ"
-              description="日帰りで行ける7つの行き先。街の紹介より先に、行き方から。"
-              icon={TrainFront}
-              accent={ACCENTS.teal}
-            />
-            <CategoryCard
-              href="#traveller"
-              eyebrow="Traveller Info"
-              title="旅の準備"
-              description="ETA、モデルコース、宿泊エリア、地下鉄とバスの乗り方。"
-              icon={Plane}
-              accent={ACCENTS.blue}
-            />
-            <CategoryCard
-              href="#resident"
-              eyebrow="Resident Info"
-              title="住む・働く"
-              description="ビザ、部屋探し、労働問題。ロンドンで暮らす人の実務。"
-              icon={HomeIcon}
-              accent={ACCENTS.emerald}
-            />
-            <CategoryCard
-              href="/reading"
-              eyebrow="Reading Britain"
-              title="英国を読む"
-              description="コラム、時事論考、通史、イギリス英語。読み物はここから。"
-              icon={BookOpen}
-              accent={ACCENTS.violet}
-            />
-            <CategoryCard
-              href="/modern-britain"
-              eyebrow="Britain, Argued"
-              title="英国のいまを論じる"
-              description="最新の英国ニュースを、出典付きで掘り下げて論じる。"
-              icon={Radio}
-              accent={ACCENTS.indigo}
-            />
-            <CategoryCard
-              href="/british-english"
-              eyebrow="British English"
-              title="イギリス英語"
-              description="単語・言い回し・スラングを毎日1つ紹介。"
-              icon={Languages}
-              accent={ACCENTS.rose}
-            />
-            <CategoryCard
-              href="/events"
-              eyebrow="This Week"
-              title="今週のロンドン"
-              description="ストライキ、運休、臨時休館、その週だけの催し。毎週更新。"
-              icon={Newspaper}
-              accent={ACCENTS.blue}
-            />
-          </div>
+          <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <RevealItem>
+              <CategoryCard
+                href="#sightseeing"
+                eyebrow="Sightseeing"
+                title="観光"
+                description="必見スポット、美術館、王室ゆかりの地。まずどこを見るか。"
+                icon={MapPin}
+                accent={ACCENTS.red}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="#things-to-do"
+                eyebrow="Things to Do"
+                title="体験する"
+                description="ミュージカル、食、買い物、テーマ別の街歩き。何をするか。"
+                icon={Sparkles}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="/beyond-london"
+                eyebrow="Beyond London"
+                title="ロンドンの外へ"
+                description="日帰りで行ける7つの行き先。街の紹介より先に、行き方から。"
+                icon={TrainFront}
+                accent={ACCENTS.teal}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="#traveller"
+                eyebrow="Traveller Info"
+                title="旅の準備"
+                description="ETA、モデルコース、宿泊エリア、地下鉄とバスの乗り方。"
+                icon={Plane}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="#resident"
+                eyebrow="Resident Info"
+                title="住む・働く"
+                description="ビザ、部屋探し、労働問題。ロンドンで暮らす人の実務。"
+                icon={HomeIcon}
+                accent={ACCENTS.emerald}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="/reading"
+                eyebrow="Reading Britain"
+                title="英国を読む"
+                description="コラム、時事論考、通史、イギリス英語。読み物はここから。"
+                icon={BookOpen}
+                accent={ACCENTS.violet}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="/modern-britain"
+                eyebrow="Britain, Argued"
+                title="英国のいまを論じる"
+                description="最新の英国ニュースを、出典付きで掘り下げて論じる。"
+                icon={Radio}
+                accent={ACCENTS.indigo}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="/british-english"
+                eyebrow="British English"
+                title="イギリス英語"
+                description="単語・言い回し・スラングを毎日1つ紹介。"
+                icon={Languages}
+                accent={ACCENTS.rose}
+              />
+            </RevealItem>
+            <RevealItem>
+              <CategoryCard
+                href="/events"
+                eyebrow="This Week"
+                title="今週のロンドン"
+                description="ストライキ、運休、臨時休館、その週だけの催し。毎週更新。"
+                icon={Newspaper}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+          </RevealGroup>
         </div>
       </section>
 
@@ -517,55 +533,69 @@ export default async function Page() {
         className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-background text-foreground"
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="Sightseeing"
-            title="ロンドンで見る"
-            description="ビッグベンやバッキンガム宮殿といった定番から、世界有数のコレクションを無料で公開する美術館まで。初めての旅行で押さえておきたい場所を集めました。"
-            accentClassName={ACCENTS.red.badge}
-          />
+          <Reveal>
+            <SectionHeader
+              eyebrow="Sightseeing"
+              title="ロンドンで見る"
+              description="ビッグベンやバッキンガム宮殿といった定番から、世界有数のコレクションを無料で公開する美術館まで。初めての旅行で押さえておきたい場所を集めました。"
+              accentClassName={ACCENTS.red.badge}
+            />
+          </Reveal>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <ExploreCard
-              href="/sightseeing/must-see"
-              title="見逃せないロンドン観光名所"
-              description="ビッグベンからバッキンガム宮殿まで、初めての旅行者が押さえておきたい定番スポットを厳選。"
-              icon={MapPin}
-              accent={ACCENTS.red}
-            />
-            <ExploreCard
-              href="/museums/best-10-museums"
-              title="絶対に行くべき美術館10選"
-              description="大英博物館やテート・モダンなど、無料で入れる名門美術館を厳選して紹介。"
-              icon={Landmark}
-              accent={ACCENTS.red}
-            />
-            <ExploreCard
-              href="/sightseeing/royal-london"
-              title="ロイヤル・ロンドン"
-              description="宮殿、衛兵交代、戴冠式の舞台。王室にまつわる場所をたどるルート。"
-              icon={Crown}
-              accent={ACCENTS.red}
-            />
-          </div>
+          <RevealGroup className="grid gap-4 md:grid-cols-3">
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/must-see"
+                title="見逃せないロンドン観光名所"
+                description="ビッグベンからバッキンガム宮殿まで、初めての旅行者が押さえておきたい定番スポットを厳選。"
+                icon={MapPin}
+                accent={ACCENTS.red}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/museums/best-10-museums"
+                title="絶対に行くべき美術館10選"
+                description="大英博物館やテート・モダンなど、無料で入れる名門美術館を厳選して紹介。"
+                icon={Landmark}
+                accent={ACCENTS.red}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/royal-london"
+                title="ロイヤル・ロンドン"
+                description="宮殿、衛兵交代、戴冠式の舞台。王室にまつわる場所をたどるルート。"
+                icon={Crown}
+                accent={ACCENTS.red}
+              />
+            </RevealItem>
+          </RevealGroup>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoPill href="/museums" title="美術館ナビ" icon={Landmark} />
-            <InfoPill
-              href="/sightseeing/all"
-              title="観光スポット一覧"
-              icon={MapPin}
-            />
-            <InfoPill
-              href="/museums/best-museums-for-kids"
-              title="キッズ向け美術館"
-              icon={Baby}
-            />
-            <InfoPill
-              href="/museums/banksy-artworks"
-              title="街で見つかるバンクシー"
-              icon={Wand2}
-            />
-          </div>
+          <RevealGroup className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <RevealItem>
+              <InfoPill href="/museums" title="美術館ナビ" icon={Landmark} />
+              <InfoPill
+                href="/sightseeing/all"
+                title="観光スポット一覧"
+                icon={MapPin}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/museums/best-museums-for-kids"
+                title="キッズ向け美術館"
+                icon={Baby}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/museums/banksy-artworks"
+                title="街で見つかるバンクシー"
+                icon={Wand2}
+              />
+            </RevealItem>
+          </RevealGroup>
 
           <div className="mt-6 flex justify-center">
             <Button asChild variant="outline" size="sm">
@@ -581,50 +611,60 @@ export default async function Page() {
         className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-muted/40 text-foreground"
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="Things to Do"
-            title="ロンドンで体験する"
-            description="ウエストエンドの観劇、パブでのイギリス料理、映画のロケ地めぐり。場所を訪れるだけでは終わらない、この街ならではの過ごし方。"
-            accentClassName={ACCENTS.amber.badge}
-          />
+          <Reveal>
+            <SectionHeader
+              eyebrow="Things to Do"
+              title="ロンドンで体験する"
+              description="ウエストエンドの観劇、パブでのイギリス料理、映画のロケ地めぐり。場所を訪れるだけでは終わらない、この街ならではの過ごし方。"
+              accentClassName={ACCENTS.amber.badge}
+            />
+          </Reveal>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <ExploreCard
-              href="/musicals"
-              title="ウエストエンドのミュージカル"
-              description="今上演中の人気作品と、チケットを安く取るための実践的な方法をまとめて。"
-              icon={Ticket}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/restaurants"
-              title="ロンドンのレストラン"
-              description="フィッシュ&チップスからアフタヌーンティー、ラーメンや飲茶まで料理別に解説。"
-              icon={UtensilsCrossed}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/brands"
-              title="イギリスのブランド"
-              description="バーバリーからドクターマーチンまで。成り立ちと、ロンドンでの買い方の両方から。"
-              icon={Tag}
-              accent={ACCENTS.amber}
-            />
-            <ExploreCard
-              href="/souvenirs"
-              title="ロンドンのお土産"
-              description="紅茶、ビスケット、雑貨。どこで買えて何が喜ばれるかを実物ベースで紹介。"
-              icon={ShoppingBag}
-              accent={ACCENTS.amber}
-            />
-          </div>
+          <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <RevealItem>
+              <ExploreCard
+                href="/musicals"
+                title="ウエストエンドのミュージカル"
+                description="今上演中の人気作品と、チケットを安く取るための実践的な方法をまとめて。"
+                icon={Ticket}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/restaurants"
+                title="ロンドンのレストラン"
+                description="フィッシュ&チップスからアフタヌーンティー、ラーメンや飲茶まで料理別に解説。"
+                icon={UtensilsCrossed}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/brands"
+                title="イギリスのブランド"
+                description="バーバリーからドクターマーチンまで。成り立ちと、ロンドンでの買い方の両方から。"
+                icon={Tag}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/souvenirs"
+                title="ロンドンのお土産"
+                description="紅茶、ビスケット、雑貨。どこで買えて何が喜ばれるかを実物ベースで紹介。"
+                icon={ShoppingBag}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+          </RevealGroup>
 
           {upcomingEvents.length > 0 && (
             <div className="mt-8">
               <h3 className="mb-3 text-sm font-semibold text-muted-foreground">
                 これから開催されるイベント
               </h3>
-              <div className="grid gap-4 sm:grid-cols-3">
+              <RevealGroup className="grid gap-4 sm:grid-cols-3">
                 {upcomingEvents.map((event) => {
                   const sameDay =
                     event.startDate.getTime() === event.endDate.getTime();
@@ -633,89 +673,107 @@ export default async function Page() {
                     : `${format(event.startDate, "M月d日")}〜${format(event.endDate, "M月d日")}`;
 
                   return (
-                    <Link key={event.id} href="/events/calendar">
-                      <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                        <CardContent className="p-4">
-                          <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                            <span className="text-xs font-semibold text-amber-600">
-                              {dateLabel}
-                            </span>
-                            {event.isFree && (
-                              <Badge
-                                variant="outline"
-                                className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
-                              >
-                                無料
-                              </Badge>
-                            )}
-                          </div>
-                          <p className="text-sm font-medium leading-snug">
-                            {event.title}
-                          </p>
-                          {event.venue && (
-                            <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
-                              {event.venue}
+                    <RevealItem key={event.id}>
+                      <Link href="/events/calendar" className="block h-full">
+                        <Card className="h-full bg-card text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                          <CardContent className="p-4">
+                            <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                              <span className="text-xs font-semibold text-amber-600">
+                                {dateLabel}
+                              </span>
+                              {event.isFree && (
+                                <Badge
+                                  variant="outline"
+                                  className="border-emerald-600/40 bg-emerald-600/10 text-[10px] text-emerald-700 dark:text-emerald-400"
+                                >
+                                  無料
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-sm font-medium leading-snug">
+                              {event.title}
                             </p>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </Link>
+                            {event.venue && (
+                              <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
+                                {event.venue}
+                              </p>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    </RevealItem>
                   );
                 })}
-              </div>
+              </RevealGroup>
             </div>
           )}
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoPill
-              href="/sightseeing/harry-potter"
-              title="ハリー・ポッターの世界"
-              icon={Wand2}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/sightseeing/film-locations"
-              title="映画・ドラマのロケ地巡り"
-              icon={Clapperboard}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/sightseeing/stadium-tours"
-              title="スタジアムツアー"
-              icon={Trophy}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/sightseeing/thames-cruise"
-              title="テムズ川クルーズ"
-              icon={Ship}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/sightseeing/kids-free-activities"
-              title="子どもと無料で楽しむ"
-              icon={Baby}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/sightseeing/christmas-markets"
-              title="クリスマスマーケット"
-              icon={Gift}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/events/calendar"
-              title="年間イベントカレンダー"
-              icon={Calendar}
-              accent={ACCENTS.amber}
-            />
-            <InfoPill
-              href="/events"
-              title="今週のロンドン"
-              icon={Newspaper}
-              accent={ACCENTS.amber}
-            />
-          </div>
+          <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <RevealItem>
+              <InfoPill
+                href="/sightseeing/harry-potter"
+                title="ハリー・ポッターの世界"
+                icon={Wand2}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/sightseeing/film-locations"
+                title="映画・ドラマのロケ地巡り"
+                icon={Clapperboard}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/sightseeing/stadium-tours"
+                title="スタジアムツアー"
+                icon={Trophy}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/sightseeing/thames-cruise"
+                title="テムズ川クルーズ"
+                icon={Ship}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/sightseeing/kids-free-activities"
+                title="子どもと無料で楽しむ"
+                icon={Baby}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/sightseeing/christmas-markets"
+                title="クリスマスマーケット"
+                icon={Gift}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/events/calendar"
+                title="年間イベントカレンダー"
+                icon={Calendar}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/events"
+                title="今週のロンドン"
+                icon={Newspaper}
+                accent={ACCENTS.amber}
+              />
+            </RevealItem>
+          </RevealGroup>
         </div>
       </section>
 
@@ -725,57 +783,71 @@ export default async function Page() {
         className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-background text-foreground"
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="Traveller Info"
-            title="ロンドン旅行の準備"
-            description="出発前に済ませる手続きから、現地での移動と滞在まで。何日で何を回り、どこに泊まり、どう動くかを決めるための実務情報。"
-            accentClassName={ACCENTS.blue.badge}
-          />
+          <Reveal>
+            <SectionHeader
+              eyebrow="Traveller Info"
+              title="ロンドン旅行の準備"
+              description="出発前に済ませる手続きから、現地での移動と滞在まで。何日で何を回り、どこに泊まり、どう動くかを決めるための実務情報。"
+              accentClassName={ACCENTS.blue.badge}
+            />
+          </Reveal>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <ExploreCard
-              href="/sightseeing/eta-uk-visa-guide"
-              title="ETA（電子渡航認証）"
-              description="日本国籍でも観光の入国前に取得が必要。申請の手順、費用、取得にかかる日数まで。"
-              icon={Plane}
-              accent={ACCENTS.blue}
-            />
-            <ExploreCard
-              href="/sightseeing/itinerary"
-              title="モデルコース（1〜5日）"
-              description="滞在日数別に回る順番を具体化。雨の日プランや子連れアレンジも用意しています。"
-              icon={Route}
-              accent={ACCENTS.blue}
-            />
-            <ExploreCard
-              href="/sightseeing/hotels"
-              title="宿泊エリアの選び方"
-              description="同じ予算でも治安と移動時間が大きく変わる。エリアごとの性格を比較して選ぶ。"
-              icon={BedDouble}
-              accent={ACCENTS.blue}
-            />
-            <ExploreCard
-              href="/sightseeing/transport"
-              title="交通ガイド"
-              description="地下鉄、バス、Oyster とタッチ決済、空港からの移動。9つのテーマに分けて解説。"
-              icon={TrainFront}
-              accent={ACCENTS.blue}
-            />
-            <ExploreCard
-              href="/sightseeing/travel-tips"
-              title="旅の実用情報"
-              description="両替とカード、チップ、治安、コンセント、通信。現地で迷いやすい点をまとめて。"
-              icon={Compass}
-              accent={ACCENTS.blue}
-            />
-            <ExploreCard
-              href="/events"
-              title="今週のロンドン"
-              description="ストライキや運休、臨時休館は旅程を直撃する。渡航前に最新号で確認を。"
-              icon={Newspaper}
-              accent={ACCENTS.blue}
-            />
-          </div>
+          <RevealGroup className="grid gap-4 md:grid-cols-3">
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/eta-uk-visa-guide"
+                title="ETA（電子渡航認証）"
+                description="日本国籍でも観光の入国前に取得が必要。申請の手順、費用、取得にかかる日数まで。"
+                icon={Plane}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/itinerary"
+                title="モデルコース（1〜5日）"
+                description="滞在日数別に回る順番を具体化。雨の日プランや子連れアレンジも用意しています。"
+                icon={Route}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/hotels"
+                title="宿泊エリアの選び方"
+                description="同じ予算でも治安と移動時間が大きく変わる。エリアごとの性格を比較して選ぶ。"
+                icon={BedDouble}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/transport"
+                title="交通ガイド"
+                description="地下鉄、バス、Oyster とタッチ決済、空港からの移動。9つのテーマに分けて解説。"
+                icon={TrainFront}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/sightseeing/travel-tips"
+                title="旅の実用情報"
+                description="両替とカード、チップ、治安、コンセント、通信。現地で迷いやすい点をまとめて。"
+                icon={Compass}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+            <RevealItem>
+              <ExploreCard
+                href="/events"
+                title="今週のロンドン"
+                description="ストライキや運休、臨時休館は旅程を直撃する。渡航前に最新号で確認を。"
+                icon={Newspaper}
+                accent={ACCENTS.blue}
+              />
+            </RevealItem>
+          </RevealGroup>
         </div>
       </section>
 
@@ -785,141 +857,159 @@ export default async function Page() {
         className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-muted/40 text-foreground"
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-14">
-          <SectionHeader
-            eyebrow="Resident Info"
-            title="ロンドンで住む・働く"
-            description="観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、口座をどう開くか、体調を崩したらどこに行くか。渡英直後から必要になる実務を整理しています。"
-            accentClassName={ACCENTS.emerald.badge}
-          />
+          <Reveal>
+            <SectionHeader
+              eyebrow="Resident Info"
+              title="ロンドンで住む・働く"
+              description="観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、口座をどう開くか、体調を崩したらどこに行くか。渡英直後から必要になる実務を整理しています。"
+              accentClassName={ACCENTS.emerald.badge}
+            />
+          </Reveal>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <PillarCard
-              href="/visa"
-              title="英国ビザ"
-              description="観光の ETA から、ワーホリ・就労・留学・家族ビザまで。目的と期間から自分のルートを見つける。"
-              icon={FileText}
-              accent={ACCENTS.emerald}
-              links={[
-                { href: "/visa/youth-mobility-scheme", label: "YMS（ワーホリ）" },
-                { href: "/visa/skilled-worker", label: "Skilled Worker（就労）" },
-                { href: "/visa/student", label: "Student／Graduate" },
-                { href: "/visa/after-arrival", label: "渡英後の手続き" },
-              ]}
-            />
-            <PillarCard
-              href="/housing"
-              title="住まい探し"
-              description="2026年5月の法改正で AST も Section 21 も廃止。物件の探し方から敷金の取り戻し方まで。"
-              icon={HomeIcon}
-              accent={ACCENTS.emerald}
-              links={[
-                {
-                  href: "/housing/rightmove-zoopla-openrent",
-                  label: "物件サイトの使い分け",
-                },
-                { href: "/housing/spareroom", label: "フラットシェアを探す" },
-                {
-                  href: "/housing/deposits-and-fees",
-                  label: "初期費用と違法な手数料",
-                },
-                { href: "/housing/moving-out", label: "退去とデポジット返還" },
-              ]}
-            />
-            <PillarCard
-              href="/jobs"
-              title="働く・労働問題"
-              description="最低賃金、労働契約、サービスチャージの未払い。英国の労働法を実務に落として解説。"
-              icon={Briefcase}
-              accent={ACCENTS.emerald}
-              links={[
-                { href: "/jobs/minimum-wage", label: "最低賃金・給与明細" },
-                {
-                  href: "/jobs/employment-contract",
-                  label: "労働契約・就業規則",
-                },
-                {
-                  href: "/jobs/service-charges",
-                  label: "サービスチャージ完全ガイド",
-                },
-                {
-                  href: "/jobs/service-charges/case-story",
-                  label: "審判所申立ての実体験",
-                },
-              ]}
-            />
-          </div>
+          <RevealGroup className="grid gap-4 md:grid-cols-3">
+            <RevealItem>
+              <PillarCard
+                href="/visa"
+                title="英国ビザ"
+                description="観光の ETA から、ワーホリ・就労・留学・家族ビザまで。目的と期間から自分のルートを見つける。"
+                icon={FileText}
+                accent={ACCENTS.emerald}
+                links={[
+                  { href: "/visa/youth-mobility-scheme", label: "YMS（ワーホリ）" },
+                  { href: "/visa/skilled-worker", label: "Skilled Worker（就労）" },
+                  { href: "/visa/student", label: "Student／Graduate" },
+                  { href: "/visa/after-arrival", label: "渡英後の手続き" },
+                ]}
+              />
+            </RevealItem>
+            <RevealItem>
+              <PillarCard
+                href="/housing"
+                title="住まい探し"
+                description="2026年5月の法改正で AST も Section 21 も廃止。物件の探し方から敷金の取り戻し方まで。"
+                icon={HomeIcon}
+                accent={ACCENTS.emerald}
+                links={[
+                  {
+                    href: "/housing/rightmove-zoopla-openrent",
+                    label: "物件サイトの使い分け",
+                  },
+                  { href: "/housing/spareroom", label: "フラットシェアを探す" },
+                  {
+                    href: "/housing/deposits-and-fees",
+                    label: "初期費用と違法な手数料",
+                  },
+                  { href: "/housing/moving-out", label: "退去とデポジット返還" },
+                ]}
+              />
+            </RevealItem>
+            <RevealItem>
+              <PillarCard
+                href="/jobs"
+                title="働く・労働問題"
+                description="最低賃金、労働契約、サービスチャージの未払い。英国の労働法を実務に落として解説。"
+                icon={Briefcase}
+                accent={ACCENTS.emerald}
+                links={[
+                  { href: "/jobs/minimum-wage", label: "最低賃金・給与明細" },
+                  {
+                    href: "/jobs/employment-contract",
+                    label: "労働契約・就業規則",
+                  },
+                  {
+                    href: "/jobs/service-charges",
+                    label: "サービスチャージ完全ガイド",
+                  },
+                  {
+                    href: "/jobs/service-charges/case-story",
+                    label: "審判所申立ての実体験",
+                  },
+                ]}
+              />
+            </RevealItem>
+          </RevealGroup>
 
           {/*
             医療とお金は、ビザ・住まい・仕事と同じ「渡英直後に必ず要る」層だが、
             上の3枠が制度の重さで先に来るため、2枚目の行として置く。
           */}
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            <PillarCard
-              href="/money"
-              title="お金・銀行"
-              description="口座開設が詰まる原因は住所証明。信用スコアではありません。開ける口座、日本からの送金、NIN の取り方まで。"
-              icon={Wallet}
-              accent={ACCENTS.emerald}
-              links={[
-                {
-                  href: "/money/opening-an-account",
-                  label: "渡英直後に開ける口座",
-                },
-                { href: "/money/passing-the-checks", label: "審査の通し方" },
-                {
-                  href: "/money/sending-money-from-japan",
-                  label: "日本からの送金と手数料",
-                },
-                {
-                  href: "/money/national-insurance-number",
-                  label: "National Insurance number",
-                },
-              ]}
-            />
-            <PillarCard
-              href="/health"
-              title="医療・NHS"
-              description="GP 登録に身分証も住所証明も要りません。救急と我慢の間にある 111、処方箋料を頭打ちにする方法まで。"
-              icon={Stethoscope}
-              accent={ACCENTS.emerald}
-              links={[
-                { href: "/health/gp-registration", label: "GP に登録する" },
-                {
-                  href: "/health/when-you-are-ill",
-                  label: "体調を崩したときの行き先",
-                },
-                {
-                  href: "/health/ihs-and-entitlement",
-                  label: "IHS とどこまで無料か",
-                },
-                {
-                  href: "/health/prescription-costs",
-                  label: "処方箋料を下げる",
-                },
-              ]}
-            />
-          </div>
+          <RevealGroup className="mt-4 grid gap-4 md:grid-cols-2">
+            <RevealItem>
+              <PillarCard
+                href="/money"
+                title="お金・銀行"
+                description="口座開設が詰まる原因は住所証明。信用スコアではありません。開ける口座、日本からの送金、NIN の取り方まで。"
+                icon={Wallet}
+                accent={ACCENTS.emerald}
+                links={[
+                  {
+                    href: "/money/opening-an-account",
+                    label: "渡英直後に開ける口座",
+                  },
+                  { href: "/money/passing-the-checks", label: "審査の通し方" },
+                  {
+                    href: "/money/sending-money-from-japan",
+                    label: "日本からの送金と手数料",
+                  },
+                  {
+                    href: "/money/national-insurance-number",
+                    label: "National Insurance number",
+                  },
+                ]}
+              />
+            </RevealItem>
+            <RevealItem>
+              <PillarCard
+                href="/health"
+                title="医療・NHS"
+                description="GP 登録に身分証も住所証明も要りません。救急と我慢の間にある 111、処方箋料を頭打ちにする方法まで。"
+                icon={Stethoscope}
+                accent={ACCENTS.emerald}
+                links={[
+                  { href: "/health/gp-registration", label: "GP に登録する" },
+                  {
+                    href: "/health/when-you-are-ill",
+                    label: "体調を崩したときの行き先",
+                  },
+                  {
+                    href: "/health/ihs-and-entitlement",
+                    label: "IHS とどこまで無料か",
+                  },
+                  {
+                    href: "/health/prescription-costs",
+                    label: "処方箋料を下げる",
+                  },
+                ]}
+              />
+            </RevealItem>
+          </RevealGroup>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <InfoPill
-              href="/visa/uk-visa-guide"
-              title="英国ビザ全ルート比較"
-              icon={FileText}
-              accent={ACCENTS.emerald}
-            />
-            <InfoPill
-              href="/housing/where-to-live"
-              title="住むエリアの選び方"
-              icon={MapPin}
-              accent={ACCENTS.emerald}
-            />
-            <InfoPill
-              href="/jobs/service-charges/dashboard"
-              title="サービスチャージ店舗別データベース"
-              icon={Receipt}
-              accent={ACCENTS.emerald}
-            />
-          </div>
+          <RevealGroup className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <RevealItem>
+              <InfoPill
+                href="/visa/uk-visa-guide"
+                title="英国ビザ全ルート比較"
+                icon={FileText}
+                accent={ACCENTS.emerald}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/housing/where-to-live"
+                title="住むエリアの選び方"
+                icon={MapPin}
+                accent={ACCENTS.emerald}
+              />
+            </RevealItem>
+            <RevealItem>
+              <InfoPill
+                href="/jobs/service-charges/dashboard"
+                title="サービスチャージ店舗別データベース"
+                icon={Receipt}
+                accent={ACCENTS.emerald}
+              />
+            </RevealItem>
+          </RevealGroup>
         </div>
       </section>
 
@@ -949,7 +1039,7 @@ export default async function Page() {
           </div>
 
           {readingLead ? (
-            <div className="grid gap-6 lg:grid-cols-12">
+            <Reveal className="grid gap-6 lg:grid-cols-12">
               {/* 主役1本。画像に見出しを重ねて、カード列との差を出す。 */}
               <Link
                 href={readingLead.href}
@@ -1015,35 +1105,37 @@ export default async function Page() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </Reveal>
           ) : (
             <p className="text-sm text-muted-foreground">近日公開予定です。</p>
           )}
 
           {/* 4区分それぞれへの導線。カード列の代わりに横並びの帯にする。 */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {READING_SECTIONS.map((sec) => (
-              <Link key={sec.href} href={sec.href} className="group block">
-                <div
-                  className={`flex h-full items-center gap-3 rounded-lg border bg-card px-4 py-3 transition ${sec.hoverBorder}`}
-                >
-                  <span
-                    className={`h-8 w-1 shrink-0 rounded-full ${sec.stripe}`}
-                  />
-                  <span className="min-w-0">
+              <RevealItem key={sec.href}>
+                <Link href={sec.href} className="group block h-full">
+                  <div
+                    className={`flex h-full items-center gap-3 rounded-lg border bg-card px-4 py-3 transition ${sec.hoverBorder}`}
+                  >
                     <span
-                      className={`block text-[10px] font-bold uppercase tracking-[0.15em] ${sec.text}`}
-                    >
-                      {sec.eyebrow}
+                      className={`h-8 w-1 shrink-0 rounded-full ${sec.stripe}`}
+                    />
+                    <span className="min-w-0">
+                      <span
+                        className={`block text-[10px] font-bold uppercase tracking-[0.15em] ${sec.text}`}
+                      >
+                        {sec.eyebrow}
+                      </span>
+                      <span className="mt-0.5 block truncate text-sm font-semibold">
+                        {sec.label}
+                      </span>
                     </span>
-                    <span className="mt-0.5 block truncate text-sm font-semibold">
-                      {sec.label}
-                    </span>
-                  </span>
-                </div>
-              </Link>
+                  </div>
+                </Link>
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 

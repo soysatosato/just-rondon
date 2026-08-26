@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import TitleLogo from "@/components/home/TitleLogo";
 import HeroSearch from "@/components/home/HeroSearch";
-import HeroStats from "@/components/home/HeroStats";
 
 /**
  * ヒーローの前景。背景の写真スライド(HeroSlideshow)の上に重なるので、
@@ -15,11 +14,7 @@ import HeroStats from "@/components/home/HeroStats";
  * すぐ上の検索窓と役割が重なっていて、最初の一手が2箇所に割れていた。
  * 区分の振り分けは下の大区分セクションが担う。
  */
-export default function HeroContent({
-  stats,
-}: {
-  stats: { attractions: number; museums: number; musicals: number };
-}) {
+export default function HeroContent() {
   const reduceMotion = useReducedMotion();
 
   // 上から順に現れる。間隔を空けすぎると読み込みが遅く見えるので
@@ -59,10 +54,6 @@ export default function HeroContent({
 
       <motion.div {...rise(0.26)}>
         <HeroSearch />
-      </motion.div>
-
-      <motion.div {...rise(0.34)}>
-        <HeroStats {...stats} />
       </motion.div>
     </div>
   );

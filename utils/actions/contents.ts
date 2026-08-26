@@ -249,16 +249,3 @@ export const fetchHeroSlides = async (take = 5) => {
     (r): r is typeof r & { engName: string } => Boolean(r.image && r.engName)
   );
 };
-
-/**
- * ヒーローに出す実数。サイトの規模を数字で見せる。
- * 非公開スポットと上演終了ミュージカルは読者が辿り着けないので数に入れない。
- */
-export const fetchSiteStats = async () => {
-  const [attractions, museums, musicals] = await Promise.all([
-    db.attraction.count({ where: { isPublished: true } }),
-    db.museum.count(),
-    db.musical.count({ where: { isOnShow: true } }),
-  ]);
-  return { attractions, museums, musicals };
-};
