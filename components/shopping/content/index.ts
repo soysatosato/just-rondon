@@ -1,6 +1,7 @@
 import type { ShoppingGuideArticle } from "../types";
 import { marketsArticle } from "./markets";
 import { departmentStoresArticle } from "./department-stores";
+import { shoppingStreetsArticle } from "./shopping-streets";
 import { bicesterVillageArticle } from "./bicester-village";
 import { vatRefundArticle } from "./vat-refund";
 
@@ -18,6 +19,7 @@ import { vatRefundArticle } from "./vat-refund";
 export const shoppingGuideArticles: Record<string, ShoppingGuideArticle> = {
   [marketsArticle.slug]: marketsArticle,
   [departmentStoresArticle.slug]: departmentStoresArticle,
+  [shoppingStreetsArticle.slug]: shoppingStreetsArticle,
   [bicesterVillageArticle.slug]: bicesterVillageArticle,
   [vatRefundArticle.slug]: vatRefundArticle,
 };
@@ -25,6 +27,7 @@ export const shoppingGuideArticles: Record<string, ShoppingGuideArticle> = {
 export {
   marketsArticle,
   departmentStoresArticle,
+  shoppingStreetsArticle,
   bicesterVillageArticle,
   vatRefundArticle,
 };

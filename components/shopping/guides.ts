@@ -75,6 +75,14 @@ export const shoppingGuides: ShoppingGuideMeta[] = [
       "ハロッズ、リバティ、フォートナム&メイソン、セルフリッジズ。建物と売り場そのものが観光地です。買わなくても行く価値がある店と、日曜に6時間しか開かない法律の話。",
   },
   {
+    slug: "shopping-streets",
+    category: "places",
+    eyebrow: "Shopping Streets",
+    label: "買い物通り — 1本違うと価格帯が変わる",
+    blurb:
+      "オックスフォード、リージェント、ボンド、カーナビー、キングス・ロード。徒歩圏に £10 の店と £50,000 の店が並んでいます。通りごとの価格帯と客層、そして歩行者天国化の進行状況。",
+  },
+  {
     slug: "bicester-village",
     category: "places",
     eyebrow: "Bicester Village",

@@ -144,6 +144,7 @@ module.exports = {
       "/shopping",
       "/shopping/markets",
       "/shopping/department-stores",
+      "/shopping/shopping-streets",
       "/shopping/bicester-village",
       "/shopping/vat-refund",
       "/restaurants",
