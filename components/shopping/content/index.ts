@@ -1,6 +1,7 @@
 import type { ShoppingGuideArticle } from "../types";
 import { marketsArticle } from "./markets";
 import { departmentStoresArticle } from "./department-stores";
+import { bicesterVillageArticle } from "./bicester-village";
 import { vatRefundArticle } from "./vat-refund";
 
 /**
@@ -17,7 +18,13 @@ import { vatRefundArticle } from "./vat-refund";
 export const shoppingGuideArticles: Record<string, ShoppingGuideArticle> = {
   [marketsArticle.slug]: marketsArticle,
   [departmentStoresArticle.slug]: departmentStoresArticle,
+  [bicesterVillageArticle.slug]: bicesterVillageArticle,
   [vatRefundArticle.slug]: vatRefundArticle,
 };
 
-export { marketsArticle, departmentStoresArticle, vatRefundArticle };
+export {
+  marketsArticle,
+  departmentStoresArticle,
+  bicesterVillageArticle,
+  vatRefundArticle,
+};

@@ -144,6 +144,7 @@ module.exports = {
       "/shopping",
       "/shopping/markets",
       "/shopping/department-stores",
+      "/shopping/bicester-village",
       "/shopping/vat-refund",
       "/restaurants",
       // レストラン/パブのガイド。料理ページ(/restaurants/<dish>)はDB由来で

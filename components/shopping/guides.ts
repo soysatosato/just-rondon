@@ -75,6 +75,14 @@ export const shoppingGuides: ShoppingGuideMeta[] = [
       "ハロッズ、リバティ、フォートナム&メイソン、セルフリッジズ。建物と売り場そのものが観光地です。買わなくても行く価値がある店と、日曜に6時間しか開かない法律の話。",
   },
   {
+    slug: "bicester-village",
+    category: "places",
+    eyebrow: "Bicester Village",
+    label: "ビスター・ヴィレッジ — 丸1日使う価値があるか",
+    blurb:
+      "ロンドンから列車で約1時間のアウトレット。最大40%引きですが、往復と滞在で1日が消えます。元が取れる条件と、タッチ決済が使えない区間であることについて。",
+  },
+  {
     slug: "vat-refund",
     category: "rules",
     eyebrow: "VAT Refund",
