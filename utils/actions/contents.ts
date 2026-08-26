@@ -222,15 +222,17 @@ export const fetchPopularReadingContents = async (take = 5) => {
 };
 
 /**
- * トップのヒーロー背景に流すスライド。
+ * トップのヒーローに敷き詰める写真タイル。
  *
  * 写真を主役にするので、条件は「画像があること」ではなく
- * 「その画像が全画面で見て耐えること」。mustSee かつ recommendLevel 最上位に
+ * 「その画像が大きく出して耐えること」。mustSee かつ recommendLevel 最上位に
  * 絞っているのはそのため。件数を増やすと建物の一部だけを写した資料写真が
  * 混ざり、ヒーローの見栄えがそこで崩れる。
  *
  * 英語名は写真のキャプションに出すため必須にしている。日本語名だけの
  * スポットは、白抜きの英字キャプションという意匠が成立しない。
+ *
+ * tagline は主役タイル(2x2)にだけ出す一言。小さいタイルには入らない。
  */
 export const fetchHeroSlides = async (take = 5) => {
   const rows = await db.attraction.findMany({
@@ -240,7 +242,13 @@ export const fetchHeroSlides = async (take = 5) => {
       recommendLevel: 5,
       engName: { not: null },
     },
-    select: { slug: true, name: true, engName: true, image: true },
+    select: {
+      slug: true,
+      name: true,
+      engName: true,
+      image: true,
+      tagline: true,
+    },
     orderBy: { name: "asc" },
     take,
   });
