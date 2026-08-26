@@ -115,6 +115,8 @@ export const NAV_SECTIONS: NavSection[] = [
         links: [
           { href: "/restaurants", label: "イギリス料理" },
           { href: "/restaurants/pub-etiquette", label: "パブの作法" },
+          { href: "/shopping", label: "ロンドンの買い物" },
+          { href: "/shopping/markets", label: "マーケット（曜日別）" },
           { href: "/brands", label: "イギリスのブランド" },
           { href: "/souvenirs", label: "ロンドンのお土産" },
         ],

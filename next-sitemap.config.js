@@ -141,6 +141,10 @@ module.exports = {
       "/beyond-london/penzance",
       "/souvenirs",
       "/brands",
+      "/shopping",
+      "/shopping/markets",
+      "/shopping/department-stores",
+      "/shopping/vat-refund",
       "/restaurants",
       // レストラン/パブのガイド。料理ページ(/restaurants/<dish>)はDB由来で
       // 下の additionalPaths が出すので、静的なガイドだけここに書く。

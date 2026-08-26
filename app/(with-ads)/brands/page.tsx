@@ -44,10 +44,11 @@ export const metadata = buildPageMetadata({
  * (免税はあるのか・どこが一番安いのか)に戻ってしまう。
  * 2021年の免税廃止は特に誤解が残っているので、最初に潰しておく。
  */
-const BUYING_BASICS: { title: string; body: string }[] = [
+const BUYING_BASICS: { title: string; body: string; href?: string }[] = [
   {
     title: "免税（VAT還付）はもう無い",
     body: "2021年1月にイギリスの旅行者向け免税制度は廃止されました。空港で書類を出せば20%戻る、という以前の前提は今は通用しません。それでも現地が安いブランドは多いのですが、理由は免税ではなく元の定価差とセールです。",
+    href: "/shopping/vat-refund",
   },
   {
     title: "狙うならセール期。年2回ある",
@@ -63,7 +64,7 @@ const FAQ: GuideFaqItem[] = [
   {
     question: "イギリスでブランド品を買うと日本より安いですか？",
     answer:
-      "カテゴリによります。アパレル・靴・食器は本国価格が明確に安く、セール期ならさらに開きます。一方で紅茶やコスメは日本の並行輸入品と大きく変わらないこともあります。**免税（VAT還付）は2021年に廃止されている**ので、「20%戻る前提」で計算すると必ずずれます。",
+      "カテゴリによります。アパレル・靴・食器は本国価格が明確に安く、セール期ならさらに開きます。一方で紅茶やコスメは日本の並行輸入品と大きく変わらないこともあります。**免税（VAT還付）は2021年に廃止されている**ので、「20%戻る前提」で計算すると必ずずれます（[詳しくはこちら](/shopping/vat-refund)）。",
   },
   {
     question: "「王室御用達」とは何ですか？",
@@ -134,6 +135,14 @@ export default async function BrandsPage() {
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   {b.body}
                 </p>
+                {b.href && (
+                  <Link
+                    href={b.href}
+                    className="inline-block text-xs font-medium text-sky-700 hover:underline dark:text-sky-300"
+                  >
+                    詳しく読む →
+                  </Link>
+                )}
               </CardContent>
             </Card>
           ))}
