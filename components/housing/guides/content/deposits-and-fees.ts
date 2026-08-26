@@ -361,6 +361,8 @@ const depositsAndFees: HousingGuideArticle = {
     { href: "/housing/moving-out", label: "退去とデポジット返還交渉" },
     { href: "/jobs/minimum-wage", label: "最低賃金・給与明細の見方" },
   ],
+  commentPrompt:
+    "違法な費用を請求された体験や、実際に取り戻せた・戻せなかったケースがあれば教えてください。交渉に使った文面が参考になった、という話も歓迎です。",
 };
 
 export default depositsAndFees;

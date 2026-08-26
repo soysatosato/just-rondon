@@ -2,12 +2,16 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Content, ContentSection } from "@prisma/client";
+import { CommentTargetType } from "@prisma/client";
 import ColumnBreadCrumbs from "@/components/column/ColumnBreadCrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { tagLabel } from "@/lib/column-taxonomy";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
+import PageCommentSection, {
+  type PageCommentItem,
+} from "@/components/comments/PageCommentSection";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -34,11 +38,13 @@ export default function ColumnDetail({
   series = [],
   prev = null,
   next = null,
+  comments,
 }: {
   content: ColumnWithSections;
   series?: SeriesEntry[];
   prev?: AdjacentContent | null;
   next?: AdjacentContent | null;
+  comments: PageCommentItem[];
 }) {
   const sections = content.sections.slice().sort(
     (a, b) => a.displayOrder - b.displayOrder,
@@ -239,6 +245,15 @@ export default function ColumnDetail({
           accent="sky"
         />
       )}
+
+      <PageCommentSection
+        targetType={CommentTargetType.COLUMN}
+        targetKey={content.slug}
+        prompt="この記事を読んだ感想や、関連して知っていることがあれば教えてください。"
+        heading="感想・コメント"
+        placeholder="感想やご意見をお聞かせください"
+        initialComments={comments}
+      />
 
       <p className="pt-4">
         <Link

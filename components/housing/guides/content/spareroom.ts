@@ -288,6 +288,8 @@ tenant として契約する場合、2026年5月1日以降は2ヶ月前通知で
     { href: "/housing/viewing", label: "内見チェックリスト" },
     { href: "/housing/where-to-live", label: "エリアの選び方と、家賃と交通費の総額" },
   ],
+  commentPrompt:
+    "SpareRoomの募集文の見極め方や、実際に同居人を選ぶときに決め手になった質問があれば教えてください。「これは避けるべきだった」という失敗談も参考になります。",
 };
 
 export default spareroom;

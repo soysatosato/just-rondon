@@ -301,6 +301,8 @@ ${jpDate(
     { href: "/visa/after-arrival", label: "渡英後の手続きガイド（share code・銀行口座）" },
     { href: "/jobs/workplace-harassment", label: "ハラスメント・職場トラブルの相談先" },
   ],
+  commentPrompt:
+    "審査を通すために実際に使った保証人サービスの評判や、「これで通った」という工夫があれば教えてください。",
 };
 
 export default referencing;

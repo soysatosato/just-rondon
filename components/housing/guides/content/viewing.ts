@@ -338,6 +338,8 @@ Gas Safety Certificate（CP12）を見せてもらい、日付を確認します
     { href: "/housing/moving-out", label: "退去とデポジット返還交渉" },
     { href: "/housing/tenancy-types", label: "契約形態の地図（2026年5月の法改正後）" },
   ],
+  commentPrompt:
+    "内見で「これを見ておけばよかった」と思った点や、同居人を見極めるために実際に聞いた質問があれば教えてください。",
 };
 
 export default viewing;

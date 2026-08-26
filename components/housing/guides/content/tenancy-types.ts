@@ -250,6 +250,8 @@ const tenancyTypes: HousingGuideArticle = {
     { href: "/housing/moving-out", label: "退去とデポジット返還交渉" },
     { href: "/visa/after-arrival", label: "渡英後の手続きガイド（住所・銀行口座・NINo）" },
   ],
+  commentPrompt:
+    "契約書に実際に書かれていた条項で驚いた点や、大家・エージェントとのやり取りで役立った交渉術があれば教えてください。",
 };
 
 export default tenancyTypes;

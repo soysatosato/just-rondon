@@ -7,11 +7,16 @@ import { fetchAttractionName } from "@/utils/actions/attractions";
 import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import ViewTracker from "@/components/analytics/ViewTracker";
+import PageCommentSection, {
+  type PageCommentItem,
+} from "@/components/comments/PageCommentSection";
+import db from "@/utils/db";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { CommentTargetType } from "@prisma/client";
 
 import MuseumHero from "@/components/museums/MuseumHero";
 import MuseumAbout from "@/components/museums/MuseumAbout";
@@ -86,6 +91,26 @@ export default async function MuseumDetailsPage({
   const pairedAttraction = pairedAttractionSlug
     ? await fetchAttractionName(pairedAttractionSlug)
     : null;
+
+  // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
+  // 投稿APIから revalidatePath で更新される。targetKey は id(uuid)。
+  const rawComments = await db.pageComment.findMany({
+    where: {
+      targetType: CommentTargetType.MUSEUM,
+      targetKey: museum.id,
+      isHidden: false,
+    },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, author: true, content: true, createdAt: true },
+    take: 200,
+  });
+
+  const comments: PageCommentItem[] = rawComments.map((c) => ({
+    id: c.id,
+    author: c.author,
+    content: c.content,
+    createdAt: c.createdAt.toISOString(),
+  }));
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-12">
@@ -162,6 +187,17 @@ export default async function MuseumDetailsPage({
           />
         </div>
       )}
+
+      <div className="mx-4">
+        <PageCommentSection
+          targetType={CommentTargetType.MUSEUM}
+          targetKey={museum.id}
+          prompt={`${museum.name}を訪れた感想や、次に行く人へのアドバイスがあれば教えてください。`}
+          heading="みんなの口コミ"
+          placeholder="見どころの感想やアドバイスを教えてください"
+          initialComments={comments}
+        />
+      </div>
 
       <section className="mx-4 rounded-2xl border border-border bg-card p-6 text-center">
         <h2 className="text-lg font-bold tracking-tight">

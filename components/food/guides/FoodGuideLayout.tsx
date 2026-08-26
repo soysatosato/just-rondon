@@ -168,6 +168,8 @@ export default function FoodGuideLayout({
         targetType={CommentTargetType.FOOD_TIP}
         targetKey={article.slug}
         prompt={article.commentPrompt}
+        heading="みんなの工夫"
+        placeholder="実践している節約の工夫を教えてください"
         initialComments={comments}
       />
 

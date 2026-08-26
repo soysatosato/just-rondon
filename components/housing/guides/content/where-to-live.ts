@@ -322,6 +322,8 @@ Elizabeth line（2022年開業）は新しく、速く、比較的空いてい�
     { href: "/health/gp-registration", label: "GP登録｜住所が決まったら最初にやること" },
     { href: "/visa/after-arrival", label: "渡英後の手続きガイド（GP登録・銀行口座）" },
   ],
+  commentPrompt:
+    "実際に住んでみて「総額で見ると得だった」エリアや、Zone選びで失敗したと感じた点があれば教えてください。",
 };
 
 export default whereToLive;

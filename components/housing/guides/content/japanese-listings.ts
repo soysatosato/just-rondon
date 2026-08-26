@@ -241,6 +241,8 @@ Aさんの契約をあなたが引き継ぐ（assignment）形なら、大家の
     { href: "/visa/after-arrival", label: "渡英後の手続きガイド（住所・銀行口座・NINo）" },
     { href: "/housing/viewing", label: "内見チェックリスト" },
   ],
+  commentPrompt:
+    "mixbや日系コミュニティ経由で契約した実体験や、「これは危なかった」という地雷物件の見分け方があれば教えてください。",
 };
 
 export default japaneseListings;

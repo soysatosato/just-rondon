@@ -10,8 +10,11 @@ import { Button } from "@/components/ui/button";
  * 記事ページ用の汎用コメント欄。
  *
  * targetType + targetKey で任意のページに紐づく(/api/page-comments)。
- * 食費節約ガイド以外(コラム・アトラクションなど)でも、この2つを渡せば
- * そのまま使える。
+ * food/housing/column/attraction/museum の5種で使っている。
+ *
+ * heading・placeholder は呼び出し側で必ず指定する。「みんなの工夫」は
+ * 食費・住まいのような実践Tips向けの文言で、コラムや観光スポットの
+ * 感想・口コミには合わないため、デフォルト値は持たせていない。
  *
  * 承認制にしていないので投稿は即時表示される。サーバ側から渡された
  * initialComments に、投稿成功したものを先頭に足していく。
@@ -36,12 +39,18 @@ export default function PageCommentSection({
   targetType,
   targetKey,
   prompt,
+  heading,
+  placeholder,
   initialComments,
 }: {
   targetType: string;
   targetKey: string;
   /** 記事ごとの誘導文。何を聞きたいのか具体的に書く。 */
   prompt: string;
+  /** セクション見出し。例: 「みんなの工夫」「みんなの口コミ」。 */
+  heading: string;
+  /** 入力欄のプレースホルダー。コンテンツ種別に合わせて具体的に書く。 */
+  placeholder: string;
   initialComments: PageCommentItem[];
 }) {
   const [comments, setComments] = useState(initialComments);
@@ -88,7 +97,7 @@ export default function PageCommentSection({
 
   return (
     <section className="mt-12">
-      <h2 className="text-lg font-semibold">みんなの工夫</h2>
+      <h2 className="text-lg font-semibold">{heading}</h2>
       <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         {prompt}
       </p>
@@ -126,7 +135,7 @@ export default function PageCommentSection({
                 onChange={(e) => setContent(e.target.value)}
                 maxLength={MAX_CONTENT}
                 rows={4}
-                placeholder="実践している節約の工夫を教えてください"
+                placeholder={placeholder}
                 className="mt-1"
                 required
               />

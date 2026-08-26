@@ -386,6 +386,8 @@ ${jpDate(
     { href: "/housing/spareroom", label: "SpareRoom でフラットシェアを探す" },
     { href: "/housing/moving-out", label: "退去とデポジット返還交渉" },
   ],
+  commentPrompt:
+    "騒音トラブルを実際に解決できた(あるいはできなかった)体験や、管理会社・自治体への通報が効いた具体的な手順があれば教えてください。",
 };
 
 export default noise;

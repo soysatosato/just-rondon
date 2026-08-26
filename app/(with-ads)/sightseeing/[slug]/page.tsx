@@ -3,6 +3,7 @@ export const revalidate = 60 * 60;
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { CommentTargetType } from "@prisma/client";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   fetchAttractionDetails,
@@ -21,6 +22,10 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
+import PageCommentSection, {
+  type PageCommentItem,
+} from "@/components/comments/PageCommentSection";
+import db from "@/utils/db";
 import {
   attractionDescription,
   attractionTitle,
@@ -289,6 +294,26 @@ export default async function AttractionDetail({
     ? await fetchMuseumIDandName(pairedMuseumSlug)
     : null;
 
+  // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
+  // 投稿APIから revalidatePath で更新される。targetKey は id(uuid)。
+  const rawComments = await db.pageComment.findMany({
+    where: {
+      targetType: CommentTargetType.ATTRACTION,
+      targetKey: attraction.id,
+      isHidden: false,
+    },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, author: true, content: true, createdAt: true },
+    take: 200,
+  });
+
+  const comments: PageCommentItem[] = rawComments.map((c) => ({
+    id: c.id,
+    author: c.author,
+    content: c.content,
+    createdAt: c.createdAt.toISOString(),
+  }));
+
   return (
     <main className="mx-auto w-full max-w-5xl">
       <JsonLd data={attractionBreadcrumbJsonLd(attraction)} />
@@ -488,6 +513,15 @@ export default async function AttractionDetail({
             description="注目作品、所要時間の目安、開館時間、館内の回り方は美術館ガイド側にまとめています。"
           />
         )}
+
+        <PageCommentSection
+          targetType={CommentTargetType.ATTRACTION}
+          targetKey={attraction.id}
+          prompt={`${attraction.name}を訪れた感想や、これから行く人に役立つコツがあれば教えてください。`}
+          heading="みんなの口コミ"
+          placeholder="訪れた感想やコツを教えてください"
+          initialComments={comments}
+        />
       </article>
 
       {/* 回遊リンクは本文より広く使う。記事を読み終えた読者の次の一手。 */}

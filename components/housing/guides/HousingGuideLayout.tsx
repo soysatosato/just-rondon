@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CommentTargetType } from "@prisma/client";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -13,6 +14,9 @@ import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
+import PageCommentSection, {
+  type PageCommentItem,
+} from "@/components/comments/PageCommentSection";
 import {
   HOUSING_BASE,
   HOUSING_SECTION_NAME,
@@ -26,8 +30,10 @@ import type { HousingGuideArticle } from "./types";
 
 export default function HousingGuideLayout({
   article,
+  comments,
 }: {
   article: HousingGuideArticle;
+  comments: PageCommentItem[];
 }) {
   const relatedGuides = housingGuides.filter((g) => g.slug !== article.slug);
   const meta = getHousingGuideMeta(article.slug);
@@ -159,6 +165,15 @@ export default function HousingGuideLayout({
         敷金の未返還、健康被害のある住環境など）では Citizens Advice、地元自治体の
         private housing team、または事務弁護士にご相談ください。
       </p>
+
+      <PageCommentSection
+        targetType={CommentTargetType.HOUSING}
+        targetKey={article.slug}
+        prompt={article.commentPrompt}
+        heading="みんなの工夫"
+        placeholder="実践した工夫や体験を教えてください"
+        initialComments={comments}
+      />
 
       <section className="mt-12">
         <h2 className="text-lg font-semibold">ほかの住まい探しガイド</h2>

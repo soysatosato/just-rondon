@@ -271,6 +271,8 @@ OpenRent 自体は正規のプラットフォームで、身元確認や契約�
     { href: "/housing/viewing", label: "内見チェックリスト" },
     { href: "/housing/deposits-and-fees", label: "初期費用と、払ってはいけない金" },
   ],
+  commentPrompt:
+    "実際に使ってみて「この使い分けが良かった」という体験や、OpenRentで大家と直接やり取りして助かった点・困った点があれば教えてください。",
 };
 
 export default rightmoveZooplaOpenrent;

@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { CommentTargetType } from "@prisma/client";
 import db from "@/utils/db";
+import { columnPath } from "@/components/column/jsonld";
+import { attractionPath } from "@/components/sightseeing/jsonld";
+import { museumPath } from "@/components/museums/jsonld";
+import { housingGuidePath } from "@/components/housing/guides/guides";
 
 /**
  * 記事ページの汎用コメント API。
@@ -135,8 +139,35 @@ export async function POST(req: NextRequest) {
   });
 
   // 記事ページは静的生成なので、コメント一覧を差し替えるため明示的に再検証する。
-  if (targetType === CommentTargetType.FOOD_TIP) {
-    revalidatePath(`/food/${targetKey}`);
+  // FOOD_TIP・HOUSING・COLUMN は targetKey がそのまま slug。
+  // ATTRACTION・MUSEUM は targetKey が id(uuid)なので、パスを組むために
+  // 一度 slug を引く(PageComment は対象への外部キーを持たないため)。
+  switch (targetType) {
+    case CommentTargetType.FOOD_TIP:
+      revalidatePath(`/food/${targetKey}`);
+      break;
+    case CommentTargetType.HOUSING:
+      revalidatePath(housingGuidePath(targetKey));
+      break;
+    case CommentTargetType.COLUMN:
+      revalidatePath(columnPath(targetKey));
+      break;
+    case CommentTargetType.ATTRACTION: {
+      const attraction = await db.attraction.findUnique({
+        where: { id: targetKey },
+        select: { slug: true },
+      });
+      if (attraction) revalidatePath(attractionPath(attraction.slug));
+      break;
+    }
+    case CommentTargetType.MUSEUM: {
+      const museum = await db.museum.findUnique({
+        where: { id: targetKey },
+        select: { slug: true },
+      });
+      if (museum) revalidatePath(museumPath(museum.slug));
+      break;
+    }
   }
 
   const res = NextResponse.json({ comment: created }, { status: 201 });

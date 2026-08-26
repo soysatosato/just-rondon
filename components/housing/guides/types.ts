@@ -8,6 +8,9 @@
  *   「初期費用・契約形態・注意点」になる。表の見出しラベルは
  *   HousingGuideLayout 側で固定しているので、記事側は行を並べるだけでよい。
  *
+ * 食費節約ガイド(components/food/guides/types.ts)と同様に `commentPrompt` を持つ。
+ * 記事ごとに聞きたいことが違うため記事側に持たせている。
+ *
  * 記事骨格(目次・注意枠・FAQ・出典)は components/guides/types.ts と共通。
  *
  * 本文中の金額・上限・施行日は必ず lib/housing/rates.ts から書き出すこと。
@@ -55,4 +58,10 @@ export type HousingGuideArticle = {
   faq?: HousingGuideFaq[];
   sources?: HousingGuideSource[];
   relatedLinks?: HousingGuideRelatedLink[];
+  /**
+   * コメント欄の誘導文。記事の内容に合わせて具体的に聞く。
+   * 「他にもあれば教えてください」だけだと投稿が集まらないため、
+   * 記事ごとに聞きたいことを絞る。
+   */
+  commentPrompt: string;
 };
