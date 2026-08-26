@@ -189,9 +189,9 @@ export default function Navbar() {
             </div>
           </Link>
         </div>
-        <div className="flex items-center justify-center overflow-x-auto px-6 py-3 max-w-7xl mx-auto">
+        <div className="flex items-center justify-center px-6 py-3 max-w-7xl mx-auto">
           <NavigationMenu className="max-w-none shrink-0">
-            <NavigationMenuList className="flex-nowrap gap-x-2">
+            <NavigationMenuList className="flex-nowrap gap-x-2 overflow-x-auto">
               {NAV_SECTIONS.map((section) => {
                 if (section.kind === "link") {
                   return (
