@@ -430,6 +430,12 @@ module.exports = {
       paths.push(await config.transform(config, `/brands/${b.slug}`));
     }
 
+    // お土産ページ。/souvenirs ハブ自体は上の staticPages 側にある。
+    const souvenirs = await prisma.souvenir.findMany({ select: { slug: true } });
+    for (const s of souvenirs) {
+      paths.push(await config.transform(config, `/souvenirs/${s.slug}`));
+    }
+
     const columns = await prisma.content.findMany({
       where: { category: "column" },
       select: { slug: true },

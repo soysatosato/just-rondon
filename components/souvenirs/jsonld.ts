@@ -1,6 +1,6 @@
 import type { Souvenir } from "@prisma/client";
 import { SITE_URL } from "@/lib/seo";
-import { SOUVENIR_BASE } from "./categories";
+import { SOUVENIR_BASE, souvenirPath } from "./categories";
 
 /**
  * お土産一覧の ItemList。
@@ -23,7 +23,32 @@ export function souvenirItemListJsonLd(souvenirs: Souvenir[]) {
       "@type": "ListItem",
       position: i + 1,
       name: s.name,
-      url: `${pageUrl}#${s.slug}`,
+      url: `${SITE_URL}${souvenirPath(s.slug)}`,
     })),
+  };
+}
+
+/**
+ * 品目1件の詳細ページ。
+ *
+ * 一覧と同じ理由で Product は使わない。価格は「£2〜5」のような幅の
+ * 目安であって実売価格ではなく、availability も持っていない。
+ * Article として「この品について書かれた記事」を渡すほうが実態に合う。
+ */
+export function souvenirArticleJsonLd(souvenir: Souvenir) {
+  const url = `${SITE_URL}${souvenirPath(souvenir.slug)}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    mainEntityOfPage: url,
+    headline: `${souvenir.name}｜ロンドンで買えるお土産`,
+    description: souvenir.blurb,
+    ...(souvenir.image ? { image: [souvenir.image] } : {}),
+    datePublished: souvenir.createdAt.toISOString(),
+    dateModified: souvenir.updatedAt.toISOString(),
+    author: { "@type": "Organization", name: "just rondon" },
+    publisher: { "@type": "Organization", name: "just rondon" },
   };
 }

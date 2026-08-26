@@ -1,12 +1,11 @@
 import type { Souvenir } from "@prisma/client";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
-import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import {
   SOUVENIR_CATEGORY_LABELS,
+  souvenirPath,
   type SouvenirCategory,
 } from "./categories";
 
@@ -61,7 +60,14 @@ export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
           />
 
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <h3 className="text-lg font-bold leading-snug">{souvenir.name}</h3>
+            <h3 className="text-lg font-bold leading-snug">
+              <Link
+                href={souvenirPath(souvenir.slug)}
+                className="hover:text-sky-700 hover:underline dark:hover:text-sky-300"
+              >
+                {souvenir.name}
+              </Link>
+            </h3>
             {souvenir.engName && (
               <span className="text-xs italic text-muted-foreground">
                 {souvenir.engName}
@@ -101,37 +107,18 @@ export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
         </dl>
 
         {/*
-          Radix の Collapsible ではなく <details> を使う。
-          閉じている間も本文が DOM に残るので検索エンジンに読まれ、
-          クライアントコンポーネントにしなくて済む。
+          本文はここに展開せず詳細ページへ送る。以前は <details> に
+          全文を持たせていたが、同じ本文が一覧と詳細の両方に出ると
+          重複扱いになり、どちらを出すかを検索エンジンに選ばせることになる。
+          一覧は「選ぶための面」に徹し、読ませるのは詳細側に一本化する。
         */}
-        <details className="group">
-          <summary className="flex cursor-pointer list-none items-center gap-1.5 text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300">
-            <span className="group-open:hidden">詳しく読む</span>
-            <span className="hidden group-open:inline">閉じる</span>
-            <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
-          </summary>
-
-          <div className="mt-3 border-t border-slate-200 pt-3 dark:border-slate-700">
-            <MarkdownBody>{souvenir.body}</MarkdownBody>
-
-            {souvenir.tips && (
-              <p className="mt-4 rounded-lg border-l-4 border-amber-400 bg-amber-50 py-2 pl-3 pr-2 text-sm leading-relaxed text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-                <span className="font-semibold">ひとこと: </span>
-                {souvenir.tips}
-              </p>
-            )}
-
-            {souvenir.instagramUrl && (
-              <div className="mt-4">
-                <p className="mb-2 text-xs font-semibold text-muted-foreground">
-                  ブランド公式アカウントより
-                </p>
-                <InstagramEmbed url={souvenir.instagramUrl} />
-              </div>
-            )}
-          </div>
-        </details>
+        <Link
+          href={souvenirPath(souvenir.slug)}
+          className="inline-flex items-center gap-1 text-sm font-semibold text-sky-700 hover:underline dark:text-sky-300"
+        >
+          {souvenir.name}を詳しく見る
+          <span aria-hidden>→</span>
+        </Link>
       </CardContent>
     </Card>
   );

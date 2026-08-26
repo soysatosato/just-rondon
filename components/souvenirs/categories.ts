@@ -3,6 +3,11 @@ import type { Souvenir } from "@prisma/client";
 export const SOUVENIR_BASE = "/souvenirs";
 export const SOUVENIR_SECTION_NAME = "ロンドンのお土産";
 
+/** 品目1件の詳細ページ。 */
+export function souvenirPath(slug: string): string {
+  return `${SOUVENIR_BASE}/${slug}`;
+}
+
 export type SouvenirCategory = "tea" | "sweets" | "food" | "beauty" | "goods";
 
 /**
@@ -50,6 +55,13 @@ export const SOUVENIR_CATEGORY_LABELS: Record<SouvenirCategory, string> =
   Object.fromEntries(
     SOUVENIR_CATEGORIES.map((c) => [c.key, c.label]),
   ) as Record<SouvenirCategory, string>;
+
+export const SOUVENIR_CATEGORY_DESCRIPTIONS: Record<
+  SouvenirCategory,
+  string
+> = Object.fromEntries(
+  SOUVENIR_CATEGORIES.map((c) => [c.key, c.description]),
+) as Record<SouvenirCategory, string>;
 
 /** カテゴリ見出しへのアンカー。ページ内ナビと目次で同じ値を使う。 */
 export function categoryAnchor(key: SouvenirCategory): string {

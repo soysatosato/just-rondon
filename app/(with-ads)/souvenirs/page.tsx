@@ -17,6 +17,7 @@ import {
   SOUVENIR_SECTION_NAME,
   categoryAnchor,
   groupByCategory,
+  souvenirPath,
 } from "@/components/souvenirs/categories";
 
 const TITLE = "ロンドンのお土産｜本当に喜ばれる定番と、渡す相手別の選び方";
@@ -164,7 +165,7 @@ export default async function SouvenirsPage() {
                   {g.picks.map((p) => (
                     <li key={p.slug}>
                       <Link
-                        href={`#${p.slug}`}
+                        href={souvenirPath(p.slug)}
                         className="text-xs font-medium text-sky-700 hover:underline dark:text-sky-300"
                       >
                         {p.name}

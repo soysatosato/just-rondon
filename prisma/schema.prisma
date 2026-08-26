@@ -52,7 +52,7 @@ model Museum {
   hasVisited     hasVisited[]
 
   /// 館内をどの順に歩くか。Attraction.visitFlow と同じ役割。
-  visitFlow      MuseumVisitStep[]
+  visitFlow MuseumVisitStep[]
 
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
@@ -835,10 +835,45 @@ model Souvenir {
   /// 埋め込みを廃止しており、埋め込めるのは個別の投稿と Reels だけ。
   instagramUrl String?
 
+  /// 持ち帰りの実務。markdown。液体か・割れるか・溶けるか・匂うか、
+  /// 機内持ち込みと預け荷物のどちらに入れるか、日本の検疫に引っかかるか。
+  ///
+  /// body から独立させたのは、読者がここだけを確認しに戻ってくるため。
+  /// 「マーマイト 持ち帰り」「クロテッドクリーム 持ち込み」で来る人は
+  /// 商品の紹介文を読みたいわけではなく、預けるべきかだけを知りたい。
+  carryingNote String?
+
+  /// 誰に渡すと喜ばれるか。markdown。ばらまき向きか、1人に絞る品か。
+  givingNote String?
+
+  faqs SouvenirFaq[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([category])
+}
+
+// お土産1品のFAQ(/souvenirs/[slug])。BrandFaq と同じ形。
+//
+// 品目ごとに聞かれることが違う(マーマイトは「どう食べるか」、
+// クロテッドクリームは「常温で持ち帰れるか」)ので、ハブ側の共通FAQ
+// とは別に持つ。ハブのFAQは買い物全体の話に絞る。
+model SouvenirFaq {
+  id         String   @id @default(cuid())
+  souvenirId String
+  souvenir   Souvenir @relation(fields: [souvenirId], references: [id], onDelete: Cascade)
+
+  question String
+  /// markdown可。JSON-LD に出す際は stripInlineMarkdown() を通すこと。
+  answer   String
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([souvenirId, displayOrder])
 }
 
 // イギリス発のブランド1社(/brands/[slug])。
@@ -1085,7 +1120,7 @@ model Content {
   /// -------------------------------------------------------------------
 
   /// 累計閲覧数。ランキングの並べ替えキー。
-  views        Int              @default(0)
+  views        Int       @default(0)
   /// 最終閲覧日時。null は一度も見られていない(集計開始前の行を含む)。
   lastViewedAt DateTime?
 
