@@ -220,3 +220,45 @@ export const fetchPopularReadingContents = async (take = 5) => {
   });
   return contents;
 };
+
+/**
+ * トップのヒーロー背景に流すスライド。
+ *
+ * 写真を主役にするので、条件は「画像があること」ではなく
+ * 「その画像が全画面で見て耐えること」。mustSee かつ recommendLevel 最上位に
+ * 絞っているのはそのため。件数を増やすと建物の一部だけを写した資料写真が
+ * 混ざり、ヒーローの見栄えがそこで崩れる。
+ *
+ * 英語名は写真のキャプションに出すため必須にしている。日本語名だけの
+ * スポットは、白抜きの英字キャプションという意匠が成立しない。
+ */
+export const fetchHeroSlides = async (take = 5) => {
+  const rows = await db.attraction.findMany({
+    where: {
+      isPublished: true,
+      mustSee: true,
+      recommendLevel: 5,
+      engName: { not: null },
+    },
+    select: { slug: true, name: true, engName: true, image: true },
+    orderBy: { name: "asc" },
+    take,
+  });
+
+  return rows.filter(
+    (r): r is typeof r & { engName: string } => Boolean(r.image && r.engName)
+  );
+};
+
+/**
+ * ヒーローに出す実数。サイトの規模を数字で見せる。
+ * 非公開スポットと上演終了ミュージカルは読者が辿り着けないので数に入れない。
+ */
+export const fetchSiteStats = async () => {
+  const [attractions, museums, musicals] = await Promise.all([
+    db.attraction.count({ where: { isPublished: true } }),
+    db.museum.count(),
+    db.musical.count({ where: { isOnShow: true } }),
+  ]);
+  return { attractions, museums, musicals };
+};

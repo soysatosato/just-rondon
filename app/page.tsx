@@ -43,6 +43,7 @@ import { Badge } from "@/components/ui/badge";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import HeroContent from "@/components/home/HeroContent";
+import HeroSlideshow from "@/components/home/HeroSlideshow";
 import LiveStrip from "@/components/live/LiveStrip";
 import SectionHeader from "@/components/home/SectionHeader";
 import {
@@ -50,6 +51,8 @@ import {
   fetchBritishEnglishEntries,
   fetchModernBritainEntries,
   fetchUpcomingEvents,
+  fetchHeroSlides,
+  fetchSiteStats,
 } from "@/utils/actions/contents";
 import { fetchLatestBrief } from "@/utils/actions/weekly";
 import {
@@ -210,12 +213,16 @@ export default async function Page() {
     latestBritishEnglish,
     upcomingEvents,
     latestBrief,
+    heroSlides,
+    siteStats,
   ] = await Promise.all([
     fetchColumns(),
     fetchModernBritainEntries(),
     fetchBritishEnglishEntries(),
     fetchUpcomingEvents(3, now),
     fetchLatestBrief(),
+    fetchHeroSlides(),
+    fetchSiteStats(),
   ]);
   // 読み物はカテゴリごとに3枚ずつ並べるのをやめ、横断の1リストにする。
   // 各カテゴリの新しい方から2本ずつ拾い、全体を新着順に並べ替える。
@@ -286,16 +293,28 @@ export default async function Page() {
 
   return (
     <div className="bg-background">
-      {/* ヒーロー */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden border-b bg-gradient-to-b from-red-50 via-background to-background text-foreground dark:from-red-950/20 dark:via-background dark:to-background">
-        {/* 写真の代わりに、ブランドカラーの光暈で奥行きを出す装飾 */}
-        <div className="pointer-events-none absolute -top-32 left-1/2 -z-10 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-red-400/20 blur-3xl dark:bg-red-500/10" />
-        <div className="pointer-events-none absolute top-24 right-[8%] -z-10 h-64 w-64 rounded-full bg-sky-400/20 blur-3xl dark:bg-sky-500/10" />
-        <div className="pointer-events-none absolute top-10 left-[6%] -z-10 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-400/10" />
+      {/*
+        ヒーロー。背景は観光スポットの写真をゆっくり流す。
+        以前はブランドカラーのぼかし円で奥行きを出していたが、
+        このサイトが何を扱っているかを一枚で伝えられるのは写真だけなので、
+        装飾ではなく実際の掲載スポットの写真に置き換えた。
+        前景の文字は写真前提で白に固定している(HeroContent 参照)。
+      */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden border-b">
+        <HeroSlideshow slides={heroSlides} />
 
-        <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-12 sm:pt-20 sm:pb-14">
-          <HeroContent />
+        <div className="relative mx-auto max-w-6xl px-4 pt-16 pb-16 sm:pt-24 sm:pb-24">
+          <HeroContent stats={siteStats} />
+        </div>
+      </section>
 
+      {/*
+        今日のロンドンと、今週の注意。
+        写真の上に重ねると、テーマ色で描かれたこの2つが読めなくなるうえ、
+        ヒーローの主題(検索)から目を奪う。写真の外の無地の帯に下ろした。
+      */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground">
+        <div className="mx-auto max-w-6xl px-4 py-6">
           {/*
             天気・運行状況・為替の要約。詳細は各ページのウィジェットが持ち、
             ここは「今日どうか」を一目で渡して送り出すだけに絞っている。
