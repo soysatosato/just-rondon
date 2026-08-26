@@ -846,12 +846,79 @@ model Souvenir {
   /// 誰に渡すと喜ばれるか。markdown。ばらまき向きか、1人に絞る品か。
   givingNote String?
 
-  faqs SouvenirFaq[]
+  /// どれを買うか。markdown。ブランド名・銘柄・サイズまで具体的に書く。
+  ///
+  /// body / givingNote / carryingNote が「その品は何か」「誰に渡すか」
+  /// 「どう持ち帰るか」を扱うのに対し、ここだけが**店頭で指させる粒度**を
+  /// 扱う。クロテッドクリームなら Rodda's か Devon Cream Company か、
+  /// ショートブレッドなら Walkers か Shortbread House of Edinburgh か。
+  ///
+  /// 読者が最後に詰まるのはここで、棚に同じような品が並んだときに選べない。
+  /// 銘柄を書かないと詳細ページの意味が半分になる。
+  recommendation String?
+
+  faqs  SouvenirFaq[]
+  picks SouvenirPick[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([category])
+}
+
+/// 品目の中の個別商品。「フォートナム&メイソンの紅茶」に対する
+/// 「Royal Blend の250g缶」のような、店頭で指させる粒度の1点。
+///
+/// recommendation(markdown)と役割が重なるようだが、あちらは
+/// 「なぜそれを選ぶか」の地の文で、こちらは**商品そのもの**。
+/// 分けたのは画像のため——本文中に銘柄名を埋めたままだと、
+/// 商品ごとの写真を後から差し込む先が無い。行にしておけば
+/// image を埋めるだけで写真付きに変わる。
+///
+/// 画像まわりを最初から nullable で持たせてあるのは、撮影が
+/// 後追いになるため。テキストだけ先に入れて運用し、撮れた商品から
+/// image を埋めていけば、本文もスキーマも触らずに写真が増える。
+model SouvenirPick {
+  id         String   @id @default(cuid())
+  souvenirId String
+  souvenir   Souvenir @relation(fields: [souvenirId], references: [id], onDelete: Cascade)
+
+  /// 商品名。英語の正式名称。棚とラベルで一致させるので訳さない。
+  name String
+  /// 日本語の読み。英語表記だけだと店員に聞けないので併記する。
+  nameJa String?
+  /// 容量・サイズ。「250g缶」「9ml」など。同じ銘柄でも土産向きの
+  /// サイズは決まっているので、名前と分けて持つ。
+  size String?
+  /// 価格の目安。変動するので必ず幅で書く。
+  priceRange String?
+
+  /// なぜこれを選ぶか。1〜3文。recommendation 本文の要約ではなく、
+  /// この商品を選ぶ理由だけを書く。
+  reason String
+
+  /// この品目の中での位置づけ。
+  /// "standard"(定番・まず外さない) | "premium"(もう一段上)
+  /// | "budget"(ばらまき向き) | "seasonal"(季節・数量限定)
+  role String @default("standard")
+
+  /// 商品写真。撮れるまで null のまま運用する。
+  image String?
+  /// "own"(自分で撮影) | "commons" | "official" | "rakuten" | "amazon"
+  /// own のときは credit 不要。ImageCredit の分岐と対応させる。
+  imageSource String?
+  imageCredit String?
+  imageLink   String?
+
+  /// アフィリエイトリンク。日本で買えるものだけ埋まる。
+  affiliateUrl String?
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([souvenirId, displayOrder])
 }
 
 // お土産1品のFAQ(/souvenirs/[slug])。BrandFaq と同じ形。

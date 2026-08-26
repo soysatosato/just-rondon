@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Gift, Luggage, MapPin, Wallet } from "lucide-react";
+import { Gift, Luggage, MapPin, ShoppingBasket, Wallet } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -17,6 +17,7 @@ import {
   fetchSouvenirSlugs,
   fetchSouvenirs,
 } from "@/utils/actions/souvenirs";
+import SouvenirPicks from "@/components/souvenirs/SouvenirPicks";
 import { souvenirArticleJsonLd } from "@/components/souvenirs/jsonld";
 import {
   SOUVENIR_BASE,
@@ -205,6 +206,34 @@ export default async function SouvenirPage({
           </p>
         )}
       </section>
+
+      {/*
+        「どれを買うか」を本文の直後に置く。読者が店頭で最後に詰まるのは
+        品の由来でも渡し方でもなく銘柄で、棚に似た品が並んだときに
+        選べないと記事を読んだ意味が半分になる。渡し方・持ち帰りより
+        手前なのは、買う前に読むのがここだけだから。
+      */}
+      {(souvenir.picks.length > 0 || souvenir.recommendation) && (
+        <section className="mt-10">
+          <h2 className="mb-2 flex items-center gap-2 text-xl font-semibold">
+            <ShoppingBasket className="h-5 w-5 flex-none text-muted-foreground" />
+            どれを買うか
+          </h2>
+
+          {/*
+            商品一覧を地の文より先に置く。棚の前で開いた読者が要るのは
+            まず「どれ」で、理由はその次。並びだけ見て店員に聞ける形に
+            しておき、迷ったときだけ下の本文を読ませる。
+          */}
+          <SouvenirPicks picks={souvenir.picks} />
+
+          {souvenir.recommendation && (
+            <MarkdownBody className="mt-6 text-base">
+              {souvenir.recommendation}
+            </MarkdownBody>
+          )}
+        </section>
+      )}
 
       {/*
         渡し方と持ち帰りを本文と分けている。読者はここだけを確認しに

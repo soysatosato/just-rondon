@@ -30,5 +30,8 @@ export const fetchSouvenirSlugs = unstable_cache(
 export const fetchSouvenir = async (slug: string) =>
   db.souvenir.findUnique({
     where: { slug },
-    include: { faqs: { orderBy: { displayOrder: "asc" } } },
+    include: {
+      faqs: { orderBy: { displayOrder: "asc" } },
+      picks: { orderBy: { displayOrder: "asc" } },
+    },
   });
