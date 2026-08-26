@@ -26,10 +26,18 @@ export const fetchDishSlugs = unstable_cache(
   { revalidate: 60 * 60 * 24 },
 );
 
+/**
+ * 詳細ページ用。menuPicks はここでだけ引く。
+ * fetchDishes(ハブのカードと「他の料理」リンク)は店カードを描かないので、
+ * あちらに join を足すと使わない行を10料理分読むことになる。
+ */
 export const fetchDish = async (slug: string) =>
   db.dish.findUnique({
     where: { slug },
     include: {
-      restaurants: { orderBy: { displayOrder: "asc" } },
+      restaurants: {
+        orderBy: { displayOrder: "asc" },
+        include: { menuPicks: { orderBy: { displayOrder: "asc" } } },
+      },
     },
   });

@@ -789,11 +789,58 @@ model Restaurant {
   imageLink   String?
 
   displayOrder Int @default(0)
+  menuPicks    MenuPick[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([dishId])
+}
+
+/// 店で頼むべき一皿。Souvenir に対する SouvenirPick と同じ役割で、
+/// あちらが「棚のどれを買うか」ならこちらは**席に着いてから何を頼むか**。
+///
+/// Restaurant.body(180字前後)が扱うのは「なぜこの店か」——歴史、内装、
+/// 予約の仕組み。**席に着いた後の話が無い**ので、メニューを渡された
+/// 時点で読者は放り出される。ディシュームの black daal のように本文に
+/// 紛れている店もあるが、地の文なので拾いにくく写真も付けられない。
+///
+/// 画像まわりを nullable で持たせてあるのは撮影が後追いになるため。
+/// 既存の店写真12件はすべて Commons の**外観**で、料理が写っていない
+/// (RestaurantCard のコメント参照)。自分で撮った料理写真を入れる先が
+/// ここになる。imageSource: "own" のとき credit は不要。
+model MenuPick {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  /// メニュー表記。英語のまま書く。指させないと注文できないので訳さない。
+  name String
+  /// 日本語の読みと補足。何の料理か分からないと選べない。
+  nameJa String?
+  /// 価格の目安。変動するので幅で書く。
+  priceRange String?
+
+  /// なぜこれを頼むか。1〜3文。店の紹介ではなく皿の話だけを書く。
+  reason String
+
+  /// "signature"(名物・まず頼む) | "second"(2皿目・連れと分ける)
+  /// | "drink"(飲み物) | "seasonal"(時間帯・季節限定)
+  role String @default("signature")
+
+  /// 料理写真。撮れるまで null のまま運用する。
+  image String?
+  /// "own"(自分で撮影) | "commons" | "official"
+  imageSource String?
+  imageCredit String?
+  imageLink   String?
+
+  displayOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([restaurantId, displayOrder])
 }
 
 // ロンドン土産の特集(/souvenirs)で紹介する1品。

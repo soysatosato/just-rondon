@@ -1,10 +1,11 @@
-import type { Restaurant } from "@prisma/client";
+import type { MenuPick, Restaurant } from "@prisma/client";
 import { ExternalLink, MapPin, Train } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
+import MenuPicks from "@/components/restaurants/MenuPicks";
 
 /**
  * 写真の無い店の代替。
@@ -26,10 +27,16 @@ function ImageFallback({ restaurant }: { restaurant: Restaurant }) {
   );
 }
 
+/**
+ * menuPicks を含む店。fetchDish が join して渡す。
+ * ImageFallback は素の Restaurant で足りるので型を分けている。
+ */
+type RestaurantWithPicks = Restaurant & { menuPicks: MenuPick[] };
+
 export default function RestaurantCard({
   restaurant,
 }: {
-  restaurant: Restaurant;
+  restaurant: RestaurantWithPicks;
 }) {
   return (
     <Card
@@ -107,6 +114,14 @@ export default function RestaurantCard({
             <MarkdownBody>{restaurant.body}</MarkdownBody>
           </div>
         )}
+
+        {/*
+          「なぜこの店か」(body)の直後に「何を頼むか」を置く。
+          店を選び終えた読者が次に詰まるのは席に着いてからで、
+          そこを本文が扱っていない。Instagram より前なのは、
+          埋め込みが縦に長く、間に挟むと本文と分断されるため。
+        */}
+        <MenuPicks picks={restaurant.menuPicks} />
 
         {/*
           店自身の投稿を埋め込む。写真を複製しないので権利上いちばん安全に
