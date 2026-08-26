@@ -11,6 +11,7 @@ import {
   getKindMeta,
   GROUP_META,
   GROUP_ORDER,
+  type BriefGroup,
 } from "@/lib/weekly";
 import BriefItemCard from "@/components/events/BriefItemCard";
 import BriefSectionNav from "@/components/events/BriefSectionNav";
@@ -56,6 +57,29 @@ export default function WeeklyBriefView({
     meta: GROUP_META[group],
     items: brief.items.filter((item) => getKindMeta(item.kind).group === group),
   })).filter(({ items }) => items.length > 0);
+
+  /*
+   * 号の「主役」として大きく出す件数。
+   *
+   * 文字だけのカードが10枚以上続くと、どれがその週の目玉なのかが読者に
+   * 伝わらない。耳寄り情報の先頭1件を大きくして、号の顔を作る。
+   *
+   * 主役の選定は displayOrder の先頭、という編集上の約束にしている。
+   * headline との語句一致や本文の長さから機械的に推測する案も試したが、
+   * 既存4号で当たり外れが割れた(w35 は displayOrder の先頭がテート・モダンの
+   * 閉幕展で、headline が主役と呼んでいるカーニバルは3番目にある)。
+   * 推測を重ねるより、号を書くときに主役を先頭へ置く運用のほうが確実なので、
+   * 表示側は並びをそのまま信頼する。既存号で並びが実態と合っていないものは
+   * displayOrder を入れ替えて直す。
+   *
+   * 主役にするのは「耳寄り情報」だけ。支障情報は severity で既に強調されて
+   * いるうえ、運休を号の顔にすると「また来たい」と思わせる面が消える。
+   * 件数が少ない号で全部が主役になると強弱が付かないので、5件以上ある号に
+   * 限って適用する。
+   */
+  const FEATURED_MIN_ITEMS = 5;
+  const featuredCount = (group: BriefGroup, itemCount: number) =>
+    group === "opportunity" && itemCount >= FEATURED_MIN_ITEMS ? 1 : 0;
 
   const navSections = [
     ...grouped.map(({ meta, items }) => ({
@@ -165,8 +189,12 @@ export default function WeeklyBriefView({
             </div>
 
             <div className="grid gap-4">
-              {items.map((item) => (
-                <BriefItemCard key={item.id} item={item} />
+              {items.map((item, index) => (
+                <BriefItemCard
+                  key={item.id}
+                  item={item}
+                  featured={index < featuredCount(group, items.length)}
+                />
               ))}
             </div>
           </section>

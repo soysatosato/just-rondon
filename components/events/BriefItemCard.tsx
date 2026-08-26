@@ -7,12 +7,22 @@ import {
   Ticket,
   ExternalLink,
   TriangleAlert,
+  ChevronDown,
 } from "lucide-react";
 import type { WeeklyBriefItem } from "@prisma/client";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getKindMeta, getSeverityMeta, getTimingLabel } from "@/lib/weekly";
+
+/**
+ * この字数を超える本文は折りたたむ。
+ *
+ * 実データの本文は300〜1400字で、中央値がおよそ530字。しきい値を中央値より
+ * 下に置くことで大半の項目が畳まれ、一覧のスクロール量が減る。300字台の短い
+ * 項目まで畳むと、開く手間だけ増えて読める量が変わらないため下限は残す。
+ */
+const COLLAPSE_THRESHOLD = 400;
 
 function formatPeriod(start: Date | null, end: Date | null): string | null {
   if (!start && !end) return null;
@@ -23,7 +33,17 @@ function formatPeriod(start: Date | null, end: Date | null): string | null {
   return format((start ?? end) as Date, "M月d日");
 }
 
-export default function BriefItemCard({ item }: { item: WeeklyBriefItem }) {
+export default function BriefItemCard({
+  item,
+  /**
+   * 号の主役として大きく出すか。号の先頭1〜2件にだけ立てる想定で、
+   * 文字だけのカードが延々と続くのを避けて「その週の顔」を作る。
+   */
+  featured = false,
+}: {
+  item: WeeklyBriefItem;
+  featured?: boolean;
+}) {
   const kind = getKindMeta(item.kind);
   const severity = getSeverityMeta(item.severity);
   const timingLabel = getTimingLabel(item.timing);
@@ -31,6 +51,10 @@ export default function BriefItemCard({ item }: { item: WeeklyBriefItem }) {
 
   // 旅程を組み替える必要があるものは、他の項目に埋もれさせない。
   const isCritical = item.severity === "high";
+
+  // 主役カードは開いた状態で見せる。畳むと大きくした意味が無くなる。
+  const isCollapsible =
+    !featured && item.description.length > COLLAPSE_THRESHOLD;
 
   const facts = [
     { icon: CalendarDays, label: formatPeriod(item.startDate, item.endDate) },
@@ -41,19 +65,34 @@ export default function BriefItemCard({ item }: { item: WeeklyBriefItem }) {
     Boolean(f.label)
   );
 
+  const body = (
+    <div
+      className={cn(
+        "prose prose-sm max-w-none leading-relaxed text-muted-foreground marker:text-muted-foreground dark:prose-invert dark:text-gray-300 prose-headings:text-foreground prose-strong:text-foreground dark:prose-strong:text-white",
+        featured && "sm:prose-base"
+      )}
+    >
+      <ReactMarkdown>{item.description}</ReactMarkdown>
+    </div>
+  );
+
   return (
     <article
       className={cn(
         "overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-md dark:bg-neutral-900",
         isCritical
           ? "border-red-500/40 shadow-sm dark:border-red-500/30"
-          : "border-border dark:border-neutral-700"
+          : "border-border dark:border-neutral-700",
+        // 主役カードは枠を強めて、通常カードの列と地続きに見えないようにする。
+        featured &&
+          !isCritical &&
+          "border-primary/30 shadow-sm dark:border-primary/30"
       )}
     >
       {/* 重要度が最も高い項目だけ、カード上端に色帯を引いて一覧の中で拾えるようにする。 */}
       {isCritical && <div className="h-1 w-full bg-red-500" />}
 
-      <div className="p-4 sm:p-5">
+      <div className={cn("p-4 sm:p-5", featured && "sm:p-6 md:p-7")}>
         <div className="mb-2.5 flex flex-wrap items-center gap-1.5">
           <span
             className={cn(
@@ -95,7 +134,14 @@ export default function BriefItemCard({ item }: { item: WeeklyBriefItem }) {
           )}
         </div>
 
-        <h3 className="text-[15px] font-bold leading-snug sm:text-base dark:text-white">
+        <h3
+          className={cn(
+            "font-bold leading-snug dark:text-white",
+            featured
+              ? "text-lg sm:text-xl md:text-2xl"
+              : "text-[15px] sm:text-base"
+          )}
+        >
           {item.title}
         </h3>
 
@@ -121,7 +167,10 @@ export default function BriefItemCard({ item }: { item: WeeklyBriefItem }) {
             {facts.map(({ icon: FactIcon, label }) => (
               <li
                 key={label}
-                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground dark:text-gray-400"
+                className={cn(
+                  "inline-flex items-center gap-1.5 text-muted-foreground dark:text-gray-400",
+                  featured ? "text-xs sm:text-sm" : "text-xs"
+                )}
               >
                 <FactIcon className="h-3.5 w-3.5 shrink-0 opacity-70" />
                 <span>{label}</span>
@@ -130,9 +179,23 @@ export default function BriefItemCard({ item }: { item: WeeklyBriefItem }) {
           </ul>
         )}
 
-        <div className="prose prose-sm mt-3 max-w-none leading-relaxed text-muted-foreground marker:text-muted-foreground dark:prose-invert dark:text-gray-300 prose-headings:text-foreground prose-strong:text-foreground dark:prose-strong:text-white">
-          <ReactMarkdown>{item.description}</ReactMarkdown>
-        </div>
+        {isCollapsible ? (
+          /*
+           * 長い本文の折りたたみ。details/summary で組むのでクライアントJSは
+           * 要らず、Ctrl+F の検索でも中身が拾える(閉じていてもブラウザが開く)。
+           * group/body で開閉状態を子に伝え、矢印の向きと文言を切り替える。
+           */
+          <details className="group/body mt-3">
+            <summary className="flex cursor-pointer list-none items-center gap-1 text-xs font-semibold text-primary underline-offset-2 hover:underline [&::-webkit-details-marker]:hidden">
+              <ChevronDown className="h-3.5 w-3.5 shrink-0 transition-transform group-open/body:rotate-180" />
+              <span className="group-open/body:hidden">続きを読む</span>
+              <span className="hidden group-open/body:inline">閉じる</span>
+            </summary>
+            <div className="mt-3">{body}</div>
+          </details>
+        ) : (
+          <div className="mt-3">{body}</div>
+        )}
 
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-3 dark:border-neutral-800">
           {item.website && (
