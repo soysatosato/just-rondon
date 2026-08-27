@@ -167,14 +167,6 @@ export const fetchEventsForMonth = async (year: number, month: number) => {
   });
 };
 
-export const fetchUpcomingEvents = async (limit = 6, from: Date = new Date()) => {
-  return db.event.findMany({
-    where: { endDate: { gte: from } },
-    orderBy: [{ startDate: "asc" }, { displayOrder: "asc" }],
-    take: limit,
-  });
-};
-
 /**
  * 読み物の「人気の記事」を取り出す。
  *
