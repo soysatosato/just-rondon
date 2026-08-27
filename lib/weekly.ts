@@ -158,98 +158,140 @@ export type BriefStatus = "confirmed" | "planned";
 
 export interface KindMeta {
   label: string;
+  /**
+   * 誌面型の見出しで、和文ラベルに添える欧文。
+   *
+   * 項目が10件を超える号では、和文の小さなラベルだけを縦に並べても
+   * どこで種類が切り替わったのかが目で拾えない。欧文を重ねると
+   * 字形の差が節目になり、走り読みでも切れ目が分かる。
+   */
+  eng: string;
   group: BriefGroup;
   icon: LucideIcon;
   iconWrapClass: string;
   badgeClass: string;
+  /** 種類を示す小さな丸。塗りつぶしのチップの代わりに使う。 */
+  dotClass: string;
+  /** ラベルの文字色。塗りを持たせないぶん、色はここだけに載せる。 */
+  textClass: string;
 }
 
 export const KIND_META: Record<BriefKind, KindMeta> = {
   strike: {
     label: "ストライキ",
+    eng: "Strike",
     group: "alert",
     icon: TriangleAlert,
     iconWrapClass: "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400",
     badgeClass: "border-red-600/40 bg-red-600/10 text-red-700 dark:text-red-400",
+    dotClass: "bg-red-500",
+    textClass: "text-red-700 dark:text-red-400",
   },
   disruption: {
     label: "運休・工事",
+    eng: "Disruption",
     group: "alert",
     icon: TrainFront,
     iconWrapClass:
       "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400",
     badgeClass:
       "border-orange-600/40 bg-orange-600/10 text-orange-700 dark:text-orange-400",
+    dotClass: "bg-orange-500",
+    textClass: "text-orange-700 dark:text-orange-400",
   },
   closure: {
     label: "臨時休館",
+    eng: "Closure",
     group: "alert",
     icon: DoorClosed,
     iconWrapClass:
       "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400",
     badgeClass:
       "border-orange-600/40 bg-orange-600/10 text-orange-700 dark:text-orange-400",
+    dotClass: "bg-orange-500",
+    textClass: "text-orange-700 dark:text-orange-400",
   },
   crowd: {
     label: "混雑・封鎖",
+    eng: "Crowds",
     group: "alert",
     icon: Users,
     iconWrapClass:
       "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
     badgeClass:
       "border-amber-600/40 bg-amber-600/10 text-amber-700 dark:text-amber-400",
+    dotClass: "bg-amber-500",
+    textClass: "text-amber-700 dark:text-amber-400",
   },
   event: {
     label: "今週だけの催し",
+    eng: "Event",
     group: "opportunity",
     icon: Sparkles,
     iconWrapClass:
       "bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400",
     badgeClass:
       "border-violet-600/40 bg-violet-600/10 text-violet-700 dark:text-violet-400",
+    dotClass: "bg-violet-500",
+    textClass: "text-violet-700 dark:text-violet-400",
   },
   exhibition: {
     label: "展覧会",
+    eng: "Exhibition",
     group: "opportunity",
     icon: Palette,
     iconWrapClass:
       "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400",
     badgeClass:
       "border-indigo-600/40 bg-indigo-600/10 text-indigo-700 dark:text-indigo-400",
+    dotClass: "bg-indigo-500",
+    textClass: "text-indigo-700 dark:text-indigo-400",
   },
   deal: {
     label: "お得情報",
+    eng: "Offer",
     group: "opportunity",
     icon: Tag,
     iconWrapClass:
       "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
     badgeClass:
       "border-emerald-600/40 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400",
+    dotClass: "bg-emerald-500",
+    textClass: "text-emerald-700 dark:text-emerald-400",
   },
   opening: {
     label: "新オープン",
+    eng: "Opening",
     group: "opportunity",
     icon: Store,
     iconWrapClass:
       "bg-teal-50 text-teal-600 dark:bg-teal-950/40 dark:text-teal-400",
     badgeClass:
       "border-teal-600/40 bg-teal-600/10 text-teal-700 dark:text-teal-400",
+    dotClass: "bg-teal-500",
+    textClass: "text-teal-700 dark:text-teal-400",
   },
   weather: {
     label: "天候",
+    eng: "Weather",
     group: "context",
     icon: CloudSun,
     iconWrapClass: "bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400",
     badgeClass: "border-sky-600/40 bg-sky-600/10 text-sky-700 dark:text-sky-400",
+    dotClass: "bg-sky-500",
+    textClass: "text-sky-700 dark:text-sky-400",
   },
   holiday: {
     label: "祝日",
+    eng: "Holiday",
     group: "context",
     icon: CalendarDays,
     iconWrapClass:
       "bg-slate-50 text-slate-600 dark:bg-slate-900/60 dark:text-slate-300",
     badgeClass:
       "border-slate-600/40 bg-slate-600/10 text-slate-700 dark:text-slate-300",
+    dotClass: "bg-slate-500",
+    textClass: "text-slate-700 dark:text-slate-300",
   },
 };
 
@@ -262,13 +304,15 @@ export function getKindMeta(kind: string): KindMeta {
 
 export interface GroupMeta {
   heading: string;
+  /** 見出しに添える欧文。号の中の大きな節目を示す。 */
+  eng: string;
   /** セクションナビ用の短い名前。 */
   shortLabel: string;
   /** セクション見出しの下に出す一言。 */
   note: string;
   anchor: string;
   icon: LucideIcon;
-  /** 見出し左の縦罫。セクションの性格を色で示す。 */
+  /** 見出しの上に引く罫。セクションの性格を色で示す。 */
   accentClass: string;
   chipClass: string;
 }
@@ -276,6 +320,7 @@ export interface GroupMeta {
 export const GROUP_META: Record<BriefGroup, GroupMeta> = {
   alert: {
     heading: "今週の注意",
+    eng: "Advisories",
     shortLabel: "注意",
     note: "知らないと予定が崩れるもの。出発前に公式サイトで最新情報を確認してください。",
     anchor: "alert",
@@ -286,6 +331,7 @@ export const GROUP_META: Record<BriefGroup, GroupMeta> = {
   },
   opportunity: {
     heading: "今週の耳寄り情報",
+    eng: "Highlights",
     shortLabel: "耳寄り",
     note: "この週だからこそ狙えるもの。",
     anchor: "opportunity",
@@ -296,6 +342,7 @@ export const GROUP_META: Record<BriefGroup, GroupMeta> = {
   },
   context: {
     heading: "今週の前提",
+    eng: "Good to Know",
     shortLabel: "前提",
     note: "天候や祝日など、動き方に影響するもの。",
     anchor: "context",
@@ -307,9 +354,19 @@ export const GROUP_META: Record<BriefGroup, GroupMeta> = {
 };
 
 /**
- * 読者が号を開く動機はまず「今週なにがあるか」なので、耳寄り情報を先頭に置く。
- * 支障系は影響が大きいものだけを載せる運用にしたぶん、件数が少なく後ろでも埋もれない。
+ * 号の題字に出す発行番号。「2026 · W36」。
+ *
+ * 通し番号(第◯号)にはしない。この連載が始まったのは第33週で、
+ * ISO週番号を号数として出すと、実際には4号しか出ていないのに
+ * 「第36号」と名乗ることになる。年と週で示せば嘘にならず、
+ * バックナンバーの並びとも一致する。
  */
+export function getIssueDesignation(slug: string): string | null {
+  const parts = parseWeekSlug(slug);
+  if (!parts) return null;
+  return `${parts.year} · W${String(parts.week).padStart(2, "0")}`;
+}
+
 export const GROUP_ORDER: BriefGroup[] = ["opportunity", "alert", "context"];
 
 export interface SeverityMeta {

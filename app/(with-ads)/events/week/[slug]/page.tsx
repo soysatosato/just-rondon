@@ -17,8 +17,7 @@ import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const revalidate = 60 * 60;
 
@@ -90,33 +89,40 @@ export default async function WeeklyBriefPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="mb-6">
-        <Link href="/events">
-          <Button variant="outline" className="dark:border-neutral-600">
-            ← 最新号へ
-          </Button>
+      <div className="mb-5">
+        <Link
+          href="/events"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          最新号へ
         </Link>
       </div>
 
       <WeeklyBriefView brief={brief} staples={staples} forecast={forecast} />
 
-      <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
-
-      <Separator className="my-8 dark:bg-neutral-700" />
+      <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
 
       <BackIssueList issues={backIssues} />
 
-      <p className="mt-8 text-center text-xs text-muted-foreground dark:text-gray-400">
-        {freshness.isPast
-          ? `この号は${format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。現在の状況とは異なります。`
-          : `この号は${format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。出発前に各公式サイトで最新の状況を確認してください。`}
-      </p>
-
-      <div className="mt-8 text-center">
-        <Link href="/events">
-          <Button className="mx-auto">最新号へ戻る</Button>
+      {/*
+       * 奥付。号の終わりを示す太罫の下に、調査時点と次の導線を置く。
+       * 中央揃えのボタンをやめたのは、本文が左揃えで通っているため。
+       */}
+      <footer className="mt-12 border-t-2 border-foreground pt-4">
+        <p className="text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
+          {freshness.isPast
+            ? `この号は${format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。現在の状況とは異なります。`
+            : `この号は${format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。出発前に各公式サイトで最新の状況を確認してください。`}
+        </p>
+        <Link
+          href="/events"
+          className="group mt-4 inline-flex items-center gap-2 text-sm font-bold underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground dark:text-white"
+        >
+          最新号を読む
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
-      </div>
+      </footer>
     </main>
   );
 }

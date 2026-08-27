@@ -5,7 +5,7 @@ import type { DaySlot } from "@/lib/weekly";
 import { cn } from "@/lib/utils";
 
 /**
- * 会期の7日を1列ずつ並べ、その日の件数と天気を1枚に重ねたもの。
+ * 会期の7日を1列ずつ並べ、その日の件数と天気を1本の帯に重ねたもの。
  *
  * 設計上の判断:
  *
@@ -19,6 +19,12 @@ import { cn } from "@/lib/utils";
  *    過去号では days が空になる。列は日付側で作り、天気は載っていれば
  *    重ねる、という向きにしている。
  * 4. 件数が0の日も列は残す。「その日は何も無い」ことも旅程を組む情報。
+ * 5. **枠は帯の外周だけ。** 以前は7日ぶんの角丸カードを並べていたが、
+ *    1枚に4〜5個の数字が入るため、7枚が並ぶと数字の壁になっていた。
+ *    外周の細罫と縦の仕切りだけにして、列を「表の列」として読ませる。
+ * 6. **最低気温は落とす。** 出すかどうかを決めるのは最高気温と雨なので、
+ *    1列に載せる数字を減らして、走り読みできる密度に寄せた。
+ *    最低気温は読み上げ用のテキストに残してある。
  */
 
 /** この確率以上なら傘の印を出す。40%はロンドンだと「降ると思って動く」境目。 */
@@ -49,8 +55,12 @@ export default function WeekTimeline({
   const maxCount = Math.max(...slots.map((s) => s.count));
 
   return (
-    <section aria-label="今週の日別の予定と天気" className="mb-8">
-      <ul className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+    <section aria-label="今週の日別の予定と天気" className="mb-12">
+      <p className="mb-2 font-serif text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+        The Week at a Glance
+      </p>
+
+      <ul className="grid grid-cols-7 divide-x divide-border border-y border-border dark:divide-neutral-800 dark:border-neutral-800">
         {slots.map((slot) => {
           const day = byDate.get(slot.date);
           const rainy =
@@ -68,68 +78,73 @@ export default function WeekTimeline({
               <Cell
                 href={linkable ? `#day-${slot.date}` : undefined}
                 className={cn(
-                  "flex h-full flex-col items-center gap-1 rounded-xl border px-1.5 py-2.5 text-center",
+                  "flex h-full flex-col items-center gap-1.5 px-0.5 py-3 text-center",
                   linkable &&
-                    "transition-colors hover:bg-muted/60 dark:hover:bg-neutral-800/50",
-                  day?.isToday
-                    ? "border-primary/50 bg-primary/5"
-                    : "border-border dark:border-neutral-700"
+                    "transition-colors hover:bg-muted/60 dark:hover:bg-neutral-900",
+                  day?.isToday && "bg-sky-500/[0.07]"
                 )}
               >
                 <span
                   className={cn(
-                    "text-[11px] font-semibold tabular-nums",
+                    "text-[11px] font-bold leading-none",
                     day?.isToday
-                      ? "text-primary"
+                      ? "text-sky-700 dark:text-sky-400"
                       : slot.isWeekend
                         ? "text-rose-600 dark:text-rose-400"
-                        : "text-muted-foreground dark:text-gray-400"
+                        : "text-foreground/70 dark:text-gray-300"
                   )}
                 >
-                  {slot.label}({slot.weekday})
+                  {slot.weekday}
+                </span>
+
+                <span className="text-[10px] leading-none tabular-nums text-muted-foreground dark:text-gray-500">
+                  {slot.label}
                 </span>
 
                 {day && (
                   <>
-                    <span className="text-lg leading-none" aria-hidden>
+                    <span className="text-base leading-none" aria-hidden>
                       {day.icon}
                     </span>
-                    <span className="sr-only">{day.weather}</span>
+                    <span className="sr-only">
+                      {day.weather}、最高{day.tempMax}度、最低{day.tempMin}度
+                    </span>
+                    <span className="text-[11px] leading-none tabular-nums text-foreground/70 dark:text-gray-300">
+                      {day.tempMax}°
+                    </span>
                   </>
                 )}
 
                 {day?.precipitation != null && (
                   <span
                     className={cn(
-                      "flex items-center gap-0.5 text-[11px] font-semibold tabular-nums",
+                      "flex items-center gap-0.5 text-[10px] leading-none tabular-nums",
                       rainy
-                        ? "text-sky-700 dark:text-sky-400"
-                        : "text-muted-foreground dark:text-gray-400"
+                        ? "font-semibold text-sky-700 dark:text-sky-400"
+                        : "text-muted-foreground/70 dark:text-gray-500"
                     )}
                   >
-                    {rainy && <Umbrella className="h-3 w-3 shrink-0" />}
+                    {rainy && <Umbrella className="h-2.5 w-2.5 shrink-0" />}
                     {day.precipitation}%
                   </span>
                 )}
 
-                {day && (
-                  <span className="text-[10px] tabular-nums text-muted-foreground dark:text-gray-400">
-                    {day.tempMax}° / {day.tempMin}°
-                  </span>
-                )}
-
-                {/* 件数は列の下端に置き、天気の有無で位置がぶれないよう mt-auto で押し下げる。 */}
+                {/*
+                 * 件数は列の下端に置き、天気の有無で位置がぶれないよう
+                 * mt-auto で押し下げる。ページ番号のように serif の数字で
+                 * 出して、上の気温・降水の数字と役割を取り違えないようにする。
+                 */}
                 <span
                   className={cn(
-                    "mt-auto pt-1 text-[11px] font-semibold tabular-nums",
+                    "mt-auto pt-2 font-serif text-sm leading-none tabular-nums",
                     slot.count === 0
-                      ? "text-muted-foreground/50 dark:text-gray-600"
+                      ? "text-muted-foreground/40"
                       : isPeak
-                        ? "text-primary"
-                        : "text-foreground dark:text-gray-200"
+                        ? "font-bold text-foreground underline decoration-2 underline-offset-4 dark:text-white"
+                        : "text-foreground/70 dark:text-gray-300"
                   )}
                 >
-                  {slot.count === 0 ? "—" : `${slot.count}件`}
+                  {slot.count === 0 ? "—" : slot.count}
                 </span>
               </Cell>
             </li>
@@ -137,9 +152,9 @@ export default function WeekTimeline({
         })}
       </ul>
 
-      <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground dark:text-gray-400">
-        件数はその日に始まる・終わるもの。
-        {hasForecast && "数字は降水確率。天気の出典は Open-Meteo。"}
+      <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground dark:text-gray-500">
+        下段の数字は、その日に始まる・終わるものの件数。
+        {hasForecast && "気温は最高気温、％は降水確率(出典 Open-Meteo)。"}
         {isPartial && "予報は7日先までのため、会期の後半は出していない。"}
       </p>
     </section>

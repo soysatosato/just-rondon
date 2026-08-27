@@ -16,7 +16,6 @@ import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import EventMonthCard from "@/components/events/EventMonthCard";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 // 号は週に1本だが、ストライキ情報は数日で覆る。カレンダーより短く取る。
@@ -108,54 +107,57 @@ export default async function EventsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      {/* 次号の予告。題字の上に細く1行だけ置き、本体の号より前に出さない。 */}
       {upcoming && (
         <Link
           href={`/events/week/${upcoming.slug}`}
-          className="mb-6 flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3 transition-colors hover:bg-muted dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+          className="group mb-5 flex items-center gap-3 border-b border-border pb-3 transition-colors hover:border-foreground/40"
         >
-          <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
-            来週号
+          <span className="shrink-0 font-serif text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            Next Issue
           </span>
-          <span className="min-w-0 flex-1 text-sm leading-snug dark:text-gray-200">
+          <span className="min-w-0 flex-1 text-xs font-bold leading-snug tabular-nums dark:text-gray-200">
             {formatWeekRange(upcoming.weekStart, upcoming.weekEnd).replace(
               /\([日月火水木金土]\)/g,
               ""
             )}
             の号を先に読む
           </span>
-          <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
 
       <WeeklyBriefView brief={brief} staples={staples} forecast={forecast} />
 
-      <Separator className="my-8 dark:bg-neutral-700" />
-
       <BackIssueList issues={backIssues} />
 
-      <div className="rounded-2xl border border-border bg-muted/40 p-5 sm:p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <CalendarRange className="h-6 w-6" />
-          </span>
+      {/*
+       * 年間カレンダーへの導線。号の本体と同じ罫の組みに揃え、
+       * 塗った箱にしない。囲うと、号より後に置いた補足のほうが強く見える。
+       */}
+      <section className="border-t-2 border-foreground pt-4">
+        <p className="font-serif text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+          The Year Ahead
+        </p>
+        <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-bold sm:text-lg dark:text-white">
+            <h2 className="flex items-center gap-2 text-lg font-bold tracking-tight sm:text-xl dark:text-white">
+              <CalendarRange className="h-4 w-4 shrink-0 opacity-60" />
               年間のイベントを探す
             </h2>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
               チェルシー・フラワーショーやクリスマスマーケットなど、1年前から日程が決まっている
               恒例行事は月別カレンダーにまとめています。旅行の時期を決めるときはこちらへ。
             </p>
           </div>
-        </div>
-        <Link href="/events/calendar" className="mt-4 block sm:mt-4">
-          <Button className="w-full sm:w-auto">
-            2026年のイベントカレンダーを見る
+          <Button asChild variant="outline" className="shrink-0 sm:mt-1">
+            <Link href="/events/calendar">2026年のカレンダーへ →</Link>
           </Button>
-        </Link>
-      </div>
+        </div>
+      </section>
 
-      <p className="mt-8 text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
+      {/* 奥付。 */}
+      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
         この号は{format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。
         運行情報や開催情報は変わることがあるため、出発前に各公式サイトで最新の状況を確認してください。
       </p>
