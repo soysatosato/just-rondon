@@ -12,6 +12,12 @@
  *
  * 実行: npx tsx scripts/fix-content-markdown-bold.ts --dry
  *      npx tsx scripts/fix-content-markdown-bold.ts
+ *
+ * --only=<文字列> でラベルの部分一致に絞れる。全体を一度に書き換えると
+ * 何が変わったかを追えないので、区分ごとに確認しながら流すときに使う。
+ *   例: --only=/events/week   --only=/column/the-lion
+ *
+ * --diff を付けると、書き換わる行を before/after で並べて出す。
  */
 
 import "dotenv/config";
@@ -33,6 +39,40 @@ function hasBrokenBold(text: string): boolean {
 
 /** 閉じ ** を壊す句読点。全角・半角の両方。 */
 const PUNCT = "。、！？：；）」』】〉》・，．!?:;)\\]\\.";
+
+/** 閉じ括弧と、それに対応する開き括弧。 */
+const BRACKET_PAIRS: Record<string, string> = {
+  ")": "(",
+  "）": "（",
+  "」": "「",
+  "』": "『",
+  "】": "【",
+  "〉": "〈",
+  "》": "《",
+  "]": "[",
+};
+
+/**
+ * 「**...(注)**」の形を「**...**(注)」に組み替える。
+ * 対応する開き括弧が太字の開始より前にある(=対になっていない)場合は、
+ * 動かすと文が壊れるので何も返さない。
+ */
+function moveBracketOut(before: string, punct: string, after: string): string {
+  const open = BRACKET_PAIRS[punct];
+  if (!open) return "";
+
+  const openBracket = before.lastIndexOf(open);
+  const openBold = before.lastIndexOf("**");
+  if (openBracket < 0 || openBold < 0 || openBracket <= openBold) return "";
+
+  return (
+    before.slice(0, openBracket) +
+    "**" +
+    before.slice(openBracket) +
+    punct +
+    after
+  );
+}
 
 /**
  * 壊れている閉じ ** を1つずつ直す。fix-markdown-bold.ts の fixLine と同じ方針:
@@ -57,6 +97,15 @@ function fixText(text: string): string | null {
       const trials = /[。、！？，．!?]/.test(punct)
         ? [`${before}**${punct}${after}`]
         : [
+            /*
+             * 閉じ括弧の場合、句読点と同じように ** と入れ替えると
+             * 開き括弧だけが太字の内側に残って対応が壊れる
+             * (**8月28日(金**)なので)。括弧の対を丸ごと外に出す。
+             *   **8月28日(金)**なので → **8月28日**(金)なので
+             * 「**用語(読み)**」「**日付(曜日)**」は日本語の本文で繰り返し
+             * 現れる形なので、空白を挟む案より先にこれを試す。
+             */
+            moveBracketOut(before, punct, after),
             `${before}${punct}** ${after}`,
             (() => {
               const open = before.lastIndexOf("**");
@@ -171,13 +220,28 @@ async function collectWeeklyBriefTargets(): Promise<Target[]> {
   }));
 }
 
+/** 書き換わった行だけを before/after で並べる。 */
+function printDiff(before: string, after: string) {
+  const a = before.split("\n");
+  const b = after.split("\n");
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (a[i] === b[i]) continue;
+    if (a[i] !== undefined) console.log(`    - ${a[i]}`);
+    if (b[i] !== undefined) console.log(`    + ${b[i]}`);
+  }
+}
+
 async function main() {
   const dry = process.argv.includes("--dry");
+  const diff = process.argv.includes("--diff");
+  const only = process.argv
+    .find((a) => a.startsWith("--only="))
+    ?.slice("--only=".length);
 
   const targets = [
     ...(await collectContentTargets()),
     ...(await collectWeeklyBriefTargets()),
-  ];
+  ].filter((t) => (only ? t.label.includes(only) : true));
 
   let fixedCount = 0;
   const skipped: { label: string; text: string }[] = [];
@@ -192,6 +256,7 @@ async function main() {
     }
 
     console.log(`修正: ${t.label}`);
+    if (diff) printDiff(t.text, fixed);
     if (!dry) await t.apply(fixed);
     fixedCount++;
   }
