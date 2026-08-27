@@ -53,7 +53,16 @@ const BRACKET_PAIRS: Record<string, string> = {
 };
 
 /**
- * 「**...(注)**」の形を「**...**(注)」に組み替える。
+ * 閉じ括弧で終わる太字を、括弧が外に出るように組み替える。
+ *
+ * 括弧が太字の途中から始まるか、太字の全体を包んでいるかで結果が変わる。
+ *
+ *   **8月28日(金)**なので   → **8月28日**(金)なので     途中から
+ *   **「顔・表情」**のことだ → 「**顔・表情**」のことだ   全体を包む
+ *
+ * 全体を包む場合に閉じ括弧だけを外へ出すと、太字の中身が空になって
+ * **** が残る。この形は括弧の対ごと外に出し、中身だけを太字にする。
+ *
  * 対応する開き括弧が太字の開始より前にある(=対になっていない)場合は、
  * 動かすと文が壊れるので何も返さない。
  */
@@ -64,6 +73,19 @@ function moveBracketOut(before: string, punct: string, after: string): string {
   const openBracket = before.lastIndexOf(open);
   const openBold = before.lastIndexOf("**");
   if (openBracket < 0 || openBold < 0 || openBracket <= openBold) return "";
+
+  // 開き括弧が ** の直後にある = 太字の中身がまるごと括弧の中。
+  if (openBracket === openBold + 2) {
+    return (
+      before.slice(0, openBold) +
+      open +
+      "**" +
+      before.slice(openBracket + open.length) +
+      "**" +
+      punct +
+      after
+    );
+  }
 
   return (
     before.slice(0, openBracket) +
