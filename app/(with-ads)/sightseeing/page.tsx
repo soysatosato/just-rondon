@@ -1,40 +1,23 @@
 export const revalidate = 60 * 60;
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import ReactMarkdown from "react-markdown";
-import Link from "next/link";
-
-import { CardCarousel } from "@/components/card/CardCarousel";
-
-import {
-  getHighlightAttractions,
-  getMustSeeCategories,
-  getSeasonalAttractions,
-  getRoyalAttractions,
-  getTours,
-  getKidsAttractions,
-  getFreeAttractions,
-  getTodaysPicks,
-} from "@/utils/sightseeing";
+import { Button } from "@/components/ui/button";
+import BreadCrumbs from "@/components/home/BreadCrumbs";
+import PhotoRail from "@/components/home/PhotoRail";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   faqPageJsonLd,
-  filmWorkPath,
-  plaqueAreaPath,
   sightseeingBreadcrumbJsonLd,
   sightseeingHubCollectionJsonLd,
 } from "@/components/sightseeing/jsonld";
@@ -43,8 +26,12 @@ import {
   travelGuidePath,
   travelGuides,
 } from "@/components/sightseeing/guides/guides";
-import { filmWorks } from "./film-locations/data";
-import { plaqueAreas } from "./blue-plaques/data";
+import {
+  AREAS_BASE,
+  areaGuidePath,
+  areaGuides,
+} from "@/components/sightseeing/areas/areas";
+import { fetchSightseeingHub } from "@/utils/sightseeing";
 
 const PAGE_TITLE =
   "ロンドン観光ガイド | 定番スポット・宿泊・移動手段・モデルコース";
@@ -71,29 +58,128 @@ export const metadata = buildPageMetadata({
   ],
 });
 
+/*
+ * /sightseeing ハブの構成。
+ *
+ * 旧版は「写真 + 見出し + 2行」の同型カードを12ブロック積んでいて、
+ * 約11画面あった。トップページを組み替えたときと同じ問題を抱えていた。
+ *
+ *   - ロケ地・ブループラーク・王室・ツアー・家族・無料が、全部
+ *     同じ見た目のカルーセルだった。6本で約5画面を使いながら、
+ *     区別がつかないので実質1本ぶんの情報量しか渡せていなかった。
+ *   - royal-london / kids-free-activities / must-see が複数の
+ *     ブロックに重複して出ていた。同じ導線を二度三度置いていた。
+ *   - Today's Picks は slug のアルファベット順から日替わりで3件
+ *     拾っているだけで、選定の意図が無く、他の棚と中身が被った。
+ *
+ * そこで、上から順に「実物 → 場所 → テーマ → 実務」に組み替えた。
+ *
+ *   1. 見出し    このセクションが何を渡すかを3段落で
+ *   2. 名所の棚  DBの写真と固有名詞を横スクロールで3列(旧カード群の置換)
+ *   3. エリア    街区ごとの半日ルート6本。表紙写真はDBから借りる
+ *   4. テーマ    旧6カルーセルを、文字だけのタイル1グリッドに集約
+ *   5. 旅の準備  8本のガイドを意思決定順の番号付きリストに
+ *   6. FAQ       JSON-LD と対で残す
+ *
+ * 色は観光=赤を基調にし、テーマのタイルだけ区分ごとに振り分ける。
+ * 棚の見出しと索引の細い罫にしか色を載せないのはトップと同じ方針。
+ */
+
+/**
+ * テーマ特集への導線。
+ *
+ * 旧版はこれを6つのカルーセル(ロケ地・ブループラーク・王室・ツアー・
+ * 家族・無料)に展開し、各特集の中身まで並べていた。写真を出しても
+ * 特集そのものの写真ではなく代表スポットの写真になるため、
+ * 上の「名所の棚」と同じ絵が二度出るだけだった。
+ *
+ * ここでは中身を見せるのをやめ、文字のタイルに畳んでいる。導線の
+ * 一覧は網羅性が仕事で、6本ぶんの面積を使う理由が無い。無料と
+ * 子ども向けは上で棚として出しているので、ここには入れない。
+ *
+ * blurb は各特集ページの description から起こしている。ハブ側で
+ * 独自の売り文句を書くと、実際のページと食い違ったときに気づけない。
+ */
+const THEMES = [
+  {
+    href: "/sightseeing/harry-potter",
+    eyebrow: "Harry Potter",
+    label: "ハリー・ポッターの世界",
+    blurb:
+      "キングスクロス駅9¾番線、レドンホール・マーケット、ミレニアム橋。映画のロケ地と、スタジオツアーへの行き方を。",
+    stripe: "bg-amber-500",
+    text: "text-amber-700 dark:text-amber-500",
+  },
+  {
+    href: "/sightseeing/film-locations",
+    eyebrow: "Film & TV",
+    label: "映画・ドラマのロケ地",
+    blurb:
+      "221Bはベーカー街になく、王妃の宮殿は政府の迎賓館。作品ごとに、実際に訪ねられる場所だけを見学の可否つきで。",
+    stripe: "bg-sky-500",
+    text: "text-sky-700 dark:text-sky-400",
+  },
+  {
+    href: "/sightseeing/blue-plaques",
+    eyebrow: "Blue Plaques",
+    label: "ブループラーク巡り",
+    blurb:
+      "壁の青いプレートが記すのは、そこに住んだ作家や音楽家の住所。English Heritage の公式スキームだけをエリア別に。",
+    stripe: "bg-sky-500",
+    text: "text-sky-700 dark:text-sky-400",
+  },
+  {
+    href: "/sightseeing/royal-london",
+    eyebrow: "Royal London",
+    label: "王室ゆかりのロンドン",
+    blurb:
+      "バッキンガム宮殿のステート・アパートメント公開と衛兵交代式、王冠宝器のあるロンドン塔、ケンジントン宮殿のめぐり方。",
+    stripe: "bg-violet-500",
+    text: "text-violet-600 dark:text-violet-400",
+  },
+  {
+    href: "/sightseeing/football",
+    eyebrow: "Football",
+    label: "プレミアリーグを観る",
+    blurb:
+      "一般販売は存在せず、転売チケットでは入場できません。会員制度の仕組みと6クラブの取りやすさを12本で。",
+    stripe: "bg-emerald-500",
+    text: "text-emerald-700 dark:text-emerald-400",
+  },
+  {
+    href: "/sightseeing/stadium-tours",
+    eyebrow: "Stadium Tours",
+    label: "スタジアムツアー",
+    blurb:
+      "試合が取れなくてもピッチには立てます。エミレーツ、スタンフォード・ブリッジ、トッテナム、ウェンブリーを比較。",
+    stripe: "bg-emerald-500",
+    text: "text-emerald-700 dark:text-emerald-400",
+  },
+  {
+    href: "/sightseeing/thames-cruise",
+    eyebrow: "River Thames",
+    label: "テムズ川クルーズ",
+    blurb:
+      "ビッグ・ベンからタワーブリッジまでを水上から。観光クルーズ、ナイト、ディナー、アフタヌーンティーの料金とルート。",
+    stripe: "bg-sky-500",
+    text: "text-sky-700 dark:text-sky-400",
+  },
+  {
+    href: "/sightseeing/christmas-markets",
+    eyebrow: "Christmas",
+    label: "クリスマスマーケット",
+    blurb:
+      "サウスバンク、ウィンターワンダーランド、ロンドンブリッジ。開催期間とアクセスを市ごとに。",
+    stripe: "bg-red-500",
+    text: "text-red-600 dark:text-red-400",
+  },
+] as const;
+
 export default async function Page() {
-  const [
-    highlightAttractions,
-    mustSeeCategories,
-    // seasonalAttractions,
-    royalAttractions,
-    tours,
-    kidsAttractions,
-    freeAttractions,
-    todaysPicks,
-  ] = await Promise.all([
-    getHighlightAttractions(),
-    getMustSeeCategories(),
-    // getSeasonalAttractions(),
-    getRoyalAttractions(),
-    getTours(),
-    getKidsAttractions(),
-    getFreeAttractions(),
-    getTodaysPicks(3),
-  ]);
+  const { rails, areas, totalSpots } = await fetchSightseeingHub();
 
   return (
-    <div className="min-h-screen">
+    <div className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd data={sightseeingBreadcrumbJsonLd()} />
       <JsonLd
         data={sightseeingHubCollectionJsonLd(travelGuides, {
@@ -105,557 +191,326 @@ export default async function Page() {
         data={faqPageJsonLd(sightseeingFaqItems, `${SITE_URL}/sightseeing`)}
       />
 
-      <main className="mx-auto max-w-6xl px-4 py-8 space-y-12">
-        <section className="space-y-6">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              London Sightseeing
-            </h1>
-            <p className="max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              ロンドンには、世界的に有名な観光スポットがぎゅっと詰まっています。
-              王室ゆかりの宮殿や歴史ある教会、最先端の展望台や体験型ミュージアムまで、
-              初めてのロンドンでも、リピーターでも楽しめる見どころが目白押しです。
-            </p>
-            <p className="max-w-3xl text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              ここでは、日本からの旅行者にも人気の「絶対に外せないスポット」を中心に、
-              テーマ別にロンドンの見どころを整理して紹介します。
-              多くの施設は事前予約制や日時指定チケット制なので、
-              渡航前にオフィシャルサイトで最新情報を確認しておくと安心です。
-            </p>
-          </div>
-          <div className="mt-4 justify-center flex">
-            <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
-          </div>
-          {/* メインの4カード（ここはそのまま） */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            {highlightAttractions.map((item: any, idx: any) => (
-              <Link key={idx} href={`/sightseeing/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-32 w-full sm:h-40">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </div>
-                  <CardHeader className="space-y-1">
-                    <p className="text-xs font-medium text-emerald-600">
-                      {item.subtitle}
-                    </p>
-                    <CardTitle className="text-lg">{item.title}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                      {item.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </section>
+      <BreadCrumbs name="観光ガイド" />
 
-        {/* ロンドン観光の概要テキスト（そのまま） */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">ロンドン観光の始め方</h2>
-          <p className="max-w-4xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-            ロンドンの魅力は「歴史」と「今」が同時に存在していることです。
-            タワー・オブ・ロンドンで中世の雰囲気を味わいつつ、
-            ロンドン・アイからは近未来的なシティのビル群を見渡せます。
-            ウェストミンスター寺院では英国の王室行事の舞台を見学し、
-            バッキンガム宮殿では衛兵交代式を見守る——
-            1日のうちに何世紀分もの時間旅行ができてしまうのがロンドンです。
+      {/*
+        見出し。旧版は「世界的に有名な観光スポットがぎゅっと詰まって
+        います」から始まっていて、どのガイドブックにも書いてあることを
+        3段落使って繰り返していた。ここでは、実際に旅程を組むときに
+        最初に破綻する点を先に出す。
+      */}
+      <header className="mt-6 max-w-3xl space-y-4">
+        <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+          ロンドン観光ガイド
+        </h1>
+        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+          ロンドン観光でつまずくのは「何を見るか」ではありません。
+          <strong className="font-semibold">1日に何箇所入るか</strong>
+          です。ロンドン塔は所要3時間〜、ウェストミンスター寺院は2〜3時間。
+          この2つを同じ日に入れた時点で、その日はもう終わりです。
+        </p>
+        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+          そこでこのガイドは、名所を並べるだけで終わらせません。各スポットのページに
+          <strong className="font-semibold">料金・所要時間・最寄駅</strong>
+          と、着いてからどの順に見るかを書いています。
+          何を削るかを決められる材料を先に渡すのが目的です。
+        </p>
+        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+          掲載は{totalSpots}件。宿・地下鉄・予算といった出発前の実務は、
+          ページ下の「旅の準備」に分けてあります。
+          <strong className="font-semibold">
+            ETA（電子渡航認証）だけは無いと搭乗できない
+          </strong>
+          ので、そこから先に片付けてください。
+        </p>
+      </header>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Button asChild className="bg-red-600 hover:bg-red-700">
+          <Link href="/sightseeing/itinerary">1〜5日のモデルコース →</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/sightseeing/all">スポット一覧（{totalSpots}件）→</Link>
+        </Button>
+      </div>
+
+      <AdSenseUnit
+        slot={AD_SLOTS.listing}
+        className="mt-8"
+        reservedHeight={120}
+      />
+
+      {/*
+        1. 名所の棚。
+        旧版の「メイン4カード」「必見スポット5カード」「王室」「ツアー」
+        「家族」「無料」「Today's Picks」の置き換え。カード7ブロック
+        (約6画面)が3列(約1.5画面)になり、見せられる件数は増えている。
+      */}
+      <section className="mt-14">
+        {/* 棚の見出しは PhotoRail 側が h3 を出すので、束ねる h2 をここに置く。
+            無いと h1 の次がいきなり h3 になり、見出しの階層が飛ぶ。 */}
+        <div className="max-w-3xl border-b border-foreground/15 pb-5">
+          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="h-3 w-0.5 shrink-0 rounded-full bg-red-500" />
+            Spots
           </p>
-          <p className="max-w-4xl text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-            「何から回ればいいか分からない」という人は、
-            まずは「必見スポット」と「シティパス」の情報を押さえ、
-            1〜2日分のシンプルなモデルコースを作るのがおすすめです。
-          </p>
-
-          <div className="flex flex-wrap justify-end gap-4 mt-2">
-            <Link
-              href="/sightseeing/itinerary"
-              className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              1〜5日のモデルコースを見る →
-            </Link>
-            <Link
-              href="/sightseeing/all"
-              className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ロンドン観光スポット一覧を見る →
-            </Link>
-          </div>
-        </section>
-
-        {/* 旅の準備（宿泊・移動・モデルコース・実用情報のガイドへの導線） */}
-        <section className="space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
-              Travel Essentials
-            </p>
-            <h2 className="mt-2 text-xl font-semibold">旅の準備</h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              ETA（渡航認証）の申請、どこに泊まるか、どう移動するか、何日で何を回るか、予算はいくらか。
-              観光スポットを選ぶ前に決めておきたいことを、テーマ別のガイドにまとめました。
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {travelGuides.map((guide) => (
-              <Link key={guide.slug} href={travelGuidePath(guide.slug)}>
-                <Card className="h-full border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer transition hover:border-emerald-400 hover:shadow-md dark:hover:border-emerald-500">
-                  <CardHeader className="space-y-1">
-                    <p className="text-xs font-semibold text-emerald-600">
-                      {guide.eyebrow}
-                    </p>
-                    <CardTitle className="text-base">{guide.label}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                      {guide.blurb}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ロケ地巡り。画像を持たない特集なので、カードは文字だけで成立させている。 */}
-        <section className="space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">
-              Film &amp; TV Locations
-            </p>
-            <h2 className="mt-2 text-xl font-semibold">
-              映画・ドラマのロケ地巡り
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              221Bはベーカー街になく、王妃の宮殿は政府の迎賓館。
-              作品ごとに、実際に訪ねられるロケ地だけを行き方と見学の可否つきで紹介します。
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {filmWorks.map((work) => (
-              <Link key={work.slug} href={filmWorkPath(work.slug)}>
-                <Card className="h-full border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer transition hover:border-sky-400 hover:shadow-md dark:hover:border-sky-500">
-                  <CardHeader className="space-y-1">
-                    <p className="text-xs font-semibold text-sky-600">
-                      {work.eyebrow} · {work.years}
-                    </p>
-                    <CardTitle className="text-base">
-                      {work.title}のロケ地
-                    </CardTitle>
-                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                      {work.summary}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-            <Link href="/sightseeing/film-locations">
-              <Card className="h-full border-dashed border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 shadow-none cursor-pointer transition hover:border-sky-400 hover:shadow-md">
-                <CardHeader className="space-y-1">
-                  <p className="text-xs font-semibold text-sky-600">Guide</p>
-                  <CardTitle className="text-base">
-                    ロケ地巡りガイド トップ
-                  </CardTitle>
-                  <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                    掲載中の作品一覧と、ロケ地を訪ねる前に知っておきたいこと。
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          </div>
-        </section>
-
-        {/* ブループラーク巡り。ロケ地巡りと同じ構成のカードグリッド。 */}
-        <section className="space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">
-              Blue Plaque Tour
-            </p>
-            <h2 className="mt-2 text-xl font-semibold">
-              ブループラーク巡り
-            </h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              建物の壁に埋め込まれた青いプレートが記すのは、そこに住んだ作家や音楽家、政治家たちの歴史。
-              English Heritageの公式スキームだけを、エリア別に行き方と見学の可否つきで紹介します。
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {plaqueAreas.map((area) => (
-              <Link key={area.slug} href={plaqueAreaPath(area.slug)}>
-                <Card className="h-full border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer transition hover:border-sky-400 hover:shadow-md dark:hover:border-sky-500">
-                  <CardHeader className="space-y-1">
-                    <p className="text-xs font-semibold text-sky-600">
-                      {area.eyebrow}
-                    </p>
-                    <CardTitle className="text-base">
-                      {area.title}のブループラーク
-                    </CardTitle>
-                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                      {area.summary}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-            <Link href="/sightseeing/blue-plaques">
-              <Card className="h-full border-dashed border-slate-300 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 shadow-none cursor-pointer transition hover:border-sky-400 hover:shadow-md">
-                <CardHeader className="space-y-1">
-                  <p className="text-xs font-semibold text-sky-600">Guide</p>
-                  <CardTitle className="text-base">
-                    ブループラーク巡りガイド トップ
-                  </CardTitle>
-                  <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                    掲載中のエリア一覧と、プラークを巡る前に知っておきたいこと。
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          </div>
-        </section>
-
-        {/* Today’s Picks（grid → carousel） */}
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-bold">Today’s Picks</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              本日のおすすめスポットをランダムにセレクト。
-            </p>
-          </div>
-
-          <CardCarousel>
-            {todaysPicks.map((item: any, idx: any) => (
-              <div
-                key={idx}
-                className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
-              >
-                <Link href={`/sightseeing/${item.slug}`}>
-                  <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition">
-                    <div className="relative h-32 w-full sm:h-40">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                      />
-                    </div>
-                    <CardHeader className="space-y-1">
-                      <p className="text-xs font-semibold text-emerald-600">
-                        Today’s Pick
-                      </p>
-                      <CardTitle className="text-base">{item.title}</CardTitle>
-                      <CardDescription className="text-xs line-clamp-2">
-                        {item.description}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                </Link>
-              </div>
-            ))}
-          </CardCarousel>
-        </section>
-
-        {/* 必見スポットカテゴリ（ここはgridのまま維持） */}
-        <section className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold">ロンドン必見スポット</h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              バッキンガム宮殿やビッグ・ベン、ロンドン・アイなど、
-              「ロンドンらしさ」を感じる名所をテーマ別にチェックしましょう。
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {mustSeeCategories.map((item: any, idx: any) => (
-              <Link key={idx} href={`/sightseeing/${item.slug}`}>
-                <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                  <div className="relative h-32 w-full sm:h-40">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </div>
-                  <CardHeader className="space-y-1">
-                    <CardTitle className="text-base">{item.title}</CardTitle>
-                    <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                      {item.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-          </div>
-          <Card className="border-dashed border-slate-300 bg-slate-50 dark:bg-slate-700">
-            <CardContent className="space-y-2 py-4 text-xs text-slate-600 dark:text-slate-300">
-              <p className="font-semibold">
-                Sightseeing pass（観光パス）をうまく使おう
-              </p>
-              <p>
-                ロンドン・パスや他のシティパスを利用すると、
-                人気アトラクションの入場料が最大50%程度節約できることもあります。
-                自分の行きたい場所と比較しながら、もっともお得なパスを選びましょう。
-              </p>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* <section className="space-y-6">
-          <h2 className="text-xl font-semibold">季節イベント</h2>
-
-          <CardCarousel>
-            {seasonalAttractions.map((item: any, idx: any) => (
-              <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
-                <Link href={`/sightseeing/${item.slug}`}>
-                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-32 w-full sm:h-40">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                      />
-                    </div>
-                    <CardContent className="space-y-1 py-3">
-                      <p className="text-sm font-semibold">{item.title}</p>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">
-                        {item.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </div>
-            ))}
-          </CardCarousel>
-        </section> */}
-
-        {/* 王室ゆかり（grid → carousel） */}
-        <section className="space-y-4">
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold">王室ゆかりのスポット</h3>
-
-            <CardCarousel>
-              {royalAttractions.map((item: any, idx: any) => (
-                <div
-                  key={idx}
-                  className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_25%]"
-                >
-                  <Link href={`/sightseeing/${item.slug}`}>
-                    <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                      <div className="relative h-32 w-full sm:h-40">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                          fetchPriority="low"
-                        />
-                      </div>
-                      <CardContent className="space-y-1 py-2">
-                        <p className="text-xs font-semibold">{item.title}</p>
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                          {item.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </div>
-              ))}
-            </CardCarousel>
-          </div>
-        </section>
-
-        {/* ツアー（grid → carousel） */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">見逃せないロンドンツアー</h2>
-
-          <CardCarousel>
-            {tours.map((item: any, idx: any) => (
-              <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
-                <Link href={`/sightseeing/${item.slug}`}>
-                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-32 w-full sm:h-40">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                      />
-                    </div>
-                    <CardContent className="space-y-1 py-3">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-sm font-semibold">{item.title}</p>
-                        {item.badge && (
-                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">
-                        {item.description}
-                      </p>
-                      {item.price && (
-                        <p className="text-[11px] font-medium text-slate-900 dark:text-slate-100">
-                          From {item.price}
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </Link>
-              </div>
-            ))}
-          </CardCarousel>
-        </section>
-
-        {/* 家族向け（grid → carousel） */}
-        <section className="space-y-6">
-          <div>
-            <h2 className="text-xl font-semibold">家族で楽しめるロンドン</h2>
-            <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              子どもと一緒のロンドン旅行なら、体験型ミュージアムやアトラクションが充実したエリアを中心にホテルを選ぶと移動が楽になります。
-              エリアごとの向き不向きは
-              <Link
-                href="/sightseeing/hotels"
-                className="mx-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                宿泊エリア別ホテル選び
-              </Link>
-              にまとめています。
-            </p>
-          </div>
-
-          <CardCarousel>
-            {kidsAttractions.map((item: any, idx: any) => (
-              <div key={idx} className="flex-[0_0_100%] md:flex-[0_0_50%]">
-                <Link href={`/sightseeing/${item.slug}`}>
-                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-32 w-full sm:h-40">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                      />
-                    </div>
-                    <CardContent className="space-y-1 py-3">
-                      <p className="text-sm font-semibold">{item.title}</p>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">
-                        {item.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </div>
-            ))}
-          </CardCarousel>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">
-            無料で楽しめるロンドンの施設
+          <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
+            名所を探す
           </h2>
-          <p className="max-w-4xl text-sm text-slate-600 dark:text-slate-300">
-            ロンドンには、国立博物館や美術館だけでなく、
-            公園、マーケット、歴史的建造物、展望スポットなど、
-            入場無料で楽しめる施設や見どころが数多くあります
-            （一部エリアや特別展示は有料の場合あり）。
-            予算を抑えながらも、ロンドンらしい文化や街の雰囲気を存分に味わえるのが魅力です。
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            行き先そのものから決めるなら、ここから。定番・入場無料・子ども連れの3つの並べ方で、
+            同じスポットが重ならないように出しています。
           </p>
-          <p className="text-sm">
-            <Link
-              href="/sightseeing/free"
-              className="text-blue-700 hover:underline dark:text-blue-400"
-            >
-              入場無料のスポットをジャンル別にすべて見る →
-            </Link>
+        </div>
+
+        <div className="mt-10 space-y-12 sm:space-y-14">
+          <PhotoRail
+            eyebrow="Must-See"
+            title="見逃せない名所"
+            description="初めてのロンドンで外さない定番。料金と所要時間、着いてから何をどの順に見るかまで書いています。"
+            href="/sightseeing/must-see"
+            moreLabel="名所をすべて見る"
+            items={rails.mustSee}
+            accentClassName="bg-red-500"
+          />
+          <PhotoRail
+            eyebrow="Free Entry"
+            title="無料で入れる"
+            description="国立の博物館・美術館は常設展が無料です。公園や街歩きを含めて、入場料のかからないスポット。"
+            href="/sightseeing/free"
+            moreLabel="無料スポットをすべて見る"
+            items={rails.free}
+            accentClassName="bg-red-500"
+          />
+          <PhotoRail
+            eyebrow="With Kids"
+            title="子どもと楽しむ"
+            description="自然史博物館やサイエンス・ミュージアムなど、子どもと1日いられる場所。多くは入場無料です。"
+            href="/sightseeing/kids-free-activities"
+            moreLabel="子ども向けをすべて見る"
+            items={rails.kids}
+            accentClassName="bg-red-500"
+          />
+        </div>
+      </section>
+
+      {/*
+        2. エリア。
+        表紙写真はエリアガイド側が持っていないので、そのエリアで最も
+        推しているスポットの写真を借りている(fetchSightseeingHub)。
+        エリアに写真用のカラムを足さないのは、スポットが入れ替われば
+        表紙も自動で追随したほうが、手で貼り替えるより古びないため。
+      */}
+      <section className="mt-16">
+        <div className="max-w-3xl border-b border-foreground/15 pb-5">
+          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="h-3 w-0.5 shrink-0 rounded-full bg-red-500" />
+            Neighbourhoods
           </p>
+          <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
+            エリアで歩く
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            地下鉄で点から点へ飛ぶより、街区ごとにまとめて歩いたほうが速く回れます。
+            6つのエリアについて、半日の回遊ルートと最寄駅、歩く時間の目安をまとめました。
+          </p>
+        </div>
 
-          <CardCarousel>
-            {freeAttractions.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {areaGuides.map((area) => {
+            const summary = areas[area.slug];
+            return (
+              <Link
+                key={area.slug}
+                href={areaGuidePath(area.slug)}
+                className="group flex flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
-                {/* getFreeAttractions() が返すのは Attraction なので、リンク先は
-                    /sightseeing/[slug]。同じ館の /museums 側のページへは、
-                    詳細ページに置いた CrossSectionLink から渡す
-                    （lib/museum-attraction-pairs.ts の対応表）。 */}
-                <Link href={`/sightseeing/${item.slug}`}>
-                  <Card className="overflow-hidden border-none shadow-sm cursor-pointer hover:shadow-md transition">
-                    <div className="relative h-32 w-full sm:h-40">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority="low"
-                      />
-                    </div>
-                    <CardHeader className="space-y-1">
-                      <CardTitle className="text-base">{item.title}</CardTitle>
-                      <CardDescription className="text-xs leading-relaxed line-clamp-2">
-                        {item.description}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                </Link>
-              </div>
-            ))}
-          </CardCarousel>
-        </section>
-
-        {/* FAQ（Card一覧 → Accordion） */}
-        <section className="space-y-6">
-          <h2 className="text-xl font-semibold">ロンドン観光 FAQ</h2>
-
-          <Accordion type="single" collapsible className="space-y-3">
-            {sightseeingFaqItems.map((faq, idx) => (
-              <AccordionItem
-                key={idx}
-                value={`faq-${idx}`}
-                className="border-none"
-              >
-                <Card className="border-none shadow-sm">
-                  <AccordionTrigger className="px-6 py-4">
-                    <span className="text-sm font-semibold">
-                      {faq.question}
+                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                  {summary?.image && (
+                    <img
+                      src={summary.image}
+                      alt=""
+                      aria-hidden
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  )}
+                  {summary?.count ? (
+                    <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white">
+                      {summary.count}スポット
                     </span>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pb-4">
-                    <div className="space-y-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-                      {faq.answer.map((line: any, i: any) => (
-                        <div key={i} className="flex gap-1">
-                          <span className="shrink-0">・</span>
-                          <div className="prose prose-slate max-w-none">
-                            <ReactMarkdown>{line}</ReactMarkdown>
-                          </div>
-                        </div>
-                      ))}
+                  ) : null}
+                </div>
+
+                <div className="flex flex-1 flex-col p-4">
+                  <p className="truncate text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                    {area.eyebrow}
+                  </p>
+                  <p className="mt-1 text-sm font-bold leading-snug decoration-1 underline-offset-2 group-hover:underline">
+                    {area.label}
+                  </p>
+                  <p className="mt-2 line-clamp-3 flex-1 text-xs leading-relaxed text-muted-foreground">
+                    {area.blurb}
+                  </p>
+                  <p className="mt-3 border-t pt-2.5 text-[11px] leading-relaxed text-muted-foreground">
+                    <span className="font-semibold text-foreground">
+                      歩く目安 {area.walkTime}
+                    </span>
+                    <span className="mt-0.5 block truncate">
+                      {area.station}
+                    </span>
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        <p className="mt-5 text-sm">
+          <Link
+            href={AREAS_BASE}
+            className="font-semibold text-red-700 underline-offset-4 hover:underline dark:text-red-400"
+          >
+            エリアガイドのトップへ →
+          </Link>
+        </p>
+      </section>
+
+      {/* 3. テーマ。旧版の6カルーセル(約5画面)をここ1グリッドに畳んでいる。 */}
+      <section className="mt-16">
+        <div className="max-w-3xl border-b border-foreground/15 pb-5">
+          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="h-3 w-0.5 shrink-0 rounded-full bg-red-500" />
+            Themes
+          </p>
+          <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
+            テーマで巡る
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            ひとつの興味を軸に、市内を横断して回る特集です。
+            エリアをまたぐので、上の街区別ガイドとは別に組んでいます。
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {THEMES.map((theme) => (
+            <Link key={theme.href} href={theme.href} className="group block">
+              <div className="flex h-full gap-3.5 rounded-lg border bg-card p-4 transition hover:-translate-y-0.5 hover:shadow-md">
+                <span
+                  className={`w-1 shrink-0 rounded-full ${theme.stripe}`}
+                  aria-hidden
+                />
+                <span className="min-w-0">
+                  <span
+                    className={`block text-[10px] font-bold uppercase tracking-[0.15em] ${theme.text}`}
+                  >
+                    {theme.eyebrow}
+                  </span>
+                  <span className="mt-1 block text-sm font-bold leading-snug decoration-1 underline-offset-2 group-hover:underline">
+                    {theme.label}
+                  </span>
+                  <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
+                    {theme.blurb}
+                  </span>
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/*
+        4. 旅の準備。
+        旧版は同型カード8枚のグリッドだった。travelGuides の並びは
+        guides.ts のコメントどおり「旅行者の意思決定順」なので、
+        番号を振って順番そのものを見せる形にした。カードを縦に積むより、
+        「上から片付ける」という読み方が伝わる。
+      */}
+      <section className="mt-16">
+        <div className="max-w-3xl border-b border-foreground/15 pb-5">
+          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="h-3 w-0.5 shrink-0 rounded-full bg-sky-500" />
+            Travel Essentials
+          </p>
+          <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
+            旅の準備
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            上から順に片付けると手戻りがありません。ETAが無いと搭乗できず、
+            宿と移動が決まらないと予算が積めないためです。
+          </p>
+        </div>
+
+        <ol className="mt-8 divide-y overflow-hidden rounded-xl border bg-card">
+          {travelGuides.map((guide, idx) => (
+            <li key={guide.slug}>
+              <Link
+                href={travelGuidePath(guide.slug)}
+                className="group flex gap-4 p-4 transition-colors hover:bg-muted/50"
+              >
+                <span className="w-7 shrink-0 pt-0.5 text-sm font-bold tabular-nums text-sky-600 dark:text-sky-400">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                    {guide.eyebrow}
+                  </span>
+                  <span className="mt-0.5 block text-sm font-bold leading-snug decoration-1 underline-offset-2 group-hover:underline">
+                    {guide.label}
+                  </span>
+                  <span className="mt-1.5 block line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                    {guide.blurb}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* 5. FAQ。FAQPage の JSON-LD と対で残す。 */}
+      <section className="mt-16">
+        <div className="max-w-3xl border-b border-foreground/15 pb-5">
+          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="h-3 w-0.5 shrink-0 rounded-full bg-red-500" />
+            FAQ
+          </p>
+          <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
+            よくある質問
+          </h2>
+        </div>
+
+        <Accordion
+          type="single"
+          collapsible
+          className="mt-6 divide-y rounded-xl border bg-card"
+        >
+          {sightseeingFaqItems.map((faq, idx) => (
+            <AccordionItem
+              key={idx}
+              value={`faq-${idx}`}
+              className="border-none"
+            >
+              <AccordionTrigger className="px-5 py-4 text-left">
+                <span className="text-sm font-semibold">{faq.question}</span>
+              </AccordionTrigger>
+              <AccordionContent className="px-5 pb-4">
+                <div className="space-y-1.5 text-xs leading-relaxed text-muted-foreground">
+                  {faq.answer.map((line, i) => (
+                    <div key={i} className="flex gap-1.5">
+                      <span className="shrink-0">・</span>
+                      <div className="prose prose-sm prose-slate max-w-none dark:prose-invert prose-p:my-0">
+                        <ReactMarkdown>{line}</ReactMarkdown>
+                      </div>
                     </div>
-                  </AccordionContent>
-                </Card>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </section>
-      </main>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </section>
     </div>
   );
 }

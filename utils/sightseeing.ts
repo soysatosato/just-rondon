@@ -1,308 +1,155 @@
+import { unstable_cache } from "next/cache";
+
 import db from "./db";
+import type { RailItem } from "./actions/home";
 
-// highlight 用の静的1件（the-london-pass）
-export const STATIC_HIGHLIGHT_PASS = {
-  title: "The London Pass",
-  subtitle: "ロンドン観光パス",
-  description: "主要観光スポットの入場料がセットになったお得なシティパス。",
-  slug: "the-london-pass",
-  image:
-    "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/londonpass.jpeg",
+/**
+ * /sightseeing ハブが使うデータ。このファイルはハブ専用で、他からは読まない。
+ *
+ * 旧実装は「静的なハードコード + 日替わりランダム」の混成だった。
+ * 問題が3つあった。
+ *
+ * 1. モジュール変数(cachedPool / cachedDay)にプールを溜めていた。
+ *    サーバーレスではインスタンスごとに別の日付が入り、同じ時刻に
+ *    別の内容が返る。ISR のキャッシュとも二重になる。
+ * 2. select を書かず take:100 で行を丸ごと引いていた。ハブは写真と
+ *    名前しか使わないのに、markdown 本文まで毎回読んでいた。
+ * 3. 「ランダムに1件拾って静的な4件の末尾に足す」形だったので、
+ *    同じスポットが必見・王室・無料の3つの棚に同時に出ることがあった。
+ *
+ * ここではトップページの fetchHomeRails と同じ形に揃える——細い select、
+ * unstable_cache で1日1回、返すのは表示に必要な形だけ。
+ */
+
+/** 棚1枚ぶんの列。本文(stories)には一切触れない。 */
+const RAIL_SELECT = {
+  slug: true,
+  name: true,
+  engName: true,
+  image: true,
+  tagline: true,
+} as const;
+
+/** 棚に並べる最大枚数。PhotoRail は横スクロールなので多めでよい。 */
+const RAIL_SIZE = 12;
+
+type RailRow = {
+  slug: string;
+  name: string;
+  engName: string | null;
+  image: string;
+  tagline: string | null;
 };
 
-// must-see 静的4件
-export const STATIC_MUST_SEE_CATEGORIES = [
-  {
-    title: "ロンドン必見スポット厳選",
-    description: "まず押さえておきたい代表的な観光名所を厳選。",
-    slug: "must-see",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/must-see-bg.jpg",
-  },
-  {
-    title: "ハリー・ポッターゆかりの地",
-    description: "作品の舞台となったロケ地や関連アトラクションを巡る。",
-    slug: "harry-potter",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/51/Harry_Potter_logo.svg",
-  },
-  {
-    title: "王室ゆかりの観光地",
-    description: "バッキンガム宮殿や王室ギャラリーなど英国王室の世界へ。",
-    slug: "royal-london",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/royal-london-bg.jpeg",
-  },
-  {
-    title: "子どもと楽しむロンドン",
-    description: "家族旅行にぴったりな体験型スポットを紹介。",
-    slug: "kids-free-activities",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/kids-free-activities-bg.jpeg",
-  },
-];
-
-// seasonal 静的1件
-export const STATIC_SEASONAL = {
-  title: "クリスマスマーケット2025",
-  description:
-    "ロンドン冬の風物詩。市内各所で開催される巨大クリスマスマーケット。",
-  slug: "christmas-markets",
-  image:
-    "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/london-cm-bg.jpeg",
-};
-
-// royal 静的1件
-export const STATIC_ROYAL = {
-  title: "王室ゆかりのロンドン完全ガイド",
-  description: "主要な王室スポットをまとめてチェック。",
-  slug: "royal-london",
-  image:
-    "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/royal-london-bg.jpeg",
-};
-
-// tour 静的2件
-export const STATIC_TOURS = [
-  {
-    title: "ロンドン・スタジアムツアー完全ガイド",
-    description: "プレミアリーグのスタジアム見学ツアー。",
-    slug: "stadium-tours",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d2/London_Wembley.jpg",
-    price: "£20.00〜（目安）",
-    badge: "",
-  },
-  {
-    title: "テムズ川ボートツアー",
-    description: "水上から楽しむロンドン観光の王道。",
-    slug: "thames-cruise",
-    image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/thamescruisebg.jpeg",
-    price: "目安 £20〜",
-    badge: "",
-  },
-];
-
-/* -----------------------------------------------------
-   共通：ランダム取得ヘルパー
------------------------------------------------------ */
-function hashToUint32(s: string) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) {
-    h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  }
-  return h;
-}
-
-function todayKeyUTC() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-/* ===============================
-   🔥 モジュール内キャッシュ
-   （DBは1日1回・1リクエスト1回）
-================================ */
-let cachedPool: any[] | null = null;
-let cachedDay: string | null = null;
-
-async function getAttractionPool() {
-  const day = todayKeyUTC();
-
-  if (cachedPool && cachedDay === day) {
-    return cachedPool;
-  }
-
-  // 👇 DBアクセスはここ1回だけ
-  cachedPool = await db.attraction.findMany({
-    where: {
-      isPublished: true,
-      OR: [
-        { recommendLevel: 5 },
-        { mustSee: true },
-        { category: { in: ["seasonal", "royal", "tour"] } },
-        { isForKids: true },
-        { isFree: true },
-      ],
-    },
-    orderBy: { slug: "asc" },
-    take: 100,
-  });
-
-  cachedDay = day;
-  return cachedPool;
-}
-
-/* ===============================
-   共通ピック関数（DB触らない）
-================================ */
-function pick<T>(
-  list: T[],
-  filter: (a: T) => boolean,
-  seed: number,
-  take: number,
-): T[] {
-  const filtered = list.filter(filter);
-  if (filtered.length === 0) return [];
-
-  const offset = seed % filtered.length;
-  return [...filtered.slice(offset), ...filtered.slice(0, offset)].slice(
-    0,
-    take,
-  );
-}
-
-export async function getHighlightAttractions() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "highlight");
-
-  const items = pick(pool, (a) => a.recommendLevel === 5, seed, 2);
-
-  return [
-    ...items.map((a) => ({
-      title: a.name,
-      subtitle: "おすすめ度★5",
-      description: a.tagline || a.summary || "",
-      slug: a.slug,
-      image: a.image,
-    })),
-    STATIC_HIGHLIGHT_PASS,
-  ];
-}
-
-export async function getMustSeeCategories() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "mustSee");
-
-  const extra = pick(pool, (a) => a.mustSee, seed, 1);
-
-  return [
-    ...STATIC_MUST_SEE_CATEGORIES,
-    ...extra.map((a) => ({
-      title: a.name,
-      description: a.tagline || a.summary || "",
-      slug: a.slug,
-      image: a.image,
-    })),
-  ];
-}
-
-export async function getSeasonalAttractions() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "seasonal");
-
-  const items = pick(pool, (a) => a.category === "seasonal", seed, 1);
-
-  return [
-    STATIC_SEASONAL,
-    ...items.map((a) => ({
-      title: a.name,
-      description: a.tagline || a.summary || "",
-      slug: a.slug,
-      image: a.image,
-    })),
-  ];
-}
-
-export async function getRoyalAttractions() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "royal");
-
-  const items = pick(pool, (a) => a.category === "royal", seed, 2);
-
-  return [
-    STATIC_ROYAL,
-    ...items.map((a) => ({
-      title: a.name,
-      description: a.tagline || a.summary || "",
-      slug: a.slug,
-      image: a.image,
-      price: undefined,
-    })),
-  ];
-}
-
-export async function getTours() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "tour");
-
-  const items = pick(pool, (a) => a.category === "tour", seed, 1);
-
-  return [
-    ...STATIC_TOURS,
-    ...items.map((a) => ({
-      title: a.name,
-      description: a.tagline || a.summary || "",
-      slug: a.slug,
-      image: a.image,
-      price: undefined,
-      badge: "",
-    })),
-  ];
-}
-
-export async function getKidsAttractions() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "kids");
-
-  return pick(pool, (a) => a.isForKids, seed, 2).map((a) => ({
-    title: a.name,
-    description: a.tagline || a.summary || "",
-    slug: a.slug,
-    image: a.image,
-    price: undefined,
-  }));
-}
-
-export async function getFreeAttractions() {
-  const pool = await getAttractionPool();
-  const seed = hashToUint32(todayKeyUTC() + "free");
-
-  return pick(pool, (a) => a.isFree, seed, 3).map((a) => ({
-    title: a.name,
-    description: a.tagline || a.summary || "",
-    slug: a.slug,
-    image: a.image,
-  }));
-}
-export async function getTodaysPicks(limit = 3) {
-  // 日替わりキー（UTC。Asia/Tokyoにしたければ後述）
-  const day = new Date().toISOString().slice(0, 10);
-  const seed = hashToUint32(`todays-picks-${day}`);
-
-  // 決定的なpivot（毎日変わる）
-  const pivot = seed.toString(36);
-
-
-
-  // ① pivot以降から取得（ここで終わることが多い）
-  const first = await db.attraction.findMany({
-    where: { slug: { gte: pivot }, isPublished: true },
-    orderBy: { slug: "asc" },
-    take: limit,
-  });
-
-  if (first.length === limit) {
-    return first.map((a) => ({
-      title: a.name,
-      description: a.tagline || a.summary || "",
-      slug: a.slug,
-      image: a.image,
+/**
+ * 画像の無い行は棚に混ぜない。写真の列に文字だけのカードが1枚挟まると、
+ * その1枚のせいで列全体が崩れて見える(トップの toItems と同じ判断)。
+ */
+function toRailItems(rows: RailRow[]): RailItem[] {
+  return rows
+    .filter((row) => Boolean(row.image))
+    .map((row) => ({
+      slug: row.slug,
+      href: `/sightseeing/${row.slug}`,
+      name: row.name,
+      engName: row.engName,
+      image: row.image,
+      blurb: row.tagline,
     }));
-  }
-
-  // ② 足りない分だけ先頭から補完
-  const second = await db.attraction.findMany({
-    where: { slug: { lt: pivot }, isPublished: true },
-    orderBy: { slug: "asc" },
-    take: limit - first.length,
-  });
-
-  const items = [...first, ...second];
-
-  return items.map((a) => ({
-    title: a.name,
-    description: a.tagline || a.summary || "",
-    slug: a.slug,
-    image: a.image,
-  }));
 }
+
+export type AreaSummary = {
+  /** 公開中のスポット件数。エリアカードに出す。 */
+  count: number;
+  /** 表紙写真。そのエリアで最も推している1件の画像を借りる。 */
+  image: string | null;
+};
+
+/**
+ * ハブが必要とするものを1回のキャッシュにまとめて取る。
+ *
+ * 棚ごとに別々の unstable_cache にすると、再検証のタイミングがずれて
+ * 「必見の棚だけ古い」状態が起きる。ハブは全体で1つの面なので
+ * キャッシュも1つにする。
+ */
+export const fetchSightseeingHub = unstable_cache(
+  async () => {
+    const [mustSeeRows, freeRows, kidsRows, areaRows, totalSpots] =
+      await Promise.all([
+        db.attraction.findMany({
+          // mustSee と★5は重なるが完全には一致しない。ハブの先頭は
+          // 「初めてでも外さないもの」なので両方を拾う。
+          where: {
+            isPublished: true,
+            OR: [{ mustSee: true }, { recommendLevel: 5 }],
+          },
+          select: RAIL_SELECT,
+          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+          take: RAIL_SIZE,
+        }),
+        db.attraction.findMany({
+          where: { isPublished: true, isFree: true },
+          select: RAIL_SELECT,
+          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+          // 上の棚と重なった分を後で落とすので、母集団は広めに取る。
+          take: RAIL_SIZE * 4,
+        }),
+        db.attraction.findMany({
+          where: { isPublished: true, isForKids: true },
+          select: RAIL_SELECT,
+          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+          take: RAIL_SIZE * 4,
+        }),
+        db.attraction.findMany({
+          where: { isPublished: true, area: { not: null } },
+          select: { area: true, image: true },
+          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+        }),
+        db.attraction.count({ where: { isPublished: true } }),
+      ]);
+
+    /*
+     * 大英博物館は必見でも無料でも子ども向けでもある。同じ写真が複数の棚に
+     * 並ぶと「棚を分けた意味が無い」と見えるので、上の棚に出したものを
+     * 下の棚から順に消し込む。結果として、無料の棚には必見に載らなかった
+     * ものが、子どもの棚には無料にも載らなかったものが上がってくる——
+     * 棚としてはそのほうが働く。
+     *
+     * 画像の判定を slice の前に置いているのは、写真の無い行を「出した」と
+     * 数えてしまうと、実際には描画されないのに下の棚から消えるため。
+     */
+    const shown = new Set<string>();
+    const nextRail = (rows: RailRow[]): RailItem[] => {
+      const picked = rows
+        .filter((row) => Boolean(row.image) && !shown.has(row.slug))
+        .slice(0, RAIL_SIZE);
+      for (const row of picked) shown.add(row.slug);
+      return toRailItems(picked);
+    };
+
+    /*
+     * エリアの件数と表紙を1回の走査で作る。areaRows は推薦順に並んでいるので、
+     * そのエリアで最初に現れた行がいちばん推しているスポットになる。
+     */
+    const areas: Record<string, AreaSummary> = {};
+    for (const row of areaRows) {
+      if (!row.area) continue;
+      const entry = (areas[row.area] ??= { count: 0, image: null });
+      entry.count += 1;
+      if (!entry.image && row.image) entry.image = row.image;
+    }
+
+    return {
+      rails: {
+        // 評価順がそのまま消し込みの順になる。並べ替えないこと。
+        mustSee: nextRail(mustSeeRows),
+        free: nextRail(freeRows),
+        kids: nextRail(kidsRows),
+      },
+      areas,
+      totalSpots,
+    };
+  },
+  ["sightseeing-hub"],
+  { revalidate: 60 * 60 * 24 },
+);
