@@ -6,6 +6,7 @@ import { columnPath } from "@/components/column/jsonld";
 import { attractionPath } from "@/components/sightseeing/jsonld";
 import { museumPath } from "@/components/museums/jsonld";
 import { housingGuidePath } from "@/components/housing/guides/guides";
+import { sendAdminMail } from "@/utils/mail";
 
 /**
  * 記事ページの汎用コメント API。
@@ -26,6 +27,48 @@ function isTargetType(value: unknown): value is CommentTargetType {
     typeof value === "string" &&
     Object.prototype.hasOwnProperty.call(CommentTargetType, value)
   );
+}
+
+/** 通知メールの件名に出すコンテンツ種別の表示名。 */
+const TARGET_LABEL: Record<CommentTargetType, string> = {
+  [CommentTargetType.FOOD_TIP]: "食費ガイド",
+  [CommentTargetType.COLUMN]: "コラム",
+  [CommentTargetType.ATTRACTION]: "観光スポット",
+  [CommentTargetType.MUSEUM]: "美術館・博物館",
+  [CommentTargetType.HOUSING]: "住まいガイド",
+};
+
+/**
+ * コメント対象のページパス。再検証と通知メールのリンクに使う。
+ * ATTRACTION・MUSEUM は targetKey が id(uuid)なので slug を引き直す。
+ * 対象が既に消えている場合は null。
+ */
+async function resolvePath(
+  targetType: CommentTargetType,
+  targetKey: string
+): Promise<string | null> {
+  switch (targetType) {
+    case CommentTargetType.FOOD_TIP:
+      return `/food/${targetKey}`;
+    case CommentTargetType.HOUSING:
+      return housingGuidePath(targetKey);
+    case CommentTargetType.COLUMN:
+      return columnPath(targetKey);
+    case CommentTargetType.ATTRACTION: {
+      const attraction = await db.attraction.findUnique({
+        where: { id: targetKey },
+        select: { slug: true },
+      });
+      return attraction ? attractionPath(attraction.slug) : null;
+    }
+    case CommentTargetType.MUSEUM: {
+      const museum = await db.museum.findUnique({
+        where: { id: targetKey },
+        select: { slug: true },
+      });
+      return museum ? museumPath(museum.slug) : null;
+    }
+  }
 }
 
 export async function GET(req: NextRequest) {
@@ -142,32 +185,34 @@ export async function POST(req: NextRequest) {
   // FOOD_TIP・HOUSING・COLUMN は targetKey がそのまま slug。
   // ATTRACTION・MUSEUM は targetKey が id(uuid)なので、パスを組むために
   // 一度 slug を引く(PageComment は対象への外部キーを持たないため)。
-  switch (targetType) {
-    case CommentTargetType.FOOD_TIP:
-      revalidatePath(`/food/${targetKey}`);
-      break;
-    case CommentTargetType.HOUSING:
-      revalidatePath(housingGuidePath(targetKey));
-      break;
-    case CommentTargetType.COLUMN:
-      revalidatePath(columnPath(targetKey));
-      break;
-    case CommentTargetType.ATTRACTION: {
-      const attraction = await db.attraction.findUnique({
-        where: { id: targetKey },
-        select: { slug: true },
-      });
-      if (attraction) revalidatePath(attractionPath(attraction.slug));
-      break;
-    }
-    case CommentTargetType.MUSEUM: {
-      const museum = await db.museum.findUnique({
-        where: { id: targetKey },
-        select: { slug: true },
-      });
-      if (museum) revalidatePath(museumPath(museum.slug));
-      break;
-    }
+  const path = await resolvePath(targetType, targetKey.trim());
+  if (path) revalidatePath(path);
+
+  // 承認制ではなく投稿即公開なので、荒らしに気付けるよう管理者にメールで知らせる。
+  // 送信に失敗してもコメント自体は保存済みなので、握りつぶして 201 を返す。
+  try {
+    await sendAdminMail({
+      subject: `【コメント】${TARGET_LABEL[targetType]}: ${finalAuthor}`,
+      text: [
+        `${TARGET_LABEL[targetType]}に新しいコメントが投稿されました。`,
+        "",
+        `名前: ${finalAuthor}`,
+        `日時: ${created.createdAt.toLocaleString("ja-JP", {
+          timeZone: "Asia/Tokyo",
+        })}`,
+        path
+          ? `ページ: ${process.env.NEXT_PUBLIC_WEBSITE_URL ?? ""}${path}`
+          : `対象: ${targetType} / ${targetKey.trim()}`,
+        "",
+        "----",
+        trimmedContent,
+        "----",
+        "",
+        "不適切な投稿は PageComment.isHidden を true にすると非表示になります。",
+      ].join("\n"),
+    });
+  } catch (error) {
+    console.error("コメント通知メールの送信に失敗しました", error);
   }
 
   const res = NextResponse.json({ comment: created }, { status: 201 });
