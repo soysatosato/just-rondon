@@ -81,6 +81,8 @@ module.exports = {
       "/museums/all-museums",
       "/museums/best-10-museums",
       "/museums/best-museums-for-kids",
+      // 「体験する」ハブ。musicals/restaurants/shopping/brands/souvenirs を束ねる。
+      "/things-to-do",
       "/musicals",
       // 観劇ガイド。並びは components/musicals/guides/guides.ts の
       // guides と一致させること。
@@ -238,6 +240,8 @@ module.exports = {
       "/sightseeing/football/lower-leagues",
       "/sightseeing/football/stadium-tours",
       "/sightseeing/thames-cruise",
+      // 「住む・働く」ハブ。visa/housing/money/health/food/jobs/social/trouble を束ねる。
+      "/living",
       // ビザガイド。並びは components/visa/guides/guides.ts の
       // visaGuides と一致させること。ETA は本体が /sightseeing 側にあるため
       // 上の旅行ガイドの並びに含まれており、ここには出さない。

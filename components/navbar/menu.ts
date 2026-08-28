@@ -96,8 +96,8 @@ export const NAV_SECTIONS: NavSection[] = [
     kind: "menu",
     label: "体験する",
     eyebrow: "Things to Do",
-    href: "/musicals",
-    hubLabel: "ミュージカルナビ トップ",
+    href: "/things-to-do",
+    hubLabel: "体験する トップ",
     description:
       "ウエストエンドの観劇、パブでのイギリス料理、映画のロケ地めぐり。場所を訪れるだけでは終わらない、この街ならではの過ごし方。",
     accent: NAV_ACCENTS.amber,
@@ -240,8 +240,8 @@ export const NAV_SECTIONS: NavSection[] = [
     kind: "menu",
     label: "住む・働く",
     eyebrow: "Resident Info",
-    href: "/visa",
-    hubLabel: "英国ビザガイド トップ",
+    href: "/living",
+    hubLabel: "住む・働く トップ",
     description:
       "観光では終わらない人のために。滞在資格をどう取るか、部屋をどう借りるか、口座をどう開くか、体調を崩したらどこに行くか。",
     accent: NAV_ACCENTS.emerald,
