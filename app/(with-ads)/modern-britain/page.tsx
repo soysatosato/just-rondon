@@ -6,12 +6,12 @@ import { fetchModernBritainEntries } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
-  modernBritainHubBreadcrumbJsonLd,
   modernBritainHubCollectionJsonLd,
 } from "@/components/modern-britain/jsonld";
 import ModernBritainCard from "@/components/modern-britain/ModernBritainCard";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/modern-britain",
@@ -32,7 +32,7 @@ export default async function ModernBritainHubPage() {
 
   return (
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
-      <JsonLd data={modernBritainHubBreadcrumbJsonLd()} />
+      <JsonLd data={breadcrumbListJsonLd({ path: "/modern-britain" })} />
       <JsonLd data={modernBritainHubCollectionJsonLd(entries)} />
 
       <header className="relative mb-10 overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-background to-cyan-50 px-6 py-10 dark:border-indigo-900/50 dark:from-indigo-950/25 dark:via-background dark:to-cyan-950/20 sm:px-10 sm:py-12">

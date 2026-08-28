@@ -1,5 +1,5 @@
 import { fetchMusicalIdandName, fetchSongs } from "@/utils/actions/musicals";
-import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -10,7 +10,9 @@ import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { musicalBreadcrumbJsonLd } from "@/components/musicals/jsonld";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import JsonLd from "@/components/seo/JsonLd";
+
 export async function generateMetadata({
   params,
 }: {
@@ -54,21 +56,13 @@ export default async function SongsPage({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            musicalBreadcrumbJsonLd(
-              { name: musical.name, slug: params.slug },
-              [
-                {
-                  name: "曲一覧",
-                  url: absoluteUrl(`/musicals/${params.slug}/songs`),
-                },
-              ],
-            ),
-          ),
-        }}
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/musicals",
+          trail: [{ label: musical.name, href: `/musicals/${params.slug}` }],
+          current: "曲一覧",
+          currentHref: `/musicals/${params.slug}/songs`,
+        })}
       />
       <Breadcrumbs
         path="/musicals"

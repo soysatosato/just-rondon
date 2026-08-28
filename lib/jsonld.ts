@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { ancestorCrumbs, crumbsJsonLd } from "@/components/navigation/tree";
 
 /**
  * セクションを問わず使う構造化データのユーティリティ。
@@ -54,34 +55,21 @@ export function faqPageJsonLd(
 }
 
 /**
- * ホーム → セクション → (任意の下層) のパンくず。
+ * Home → (大区分) → セクション → 任意の下層、のパンくず。
  * trail にはセクションのトップより下の階層だけを渡す。
+ *
+ * 大区分は section.path から components/navigation/tree.ts が補う。
+ * 呼び出し側が「英国を読む」のような上位階層を意識しなくてよく、
+ * 画面のパンくず(<Breadcrumbs />)と同じ並びが構造化データにも出る。
  */
 export function breadcrumbJsonLd(
   section: { name: string; path: string },
   trail: { name: string; path: string }[] = []
 ) {
-  const base = [
-    { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: section.name,
-      item: `${SITE_URL}${section.path}`,
-    },
-  ];
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      ...base,
-      ...trail.map((t, i) => ({
-        "@type": "ListItem",
-        position: base.length + i + 1,
-        name: t.name,
-        item: `${SITE_URL}${t.path}`,
-      })),
-    ],
-  };
+  return crumbsJsonLd([
+    { label: "Home", href: "/" },
+    ...ancestorCrumbs(section.path),
+    { label: section.name, href: section.path },
+    ...trail.map((t) => ({ label: t.name, href: t.path })),
+  ]);
 }

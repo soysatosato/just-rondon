@@ -1,3 +1,4 @@
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import type { Theatre } from "@prisma/client";
 
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -76,31 +77,11 @@ export function buildTheatreMetadata(
 export function theatreBreadcrumbJsonLd(
   theatre: Pick<Theatre, "slug" | "name" | "nameJa">,
 ) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "ミュージカル",
-        item: `${SITE_URL}${MUSICALS_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: THEATRES_SECTION_NAME,
-        item: `${SITE_URL}${THEATRES_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: theatre.nameJa,
-        item: `${SITE_URL}${theatrePath(theatre.slug)}`,
-      },
-    ],
-  };
+  return breadcrumbListJsonLd({
+    path: "/musicals/theatres",
+    current: theatre.nameJa,
+    currentHref: theatrePath(theatre.slug),
+  });
 }
 
 /**

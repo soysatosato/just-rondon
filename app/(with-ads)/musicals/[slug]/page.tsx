@@ -29,10 +29,8 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { Theater } from "lucide-react";
-import {
-  musicalBreadcrumbJsonLd,
-  theaterEventJsonLd,
-} from "@/components/musicals/jsonld";
+import { theaterEventJsonLd } from "@/components/musicals/jsonld";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 // dynamic 関数を使ってコンポーネントを、遅延読み込み（Dynamic Import）する
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
@@ -83,7 +81,13 @@ export default async function musicalDetailsPage({
 
   return (
     <div>
-      <JsonLd data={musicalBreadcrumbJsonLd(musical)} />
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/musicals",
+          current: musical.name,
+          currentHref: `/musicals/${musical.slug}`,
+        })}
+      />
       <JsonLd data={theaterEventJsonLd(musical, performances)} />
       <Breadcrumbs path="/musicals" current={musical.name} />
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10">

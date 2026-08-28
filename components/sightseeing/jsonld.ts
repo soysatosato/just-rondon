@@ -1,3 +1,4 @@
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import type { Attraction } from "@prisma/client";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
@@ -48,25 +49,11 @@ export function attractionBreadcrumbJsonLd(attraction: {
   name: string;
   slug: string;
 }) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "観光ガイド",
-        item: `${SITE_URL}/sightseeing`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: attraction.name,
-        item: `${SITE_URL}${attractionPath(attraction.slug)}`,
-      },
-    ],
-  };
+  return breadcrumbListJsonLd({
+    path: "/sightseeing",
+    current: attraction.name,
+    currentHref: attractionPath(attraction.slug),
+  });
 }
 
 /**
@@ -108,31 +95,11 @@ export function christmasMarketBreadcrumbJsonLd(content: {
   title: string;
   slug: string;
 }) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "観光ガイド",
-        item: `${SITE_URL}/sightseeing`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: "クリスマスマーケット",
-        item: `${SITE_URL}/sightseeing/christmas-markets`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: content.title,
-        item: `${SITE_URL}/sightseeing/christmas-markets/${content.slug}`,
-      },
-    ],
-  };
+  return breadcrumbListJsonLd({
+    path: "/sightseeing/christmas-markets",
+    current: content.title,
+    currentHref: `/sightseeing/christmas-markets/${content.slug}`,
+  });
 }
 
 export const SIGHTSEEING_PUBLISHER = {
@@ -142,35 +109,16 @@ export const SIGHTSEEING_PUBLISHER = {
 };
 
 /**
- * ホーム → 観光ガイド → (任意の下層) のパンくず。
+ * Home → 観光 → (任意の下層) のパンくず。
  * trail には /sightseeing より下の階層だけを渡す。
  */
 export function sightseeingBreadcrumbJsonLd(
   trail: { name: string; path: string }[] = []
 ) {
-  const base = [
-    { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "観光ガイド",
-      item: `${SITE_URL}${SIGHTSEEING_BASE}`,
-    },
-  ];
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      ...base,
-      ...trail.map((t, i) => ({
-        "@type": "ListItem",
-        position: base.length + i + 1,
-        name: t.name,
-        item: `${SITE_URL}${t.path}`,
-      })),
-    ],
-  };
+  return breadcrumbListJsonLd({
+    path: "/sightseeing",
+    trail: trail.map((t) => ({ label: t.name, href: t.path })),
+  });
 }
 
 /**

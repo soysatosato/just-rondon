@@ -120,23 +120,45 @@ export type BreadcrumbSpec = {
   currentHref?: string;
 };
 
+/** 登録済みノード自身と、その上の祖先。Home は含まない。 */
+function chainOf(path: BreadcrumbPath): Crumb[] {
+  const chain: Crumb[] = [];
+  let key: string | undefined = path;
+
+  while (key) {
+    const node: TreeNode = TREE[key as BreadcrumbPath];
+    chain.unshift({ label: node.label, href: key });
+    key = node.parent;
+  }
+
+  return chain;
+}
+
+/**
+ * path より上の階層。木に登録していないページからも呼べる。
+ *
+ * 未登録のパスは、いちばん長い登録済みの前方一致を親とみなす。
+ * /sightseeing/transport/fares のような記事ページを木に一つずつ
+ * 書き足さなくても「観光 > 交通ガイド」が出るようにするため。
+ */
+export function ancestorCrumbs(path: string): Crumb[] {
+  if (path in TREE) return chainOf(path as BreadcrumbPath).slice(0, -1);
+
+  const nearest = Object.keys(TREE)
+    .filter((key) => path.startsWith(`${key}/`))
+    .sort((a, b) => b.length - a.length)[0];
+
+  return nearest ? chainOf(nearest as BreadcrumbPath) : [];
+}
+
 /**
  * Home から現在地までの並び。画面表示と JSON-LD の両方がこれを使うので、
  * 二つが食い違うことはない。
  */
 export function resolveCrumbs(spec: BreadcrumbSpec): Crumb[] {
-  const ancestors: Crumb[] = [];
-  let key: string | undefined = spec.path;
-
-  while (key) {
-    const node: TreeNode = TREE[key as BreadcrumbPath];
-    ancestors.unshift({ label: node.label, href: key });
-    key = node.parent;
-  }
-
   return [
     { label: "Home", href: "/" },
-    ...ancestors,
+    ...chainOf(spec.path),
     ...(spec.trail ?? []),
     ...(spec.current
       ? [{ label: spec.current, href: spec.currentHref }]
@@ -145,19 +167,24 @@ export function resolveCrumbs(spec: BreadcrumbSpec): Crumb[] {
 }
 
 /**
- * BreadcrumbList の構造化データ。画面のパンくずと同じ spec を渡すこと。
- * 末尾の現在地は URL が無ければ item を省く(Google は最後の要素の
- * item を必須としない)。
+ * BreadcrumbList の構造化データ。
+ * URL を持たない要素(末尾の現在地)は item を省く。Google は最後の要素の
+ * item を必須としない。
  */
-export function breadcrumbListJsonLd(spec: BreadcrumbSpec) {
+export function crumbsJsonLd(crumbs: Crumb[]) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: resolveCrumbs(spec).map((crumb, i) => ({
+    itemListElement: crumbs.map((crumb, i) => ({
       "@type": "ListItem",
       position: i + 1,
       name: crumb.label,
       ...(crumb.href ? { item: absoluteUrl(crumb.href) } : {}),
     })),
   };
+}
+
+/** 画面のパンくずと同じ spec から作る BreadcrumbList。 */
+export function breadcrumbListJsonLd(spec: BreadcrumbSpec) {
+  return crumbsJsonLd(resolveCrumbs(spec));
 }

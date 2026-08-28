@@ -10,9 +10,10 @@ import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import {
   britishEnglishArticleJsonLd,
-  britishEnglishBreadcrumbJsonLd,
+  britishEnglishPath,
 } from "@/components/british-english/jsonld";
 import BritishEnglishDetail from "@/components/british-english/BritishEnglishDetail";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 interface Props {
   params: {
@@ -59,7 +60,13 @@ export default async function BritishEnglishDetailPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={britishEnglishBreadcrumbJsonLd(content)} />
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/british-english",
+          current: content.title,
+          currentHref: britishEnglishPath(content.slug),
+        })}
+      />
       <JsonLd data={britishEnglishArticleJsonLd(content)} />
       <BritishEnglishDetail content={content} prev={prev} next={next} />
 

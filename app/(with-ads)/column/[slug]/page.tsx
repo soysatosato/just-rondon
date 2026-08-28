@@ -10,10 +10,11 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
-import { columnArticleJsonLd, columnBreadcrumbJsonLd } from "@/components/column/jsonld";
+import { columnArticleJsonLd, columnPath } from "@/components/column/jsonld";
 import ColumnDetail from "@/components/column/ColumnDetail";
 import type { PageCommentItem } from "@/components/comments/PageCommentSection";
 import db from "@/utils/db";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 interface Props {
   params: {
@@ -79,7 +80,13 @@ export default async function ColumnDetailPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={columnBreadcrumbJsonLd(content)} />
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/column",
+          current: content.title,
+          currentHref: columnPath(content.slug),
+        })}
+      />
       <JsonLd data={columnArticleJsonLd(content)} />
       <ColumnDetail
         content={content}

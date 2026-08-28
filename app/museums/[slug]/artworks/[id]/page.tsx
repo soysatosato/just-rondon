@@ -13,11 +13,11 @@ import remarkGfm from "remark-gfm";
 import { Sparkles } from "lucide-react";
 import ContactDialog from "@/components/form/ContactDialog";
 import JsonLd from "@/components/seo/JsonLd";
-import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata } from "@/lib/seo";
 import {
   artworkJsonLd,
-  museumBreadcrumbJsonLd,
 } from "@/components/museums/jsonld";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export async function generateMetadata({
   params,
@@ -52,17 +52,18 @@ export default async function ArtworkDetailPage({
       {artwork && (
         <>
           <JsonLd
-            data={museumBreadcrumbJsonLd(
-              { name: museum.name, slug: params.slug },
-              [
+            data={breadcrumbListJsonLd({
+              path: "/museums",
+              trail: [
+                { label: museum.name, href: `/museums/${params.slug}` },
                 {
-                  name: artwork.title,
-                  url: absoluteUrl(
-                    `/museums/${params.slug}/artworks/${params.id}`,
-                  ),
+                  label: "コレクション",
+                  href: `/museums/${params.slug}/artworks`,
                 },
               ],
-            )}
+              current: artwork.title,
+              currentHref: `/museums/${params.slug}/artworks/${params.id}`,
+            })}
           />
           <JsonLd
             data={artworkJsonLd(artwork, {

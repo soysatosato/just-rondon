@@ -30,11 +30,8 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { buildPageMetadata, fitTitle, truncateDescription } from "@/lib/seo";
-import {
-  museumBreadcrumbJsonLd,
-  museumJsonLd,
-  museumPath,
-} from "@/components/museums/jsonld";
+import { museumJsonLd, museumPath } from "@/components/museums/jsonld";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 const TITLE_SUFFIXES = [
   "の見どころ・所要時間・アクセス｜ロンドン美術館ガイド",
@@ -114,7 +111,13 @@ export default async function MuseumDetailsPage({
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-12">
-      <JsonLd data={museumBreadcrumbJsonLd(museum)} />
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/museums",
+          current: museum.name,
+          currentHref: museumPath(museum.slug),
+        })}
+      />
       <JsonLd data={museumJsonLd(museum)} />
 
       <div className="pt-4">

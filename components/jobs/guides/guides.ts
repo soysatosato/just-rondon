@@ -1,3 +1,4 @@
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import type { JobGuideArticle } from "./types";
 
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -70,25 +71,11 @@ export function buildMetadata(article: JobGuideArticle) {
 }
 
 export function breadcrumbJsonLd(article: JobGuideArticle) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "お仕事・労働問題",
-        item: `${SITE_URL}${JOBS_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: article.title,
-        item: `${SITE_URL}${guidePath(article.slug)}`,
-      },
-    ],
-  };
+  return breadcrumbListJsonLd({
+    path: "/jobs",
+    current: article.title,
+    currentHref: guidePath(article.slug),
+  });
 }
 
 export function articleJsonLd(article: JobGuideArticle) {

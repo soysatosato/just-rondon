@@ -22,37 +22,6 @@ export function collectionPageJsonLd(
   };
 }
 
-export function musicalBreadcrumbJsonLd(
-  musical: { name: string; slug: string },
-  extraCrumbs: { name: string; url: string }[] = [],
-) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "ミュージカル",
-        item: `${SITE_URL}/musicals`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: musical.name,
-        item: `${SITE_URL}/musicals/${musical.slug}`,
-      },
-      ...extraCrumbs.map((c, i) => ({
-        "@type": "ListItem",
-        position: 4 + i,
-        name: c.name,
-        item: c.url,
-      })),
-    ],
-  };
-}
-
 /** startDate/endDate を出すのに必要な最小限。呼び出し側は
  *  fetchMusicalPerformances の戻り値をそのまま渡せる。 */
 type PerformanceForJsonLd = {

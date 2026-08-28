@@ -38,69 +38,6 @@ export function britishEnglishArticleJsonLd(content: {
   };
 }
 
-export function britishEnglishBreadcrumbJsonLd(content: {
-  title: string;
-  slug: string;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "イギリス英語",
-        item: `${SITE_URL}${BRITISH_ENGLISH_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: content.title,
-        item: `${SITE_URL}${britishEnglishPath(content.slug)}`,
-      },
-    ],
-  };
-}
-
-export function britishEnglishHubBreadcrumbJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "イギリス英語",
-        item: `${SITE_URL}${BRITISH_ENGLISH_BASE}`,
-      },
-    ],
-  };
-}
-
-export function britishEnglishScenesBreadcrumbJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "イギリス英語",
-        item: `${SITE_URL}${BRITISH_ENGLISH_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: "場面別フレーズ集",
-        item: `${SITE_URL}${BRITISH_ENGLISH_BASE}/scenes`,
-      },
-    ],
-  };
-}
-
 export function britishEnglishHubCollectionJsonLd(
   items: { title: string; summary: string | null; slug: string }[]
 ) {

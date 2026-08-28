@@ -5,12 +5,12 @@ import { fetchColumns } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
-  columnHubBreadcrumbJsonLd,
   columnHubCollectionJsonLd,
 } from "@/components/column/jsonld";
 import ColumnBrowser from "@/components/column/ColumnBrowser";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/column",
@@ -40,7 +40,7 @@ export default async function ColumnHubPage() {
 
   return (
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
-      <JsonLd data={columnHubBreadcrumbJsonLd()} />
+      <JsonLd data={breadcrumbListJsonLd({ path: "/column" })} />
       <JsonLd data={columnHubCollectionJsonLd(columns)} />
 
       <header className="relative mb-10 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-background to-sky-50 px-6 py-10 dark:border-amber-900/50 dark:from-amber-950/25 dark:via-background dark:to-sky-950/20 sm:px-10 sm:py-12">

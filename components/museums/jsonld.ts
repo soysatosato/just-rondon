@@ -1,3 +1,4 @@
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
 export function museumPath(slug: string) {
@@ -108,65 +109,14 @@ export function museumJsonLd(museum: MuseumForJsonLd) {
   };
 }
 
-export function museumBreadcrumbJsonLd(
-  museum: { name: string; slug: string },
-  extraCrumbs: { name: string; url: string }[] = [],
-) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "美術館・博物館",
-        item: `${SITE_URL}/museums`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: museum.name,
-        item: `${SITE_URL}${museumPath(museum.slug)}`,
-      },
-      ...extraCrumbs.map((c, i) => ({
-        "@type": "ListItem",
-        position: 4 + i,
-        name: c.name,
-        item: c.url,
-      })),
-    ],
-  };
-}
-
 /** ハブ(/museums)自身のパンくず。個別館ページ用の museumBreadcrumbJsonLd とは別物。 */
 export function museumsHubBreadcrumbJsonLd(
   current?: { name: string; path: string },
 ) {
-  const items = [
-    { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "美術館・博物館",
-      item: `${SITE_URL}/museums`,
-    },
-  ];
-
-  if (current) {
-    items.push({
-      "@type": "ListItem",
-      position: 3,
-      name: current.name,
-      item: `${SITE_URL}${current.path}`,
-    });
-  }
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items,
-  };
+  return breadcrumbListJsonLd({
+    path: "/museums",
+    ...(current ? { current: current.name, currentHref: current.path } : {}),
+  });
 }
 
 /**

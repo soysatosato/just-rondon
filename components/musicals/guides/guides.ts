@@ -1,3 +1,4 @@
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import type { MusicalGuideArticle } from "./types";
 
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -152,25 +153,12 @@ export function buildMetadata(article: MusicalGuideArticle) {
 
 export function breadcrumbJsonLd(article: MusicalGuideArticle) {
   const meta = getGuideMeta(article.slug);
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "ミュージカル",
-        item: `${SITE_URL}${MUSICALS_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: meta?.label ?? article.title,
-        item: `${SITE_URL}${guidePath(article.slug)}`,
-      },
-    ],
-  };
+
+  return breadcrumbListJsonLd({
+    path: "/musicals",
+    current: meta?.label ?? article.title,
+    currentHref: guidePath(article.slug),
+  });
 }
 
 export function articleJsonLd(article: MusicalGuideArticle) {

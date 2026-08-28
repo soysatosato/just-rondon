@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
-import { britishEnglishScenesBreadcrumbJsonLd } from "@/components/british-english/jsonld";
+
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import BritishEnglishScenes, {
   SCENE_NAV,
 } from "@/components/british-english/BritishEnglishScenes";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/british-english/scenes",
@@ -27,7 +28,13 @@ export const metadata = buildPageMetadata({
 export default function BritishEnglishScenesPage() {
   return (
     <main className="max-w-3xl mx-auto py-8 px-4 md:py-10">
-      <JsonLd data={britishEnglishScenesBreadcrumbJsonLd()} />
+      <JsonLd
+          data={breadcrumbListJsonLd({
+            path: "/british-english",
+            current: "場面別フレーズ集",
+            currentHref: "/british-english/scenes",
+          })}
+        />
 
       <div className="mb-6">
         <Breadcrumbs path="/british-english" current="場面別フレーズ集" />

@@ -1,3 +1,4 @@
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { SITE_URL } from "@/lib/seo";
 import { SIGHTSEEING_BASE, SIGHTSEEING_PUBLISHER } from "../jsonld";
 import type { FeatureArticle } from "./types";
@@ -89,25 +90,11 @@ export function featureBreadcrumbJsonLd(article: {
 }) {
   const meta = getFeatureMeta(article.slug);
 
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "観光ガイド",
-        item: `${SITE_URL}${SIGHTSEEING_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: meta?.label ?? article.title,
-        item: `${SITE_URL}${featurePath(article.slug)}`,
-      },
-    ],
-  };
+  return breadcrumbListJsonLd({
+    path: "/sightseeing",
+    current: meta?.label ?? article.title,
+    currentHref: featurePath(article.slug),
+  });
 }
 
 /**

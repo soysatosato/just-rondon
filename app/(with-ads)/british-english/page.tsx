@@ -6,13 +6,13 @@ import { fetchBritishEnglishEntries } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
-  britishEnglishHubBreadcrumbJsonLd,
   britishEnglishHubCollectionJsonLd,
 } from "@/components/british-english/jsonld";
 import BritishEnglishCard from "@/components/british-english/BritishEnglishCard";
 import BritishEnglishTraits from "@/components/british-english/BritishEnglishTraits";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/british-english",
@@ -33,7 +33,7 @@ export default async function BritishEnglishHubPage() {
 
   return (
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
-      <JsonLd data={britishEnglishHubBreadcrumbJsonLd()} />
+      <JsonLd data={breadcrumbListJsonLd({ path: "/british-english" })} />
       <JsonLd data={britishEnglishHubCollectionJsonLd(entries)} />
 
       <header className="relative mb-10 overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-background to-sky-50 px-6 py-10 dark:border-rose-900/50 dark:from-rose-950/25 dark:via-background dark:to-sky-950/20 sm:px-10 sm:py-12">

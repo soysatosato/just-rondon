@@ -38,47 +38,6 @@ export function modernBritainArticleJsonLd(content: {
   };
 }
 
-export function modernBritainBreadcrumbJsonLd(content: {
-  title: string;
-  slug: string;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "英国のいまを論じる",
-        item: `${SITE_URL}${MODERN_BRITAIN_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: content.title,
-        item: `${SITE_URL}${modernBritainPath(content.slug)}`,
-      },
-    ],
-  };
-}
-
-export function modernBritainHubBreadcrumbJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "英国のいまを論じる",
-        item: `${SITE_URL}${MODERN_BRITAIN_BASE}`,
-      },
-    ],
-  };
-}
-
 export function modernBritainHubCollectionJsonLd(
   items: { title: string; summary: string | null; slug: string }[]
 ) {

@@ -10,9 +10,10 @@ import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import {
   modernBritainArticleJsonLd,
-  modernBritainBreadcrumbJsonLd,
+  modernBritainPath,
 } from "@/components/modern-britain/jsonld";
 import ModernBritainDetail from "@/components/modern-britain/ModernBritainDetail";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 interface Props {
   params: {
@@ -57,7 +58,13 @@ export default async function ModernBritainDetailPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={modernBritainBreadcrumbJsonLd(content)} />
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/modern-britain",
+          current: content.title,
+          currentHref: modernBritainPath(content.slug),
+        })}
+      />
       <JsonLd data={modernBritainArticleJsonLd(content)} />
       <ModernBritainDetail content={content} prev={prev} next={next} />
 

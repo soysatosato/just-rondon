@@ -38,44 +38,6 @@ export function columnArticleJsonLd(content: {
   };
 }
 
-export function columnBreadcrumbJsonLd(content: { title: string; slug: string }) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "コラム",
-        item: `${SITE_URL}${COLUMN_BASE}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: content.title,
-        item: `${SITE_URL}${columnPath(content.slug)}`,
-      },
-    ],
-  };
-}
-
-export function columnHubBreadcrumbJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "コラム",
-        item: `${SITE_URL}${COLUMN_BASE}`,
-      },
-    ],
-  };
-}
-
 export function columnHubCollectionJsonLd(
   items: { title: string; summary: string | null; slug: string }[]
 ) {
