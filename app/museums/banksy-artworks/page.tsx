@@ -1,4 +1,4 @@
-import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import MuseumBanksy from "@/components/museums/MuseumBanksy";
@@ -76,7 +76,7 @@ export default function BanksyLondonPage() {
       />
 
       <div className="mx-auto max-w-6xl px-4 pt-8 md:pt-10">
-        <MuseumBreadCrumbs name="美術館ナビ" link2="" name2="バンクシー作品" />
+        <Breadcrumbs path="/museums" current="バンクシー作品" />
       </div>
 
       <MuseumBanksy />

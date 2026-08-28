@@ -15,7 +15,7 @@ import { museumSlugForAttraction } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import { redirect } from "next/navigation";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Baby, Flame, MapPin, Star, Tag, Ticket } from "lucide-react";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
@@ -320,15 +320,7 @@ export default async function AttractionDetail({
       <JsonLd data={attractionJsonLd(attraction)} />
 
       <div className="mb-4">
-        <BreadCrumbs
-          name="観光ガイド"
-          link="sightseeing"
-          name2={
-            attraction.name.length > 7
-              ? attraction.name.slice(0, 7) + "..."
-              : attraction.name
-          }
-        />
+        <Breadcrumbs path="/sightseeing" current={attraction.name} />
       </div>
 
       {/* Hero image full width */}

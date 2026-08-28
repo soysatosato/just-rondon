@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -19,7 +19,6 @@ import {
   AREAS_BASE,
   AREA_CATEGORY_LABELS,
   AREA_CATEGORY_ORDER,
-  AREAS_SECTION_NAME,
   areaGuidePath,
   areaGuideArticleJsonLd,
   areaGuideBreadcrumbJsonLd,
@@ -51,12 +50,9 @@ export default function AreaGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name="観光ガイド"
-        link="sightseeing"
-        name2={AREAS_SECTION_NAME}
-        link2="sightseeing/areas"
-        name3={meta?.label ?? article.title}
+      <Breadcrumbs
+        path="/sightseeing/areas"
+        current={meta?.label ?? article.title}
       />
 
       <header className="mt-6 space-y-3">

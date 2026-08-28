@@ -10,7 +10,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import PhotoRail from "@/components/home/PhotoRail";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -191,7 +191,7 @@ export default async function Page() {
         data={faqPageJsonLd(sightseeingFaqItems, `${SITE_URL}/sightseeing`)}
       />
 
-      <BreadCrumbs name="観光ガイド" />
+      <Breadcrumbs path="/sightseeing" />
 
       {/*
         見出し。旧版は「世界的に有名な観光スポットがぎゅっと詰まって

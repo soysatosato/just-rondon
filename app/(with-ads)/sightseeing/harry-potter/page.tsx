@@ -1,15 +1,17 @@
-import Image from "next/image";
+export const revalidate = 60 * 60 * 24;
+
+import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
+import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { hpActivities } from "./data";
-import ExpandableText from "@/components/card/ExpandableText";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/harry-potter",
-  title: "ハリー・ポッター聖地巡礼 in ロンドン | ロケ地・モデル地・スタジオツアー完全ガイド | ジャスト・ロンドン",
+  title:
+    "ハリー・ポッター聖地巡礼 in ロンドン | ロケ地・モデル地・スタジオツアー完全ガイド | ジャスト・ロンドン",
   titleSuffix: false,
-  description: "ロンドンで巡るハリー・ポッターの聖地特集。キングスクロス駅9¾番線、レドンホール・マーケット、ミレニアム橋、ロンドン動物園、レイコック村など映画ロケ地を徹底紹介。スタジオツアー（WB Studio Tour London）への行き方も掲載。",
+  description:
+    "ロンドンで巡るハリー・ポッターの聖地特集。キングスクロス駅9¾番線、レドンホール・マーケット、ミレニアム橋、ロンドン動物園、レイコック村など映画ロケ地を徹底紹介。スタジオツアー（WB Studio Tour London）への行き方も掲載。",
   keywords: [
     "ハリー・ポッター",
     "Harry Potter",
@@ -25,150 +27,50 @@ export const metadata = buildPageMetadata({
   ],
 });
 
+/*
+ * 項目ごとのリンク先。
+ *
+ * 舞台『呪いの子』だけは観光スポットではなく上演中の演目なので、
+ * /sightseeing ではなくミュージカル側へ送る。それ以外は
+ * FeatureLayout が DB を見て、実体があるものだけリンクにする。
+ */
+const HREFS: Record<string, string> = {
+  "harry-potter-cursed-child-play": "/musicals/harry-potter-cursed-child",
+};
+
+const article: FeatureArticle = {
+  slug: "harry-potter",
+  title: "ロンドンで巡るハリー・ポッターの舞台",
+  engTitle: "Harry Potter Spots in London",
+  intro: [
+    "ロンドンのハリー・ポッター関連の場所は、性質が3つに分かれます。撮影に実際に使われたロケ地、作品のために作られた展示施設、そして原作の設定にちなんで後から作られたショップや店です。同じ「聖地」として並べると、行ってみて拍子抜けすることになります。",
+    "本気で見たいならスタジオツアーが別格です。ロンドン中心部からは電車とバスで片道1時間ほどかかり、当日券はまず出ません。日付指定の事前予約が要ります。",
+    "一方、キングスクロス駅の9¾番線やレドンホール・マーケットは街の中にあり、通りがかりに寄れます。以下、行き方と見学の可否を項目ごとにまとめました。",
+  ],
+  items: hpActivities.map((item) => ({
+    slug: item.slug,
+    title: item.title,
+    summary: item.summary,
+    mainText: item.mainText,
+    image: item.image,
+    website: item.website,
+    sections: item.sections,
+    href: HREFS[item.slug] ?? null,
+  })),
+  related: [
+    {
+      href: "/sightseeing/film-locations",
+      label: "映画・ドラマのロケ地巡り",
+      note: "シャーロックやブリジャートン家など、他作品のロケ地。",
+    },
+    {
+      href: "/musicals/harry-potter-cursed-child",
+      label: "ハリー・ポッターと呪いの子（舞台）",
+      note: "あらすじ、上演時間、チケットの取り方。",
+    },
+  ],
+};
+
 export default function HarryPotterPage() {
-  const contents = hpActivities;
-
-  return (
-    <div className="max-w-4xl mx-auto p-6 space-y-10">
-      <div>
-        <h2 className="text-lg italic font-semibold text-center text-purple-700 dark:text-purple-300 mt-2">
-          Harry Potter Spots in London
-        </h2>
-        <h1 className="text-2xl font-bold text-center">
-          ロンドンで巡るハリー・ポッタースポット
-        </h1>
-      </div>
-      <div>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-          ロンドンは、魔法界の外側にあっても不思議がそこかしこに染み込んでいる街です。重層的な歴史、曲がりくねった街路、居心地のいいパブ、そして古い建物が織りなす空気だけでも魅力的ですが、この街には愛され続ける『ハリー・ポッター』の世界と結びついた場所が数多くあります。
-        </p>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-          映画のロケ地、没入型のスタジオツアー、遊び心あふれるショップ、テーマ性のあるホテルまで、ファンが魔法の世界に一歩踏み込めるスポットがぎっしりと詰まっています。
-        </p>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-10">
-          このガイドでは、ロンドンに点在する必見のハリー・ポッターゆかりの場所を紹介します。本や映画、そして舞台が残した魔法の痕跡をたどりながら、街の中に潜む“魔法の片鱗”を探しにいきましょう。
-        </p>
-      </div>
-      <section className="space-y-2">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-          目次
-        </h2>
-
-        <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-          {contents.map((item, idx) => (
-            <li key={idx} className="leading-tight relative pl-6">
-              <span
-                className="
-            absolute left-0 text-gray-500 dark:text-gray-400 text-sm
-          "
-              >
-                {idx + 1}.
-              </span>
-
-              <a
-                href={`#${item.slug}`}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:underline text-sm font-medium"
-              >
-                {item.title}
-              </a>
-
-              <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
-                {item.summary}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
-      {contents.map((item, idx) => {
-        const isLinkable = item.slug && item.slug !== "-";
-
-        return (
-          <div id={item.slug} key={idx}>
-            <Card className="p-4 shadow-md rounded-xl hover:shadow-lg transition">
-              <CardHeader>
-                <CardTitle className="text-2xl">{item.title}</CardTitle>
-
-                {item.image && (
-                  <div className="relative w-full h-64 mt-4 rounded-lg overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </div>
-                )}
-              </CardHeader>
-
-              <CardContent>
-                {item.mainText && (
-                  <ExpandableText text={item.mainText} maxLines={4} />
-                )}
-
-                {item.sections?.length > 0 && (
-                  <div className="mt-6 space-y-6">
-                    {item.sections.map((sec, secIdx) => (
-                      <div
-                        key={secIdx}
-                        className="border-l-4 pl-4 border-purple-600"
-                      >
-                        <h3 className="text-xl font-semibold">{sec.title}</h3>
-                        {sec.description && (
-                          <p className="text-gray-600 dark:text-gray-300 mt-2 whitespace-pre-line">
-                            {sec.description}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {isLinkable && (
-                  <div className="mt-6 text-right">
-                    <Link
-                      href={`/sightseeing/${item.slug}`}
-                      className="
-        inline-flex items-center gap-2
-        rounded-full px-4 py-1.5
-        text-sm font-semibold
-        bg-purple-100 dark:bg-purple-800/50
-        text-purple-700 dark:text-purple-300
-        hover:bg-purple-200 dark:hover:bg-purple-700
-        transition-all
-        group
-      "
-                    >
-                      詳細ページへ
-                      <span
-                        className="
-          inline-block transition-transform duration-200
-          group-hover:translate-x-1
-        "
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </div>
-                )}
-
-                {/* 外部オフィシャルサイト */}
-                {item.website && (
-                  <a
-                    href={item.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block mt-4 text-purple-700 font-semibold hover:underline"
-                  >
-                    Visit Official Website →
-                  </a>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        );
-      })}
-    </div>
-  );
+  return <FeatureLayout article={article} />;
 }

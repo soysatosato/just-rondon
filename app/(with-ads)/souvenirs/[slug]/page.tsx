@@ -4,7 +4,7 @@ import { Gift, Luggage, MapPin, ShoppingBasket, Wallet } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import GuideFaq from "@/components/guides/GuideFaq";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
@@ -109,11 +109,7 @@ export default async function SouvenirPage({
         ]}
       />
 
-      <BreadCrumbs
-        name={SOUVENIR_SECTION_NAME}
-        name2={souvenir.name}
-        link="souvenirs"
-      />
+      <Breadcrumbs path="/souvenirs" current={souvenir.name} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">

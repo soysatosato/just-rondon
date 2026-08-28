@@ -3,7 +3,7 @@ import { CommentTargetType } from "@prisma/client";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -19,7 +19,6 @@ import PageCommentSection, {
 } from "@/components/comments/PageCommentSection";
 import {
   FOOD_BASE,
-  FOOD_SECTION_NAME,
   foodGuideArticleJsonLd,
   foodGuideBreadcrumbJsonLd,
   foodGuidePath,
@@ -47,11 +46,7 @@ export default function FoodGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={FOOD_SECTION_NAME}
-        link="food"
-        name2={meta?.label ?? article.title}
-      />
+      <Breadcrumbs path="/food" current={meta?.label ?? article.title} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

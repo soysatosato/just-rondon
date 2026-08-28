@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -17,7 +17,6 @@ import {
   TRANSPORT_BASE,
   TRANSPORT_CATEGORY_LABELS,
   TRANSPORT_CATEGORY_ORDER,
-  TRANSPORT_SECTION_NAME,
   getTransportGuideMeta,
   transportGuideArticleJsonLd,
   transportGuideBreadcrumbJsonLd,
@@ -42,12 +41,9 @@ export default function TransportGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name="観光ガイド"
-        link="sightseeing"
-        name2={TRANSPORT_SECTION_NAME}
-        link2="sightseeing/transport"
-        name3={meta?.label ?? article.title}
+      <Breadcrumbs
+        path="/sightseeing/transport"
+        current={meta?.label ?? article.title}
       />
 
       <header className="mt-6 space-y-3">

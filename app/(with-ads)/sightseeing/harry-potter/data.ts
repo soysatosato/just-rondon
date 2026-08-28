@@ -35,7 +35,7 @@ export const hpActivities: HPActivity[] = [
   },
   {
     title: "ハリー・ポッターと呪いの子（舞台）",
-    slug: "-",
+    slug: "harry-potter-cursed-child-play",
     summary:
       "19年後のハリーたちを描く続編舞台。圧倒的演出と魔法のギミックで世界中のファンを魅了するロンドンの人気公演。",
     mainText: `
@@ -126,7 +126,7 @@ export const hpActivities: HPActivity[] = [
   },
   {
     title: "ハリー・ポッター像（レスタースクエア）",
-    slug: "-",
+    slug: "harry-potter-statue-leicester-square",
     summary:
       "レスタースクエアの映画ヒーロー像のひとつ。ホグワーツ生時代のハリーが空を飛ぶ姿が見られる無料スポット。",
     mainText: `
@@ -144,7 +144,7 @@ export const hpActivities: HPActivity[] = [
   },
   {
     title: "セント・パンクラス駅（映画ロケ地）",
-    slug: "-",
+    slug: "st-pancras-station-filming-location",
     summary:
       "ホグワーツ特急の発着シーンで使われた駅。ウィーズリー家の空飛ぶ車が離陸する印象的な場面の舞台。",
     mainText: `
@@ -161,7 +161,7 @@ export const hpActivities: HPActivity[] = [
   },
   {
     title: "ピカデリー・サーカス（映画ロケ地）",
-    slug: "-",
+    slug: "piccadilly-circus-filming-location",
     summary:
       "『死の秘宝』で3人が逃走中に駆け抜けるロケ地。ロンドン中心部の象徴で観光に組み込みやすい。",
     mainText: `
@@ -178,7 +178,7 @@ export const hpActivities: HPActivity[] = [
   },
   {
     title: "ウェストミンスター駅（映画ロケ地）",
-    slug: "-",
+    slug: "westminster-station-filming-location",
     summary:
       "ハリーがアーサー・ウィーズリーと一緒に地下鉄を使うシーンの撮影地。1日閉鎖して撮影された。",
     mainText: `
@@ -195,7 +195,7 @@ export const hpActivities: HPActivity[] = [
   },
   {
     title: "デ・ヴィア・ハウス（ゴドリックの谷の家）",
-    slug: "-",
+    slug: "de-vere-house-godrics-hollow",
     summary:
       "ハリーの生家として映画に登場した建物。ロンドンから約2時間、村そのものが中世の世界のよう。",
     mainText: `

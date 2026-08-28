@@ -67,7 +67,7 @@ export const kidsFreeActivities: KidsFreeActivity[] = [
       "**Crystal Palace Dinosaurs** は自然公園内に点在する恐竜彫刻群で、19世紀に造られた歴史的“恐竜像”。木々の間から覗く恐竜や遊具エリアの彫刻は、子どもたちにとってリアルでワクワクする探索体験になる。迷路や湖もあり、1日中遊べる広さ。恐竜好きのファミリーには外せない無料スポット。",
   },
   {
-    slug: "imperial-war-museum-london",
+    slug: "imperial-war-museum",
     title: "インペリアル・ウォー・ミュージアム",
     engTitle: "Imperial War Museum London",
     summary: "戦争と歴史を学べる無料博物館。特に8歳以上の子どもにおすすめ。",
@@ -75,7 +75,7 @@ export const kidsFreeActivities: KidsFreeActivity[] = [
       "歴史と平和について学べる無料博物館が **Imperial War Museum London**。戦時中の兵器、車両、飛行機など実物資料が並び、映像展示も多く理解しやすい構成。第二次世界大戦を学んでいる子どもには特に効果的な“体験型学習”の場となる。大人も楽しめるほどクオリティが高く、親子でじっくり過ごしたいスポット。",
   },
   {
-    slug: "british-museum",
+    slug: "british-museum-london",
     title: "大英博物館",
     engTitle: "The British Museum",
     summary: "世界文化と遺物を学べるロンドン最大級の無料博物館。子ども向けアクティビティも充実。",

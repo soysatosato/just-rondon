@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -15,7 +15,6 @@ import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
 import {
   VISA_BASE,
-  VISA_SECTION_NAME,
   getVisaGuideMeta,
   visaGuideArticleJsonLd,
   visaGuideBreadcrumbJsonLd,
@@ -41,11 +40,7 @@ export default function VisaGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={VISA_SECTION_NAME}
-        link="visa"
-        name2={meta?.label ?? article.title}
-      />
+      <Breadcrumbs path="/visa" current={meta?.label ?? article.title} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

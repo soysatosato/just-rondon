@@ -1,11 +1,9 @@
-import Image from "next/image";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import ReactMarkdown from "react-markdown";
-import { thamesCruises } from "./data";
-import Link from "next/link";
-import ExpandableText from "@/components/card/ExpandableText";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+export const revalidate = 60 * 60 * 24;
+
+import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
+import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
+import { thamesCruises } from "./data";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/thames-cruise",
@@ -25,165 +23,52 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default function ThamesRiverCruisesListPage() {
-  const items = thamesCruises;
+/*
+ * 見出しに年号を入れない(royal-london と同じ理由)。クルーズの航路と
+ * 船種は年で変わらないので、年号は古びるだけで判断材料にならない。
+ *
+ * lookupFacts を切っているのは、ここで扱うのが「船のプラン」であって
+ * 観光スポットではないため。DB の Attraction には1件も対応が無く、
+ * 照合しても空振りするだけになる。本文は各項目にその場で出す。
+ */
+const article: FeatureArticle = {
+  slug: "thames-cruise",
+  title: "テムズ川クルーズ",
+  engTitle: "River Thames Cruises",
+  lookupFacts: false,
+  intro: [
+    "テムズ川の船は、大きく2種類あります。観光船と、地元の人が通勤に使う高速船です。前者は解説付きでゆっくり進み、後者は速い代わりに案内がありません。値段も乗り方も別物なので、まずどちらに乗るかを決めてください。",
+    "移動を兼ねたいなら Uber Boat by Thames Clippers です。タッチ決済やオイスターで乗れて、ウェストミンスターからグリニッジまで座って移動できます。観光として乗るなら、解説付きの周遊クルーズか、食事とセットになった夜のクルーズになります。",
+  ],
+  items: thamesCruises.map((item) => ({
+    slug: item.slug,
+    title: item.title,
+    engTitle: item.engTitle,
+    summary: item.summary,
+    mainText: item.mainText,
+    image: item.image,
+    website: item.website,
+    sections: item.sections,
+  })),
+  related: [
+    {
+      href: "/sightseeing/transport",
+      label: "ロンドンの交通ガイド（全9本）",
+      note: "River Bus の運賃と、オイスターで乗れる範囲。",
+    },
+    {
+      href: "/sightseeing/areas/greenwich",
+      label: "グリニッジを歩く",
+      note: "船で行って歩いて帰る、半日の回遊ルート。",
+    },
+    {
+      href: "/sightseeing/areas/southbank",
+      label: "サウスバンクを歩く",
+      note: "船着き場が並ぶ南岸の遊歩道。",
+    },
+  ],
+};
 
-  return (
-    <div className="max-w-5xl mx-auto py-16 space-y-14">
-      {/* Hero Section */}
-      <div className="mb-4">
-        <BreadCrumbs
-          name="観光ガイド"
-          link="sightseeing"
-          name2="テムズ川特集"
-        />
-      </div>
-      <section className="relative text-center space-y-6 rounded-2xl overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 -z-10">
-          <img
-            src="https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/thamescruisebg.jpeg"
-            alt="Thames River background"
-            className="absolute inset-0 w-full h-full object-cover opacity-60"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-        </div>
-        {/* 見出しに年号を入れない（royal-london と同じ理由）。
-            クルーズの航路と船種は年で変わらないので、年号は
-            古びるだけで読者の判断材料にならない。 */}
-        <h1 className="text-xl text-blue-200 font-extrabold tracking-tight">
-          テムズ川クルーズ特集
-        </h1>
-
-        <p className="text-sm text-blue-100 leading-relaxed max-w-2xl mx-auto px-2 pb-6">
-          美しいロンドンの街並みを、水上から楽しむ贅沢な時間。
-          アフタヌーンティーやディナー、夜景の眺望など、
-          テムズ川クルーズならではの体験を厳選して紹介します。
-        </p>
-      </section>
-
-      {/* List Section */}
-      <section className="grid gap-8">
-        {/* Table of Content */}
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            目次
-          </h2>
-
-          <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-            {items.map((item, idx: number) => (
-              <li key={item.slug} className="leading-tight relative pl-6">
-                <span className="absolute left-0 text-gray-500 dark:text-gray-400 text-sm">
-                  {idx + 1}.
-                </span>
-
-                <a
-                  href={`#${item.slug}`}
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:underline text-sm font-medium"
-                >
-                  {item.title}
-                </a>
-
-                <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
-                  {item.summary}
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-            観光クルーズではなく移動手段としてテムズ川を使うなら、Uber Boat
-            by Thames Clippers も便利です。運賃体系や乗り方は
-            <Link
-              href="/sightseeing/transport"
-              className="mx-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ロンドンの交通ガイド
-            </Link>
-            で解説しています。
-          </p>
-        </section>
-
-        {/* Cards Section */}
-        <section className="grid gap-10">
-          {items.map((item) => (
-            <div key={item.slug} id={item.slug} className="scroll-mt-24">
-              <Card
-                className="shadow-sm border bg-white/60 dark:bg-white/20 backdrop-blur-sm 
-                            hover:shadow-xl hover:bg-white dark:hover:bg-black
-                            transition-all duration-300"
-              >
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    width={800}
-                    height={500}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                  />
-                )}
-
-                <CardHeader>
-                  <CardTitle className="text-xl font-semibold">
-                    {item.title}
-                  </CardTitle>
-
-                  {item.engTitle && (
-                    <p className="text-sm text-muted-foreground italic">
-                      {item.engTitle}
-                    </p>
-                  )}
-                </CardHeader>
-
-                <CardContent className="text-sm leading-relaxed space-y-4">
-                  {/* Summary */}
-                  <p className="font-medium text-muted-foreground">
-                    {item.summary}
-                  </p>
-
-                  {/* MainText */}
-                  {item.mainText && (
-                    <ExpandableText text={item.mainText} maxLines={3} />
-                  )}
-
-                  {/* Sections → 場所 / 公式サイトなど */}
-                  {item.sections?.length > 0 && (
-                    <div className="pt-2 border-t border-gray-300 dark:border-gray-700 space-y-1">
-                      {item.website && (
-                        <div>
-                          <p className="font-semibold">正規サイト</p>
-                          <div className="text-muted-foreground underline text-sm mb-4">
-                            <Link href={item.website}>{item.website}</Link>
-                          </div>
-                        </div>
-                      )}
-
-                      {item.sections.map((section) => (
-                        <div key={section.title}>
-                          <p className="font-semibold">{section.title}</p>
-                          {section.description && (
-                            <div className="text-muted-foreground underline text-sm mb-4">
-                              <ReactMarkdown>
-                                {section.description}
-                              </ReactMarkdown>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </section>
-      </section>
-    </div>
-  );
+export default function ThamesCruisePage() {
+  return <FeatureLayout article={article} />;
 }

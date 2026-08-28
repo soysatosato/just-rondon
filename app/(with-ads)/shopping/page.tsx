@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import GuideFaq from "@/components/guides/GuideFaq";
 import type { GuideFaqItem } from "@/components/guides/types";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,7 +98,7 @@ export default function ShoppingHubPage() {
         ]}
       />
 
-      <BreadCrumbs name={SHOPPING_SECTION_NAME} />
+      <Breadcrumbs path="/shopping" />
 
       <header className="mt-6 space-y-4">
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">

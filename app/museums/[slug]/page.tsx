@@ -1,4 +1,4 @@
-import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ShareButton from "@/components/museums/ShareButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -118,7 +118,7 @@ export default async function MuseumDetailsPage({
       <JsonLd data={museumJsonLd(museum)} />
 
       <div className="pt-4">
-        <MuseumBreadCrumbs name="美術館ナビ" name2={museum.name} link2="" />
+        <Breadcrumbs path="/museums" current={museum.name} />
       </div>
 
       <MuseumHero museum={museum} />

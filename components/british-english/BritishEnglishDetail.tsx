@@ -2,7 +2,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Content, ContentSection } from "@prisma/client";
-import BritishEnglishBreadCrumbs from "@/components/british-english/BritishEnglishBreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
@@ -56,7 +56,7 @@ export default function BritishEnglishDetail({
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
-      <BritishEnglishBreadCrumbs title={content.title} />
+      <Breadcrumbs path="/british-english" current={content.title} />
 
       <header className="relative mt-6 overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-background to-amber-50 px-6 py-9 dark:border-rose-900/50 dark:from-rose-950/25 dark:via-background dark:to-amber-950/15 sm:px-10 sm:py-11">
         <div

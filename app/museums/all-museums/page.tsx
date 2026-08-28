@@ -1,6 +1,6 @@
 export const revalidate = 60 * 60;
 
-import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import MuseumBrowser from "@/components/museums/MuseumBrowser";
@@ -50,11 +50,7 @@ export default async function AllMuseumsPage() {
       />
 
       <div className="mb-6">
-        <MuseumBreadCrumbs
-          name="美術館ナビ"
-          link2=""
-          name2="美術館一覧"
-        />
+        <Breadcrumbs path="/museums" current="美術館一覧" />
       </div>
 
       <header className="mb-8 space-y-4">

@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -16,7 +16,6 @@ import GuideToc from "@/components/guides/GuideToc";
 import { EMERGENCY_CONTACTS } from "@/lib/trouble/contacts";
 import {
   TROUBLE_BASE,
-  TROUBLE_SECTION_NAME,
   getTroubleGuideMeta,
   troubleGuideArticleJsonLd,
   troubleGuideBreadcrumbJsonLd,
@@ -42,11 +41,7 @@ export default function TroubleGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={TROUBLE_SECTION_NAME}
-        link="trouble"
-        name2={meta?.label ?? article.title}
-      />
+      <Breadcrumbs path="/trouble" current={meta?.label ?? article.title} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

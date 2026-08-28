@@ -2,7 +2,7 @@ import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import { britishEnglishScenesBreadcrumbJsonLd } from "@/components/british-english/jsonld";
-import BritishEnglishBreadCrumbs from "@/components/british-english/BritishEnglishBreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import BritishEnglishScenes, {
   SCENE_NAV,
 } from "@/components/british-english/BritishEnglishScenes";
@@ -30,7 +30,7 @@ export default function BritishEnglishScenesPage() {
       <JsonLd data={britishEnglishScenesBreadcrumbJsonLd()} />
 
       <div className="mb-6">
-        <BritishEnglishBreadCrumbs title="場面別フレーズ集" />
+        <Breadcrumbs path="/british-english" current="場面別フレーズ集" />
       </div>
 
       <header className="relative mb-8 overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-background to-sky-50 px-6 py-9 dark:border-rose-900/50 dark:from-rose-950/25 dark:via-background dark:to-sky-950/20 sm:px-9 sm:py-11">

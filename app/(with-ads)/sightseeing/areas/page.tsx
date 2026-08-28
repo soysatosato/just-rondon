@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import GuideFaq from "@/components/guides/GuideFaq";
@@ -160,11 +160,7 @@ export default async function AreasHubPage() {
       />
       <JsonLd data={faqPageJsonLd(FAQ_ITEMS, pageUrl)} />
 
-      <BreadCrumbs
-        name="観光ガイド"
-        link="sightseeing"
-        name2={AREAS_SECTION_NAME}
-      />
+      <Breadcrumbs path="/sightseeing/areas" />
 
       <header className="mt-6 space-y-4">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

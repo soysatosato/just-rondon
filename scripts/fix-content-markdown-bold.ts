@@ -18,6 +18,11 @@
  *   例: --only=/events/week   --only=/column/the-lion
  *
  * --diff を付けると、書き換わる行を before/after で並べて出す。
+ *
+ * --strip を付けると、デリミタを動かしても直せなかった箇所について、
+ * 太字そのものを諦めて余った ** を落とす。太字の範囲が本文の意図と
+ * ずれている(どこを強調したいのか読み取れない)ものが対象で、
+ * 強調を推測して置き直すより、生の ** を読者に見せないほうを優先する。
  */
 
 import "dotenv/config";
@@ -162,6 +167,69 @@ function fixText(text: string): string | null {
   return null;
 }
 
+/** 文字列中の ** の位置を全部返す。 */
+function delimiterOffsets(text: string): number[] {
+  const offsets: number[] = [];
+  for (let i = text.indexOf("**"); i !== -1; i = text.indexOf("**", i + 2)) {
+    offsets.push(i);
+  }
+  return offsets;
+}
+
+function removeAt(text: string, offsets: number[]): string {
+  // 後ろから消さないと、前を消した時点で後ろの位置がずれる。
+  return [...offsets]
+    .sort((a, b) => b - a)
+    .reduce((acc, at) => acc.slice(0, at) + acc.slice(at + 2), text);
+}
+
+/**
+ * 成立していない太字を、対ごと落とす。
+ *
+ * fixText はデリミタを動かして太字を残そうとするが、開き側の位置が
+ * 本文の意図とずれている場合(読点から始まる・鉤括弧の直前で開く等)は
+ * どこを強調したいのかが読み取れず、動かし先を決められない。
+ * そういう箇所は強調を推測せず、生の ** が消えることだけを目的にする。
+ *
+ * どれを落とすかは**描画結果からではなく、書き手が打った対から決める**。
+ * 1番目と2番目、3番目と4番目……が書き手の意図した対で、その対だけを
+ * 残して他を全部外した文字列を描画し、生の ** が出るなら壊れた対とみなす。
+ *
+ * 描画結果を基準にできない。デリミタが食い違うと、CommonMark は書き手の
+ * 意図と関係のない組み合わせで太字を作ってしまうためで、それを「元から
+ * あった太字」として温存すると、本文の無関係な範囲が太字のまま残る。実例:
+ *
+ *   …ために**、2日間で6レース**がまとめて…同様に**、…消化**している
+ *
+ * ここは1番目と4番目が余り、2番目と3番目が対になって
+ * 「がまとめて実施された。…同様に」が太字として描画されていた。
+ * 対で見れば (1,2) も (3,4) も壊れているので、4つとも落とすのが正しい。
+ */
+function stripBrokenBold(text: string): string | null {
+  const offsets = delimiterOffsets(text);
+  const drop: number[] = [];
+
+  for (let i = 0; i < offsets.length; i += 2) {
+    const pair = offsets.slice(i, i + 2);
+
+    // 奇数個で余った最後の1つは、相方がいないので必ず落とす。
+    if (pair.length < 2) {
+      drop.push(pair[0]);
+      break;
+    }
+
+    // この対だけを残した状態で描画し、生の ** が出るなら成立していない。
+    const others = offsets.filter((o) => !pair.includes(o));
+    if (renderMd(removeAt(text, others)).includes("**")) drop.push(...pair);
+  }
+
+  if (drop.length === 0) return null;
+
+  const stripped = removeAt(text, drop);
+  // 落としきれていなければ、判断を人に返す。
+  return renderMd(stripped).includes("**") ? null : stripped;
+}
+
 type Target = {
   label: string;
   text: string;
@@ -256,6 +324,7 @@ function printDiff(before: string, after: string) {
 async function main() {
   const dry = process.argv.includes("--dry");
   const diff = process.argv.includes("--diff");
+  const strip = process.argv.includes("--strip");
   const only = process.argv
     .find((a) => a.startsWith("--only="))
     ?.slice("--only=".length);
@@ -271,13 +340,21 @@ async function main() {
   for (const t of targets) {
     if (!hasBrokenBold(t.text)) continue;
 
-    const fixed = fixText(t.text);
+    let fixed = fixText(t.text);
+    let stripped = false;
+
+    // デリミタを動かして直せない箇所だけ、太字を落とす側に回す。
+    if ((fixed === null || hasBrokenBold(fixed)) && strip) {
+      fixed = stripBrokenBold(t.text);
+      stripped = fixed !== null;
+    }
+
     if (fixed === null || hasBrokenBold(fixed)) {
       skipped.push({ label: t.label, text: t.text.slice(0, 200) });
       continue;
     }
 
-    console.log(`修正: ${t.label}`);
+    console.log(`${stripped ? "太字を削除" : "修正"}: ${t.label}`);
     if (diff) printDiff(t.text, fixed);
     if (!dry) await t.apply(fixed);
     fixedCount++;

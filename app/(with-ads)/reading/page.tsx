@@ -3,7 +3,7 @@ export const revalidate = 60 * 60;
 import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { Card, CardContent } from "@/components/ui/card";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -196,7 +196,7 @@ export default async function ReadingHubPage() {
       <JsonLd data={breadcrumbJsonLd({ name: PAGE_NAME, path: PAGE_PATH })} />
       <JsonLd data={readingHubCollectionJsonLd()} />
 
-      <BreadCrumbs name={PAGE_NAME} />
+      <Breadcrumbs path="/reading" />
 
       {/* 新聞の題字のように、罫線で挟んだヘッダ。 */}
       <header className="mt-6 border-y-2 border-foreground/80 py-5">

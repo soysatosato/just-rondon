@@ -7,7 +7,7 @@ import {
 } from "@/utils/actions/museums";
 import { Star } from "lucide-react";
 import { FaStar } from "react-icons/fa";
-import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Sparkles } from "lucide-react";
@@ -72,11 +72,16 @@ export default async function ArtworkDetailPage({
           />
         </>
       )}
-      <MuseumBreadCrumbs
-        name={museum.name}
-        link2={params.slug}
-        name2="コレクション"
-        name3={artwork?.title}
+      <Breadcrumbs
+        path="/museums"
+        trail={[
+          { label: museum.name, href: `/museums/${params.slug}` },
+          {
+            label: "コレクション",
+            href: `/museums/${params.slug}/artworks`,
+          },
+        ]}
+        current={artwork?.title}
       />
 
       {/* タイトル＋評価＋バッジ */}

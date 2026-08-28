@@ -1,23 +1,17 @@
-import Link from "next/link";
-import { buildPageMetadata } from "@/lib/seo";
-import Image from "next/image";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+export const revalidate = 60 * 60 * 24;
+
+import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
+import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { fetchMustSeeAttractions } from "@/utils/actions/attractions";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/must-see",
-  title: "絶対に外せないロンドン観光スポット特集 | 初めての旅行におすすめ名所ガイド | ジャスト・ロンドン",
+  title:
+    "絶対に外せないロンドン観光スポット特集 | 初めての旅行におすすめ名所ガイド | ジャスト・ロンドン",
   titleSuffix: false,
-  description: "ロンドン観光の定番スポットを厳選して紹介。ビッグ・ベン、タワーブリッジ、バッキンガム宮殿、ロンドン塔、ウェストミンスター寺院、自然史博物館など、初めてのロンドン旅行で絶対に外せない見どころをまとめた完全ガイド。",
+  description:
+    "ロンドン観光の定番スポットを厳選して紹介。ビッグ・ベン、タワーブリッジ、バッキンガム宮殿、ロンドン塔、ウェストミンスター寺院、自然史博物館など、初めてのロンドン旅行で絶対に外せない見どころをまとめた完全ガイド。",
   keywords: [
     "ロンドン",
     "ロンドン観光",
@@ -34,73 +28,55 @@ export const metadata = buildPageMetadata({
 export default async function MustSeePage() {
   const attractions = await fetchMustSeeAttractions();
 
-  return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold mb-4">Must-See Attractions</h1>
-      <p className="text-base text-muted-foreground mb-4">
-        ロンドンを訪れるなら絶対に見ておきたいスポットをまとめています。
-        一生に一度は見ておきたい、王道中の王道の &quot;MUST SEE&quot; です。
-      </p>
-      <p className="text-sm text-muted-foreground mb-8">
-        これらをどの順番で、何日かけて回るかは
-        <Link
-          href="/sightseeing/itinerary"
-          className="mx-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
-        >
-          ロンドン モデルコース（1〜5日）
-        </Link>
-        にまとめています。
-      </p>
+  /*
+   * 一覧の行はもう DB から料金・所要時間・最寄駅ごと引けているので、
+   * FeatureLayout 側の slug 照合(lookupFacts)は切って、ここで組んだ
+   * 1行をそのまま渡す。同じことを二度問い合わせない。
+   */
+  const article: FeatureArticle = {
+    slug: "must-see",
+    title: "見逃せないロンドンの観光名所",
+    engTitle: "Must-See London",
+    lookupFacts: false,
+    intro: [
+      `初めてのロンドンで外さない${attractions.length}件です。どれも街の中心部にあり、地下鉄で結べば数日で回れます。`,
+      "ただし詰め込みは効きません。ロンドン塔は所要3時間〜、ウェストミンスター寺院は2〜3時間。大きいものを1日に2つ入れると、その日は他が入りません。1日あたり大きいもの1つと小さいもの2つ、くらいが現実的な上限です。",
+      "多くは日時指定の事前予約制で、当日窓口に並ぶと入れないことがあります。料金と所要時間を下に添えたので、行く順番を決める材料にしてください。",
+    ],
+    items: attractions.map((spot) => ({
+      slug: spot.slug,
+      title: spot.name,
+      engTitle: spot.engName,
+      summary: spot.tagline ?? spot.summary,
+      image: spot.image,
+      href: `/sightseeing/${spot.slug}`,
+      factsText:
+        [
+          spot.priceAdult ? `料金 ${spot.priceAdult}` : null,
+          spot.durationText ? `所要 ${spot.durationText}` : null,
+          spot.nearestStation,
+        ]
+          .filter(Boolean)
+          .join("・") || null,
+    })),
+    related: [
+      {
+        href: "/sightseeing/itinerary",
+        label: "ロンドン モデルコース（1〜5日）",
+        note: "この名所をどの順に、何日で回るか。",
+      },
+      {
+        href: "/sightseeing/areas",
+        label: "エリア別ガイド（6街区）",
+        note: "近いものをまとめて歩く、半日の回遊ルート。",
+      },
+      {
+        href: "/sightseeing/all",
+        label: "ロンドンの観光スポット一覧",
+        note: "定番以外も含めた全件。",
+      },
+    ],
+  };
 
-      <div className="grid gap-8">
-        {attractions.map((a) => (
-          <Card key={a.id} className="overflow-hidden">
-            <CardHeader>
-              <CardTitle className="text-base flex flex-wrap items-center gap-1">
-                <span className="whitespace-nowrap">{a.name}</span>
-                <Badge
-                  variant="secondary"
-                  className="whitespace-nowrap flex-none"
-                >
-                  {a.engName}
-                </Badge>
-              </CardTitle>
-
-              <CardDescription className="text-sm italic">
-                {a.tagline}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent>
-              <AspectRatio
-                ratio={16 / 9}
-                className="rounded-md overflow-hidden"
-              >
-                <img
-                  src={a.image}
-                  alt={a.name}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                />
-              </AspectRatio>
-
-              {a.summary && (
-                <p className="mt-4 text-gray-700 dark:text-neutral-300">
-                  {a.summary}
-                </p>
-              )}
-
-              <div className="mt-4">
-                <Button asChild variant="outline">
-                  <Link href={`/sightseeing/${a.slug}`}>詳細を表示</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+  return <FeatureLayout article={article} />;
 }

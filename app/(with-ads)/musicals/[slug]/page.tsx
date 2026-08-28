@@ -23,7 +23,7 @@ import MusicalInfo from "@/components/musicals/MusicalInfo";
 import MusicalPracticalFacts from "@/components/musicals/MusicalPracticalFacts";
 import MusicalHero from "@/components/musicals/MusicalHero";
 import { theatrePath } from "@/components/musicals/theatres/theatres";
-import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
@@ -85,13 +85,7 @@ export default async function musicalDetailsPage({
     <div>
       <JsonLd data={musicalBreadcrumbJsonLd(musical)} />
       <JsonLd data={theaterEventJsonLd(musical, performances)} />
-      <MusicalBreadCrumbs
-        name={
-          musical.name.length > 7
-            ? musical.name.slice(0, 7) + "..."
-            : musical.name
-        }
-      />
+      <Breadcrumbs path="/musicals" current={musical.name} />
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10">
         <MusicalHero
           name={musical.name}

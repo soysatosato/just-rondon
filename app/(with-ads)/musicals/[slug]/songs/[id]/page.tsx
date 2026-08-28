@@ -1,5 +1,5 @@
 import { absoluteUrl, buildPageMetadata, truncateDescription } from "@/lib/seo";
-import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import {
   fetchMusicalIdandName,
   fetchSongDetails,
@@ -72,15 +72,13 @@ export default async function SongDetailsPage({
           ),
         }}
       />
-      <MusicalBreadCrumbs
-        name2="曲一覧"
-        name3={song.name.length > 7 ? song.name.slice(0, 7) + "..." : song.name}
-        link2={params.slug}
-        name={
-          song.musical.name.length > 7
-            ? song.musical.name.slice(0, 7) + "..."
-            : song.musical.name
-        }
+      <Breadcrumbs
+        path="/musicals"
+        trail={[
+          { label: song.musical.name, href: `/musicals/${params.slug}` },
+          { label: "曲一覧", href: `/musicals/${params.slug}/songs` },
+        ]}
+        current={song.name}
       />
       <div className="max-w-3xl mx-auto p-8 bg-background rounded-2xl shadow-lg">
         <div className="mb-6 sm:mb-8 text-center">

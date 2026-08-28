@@ -7,7 +7,13 @@ import { categoryLabel } from "@/components/sightseeing/categories";
 import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/lib/seo";
+import {
+  featureBreadcrumbJsonLd,
+  getFeatureMeta,
+} from "@/components/sightseeing/features/features";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/free",
@@ -31,13 +37,49 @@ export default async function FreeAttractionsPage() {
   const groups = await fetchFreeAttractionsByCategory();
   const total = groups.reduce((sum, g) => sum + g.spots.length, 0);
 
+  const meta = getFeatureMeta("free");
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
+      <JsonLd
+        data={featureBreadcrumbJsonLd({
+          slug: "free",
+          title: "ロンドンの無料観光スポット",
+        })}
+      />
+      {/* 特集ページと同じく ItemList で出す。並びはカテゴリー順のまま、
+          読者が見るのと同じ順序で番号を振る。 */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "@id": `${SITE_URL}/sightseeing/free#items`,
+          url: `${SITE_URL}/sightseeing/free`,
+          name: `ロンドンの無料観光スポット${total}選`,
+          inLanguage: "ja",
+          numberOfItems: total,
+          itemListElement: groups
+            .flatMap((group) => group.spots)
+            .map((spot, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: spot.name,
+              url: `${SITE_URL}/sightseeing/${spot.slug}`,
+            })),
+        }}
+      />
+
       <div className="mb-4">
-        <BreadCrumbs name="観光ガイド" link="sightseeing" name2="無料スポット" />
+        <Breadcrumbs path="/sightseeing" current="無料スポット" />
       </div>
 
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+      {meta && (
+        <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+          <span className={`h-3 w-0.5 shrink-0 rounded-full ${meta.stripe}`} />
+          {meta.eyebrow}
+        </p>
+      )}
+      <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
         ロンドンの無料観光スポット{total}選
       </h1>
 

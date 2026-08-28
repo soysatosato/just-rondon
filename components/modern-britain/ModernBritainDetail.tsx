@@ -2,7 +2,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Content, ContentSection } from "@prisma/client";
-import ModernBritainBreadCrumbs from "@/components/modern-britain/ModernBritainBreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -65,7 +65,7 @@ export default function ModernBritainDetail({
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
-      <ModernBritainBreadCrumbs title={content.title} />
+      <Breadcrumbs path="/modern-britain" current={content.title} />
 
       <header className="relative mt-6 overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-background to-cyan-50 px-6 py-9 dark:border-indigo-900/50 dark:from-indigo-950/25 dark:via-background dark:to-cyan-950/15 sm:px-10 sm:py-11">
         <div

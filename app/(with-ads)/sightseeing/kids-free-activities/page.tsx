@@ -1,14 +1,17 @@
-import Link from "next/link";
+export const revalidate = 60 * 60 * 24;
+
+import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
+import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import ReactMarkdown from "react-markdown";
 import { kidsFreeActivities } from "./data";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/kids-free-activities",
-  title: "子どもと行けるロンドン無料スポット特集 | 家族で楽しむ観光ガイド | ジャスト・ロンドン",
+  title:
+    "子どもと行けるロンドン無料スポット特集 | 家族で楽しむ観光ガイド | ジャスト・ロンドン",
   titleSuffix: false,
-  description: "ロンドンで子どもと楽しめる無料観光スポットを厳選紹介。自然史博物館、科学博物館、ブリティッシュミュージアム、スカイガーデン、コーラムズ・フィールズ、プレイパーク、動物スポットなど、家族で1日たっぷり遊べる人気の無料スポットをまとめたガイドです。",
+  description:
+    "ロンドンで子どもと楽しめる無料観光スポットを厳選紹介。自然史博物館、科学博物館、ブリティッシュミュージアム、スカイガーデン、コーラムズ・フィールズ、プレイパーク、動物スポットなど、家族で1日たっぷり遊べる人気の無料スポットをまとめたガイドです。",
   keywords: [
     "ロンドン",
     "無料",
@@ -23,96 +26,40 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default function KidsFreeListPage() {
-  const items = kidsFreeActivities;
+const article: FeatureArticle = {
+  slug: "kids-free-activities",
+  title: "子どもと楽しむロンドンの無料スポット",
+  engTitle: "Free Days Out with Kids",
+  intro: [
+    "ロンドンで子連れの出費が抑えられるのは、国立の博物館が全部無料だからです。自然史博物館の恐竜も、サイエンス・ミュージアムの体験展示も、入場料はかかりません。特別展だけが有料です。",
+    "交通費も11歳未満は地下鉄・バスとも無料で、大人に付き添われていれば手続きも要りません。入場料と運賃が要らない前提で組むと、1日の出費が食事代だけになる日も作れます。",
+  ],
+  items: kidsFreeActivities.map((item) => ({
+    slug: item.slug,
+    title: item.title,
+    engTitle: item.engTitle,
+    summary: item.summary,
+    mainText: item.mainText,
+  })),
+  related: [
+    {
+      href: "/sightseeing/free",
+      label: "ロンドンの無料観光スポット一覧",
+      note: "子ども向けに限らない、入場無料のスポット全部。",
+    },
+    {
+      href: "/sightseeing/itinerary/with-kids",
+      label: "子連れのモデルコース",
+      note: "移動と昼寝を織り込んだ1日の組み方。",
+    },
+    {
+      href: "/sightseeing/step-free",
+      label: "バリアフリーのロンドン",
+      note: "ベビーカーで段差なく動くための原則。",
+    },
+  ],
+};
 
-  return (
-    <div className="max-w-5xl mx-auto px-6 py-16 space-y-14">
-      {/* Hero Section */}
-      <section className="text-center space-y-6">
-        <h1 className="text-xl font-extrabold tracking-tight">
-          ロンドンで子どもと楽しむ無料スポットBEST 10
-        </h1>
-
-        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          ロンドンには、子どもと一緒に“お金をかけずに”楽しめる場所が驚くほど豊富にあります。
-          博物館、公園、展望台、王室イベント──無料でも想像以上に充実した体験ができるのがこの街の魅力です。
-          10歳以下なら交通機関も無料なので、家族で気軽にロンドンの街を冒険できます。
-          有料スポットと組み合わせれば、予算を抑えつつ最高の思い出が作れます。
-        </p>
-      </section>
-
-      {/* List Section */}
-      <section className="grid gap-8">
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            目次
-          </h2>
-
-          <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-            {items.map((item, idx) => (
-              <li key={item.slug} className="leading-tight relative pl-6">
-                <span
-                  className="
-            absolute left-0 text-gray-500 dark:text-gray-400 text-sm
-          "
-                >
-                  {idx + 1}.
-                </span>
-
-                <a
-                  href={`#${item.slug}`}
-                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:underline text-sm font-medium"
-                >
-                  {item.title}
-                </a>
-
-                <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
-                  {item.summary}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* --- Cards Section --- */}
-        <section className="grid gap-10">
-          {items.map((item) => (
-            <div key={item.slug} id={item.slug} className="scroll-mt-24">
-              <Link href={`/sightseeing/${item.slug}`} className="group block">
-                <Card
-                  className="shadow-sm border bg-white/60 backdrop-blur-sm 
-    hover:shadow-xl hover:bg-white transition-all duration-300
-    dark:bg-slate-800/60 dark:hover:bg-slate-800 
-    dark:border-slate-700"
-                >
-                  <CardHeader>
-                    <CardTitle className="text-xl font-semibold">
-                      {item.title}
-                    </CardTitle>
-
-                    {item.engTitle && (
-                      <p className="text-sm text-muted-foreground italic">
-                        {item.engTitle}
-                      </p>
-                    )}
-                  </CardHeader>
-
-                  <CardContent className="text-sm leading-relaxed space-y-3">
-                    <p className="font-medium text-muted-foreground">
-                      {item.summary}
-                    </p>
-
-                    <div className="prose prose-sm max-w-none text-muted-foreground">
-                      <ReactMarkdown>{item.mainText}</ReactMarkdown>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-          ))}
-        </section>
-      </section>
-    </div>
-  );
+export default function KidsFreeActivitiesPage() {
+  return <FeatureLayout article={article} />;
 }

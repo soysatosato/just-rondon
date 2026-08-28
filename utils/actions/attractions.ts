@@ -240,10 +240,28 @@ export const fetchFreeAttractionsByCategory = unstable_cache(
   { revalidate: 60 * 60 * 24 },
 );
 
+/**
+ * /sightseeing/must-see の一覧。
+ *
+ * 一覧に出すのは写真・名前・要約と、料金/所要時間/最寄駅だけ。
+ * select を書かずに行を丸ごと引くと markdown 本文まで読むことになるので、
+ * 使う列だけを挙げる(fetchHomeRails / fetchSightseeingHub と同じ方針)。
+ */
 export const fetchMustSeeAttractions = unstable_cache(
   async () =>
     db.attraction.findMany({
       where: { mustSee: true, isPublished: true },
+      select: {
+        slug: true,
+        name: true,
+        engName: true,
+        tagline: true,
+        summary: true,
+        image: true,
+        priceAdult: true,
+        durationText: true,
+        nearestStation: true,
+      },
       orderBy: { createdAt: "asc" },
     }),
   ["must-see-attractions"],

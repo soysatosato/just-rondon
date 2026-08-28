@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import MusicalBreadCrumbs from "@/components/musicals/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
@@ -70,14 +70,10 @@ export default async function SongsPage({
           ),
         }}
       />
-      <MusicalBreadCrumbs
-        name2="曲一覧"
-        link2={params.slug}
-        name={
-          musical.name.length > 7
-            ? musical.name.slice(0, 7) + "..."
-            : musical.name
-        }
+      <Breadcrumbs
+        path="/musicals"
+        trail={[{ label: musical.name, href: `/musicals/${params.slug}` }]}
+        current="曲一覧"
       />
       <div className="max-w-4xl mx-auto p-6 sm:p-8 space-y-6">
         {/* ミュージカル名 */}

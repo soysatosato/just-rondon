@@ -4,7 +4,7 @@ import { Clock, Wallet } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
 import { buildPageMetadata } from "@/lib/seo";
@@ -70,11 +70,7 @@ export default async function DishPage({
         ]}
       />
 
-      <BreadCrumbs
-        name={RESTAURANT_SECTION_NAME}
-        name2={dish.name}
-        link="restaurants"
-      />
+      <Breadcrumbs path="/restaurants" current={dish.name} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">

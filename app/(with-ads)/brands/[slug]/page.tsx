@@ -4,7 +4,7 @@ import { Crown, MapPin, Wallet, Train } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
@@ -138,7 +138,7 @@ export default async function BrandPage({
         ]}
       />
 
-      <BreadCrumbs name={BRAND_SECTION_NAME} name2={brand.name} link="brands" />
+      <Breadcrumbs path="/brands" current={brand.name} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">

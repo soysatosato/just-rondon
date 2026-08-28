@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -16,7 +16,6 @@ import GuideToc from "@/components/guides/GuideToc";
 import { SAFETY_CONTACTS } from "@/lib/social/facts";
 import {
   SOCIAL_BASE,
-  SOCIAL_SECTION_NAME,
   getSocialGuideMeta,
   socialGuideArticleJsonLd,
   socialGuideBreadcrumbJsonLd,
@@ -42,11 +41,7 @@ export default function SocialGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={SOCIAL_SECTION_NAME}
-        link="social"
-        name2={meta?.label ?? article.title}
-      />
+      <Breadcrumbs path="/social" current={meta?.label ?? article.title} />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -16,7 +16,6 @@ import GuideToc from "@/components/guides/GuideToc";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import {
   RESTAURANT_BASE,
-  RESTAURANT_SECTION_NAME,
   getRestaurantGuideMeta,
   restaurantGuideArticleJsonLd,
   restaurantGuideBreadcrumbJsonLd,
@@ -42,10 +41,9 @@ export default function RestaurantGuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={RESTAURANT_SECTION_NAME}
-        link="restaurants"
-        name2={meta?.label ?? article.title}
+      <Breadcrumbs
+        path="/restaurants"
+        current={meta?.label ?? article.title}
       />
 
       <header className="mt-6 space-y-3">

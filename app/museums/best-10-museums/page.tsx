@@ -2,7 +2,7 @@ export const revalidate = 60 * 60;
 
 import Link from "next/link";
 
-import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import MuseumRankedList from "@/components/museums/MuseumRankedList";
 import JsonLd from "@/components/seo/JsonLd";
 import {
@@ -55,7 +55,7 @@ export default async function BestTenMuseumsPage() {
       />
 
       <div className="mb-6">
-        <MuseumBreadCrumbs name="美術館ナビ" link2="" name2="ベスト10" />
+        <Breadcrumbs path="/museums" current="ベスト10" />
       </div>
 
       <header className="mb-10 space-y-4">

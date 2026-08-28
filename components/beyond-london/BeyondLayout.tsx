@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -17,7 +17,6 @@ import {
   BEYOND_BASE,
   BEYOND_CATEGORY_LABELS,
   BEYOND_CATEGORY_ORDER,
-  BEYOND_SECTION_NAME,
   beyondArticleJsonLd,
   beyondBreadcrumbJsonLd,
   beyondByCategory,
@@ -55,10 +54,9 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={BEYOND_SECTION_NAME}
-        link="beyond-london"
-        name2={meta?.label ?? article.title}
+      <Breadcrumbs
+        path="/beyond-london"
+        current={meta?.label ?? article.title}
       />
 
       <header className="mt-6 space-y-3">

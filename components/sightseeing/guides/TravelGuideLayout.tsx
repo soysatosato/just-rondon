@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -75,21 +75,16 @@ export default function TravelGuideLayout({
         <JsonLd key={i} data={data} />
       ))}
 
-      {parent ? (
-        <BreadCrumbs
-          name="観光ガイド"
-          link="sightseeing"
-          name2={parent.name}
-          link2={`sightseeing/${parent.slug}`}
-          name3={meta?.label ?? article.title}
-        />
-      ) : (
-        <BreadCrumbs
-          name="観光ガイド"
-          link="sightseeing"
-          name2={meta?.label ?? article.title}
-        />
-      )}
+      {/* モデルコースの分岐版だけ、親記事(1〜5日の本編)を挟む。 */}
+      <Breadcrumbs
+        path="/sightseeing"
+        trail={
+          parent
+            ? [{ label: parent.name, href: `/sightseeing/${parent.slug}` }]
+            : []
+        }
+        current={meta?.label ?? article.title}
+      />
 
       <header className="mt-6 space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

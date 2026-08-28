@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Content, ContentSection } from "@prisma/client";
 import { CommentTargetType } from "@prisma/client";
-import ColumnBreadCrumbs from "@/components/column/ColumnBreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { tagLabel } from "@/lib/column-taxonomy";
@@ -63,7 +63,7 @@ export default function ColumnDetail({
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 md:py-10 space-y-10">
-      <ColumnBreadCrumbs title={content.title} />
+      <Breadcrumbs path="/column" current={content.title} />
 
       <div>
         <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">

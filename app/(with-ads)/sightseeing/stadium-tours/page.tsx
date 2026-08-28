@@ -1,9 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { stadiumTours } from "./data";
-import ExpandableText from "@/components/card/ExpandableText";
+export const revalidate = 60 * 60 * 24;
+
+import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
+import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
+import { stadiumTours } from "./data";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/stadium-tours",
@@ -26,189 +26,44 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-export default function tadiumToursListPage() {
-  const contents = stadiumTours;
+const article: FeatureArticle = {
+  slug: "stadium-tours",
+  title: "ロンドンのスタジアムツアー",
+  engTitle: "Stadium Tours in London",
+  intro: [
+    "試合のチケットが取れなくても、スタジアムの中には入れます。スタジアムツアーは、ロッカールーム、ピッチ脇のベンチ、記者会見室、選手が通るトンネルまでを、案内付きで見て回るものです。",
+    "所要はどこも1時間から1時間半、料金は£25〜£40あたりが相場です。試合日とその前後は開催されないか短縮版になるので、日程を決める前に公式サイトで実施日を確認してください。",
+  ],
+  notes: [
+    {
+      title: "試合そのものを観たい場合",
+      description:
+        "プレミアリーグには一般販売がほとんどなく、チケットの入手には3ヶ月前からの準備が要ります。転売サイトで買った席では入場できません。下の「あわせて読みたい」から観戦ガイドへ。",
+    },
+  ],
+  items: stadiumTours.map((item) => ({
+    slug: item.slug,
+    title: item.title,
+    summary: item.summary,
+    mainText: item.mainText,
+    image: item.image,
+    website: item.website,
+    sections: item.sections,
+  })),
+  related: [
+    {
+      href: "/sightseeing/football",
+      label: "プレミアリーグ観戦ガイド（全12本）",
+      note: "一般販売が無い理由と、会員制度の仕組みから。",
+    },
+    {
+      href: "/sightseeing/football/tickets",
+      label: "チケットの取り方のすべて",
+      note: "6クラブの取りやすさ比較と、取れなかったときの代替。",
+    },
+  ],
+};
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 space-y-10">
-      <div>
-        <h2 className="text-lg italic font-semibold text-center text-purple-700 dark:text-purple-300 mt-2">
-          Stadium Tours in London
-        </h2>
-        <h1 className="text-2xl font-bold text-center">
-          ロンドンで楽しむスタジアムツアー
-        </h1>
-      </div>
-      <div>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-          ロンドンは、世界トップレベルのフットボール（サッカー）が息づく街です。
-          街を歩けば、プレミアリーグの歴史や熱狂がそこかしこに漂っています。
-        </p>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-2">
-          スタジアムツアーでは、選手たちが実際に使うロッカールーム、ピッチへ続くトンネル、
-          VIPが座るロイヤルボックスなど、普段絶対入れない場所に足を踏み入れることができます。
-          まさに“試合前夜の緊張感”を体験できる裏側への冒険です。
-        </p>
-        <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-10">
-          このガイドでは、アーセナル、チェルシー、トッテナム、ウェストハム、
-          そして聖地ウェンブリーまで、ロンドンが誇るスタジアムツアーを紹介します。
-          少しだけファン目線で、心が高鳴る瞬間を一緒に巡っていきましょう。
-        </p>
-      </div>
-      <section className="space-y-2">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-          目次
-        </h2>
-
-        <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
-          {contents.map((item, idx: number) => (
-            <li key={item.slug} className="leading-tight relative pl-6">
-              <span
-                className="
-            absolute left-0 text-gray-500 dark:text-gray-400 text-sm
-          "
-              >
-                {idx + 1}.
-              </span>
-
-              <a
-                href={`#${item.slug}`}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:underline text-sm font-medium"
-              >
-                {item.title}
-              </a>
-
-              <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
-                {item.summary}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
-      {contents.map((item) => {
-        const isLinkable = item.slug && item.slug !== "-";
-
-        return (
-          <div id={item.slug} key={item.slug}>
-            <Card className="p-4 shadow-md rounded-xl hover:shadow-lg transition">
-              <CardHeader>
-                <CardTitle className="text-2xl">{item.title}</CardTitle>
-
-                {item.image && (
-                  <div className="relative w-full h-64 mt-4 rounded-lg overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </div>
-                )}
-              </CardHeader>
-
-              <CardContent>
-                {item.mainText && (
-                  <ExpandableText text={item.mainText} maxLines={4} />
-                )}
-
-                {item.sections?.length > 0 && (
-                  <div className="mt-6 space-y-6">
-                    {item.sections
-                      .sort((a, b) => a.displayOrder - b.displayOrder)
-                      .map((sec) => (
-                        <div
-                          key={sec.id}
-                          className="border-l-4 pl-4 border-purple-600"
-                        >
-                          <h3 className="text-xl font-semibold">{sec.title}</h3>
-                          {sec.description && (
-                            <p className="text-gray-600 dark:text-gray-300 mt-2 whitespace-pre-line">
-                              {sec.description}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                  </div>
-                )}
-
-                {isLinkable && (
-                  <div className="mt-6 text-right">
-                    <Link
-                      href={`/sightseeing/${item.slug}`}
-                      className="
-        inline-flex items-center gap-2
-        rounded-full px-4 py-1.5
-        text-sm font-semibold
-        bg-purple-100 dark:bg-purple-800/50
-        text-purple-700 dark:text-purple-300
-        hover:bg-purple-200 dark:hover:bg-purple-700
-        transition-all
-        group
-      "
-                    >
-                      詳細ページへ
-                      <span
-                        className="
-          inline-block transition-transform duration-200
-          group-hover:translate-x-1
-        "
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </div>
-                )}
-
-                {/* 外部オフィシャルサイト */}
-                {item.website && (
-                  <a
-                    href={item.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block mt-4 text-purple-700 font-semibold hover:underline"
-                  >
-                    Visit Official Website →
-                  </a>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        );
-      })}
-
-      {/*
-        ツアーを探している読者の一定数は、本当は試合そのものを観たい。
-        観戦はチケットの取り方から準備が要るので、ここから観戦ガイドへ送る。
-      */}
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-          実際の試合を観たい場合
-        </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-          プレミアリーグには一般販売がほとんどなく、チケットの入手には
-          3ヶ月前からの準備が要ります。転売サイトで買った席では入場できません。
-        </p>
-        <ul className="mt-3 space-y-2 text-sm">
-          <li>
-            <Link
-              href="/sightseeing/football"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
-            >
-              プレミアリーグ観戦ガイド（全12本）
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/sightseeing/football/tickets"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
-            >
-              チケットの取り方のすべて
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
+export default function StadiumToursPage() {
+  return <FeatureLayout article={article} />;
 }

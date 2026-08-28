@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import BreadCrumbs from "@/components/home/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
@@ -16,7 +16,6 @@ import ChapterNav from "./ChapterNav";
 import {
   HISTORY_AS_OF,
   HISTORY_BASE,
-  HISTORY_SECTION_NAME,
   chapterArticleJsonLd,
   chapterBreadcrumbJsonLd,
   chapterPath,
@@ -52,11 +51,7 @@ export default function HistoryChapterLayout({
         <JsonLd data={faqPageJsonLd(chapter.faq, pageUrl)} />
       )}
 
-      <BreadCrumbs
-        name={HISTORY_SECTION_NAME}
-        link="history"
-        name2={meta?.label ?? chapter.title}
-      />
+      <Breadcrumbs path="/history" current={meta?.label ?? chapter.title} />
 
       <header className="mt-6 space-y-3">
         <p className="text-xs font-bold tracking-wide text-amber-700 dark:text-amber-500">

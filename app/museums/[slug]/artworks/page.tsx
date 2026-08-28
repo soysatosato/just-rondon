@@ -1,7 +1,7 @@
 import ArtworksAccordion from "@/components/artworks/ArtworksAccordion";
 import { buildPageMetadata } from "@/lib/seo";
 import ArtworksIntro from "@/components/artworks/ArtworksIntro";
-import MuseumBreadCrumbs from "@/components/museums/BreadCrumbs";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { fetchArtworks, fetchMuseumIDandName } from "@/utils/actions/museums";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -91,10 +91,10 @@ export default async function ArtworksPage({
   return (
     <div className="mx-auto max-w-5xl px-4 py-4 text-foreground">
       <div className="mb-6">
-        <MuseumBreadCrumbs
-          name={museum.name}
-          link2={params.slug}
-          name2="コレクション"
+        <Breadcrumbs
+          path="/museums"
+          trail={[{ label: museum.name, href: `/museums/${params.slug}` }]}
+          current="コレクション"
         />
       </div>
       <ArtworksIntro museumName={museum.name} />
