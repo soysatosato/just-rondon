@@ -12,6 +12,9 @@ import { AD_SLOTS } from "@/lib/adsense";
 import { getMonthNumber, getSeasonMeta } from "@/lib/events";
 import SeasonBadge from "@/components/events/SeasonBadge";
 import EventDetailCard from "@/components/events/EventDetailCard";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -62,6 +65,16 @@ export default async function EventDetailPage({
 
   return (
     <main className="container mx-auto px-4 py-10">
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/events",
+          current: content.title,
+          currentHref: `/events/${content.slug}`,
+        })}
+      />
+
+      <Breadcrumbs path="/events" current={content.title} className="mb-6" />
+
       <div className="mb-6">
         <Link href="/events">
           <Button variant="outline" className="dark:border-neutral-600">

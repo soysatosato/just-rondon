@@ -13,6 +13,7 @@ import Pagination from "@/components/home/Pagination";
 import { fetchAllAttractions } from "@/utils/actions/attractions";
 import AttractionFilterBar from "@/components/attractions/AttractionFilterBar";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
@@ -101,6 +102,8 @@ export default async function FacilitiesListPage({
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4">
+      <Breadcrumbs path="/sightseeing/all" className="mb-6" />
+
       <h1 className="text-2xl font-bold mb-4">ロンドン観光施設一覧</h1>
       <p className="text-base text-muted-foreground mb-2">
         ロンドンには、急いで巡らなくても楽しめる場所がたくさんあります。

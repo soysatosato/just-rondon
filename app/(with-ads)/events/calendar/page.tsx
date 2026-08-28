@@ -4,6 +4,9 @@ import { CalendarRange } from "lucide-react";
 import { fetchEvents2026 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import EventMonthCard from "@/components/events/EventMonthCard";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { Button } from "@/components/ui/button";
 
 export const revalidate = 60 * 60;
@@ -28,6 +31,10 @@ export default async function EventsCalendarPage() {
 
   return (
     <main className="container mx-auto px-4 py-10">
+      <JsonLd data={breadcrumbListJsonLd({ path: "/events/calendar" })} />
+
+      <Breadcrumbs path="/events/calendar" className="mb-6" />
+
       <div className="mb-6">
         <Link href="/events">
           <Button variant="outline" className="dark:border-neutral-600">

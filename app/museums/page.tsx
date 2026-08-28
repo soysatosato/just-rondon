@@ -6,11 +6,12 @@ import MuseumsHub from "@/components/museums/MuseumsHub";
 import {
   museumsCollectionJsonLd,
   museumsFaqJsonLd,
-  museumsHubBreadcrumbJsonLd,
 } from "@/components/museums/jsonld";
 import { museumsFaqItems } from "@/components/museums/faq";
 import { fetchMuseumsHubData } from "@/utils/actions/museums";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { AD_SLOTS } from "@/lib/adsense";
 
 const PAGE_TITLE =
@@ -42,7 +43,7 @@ export default async function MuseumsHubPage() {
 
   return (
     <>
-      <JsonLd data={museumsHubBreadcrumbJsonLd()} />
+      <JsonLd data={breadcrumbListJsonLd({ path: "/museums" })} />
       <JsonLd
         data={museumsCollectionJsonLd({
           path: "/museums",
@@ -52,6 +53,10 @@ export default async function MuseumsHubPage() {
         })}
       />
       <JsonLd data={museumsFaqJsonLd(museumsFaqItems, "/museums")} />
+
+      <div className="mx-auto max-w-6xl px-4 pt-4">
+        <Breadcrumbs path="/museums" />
+      </div>
 
       <MuseumsHub
         topMuseums={topMuseums}

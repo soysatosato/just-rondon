@@ -9,6 +9,7 @@ import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import {
   christmasMarketBreadcrumbJsonLd,
   contentAttractionJsonLd,
@@ -101,6 +102,12 @@ export default function ChristmasMarketDetailPage({ params }: Props) {
     <div className="max-w-4xl mx-auto py-8 px-4 md:py-10 space-y-10">
       <JsonLd data={christmasMarketBreadcrumbJsonLd(content)} />
       <JsonLd data={contentAttractionJsonLd(content)} />
+
+      <Breadcrumbs
+        path="/sightseeing/christmas-markets"
+        current={content.title}
+      />
+
       <div>
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
           {content.title}

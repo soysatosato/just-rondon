@@ -12,6 +12,9 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { getMonthNumber, getSeasonMeta } from "@/lib/events";
 import SeasonBadge from "@/components/events/SeasonBadge";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -59,6 +62,22 @@ export default async function EventDetailArchivePage({
 
   return (
     <main className="container mx-auto px-4 py-10">
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/events",
+          trail: [{ label: "2025年アーカイブ", href: "/events/archive/2025" }],
+          current: content.title,
+          currentHref: `/events/archive/2025/${content.slug}`,
+        })}
+      />
+
+      <Breadcrumbs
+        path="/events"
+        trail={[{ label: "2025年アーカイブ", href: "/events/archive/2025" }]}
+        current={content.title}
+        className="mb-6"
+      />
+
       <div className="mb-6">
         <Link href="/events/archive/2025">
           <Button variant="outline" className="dark:border-neutral-600">

@@ -5,6 +5,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/jobs/service-charges",
@@ -129,6 +132,10 @@ export default function ServiceChargeGuidePage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 md:py-14">
+      <JsonLd data={breadcrumbListJsonLd({ path: "/jobs/service-charges" })} />
+
+      <Breadcrumbs path="/jobs/service-charges" className="mb-6" />
+
       {/* Title */}
       <header className="mx-auto max-w-[46rem] space-y-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

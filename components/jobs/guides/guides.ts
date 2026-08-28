@@ -73,7 +73,7 @@ export function buildMetadata(article: JobGuideArticle) {
 export function breadcrumbJsonLd(article: JobGuideArticle) {
   return breadcrumbListJsonLd({
     path: "/jobs",
-    current: article.title,
+    current: getGuideMeta(article.slug)?.label ?? article.title,
     currentHref: guidePath(article.slug),
   });
 }

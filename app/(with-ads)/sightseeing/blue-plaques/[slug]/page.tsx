@@ -22,6 +22,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { plaqueAreas, getPlaqueArea, type Plaque } from "../data";
 
 interface Props {
@@ -101,6 +102,8 @@ export default function PlaqueAreaPage({ params }: Props) {
     <div className="max-w-4xl mx-auto py-8 px-4 md:py-10 space-y-10">
       <JsonLd data={plaqueAreaBreadcrumbJsonLd(area)} />
       <JsonLd data={plaqueAreaJsonLd(area)} />
+
+      <Breadcrumbs path="/sightseeing/blue-plaques" current={area.title} />
 
       <header>
         <p className="text-sm font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-2">

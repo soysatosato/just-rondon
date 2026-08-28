@@ -1,6 +1,9 @@
 import LoadingCards from "@/components/card/LoadingCards";
 import { buildPageMetadata } from "@/lib/seo";
 import MusicalHomePage from "@/components/musicals/MusicalHomePage";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { fetchMusicalsForBrowse } from "@/utils/actions/musicals";
 import { collectionPageJsonLd } from "@/components/musicals/jsonld";
 import { Metadata } from "next";
@@ -25,6 +28,12 @@ export default async function HomePage() {
           __html: JSON.stringify(collectionPageJsonLd(musicals)),
         }}
       />
+      <JsonLd data={breadcrumbListJsonLd({ path: "/musicals" })} />
+
+      <div className="mx-auto max-w-6xl px-4 pt-4">
+        <Breadcrumbs path="/musicals" />
+      </div>
+
       <section>
         <Suspense fallback={<LoadingCards />}>
           <MusicalHomePage musicals={musicals} />

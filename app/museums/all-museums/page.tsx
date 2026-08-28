@@ -6,10 +6,10 @@ import JsonLd from "@/components/seo/JsonLd";
 import MuseumBrowser from "@/components/museums/MuseumBrowser";
 import {
   museumsCollectionJsonLd,
-  museumsHubBreadcrumbJsonLd,
 } from "@/components/museums/jsonld";
 import { fetchAllMuseums } from "@/utils/actions/museums";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { AD_SLOTS } from "@/lib/adsense";
 
 const PAGE_TITLE = "ロンドンの美術館・博物館 一覧 | 無料・子ども向けで絞り込む";
@@ -35,9 +35,10 @@ export default async function AllMuseumsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd
-        data={museumsHubBreadcrumbJsonLd({
-          name: "美術館一覧",
-          path: "/museums/all-museums",
+        data={breadcrumbListJsonLd({
+          path: "/museums",
+          current: "美術館一覧",
+          currentHref: "/museums/all-museums",
         })}
       />
       <JsonLd

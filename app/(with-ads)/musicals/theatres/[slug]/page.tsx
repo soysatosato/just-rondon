@@ -28,10 +28,10 @@ import {
   operatorSite,
   theatreBreadcrumbJsonLd,
   theatreJsonLd,
-  THEATRES_BASE,
 } from "@/components/musicals/theatres/theatres";
 import TheatrePerformances from "@/components/musicals/theatres/TheatrePerformances";
 import TheatreNotes from "@/components/musicals/theatres/TheatreNotes";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { formatRuntime } from "@/components/musicals/facts";
 
 const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
@@ -85,17 +85,7 @@ export default async function TheatreDetailPage({
       <JsonLd data={theatreJsonLd(theatre)} />
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:py-12 space-y-10">
-        <nav className="text-xs text-muted-foreground">
-          <Link href="/musicals" className="hover:text-foreground">
-            ミュージカル
-          </Link>
-          <span className="mx-1.5">/</span>
-          <Link href={THEATRES_BASE} className="hover:text-foreground">
-            劇場ガイド
-          </Link>
-          <span className="mx-1.5">/</span>
-          <span className="text-foreground">{theatre.nameJa}</span>
-        </nav>
+        <Breadcrumbs path="/musicals/theatres" current={theatre.nameJa} />
 
         <header>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">

@@ -7,12 +7,12 @@ import MuseumRankedList from "@/components/museums/MuseumRankedList";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   museumsCollectionJsonLd,
-  museumsHubBreadcrumbJsonLd,
 } from "@/components/museums/jsonld";
 import { buildPageMetadata } from "@/lib/seo";
 import { fetchKidsMuseums } from "@/utils/actions/museums";
 import { Button } from "@/components/ui/button";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { AD_SLOTS } from "@/lib/adsense";
 
 const PAGE_TITLE = "子どもと行くロンドンの博物館・美術館";
@@ -39,9 +39,10 @@ export default async function KidsMuseumsPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
       <JsonLd
-        data={museumsHubBreadcrumbJsonLd({
-          name: "子どもと行く博物館",
-          path: "/museums/best-museums-for-kids",
+        data={breadcrumbListJsonLd({
+          path: "/museums",
+          current: "子どもと行く博物館",
+          currentHref: "/museums/best-museums-for-kids",
         })}
       />
       <JsonLd
@@ -54,7 +55,7 @@ export default async function KidsMuseumsPage() {
       />
 
       <div className="mb-6">
-        <Breadcrumbs path="/museums" current="子ども向け" />
+        <Breadcrumbs path="/museums" current="子どもと行く博物館" />
       </div>
 
       <header className="mb-8 space-y-4">

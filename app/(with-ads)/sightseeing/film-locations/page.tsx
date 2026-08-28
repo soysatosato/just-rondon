@@ -11,6 +11,7 @@ import {
   FILM_LOCATIONS_BASE,
 } from "@/components/sightseeing/jsonld";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { filmWorks } from "./data";
 
@@ -42,6 +43,8 @@ export default function FilmLocationsHubPage() {
           { name: "ロケ地巡り", path: FILM_LOCATIONS_BASE },
         ])}
       />
+
+      <Breadcrumbs path="/sightseeing/film-locations" className="mb-6" />
 
       <header className="mb-8">
         <p className="text-sm font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-2">

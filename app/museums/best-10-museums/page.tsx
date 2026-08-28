@@ -7,12 +7,12 @@ import MuseumRankedList from "@/components/museums/MuseumRankedList";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   museumsCollectionJsonLd,
-  museumsHubBreadcrumbJsonLd,
 } from "@/components/museums/jsonld";
 import { buildPageMetadata } from "@/lib/seo";
 import { fetchTop10Museums } from "@/utils/actions/museums";
 import { Button } from "@/components/ui/button";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { AD_SLOTS } from "@/lib/adsense";
 
 const PAGE_TITLE = "ロンドンで絶対に行くべき美術館・博物館10選";
@@ -40,9 +40,10 @@ export default async function BestTenMuseumsPage() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
       <JsonLd
-        data={museumsHubBreadcrumbJsonLd({
-          name: "絶対に行くべき10館",
-          path: "/museums/best-10-museums",
+        data={breadcrumbListJsonLd({
+          path: "/museums",
+          current: "絶対に行くべき10館",
+          currentHref: "/museums/best-10-museums",
         })}
       />
       <JsonLd
@@ -55,7 +56,7 @@ export default async function BestTenMuseumsPage() {
       />
 
       <div className="mb-6">
-        <Breadcrumbs path="/museums" current="ベスト10" />
+        <Breadcrumbs path="/museums" current="絶対に行くべき10館" />
       </div>
 
       <header className="mb-10 space-y-4">

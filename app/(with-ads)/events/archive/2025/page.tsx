@@ -1,6 +1,9 @@
 import { fetchEvents2025 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import EventMonthCard from "@/components/events/EventMonthCard";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/events/archive/2025",
@@ -19,6 +22,16 @@ export default async function Events2025ArchivePage() {
 
   return (
     <main className="container mx-auto px-4 py-10">
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/events",
+          current: "2025年アーカイブ",
+          currentHref: "/events/archive/2025",
+        })}
+      />
+
+      <Breadcrumbs path="/events" current="2025年アーカイブ" className="mb-6" />
+
       <h1 className="text-3xl font-bold mb-2 text-center dark:text-white">
         ロンドンイベントカレンダー 2025（アーカイブ）
       </h1>

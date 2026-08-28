@@ -2,7 +2,7 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import MuseumBanksy from "@/components/museums/MuseumBanksy";
-import { museumsHubBreadcrumbJsonLd } from "@/components/museums/jsonld";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { BANKSY_ARTWORKS, VIEWABLE_ARTWORKS } from "@/lib/banksy";
 
 const PAGE_PATH = "/museums/banksy-artworks";
@@ -26,9 +26,10 @@ export default function BanksyLondonPage() {
   return (
     <>
       <JsonLd
-        data={museumsHubBreadcrumbJsonLd({
-          name: "バンクシー作品",
-          path: PAGE_PATH,
+        data={breadcrumbListJsonLd({
+          path: "/museums",
+          current: "バンクシー作品",
+          currentHref: "/museums/banksy-artworks",
         })}
       />
       <JsonLd

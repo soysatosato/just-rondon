@@ -45,7 +45,6 @@ const TREE = {
     label: "プレミアリーグ観戦ガイド",
     parent: "/sightseeing",
   },
-  "/sightseeing/itinerary": { label: "モデルコース", parent: "/sightseeing" },
   "/sightseeing/blue-plaques": {
     label: "ブルー・プラーク",
     parent: "/sightseeing",
@@ -108,6 +107,23 @@ for (const [path, node] of Object.entries(TREE) as [string, TreeNode][]) {
 }
 
 export type Crumb = { label: string; href?: string };
+
+/** 登録済みなら木のラベル。未登録なら undefined。 */
+export function treeLabel(path: string): string | undefined {
+  return path in TREE ? TREE[path as BreadcrumbPath].label : undefined;
+}
+
+/**
+ * { name, path } 形式の指定を Crumb に直す。木に載っているパスは木の
+ * ラベルを優先し、呼び出し側が渡した別表記("ブループラーク巡り" など)は
+ * 使わない。画面と構造化データで違う名前が出るのを防ぐため。
+ */
+export function crumbFor(item: {
+  name: string;
+  path: string;
+}): { label: string; href: string } {
+  return { label: treeLabel(item.path) ?? item.name, href: item.path };
+}
 
 export type BreadcrumbSpec = {
   /** 木に登録済みの祖先。ここまでは全てリンクになる。 */

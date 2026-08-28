@@ -16,6 +16,9 @@ import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import EventMonthCard from "@/components/events/EventMonthCard";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { Button } from "@/components/ui/button";
 
 // 号は週に1本だが、ストライキ情報は数日で覆る。カレンダーより短く取る。
@@ -106,6 +109,10 @@ export default async function EventsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      <JsonLd data={breadcrumbListJsonLd({ path: "/events" })} />
+
+      <Breadcrumbs path="/events" className="mb-5" />
 
       {/* 次号の予告。題字の上に細く1行だけ置き、本体の号より前に出さない。 */}
       {upcoming && (

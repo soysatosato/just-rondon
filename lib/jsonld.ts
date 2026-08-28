@@ -1,5 +1,9 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
-import { ancestorCrumbs, crumbsJsonLd } from "@/components/navigation/tree";
+import {
+  ancestorCrumbs,
+  crumbFor,
+  crumbsJsonLd,
+} from "@/components/navigation/tree";
 
 /**
  * セクションを問わず使う構造化データのユーティリティ。
@@ -69,7 +73,7 @@ export function breadcrumbJsonLd(
   return crumbsJsonLd([
     { label: "Home", href: "/" },
     ...ancestorCrumbs(section.path),
-    { label: section.name, href: section.path },
-    ...trail.map((t) => ({ label: t.name, href: t.path })),
+    crumbFor(section),
+    ...trail.map(crumbFor),
   ]);
 }

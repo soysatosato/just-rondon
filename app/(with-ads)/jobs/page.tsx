@@ -1,4 +1,7 @@
 import Link from "next/link";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { guidePath, guides, JOBS_BASE, SITE_URL } from "@/components/jobs/guides/guides";
@@ -53,6 +56,10 @@ export default function JobsHubPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      <JsonLd data={breadcrumbListJsonLd({ path: "/jobs" })} />
+
+      <Breadcrumbs path="/jobs" className="mb-6" />
 
       <header className="space-y-4">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

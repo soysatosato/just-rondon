@@ -9,6 +9,7 @@ import {
 } from "@/components/column/jsonld";
 import ColumnBrowser from "@/components/column/ColumnBrowser";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
@@ -42,6 +43,8 @@ export default async function ColumnHubPage() {
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/column" })} />
       <JsonLd data={columnHubCollectionJsonLd(columns)} />
+
+      <Breadcrumbs path="/column" className="mb-6" />
 
       <header className="relative mb-10 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-background to-sky-50 px-6 py-10 dark:border-amber-900/50 dark:from-amber-950/25 dark:via-background dark:to-sky-950/20 sm:px-10 sm:py-12">
         <div

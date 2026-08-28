@@ -1,4 +1,4 @@
-import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { breadcrumbListJsonLd, crumbFor } from "@/components/navigation/tree";
 import type { Attraction } from "@prisma/client";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
@@ -117,7 +117,7 @@ export function sightseeingBreadcrumbJsonLd(
 ) {
   return breadcrumbListJsonLd({
     path: "/sightseeing",
-    trail: trail.map((t) => ({ label: t.name, href: t.path })),
+    trail: trail.map(crumbFor),
   });
 }
 

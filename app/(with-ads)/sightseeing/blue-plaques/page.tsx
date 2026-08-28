@@ -11,6 +11,7 @@ import {
   BLUE_PLAQUES_BASE,
 } from "@/components/sightseeing/jsonld";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { plaqueAreas } from "./data";
 
@@ -40,6 +41,8 @@ export default function BluePlaquesHubPage() {
           { name: "ブループラーク巡り", path: BLUE_PLAQUES_BASE },
         ])}
       />
+
+      <Breadcrumbs path="/sightseeing/blue-plaques" className="mb-6" />
 
       <header className="mb-8">
         <p className="text-sm font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-2">

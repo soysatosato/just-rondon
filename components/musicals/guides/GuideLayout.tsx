@@ -11,6 +11,7 @@ import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { SITE_URL } from "@/lib/seo";
 import {
   MUSICALS_BASE,
@@ -43,15 +44,11 @@ export default async function GuideLayout({
         <JsonLd data={faqPageJsonLd(article.faq, pageUrl)} />
       )}
 
-      <nav className="mb-6 text-xs text-gray-500 dark:text-gray-400">
-        <Link href={MUSICALS_BASE} className="hover:underline">
-          ミュージカル
-        </Link>
-        <span className="mx-1.5">/</span>
-        <span className="text-gray-700 dark:text-gray-300">
-          {meta?.label ?? article.title}
-        </span>
-      </nav>
+      <Breadcrumbs
+        path="/musicals"
+        current={meta?.label ?? article.title}
+        className="mb-6"
+      />
 
       <header className="space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

@@ -1,4 +1,3 @@
-import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
 export function museumPath(slug: string) {
@@ -107,16 +106,6 @@ export function museumJsonLd(museum: MuseumForJsonLd) {
     ...(hours ? { openingHoursSpecification: hours } : {}),
     ...(museum.website ? { sameAs: [museum.website] } : {}),
   };
-}
-
-/** ハブ(/museums)自身のパンくず。個別館ページ用の museumBreadcrumbJsonLd とは別物。 */
-export function museumsHubBreadcrumbJsonLd(
-  current?: { name: string; path: string },
-) {
-  return breadcrumbListJsonLd({
-    path: "/museums",
-    ...(current ? { current: current.name, currentHref: current.path } : {}),
-  });
 }
 
 /**

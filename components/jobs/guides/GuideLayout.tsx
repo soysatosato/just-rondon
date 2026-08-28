@@ -7,10 +7,11 @@ import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideDisclaimer from "./GuideDisclaimer";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import {
-  JOBS_BASE,
   articleJsonLd,
   breadcrumbJsonLd,
+  getGuideMeta,
   guidePath,
   guides,
 } from "./guides";
@@ -45,11 +46,11 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
       <JsonLd data={breadcrumbJsonLd(article)} />
       <JsonLd data={articleJsonLd(article)} />
 
-      <nav className="mb-6 text-xs text-gray-500 dark:text-gray-400">
-        <Link href={JOBS_BASE} className="hover:underline">
-          お仕事・労働問題
-        </Link>
-      </nav>
+      <Breadcrumbs
+        path="/jobs"
+        current={getGuideMeta(article.slug)?.label ?? article.title}
+        className="mb-6"
+      />
 
       <header className="space-y-3">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">

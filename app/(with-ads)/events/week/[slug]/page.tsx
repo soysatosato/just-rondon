@@ -16,6 +16,9 @@ import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { AD_SLOTS } from "@/lib/adsense";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -88,6 +91,16 @@ export default async function WeeklyBriefPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/events",
+          current: brief.title,
+          currentHref: `/events/week/${brief.slug}`,
+        })}
+      />
+
+      <Breadcrumbs path="/events" current={brief.title} className="mb-5" />
 
       <div className="mb-5">
         <Link

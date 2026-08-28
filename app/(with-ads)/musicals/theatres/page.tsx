@@ -3,6 +3,8 @@ import Link from "next/link";
 import { MapPin, Theater, ArrowRight } from "lucide-react";
 
 import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { buildPageMetadata } from "@/lib/seo";
 import { fetchAllTheatres } from "@/utils/actions/theatres";
 import {
@@ -34,7 +36,11 @@ export default async function TheatresHubPage() {
     <>
       <JsonLd data={theatresHubJsonLd(theatres)} />
 
+      <JsonLd data={breadcrumbListJsonLd({ path: "/musicals/theatres" })} />
+
       <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+        <Breadcrumbs path="/musicals/theatres" className="mb-6" />
+
         <header className="max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
             <Theater className="h-3.5 w-3.5" />
