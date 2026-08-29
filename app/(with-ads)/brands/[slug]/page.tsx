@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Crown, MapPin, Wallet, Train } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
@@ -10,6 +9,7 @@ import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import GuideFaq from "@/components/guides/GuideFaq";
 import BrandFigure from "@/components/brands/BrandFigure";
+import BrandRelated from "@/components/brands/BrandRelated";
 import { splitMarkdownSections } from "@/components/brands/splitMarkdownSections";
 import { Badge } from "@/components/ui/badge";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
@@ -67,8 +67,8 @@ export default async function BrandPage({
   const brand = await fetchBrand(params.slug);
   if (!brand) notFound();
 
-  // 「次にどれを読むか」を切らさないための他ブランドリンク。
-  const others = (await fetchBrands()).filter((b) => b.slug !== brand.slug);
+  // 末尾の他ブランド導線に渡す。「次にどれを読むか」を切らさないため。
+  const allBrands = await fetchBrands();
 
   const categoryLabel =
     BRAND_CATEGORY_LABELS[brand.category as BrandCategory] ?? null;
@@ -453,23 +453,7 @@ export default async function BrandPage({
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
 
-      {others.length > 0 && (
-        <section className="mt-12 space-y-3 rounded-lg border border-slate-200 p-5 dark:border-slate-800">
-          <h2 className="text-lg font-semibold">ほかのイギリスブランド</h2>
-          <ul className="grid gap-2 text-sm sm:grid-cols-2">
-            {others.map((b) => (
-              <li key={b.id}>
-                <Link
-                  href={brandPath(b.slug)}
-                  className="text-sky-700 hover:underline dark:text-sky-300"
-                >
-                  {b.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <BrandRelated all={allBrands} current={brand} />
     </div>
   );
 }
