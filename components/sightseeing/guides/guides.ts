@@ -6,6 +6,19 @@ import {
 } from "../jsonld";
 import type { TravelGuideArticle } from "./types";
 
+/**
+ * metadata と JSON-LD を組み立てるのに要る最小限のフィールド。
+ *
+ * ETA だけは markdown の TravelGuideArticle をやめ、専用の構造化データ
+ * (components/sightseeing/guides/eta/)に移した。sections を持たない
+ * そちらからも同じヘルパーを使えるよう、引数を実際に読む範囲まで狭めてある。
+ * 既存7本は TravelGuideArticle のまま渡せる。
+ */
+export type TravelGuideMetaSource = Pick<
+  TravelGuideArticle,
+  "slug" | "title" | "description" | "keywords" | "updatedAt"
+>;
+
 export { SITE_URL, SIGHTSEEING_BASE };
 
 /**
@@ -121,7 +134,7 @@ export function getTravelGuideMeta(slug: string) {
  * 記事データから Next.js の metadata を組み立てる。
  * canonical は buildPageMetadata が path から導出するので手書きしない。
  */
-export function buildTravelGuideMetadata(article: TravelGuideArticle) {
+export function buildTravelGuideMetadata(article: TravelGuideMetaSource) {
   return buildPageMetadata({
     path: travelGuidePath(article.slug),
     title: article.title,
@@ -137,7 +150,7 @@ export function buildTravelGuideMetadata(article: TravelGuideArticle) {
  * parent を渡さなければ従来どおり 観光ガイド → 記事 の2段。
  */
 export function travelGuideBreadcrumbJsonLd(
-  article: TravelGuideArticle,
+  article: Pick<TravelGuideArticle, "slug" | "title">,
   parent?: { name: string; slug: string }
 ) {
   const meta = getTravelGuideMeta(article.slug);
@@ -154,7 +167,7 @@ export function travelGuideBreadcrumbJsonLd(
   ]);
 }
 
-export function travelGuideArticleJsonLd(article: TravelGuideArticle) {
+export function travelGuideArticleJsonLd(article: TravelGuideMetaSource) {
   const url = `${SITE_URL}${travelGuidePath(article.slug)}`;
 
   return {

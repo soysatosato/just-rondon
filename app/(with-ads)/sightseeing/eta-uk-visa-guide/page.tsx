@@ -1,9 +1,9 @@
-import TravelGuideLayout from "@/components/sightseeing/guides/TravelGuideLayout";
+import EtaGuide from "@/components/sightseeing/guides/eta/EtaGuide";
 import { buildTravelGuideMetadata } from "@/components/sightseeing/guides/guides";
-import eta from "@/components/sightseeing/guides/content/eta";
+import { etaMeta } from "@/components/sightseeing/guides/eta/content";
 
-export const metadata = buildTravelGuideMetadata(eta);
+export const metadata = buildTravelGuideMetadata(etaMeta);
 
 export default function Page() {
-  return <TravelGuideLayout article={eta} />;
+  return <EtaGuide />;
 }

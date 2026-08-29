@@ -1,6 +1,5 @@
 import type { TravelGuideArticle } from "../types";
 import budget from "./budget";
-import eta from "./eta";
 import hotels from "./hotels";
 import itinerary from "./itinerary";
 import itineraryLayover from "./itinerary-layover";
@@ -18,7 +17,6 @@ import travelTips from "./travel-tips";
  * 分割されたため、実体は components/sightseeing/transport/content/ にある。
  */
 export const travelGuideArticles: Record<string, TravelGuideArticle> = {
-  "eta-uk-visa-guide": eta,
   itinerary,
   hotels,
   budget,
@@ -42,7 +40,6 @@ export const itineraryVariantArticles: Record<string, TravelGuideArticle> = {
 };
 
 export {
-  eta,
   itinerary,
   hotels,
   budget,
