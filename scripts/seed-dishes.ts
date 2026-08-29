@@ -751,7 +751,7 @@ greasy spoon の対極にある選択肢で、値段も相応。朝から人が�
 
 チャイナタウンの Kung-Fu Noodle と同じ経営です。
 
-**予約はできません。**2026年5月にコヴェント・ガーデン店（13 Maiden Lane）が開いたので、ソーホー店が混んでいればそちらという手もあります。行列の攻略は[絶対行くべき超人気店](/restaurants/must-visit)にも書いています。`,
+**予約はできません**。2026年5月にコヴェント・ガーデン店（13 Maiden Lane）が開いたので、ソーホー店が混んでいればそちらという手もあります。行列の攻略は[絶対行くべき超人気店](/restaurants/must-visit)にも書いています。`,
         area: "ソーホー / コヴェント・ガーデン",
         nearestStation: "Leicester Square / Covent Garden",
         priceRange: "£12〜20",
