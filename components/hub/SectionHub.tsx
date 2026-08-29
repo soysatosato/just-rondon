@@ -5,7 +5,7 @@ import { breadcrumbListJsonLd, type BreadcrumbPath } from "@/components/navigati
 import { absoluteUrl } from "@/lib/seo";
 
 /**
- * ナビの大区分そのもののハブページ。
+ * ナビの大区分そのもののハブページ。現在の利用は /living のみ。
  *
  * パンくずを「Home > 大区分 > セクション」に揃えたことで、大区分は
  * 全ページの親としてリンクされるようになった。リンク先が無い区分が
@@ -13,6 +13,12 @@ import { absoluteUrl } from "@/lib/seo";
  *
  * 中身は配下セクションの索引に徹する。ここで解説を始めると各セクションの
  * トップと同じことを書くことになり、どちらを読ませたいのか分からなくなる。
+ *
+ * かつては /things-to-do も同じ索引で描いていたが、あちらは配下の実体が
+ * すべて写真つきで DB にあり、索引にすると最も絵になる区分が最も文字だけの
+ * ページになっていたため、専用の組みに移した(app/(with-ads)/things-to-do)。
+ * ここが索引のままでよいのは、ビザ・住まい・口座に見せる写真が無く、
+ * 読者も「どれを読むか」ではなく手続きを探して来るため。
  */
 
 export type HubSection = {
