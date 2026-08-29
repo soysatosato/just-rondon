@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import type { RailItem } from "@/utils/actions/home";
-import PhotoTile from "@/components/things-to-do/PhotoTile";
+import PhotoTile from "@/components/shared/PhotoTile";
 
 export type Experience = {
   /** セクションのトップ。 */

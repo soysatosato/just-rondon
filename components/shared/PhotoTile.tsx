@@ -1,6 +1,18 @@
 import Link from "next/link";
 
-import type { RailItem } from "@/utils/actions/home";
+
+/**
+ * タイルに出す1枚ぶん。utils/actions/home.ts の RailItem がそのまま通る形に
+ * してあるが、型は借りていない。写真の棚を持つのはトップだけではないので、
+ * 呼ぶ側がトップの都合(slug を持つ等)に縛られないようにしておく。
+ */
+export type PhotoTileItem = {
+  href: string;
+  name: string;
+  engName: string | null;
+  image: string;
+  blurb?: string | null;
+};
 
 /**
  * 写真の上に名前を載せるタイル。
@@ -20,7 +32,7 @@ export default function PhotoTile({
   className = "",
   priority = false,
 }: {
-  item: RailItem;
+  item: PhotoTileItem;
   /** lg はヒーローの主役、md は帯の中、sm は棚と格子。 */
   size?: "lg" | "md" | "sm";
   className?: string;

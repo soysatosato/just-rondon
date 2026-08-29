@@ -6,9 +6,8 @@ import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import GuideFaq from "@/components/guides/GuideFaq";
 import type { GuideFaqItem } from "@/components/guides/types";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import ImageCredit from "@/components/shared/ImageCredit";
+import PhotoTile from "@/components/shared/PhotoTile";
+import DishCard from "@/components/restaurants/DishCard";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import { fetchDishes } from "@/utils/actions/dishes";
@@ -22,6 +21,24 @@ import {
   restaurantGuidePath,
   restaurantGuides,
 } from "@/components/restaurants/guides/guides";
+
+/*
+ * 料理別に店を選ぶハブ。
+ *
+ * 以前は「写真を左端の224pxに置いた横長カード」を10枚、1列で縦に積んでいた。
+ * 料理から入るという構成そのものは正しいが、ページとしては次の問題があった。
+ *
+ *   - 10品すべてに写真があるのに、最も強い素材をサムネイル扱いしていた。
+ *   - 冒頭の3段落(約400字)を読み終えるまで、写真が1枚も出なかった。
+ *   - 「パブの作法」「絶対行くべき超人気店」が10品の後ろにいた。カウンター
+ *     注文を知らないと最初の一杯にたどり着けない、と記事自身が書いている
+ *     のに、料理を全部スクロールしないと届かなかった。
+ *
+ * そこで写真を主役に組み直した。上から順に、名前と一文 → 料理の写真 →
+ * 店に入る前に読む2本 → 料理10品(写真を上に大きく) → なぜ料理から入るのか
+ * → FAQ。前置きの3段落は消さず、一覧の後ろに畳んでいる。読者が「どれを
+ * 食べるか」を決めた後なら、セクションの主張を読む理由ができる。
+ */
 
 const TITLE = "ロンドンのレストラン｜料理別に店を選ぶガイド";
 const DESCRIPTION =
@@ -91,8 +108,23 @@ export default async function RestaurantsPage() {
     0,
   );
 
+  /*
+   * 見出しの直下に敷く写真の帯。displayOrder の先頭4品をそのまま使う。
+   * 並び自体が編集上の順序(イギリス料理の定番から)なので、ここで別の
+   * 基準を持ち込むと、下の一覧と順番が食い違って理由の説明がつかなくなる。
+   */
+  const bandTiles = dishes
+    .filter((dish) => dish.image)
+    .slice(0, 4)
+    .map((dish) => ({
+      href: dishPath(dish.slug),
+      name: dish.name,
+      engName: dish.engName,
+      image: dish.image as string,
+    }));
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
+    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8">
       <JsonLd
         data={[
           breadcrumbJsonLd({
@@ -106,148 +138,110 @@ export default async function RestaurantsPage() {
 
       <Breadcrumbs path="/restaurants" />
 
-      <header className="mt-6 space-y-4">
-        <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+      <header className="mt-6 max-w-3xl">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-sky-700 dark:text-sky-400">
+          Eat &amp; Drink
+        </p>
+        <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
           ロンドンのレストラン
         </h1>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-          「イギリスの料理はまずい」という評判は、もう実態を表していません。
-          ただし
+        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+          「イギリスの料理はまずい」という評判は、もう実態を表していません。ただし
           <strong className="font-semibold">当たり外れの幅は本当に大きい</strong>
-          。同じフィッシュ&チップスでも、店を選べば忘れられない一皿になり、
-          選ばなければただの油っぽい揚げ物で終わります。
+          。だからこの特集は、店ではなく
+          <strong className="font-semibold">料理から入ります</strong>。
         </p>
-        {/*
-          イギリス料理以外も扱う理由をここで明示している。
-          見出しだけ広げて中身の説明を変えないと、
-          「イギリス料理を読みに来たのに中華がある」と映るため。
-        */}
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm font-medium text-muted-foreground">
+          {dishes.length}品・掲載{totalRestaurants}軒。それぞれ何を食べているのか、どう頼むのか、どこで食べるのか。
+        </p>
+      </header>
+
+      {bandTiles.length > 0 && (
+        <ul className="mt-7 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          {bandTiles.map((tile) => (
+            <li key={tile.href} className="aspect-[3/2]">
+              <PhotoTile item={tile} size="md" className="h-full w-full" />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/*
+        店に入る前に読む記事。料理を選ぶより手前の話なので、一覧の後ろではなく
+        前に置く。カウンター注文を知らないと、どの店を選んでも最初の一杯に
+        たどり着けない。guides.ts の restaurantGuides から引くので、記事を
+        足せばここにも自動で並ぶ。並び順もあちらに従う。
+      */}
+      <section className="mt-10">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+          Before You Order ・ 店に入る前に
+        </h2>
+        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+          {restaurantGuides.map((g) => (
+            <li key={g.slug}>
+              <Link
+                href={restaurantGuidePath(g.slug)}
+                className="group flex h-full flex-col rounded-xl border border-slate-200 p-5 transition hover:border-sky-400 hover:bg-sky-50/50 dark:border-slate-800 dark:hover:border-sky-500 dark:hover:bg-sky-950/20"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700 dark:text-sky-300">
+                  {g.eyebrow}
+                </span>
+                <span className="mt-1.5 flex items-center gap-1 text-base font-bold">
+                  {g.label}
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                </span>
+                <span className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  {g.blurb}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <AdSenseUnit slot={AD_SLOTS.listing} className="mt-10" />
+
+      <section className="mt-12">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+          By Dish ・ 料理から選ぶ
+        </h2>
+        <div className="mt-6 grid gap-x-8 gap-y-10 md:grid-cols-2">
+          {dishes.map((dish) => (
+            <DishCard key={dish.id} dish={dish} />
+          ))}
+        </div>
+      </section>
+
+      {/*
+        かつて冒頭に置いていた3段落。イギリス料理以外を扱う理由をここで
+        明示している。見出しだけ広げて中身の説明を変えないと、
+        「イギリス料理を読みに来たのに中華がある」と映るため。
+      */}
+      <section className="mt-14 max-w-3xl border-t pt-8">
+        <h2 className="text-xl font-bold tracking-tight">
+          なぜ「料理から」入るのか
+        </h2>
+        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+          同じフィッシュ&チップスでも、店を選べば忘れられない一皿になり、選ばなければただの油っぽい揚げ物で終わります。「まずい」という評判の多くは、この選び方の差から来ています。店の名前を先に並べても、その差は埋まりません。
+        </p>
+        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
           そしてロンドンの外食は、イギリス料理だけではありません。
           <strong className="font-semibold">
             移民が持ち込んだ料理こそがこの街の日常
           </strong>
-          で、インドカレーもチャイナタウンの飲茶も、
-          観光客向けではなく地元の食事として根づいています。日本食も同じで、
-          「日本の味が恋しくなったとき」に行ける店が揃っています。
+          で、インドカレーもチャイナタウンの飲茶も、観光客向けではなく地元の食事として根づいています。日本食も同じで、「日本の味が恋しくなったとき」に行ける店が揃っています。
         </p>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-          そこでこの特集は、店ではなく
-          <strong className="font-semibold">料理から入る</strong>
-          構成にしました。{dishes.length}品それぞれについて、
-          何を食べているのか・どう頼むのか・どこで食べるのかをまとめています。
-          掲載店は全{totalRestaurants}軒です。
+        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+          だからこの特集は、{dishes.length}品それぞれについて、何を食べているのか・どう頼むのか・どこで食べるのかをまとめています。掲載店は全
+          {totalRestaurants}軒です。
         </p>
-      </header>
-
-      <AdSenseUnit slot={AD_SLOTS.listing} className="mt-8" />
-
-      <div className="mt-10 space-y-6">
-        {dishes.map((dish) => (
-          <Card
-            key={dish.id}
-            className="overflow-hidden border-slate-200 transition-shadow hover:shadow-md dark:border-slate-800"
-          >
-            <Link href={dishPath(dish.slug)} className="block sm:flex">
-              {dish.image && (
-                <div className="relative aspect-[16/9] w-full flex-none sm:aspect-auto sm:w-56">
-                  <img
-                    src={dish.image}
-                    alt={dish.name}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                  />
-                </div>
-              )}
-
-              <CardContent className="flex-1 space-y-3 p-5">
-                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                  <h2 className="text-lg font-bold">{dish.name}</h2>
-                  <span className="text-xs italic text-muted-foreground">
-                    {dish.engName}
-                  </span>
-                </div>
-
-                <p className="text-sm font-medium text-sky-800 dark:text-sky-300">
-                  {dish.tagline}
-                </p>
-
-                <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  {dish.summary}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5">
-                  {dish.priceRange && (
-                    <Badge variant="secondary" className="font-normal">
-                      {dish.priceRange}
-                    </Badge>
-                  )}
-                  {dish.bestTime && (
-                    <Badge variant="secondary" className="font-normal">
-                      {dish.bestTime}
-                    </Badge>
-                  )}
-                  <Badge variant="secondary" className="font-normal">
-                    店 {dish.restaurants.length}軒
-                  </Badge>
-                </div>
-
-                <p className="flex items-center gap-1 text-sm font-semibold text-sky-700 dark:text-sky-300">
-                  {dish.name}の店を見る
-                  <ArrowRight className="h-4 w-4" />
-                </p>
-              </CardContent>
-            </Link>
-
-            {dish.image && (
-              <div className="px-5 pb-3">
-                <ImageCredit
-                  source={dish.imageSource}
-                  credit={dish.imageCredit}
-                  link={dish.imageLink}
-                />
-              </div>
-            )}
-          </Card>
-        ))}
-      </div>
-
-      {/*
-        店に入る前に読む記事。料理を選ぶより手前の話なので、
-        「あわせて読みたい」の一覧ではなくカードで独立させている。
-        カウンター注文を知らないと、どの店を選んでも最初の一杯に
-        たどり着けないため。
-
-        guides.ts の restaurantGuides から引くので、記事を足せば
-        ここにも自動で並ぶ。並び順もあちらに従う。
-      */}
-      <section className="mt-12 space-y-3">
-        {restaurantGuides.map((g) => (
-          <Link key={g.slug} href={restaurantGuidePath(g.slug)} className="block">
-            <Card className="border-slate-200 transition hover:border-sky-400 dark:border-slate-800 dark:hover:border-sky-500">
-              <CardContent className="p-5">
-                <span className="block text-xs font-semibold text-sky-700 dark:text-sky-300">
-                  {g.eyebrow}
-                </span>
-                <span className="mt-1 block text-base font-semibold">
-                  {g.label}
-                </span>
-                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
-                  {g.blurb}
-                </span>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
       </section>
 
       <GuideFaq items={FAQ} />
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
 
-      <section className="mt-12 space-y-3 rounded-lg border border-slate-200 p-5 dark:border-slate-800">
+      <section className="mt-12 max-w-3xl space-y-3 rounded-lg border border-slate-200 p-5 dark:border-slate-800">
         <h2 className="text-lg font-semibold">あわせて読みたい</h2>
         <ul className="space-y-2 text-sm">
           <li>

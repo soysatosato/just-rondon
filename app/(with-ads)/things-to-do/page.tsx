@@ -8,7 +8,7 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import ExperienceBlock, {
   type Experience,
 } from "@/components/things-to-do/ExperienceBlock";
-import PhotoTile from "@/components/things-to-do/PhotoTile";
+import PhotoTile from "@/components/shared/PhotoTile";
 import { fetchThingsToDoPhotos } from "@/utils/actions/things-to-do";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 
