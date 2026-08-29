@@ -47,7 +47,7 @@ const FIXES: Fix[] = [
       "還付を前提に予算を組んでしまう。" +
       "https://www.visitlondon.com/traveller-information/essential-information/money/tax-free",
     find:
-      "- **タックスリファンド（免税手続き）**対応\n" +
+      "- **タックスリファンド（免税手続き）** 対応\n" +
       "- 両替サービス、バレットパーキングなど",
     replace:
       "- 両替サービス、バレットパーキングなど\n" +
@@ -68,7 +68,7 @@ const FIXES: Fix[] = [
       "代替として国立海事博物館で Astronomers Take Over が実施されている。" +
       "https://www.rmg.co.uk/whats-on/planetarium-shows",
     find:
-      "**ピーター・ハリソン・プラネタリウム（Peter Harrison Planetarium）**は、ロイヤル天文台グリニッジ内にあるロンドン唯一のプラネタリウムです。",
+      "**ピーター・ハリソン・プラネタリウム（Peter Harrison Planetarium）** は、ロイヤル天文台グリニッジ内にあるロンドン唯一のプラネタリウムです。",
     replace:
       "> **【重要】現在は改修工事のため閉鎖中です（2026年8月時点）。**\n" +
       "> 再開は2028年春の見込みです。以下の上映内容・料金・時間は閉鎖前のもので、" +
@@ -77,7 +77,7 @@ const FIXES: Fix[] = [
       "「Astronomers Take Over」というプラネタリウム体験が行われています。" +
       "訪問前に必ず[公式サイト](https://www.rmg.co.uk/whats-on/planetarium-shows)で最新情報をご確認ください。\n" +
       "\n" +
-      "**ピーター・ハリソン・プラネタリウム（Peter Harrison Planetarium）**は、ロイヤル天文台グリニッジ内にあるロンドン唯一のプラネタリウムです。",
+      "**ピーター・ハリソン・プラネタリウム（Peter Harrison Planetarium）** は、ロイヤル天文台グリニッジ内にあるロンドン唯一のプラネタリウムです。",
   },
   {
     sectionId: 930,

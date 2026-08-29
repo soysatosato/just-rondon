@@ -366,7 +366,7 @@ Monzo、Starling、Revolut などは、**住所証明なしでスマホから開
     {
       question: "BRP（在留カード）が届かないのですが、大丈夫ですか？",
       answer:
-        `**正常です。**BRP は${jpDate(VISA_KEY_DATES.brpExpiredOn)}に一斉失効し、発行も終了しました。現在は eVisa（オンライン上の記録）が唯一の在留資格の証明です。UKVI アカウントを作成し、eVisa をリンクしてください。`,
+        `**正常です**。BRP は${jpDate(VISA_KEY_DATES.brpExpiredOn)}に一斉失効し、発行も終了しました。現在は eVisa（オンライン上の記録）が唯一の在留資格の証明です。UKVI アカウントを作成し、eVisa をリンクしてください。`,
     },
     {
       question: "パスポートを更新しました。何かする必要がありますか？",

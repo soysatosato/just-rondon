@@ -361,7 +361,7 @@ Graduate の期間が18ヶ月に短縮されると、この活動時間がさら
     {
       question: "IHS は学生割引が効きますか？",
       answer:
-        `**Student visa は割引レート（年${gbp(IHS_PER_YEAR.discounted)}）**が適用されます。ただし**Graduate visa には適用されず、一般レート（年${gbp(IHS_PER_YEAR.standard)}）**になります。卒業後の申請でここが想定外の出費になる方が多いので、あらかじめ見込んでおいてください。`,
+        `**Student visa は割引レート（年${gbp(IHS_PER_YEAR.discounted)}）**が適用されます。ただし**Graduate visa には適用されず、一般レート（年${gbp(IHS_PER_YEAR.standard)}）** になります。卒業後の申請でここが想定外の出費になる方が多いので、あらかじめ見込んでおいてください。`,
     },
   ],
   sources: [

@@ -71,6 +71,12 @@ function normalize(line: string): string {
       */
       .replace(/^(?:const\s+\w+\s*=\s*)?\w+:\s*(?:`|"|')/, "")
       /*
+        prettier が `answer:` と本文を別の行に割ったとき、本文の行は
+        引用符だけで始まる。これを残すと上と同じ理由で開き ** が
+        左隣接にならず、壊れているのに直せない行として報告される。
+      */
+      .replace(/^(?:`|"|')/, "")
+      /*
         エスケープされた改行を実際の改行に戻す。
         data.ts 系は本文を1行の文字列に "\n\n" 区切りで詰め込んでいて、
         そのままだと段落が繋がって別の ** と誤って対になる。
@@ -78,6 +84,47 @@ function normalize(line: string): string {
       .replace(/\\n/g, "\n")
       .replace(/\$\{[^}]*\}/g, "X")
   );
+}
+
+/**
+ * 各行が「コメントの中か」を返すマスク。
+ *
+ * scripts/ を対象に入れたことで必要になった。この不具合を説明している
+ * ファイルが scripts/ に9本あり、コメントの中に「壊れている例」を
+ * わざと書いている:
+ *
+ *   NG: **バスキュール(bascule)**と    OK: **バスキュール**(bascule)と
+ *
+ * これを直すと説明が説明でなくなる。実際、対象を広げた最初の実行で
+ * このファイル自身の説明を1行壊した。
+ *
+ * 行頭が `* ` かどうかでは足りない。`/* ... *\/` ブロックの継続行は
+ * アスタリスクで始まらないことがあり(このファイルの中にもある)、
+ * そこに壊れた例が書いてある。ブロックの開閉を追う必要がある。
+ *
+ * 文字列リテラルの中の `/*` までは見ていない。本文に出てくる形では
+ * ないので、いまのところ問題にならない。
+ */
+function commentMask(src: string): boolean[] {
+  const mask: boolean[] = [];
+  let open = false;
+
+  for (const line of src.split("\n")) {
+    const startedInside = open;
+    // 同じ行で開いて閉じるものは状態を変えないので先に落とす
+    const rest = line.replace(/\/\*[\s\S]*?\*\//g, "");
+    if (open) {
+      if (rest.includes("*/")) open = false;
+    } else if (rest.includes("/*")) {
+      open = true;
+    }
+    // 行内で完結する /** … */ も丸ごとコメント扱いにする。
+    // (`/** 閉じ ** を壊す句読点。*/` のような1行 JSDoc が該当する)
+    const codeOnly = rest.replace(/^\s*\/\/.*$/, "");
+    mask.push(startedInside || codeOnly.trim() === "");
+  }
+
+  return mask;
 }
 
 function hasBrokenBold(line: string): boolean {
@@ -181,8 +228,14 @@ function fixLine(line: string): string | null {
 function main() {
   const dry = process.argv.includes("--dry");
 
+  /*
+    scripts も対象。ここを外していたせいで seed 系の本文が
+    どちらの点検からも漏れていた(fix-content-markdown-bold.ts が
+    見るのは Content と WeeklyBriefItem だけ)。seed のソースが
+    壊れたままだと、再実行するたびに DB 側の修正が巻き戻る。
+  */
   const files = execSync(
-    "grep -rl '\\*\\*' components lib app --include=*.ts --include=*.tsx",
+    "grep -rl '\\*\\*' components lib app scripts --include=*.ts --include=*.tsx",
   )
     .toString()
     .trim()
@@ -196,9 +249,11 @@ function main() {
   for (const file of files) {
     const src = fs.readFileSync(file, "utf8");
     const lines = src.split("\n");
+    const isComment = commentMask(src);
     let changed = false;
 
     lines.forEach((line, i) => {
+      if (isComment[i]) return;
       if (!hasBrokenBold(line)) return;
 
       const fixed = fixLine(line);
