@@ -92,6 +92,12 @@ const edinburgh: DestinationArticle = {
         ADMISSIONS.edinburghCastle
       )} 程度。**事前予約制の時間枠**があるので公式で確認を`,
       mapQuery: "Edinburgh Castle",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg/1280px-City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg",
+      imageSource: "commons",
+      imageCredit: "Enric (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg",
     },
     {
       name: "ロイヤルマイル",
@@ -99,6 +105,12 @@ const edinburgh: DestinationArticle = {
       body: "城からホリールード宮殿まで、旧市街の背骨を成す約1.6kmの通り。両側から細い路地（クローズ）が枝分かれし、その一本一本に中世からの歴史があります。歩くこと自体が観光になります。",
       admission: "無料",
       mapQuery: "Royal Mile Edinburgh",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/High_Street%2C_Edinburgh.JPG/1280px-High_Street%2C_Edinburgh.JPG",
+      imageSource: "commons",
+      imageCredit: "Kim Traynor (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:High_Street,_Edinburgh.JPG",
     },
     {
       name: "ホリールードハウス宮殿",
@@ -106,6 +118,12 @@ const edinburgh: DestinationArticle = {
       body: "ロイヤルマイルの東端にある、英国王のスコットランドにおける公式宮殿。メアリー・スチュアートが暮らした部屋が残っています。王室が滞在中は閉まります。",
       admission: "有料。王室行事による休館があります",
       mapQuery: "Palace of Holyroodhouse",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Holyrood_Palace_-_aerial_-_2025-04-19_01_%28cropped%29.jpg/1280px-Holyrood_Palace_-_aerial_-_2025-04-19_01_%28cropped%29.jpg",
+      imageSource: "commons",
+      imageCredit: "瑞丽江的河水 (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Holyrood_Palace_-_aerial_-_2025-04-19_01_(cropped).jpg",
       internalLink: {
         href: "/sightseeing/royal-london",
         label: "ロイヤル・ロンドン｜ロンドンの王室施設と比べる",
@@ -117,6 +135,12 @@ const edinburgh: DestinationArticle = {
       body: "市街地のすぐ隣にそびえる死火山。頂上まで往復2時間ほどで、街と海を一望できます。登山装備は不要ですが、それなりの傾斜と風があります。",
       admission: "無料",
       mapQuery: "Arthur's Seat Edinburgh",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Arthur%27s_Seat%2C_Edinburgh.JPG/1280px-Arthur%27s_Seat%2C_Edinburgh.JPG",
+      imageSource: "commons",
+      imageCredit: "Kim Traynor (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Arthur%27s_Seat,_Edinburgh.JPG",
     },
   ],
   mainText: `エディンバラは、このセクションで唯一の **「別の国」** です。

@@ -70,6 +70,12 @@ const bathStonehenge: DestinationArticle = {
         ADMISSIONS.romanBaths
       )} 程度。曜日と季節で料金が変わります`,
       mapQuery: "Roman Baths Bath",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Roman_Baths_in_Bath_Spa%2C_England_-_July_2006.jpg/1280px-Roman_Baths_in_Bath_Spa%2C_England_-_July_2006.jpg",
+      imageSource: "commons",
+      imageCredit: "Diliff (CC BY 2.5)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Roman_Baths_in_Bath_Spa,_England_-_July_2006.jpg",
       internalLink: {
         href: "/history/roman-britain",
         label: "第1章 ローマ支配とブリタニア｜この浴場が作られた時代",
@@ -81,6 +87,12 @@ const bathStonehenge: DestinationArticle = {
       body: "30棟の家が三日月形に連なるジョージ王朝様式の集合住宅。1774年完成で、今も住居として使われています。1番地だけが博物館として公開されています。",
       admission: "外観は無料。No.1 Royal Crescent（博物館）は有料",
       mapQuery: "Royal Crescent Bath",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Royal_Crescent%2C_Bath_2014_10.jpg/1280px-Royal_Crescent%2C_Bath_2014_10.jpg",
+      imageSource: "commons",
+      imageCredit: "Mike Peel (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Royal_Crescent,_Bath_2014_10.jpg",
     },
     {
       name: "バース修道院",
@@ -88,6 +100,12 @@ const bathStonehenge: DestinationArticle = {
       body: "扇状ヴォールトの天井が見事な教会。西側正面の壁には、天使が梯子を上り下りする独特の彫刻があります。塔に登るツアーもあります。",
       admission: "寄付制（塔のツアーは別料金）",
       mapQuery: "Bath Abbey",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bath_Abbey_from_the_South_West.jpg/1280px-Bath_Abbey_from_the_South_West.jpg",
+      imageSource: "commons",
+      imageCredit: "GarfieldJAustin (CC BY 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Bath_Abbey_from_the_South_West.jpg",
     },
     {
       name: "ストーンヘンジ",
@@ -95,6 +113,12 @@ const bathStonehenge: DestinationArticle = {
       body: "約5000年前から段階的に作られた環状列石。ビジターセンターから遺跡まではシャトルバスで移動します。石の輪の内側には原則として入れず、外周の通路から見る形です。",
       admission: `${gbpRange(ADMISSIONS.stonehenge)} 程度。**事前予約制**です`,
       mapQuery: "Stonehenge",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Stonehenge2007_07_30.jpg/1280px-Stonehenge2007_07_30.jpg",
+      imageSource: "commons",
+      imageCredit: "garethwiscombe (CC BY 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Stonehenge2007_07_30.jpg",
     },
   ],
   mainText: `この2か所は日本語のガイドでよくセットで紹介されます。実際、現地発の日帰りツアーの多くが両方を1日で回ります。

@@ -83,6 +83,12 @@ const penzance: DestinationArticle = {
         ADMISSIONS.stMichaelsMount
       )} 程度。**潮の時間で渡り方が変わる**ので、事前に公式で確認を`,
       mapQuery: "St Michael's Mount Marazion",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/St_Michael%27s_Mount_View.jpg/1280px-St_Michael%27s_Mount_View.jpg",
+      imageSource: "commons",
+      imageCredit: "Werner Wilmes (CC BY 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:St_Michael%27s_Mount_View.jpg",
     },
     {
       name: "ミナック劇場",
@@ -90,6 +96,11 @@ const penzance: DestinationArticle = {
       body: "崖を削って造られた野外劇場。客席の向こうに大西洋が広がります。20世紀に一人の女性が私財と自らの手で造り始めたもので、今も夏には公演が行われています。公演がない時間は見学できます。",
       admission: "見学は有料。公演を観る場合は別途チケット（夏は早くに売り切れます）",
       mapQuery: "Minack Theatre Porthcurno",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Minack_Panorama.jpg/1280px-Minack_Panorama.jpg",
+      imageSource: "commons",
+      imageCredit: "Tim Lewy (Attribution)",
+      imageLink: "https://commons.wikimedia.org/wiki/File:Minack_Panorama.jpg",
     },
     {
       name: "ランズエンド",
@@ -97,6 +108,12 @@ const penzance: DestinationArticle = {
       body: "グレートブリテン島の最南西端。「ここから先は海しかない」という地点で、断崖と大西洋の風景が広がります。周辺は観光施設化されていますが、少し歩けば崖沿いの遊歩道に出られます。",
       admission: "岬自体は無料（駐車場と併設施設は有料）",
       mapQuery: "Land's End Cornwall",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/20210529_Lands_End-9.jpg/1280px-20210529_Lands_End-9.jpg",
+      imageSource: "commons",
+      imageCredit: "Balon Greyjoy (CC0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:20210529_Lands_End-9.jpg",
     },
     {
       name: "セント・アイヴス",
@@ -104,6 +121,10 @@ const penzance: DestinationArticle = {
       body: "半島の反対側にある港町。光の質が良いことから20世紀に芸術家が集まり、テート・セント・アイヴスがあります。細い路地と白い砂浜——コーンウォールで最も「絵になる」街です。",
       admission: "街歩きは無料。テート・セント・アイヴスは有料",
       mapQuery: "St Ives Cornwall",
+      image: "https://upload.wikimedia.org/wikipedia/commons/5/54/Stives1.jpg",
+      imageSource: "commons",
+      imageCredit: "waterborough (Public Domain)",
+      imageLink: "https://commons.wikimedia.org/wiki/File:Stives1.jpg",
       internalLink: {
         href: "/museums",
         label: "美術館ナビ｜テートの他の館と比べる",

@@ -72,6 +72,12 @@ const brighton: DestinationArticle = {
       body: "ジョージ4世が保養用に建てた離宮。外観はインドのムガル建築風、内装は中国趣味という、英国のどこにも似ていない建物です。ブライトンで1つだけ見るならここになります。",
       admission: `${gbpRange(ADMISSIONS.royalPavilion)} 程度`,
       mapQuery: "Royal Pavilion Brighton",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Brighton_royal_pavilion_Qmin.jpg/1280px-Brighton_royal_pavilion_Qmin.jpg",
+      imageSource: "commons",
+      imageCredit: "Qmin (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Brighton_royal_pavilion_Qmin.jpg",
     },
     {
       name: "レーンズ",
@@ -79,6 +85,12 @@ const brighton: DestinationArticle = {
       body: "細い路地が入り組む旧市街。古着屋、レコード店、アンティーク、独立系のカフェが密集しています。ブライトンの空気がいちばん濃い区画で、歩くこと自体が目的になります。",
       admission: "無料",
       mapQuery: "The Lanes Brighton",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/The_Lanes%2C_Brighton%2C_England_03.jpg/1280px-The_Lanes%2C_Brighton%2C_England_03.jpg",
+      imageSource: "commons",
+      imageCredit: "Fry72 (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:The_Lanes,_Brighton,_England_03.jpg",
     },
     {
       name: "ブライトン・パレス・ピア",
@@ -86,6 +98,12 @@ const brighton: DestinationArticle = {
       body: "海に突き出した桟橋。遊具、ゲーム、フィッシュ・アンド・チップスの店が並びます。英国の海辺のリゾートという様式を、そのまま保存したような場所です。",
       admission: "入場無料（遊具は個別に有料）",
       mapQuery: "Brighton Palace Pier",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Brighton_Pier%2C_Brighton%2C_East_Sussex%2C_England-2Oct2011_%281%29.jpg/1280px-Brighton_Pier%2C_Brighton%2C_East_Sussex%2C_England-2Oct2011_%281%29.jpg",
+      imageSource: "commons",
+      imageCredit: "Ian Stannard (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Brighton_Pier,_Brighton,_East_Sussex,_England-2Oct2011_(1).jpg",
     },
     {
       name: "セブンシスターズ",
@@ -94,6 +112,12 @@ const brighton: DestinationArticle = {
       admission:
         "カントリー・パーク（Exceat）もバーリング・ギャップも入場無料。駐車場のみ有料",
       mapQuery: "Seven Sisters Country Park Exceat",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Seven_Sisters_March_2017_02.jpg/1280px-Seven_Sisters_March_2017_02.jpg",
+      imageSource: "commons",
+      imageCredit: "Arild Vågen (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Seven_Sisters_March_2017_02.jpg",
     },
     {
       name: "バーリング・ギャップ",
@@ -101,6 +125,12 @@ const brighton: DestinationArticle = {
       body: "断崖の途中で唯一、階段で浜まで降りられる地点。ナショナル・トラストが管理していて、カフェとトイレがあります。セブンシスターズを歩くときの起点か終点になります。",
       admission: "無料（駐車場は有料）",
       mapQuery: "Birling Gap",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Birling_Gap_March_2017_05.jpg/1280px-Birling_Gap_March_2017_05.jpg",
+      imageSource: "commons",
+      imageCredit: "Arild Vågen (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Birling_Gap_March_2017_05.jpg",
     },
     {
       name: "ブライトン博物館＆美術館",
@@ -108,6 +138,12 @@ const brighton: DestinationArticle = {
       body: "ロイヤル・パビリオンの敷地内にある博物館。装飾芸術とブライトンの街の歴史が中心です。雨の日の避難先としても使えます。",
       admission: "有料（パビリオンとの共通券がある場合があります）",
       mapQuery: "Brighton Museum and Art Gallery",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Brighton_Museum_and_Art_Gallery_%28IoE_Code_480508%29.jpg/1280px-Brighton_Museum_and_Art_Gallery_%28IoE_Code_480508%29.jpg",
+      imageSource: "commons",
+      imageCredit: "The Voice of Hassocks (Public Domain)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Brighton_Museum_and_Art_Gallery_(IoE_Code_480508).jpg",
     },
   ],
   mainText: `ロンドンに滞在していると、**海を見る機会がありません**。テムズ川は川で、河口までは遠い。

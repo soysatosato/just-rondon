@@ -98,7 +98,16 @@ export type OnArrival = {
   fullDay?: string;
 };
 
-/** 現地の見どころ。DB を持たないので記事側に置く。 */
+/**
+ * 現地の見どころ。DB を持たないので記事側に置く。
+ *
+ * 画像は blue-plaques / film-locations と同じ方針で、
+ * Wikimedia Commons の CC/PD 画像を直リンクし、imageCredit を必ず表示する。
+ * ロンドン外は読者が現地を全く知らないため、
+ * 「何が見えるのか」を文章だけで伝えるより写真1枚のほうが速い。
+ * ただし画像は任意——適切な自由ライセンス画像が無い見どころ
+ * (私有地・屋内展示など)を、無理に埋めて質を落とさないため。
+ */
 export type BeyondHighlight = {
   name: string;
   engName: string;
@@ -110,6 +119,18 @@ export type BeyondHighlight = {
   mapQuery: string;
   /** サイト内の関連ページ(/history の章など)。 */
   internalLink?: { href: string; label: string };
+  /**
+   * 見どころの写真。Commons の thumb URL を使う(原寸は数MBある)。
+   * next.config.mjs で画像最適化を止めているので、
+   * ここで縮めておかないとそのまま読者に届く。
+   */
+  image?: string;
+  /** ImageCredit の分岐キー。Commons 由来なら "commons"。 */
+  imageSource?: string;
+  /** 撮影者とライセンス。commons のときは表示が条件なので必須。 */
+  imageCredit?: string;
+  /** Commons のファイルページ。 */
+  imageLink?: string;
 };
 
 /** 二層構成。ハブでの束ね方。 */

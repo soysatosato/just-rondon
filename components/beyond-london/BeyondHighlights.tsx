@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import ImageCredit from "@/components/shared/ImageCredit";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import type { BeyondHighlight } from "./types";
 
@@ -10,6 +11,10 @@ import type { BeyondHighlight } from "./types";
  * そのまま描く。地図リンクを必ず出しているのは、ロンドン外は
  * 「駅からどっちに歩くか」が分からないと動けないため
  * (市内なら地下鉄の出口表示で足りるが、地方の駅にはそれがない)。
+ *
+ * 写真は任意。next/image ではなく素の img を使うのは
+ * film-locations / blue-plaques と揃えるため
+ * (Vercel の画像最適化を止めている間、next/image を挟む利点がない)。
  */
 export default function BeyondHighlights({
   highlights,
@@ -28,6 +33,27 @@ export default function BeyondHighlights({
             className="border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
           >
             <CardContent className="space-y-2 p-4 sm:p-5">
+              {spot.image && (
+                <div className="space-y-1.5">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={spot.image}
+                      alt={spot.name}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
+                  </div>
+                  <ImageCredit
+                    source={spot.imageSource ?? null}
+                    credit={spot.imageCredit ?? null}
+                    link={spot.imageLink ?? null}
+                  />
+                </div>
+              )}
+
               <div>
                 <h3 className="text-base font-semibold">{spot.name}</h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400">

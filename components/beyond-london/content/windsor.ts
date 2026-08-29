@@ -73,6 +73,12 @@ const windsor: DestinationArticle = {
         ADMISSIONS.windsorCastle.onTheDay
       )}。開館日は王室行事で変わるため、必ず公式で確認してください`,
       mapQuery: "Windsor Castle",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Windsor_Castle_at_Sunset_-_Nov_2006.jpg/1280px-Windsor_Castle_at_Sunset_-_Nov_2006.jpg",
+      imageSource: "commons",
+      imageCredit: "Diliff (CC BY 2.5)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Windsor_Castle_at_Sunset_-_Nov_2006.jpg",
       internalLink: {
         href: "/sightseeing/royal-london",
         label: "ロイヤル・ロンドン｜王室ゆかりの地をまとめて見る",
@@ -84,6 +90,13 @@ const windsor: DestinationArticle = {
       body: "エリザベス2世とフィリップ殿下が埋葬されている礼拝堂です。歴代の君主10人が眠っています。礼拝が行われる日は拝観できない時間帯があります。",
       admission: "城の入場料に含まれます（拝観できる曜日は限られます）",
       mapQuery: "St George's Chapel Windsor",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/St._Georges_Chapel%2C_Windsor_Castle_%282%29.jpg/1280px-St._Georges_Chapel%2C_Windsor_Castle_%282%29.jpg",
+      imageSource: "commons",
+      imageCredit:
+        "Aurelien Guichard (changes by Rabanus Flavus) (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:St._Georges_Chapel,_Windsor_Castle_(2).jpg",
     },
     {
       name: "イートン校",
@@ -91,6 +104,12 @@ const windsor: DestinationArticle = {
       body: "1440年創設の全寮制の名門校。テムズ川を渡って徒歩15分ほどです。校内の見学は限定的ですが、制服姿の生徒が歩く街並みそのものが見どころです。",
       admission: "街歩きは無料。校内見学はツアーのみで、時期が限られます",
       mapQuery: "Eton College",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/MK17792_Eton_College_Chapel.jpg/1280px-MK17792_Eton_College_Chapel.jpg",
+      imageSource: "commons",
+      imageCredit: "Martin Kraft (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:MK17792_Eton_College_Chapel.jpg",
     },
     {
       name: "ロング・ウォーク",
@@ -98,6 +117,12 @@ const windsor: DestinationArticle = {
       body: "城から南へまっすぐ約4キロ伸びる並木道。突き当たりの丘にジョージ3世の騎馬像が立ちます。全部歩くと往復2時間かかるので、入口付近から眺めるだけでも十分です。",
       admission: "無料",
       mapQuery: "The Long Walk Windsor",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Windsor_Great_Park.jpg/1280px-Windsor_Great_Park.jpg",
+      imageSource: "commons",
+      imageCredit: "Smithr32 (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Windsor_Great_Park.jpg",
     },
   ],
   mainText: `ロンドンから日帰りで行ける場所はいくつもありますが、**「半日で戻れて、しかも本物」** という条件を満たすのはウィンザーだけです。

@@ -66,6 +66,12 @@ const canterbury: DestinationArticle = {
       body: "英国国教会の総本山で、カンタベリー大主教の座があります。現在の建物は11世紀以降のもので、ロマネスクからゴシックへの移行が一つの建物の中で見て取れます。ステンドグラスは中世のものが残っています。",
       admission: `${gbpRange(ADMISSIONS.canterburyCathedral)} 程度`,
       mapQuery: "Canterbury Cathedral",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Canterbury_Cathedral_in_a_foggy_afternoon_2024-12-29_%28cropped%29.jpg/1280px-Canterbury_Cathedral_in_a_foggy_afternoon_2024-12-29_%28cropped%29.jpg",
+      imageSource: "commons",
+      imageCredit: "Andy Li (CC0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Canterbury_Cathedral_in_a_foggy_afternoon_2024-12-29_(cropped).jpg",
       internalLink: {
         href: "/history/tudors",
         label: "第4章 チューダー朝と宗教改革｜この大聖堂が総本山になった経緯",
@@ -84,6 +90,11 @@ const canterbury: DestinationArticle = {
       body: "597年に創設された修道院の遺構。ヘンリー8世の修道院解散で破壊され、今は基礎部分が残るのみです。破壊されたという事実そのものが、宗教改革の物証になっています。",
       admission: "有料（English Heritage 管理）",
       mapQuery: "St Augustine's Abbey Canterbury",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Augustine_Abbey.jpg/1280px-Augustine_Abbey.jpg",
+      imageSource: "commons",
+      imageCredit: "Willhsmit (Public Domain)",
+      imageLink: "https://commons.wikimedia.org/wiki/File:Augustine_Abbey.jpg",
     },
     {
       name: "ウェストゲート・タワーズ",
@@ -91,6 +102,12 @@ const canterbury: DestinationArticle = {
       body: "14世紀に建てられた、英国最大級の現存する中世の市門。城壁で囲まれていた街の構造が、ここを見ると実感できます。塔に登ることもできます。",
       admission: "外から見るのは無料。塔への登楼は有料",
       mapQuery: "Westgate Towers Canterbury",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Westgate%2C_Canterbury.jpg/1280px-Westgate%2C_Canterbury.jpg",
+      imageSource: "commons",
+      imageCredit: "DeFacto (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Westgate,_Canterbury.jpg",
     },
   ],
   mainText: `英国に大聖堂は数多くありますが、**カンタベリー大聖堂だけは意味が違います**。ここは英国国教会の総本山で、カンタベリー大主教——国王に次ぐ英国国教会の実質的な頂点——の座がある場所です。

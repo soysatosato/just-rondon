@@ -67,6 +67,12 @@ const oxford: DestinationArticle = {
         ADMISSIONS.christChurch
       )} 程度（季節と曜日で変動）。時期により事前予約制`,
       mapQuery: "Christ Church Oxford",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Tom_Quad%2C_Christ_Church%2C_Oxford.jpg/1280px-Tom_Quad%2C_Christ_Church%2C_Oxford.jpg",
+      imageSource: "commons",
+      imageCredit: "Dmitry Djouce (CC BY 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Tom_Quad,_Christ_Church,_Oxford.jpg",
     },
     {
       name: "ボドリアン図書館",
@@ -74,6 +80,12 @@ const oxford: DestinationArticle = {
       body: "1602年開架の大学図書館。中庭とディヴィニティ・スクール（15世紀の講堂）は見学でき、天井の石細工が見事です。ガイドツアーでのみ入れる区画もあります。",
       admission: "中庭は無料。ディヴィニティ・スクールとツアーは有料",
       mapQuery: "Bodleian Library Oxford",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Bibliotheca_Bodleiana.jpg/1280px-Bibliotheca_Bodleiana.jpg",
+      imageSource: "commons",
+      imageCredit: "Honcques Laus (CC0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Bibliotheca_Bodleiana.jpg",
     },
     {
       name: "ラドクリフ・カメラ",
@@ -81,6 +93,12 @@ const oxford: DestinationArticle = {
       body: "円形の図書館で、オックスフォードを代表する構図。内部は学生専用で入れませんが、外観そのものが見どころです。隣の聖メアリー教会の塔に登ると、この建物を見下ろせます。",
       admission: "外観は無料。聖メアリー教会の塔は有料",
       mapQuery: "Radcliffe Camera Oxford",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Radcliffe_Camera%2C_Oxford_-_Oct_2006.jpg/1280px-Radcliffe_Camera%2C_Oxford_-_Oct_2006.jpg",
+      imageSource: "commons",
+      imageCredit: "Diliff (CC BY 2.5)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Radcliffe_Camera,_Oxford_-_Oct_2006.jpg",
     },
     {
       name: "アシュモリアン博物館",
@@ -88,6 +106,12 @@ const oxford: DestinationArticle = {
       body: "1683年開館の、英国最古の公立博物館。古代エジプトから日本の美術まで幅広く、規模のわりに人が少ないのが利点です。雨の日の避難先としても機能します。",
       admission: "無料",
       mapQuery: "Ashmolean Museum Oxford",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Ashmolean_Museum_in_July_2014.jpg/1280px-Ashmolean_Museum_in_July_2014.jpg",
+      imageSource: "commons",
+      imageCredit: "Lewis Clarke (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Ashmolean_Museum_in_July_2014.jpg",
       internalLink: {
         href: "/museums",
         label: "美術館ナビ｜ロンドンの無料美術館と比べる",

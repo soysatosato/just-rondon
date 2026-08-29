@@ -71,6 +71,12 @@ const lakeDistrict: DestinationArticle = {
       body: "英国最大の自然湖を船で渡ります。ボウネスを起点に北（アンブルサイド方面）と南（レイクサイド方面）へ航路があり、移動手段としても観光としても機能します。船上から見る山と湖の眺めが、この地方の代表的な風景です。",
       admission: "区間により有料。1日乗船券があります",
       mapQuery: "Bowness-on-Windermere Pier",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/f/f1/Bowness_on_Windermere.jpg",
+      imageSource: "commons",
+      imageCredit: "Karl1587 (Public Domain)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Bowness_on_Windermere.jpg",
     },
     {
       name: "ヒル・トップ",
@@ -78,6 +84,12 @@ const lakeDistrict: DestinationArticle = {
       body: "ビアトリクス・ポターが暮らし、ピーターラビットの物語を書いた農家。彼女の遺志で当時のまま保存されており、絵本に描かれた室内がそのまま残っています。ナショナル・トラストが管理しています。",
       admission: "有料。**入場人数が制限され、時間枠制**のことがあります",
       mapQuery: "Hill Top Near Sawrey",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/b/b4/Hill_Top_Farm%2C_Near_Sawrey%2C_Cumbria_-_geograph.org.uk_-_43164.jpg",
+      imageSource: "commons",
+      imageCredit: "Marion Dutcher (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Hill_Top_Farm,_Near_Sawrey,_Cumbria_-_geograph.org.uk_-_43164.jpg",
     },
     {
       name: "アンブルサイド",
@@ -85,6 +97,12 @@ const lakeDistrict: DestinationArticle = {
       body: "湖の北端の町。石造りの建物が並び、山歩きの起点になります。ボウネスより落ち着いていて、周辺の丘へ登るルートが複数あります。橋の上に建つ小さな家（Bridge House）が街のシンボルです。",
       admission: "街歩きは無料",
       mapQuery: "Ambleside Cumbria",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Shops_in_Ambleside_%286789%29.jpg/1280px-Shops_in_Ambleside_%286789%29.jpg",
+      imageSource: "commons",
+      imageCredit: "Nilfanion (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Shops_in_Ambleside_(6789).jpg",
     },
     {
       name: "ダヴ・コテージ（グラスミア）",
@@ -92,6 +110,12 @@ const lakeDistrict: DestinationArticle = {
       body: "詩人ウィリアム・ワーズワースが暮らした家。湖水地方の風景を詩に書き、この地方が「観光地」になるきっかけを作った人物です。併設の博物館に草稿類が残っています。",
       admission: "有料",
       mapQuery: "Dove Cottage Grasmere",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Dove_Cottage_-_April_2021.jpg/1280px-Dove_Cottage_-_April_2021.jpg",
+      imageSource: "commons",
+      imageCredit: "Likewinter (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Dove_Cottage_-_April_2021.jpg",
     },
   ],
   mainText: `湖水地方は**英国最大の国立公園**で、氷河が削った谷に細長い湖が並んでいます。山は高くありませんが（最高峰でも約978m）、湖と丘と羊が作る風景が英国人にとって特別な意味を持っています。

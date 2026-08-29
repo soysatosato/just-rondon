@@ -57,6 +57,12 @@ const cotswolds: DestinationArticle = {
       body: "ウィリアム・モリスが「イングランドで最も美しい村」と呼んだ村。アーリントン・ロウという14世紀の石造りの家並みが有名です。ただし鉄道駅がなく、公共交通で行くのは困難です。",
       admission: "村の散策は無料",
       mapQuery: "Bibury Arlington Row",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Arlington_Row_Bibury.jpg/1280px-Arlington_Row_Bibury.jpg",
+      imageSource: "commons",
+      imageCredit: "Saffron Blaze (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Arlington_Row_Bibury.jpg",
     },
     {
       name: "バートン・オン・ザ・ウォーター",
@@ -64,6 +70,12 @@ const cotswolds: DestinationArticle = {
       body: "村の中央を浅い川が流れ、低い石橋がいくつも架かる村。「コッツウォルズのヴェネツィア」と呼ばれます。観光客が最も多い村でもあります。",
       admission: "村の散策は無料",
       mapQuery: "Bourton-on-the-Water",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/5/53/River_Windrush_-_geograph.org.uk_-_1341404.jpg",
+      imageSource: "commons",
+      imageCredit: "Dennis Turner (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:River_Windrush_-_geograph.org.uk_-_1341404.jpg",
     },
     {
       name: "モートン・イン・マーシュ",
@@ -71,6 +83,12 @@ const cotswolds: DestinationArticle = {
       body: "コッツウォルズで数少ない「駅がある村」。村の中心まで徒歩5分で、鉄道で来る場合の拠点になります。火曜には大きな市が立ちます。",
       admission: "村の散策は無料",
       mapQuery: "Moreton-in-Marsh",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Redesdale_Hall_Moreton_in_marsh.jpg/1280px-Redesdale_Hall_Moreton_in_marsh.jpg",
+      imageSource: "commons",
+      imageCredit: "Tony Hisgett (CC BY 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Redesdale_Hall_Moreton_in_marsh.jpg",
     },
     {
       name: "キャッスル・クーム",
@@ -78,6 +96,12 @@ const cotswolds: DestinationArticle = {
       body: "『ウォーホース』などの撮影に使われた村。中世の街並みがほぼ手つかずで残っており、電線すら目立たないよう配慮されています。ここも公共交通では行きにくい場所です。",
       admission: "村の散策は無料",
       mapQuery: "Castle Combe",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Castle_combe_river.jpg/1280px-Castle_combe_river.jpg",
+      imageSource: "commons",
+      imageCredit: "Saffron Blaze (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Castle_combe_river.jpg",
       internalLink: {
         href: "/sightseeing/film-locations",
         label: "映画・ドラマのロケ地巡り",

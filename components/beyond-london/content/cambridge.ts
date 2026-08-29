@@ -57,6 +57,12 @@ const cambridge: DestinationArticle = {
       body: "1446年に着工し、100年以上かけて完成した礼拝堂。世界最大級の扇状ヴォールト（扇形の天井）が見どころです。ケンブリッジで1つだけ見るならここになります。",
       admission: "有料（カレッジ入場料に含まれる）。行事や礼拝で入れない時間帯があります",
       mapQuery: "King's College Chapel Cambridge",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/f/fd/KingsCollegeChapel.jpg",
+      imageSource: "commons",
+      imageCredit: "Christian Richardt (CC BY-SA 3.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:KingsCollegeChapel.jpg",
     },
     {
       name: "パント（ケム川）",
@@ -64,6 +70,11 @@ const cambridge: DestinationArticle = {
       body: "平底の舟で川を進み、カレッジ群を裏側から見上げます。「バックス」と呼ばれるこの区間が、ケンブリッジで最も知られた風景です。案内人つきなら歴史の解説も聞けます。",
       admission: "案内人つきで1人£25〜35程度、自分で漕ぐ場合は舟1艘£30前後",
       mapQuery: "Punting Cambridge Mill Lane",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/CambridgePunt.jpg/1280px-CambridgePunt.jpg",
+      imageSource: "commons",
+      imageCredit: "Renata (Public Domain)",
+      imageLink: "https://commons.wikimedia.org/wiki/File:CambridgePunt.jpg",
     },
     {
       name: "数学橋",
@@ -71,6 +82,12 @@ const cambridge: DestinationArticle = {
       body: "クイーンズ・カレッジにかかる木造の橋。直線の材だけで曲線を組む構造で知られます。「ニュートンが釘を使わずに造った」という逸話は事実ではありませんが、構造そのものは見る価値があります。",
       admission: "外から見るのは無料。パントからよく見えます",
       mapQuery: "Mathematical Bridge Cambridge",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Queens%27_College_-_Mathematical_Bridge.jpg/1280px-Queens%27_College_-_Mathematical_Bridge.jpg",
+      imageSource: "commons",
+      imageCredit: "Rafa Esteve (CC BY-SA 4.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Queens%27_College_-_Mathematical_Bridge.jpg",
     },
     {
       name: "フィッツウィリアム博物館",
@@ -78,6 +95,12 @@ const cambridge: DestinationArticle = {
       body: "ケンブリッジ大学の博物館。古代エジプト、印象派、陶磁器と幅広く、規模のわりに空いています。雨の日の避難先にもなります。",
       admission: "無料",
       mapQuery: "Fitzwilliam Museum Cambridge",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Fitzwilliam_Museum_Cambridge_2.jpg/1280px-Fitzwilliam_Museum_Cambridge_2.jpg",
+      imageSource: "commons",
+      imageCredit: "Oxyman (CC BY 2.5)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:Fitzwilliam_Museum_Cambridge_2.jpg",
       internalLink: {
         href: "/museums",
         label: "美術館ナビ｜ロンドンの無料美術館と比べる",

@@ -83,6 +83,12 @@ const york: DestinationArticle = {
         ADMISSIONS.yorkMinster
       )} 程度。**チケットは1年間有効**。塔の登楼は別料金`,
       mapQuery: "York Minster",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/York_Minster_%282797690%29.jpg/1280px-York_Minster_%282797690%29.jpg",
+      imageSource: "commons",
+      imageCredit: "FEGreene (CC0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:York_Minster_(2797690).jpg",
     },
     {
       name: "JORVIK ヴァイキング・センター",
@@ -90,6 +96,12 @@ const york: DestinationArticle = {
       body: "実際の発掘現場の上に建てられた展示施設。10世紀のヨーク（ヴァイキングの言葉でヨルヴィク）の街並みを再現し、小型車両で通り抜けます。出土品もそのまま展示されています。",
       admission: `${gbpRange(ADMISSIONS.jorvik)} 程度。**事前予約を勧めます**`,
       mapQuery: "JORVIK Viking Centre York",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/7/7a/The_entrance_to_the_Jorvik_Viking_Centre%2C_York_-_geograph.org.uk_-_2521909.jpg",
+      imageSource: "commons",
+      imageCredit: "Jeremy Bolwell (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:The_entrance_to_the_Jorvik_Viking_Centre,_York_-_geograph.org.uk_-_2521909.jpg",
       internalLink: {
         href: "/history/anglo-saxons-vikings",
         label: "第2章 アングロサクソンとヴァイキング｜この街が王国だった時代",
@@ -101,6 +113,11 @@ const york: DestinationArticle = {
       body: "英国で最も完全に残る中世の城壁。全長約3.4kmで、その大部分を歩けます。一周2時間ほど。城壁の上から大聖堂や街並みを見下ろす視点が得られます。",
       admission: "無料",
       mapQuery: "York City Walls",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/b/b7/York_city.jpg",
+      imageSource: "commons",
+      imageCredit: "Steve nova (CC BY-SA 3.0)",
+      imageLink: "https://commons.wikimedia.org/wiki/File:York_city.jpg",
     },
     {
       name: "シャンブルズ",
@@ -108,6 +125,12 @@ const york: DestinationArticle = {
       body: "上階が張り出した木組みの建物が向かい合う、中世そのままの通り。かつて肉屋が並んでいた通りで、庇が日光を遮る構造になっています。ハリー・ポッターのダイアゴン横丁の着想源とも言われます。",
       admission: "無料",
       mapQuery: "The Shambles York",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/The_Shambles%2C_York_-_geograph.org.uk_-_5211003.jpg/1280px-The_Shambles%2C_York_-_geograph.org.uk_-_5211003.jpg",
+      imageSource: "commons",
+      imageCredit: "Jeff Buck (CC BY-SA 2.0)",
+      imageLink:
+        "https://commons.wikimedia.org/wiki/File:The_Shambles,_York_-_geograph.org.uk_-_5211003.jpg",
     },
   ],
   mainText: `ヨークの面白さは、**2000年ぶんの歴史が徒歩30分の範囲に積み重なっている**ことです。
