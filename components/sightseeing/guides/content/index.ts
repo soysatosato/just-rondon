@@ -4,7 +4,6 @@ import itineraryLayover from "./itinerary-layover";
 import itineraryRainyDay from "./itinerary-rainy-day";
 import itineraryWithKids from "./itinerary-with-kids";
 import stepFree from "./step-free";
-import tippingAndPayment from "./tipping-and-payment";
 
 /**
  * slug → 記事。
@@ -15,7 +14,6 @@ import tippingAndPayment from "./tipping-and-payment";
  */
 export const travelGuideArticles: Record<string, TravelGuideArticle> = {
   itinerary,
-  "tipping-and-payment": tippingAndPayment,
   "step-free": stepFree,
 };
 
@@ -35,7 +33,6 @@ export const itineraryVariantArticles: Record<string, TravelGuideArticle> = {
 
 export {
   itinerary,
-  tippingAndPayment,
   stepFree,
   itineraryRainyDay,
   itineraryWithKids,
