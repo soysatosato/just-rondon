@@ -39,6 +39,66 @@ export const BEYOND_CATEGORY_ORDER: BeyondCategory[] = [
   "weekender",
 ];
 
+/**
+ * 行き先が要求する時間。ハブの絞り込みの主軸。
+ *
+ * 「日帰りか1泊か」(BeyondTier)とは別に持つ。tier は記事の書き方を
+ * 決める区分だが、読者がハブで最初に照合するのは自分の空き時間で、
+ * そこには「午前中しか空いていない」という第三の状態がある。
+ *
+ * 配列で持つのは、複数の時間枠に成立する行き先があるから。
+ * ヨークは日帰りもできるが1泊するほうがいい——記事本文がそう
+ * 書いているのに、どちらか一方に振ると必ず嘘になる。
+ */
+export type BeyondTimeFit = "halfDay" | "fullDay" | "overnight";
+
+/**
+ * 何を見に行くか。時間で絞ったあとの第二軸。
+ *
+ * 網羅的な分類ではなく、「これがあるから行く」と言える要素だけを
+ * 付ける。全行き先に当てはまるタグ(歴史・街歩き)は付けない——
+ * 絞り込みに使えないタグは、チップの列を長くするだけになる。
+ */
+export type BeyondTheme =
+  | "castle"
+  | "university"
+  | "ancient"
+  | "cathedral"
+  | "seaside"
+  | "countryside"
+  | "walking"
+  | "scotland";
+
+export const BEYOND_THEME_LABELS: Record<BeyondTheme, string> = {
+  castle: "城と宮殿",
+  university: "大学の街",
+  ancient: "ローマ・古代",
+  cathedral: "大聖堂",
+  seaside: "海辺",
+  countryside: "田園と村",
+  walking: "自然を歩く",
+  scotland: "別の国",
+};
+
+/**
+ * 現地に着いてからの足。
+ *
+ * ハブに出すのは、ここが行き先選びを覆すことがあるから。
+ * コッツウォルズは所要時間だけ見ればオックスフォードと同程度だが、
+ * 駅に降りても村には着かない。時間と運賃だけを並べた表は、
+ * この一点で読者を誤らせる。
+ */
+export type BeyondLocalTransport = "walk" | "local" | "tour";
+
+export const BEYOND_LOCAL_TRANSPORT_LABELS: Record<
+  BeyondLocalTransport,
+  string
+> = {
+  walk: "駅から徒歩圏",
+  local: "現地でバス・船",
+  tour: "ツアーか車が要る",
+};
+
 export type BeyondMeta = {
   slug: string;
   category: BeyondCategory;
@@ -50,6 +110,27 @@ export type BeyondMeta = {
   /** 片道の所要。行き先カードにだけ出す。 */
   journeyTime?: string;
   blurb: string;
+
+  /* --- 以下、ハブの一覧・絞り込みが使う。rail には付けない --- */
+
+  /** ロンドン側の始発駅。短く。複数あるなら「／」で繋ぐ。 */
+  fromStation?: string;
+  /**
+   * 片道の最速所要(分)。並べ替えと所要バーの長さに使う。
+   * 表示は journeyTime のほうを出す——「約1時間30分」と
+   * 書いてある記事に対して「90分」と出すと別物に見える。
+   */
+  journeyMinutes?: number;
+  /** どの時間枠で成立するか。1つ以上。 */
+  timeFit?: BeyondTimeFit[];
+  themes?: BeyondTheme[];
+  localTransport?: BeyondLocalTransport;
+  /**
+   * localTransport の但し書き。
+   * 一語のラベルでは嘘になる行き先にだけ付ける(バースは単体なら徒歩圏、
+   * 湖水地方は東岸だけ公共交通で足りる、など)。
+   */
+  localTransportNote?: string;
 };
 
 /**
@@ -87,6 +168,11 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約30分〜1時間",
     blurb:
       "現在も使われている世界最古の居住城。ロンドンから最も手軽な「王室の本物」で、半日で戻れます。ただしOyster圏外なので、切符の買い方だけ先に押さえてください。",
+    fromStation: "パディントン／ウォータールー",
+    journeyMinutes: 35,
+    timeFit: ["halfDay", "fullDay"],
+    themes: ["castle", "cathedral"],
+    localTransport: "walk",
   },
   {
     slug: "oxford",
@@ -97,6 +183,11 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間",
     blurb:
       "英語圏最古の大学。ただしカレッジは学期中に見学が制限されるので、「行けば入れる」ではありません。行く前に見学可否を確認する手順まで。",
+    fromStation: "パディントン",
+    journeyMinutes: 60,
+    timeFit: ["fullDay"],
+    themes: ["university"],
+    localTransport: "walk",
   },
   {
     slug: "cambridge",
@@ -107,6 +198,12 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間20分",
     blurb:
       "パント（平底舟）で川から眺めるカレッジ群。オックスフォードとどちらを選ぶかで迷う人が多いので、その判断基準から書きます。",
+    fromStation: "キングス・クロス",
+    journeyMinutes: 60,
+    timeFit: ["fullDay"],
+    themes: ["university"],
+    localTransport: "local",
+    localTransportNote: "駅から中心部まで徒歩25分。バスで10分",
   },
   {
     slug: "bath-stonehenge",
@@ -117,6 +214,12 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間30分",
     blurb:
       "ローマ人が作った浴場が、ほぼそのまま残っています。ストーンヘンジと組み合わせるなら鉄道より現地発ツアーが速い、というのが結論です。",
+    fromStation: "パディントン",
+    journeyMinutes: 90,
+    timeFit: ["fullDay"],
+    themes: ["ancient"],
+    localTransport: "tour",
+    localTransportNote: "バース単体なら駅から徒歩圏。ストーンヘンジと組むならツアー",
   },
   {
     slug: "cotswolds",
@@ -127,6 +230,12 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間30分〜2時間",
     blurb:
       "蜂蜜色の石造りの村が点在する丘陵地帯。このセクションで唯一、公共交通が実用にならない行き先です。ツアーか車を勧める理由を正直に書きます。",
+    fromStation: "パディントン",
+    journeyMinutes: 90,
+    timeFit: ["fullDay"],
+    themes: ["countryside"],
+    localTransport: "tour",
+    localTransportNote: "鉄道で行けるのはモートン・イン・マーシュなど一部の村だけ",
   },
   {
     slug: "brighton",
@@ -137,6 +246,12 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間",
     blurb:
       "ロンドンから最短で着く「英国の海辺」。砂ではなく小石の浜と、インド風の異様な離宮。バスで1時間の白亜の断崖セブンシスターズまで含めて、天気に賭ける日帰りを組み立てます。",
+    fromStation: "ヴィクトリア",
+    journeyMinutes: 60,
+    timeFit: ["fullDay"],
+    themes: ["seaside", "castle", "walking"],
+    localTransport: "walk",
+    localTransportNote: "セブンシスターズまで足を延ばすならバスで1時間",
   },
   {
     slug: "canterbury",
@@ -147,6 +262,11 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約1時間",
     blurb:
       "英国国教会の総本山。ヘンリー8世がローマと断絶した宗教改革の帰結が、この大聖堂ひとつで見て取れます。",
+    fromStation: "セント・パンクラス",
+    journeyMinutes: 60,
+    timeFit: ["halfDay", "fullDay"],
+    themes: ["cathedral"],
+    localTransport: "walk",
   },
   {
     slug: "york",
@@ -157,6 +277,11 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約2時間",
     blurb:
       "ローマの軍団基地、ヴァイキングの王国、中世の大聖堂が徒歩30分の範囲に積み重なっています。日帰りもできますが、観光客が帰ったあとの夜が泊まる理由です。",
+    fromStation: "キングス・クロス",
+    journeyMinutes: 120,
+    timeFit: ["fullDay", "overnight"],
+    themes: ["ancient", "cathedral"],
+    localTransport: "walk",
   },
   {
     slug: "edinburgh",
@@ -167,6 +292,11 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約4時間20分",
     blurb:
       "唯一の「別の国」。紙幣も法律も教育制度も変わります。2026年7月に英国初の宿泊税が始まったので、予算の立て方も他とは違います。",
+    fromStation: "キングス・クロス",
+    journeyMinutes: 260,
+    timeFit: ["overnight"],
+    themes: ["scotland", "castle", "walking"],
+    localTransport: "walk",
   },
   {
     slug: "lake-district",
@@ -177,6 +307,12 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約3時間20分",
     blurb:
       "「車がないと無理」と書かれがちですが、ウィンダミア湖の東岸に絞れば船とバスで回れます。その線引きから書きます。",
+    fromStation: "ユーストン",
+    journeyMinutes: 200,
+    timeFit: ["overnight"],
+    themes: ["countryside", "walking"],
+    localTransport: "local",
+    localTransportNote: "湖の東岸なら船とバスで回れる。西岸は車が要る",
   },
   {
     slug: "penzance",
@@ -187,6 +323,12 @@ export const beyondDestinations: BeyondMeta[] = [
     journeyTime: "約5時間（寝台なら夜行）",
     blurb:
       "このセクションで最も遠く、英国で数少ない寝台列車で行ける行き先。海に浮かぶ城と、崖を削った野外劇場が待っています。",
+    fromStation: "パディントン",
+    journeyMinutes: 300,
+    timeFit: ["overnight"],
+    themes: ["seaside", "castle"],
+    localTransport: "local",
+    localTransportNote: "現地はバスと支線。寝台なら夜行で移動できる",
   },
 ];
 

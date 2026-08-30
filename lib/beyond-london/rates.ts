@@ -451,3 +451,38 @@ export const RAIL_SOURCES = [
     url: EDINBURGH_LEVY.official,
   },
 ];
+
+/* -----------------------------------------------------
+   行き先ごとの運賃帯（ハブの一覧用）
+
+   LONG_DISTANCE_ROUTES と分けているのは、あちらが
+   BritRail Pass の損益分岐に使う3路線だけを持つ比較材料で、
+   「パスの価格と何を比べるか」以外の用途を想定していないから。
+   ここは /beyond-london ハブが全行き先を横並びに出すための表で、
+   増減の単位が違う(行き先が増えれば増える)。
+
+   金額を持たず帯で持つ方針は LONG_DISTANCE_ROUTES と同じ。
+   片道で持つのは、各記事の fareGuide が片道で書かれているため。
+   往復に直して持つと、記事と数字が食い違って見える。
+
+   advanceFrom と onTheDay を両方持つのは、この差そのものが
+   ハブで最初に伝えたいことだから。ヨークの「£20台 → £100以上」を
+   一目で見せるために、片方だけにしない。
+----------------------------------------------------- */
+
+export const BEYOND_FARE_BANDS: Record<
+  string,
+  { advanceFrom: string; onTheDay: string }
+> = {
+  windsor: { advanceFrom: "£10前後", onTheDay: "£10〜15" },
+  oxford: { advanceFrom: "£10前後", onTheDay: "£30〜40" },
+  cambridge: { advanceFrom: "£10台", onTheDay: "£25〜30" },
+  brighton: { advanceFrom: "£10台", onTheDay: "£25〜35" },
+  canterbury: { advanceFrom: "£15前後", onTheDay: "£30〜40" },
+  "bath-stonehenge": { advanceFrom: "£20台", onTheDay: "£60以上" },
+  cotswolds: { advanceFrom: "£20台", onTheDay: "£50以上" },
+  york: { advanceFrom: "£20台", onTheDay: "£100以上" },
+  edinburgh: { advanceFrom: "£30台", onTheDay: "£150以上" },
+  "lake-district": { advanceFrom: "£30台", onTheDay: "£120以上" },
+  penzance: { advanceFrom: "£40台", onTheDay: "£100以上" },
+};
