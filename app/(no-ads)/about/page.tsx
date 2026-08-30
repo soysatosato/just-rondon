@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  SitePageHeader,
+  SitePageNav,
+  SitePageShell,
+  SiteSections,
+  type SiteSection,
+} from "@/components/site/SitePageLayout";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -8,7 +14,7 @@ export const metadata = buildPageMetadata({
     "ジャスト・ロンドンは、ロンドンの観光・文化・生活・ニュースを日本語でわかりやすく紹介するサイトです。運営方針と掲載情報の考え方について説明します。",
 });
 
-const sections = [
+const sections: SiteSection[] = [
   {
     title: "Just Rondon について",
     content: [
@@ -38,53 +44,20 @@ const sections = [
       "施設情報、価格、営業時間、制度、イベント情報などは変更される場合があるため、必要に応じて公式情報もあわせてご確認ください。",
     ],
   },
-  {
-    title: "お問い合わせ",
-    content: [
-      "掲載内容に関するご質問、ご意見、ご連絡は Contact ページよりお願いいたします。",
-    ],
-  },
 ];
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen px-4 py-10 md:px-6">
-      <div className="mx-auto max-w-3xl">
-        <Card className="border-border bg-card shadow-sm">
-          <CardHeader className="space-y-3">
-            {/* 本文が h2 から始まるため、ページの h1 をここで明示する。 */}
-            <CardTitle asChild>
-              <h1 className="text-center text-2xl font-bold tracking-tight md:text-4xl">
-                About｜ジャスト・ロンドンについて
-              </h1>
-            </CardTitle>
-            <p className="text-center text-sm leading-6 text-muted-foreground md:text-base">
-              このサイトの目的や運営方針についてご案内します。
-            </p>
-          </CardHeader>
+    <SitePageShell>
+      <SitePageHeader
+        kicker="About"
+        title="ジャスト・ロンドンについて"
+        lede="ロンドンを日本語で伝える、このサイトの目的と運営方針について。"
+      />
 
-          <CardContent className="space-y-8">
-            {sections.map((section) => (
-              <section key={section.title} className="space-y-3">
-                <h2 className="text-lg font-semibold tracking-tight md:text-xl">
-                  {section.title}
-                </h2>
+      <SiteSections sections={sections} />
 
-                <div className="space-y-3">
-                  {section.content.map((paragraph, index) => (
-                    <p
-                      key={`${section.title}-${index}`}
-                      className="text-sm leading-7 text-foreground md:text-base"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+      <SitePageNav current="/about" />
+    </SitePageShell>
   );
 }

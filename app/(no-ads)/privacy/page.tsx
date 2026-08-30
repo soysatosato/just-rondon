@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  SitePageHeader,
+  SitePageNav,
+  SitePageShell,
+  SiteSections,
+  type SiteSection,
+} from "@/components/site/SitePageLayout";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -8,13 +14,7 @@ export const metadata = buildPageMetadata({
     "ジャスト・ロンドンにおける個人情報の取り扱い、広告配信(Google AdSense)およびアクセス解析(Google アナリティクス)での Cookie の利用と、その無効化方法について説明します。",
 });
 
-type Section = {
-  title: string;
-  content: string[];
-  links?: { label: string; href: string }[];
-};
-
-const sections: Section[] = [
+const sections: SiteSection[] = [
   {
     title: "個人情報の利用目的",
     content: [
@@ -80,60 +80,16 @@ const sections: Section[] = [
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen px-4 py-10 md:px-6">
-      <div className="mx-auto max-w-3xl">
-        <Card className="border-border bg-card shadow-sm">
-          <CardHeader className="space-y-3">
-            {/* 本文が h2 から始まるため、ページの h1 をここで明示する。 */}
-            <CardTitle asChild>
-              <h1 className="text-center text-2xl font-bold tracking-tight md:text-4xl">
-                プライバシーポリシー
-              </h1>
-            </CardTitle>
-            <p className="text-center text-sm leading-6 text-muted-foreground md:text-base">
-              当サイトにおける個人情報の取り扱いについてご説明します。
-            </p>
-          </CardHeader>
+    <SitePageShell>
+      <SitePageHeader
+        kicker="Privacy"
+        title="プライバシーポリシー"
+        lede="当サイトにおける個人情報の取り扱い、Cookie の利用と、その無効化の方法について。"
+      />
 
-          <CardContent className="space-y-8">
-            {sections.map((section) => (
-              <section key={section.title} className="space-y-3">
-                <h2 className="text-lg font-semibold tracking-tight md:text-xl">
-                  {section.title}
-                </h2>
+      <SiteSections sections={sections} />
 
-                <div className="space-y-3">
-                  {section.content.map((paragraph, index) => (
-                    <p
-                      key={`${section.title}-${index}`}
-                      className="text-sm leading-7 text-foreground md:text-base"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-
-                  {section.links && (
-                    <ul className="space-y-1 text-sm md:text-base">
-                      {section.links.map((link) => (
-                        <li key={link.href}>
-                          <a
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sky-600 underline underline-offset-2 dark:text-sky-400"
-                          >
-                            {link.label}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </section>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+      <SitePageNav current="/privacy" />
+    </SitePageShell>
   );
 }

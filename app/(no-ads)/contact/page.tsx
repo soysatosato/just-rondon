@@ -1,24 +1,24 @@
 import ContactForm from "@/components/form/ContactForm";
+import {
+  SitePageHeader,
+  SitePageNav,
+  SitePageShell,
+} from "@/components/site/SitePageLayout";
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center mb-12 md:block md:min-h-0">
-      <div className="max-w-lg mx-auto p-6 bg-background rounded-2xl shadow-md max-h-[90vh] overflow-y-auto">
-        <div className="mb-12">
-          <h1 className="text-xl md:text-3xl font-bold mb-4 text-center">
-            お問い合わせ
-          </h1>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Just Rondon
-            に関するご質問・ご感想・掲載内容についてのお問い合わせは、
-            こちらのフォームよりご連絡ください。
-            <br />
-            内容を確認のうえ、順次対応いたします。
-          </p>
-        </div>
+    <SitePageShell>
+      <SitePageHeader
+        kicker="Contact"
+        title="お問い合わせ"
+        lede="ご質問・ご感想、掲載内容の誤りのご指摘、お仕事のご依頼まで。内容を確認のうえ、順次お返事します。"
+      />
 
+      <div className="mt-12">
         <ContactForm />
       </div>
-    </div>
+
+      <SitePageNav current="/contact" />
+    </SitePageShell>
   );
 }

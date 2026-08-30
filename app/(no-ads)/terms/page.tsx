@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  SitePageHeader,
+  SitePageNav,
+  SitePageShell,
+  SiteSections,
+  type SiteSection,
+} from "@/components/site/SitePageLayout";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata = buildPageMetadata({
@@ -8,12 +14,7 @@ export const metadata = buildPageMetadata({
     "ジャスト・ロンドンをご利用いただく際の条件を定めた利用規約です。掲載情報の取り扱い、禁止事項、免責事項、著作権について説明します。",
 });
 
-type Section = {
-  title: string;
-  content: string[];
-};
-
-const sections: Section[] = [
+const sections: SiteSection[] = [
   {
     title: "適用",
     content: [
@@ -71,43 +72,16 @@ const sections: Section[] = [
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen px-4 py-10 md:px-6">
-      <div className="mx-auto max-w-3xl">
-        <Card className="border-border bg-card shadow-sm">
-          <CardHeader className="space-y-3">
-            {/* 本文が h2 から始まるため、ページの h1 をここで明示する。 */}
-            <CardTitle asChild>
-              <h1 className="text-center text-2xl font-bold tracking-tight md:text-4xl">
-                利用規約
-              </h1>
-            </CardTitle>
-            <p className="text-center text-sm leading-6 text-muted-foreground md:text-base">
-              当サイトのご利用にあたっての条件についてご説明します。
-            </p>
-          </CardHeader>
+    <SitePageShell>
+      <SitePageHeader
+        kicker="Terms"
+        title="利用規約"
+        lede="当サイトをご利用いただくにあたっての条件を定めています。"
+      />
 
-          <CardContent className="space-y-8">
-            {sections.map((section) => (
-              <section key={section.title} className="space-y-3">
-                <h2 className="text-lg font-semibold tracking-tight md:text-xl">
-                  {section.title}
-                </h2>
+      <SiteSections sections={sections} />
 
-                <div className="space-y-3">
-                  {section.content.map((paragraph, index) => (
-                    <p
-                      key={`${section.title}-${index}`}
-                      className="text-sm leading-7 text-foreground md:text-base"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+      <SitePageNav current="/terms" />
+    </SitePageShell>
   );
 }
