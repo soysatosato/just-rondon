@@ -182,7 +182,14 @@ export async function fetchMuseumsHubData() {
   return { topMuseums, totalCount, freeCount, kidsCount };
 }
 
-/** 一覧ページ用。全件を一度に返し、絞り込みはクライアント側で行う(47件なので十分軽い)。 */
+/**
+ * 一覧ページ用。全件を一度に返し、絞り込みはクライアント側で行う(47件なので十分軽い)。
+ *
+ * highlights と summary まで取るのは、カードに置くタグと、収蔵品名での
+ * 検索(「恐竜」「ゴッホ」「マグナカルタ」)に使うため。館名しか引けないと、
+ * 何が置いてあるかを知らない読者はその館に辿り着けない。
+ * description(本文)は重いので含めない。
+ */
 export async function fetchAllMuseums() {
   return db.museum.findMany({
     orderBy: [{ recommendLevel: "desc" }, { createdAt: "asc" }],
@@ -193,6 +200,7 @@ export async function fetchAllMuseums() {
       slug: true,
       tagline: true,
       summary: true,
+      highlights: true,
       price: true,
       address: true,
       image: true,
@@ -200,6 +208,9 @@ export async function fetchAllMuseums() {
       lng: true,
       recommendLevel: true,
       isForChildren: true,
+      museumInfo: {
+        select: { recommendedDuration: true, nearestStation: true },
+      },
     },
   });
 }
