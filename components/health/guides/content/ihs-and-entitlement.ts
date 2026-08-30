@@ -11,7 +11,7 @@ const ihsAndEntitlement: HealthGuideArticle = {
   slug: "ihs-and-entitlement",
   title: "IHS（移民健康保険料）とは｜イギリスで医療がどこまで無料か",
   engTitle: "The Immigration Health Surcharge and What It Covers",
-  audience: "ビザ申請時に払った IHS が何の対価なのか把握していない人",
+  audience: "ビザ申請で数十万円払い、あれが何だったのか分かっていない人",
   summary: `ビザ申請のときに払った年額${gbp(
     IHS.perYearStandard
   )}前後のあの金額が、英国での医療費の正体です。これを払った人は GP も救急も入院も無料。逆に払っていない短期滞在者には請求が来ます。自分がどちら側なのかを、はっきりさせておく話です。`,
@@ -54,6 +54,7 @@ const ihsAndEntitlement: HealthGuideArticle = {
   sections: [
     {
       id: "what-it-is",
+      navLabel: "IHSとは",
       title: "IHS とは何の対価か",
       subtitle: "保険ではなく、利用資格の購入",
       body: `IHS は民間の医療保険ではありません。**NHS を居住者と同じ条件で使う権利**を、前払いで買うものです。
@@ -90,6 +91,7 @@ const ihsAndEntitlement: HealthGuideArticle = {
     },
     {
       id: "what-is-free",
+      navLabel: "無料の範囲",
       title: "無料になるもの、ならないもの",
       subtitle: "「NHS は無料」は半分だけ正しい",
       body: `IHS を払った人（および英国の通常居住者）にとって、以下は**無料**です。
@@ -128,6 +130,7 @@ const ihsAndEntitlement: HealthGuideArticle = {
     },
     {
       id: "who-pays-what",
+      navLabel: "自分の立場",
       title: "自分がどの立場かを確認する",
       subtitle: "旅行者・在住者・短期滞在の線引き",
       body: `NHS の費用負担は、ビザの種類ではなく **「通常居住者（ordinarily resident）と扱われるか」** で決まります。
@@ -166,6 +169,7 @@ const ihsAndEntitlement: HealthGuideArticle = {
     },
     {
       id: "refunds",
+      navLabel: "返金",
       title: "返金されることがある",
       subtitle: "多くの人が取り逃している",
       body: `IHS は前払いなので、**払いすぎた分が返ってくる**場面があります。自動では戻らないことが多く、申請が必要です。

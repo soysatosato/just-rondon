@@ -16,7 +16,7 @@ const prescriptionCosts: HealthGuideArticle = {
     NHS_CHARGES.prescriptionItem
   )}を頭打ちにする`,
   engTitle: "Cutting NHS Prescription Costs with a PPC",
-  audience: "常用薬があり、毎月の処方箋料が積み上がっている人",
+  audience: "薬局で請求された金額が思ったより高かった人",
   summary: `イングランドの処方箋は1品目 ${gbp(
     NHS_CHARGES.prescriptionItem
   )}。「1回」ではなく「1品目」なので、3種類出れば3倍です。年に${
@@ -70,6 +70,7 @@ const prescriptionCosts: HealthGuideArticle = {
   sections: [
     {
       id: "how-charging-works",
+      navLabel: "課金の仕組み",
       title: "課金の仕組み",
       subtitle: "「1回」ではなく「1品目」",
       body: `処方された薬の **品目数 × ${gbp(
@@ -109,6 +110,7 @@ const prescriptionCosts: HealthGuideArticle = {
     },
     {
       id: "ppc",
+      navLabel: "PPC",
       title: "PPC（前払い証）で頭打ちにする",
       subtitle: "常用薬があるなら、ほぼ確実に得",
       body: `**Prescription Prepayment Certificate（PPC）** は、期間中の処方箋が何品目でも定額になる前払い証です。
@@ -159,6 +161,7 @@ PPC はイングランドでのみ意味を持ちます。スコットランド�
     },
     {
       id: "free-prescriptions",
+      navLabel: "無料になる条件",
       title: "無料になる条件",
       subtitle: "思っているより範囲が広い",
       body: `以下に該当する人は、処方箋料が **全額無料** です。PPC も必要ありません。
@@ -203,6 +206,7 @@ HC1 という申請書を提出すると、全額免除の HC2 か一部免除�
     },
     {
       id: "nations",
+      navLabel: "イングランド以外",
       title: "イングランド以外は無料",
       subtitle: "同じ英国でも制度が違う",
       body: `処方箋料は英国全体で統一されていません。

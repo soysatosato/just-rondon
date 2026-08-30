@@ -11,7 +11,7 @@ const pharmacyAndPrescriptions: HealthGuideArticle = {
   slug: "pharmacy-and-prescriptions",
   title: "イギリスの薬局の使い方｜市販薬の探し方と処方箋の受け取り",
   engTitle: "Using Pharmacies and Collecting Prescriptions in the UK",
-  audience: "薬が必要だが、GPの予約が取れない・日本の薬が見つからない人",
+  audience: "GP の予約が数週間先で、それまで待てない人",
   summary: `英国の薬局は日本のドラッグストアより権限が広く、薬剤師に無料で相談でき、一部の症状では処方薬まで出せます。GP の予約を待たずに済む範囲が想像より広い。あわせて、日本の常備薬に当たるものを成分名で探す方法をまとめます。`,
   description:
     "イギリスの薬局（Pharmacy／Chemist）の使い方を解説。Pharmacy First で薬剤師が処方できる症状、処方箋の受け取り方と繰り返し処方、日本の市販薬に相当する成分名の対応表、Boots や Superdrug の使い分けまで。",
@@ -46,6 +46,7 @@ GP の予約が2週間先しか空いていない——という状況は英国�
   sections: [
     {
       id: "pharmacy-first",
+      navLabel: "薬剤師の処方範囲",
       title: "薬剤師が処方できる範囲",
       subtitle: "GP を経由しなくていい症状がある",
       body: `**Pharmacy First** という仕組みにより、特定の症状については薬剤師が診断・処方まで行えます。GP の予約は不要で、費用は処方箋料のみです。
@@ -82,6 +83,7 @@ GP の予約が2週間先しか空いていない——という状況は英国�
     },
     {
       id: "otc-medicines",
+      navLabel: "市販薬を探す",
       title: "日本の常備薬に当たるものを探す",
       subtitle: "商品名は通じない。成分で探す",
       body: `日本の市販薬は英国では手に入りません。ただし **同じ成分の薬はほぼすべて存在します**。棚の前で商品名を探すのをやめて、成分名で探してください。
@@ -115,6 +117,7 @@ GP の予約が2週間先しか空いていない——という状況は英国�
     },
     {
       id: "prescriptions",
+      navLabel: "処方箋を受け取る",
       title: "処方箋を受け取る",
       subtitle: "紙は使わない。電子で薬局に飛ぶ",
       body: `GP が薬を処方すると、処方箋は **電子的に薬局へ送られます**（Electronic Prescription Service）。紙を持ち歩く必要はありません。

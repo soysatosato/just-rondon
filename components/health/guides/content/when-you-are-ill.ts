@@ -10,7 +10,7 @@ const whenYouAreIll: HealthGuideArticle = {
   slug: "when-you-are-ill",
   title: "イギリスで体調を崩したとき、どこに行くか｜111と999の使い分け",
   engTitle: "Where to Go When You Are Ill in the UK",
-  audience: "具合が悪いが、救急車を呼ぶほどか判断がつかない人",
+  audience: "いま具合が悪く、どこに行けばいいのか分からない人",
   summary: `英国の医療は「救急車か、我慢か」の二択ではありません。間に ${NHS_CONTACTS.nonEmergency} という電話相談があります。24時間・無料・通訳を頼めて、必要なら当日の診察枠まで手配してくれる。この番号を知っているかどうかで、A&E で6時間待つか、1時間で解決するかが変わります。`,
   description:
     "イギリスで具合が悪くなったときの行き先を、症状別に整理。NHS 111 と 999 の使い分け、A&E（救急外来）の待ち時間の実態、Urgent Treatment Centre、Walk-in Centre、薬局で済む範囲まで、日本語で解説します。",
@@ -46,6 +46,7 @@ const whenYouAreIll: HealthGuideArticle = {
   sections: [
     {
       id: "the-four-doors",
+      navLabel: "行き先は4つ",
       title: "行き先は4つある",
       subtitle: "まずこの地図を頭に入れる",
       body: `| 状態 | 行き先 | 費用 | 目安 |
@@ -64,6 +65,7 @@ const whenYouAreIll: HealthGuideArticle = {
     },
     {
       id: "nhs-111",
+      navLabel: "111",
       title: `${NHS_CONTACTS.nonEmergency} ── 知らないと損をする番号`,
       subtitle: "24時間・無料・通訳あり",
       body: `${NHS_CONTACTS.nonEmergency} は、緊急ではあるが命に関わるとは言い切れない場面のための窓口です。**夜間も休日も、24時間つながります。**
@@ -100,6 +102,7 @@ const whenYouAreIll: HealthGuideArticle = {
     },
     {
       id: "ae-reality",
+      navLabel: "A&Eの実態",
       title: "A&E（救急外来）の実態",
       subtitle: "行けば早く診てもらえる、わけではない",
       body: `A&E（Accident & Emergency）は、日本の救急外来にあたります。24時間開いており、費用は無料です。
@@ -137,6 +140,7 @@ A&E より待ち時間が短いことが多く、111 に電話すると、この
     },
     {
       id: "pharmacy-first",
+      navLabel: "軽い不調は薬局",
       title: "軽い不調は薬局で終わることが多い",
       subtitle: "GP を待たなくていい範囲",
       body: `英国の薬局（Pharmacy／Chemist）は、日本のドラッグストアより踏み込んだ役割を持っています。**薬剤師に無料で相談でき、予約も要りません。**
@@ -177,6 +181,7 @@ Boots や Superdrug といったチェーンのほか、街角の独立系薬局
     },
     {
       id: "practical-phrases",
+      navLabel: "受診の備え",
       title: "受診時に困らないための備え",
       subtitle: "英語より、準備の問題",
       body: `英語力そのものよりも、**準備しているかどうか**で診察の質が変わります。診察時間が短いためです。

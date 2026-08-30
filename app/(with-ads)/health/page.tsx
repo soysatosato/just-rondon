@@ -3,25 +3,21 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import MarkdownBody from "@/components/jobs/MarkdownBody";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import {
   HEALTH_BASE,
-  HEALTH_CATEGORY_LABELS,
-  HEALTH_CATEGORY_ORDER,
   HEALTH_SECTION_NAME,
+  getHealthGuideMeta,
   healthGuidePath,
-  healthGuides,
-  healthGuidesByCategory,
   healthHubCollectionJsonLd,
 } from "@/components/health/guides/guides";
+import { healthGuideArticles } from "@/components/health/guides/content";
 import {
   HEALTH_AS_OF,
+  HEALTH_CHARGE_REVISION,
   HEALTH_UPDATED_AT,
   IHS,
   NHS_CHARGES,
@@ -55,69 +51,57 @@ export const metadata = buildPageMetadata({
  * 発熱している人に IHS の制度解説を出しても読まれないし、
  * 元気な人に救急の判断表を出しても記憶に残らない。
  * 抽象的な目次ではなく、読者が自分の現在地を選べる形にする。
+ *
+ * 以前はこの一覧の下に「医療ガイド一覧」があり、同じ6本を同じリンクで
+ * もう一度カードにしていた。読者の仕事は6つから1つ選ぶことなので、
+ * 選択肢を2箇所に分けて出す意味がない。カテゴリ別の見出しごと畳んで
+ * ここに一本化してある。
+ *
+ * 状況の文言は各記事の audience から引く。types.ts が「ハブのカードが
+ * 振り分け先の説明に使う」と決めているのに、以前のハブは似た文言を
+ * 別に持っていて、すでに表現がずれていた。ハブ側の書き方のほうが
+ * 具体的だったので、その文言を記事の audience へ移してある。
  */
-const SCENARIOS: {
-  situation: string;
-  answer: string;
-  detail: string;
-  href: string;
-  cta: string;
-}[] = [
+const SCENARIOS: { slug: string; answer: string; detail: string }[] = [
   {
-    situation: "渡英したばかり。まだ何も手続きしていない",
+    slug: "gp-registration",
     answer: "GP 登録",
     detail:
       "英国の医療はすべて GP が入口です。登録は無料で、身分証も住所証明もビザの提示も要りません。オンラインで10〜15分。元気なうちに終わらせておく手続きです。",
-    href: "/health/gp-registration",
-    cta: "GP 登録の手順を見る",
   },
   {
-    situation: "今すぐ具合が悪い。どこに行けばいいのか分からない",
+    slug: "when-you-are-ill",
     answer: `${NHS_CONTACTS.nonEmergency} に電話`,
     detail: `救急車か我慢かの二択ではありません。間に ${NHS_CONTACTS.nonEmergency} があります。24時間・無料・通訳あり。症状を聞いて行き先を指定してくれるので、自分で判断する必要がありません。`,
-    href: "/health/when-you-are-ill",
-    cta: "行き先の判断表を見る",
   },
   {
-    situation: "GP の予約が2週間先。それまで待てない",
+    slug: "pharmacy-and-prescriptions",
     answer: "薬局で相談する",
     detail:
       "薬剤師への相談は無料・予約不要です。副鼻腔炎・扁桃炎・膀胱炎などは、薬剤師が GP を介さず処方薬まで出せます。待つ前に寄る価値があります。",
-    href: "/health/pharmacy-and-prescriptions",
-    cta: "薬局の使い方を見る",
   },
   {
-    situation: "ビザ申請で数十万円払った。あれは何だったのか",
+    slug: "ihs-and-entitlement",
     answer: "IHS（移民健康保険料）",
-    detail: `年額${gbp(
-      IHS.perYearStandard
-    )}（学生・ワーホリは${gbp(
+    detail: `年額${gbp(IHS.perYearStandard)}（学生・ワーホリは${gbp(
       IHS.perYearStudentAndYms
     )}）を前払いした対価が、NHS の利用資格です。払った人は GP も救急も入院も無料。使わないほうが損をします。`,
-    href: "/health/ihs-and-entitlement",
-    cta: "無料の範囲を確認する",
   },
   {
-    situation: "薬局で請求された金額が思ったより高い",
+    slug: "prescription-costs",
     answer: "処方箋は1品目ごと",
-    detail: `1品目 ${gbp(
-      NHS_CHARGES.prescriptionItem
-    )}。「1回」ではありません。年${
+    detail: `1品目 ${gbp(NHS_CHARGES.prescriptionItem)}。「1回」ではありません。年${
       NHS_CHARGES.ppc12MonthsBreakEvenItems
     }品目を超えるなら、前払い証で年${gbp(
       NHS_CHARGES.ppc12Months
     )}に頭打ちにできます。`,
-    href: "/health/prescription-costs",
-    cta: "PPC の損益分岐を見る",
   },
   {
-    situation: "歯が痛い。NHS の歯医者が見つからない",
+    slug: "dentist-and-optician",
     answer: "歯科は別枠の問題",
     detail: `料金は Band 1 が ${gbp(
       NHS_CHARGES.dentalBand1
     )} と安いのですが、新規患者を受け付ける診療所がほぼありません。一時帰国で治すという選択が現実解になる理由と、その損得。`,
-    href: "/health/dentist-and-optician",
-    cta: "歯科と眼科の実情を見る",
   },
 ];
 
@@ -153,6 +137,43 @@ const FAQ_ITEMS = [
       "**受けられますが、費用の扱いが違います**。A&E での初期の診察、111 への電話相談、GP の診察、感染症の診断と治療は、短期滞在者でも無料です。ただしその後の入院や継続的な治療には請求が発生します。IHS を払っていない短期滞在では、海外旅行保険が実質的に必須です。",
   },
 ];
+
+/**
+ * 状況カード1枚。文言は記事の audience から引く。
+ */
+function ScenarioCard({
+  slug,
+  answer,
+  detail,
+}: {
+  slug: string;
+  answer: string;
+  detail: string;
+}) {
+  const meta = getHealthGuideMeta(slug);
+  if (!meta) return null;
+
+  const audience = healthGuideArticles[slug]?.audience ?? meta.blurb;
+
+  return (
+    <Link href={healthGuidePath(slug)} className="block">
+      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+        <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+          {audience}
+        </p>
+        <p className="mt-3 text-xs font-bold tracking-wide text-sky-600 dark:text-sky-400">
+          → {answer}
+        </p>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          {detail}
+        </p>
+        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+          {meta.label} を読む →
+        </span>
+      </article>
+    </Link>
+  );
+}
 
 export default function HealthHubPage() {
   const pageUrl = `${SITE_URL}${HEALTH_BASE}`;
@@ -215,141 +236,135 @@ export default function HealthHubPage() {
         </p>
       </div>
 
-      <Separator className="my-8" />
+      <section aria-labelledby="find-your-stage" className="mt-10">
+        <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
+          自分の状況を選んでください
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          一番近いものが1つ見つかれば、それがあなたの読むべきページです。
+        </p>
 
-      <section aria-labelledby="find-your-stage" className="space-y-5">
-        <div className="space-y-2">
-          <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
-            自分の状況を選んでください
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            一番近いものが1つ見つかれば、それがあなたの読むべきページです。
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
-            <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-                <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
-                    {s.situation}
-                  </p>
-                  <p className="mt-3 text-xs font-bold tracking-wide text-sky-600 dark:text-sky-400">
-                    → {s.answer}
-                  </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {s.detail}
-                  </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
-                    {s.cta} →
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+            <ScenarioCard key={s.slug} {...s} />
           ))}
         </div>
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />
 
-      <section aria-labelledby="cost-overview" className="space-y-4">
+      {/*
+        何が無料で、何にいくらかかるか。
+
+        以前ここは GFM のテーブル3つだった。MarkdownBody の
+        min-w-[32rem] がかかるので、スマホでは金額を見るのに
+        横スクロールが要った——このページで最も参照される数字なのに。
+
+        しかも1つ目の表は2列目が全行「無料」で、列として情報を
+        持っていなかった。あれは表ではなく箇条書き。
+      */}
+      <section aria-labelledby="cost-overview" className="mt-10">
         <h2 id="cost-overview" className="text-xl font-bold md:text-2xl">
           何が無料で、何にいくらかかるか
         </h2>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           「NHS は無料」は半分だけ正しい表現です。
           <strong>自己負担があるのは処方箋・歯科・眼科の3つだけ</strong>
-          で、それ以外の診療は無料です。
+          で、それ以外の診療は無料です。以下は{HEALTH_AS_OF}
+          時点・イングランドの額で、
+          <strong>{HEALTH_CHARGE_REVISION}に改定</strong>されます。
         </p>
-        <MarkdownBody>
-          {`**無料になるもの（IHS 支払い済み・通常居住者）**
 
-| 項目 | 費用 |
-|---|---|
-| GP の診察 | 無料 |
-| 専門医の診察・治療（GP の紹介経由） | 無料 |
-| A&E（救急外来）・救急車 | 無料 |
-| 入院・手術・検査 | 無料 |
-| 妊娠・出産に関わる医療 | 無料 |
-
-**自己負担があるもの（${HEALTH_AS_OF}時点・イングランド）**
-
-| 項目 | 金額 |
-|---|---:|
-| 処方箋（1品目あたり） | ${gbp(NHS_CHARGES.prescriptionItem)} |
-| 処方箋前払い証 PPC（3ヶ月） | ${gbp(NHS_CHARGES.ppc3Months)} |
-| 処方箋前払い証 PPC（12ヶ月） | ${gbp(NHS_CHARGES.ppc12Months)} |
-| 歯科 Band 1（検診・レントゲン・歯石除去） | ${gbp(NHS_CHARGES.dentalBand1)} |
-| 歯科 Band 2（詰め物・抜歯・根管治療） | ${gbp(NHS_CHARGES.dentalBand2)} |
-| 歯科 Band 3（冠・入れ歯・ブリッジ） | ${gbp(NHS_CHARGES.dentalBand3)} |
-
-**IHS（ビザ申請時に前払いする移民健康保険料）**
-
-| 対象 | 年額 |
-|---|---:|
-| 一般の成人 | ${gbp(IHS.perYearStandard)} |
-| 学生・YMS（ワーホリ）・18歳未満 | ${gbp(IHS.perYearStudentAndYms)} |
-
-処方箋料は**1回ではなく1品目ごと**です。3種類処方されれば ${gbp(
-            NHS_CHARGES.prescriptionItem * 3
-          )} かかります。年に${
-            NHS_CHARGES.ppc12MonthsBreakEvenItems
-          }品目を超える人は、PPC で頭打ちにできます。
-
-なお処方箋が有料なのは**イングランドだけ**で、スコットランド・ウェールズ・北アイルランドは無料です。`}
-        </MarkdownBody>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section aria-labelledby="all-guides" className="space-y-8">
-        <div className="space-y-2">
-          <h2 id="all-guides" className="text-xl font-bold md:text-2xl">
-            医療ガイド一覧
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            全{healthGuides.length}
-            本。渡英直後の備えから、実際にかかるとき、費用を抑える方法まで、
-            順を追って読めるように並べています。
+        <div className="mt-5 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3 dark:bg-emerald-950/25">
+          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            無料になるもの（IHS 支払い済み・通常居住者）
           </p>
+          <ul className="mt-2 flex flex-wrap gap-x-2 gap-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+            {[
+              "GP の診察",
+              "専門医の診察・治療",
+              "A&E（救急外来）",
+              "救急車",
+              "入院・手術・検査",
+              "妊娠・出産に関わる医療",
+            ].map((item) => (
+              <li
+                key={item}
+                className="rounded-full bg-white/70 px-2.5 py-1 dark:bg-neutral-900/50"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {HEALTH_CATEGORY_ORDER.map((category) => {
-          const guides = healthGuidesByCategory(category);
-          if (guides.length === 0) return null;
-
-          return (
-            <div key={category} className="space-y-3">
-              <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
-                {HEALTH_CATEGORY_LABELS[category]}
-              </h3>
-              <div className="space-y-3">
-                {guides.map((g) => (
-                  <Link
-                    key={g.slug}
-                    href={healthGuidePath(g.slug)}
-                    className="block"
-                  >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-                      <CardContent className="p-5">
-                        <span className="block text-xs font-semibold text-sky-600">
-                          {g.eyebrow}
-                        </span>
-                        <span className="mt-1 block text-base font-semibold">
-                          {g.label}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                          {g.blurb}
-                        </span>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
+        <h3 className="mt-6 text-sm font-bold text-gray-700 dark:text-gray-300">
+          自己負担があるもの
+        </h3>
+        <dl className="mt-3 grid gap-3 sm:grid-cols-3">
+          {[
+            {
+              label: "処方箋（1品目）",
+              value: gbp(NHS_CHARGES.prescriptionItem),
+              note: `「1回」ではありません。3種類出れば ${gbp(
+                NHS_CHARGES.prescriptionItem * 3
+              )}`,
+            },
+            {
+              label: "処方箋前払い証 PPC",
+              value: `年${gbp(NHS_CHARGES.ppc12Months)}`,
+              note: `3ヶ月なら${gbp(NHS_CHARGES.ppc3Months)}。年${
+                NHS_CHARGES.ppc12MonthsBreakEvenItems
+              }品目を超えるなら得`,
+            },
+            {
+              label: "歯科 Band 1",
+              value: gbp(NHS_CHARGES.dentalBand1),
+              note: "検診・レントゲン・歯石除去",
+            },
+            {
+              label: "歯科 Band 2",
+              value: gbp(NHS_CHARGES.dentalBand2),
+              note: "詰め物・抜歯・根管治療",
+            },
+            {
+              label: "歯科 Band 3",
+              value: gbp(NHS_CHARGES.dentalBand3),
+              note: "冠・入れ歯・ブリッジ",
+            },
+            {
+              label: "眼科",
+              value: "自己負担",
+              note: "視力検査・眼鏡は原則すべて実費",
+            },
+          ].map((row) => (
+            <div
+              key={row.label}
+              className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+            >
+              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                {row.label}
+              </dt>
+              <dd className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+                {row.value}
+                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-gray-500 dark:text-gray-400">
+                  {row.note}
+                </span>
+              </dd>
             </div>
-          );
-        })}
+          ))}
+        </dl>
+
+        <p className="mt-4 rounded-lg border-l-4 border-sky-500 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-sky-950/25 dark:text-gray-300">
+          <strong className="text-gray-900 dark:text-gray-100">
+            処方箋が有料なのはイングランドだけです。
+          </strong>
+          スコットランド・ウェールズ・北アイルランドは全面的に無料です。また
+          IHS（ビザ申請時に前払いする移民健康保険料）は一般の成人で年
+          {gbp(IHS.perYearStandard)}、学生・YMS（ワーホリ）・18歳未満は年
+          {gbp(IHS.perYearStudentAndYms)}。これを払っていれば、上の「無料」が
+          適用されます。
+        </p>
       </section>
 
       <GuideFaq items={FAQ_ITEMS} />

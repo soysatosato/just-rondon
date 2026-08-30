@@ -22,12 +22,6 @@ export const HEALTH_CATEGORY_LABELS: Record<HealthCategory, string> = {
   cost: "お金と自己負担",
 };
 
-export const HEALTH_CATEGORY_ORDER: HealthCategory[] = [
-  "prepare",
-  "access",
-  "cost",
-];
-
 export type HealthGuideMeta = {
   slug: string;
   category: HealthCategory;
@@ -108,10 +102,6 @@ export function getHealthGuideMeta(slug: string) {
 
 /** /health/[slug] が実際に生成するページ。 */
 export const healthGuideSlugs = healthGuides.map((g) => g.slug);
-
-export function healthGuidesByCategory(category: HealthCategory) {
-  return healthGuides.filter((g) => g.category === category);
-}
 
 /**
  * 記事データから Next.js の metadata を組み立てる。

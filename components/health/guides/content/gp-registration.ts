@@ -11,7 +11,7 @@ const gpRegistration: HealthGuideArticle = {
   slug: "gp-registration",
   title: "イギリスでGPに登録する方法｜身分証も住所証明も不要です",
   engTitle: "Registering with a GP Surgery in England",
-  audience: "渡英したばかりで、まだ かかりつけ医(GP)を持っていない人",
+  audience: "渡英したばかりで、まだ何の医療手続きもしていない人",
   summary: `英国の医療はすべて GP(かかりつけ医)が入口です。登録していないと専門医にも検査にも到達できません。そして日本語圏で最も誤解されている点として、登録に身分証・住所証明・在留資格の証明は一切必要ありません。これは診療所の親切ではなく NHS の規則です。`,
   description:
     "イギリスでGP（かかりつけ医）に登録する手順を解説。身分証・住所証明・ビザの提示は不要という公式ルール、オンライン登録の流れ、診療所の選び方、登録を断られたときの対処法（NHS England への連絡先）まで。",
@@ -50,6 +50,7 @@ const gpRegistration: HealthGuideArticle = {
   sections: [
     {
       id: "no-documents-needed",
+      navLabel: "書類は要らない",
       title: "身分証も住所証明も在留資格も要らない",
       subtitle: "最も誤解されている一点",
       body: `NHS の公式見解ははっきりしています。GP への登録にあたって、
@@ -89,6 +90,7 @@ const gpRegistration: HealthGuideArticle = {
     },
     {
       id: "how-to-choose",
+      navLabel: "どの診療所か",
       title: "どの診療所に登録するか",
       subtitle: "選べる範囲は住所で決まる",
       body: `GP は自由に選べるわけではなく、**診療圏(catchment area)** があります。自宅の住所がその圏内に入っている診療所にしか登録できないのが原則です。
@@ -112,6 +114,7 @@ const gpRegistration: HealthGuideArticle = {
     },
     {
       id: "how-to-register",
+      navLabel: "登録の手順",
       title: "登録の手順",
       subtitle: `オンラインなら${GP_REGISTRATION.onlineFormMinutes}`,
       body: `### 方法1：オンライン（推奨）
@@ -144,6 +147,7 @@ NHS が提供する「Register with a GP surgery」というオンラインサ�
     },
     {
       id: "if-refused",
+      navLabel: "断られたら",
       title: "登録を断られたとき",
       subtitle: "規則はこちらの味方をする",
       body: `診療所が登録を拒否できるのは、**診療圏の外に住んでいる**か、**受け入れ枠が満杯**の場合に限られます。
@@ -183,6 +187,7 @@ NHS が提供する「Register with a GP surgery」というオンラインサ�
     },
     {
       id: "after-registration",
+      navLabel: "登録したあと",
       title: "登録したあと、実際にどう使うか",
       subtitle: "予約の取り方と、期待値の調整",
       body: `登録が済んでも、日本の医療と同じ感覚では動きません。前提が違う点を先に知っておくと、無駄な苛立ちを避けられます。

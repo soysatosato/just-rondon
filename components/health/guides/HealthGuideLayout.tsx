@@ -4,18 +4,19 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import { SITE_URL } from "@/lib/seo";
 import { faqPageJsonLd } from "@/lib/jsonld";
 import GuideCallout from "@/components/guides/GuideCallout";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
+import GuideNotes from "@/components/guides/GuideNotes";
+import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import GuideSources from "@/components/guides/GuideSources";
-import GuideToc from "@/components/guides/GuideToc";
 import { NHS_CONTACTS } from "@/lib/health/rates";
 import {
   HEALTH_BASE,
+  HEALTH_CATEGORY_LABELS,
   getHealthGuideMeta,
   healthGuideArticleJsonLd,
   healthGuideBreadcrumbJsonLd,
@@ -33,6 +34,12 @@ export default function HealthGuideLayout({
   const meta = getHealthGuideMeta(article.slug);
   const pageUrl = `${SITE_URL}${healthGuidePath(article.slug)}`;
 
+  // navLabel が無い記事は見出しをそのまま出す(医療6本はすべて持つ)。
+  const navSections = article.sections.map((sec) => ({
+    id: sec.id,
+    navLabel: sec.navLabel ?? sec.title,
+  }));
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={healthGuideBreadcrumbJsonLd(article)} />
@@ -43,20 +50,25 @@ export default function HealthGuideLayout({
 
       <Breadcrumbs path="/health" current={meta?.label ?? article.title} />
 
-      <header className="mt-6 space-y-3">
+      <header className="mt-6">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           {article.engTitle}
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="mt-3">
+          <GuideFreshness
+            dataAsOf={article.dataAsOf}
+            updatedAt={article.updatedAt}
+          />
+        </div>
+        <p className="mt-4 text-sm font-semibold text-sky-700 dark:text-sky-400">
+          {article.audience}
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
           {article.summary}
         </p>
-        <GuideFreshness
-          dataAsOf={article.dataAsOf}
-          updatedAt={article.updatedAt}
-        />
       </header>
 
       {/*
@@ -75,27 +87,28 @@ export default function HealthGuideLayout({
         </p>
       </div>
 
-      <Separator className="my-6" />
-
       {/*
-        要約表。医療の記事は「結局いくらかかって、何を持っていけばいいか」を
+        要点。医療の記事は「結局いくらかかって、何を持っていけばいいか」を
         最初に確定させたい読者が多いので、目次より前に置く。
+
+        ビザ側と違って項目を型で固定していないのは、6本の要点に
+        共通のスキーマが無いため。歯科の3バンド、111と999の使い分け、
+        PPC の損益分岐は、並べて比べるものではなく、その記事だけの数字。
+        灰色の label/value 表をやめたのは、すぐ上の緊急連絡先の枠と
+        体裁が近く、どちらも同じ重さに見えていたから。
       */}
       {article.atAGlance && article.atAGlance.length > 0 && (
-        <section className="mb-8 overflow-hidden rounded-lg border border-gray-300 dark:border-neutral-700">
-          <h2 className="border-b border-gray-300 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 px-4 py-2 text-sm font-semibold">
-            要点
-          </h2>
-          <dl className="divide-y divide-gray-200 dark:divide-neutral-700">
+        <section className="mt-8 mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+          <h2 className="text-base font-bold">要点</h2>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
             {article.atAGlance.map((fact) => (
-              <div
-                key={fact.label}
-                className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4"
-              >
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
+              <div key={fact.label}>
+                <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
+                  <MarkdownBody>{fact.value}</MarkdownBody>
+                </dd>
               </div>
             ))}
           </dl>
@@ -108,11 +121,16 @@ export default function HealthGuideLayout({
         </section>
       )}
 
-      <GuideToc sections={article.sections} />
-
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
 
-      <div className="mt-8 space-y-8">
+      {/*
+        固定の目次ではなく追従ナビにするのは、医療の記事が
+        必要になった場面で開かれるため。薬局の前で「薬剤師の処方範囲」へ、
+        受付で「断られたら」へと飛ぶので、そのたびに冒頭へ戻らせない。
+      */}
+      <GuideSectionNav sections={navSections} />
+
+      <div className="space-y-8">
         {article.sections.map((section, i) => (
           <Card
             key={section.id}
@@ -131,18 +149,7 @@ export default function HealthGuideLayout({
               <MarkdownBody>{section.body}</MarkdownBody>
 
               {section.tips && section.tips.length > 0 && (
-                <div className="mt-5 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/60 p-4">
-                  <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
-                    実務メモ
-                  </p>
-                  <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 dark:text-gray-300 marker:text-gray-400">
-                    {section.tips.map((tip) => (
-                      <li key={tip} className="leading-relaxed">
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <GuideNotes items={section.tips} />
               )}
 
               {section.callout && <GuideCallout {...section.callout} />}
@@ -171,27 +178,28 @@ export default function HealthGuideLayout({
         改定されるため、受診前に NHS の公式ページで最新額をご確認ください。
       </p>
 
+      {/*
+        ほかのガイド。以前は blurb つきのカードを5枚並べていて、
+        どの記事の末尾にも同じ長さの尾がついていた。ハブが状況から
+        選ばせる形になったので、ここは索引に徹する。
+      */}
       <section className="mt-12">
         <h2 className="text-lg font-semibold">ほかの医療ガイド</h2>
-        <div className="mt-4 space-y-3">
+        <ul className="mt-4 divide-y divide-gray-200 dark:divide-neutral-800">
           {relatedGuides.map((g) => (
-            <Link key={g.slug} href={healthGuidePath(g.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-sky-400 dark:hover:border-sky-500">
-                <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-sky-600">
-                    {g.eyebrow}
-                  </span>
-                  <span className="mt-1 block text-base font-semibold">
-                    {g.label}
-                  </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {g.blurb}
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+            <li key={g.slug}>
+              <Link
+                href={healthGuidePath(g.slug)}
+                className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2.5 transition hover:text-sky-700 dark:hover:text-sky-400"
+              >
+                <span className="text-sm font-semibold">{g.label}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {HEALTH_CATEGORY_LABELS[g.category]}
+                </span>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">

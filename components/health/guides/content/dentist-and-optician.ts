@@ -12,10 +12,10 @@ const dentistAndOptician: HealthGuideArticle = {
   slug: "dentist-and-optician",
   title: "イギリスの歯科と眼科｜NHSで診てもらえるか、一時帰国で治すか",
   engTitle: "NHS Dentists and Opticians: Costs and Availability",
-  audience: "歯を治したいが、NHSの歯科が見つからない人",
+  audience: "歯が痛いのに、NHS の歯医者が見つからない人",
   summary: `NHS の歯科は Band 1 が ${gbp(NHS_CHARGES.dentalBand1)}、Band 3 でも ${gbp(
     NHS_CHARGES.dentalBand3
-  )} と、日本の自費診療より安く済みます。問題は金額ではなく、**新規患者を受け付けている診療所がほとんどない**ことです。そのため「一時帰国で治す」が現実的な選択肢として浮上します。その損得を計算します。`,
+  )} と、日本の自費診療より安く済みます。問題は金額ではなく、新規患者を受け付けている診療所がほとんどないことです。そのため「一時帰国で治す」が現実的な選択肢として浮上します。その損得を計算します。`,
   description:
     "イギリスの歯科（NHS Band 1・2・3の料金）と眼科の費用を解説。NHS歯科が予約できない理由、private との価格差、一時帰国して日本で治療する場合の損得、緊急の歯痛への対処法まで。",
   keywords: [
@@ -57,6 +57,7 @@ const dentistAndOptician: HealthGuideArticle = {
   sections: [
     {
       id: "nhs-bands",
+      navLabel: "NHSの料金",
       title: "NHS 歯科の料金（3段階の定額制）",
       subtitle: "何回通っても1コース分",
       body: `NHS の歯科治療は、内容に応じて3つの Band に分類され、**1つの治療コースにつき1回だけ課金**されます。
@@ -107,6 +108,7 @@ Band 1 の治療中に虫歯が見つかって Band 2 の処置が必要にな�
     },
     {
       id: "finding-a-dentist",
+      navLabel: "歯科を見つける",
       title: "NHS 歯科を実際に見つける",
       subtitle: "最大の難関はここ",
       body: `料金表より重要なのが、**受け付けている診療所を見つける**ことです。
@@ -138,6 +140,7 @@ GP と違って歯科は「登録」という概念が弱く、しばらく通�
     },
     {
       id: "private-and-japan",
+      navLabel: "privateと一時帰国",
       title: "private と一時帰国、どちらが得か",
       subtitle: "多くの在英日本人が直面する計算",
       body: `NHS の歯科が見つからない場合、選択肢は2つです。
@@ -184,6 +187,7 @@ GP と違って歯科は「登録」という概念が弱く、しばらく通�
     },
     {
       id: "opticians",
+      navLabel: "眼科と眼鏡",
       title: "眼科と眼鏡",
       subtitle: "歯科より単純だが、原則自己負担",
       body: `眼科（optician）は歯科より話が単純です。**視力検査も眼鏡も、原則として自己負担**です。
