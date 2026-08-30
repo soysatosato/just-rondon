@@ -1,9 +1,9 @@
-import TravelGuideLayout from "@/components/sightseeing/guides/TravelGuideLayout";
+import StepFreeGuide from "@/components/sightseeing/guides/step-free/StepFreeGuide";
 import { buildTravelGuideMetadata } from "@/components/sightseeing/guides/guides";
-import stepFree from "@/components/sightseeing/guides/content/step-free";
+import { stepFreeMeta } from "@/components/sightseeing/guides/step-free/content";
 
-export const metadata = buildTravelGuideMetadata(stepFree);
+export const metadata = buildTravelGuideMetadata(stepFreeMeta);
 
 export default function Page() {
-  return <TravelGuideLayout article={stepFree} />;
+  return <StepFreeGuide />;
 }

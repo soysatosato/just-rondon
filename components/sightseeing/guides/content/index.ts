@@ -3,7 +3,6 @@ import itinerary from "./itinerary";
 import itineraryLayover from "./itinerary-layover";
 import itineraryRainyDay from "./itinerary-rainy-day";
 import itineraryWithKids from "./itinerary-with-kids";
-import stepFree from "./step-free";
 
 /**
  * slug → 記事。
@@ -14,7 +13,6 @@ import stepFree from "./step-free";
  */
 export const travelGuideArticles: Record<string, TravelGuideArticle> = {
   itinerary,
-  "step-free": stepFree,
 };
 
 /**
@@ -33,7 +31,6 @@ export const itineraryVariantArticles: Record<string, TravelGuideArticle> = {
 
 export {
   itinerary,
-  stepFree,
   itineraryRainyDay,
   itineraryWithKids,
   itineraryLayover,
