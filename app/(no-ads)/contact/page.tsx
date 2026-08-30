@@ -1,7 +1,6 @@
 import ContactForm from "@/components/form/ContactForm";
 import {
   SitePageHeader,
-  SitePageNav,
   SitePageShell,
 } from "@/components/site/SitePageLayout";
 
@@ -17,8 +16,6 @@ export default function ContactPage() {
       <div className="mt-12">
         <ContactForm />
       </div>
-
-      <SitePageNav current="/contact" />
     </SitePageShell>
   );
 }

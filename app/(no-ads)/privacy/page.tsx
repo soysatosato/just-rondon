@@ -1,6 +1,5 @@
 import {
   SitePageHeader,
-  SitePageNav,
   SitePageShell,
   SiteSections,
   type SiteSection,
@@ -88,8 +87,6 @@ export default function PrivacyPage() {
       />
 
       <SiteSections sections={sections} />
-
-      <SitePageNav current="/privacy" />
     </SitePageShell>
   );
 }

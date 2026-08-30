@@ -1,6 +1,5 @@
 import {
   SitePageHeader,
-  SitePageNav,
   SitePageShell,
   SiteSections,
   type SiteSection,
@@ -80,8 +79,6 @@ export default function TermsPage() {
       />
 
       <SiteSections sections={sections} />
-
-      <SitePageNav current="/terms" />
     </SitePageShell>
   );
 }

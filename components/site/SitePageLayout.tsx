@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 /**
  * about / privacy / terms / contact の共通レイアウト。
  *
@@ -9,15 +7,6 @@ import Link from "next/link";
  * 区切りを作っている。規約のように「第何項の話か」を指したい文書ほど、
  * 番号が振ってあるほうが引用しやすい。
  */
-
-export const SITE_PAGES = [
-  { href: "/about", kicker: "About", label: "サイト概要" },
-  { href: "/contact", kicker: "Contact", label: "お問い合わせ" },
-  { href: "/terms", kicker: "Terms", label: "利用規約" },
-  { href: "/privacy", kicker: "Privacy", label: "プライバシーポリシー" },
-] as const;
-
-type SitePagePath = (typeof SITE_PAGES)[number]["href"];
 
 export function SitePageHeader({
   kicker,
@@ -40,31 +29,6 @@ export function SitePageHeader({
         {lede}
       </p>
     </header>
-  );
-}
-
-/** ページ下部の相互リンク。4ページは互いに参照し合うので、常に4つ並べて現在地だけ落とす。 */
-export function SitePageNav({ current }: { current: SitePagePath }) {
-  return (
-    <nav className="mt-16 border-t border-gray-200 pt-6 dark:border-neutral-800">
-      <ul className="flex flex-wrap gap-x-6 gap-y-3">
-        {SITE_PAGES.filter((page) => page.href !== current).map((page) => (
-          <li key={page.href}>
-            <Link
-              href={page.href}
-              className="group inline-flex flex-col text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-            >
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
-                {page.kicker}
-              </span>
-              <span className="underline decoration-gray-300 underline-offset-4 group-hover:decoration-current dark:decoration-neutral-700">
-                {page.label}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
   );
 }
 

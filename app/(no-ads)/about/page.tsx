@@ -1,6 +1,5 @@
 import {
   SitePageHeader,
-  SitePageNav,
   SitePageShell,
   SiteSections,
   type SiteSection,
@@ -56,8 +55,6 @@ export default function AboutPage() {
       />
 
       <SiteSections sections={sections} />
-
-      <SitePageNav current="/about" />
     </SitePageShell>
   );
 }
