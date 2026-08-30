@@ -7,7 +7,7 @@ import { unstable_cache } from "next/cache";
 const getTotalCount = unstable_cache(
   async () => db.attraction.count({ where: { isPublished: true } }),
   ["attraction-total-count"],
-  { revalidate: 60 * 60 * 24 }, // 1時間
+  { revalidate: 60 * 60 * 24 }, // 24時間
 );
 
 export const fetchAttractions = async ({
@@ -268,64 +268,40 @@ export const fetchMustSeeAttractions = unstable_cache(
   { revalidate: 60 * 60 * 24 * 7 },
 );
 
-export async function fetchAllAttractions({
-  page = 1,
-  limit = 10,
-  filters = {},
-}: {
-  page?: number;
-  limit?: number;
-  filters?: any;
-}) {
-  const where: any = { isPublished: true };
-
-  if (filters.rec) where.recommendLevel = filters.rec;
-  if (filters.mustSee) where.mustSee = true;
-  if (filters.kids) where.isForKids = true;
-  if (filters.free) where.isFree = true;
-  if (filters.categories?.length) {
-    where.category = { in: filters.categories };
-  }
-
-  let orderBy:
-    | { name: "asc" | "desc" }
-    | { recommendLevel: "asc" | "desc" }
-    | Array<{ recommendLevel?: "asc" | "desc"; name?: "asc" | "desc" }>
-    | undefined;
-
-  switch (filters.sort) {
-    case "name_asc":
-      orderBy = { name: "asc" };
-      break;
-    case "name_desc":
-      orderBy = { name: "desc" };
-      break;
-    case "recommend_desc":
-      orderBy = { recommendLevel: "desc" };
-      break;
-    default:
-      orderBy = [{ recommendLevel: "desc" }, { name: "asc" }];
-  }
-
-  const take = Math.max(1, limit);
-  const skip = (Math.max(1, page) - 1) * take;
-
-  // 👇 countはキャッシュから（0クエリ）
-  const totalCountPromise =
-    page === 1 && Object.keys(filters).length === 0 ? getTotalCount() : null;
-
-  // 👇 一覧は常に1クエリ
-  const facilities = await db.attraction.findMany({
-    where,
-    orderBy,
-    skip,
-    take,
+/**
+ * /sightseeing/all 用。公開中の全件を一度に返す。
+ *
+ * 以前はここで page / limit / filters を受けてサーバー側で絞り、10件ずつ
+ * 返していた。ただし総件数は
+ *   page === 1 && Object.keys(filters).length === 0
+ * のときしか取っておらず、呼び出し側は常に6キーのオブジェクトを渡すので
+ * この条件は成立しない。totalCount は必ず 0 になり、Pagination が
+ * totalPages 0 で何も描画せず、144件中10件までしか辿れなくなっていた。
+ *
+ * 絞り込みも並べ替えもクライアント側に移したので、ページ送りごと不要になった。
+ * 144件ぶんカードに出す列だけを引く(本文は stories 側にあり、ここでは触らない)。
+ */
+export async function fetchAllAttractions() {
+  return db.attraction.findMany({
+    where: { isPublished: true },
+    orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+    select: {
+      id: true,
+      name: true,
+      engName: true,
+      slug: true,
+      tagline: true,
+      summary: true,
+      image: true,
+      category: true,
+      area: true,
+      recommendLevel: true,
+      mustSee: true,
+      isForKids: true,
+      isFree: true,
+      priceAdult: true,
+      durationText: true,
+      nearestStation: true,
+    },
   });
-
-  const totalCount = totalCountPromise ? await totalCountPromise : undefined;
-
-  return {
-    facilities,
-    totalCount: totalCount ?? 0
-  };
 }

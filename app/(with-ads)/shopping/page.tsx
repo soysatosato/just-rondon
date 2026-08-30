@@ -6,6 +6,7 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import GuideFaq from "@/components/guides/GuideFaq";
 import type { GuideFaqItem } from "@/components/guides/types";
 import { Card, CardContent } from "@/components/ui/card";
+import ShoppingGuideCard from "@/components/shopping/ShoppingGuideCard";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import {
@@ -14,7 +15,6 @@ import {
   SHOPPING_CATEGORY_LABELS,
   SHOPPING_CATEGORY_ORDER,
   SHOPPING_SECTION_NAME,
-  shoppingGuidePath,
   shoppingGuidesByCategory,
   shoppingHubCollectionJsonLd,
 } from "@/components/shopping/guides";
@@ -139,25 +139,7 @@ export default function ShoppingHubPage() {
 
               <div className="space-y-3">
                 {guides.map((g) => (
-                  <Link
-                    key={g.slug}
-                    href={shoppingGuidePath(g.slug)}
-                    className="block"
-                  >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
-                      <CardContent className="p-5">
-                        <span className="block text-xs font-semibold text-emerald-600">
-                          {g.eyebrow}
-                        </span>
-                        <span className="mt-1 block text-base font-semibold">
-                          {g.label}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                          {g.blurb}
-                        </span>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                  <ShoppingGuideCard key={g.slug} meta={g} />
                 ))}
               </div>
             </section>

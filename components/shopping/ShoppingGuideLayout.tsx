@@ -13,6 +13,8 @@ import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
+import ShoppingFigure from "./ShoppingFigure";
+import ShoppingGuideCard from "./ShoppingGuideCard";
 import {
   SHOPPING_BASE,
   SHOPPING_CATEGORY_LABELS,
@@ -58,6 +60,13 @@ export default function ShoppingGuideLayout({
           updatedAt={article.updatedAt}
         />
       </header>
+
+      {/*
+        記事の顔。要点表より前に置く。買い物の記事は行き先の見当が
+        つかないまま開かれることが多く、写真1枚で「どういう場所か」が
+        先に伝わるほうが、曜日や法律の話に入りやすい。
+      */}
+      {article.hero && <ShoppingFigure figure={article.hero} priority className="mt-6" />}
 
       <Separator className="my-6" />
 
@@ -114,6 +123,15 @@ export default function ShoppingGuideLayout({
               )}
               <MarkdownBody>{section.body}</MarkdownBody>
 
+              {/*
+                写真は本文の後。先に置くと、その節が何を言おうとして
+                いるのかより先に絵を見ることになり、曜日や法律という
+                主張が飾りに見える。
+              */}
+              {section.figure && (
+                <ShoppingFigure figure={section.figure} className="mt-5" />
+              )}
+
               {section.tips && section.tips.length > 0 && (
                 <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
                   <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
@@ -157,25 +175,7 @@ export default function ShoppingGuideLayout({
                 {SHOPPING_CATEGORY_LABELS[category]}
               </h3>
               {guides.map((g) => (
-                <Link
-                  key={g.slug}
-                  href={shoppingGuidePath(g.slug)}
-                  className="block"
-                >
-                  <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
-                    <CardContent className="p-5">
-                      <span className="block text-xs font-semibold text-emerald-600">
-                        {g.eyebrow}
-                      </span>
-                      <span className="mt-1 block text-base font-semibold">
-                        {g.label}
-                      </span>
-                      <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                        {g.blurb}
-                      </span>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <ShoppingGuideCard key={g.slug} meta={g} />
               ))}
             </div>
           );

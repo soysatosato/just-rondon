@@ -40,6 +40,17 @@ export const vatRefundArticle: ShoppingGuideArticle = {
 ややこしいのは、廃止から5年が経った今も、**日本語で書かれた古い記事が大量に残っている**ことです。「イギリス 免税」で検索すると、還付書類の書き方を解説したページが今でも上位に出てきます。それらは2020年以前の情報です。
 
 そのうえで、現地で買うことに意味がなくなったわけではありません。理由が免税ではなくなった、というだけです。`,
+  hero: {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Say_hello_to_the_good_buys.jpg/1280px-Say_hello_to_the_good_buys.jpg",
+    alt: "「Say hello to the good buys — HEATHROW DUTY FREE SHOPS」と書かれた古い地下鉄の広告",
+    caption:
+      "地下鉄駅に残るヒースロー免税店の旧広告。空港の Duty Free は今も健在だが、街で買った物の税金が戻る制度のほうは2021年に終わった。",
+    imageSource: "commons",
+    imageCredit: "TheJRB / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:Say_hello_to_the_good_buys.jpg",
+  },
   atAGlance: [
     { label: "現在の制度", value: "旅行者向けVAT還付は無い（2021年1月に廃止）" },
     { label: "VAT税率", value: "標準20%。表示価格に含まれている" },

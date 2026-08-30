@@ -43,6 +43,17 @@ export const bicesterVillageArticle: ShoppingGuideArticle = {
 朝に出て夕方に戻る前提で、移動に往復2時間強、現地で3〜4時間。ここに駅までの移動と切符を買う時間が乗ります。**その日はロンドン市内の観光がほぼできません。** 5日の滞在なら5分の1を、3日なら3分の1をここに使うことになります。
 
 だからこの記事は、店の紹介より先に「行くべきかどうか」から始めます。結論を先に書くと、**買うものが決まっている人には元が取れて、決まっていない人には取れません。**`,
+  hero: {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Bicester_Village_-_geograph.org.uk_-_1828514.jpg/1280px-Bicester_Village_-_geograph.org.uk_-_1828514.jpg",
+    alt: "青空の下、切妻屋根の低層店舗が並ぶビスター・ヴィレッジの通り",
+    caption:
+      "ビスター・ヴィレッジ。ロンドンの店ではなくオックスフォードシャーの村を模した屋外の通りで、天気がそのまま体験に響く。",
+    imageSource: "commons",
+    imageCredit: "Des Blenkinsopp / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:Bicester_Village_-_geograph.org.uk_-_1828514.jpg",
+  },
   atAGlance: [
     { label: "所要時間", value: "ロンドン・メリルボーン駅から列車で約55分〜1時間5分" },
     { label: "1日の消費", value: "往復と滞在でほぼ丸1日。市内観光は諦める前提" },
@@ -160,6 +171,17 @@ export const bicesterVillageArticle: ShoppingGuideArticle = {
     },
     {
       id: "on-site",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/9/90/Part_of_Bicester_Village_-_geograph.org.uk_-_5600402.jpg",
+        alt: "紙袋を提げた買い物客が両側の店の間を歩くビスター・ヴィレッジ",
+        caption:
+          "通りは一本道で、端から端まで歩くだけで往復20分ほど。荷物が増えるほどこの一本道が効いてくる。",
+        imageSource: "commons",
+        imageCredit: "Jeremy Bolwell / CC BY-SA 2.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Part_of_Bicester_Village_-_geograph.org.uk_-_5600402.jpg",
+      },
       title: "現地での立ち回り",
       subtitle: "免税は無い。荷物は預けられる",
       body: `**免税（VAT還付）は受けられません。** アウトレットでも同じで、[2021年に制度そのものが廃止されている](/shopping/vat-refund)ためです。「アウトレットなら免税がある」という話を見かけたら、それは廃止前の情報です。表示価格をそのまま支払います。

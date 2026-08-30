@@ -42,6 +42,17 @@ export const shoppingStreetsArticle: ShoppingGuideArticle = {
 実際に歩くと分かりますが、オックスフォード・ストリートの南側には、徒歩10分以内に性格のまったく違う通りがいくつも並んでいます。**£10 のTシャツが積まれた通りから、時計が £50,000 で売られる通りまで、地図の上ではほとんど隣接しています。** 通りを1本間違えると、予算感が一桁ずれます。
 
 この記事は店の一覧ではなく、**通りごとの価格帯と客層**を整理します。行きたい通りが決まれば、店は現地で見つかります。逆にここを間違えると、半日歩いて何も買えずに終わります。`,
+  hero: {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Regent_Street_2011-04-25.jpg/1280px-Regent_Street_2011-04-25.jpg",
+    alt: "ユニオンジャックが連なり赤い二階建てバスが走るリージェント・ストリート",
+    caption:
+      "リージェント・ストリート。ゆるやかに曲がる通り全体が一体の設計で、この景観のために店を見なくても歩く価値がある。",
+    imageSource: "commons",
+    imageCredit: "aurélien. / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:Regent_Street_2011-04-25.jpg",
+  },
   atAGlance: [
     { label: "店数が最多", value: "オックスフォード・ストリート。中価格帯のチェーンが中心" },
     { label: "建物が見どころ", value: "リージェント・ストリート。曲線の街並みそのものが観光" },
@@ -76,6 +87,17 @@ export const shoppingStreetsArticle: ShoppingGuideArticle = {
     },
     {
       id: "oxford-street",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Oxford_Circus_-_geograph.org.uk_-_2382100.jpg/1280px-Oxford_Circus_-_geograph.org.uk_-_2382100.jpg",
+        alt: "四隅が曲面の石造建築に囲まれ、バスと人が行き交うオックスフォード・サーカス",
+        caption:
+          "オックスフォード・サーカス。オックスフォードとリージェントの交点で、歩行者天国化の対象から外れて今後もバスが通る東側の入口にあたる。",
+        imageSource: "commons",
+        imageCredit: "Colin Smith / CC BY-SA 2.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Oxford_Circus_-_geograph.org.uk_-_2382100.jpg",
+      },
       title: "オックスフォード・ストリート — 数はあるが、混む",
       subtitle: "2026年9月から車両規制が始まる",
       body: `ロンドンで最も店の数が多い通りです。大型チェーン、ファストファッション、スポーツ用品、そしてセルフリッジズをはじめとするデパートが並びます。**「とりあえず何か買いたい」なら、ここで足ります。**
@@ -108,6 +130,17 @@ export const shoppingStreetsArticle: ShoppingGuideArticle = {
     },
     {
       id: "regent-carnaby",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Carnaby_London.jpg/1280px-Carnaby_London.jpg",
+        alt: "「WELCOME TO CARNABY STREET」のアーチがかかる歩行者専用の通り",
+        caption:
+          "カーナビー・ストリート。リージェントの裏手にあたり、歩いて数分で車の来ない通りに変わる。",
+        imageSource: "commons",
+        imageCredit: "SisterLondon / CC BY-SA 4.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Carnaby_London.jpg",
+      },
       title: "リージェント・ストリートとカーナビー — 買わなくても歩く価値",
       subtitle: "建築の通りと、独立系の通り",
       body: `**リージェント・ストリート**は、オックスフォード・サーカスからピカデリー・サーカスへ向かって**大きく湾曲する**通りです。この曲線は19世紀初頭の都市計画によるもので、**街並みそのものが観光対象**になっています。建物の高さと外観が統一されていて、ロンドンで最も整った通りのひとつです。
@@ -129,6 +162,17 @@ export const shoppingStreetsArticle: ShoppingGuideArticle = {
     },
     {
       id: "bond-savile",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Old_Bond_Street%2C_London.jpg/1280px-Old_Bond_Street%2C_London.jpg",
+        alt: "高級ブランドの旗が両側に下がり黒いタクシーが走るオールド・ボンド・ストリート",
+        caption:
+          "オールド・ボンド・ストリート。オックスフォード・ストリートから徒歩数分で、この価格帯に変わる。",
+        imageSource: "commons",
+        imageCredit: "Garry Knight / CC BY 2.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Old_Bond_Street,_London.jpg",
+      },
       title: "ボンド・ストリートとサヴィル・ロウ — 見るための通り",
       subtitle: "買わなくてよい。入らなくてもよい",
       body: `**ボンド・ストリート**（ニュー・ボンド・ストリートとオールド・ボンド・ストリート）は、ロンドンで最も地価の高い商業通りのひとつです。宝飾、時計、オートクチュール、アートギャラリー、オークションハウス。**桁がひとつ、ときにふたつ違います。**
@@ -155,6 +199,17 @@ export const shoppingStreetsArticle: ShoppingGuideArticle = {
     },
     {
       id: "kings-road",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/King%27s_Road%2C_Chelsea_-_geograph.org.uk_-_7628775.jpg/1280px-King%27s_Road%2C_Chelsea_-_geograph.org.uk_-_7628775.jpg",
+        alt: "街路樹の下に低層の店が続くチェルシーのキングス・ロード",
+        caption:
+          "キングス・ロード。中心部の買い物通りと違って歩道が広く、店が低い。混雑を避けたい日の行き先になる。",
+        imageSource: "commons",
+        imageCredit: "Dylan Moore / CC BY-SA 2.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:King%27s_Road,_Chelsea_-_geograph.org.uk_-_7628775.jpg",
+      },
       title: "キングス・ロード — 中心部から離れる価値",
       subtitle: "観光客が減り、生活圏に近づく",
       body: `チェルシーを東西に走る通りで、スローン・スクエア駅から西へ伸びています。**中心部の買い物通りから離れているぶん、観光客の密度が明確に下がります。**

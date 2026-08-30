@@ -37,6 +37,17 @@ export const marketsArticle: ShoppingGuideArticle = {
 しかも市場は旅程の組み直しが効きません。美術館なら「明日行こう」で済みますが、日曜だけの市場を逃したら、次の機会は1週間後です。**滞在が5日なら、その5日にどの曜日が含まれるかで、行ける市場が決まってしまう。**
 
 だからこの記事は、市場ごとの紹介より先に曜日の表を置きます。まず自分の滞在に含まれる曜日を見て、そこから行き先を決めてください。`,
+  hero: {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/London_%2C_Camden_-_Camden_Market_-_geograph.org.uk_-_2047319.jpg/1280px-London_%2C_Camden_-_Camden_Market_-_geograph.org.uk_-_2047319.jpg",
+    alt: "屋根のかかった通路に露店が並ぶカムデン・マーケット",
+    caption:
+      "カムデン・マーケット。屋根があるので雨でも歩けるが、この密度は土日のもの。平日は同じ通路がすいている。",
+    imageSource: "commons",
+    imageCredit: "Lewis Clarke / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:London_,_Camden_-_Camden_Market_-_geograph.org.uk_-_2047319.jpg",
+  },
   atAGlance: [
     { label: "日曜だけ", value: "コロンビア・ロード（花市場）。8時ごろ〜15時ごろ" },
     { label: "土曜が本番", value: "ポートベロー・ロード（アンティーク）" },
@@ -77,6 +88,17 @@ export const marketsArticle: ShoppingGuideArticle = {
     },
     {
       id: "columbia-road",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Columbia_Road_Flower_Market_2022.jpg/1280px-Columbia_Road_Flower_Market_2022.jpg",
+        alt: "細い通りの片側に花の露店が並び、人で埋まっているコロンビア・ロード",
+        caption:
+          "コロンビア・ロード。この光景が見られるのは日曜の午前だけで、ほかの6日は何もない住宅街の通りに戻る。",
+        imageSource: "commons",
+        imageCredit: "SunDawn / CC BY-SA 4.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Columbia_Road_Flower_Market_2022.jpg",
+      },
       title: "コロンビア・ロード — 日曜の午前だけ",
       subtitle: "花市場。買わなくても行く価値がある",
       body: `イースト・ロンドンの細い通りに、**日曜の朝だけ**花と植木の露店がびっしり並びます。8時ごろに始まり、15時ごろには終わります。
@@ -100,6 +122,17 @@ export const marketsArticle: ShoppingGuideArticle = {
     },
     {
       id: "portobello",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Portobello_Road_Market_-_2025-06-14.jpg/1280px-Portobello_Road_Market_-_2025-06-14.jpg",
+        alt: "パステル色の家並みの下に露店と人が続くポートベロー・ロード",
+        caption:
+          "ポートベロー・ロード。写真で紹介されるのはほぼ土曜の姿で、アンティークが通り全体に出るのもこの日だけ。",
+        imageSource: "commons",
+        imageCredit: "Bex Walton / CC BY 4.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Portobello_Road_Market_-_2025-06-14.jpg",
+      },
       title: "ポートベロー・ロード — 土曜がアンティーク",
       subtitle: "他の曜日は、ただの生活の市場",
       body: `ノッティング・ヒルの長い坂道に立つ市場です。「ロンドンの蚤の市」として写真で紹介されるのは、ほぼ例外なく**土曜の姿**です。
@@ -130,6 +163,17 @@ export const marketsArticle: ShoppingGuideArticle = {
     },
     {
       id: "borough",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Borough_Market_%284701274756%29.jpg/1280px-Borough_Market_%284701274756%29.jpg",
+        alt: "鉄骨とガラス屋根の下に人が集まるバラ・マーケットの入口",
+        caption:
+          "バラ・マーケット。火曜から日曜まで開いていて、休むのは月曜。日曜休みと書いた記事が多いので注意。",
+        imageSource: "commons",
+        imageCredit: "Jeremy Keith from Brighton & Hove, United Kingdom / CC BY 2.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Borough_Market_(4701274756).jpg",
+      },
       title: "バラ・マーケット — 月曜が休み",
       subtitle: "食べ物専門。買う市場ではなく食べる市場",
       body: `ロンドン・ブリッジ駅のすぐ隣にある食品市場です。**月曜が休みで、火曜から日曜まで営業**しています。土曜が最も混み、日曜は少し短めに閉まります。
@@ -158,6 +202,17 @@ export const marketsArticle: ShoppingGuideArticle = {
     },
     {
       id: "camden-spitalfields",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Old_Spitalfields_Market_Panorama%2C_London%2C_UK_-_Diliff.jpg/1280px-Old_Spitalfields_Market_Panorama%2C_London%2C_UK_-_Diliff.jpg",
+        alt: "ヴィクトリア朝の鉄骨屋根の下に露店が整然と並ぶオールド・スピタルフィールズ・マーケット",
+        caption:
+          "オールド・スピタルフィールズ・マーケット。屋根の下に全部収まっているので、天気に旅程を左右されない。",
+        imageSource: "commons",
+        imageCredit: "Diliff / CC BY-SA 3.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Old_Spitalfields_Market_Panorama,_London,_UK_-_Diliff.jpg",
+      },
       title: "カムデンとスピタルフィールズ — 曜日を選ばない2か所",
       subtitle: "どの曜日に行っても成立する",
       body: `曜日の制約が事実上ない市場もあります。旅程の隙間に入れやすいのはこの2つです。

@@ -37,6 +37,17 @@ export const departmentStoresArticle: ShoppingGuideArticle = {
 理由は単純で、建物と売り場そのものが見どころだからです。リバティは1920年代に難破した軍艦の木材で建てられたチューダー様式の建築で、中央が吹き抜けになっています。ハロッズのフードホールは天井と壁がヴィクトリア朝のタイル装飾で埋まっていて、食品を売る場所としては明らかに過剰です。**入場無料の美術館だと思えば、費用対効果はかなり良い。**
 
 そのうえで、行く前に知っておくべき制度がひとつあります。**日曜だけ、これらの店は6時間しか開けられません。** 個々の店の方針ではなく法律です。日曜の午前中に行って閉まっていた、という失敗はこれが原因です。`,
+  hero: {
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Selfridges_on_Oxford_Street_-_geograph.org.uk_-_2190127.jpg/1280px-Selfridges_on_Oxford_Street_-_geograph.org.uk_-_2190127.jpg",
+    alt: "オックスフォード・ストリートに面した列柱のセルフリッジズと二階建てバス",
+    caption:
+      "セルフリッジズ。売場面積が280m²を超えるので、この店も日曜は6時間しか開けられない。",
+    imageSource: "commons",
+    imageCredit: "Steve Daniels / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:Selfridges_on_Oxford_Street_-_geograph.org.uk_-_2190127.jpg",
+  },
   atAGlance: [
     { label: "日曜の営業", value: "法律により最大6時間。10〜18時の間に限られる" },
     { label: "対象", value: "売場面積 280m² 超の大型店すべて（イングランドとウェールズ）" },
@@ -77,6 +88,17 @@ export const departmentStoresArticle: ShoppingGuideArticle = {
     },
     {
       id: "liberty",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Liberty%2C_London_%28August_2023%29_01.jpg/1280px-Liberty%2C_London_%28August_2023%29_01.jpg",
+        alt: "白黒の木骨造りが並ぶリバティの外観",
+        caption:
+          "リバティ。1924年築のチューダー様式で、軍艦2隻を解体した木材で建てられている。買わなくても中に入る価値があるのはこの建物のため。",
+        imageSource: "commons",
+        imageCredit: "DiscoA340 / CC BY-SA 4.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Liberty,_London_(August_2023)_01.jpg",
+      },
       title: "リバティ — 建物がいちばんの見どころ",
       subtitle: "軍艦の木材で建てられたチューダー様式",
       body: `**建築だけを目的に行ってよい店です。** ロンドンのデパートで1軒だけ選ぶなら、買い物をしない人にはここを勧めます。
@@ -96,6 +118,17 @@ export const departmentStoresArticle: ShoppingGuideArticle = {
     },
     {
       id: "harrods",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Harrods_%28London%29.jpg/1280px-Harrods_%28London%29.jpg",
+        alt: "テラコッタ色の外壁とドームが続くハロッズの正面",
+        caption:
+          "ハロッズ。ナイツブリッジの一区画をまるごと占める。服装規定は現在は無く、普段着で入れる。",
+        imageSource: "commons",
+        imageCredit: "Sokkk y / Public domain, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Harrods_(London).jpg",
+      },
       title: "ハロッズ — フードホールだけ見て出てもいい",
       subtitle: "服装の指定はない。普段着で入れる",
       body: `ナイツブリッジにある、ロンドンで最も名前の知られたデパートです。売り場面積が巨大で、全フロアを見ようとすると半日が消えます。**時間がないなら、地上階のフードホールだけ見て出るのが効率的です。**
@@ -122,6 +155,17 @@ export const departmentStoresArticle: ShoppingGuideArticle = {
     },
     {
       id: "fortnum-selfridges",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Fortnum_and_Mason.jpg/1280px-Fortnum_and_Mason.jpg",
+        alt: "赤煉瓦の正面中央に張り出した時計を持つフォートナム&メイソン",
+        caption:
+          "フォートナム&メイソン。正面の時計は毎正時にフォートナム氏とメイソン氏の人形が出てくる。",
+        imageSource: "commons",
+        imageCredit: "Tony Hisgett from Birmingham, UK / CC BY 2.0, via Wikimedia Commons",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Fortnum_and_Mason.jpg",
+      },
       title: "フォートナム&メイソンとセルフリッジズ",
       subtitle: "紅茶の店と、ショーウィンドウの店",
       body: `残る2店は性格がはっきり分かれます。
