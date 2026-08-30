@@ -56,21 +56,13 @@ const globalTalent: VisaGuideArticle = {
 
 特に見落とされているのが**芸術・文化分野**です。デザイナー、映像制作者、音楽家、ファッション、建築、工芸——これらはすべて対象範囲に含まれます。「研究者向けのビザ」だと思って読み飛ばしている方は、このページを最後まで読んでみてください。`,
   atAGlance: [
-    { label: "スポンサー", value: "**不要**。雇用主も内定も要りません" },
     { label: "必要なもの", value: "推薦団体（endorsing body）からの推薦、または対象の国際的な賞" },
     { label: "分野", value: "①学術・研究　②芸術・文化　③デジタル技術" },
-    {
-      label: "費用",
-      value: `合計 ${gbp(VISA_FEES.globalTalent.total)}（推薦 ${gbp(VISA_FEES.globalTalent.endorsement)} ＋ 査証 ${gbp(VISA_FEES.globalTalent.visa)}）＋IHS 年${gbp(IHS_PER_YEAR.standard)}`,
-    },
-    { label: "滞在できる期間", value: "1〜5年で自分で選択。更新の回数制限なし" },
-    { label: "永住まで", value: "**最短3年**（Exceptional Talent の場合）" },
-    { label: "年収要件", value: "**なし**" },
-    { label: "審査期間", value: `推薦・査証それぞれ約${PROCESSING_WEEKS.work}週間（英国外から）` },
   ],
   sections: [
     {
       id: "who",
+      navLabel: "誰が対象か",
       title: "誰が対象になるのか",
       subtitle: "「ノーベル賞級」ではありません",
       body: `### 2つの区分
@@ -114,6 +106,7 @@ Arts Council England 経由のルートは、日本語の情報が特に不足�
     },
     {
       id: "evidence",
+      navLabel: "推薦の提出物",
       title: "推薦申請で何を出すか",
       subtitle: "証拠の「質」で決まります。量ではありません",
       body: `### 基本の構成
@@ -168,6 +161,7 @@ Arts Council England 経由のルートは、日本語の情報が特に不足�
     },
     {
       id: "cost-process",
+      navLabel: "費用と流れ",
       title: "費用と申請の流れ",
       subtitle: "2段階に分かれています",
       body: `### 費用
@@ -210,6 +204,7 @@ Exceptional Talent なら永住まで3年なので、**まず3年で取得し、
     },
     {
       id: "after",
+      navLabel: "取得後",
       title: "取得後にできること",
       subtitle: "制約がほとんどありません",
       body: `### できること

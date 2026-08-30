@@ -3,26 +3,21 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import MarkdownBody from "@/components/jobs/MarkdownBody";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import {
   VISA_BASE,
-  VISA_CATEGORY_LABELS,
   VISA_SECTION_NAME,
-  type VisaCategory,
+  VISA_SPONSOR_LABELS,
+  getVisaGuideMeta,
   visaGuidePath,
-  visaGuides,
-  visaGuidesByCategory,
   visaHubCollectionJsonLd,
 } from "@/components/visa/guides/guides";
+import { visaGuideArticles } from "@/components/visa/guides/content";
 import {
   IHS_PER_YEAR,
-  JAPAN_YMS_QUOTA,
   RATES_AS_OF,
   RATES_UPDATED_AT,
   VISA_FEES,
@@ -32,7 +27,7 @@ import {
 
 const TITLE = "英国ビザガイド｜自分に必要なビザを見つける";
 const DESCRIPTION =
-  "日本国籍の人が実際に使う英国ビザを、目的・期間・年齢から絞り込めるようにまとめました。観光のETAから、ワーホリ、就労、留学、家族ビザ、そして渡英後の手続きまで。2026年8月時点の料金と要件で、申請を最後まで終わらせるための手順を各ルートごとに用意しています。";
+  "日本国籍の人が実際に使う英国ビザを、目的・期間・年齢から絞り込めるようにまとめました。観光のETAから、ワーホリ、就労、留学、家族ビザ、そして渡英後の手続きまで。スポンサーの要否・申請時に払う額・永住にカウントされるかを並べて比較できます。2026年8月時点の料金と要件で、申請を最後まで終わらせるための手順を各ルートごとに用意しています。";
 
 export const metadata = buildPageMetadata({
   path: VISA_BASE,
@@ -51,72 +46,60 @@ export const metadata = buildPageMetadata({
 });
 
 /**
- * 診断カード。
+ * 状況からルートを選ばせる一覧。
  *
- * 抽象的なフローチャートにしないのは、読者が自分をノードに当てはめられない
- * ため。「6ヶ月以内か?」ではなく「2週間の観光で行く」という具体的な状況を
- * 並べ、そのまま自分に当てはまるものを選んでもらう方が速い。
+ * 抽象的なフローチャートにしないのは、読者が自分をノードに
+ * 当てはめられないため。「6ヶ月以内か?」ではなく「2週間の観光で行く」
+ * という具体的な状況を並べ、そのまま自分に当てはまるものを選んでもらう。
+ *
+ * 以前はこの一覧の下に「ビザガイド一覧」があり、同じ7本を同じリンクで
+ * もう一度カードにしていた。読者の仕事は7つから1つ選ぶことなので、
+ * 選択肢を2箇所に分けて出す意味がない。カテゴリ別の見出しごと畳んで
+ * ここに一本化してある。
+ *
+ * 状況の文言(situation)は各記事の audience から引く。types.ts が
+ * 「記事側を正とし、ハブはここを参照する」と決めているのに、
+ * 以前のハブは似た文言を別に持っていて、すでに表現がずれていた。
  *
  * 並び順は該当者の多い順。日本国籍の読者の大多数は観光客なので ETA が先頭。
  */
-const SCENARIOS: {
-  situation: string;
-  answer: string;
-  detail: string;
-  href: string;
-  cta: string;
-}[] = [
+const SCENARIOS: { slug: string; answer: string; why: string }[] = [
   {
-    situation: "観光や短期の出張で、6ヶ月以内の滞在",
+    slug: "eta-uk-visa-guide",
     answer: "ETA（電子渡航認証）",
-    detail: `ビザは不要ですが、ETA は必須です。無いと日本の空港で搭乗を断られます。${gbp(VISA_FEES.eta)}・10分ほどで終わります。`,
-    href: "/sightseeing/eta-uk-visa-guide",
-    cta: "ETA の申請手順を見る",
+    why: `ビザは不要ですが、ETA は必須です。無いと日本の空港で搭乗を断られます。${gbp(
+      VISA_FEES.eta
+    )}・10分ほどで終わります。`,
   },
   {
-    situation: "18〜30歳で、働きながら英国で暮らしたい",
+    slug: "youth-mobility-scheme",
     answer: "YMS（ワーキングホリデー）",
-    detail: `スポンサーも内定も英語力の証明も不要で、最長2年働けます。日本枠は年${JAPAN_YMS_QUOTA.toLocaleString("ja-JP")}人・抽選なし。該当するなら最優先で検討してください。`,
-    href: "/visa/youth-mobility-scheme",
-    cta: "YMS の申請手順を見る",
+    why: "スポンサーも内定も英語力の証明も不要で、最長2年働けます。日本枠は抽選なし。該当するなら最優先で検討してください。",
   },
   {
-    situation: "英国企業に就職して、長期的に働きたい",
+    slug: "skilled-worker",
     answer: "Skilled Worker",
-    detail: `雇用主のスポンサーと、年収${gbp(VISA_THRESHOLDS.skilledWorker.general)}以上が必要です。2025年7月に対象職種が学士相当へ引き上げられ、約180職種が対象外になりました。`,
-    href: "/visa/skilled-worker",
-    cta: "Skilled Worker の要件を見る",
+    why: "2025年7月に対象職種が学士相当へ引き上げられ、約180職種が対象外になりました。今も取れる職種と、スポンサー企業の探し方から。",
   },
   {
-    situation: "研究・芸術・技術の分野で実績がある",
+    slug: "global-talent",
     answer: "Global Talent",
-    detail:
-      "雇用主のスポンサーが不要で、転職も独立も自由。最短3年で永住権に届きます。日本人に最も過小評価されているルートです。",
-    href: "/visa/global-talent",
-    cta: "Global Talent の要件を見る",
+    why: "雇用主のスポンサーが不要で、転職も独立も自由。日本人に最も過小評価されているルートです。",
   },
   {
-    situation: "英国の大学・大学院に留学したい",
+    slug: "student",
     answer: "Student → Graduate",
-    detail:
-      "在学中は週20時間まで就労可。卒業後は Graduate visa で最長2年働けますが、2027年1月申請分から18ヶ月に短縮されます。",
-    href: "/visa/student",
-    cta: "Student／Graduate の手順を見る",
+    why: "在学中は週20時間まで就労可。卒業後は Graduate visa で最長2年働けますが、2027年1月申請分から18ヶ月に短縮されます。",
   },
   {
-    situation: "英国人・英国定住者のパートナーと暮らしたい",
+    slug: "family",
     answer: "家族・配偶者ビザ",
-    detail: `英国側に年収${gbp(VISA_THRESHOLDS.family.minimumIncome)}または貯蓄${gbp(VISA_THRESHOLDS.family.cashSavings)}が必要です。審査に約12週間かかるため、逆算が要ります。`,
-    href: "/visa/family",
-    cta: "家族ビザの要件を見る",
+    why: "審査に12週間かかり、他ルートの4倍です。渡英日から逆算して動く必要があります。",
   },
   {
-    situation: "ビザは下りた。渡英後に何をすればいい？",
+    slug: "after-arrival",
     answer: "渡英後の手続き",
-    detail:
-      "UKVI アカウント、share code、NINo、GP登録、銀行口座。特にパスポート更新時の旅券番号更新を怠ると、搭乗を拒否されます。",
-    href: "/visa/after-arrival",
-    cta: "渡英後の手続きを見る",
+    why: "UKVI アカウント、share code、NINo、GP登録、銀行口座。特にパスポート更新時の旅券番号更新を怠ると、搭乗を拒否されます。",
   },
 ];
 
@@ -151,13 +134,92 @@ const FAQ_ITEMS = [
   },
 ];
 
-const CATEGORY_ORDER: VisaCategory[] = [
-  "short",
-  "work",
-  "study",
-  "family",
-  "after",
-];
+/**
+ * 状況カード1枚。
+ *
+ * ルート5本は同じ位置に同じ3項目(スポンサー・申請時に払う額・
+ * 永住カウント)を出す。以前この比較は下に別立ての GFM テーブルで
+ * 置かれていて、MarkdownBody の min-w-[32rem] のせいでスマホでは
+ * 横スクロールしないと列が揃わなかった。カードの同じ位置に置けば、
+ * 縦に並べたままでも項目同士が対応する。
+ */
+function ScenarioCard({
+  slug,
+  answer,
+  why,
+}: {
+  slug: string;
+  answer: string;
+  why: string;
+}) {
+  const meta = getVisaGuideMeta(slug);
+  if (!meta) return null;
+
+  const audience =
+    visaGuideArticles[slug]?.audience ?? meta.externalAudience ?? meta.blurb;
+  const facts = meta.routeFacts;
+
+  return (
+    <Link href={visaGuidePath(slug)} className="block">
+      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+        <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+          {audience}
+        </p>
+        <p className="mt-3 text-xs font-bold tracking-wide text-emerald-600 dark:text-emerald-400">
+          → {answer}
+        </p>
+
+        {facts && (
+          <dl className="mt-3 space-y-1.5 border-y border-gray-200 py-3 text-xs dark:border-neutral-700">
+            <div className="flex gap-2">
+              <dt className="w-24 shrink-0 font-bold text-gray-500 dark:text-gray-400">
+                スポンサー
+              </dt>
+              <dd
+                className={
+                  facts.sponsor === "none"
+                    ? "font-semibold text-emerald-700 dark:text-emerald-400"
+                    : "text-gray-700 dark:text-gray-300"
+                }
+              >
+                {VISA_SPONSOR_LABELS[facts.sponsor]}
+              </dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="w-24 shrink-0 font-bold text-gray-500 dark:text-gray-400">
+                申請時に払う額
+              </dt>
+              <dd className="text-gray-700 dark:text-gray-300">
+                {facts.upfrontCost}
+              </dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="w-24 shrink-0 font-bold text-gray-500 dark:text-gray-400">
+                永住カウント
+              </dt>
+              <dd
+                className={
+                  facts.countsTowardsIlr
+                    ? "text-gray-700 dark:text-gray-300"
+                    : "font-semibold text-red-700 dark:text-red-400"
+                }
+              >
+                {facts.countsTowardsIlr ? facts.ilrNote : "されません"}
+              </dd>
+            </div>
+          </dl>
+        )}
+
+        <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          {why}
+        </p>
+        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+          {meta.label} を読む →
+        </span>
+      </article>
+    </Link>
+  );
+}
 
 export default function VisaHubPage() {
   const pageUrl = `${SITE_URL}${VISA_BASE}`;
@@ -177,63 +239,61 @@ export default function VisaHubPage() {
 
       <Breadcrumbs path="/visa" />
 
-      <header className="mt-6 space-y-4">
+      <header className="mt-6">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           英国ビザガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           UK Visas: Find the Route That Applies to You
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="mt-3">
+          <GuideFreshness dataAsOf={RATES_AS_OF} updatedAt={RATES_UPDATED_AT} />
+        </div>
+        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
           英国のビザは、種類の多さと名前の分かりにくさが最大の壁です。このページは、
           <strong>まず自分がどれに該当するかを確定させる</strong>
-          ことだけを目的にしています。下の一覧から、自分の状況に一番近いものを選んでください。
-          そこから先は、各ルートの申請手順に進めます。
+          ことだけを目的にしています。
         </p>
-        <GuideFreshness dataAsOf={RATES_AS_OF} updatedAt={RATES_UPDATED_AT} />
       </header>
 
-      <Separator className="my-8" />
+      {/*
+        出発前に効く1つ。どのルートを選んでも、請求額の大半はここ。
+        以前は下の方に「費用の目安」として GFM の表で置いていたが、
+        表の8行が伝えていたことの中心はこの一文だった。
+      */}
+      <div className="mt-6 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 dark:bg-amber-950/25">
+        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+          金額の大部分は申請料ではなく IHS（医療サーチャージ）です
+        </p>
+        <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          年{gbp(IHS_PER_YEAR.standard)}（学生・YMS は
+          {gbp(IHS_PER_YEAR.discounted)}）を、滞在年数分まとめて申請時に前払いします。
+          5年なら{gbp(IHS_PER_YEAR.standard * 5)}。下のカードの「申請時に払う額」は、
+          この IHS を含めた実際の請求額で書いています。申請料は
+          <strong>毎年4月に一斉改定</strong>
+          されるため（直近は2026年4月8日、6〜7%増）、年をまたぐ申請では GOV.UK
+          で申請時点の金額を確認してください。
+        </p>
+      </div>
 
-      {/* 診断：具体的な状況から選ばせる */}
-      <section aria-labelledby="find-your-route" className="space-y-5">
-        <div className="space-y-2">
-          <h2
-            id="find-your-route"
-            className="text-xl font-bold md:text-2xl"
-          >
-            自分の状況を選んでください
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            一番近いものが1つ見つかれば、それがあなたの読むべきページです。
-            複数に当てはまる場合は、<strong>滞在が長くなる方</strong>を選んでください。
-          </p>
-        </div>
+      <section aria-labelledby="find-your-route" className="mt-10">
+        <h2 id="find-your-route" className="text-xl font-bold md:text-2xl">
+          自分の状況を選んでください
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          一番近いものが1つ見つかれば、それがあなたの読むべきページです。
+          複数に当てはまる場合は、<strong>滞在が長くなる方</strong>
+          を選んでください。ルートのカードは同じ位置に同じ3項目を出しているので、
+          そのまま比較にも使えます。
+        </p>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
-            <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
-                <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
-                    {s.situation}
-                  </p>
-                  <p className="mt-3 text-xs font-bold tracking-wide text-emerald-600 dark:text-emerald-400">
-                    → {s.answer}
-                  </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {s.detail}
-                  </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
-                    {s.cta} →
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+            <ScenarioCard key={s.slug} {...s} />
           ))}
         </div>
 
-        <div className="rounded-lg border border-blue-200 bg-blue-50/70 p-4 text-sm leading-relaxed dark:border-blue-900/60 dark:bg-blue-950/25">
+        <div className="mt-5 rounded-lg border border-blue-200 bg-blue-50/70 p-4 text-sm leading-relaxed dark:border-blue-900/60 dark:bg-blue-950/25">
           <p className="font-semibold text-gray-900 dark:text-gray-100">
             どれにも当てはまらない、迷っている
           </p>
@@ -252,80 +312,55 @@ export default function VisaHubPage() {
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />
 
-      {/* 費用の目安。ハブの段階で「いくらかかるか」を見せておく */}
-      <section aria-labelledby="cost-overview" className="space-y-4">
-        <h2 id="cost-overview" className="text-xl font-bold md:text-2xl">
-          費用の目安
+      {/*
+        資金の閾値。カードに載せると3項目の対応が崩れるので分けている。
+        ここを満たせないと申請自体が通らないので、額は最初に見せておく。
+      */}
+      <section aria-labelledby="thresholds" className="mt-10">
+        <h2 id="thresholds" className="text-xl font-bold md:text-2xl">
+          用意しておく資金
         </h2>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-          申請料だけを見ていると、実際の請求額で驚きます。多くのルートで金額の大部分を占めるのは
-          <strong>IHS（医療サーチャージ）</strong>
-          で、滞在年数分を申請時に一括で前払いします。
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          申請料とは別に、「これだけ持っている」ことの証明を求められます。却下理由として最も多いのがここです。
         </p>
-        <MarkdownBody>
-          {`| ルート | 申請料 | IHS（年額） |
-|---|---:|---:|
-| ETA | ${gbp(VISA_FEES.eta)} | — |
-| YMS（ワーホリ） | ${gbp(VISA_FEES.youthMobility)} | ${gbp(IHS_PER_YEAR.discounted)} |
-| Student | ${gbp(VISA_FEES.student)} | ${gbp(IHS_PER_YEAR.discounted)} |
-| Graduate | ${gbp(VISA_FEES.graduate)} | ${gbp(IHS_PER_YEAR.standard)} |
-| Skilled Worker（英国外・3年以下） | ${gbp(VISA_FEES.skilledWorker.outsideUpTo3y)} | ${gbp(IHS_PER_YEAR.standard)} |
-| Global Talent | ${gbp(VISA_FEES.globalTalent.total)} | ${gbp(IHS_PER_YEAR.standard)} |
-| 家族・配偶者（英国外） | ${gbp(VISA_FEES.familyPartner.outside)} | ${gbp(IHS_PER_YEAR.standard)} |
-| 永住（ILR） | ${gbp(VISA_FEES.ilr)} | — |
-
-英国の申請料は**毎年4月に一斉改定**されます（直近は2026年4月8日、6〜7%増）。年をまたぐ申請では、必ず申請時点の金額を GOV.UK で確認してください。`}
-        </MarkdownBody>
-      </section>
-
-      <Separator className="my-10" />
-
-      {/* 全ガイド一覧。カテゴリ別 */}
-      <section aria-labelledby="all-guides" className="space-y-8">
-        <div className="space-y-2">
-          <h2 id="all-guides" className="text-xl font-bold md:text-2xl">
-            ビザガイド一覧
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            全{visaGuides.length}本。それぞれ、申請を最後まで終わらせるための手順書として書いています。
-          </p>
-        </div>
-
-        {CATEGORY_ORDER.map((category) => {
-          const guides = visaGuidesByCategory(category);
-          if (guides.length === 0) return null;
-
-          return (
-            <div key={category} className="space-y-3">
-              <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
-                {VISA_CATEGORY_LABELS[category]}
-              </h3>
-              <div className="space-y-3">
-                {guides.map((g) => (
-                  <Link
-                    key={g.slug}
-                    href={visaGuidePath(g.slug)}
-                    className="block"
-                  >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
-                      <CardContent className="p-5">
-                        <span className="block text-xs font-semibold text-emerald-600">
-                          {g.eyebrow}
-                        </span>
-                        <span className="mt-1 block text-base font-semibold">
-                          {g.label}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                          {g.blurb}
-                        </span>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
+        <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+          {[
+            {
+              label: "YMS（ワーホリ）",
+              value: gbp(VISA_THRESHOLDS.youthMobility.funds),
+              note: `本人名義の口座に${VISA_THRESHOLDS.youthMobility.fundsDays}日間連続で`,
+            },
+            {
+              label: "Student（ロンドン）",
+              value: `月${gbp(
+                VISA_THRESHOLDS.student.maintenanceLondonPerMonth
+              )}`,
+              note: `学費残額＋最大${VISA_THRESHOLDS.student.maintenanceMaxMonths}ヶ月分`,
+            },
+            {
+              label: "家族・配偶者",
+              value: `年${gbp(VISA_THRESHOLDS.family.minimumIncome)}`,
+              note: `英国側の所得。または貯蓄${gbp(
+                VISA_THRESHOLDS.family.cashSavings
+              )}`,
+            },
+          ].map((row) => (
+            <div
+              key={row.label}
+              className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+            >
+              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                {row.label}
+              </dt>
+              <dd className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+                {row.value}
+                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-gray-500 dark:text-gray-400">
+                  {row.note}
+                </span>
+              </dd>
             </div>
-          );
-        })}
+          ))}
+        </dl>
       </section>
 
       <GuideFaq items={FAQ_ITEMS} />

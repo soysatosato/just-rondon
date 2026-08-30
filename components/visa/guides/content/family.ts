@@ -60,26 +60,11 @@ const family: VisaGuideArticle = {
 このページは、その2軸の準備を具体的に整理します。`,
   atAGlance: [
     { label: "誰が申請できるか", value: "英国市民・定住者（ILR保持者）等の配偶者／婚約者／未婚パートナー" },
-    {
-      label: "最低所得（英国側）",
-      value: `年${gbp(VISA_THRESHOLDS.family.minimumIncome)}。子どもの人数で増額されません`,
-    },
-    {
-      label: "貯蓄での代替",
-      value: `${gbp(VISA_THRESHOLDS.family.cashSavings)}（6ヶ月以上保持）`,
-    },
-    {
-      label: "申請料",
-      value: `英国外から ${gbp(VISA_FEES.familyPartner.outside)}／英国内から ${gbp(VISA_FEES.familyPartner.inside)}`,
-    },
-    { label: "IHS", value: `年${gbp(IHS_PER_YEAR.standard)}（付与期間分を前払い）` },
-    { label: "付与される期間", value: "2年9ヶ月 → 更新で2年6ヶ月" },
-    { label: "**審査期間**", value: `**約${PROCESSING_WEEKS.family}週間**（英国外から）` },
-    { label: "永住まで", value: "**5年**（この期間はカウントされます）" },
   ],
   sections: [
     {
       id: "who",
+      navLabel: "誰が申請できるか",
       title: "誰が申請できるか",
       subtitle: "「英国側のパートナー」の資格が先に決まります",
       body: `### 英国側のパートナーが、次のいずれかであること
@@ -122,6 +107,7 @@ const family: VisaGuideArticle = {
     },
     {
       id: "income",
+      navLabel: "最低所得の証明",
       title: "最低所得 £29,000 をどう証明するか",
       subtitle: "満たすのは申請者ではなく、英国側のパートナーです",
       body: `### 基本ルール
@@ -183,6 +169,7 @@ const family: VisaGuideArticle = {
     },
     {
       id: "genuine",
+      navLabel: "関係の真実性",
       title: "関係の真実性をどう立証するか",
       subtitle: "証拠は、交際期間中にしか集められません",
       body: `英国の審査官は、**偽装結婚（sham marriage）の可能性**を必ず検討します。求められるのは感情の表明ではなく、**関係が実在し、継続していることを示す客観的な記録**です。
@@ -248,6 +235,7 @@ const family: VisaGuideArticle = {
     },
     {
       id: "english-and-docs",
+      navLabel: "英語要件と書類",
       title: "英語要件と、その他の必要書類",
       subtitle: "英語のレベルは段階的に上がります",
       body: `### 英語要件は3段階
@@ -280,6 +268,7 @@ A1 は入門レベルで、UKVI 承認の SELT（Secure English Language Test）
     },
     {
       id: "cost-process",
+      navLabel: "費用と流れ",
       title: "費用と申請の流れ",
       subtitle: `審査に約${PROCESSING_WEEKS.family}週間。逆算してください`,
       body: `### 費用

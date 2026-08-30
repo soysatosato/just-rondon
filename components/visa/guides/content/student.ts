@@ -56,29 +56,20 @@ Student visa は学校がスポンサーになるため、入学が決まれば�
 
 このページは、Student の申請実務から Graduate の使い方まで、一続きで解説します。`,
   atAGlance: [
-    { label: "スポンサー", value: "**必要**（学校。CAS を発行してもらう）" },
-    {
-      label: "資金証明（ロンドン）",
-      value: `学費残額 ＋ 月${gbp(VISA_THRESHOLDS.student.maintenanceLondonPerMonth)} × 最大${VISA_THRESHOLDS.student.maintenanceMaxMonths}ヶ月`,
-    },
     {
       label: "資金証明（ロンドン外）",
       value: `学費残額 ＋ 月${gbp(VISA_THRESHOLDS.student.maintenanceOutsideLondonPerMonth)} × 最大${VISA_THRESHOLDS.student.maintenanceMaxMonths}ヶ月`,
-    },
-    {
-      label: "申請料",
-      value: `${gbp(VISA_FEES.student)}＋IHS 年${gbp(IHS_PER_YEAR.discounted)}（学生割引レート）`,
     },
     { label: "就労", value: "学位課程なら学期中は**週20時間まで**、休暇中はフルタイム可" },
     {
       label: "卒業後（Graduate）",
       value: `${gbp(VISA_FEES.graduate)}。2年（博士3年）。**${jpDate(VISA_KEY_DATES.graduate18MonthsFrom)}申請分から18ヶ月**`,
     },
-    { label: "永住へのカウント", value: "Student・Graduate とも**されません**" },
   ],
   sections: [
     {
       id: "cas",
+      navLabel: "CAS",
       title: "Student visa：まず CAS を得る",
       subtitle: "これがなければ申請は始まりません",
       body: `### CAS とは
@@ -117,6 +108,7 @@ CAS には、以下が記載されています。**間違いがあると、そ�
     },
     {
       id: "money",
+      navLabel: "資金証明",
       title: "資金証明：最も落ちやすいポイント",
       subtitle: "金額の計算と、28日ルール",
       body: `### 用意すべき金額
@@ -176,6 +168,7 @@ deception と認定されると、**10年間の再申請禁止**につながり�
     },
     {
       id: "work",
+      navLabel: "在学中の就労",
       title: "在学中に働ける範囲",
       subtitle: "「週20時間」の数え方を、正確に理解してください",
       body: `### 上限
@@ -217,6 +210,7 @@ deception と認定されると、**10年間の再申請禁止**につながり�
     },
     {
       id: "cost-process",
+      navLabel: "費用と流れ",
       title: "費用と申請の流れ",
       subtitle: "IHS は学生割引レートが適用されます",
       body: `### 費用
@@ -263,6 +257,7 @@ Student visa はコース期間に加えて数ヶ月が付与されるため、I
     },
     {
       id: "graduate",
+      navLabel: "Graduate visa",
       title: "Graduate visa：卒業後に最長2年",
       subtitle: `${jpDate(VISA_KEY_DATES.graduate18MonthsFrom)}申請分から18ヶ月に短縮されます`,
       body: `### 何ができるか

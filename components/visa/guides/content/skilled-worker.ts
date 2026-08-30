@@ -56,24 +56,14 @@ const skilledWorker: VisaGuideArticle = {
 
 このページは、改正後の現在地から書いています。`,
   atAGlance: [
-    { label: "スポンサー", value: "**必須**。ライセンスを持つ英国の雇用主から CoS の発行を受ける" },
     { label: "職種の要件", value: "原則 RQF6（学士相当）以上。一部の職種のみ例外" },
-    {
-      label: "最低年収",
-      value: `${gbp(VISA_THRESHOLDS.skilledWorker.general)} と職種別相場（going rate）の**高い方**`,
-    },
     { label: "英語力", value: "現在 CEFR B1。2027年3月26日申請分から B2" },
-    {
-      label: "申請料（英国外・3年以下）",
-      value: `${gbp(VISA_FEES.skilledWorker.outsideUpTo3y)}＋IHS 年${gbp(IHS_PER_YEAR.standard)}`,
-    },
-    { label: "滞在できる期間", value: "最長5年。更新回数に制限なし" },
-    { label: "永住まで", value: "**5年**（この期間はカウントされます）" },
     { label: "家族の帯同", value: "可能。ただし Temporary Shortage List の職種は不可" },
   ],
   sections: [
     {
       id: "rqf6",
+      navLabel: "2025年7月の変更",
       title: "2025年7月22日に何が変わったか",
       subtitle: "ここを理解しないと、他のすべての情報が無意味になります",
       body: `### 変更の中身
@@ -134,6 +124,7 @@ TSL は「一時的な救済」であって、**そこに乗って長期の生�
     },
     {
       id: "salary",
+      navLabel: "年収要件",
       title: "年収要件：£41,700の壁の正確な意味",
       subtitle: "「41,700以上なら通る」ではありません",
       body: `### 基本ルール
@@ -180,6 +171,7 @@ TSL は「一時的な救済」であって、**そこに乗って長期の生�
     },
     {
       id: "sponsor",
+      navLabel: "スポンサー探し",
       title: "スポンサー企業を見つける",
       subtitle: "ここが実務上、最大の関門です",
       body: `Skilled Worker は**雇用主のスポンサーがなければ、申請すら始まりません**。そして「日本人を雇いたい企業」と「スポンサーできる企業」は別物です。
@@ -232,6 +224,7 @@ CoS は、**実在する求人に対して、実際に雇用する企業が発�
     },
     {
       id: "requirements",
+      navLabel: "申請要件",
       title: "申請要件の全体像",
       subtitle: "スポンサーが決まった後に揃えるもの",
       body: `### 必須要件
@@ -269,6 +262,7 @@ CoS は、**実在する求人に対して、実際に雇用する企業が発�
     },
     {
       id: "cost-and-process",
+      navLabel: "費用と流れ",
       title: "費用と申請の流れ",
       subtitle: "3年契約なら、本人負担は約80万円",
       body: `### 申請料
@@ -312,6 +306,7 @@ CoS は、**実在する求人に対して、実際に雇用する企業が発�
     },
     {
       id: "after",
+      navLabel: "転職・延長・永住",
       title: "取得後：転職、延長、永住",
       subtitle: "スポンサー付きビザ特有の制約があります",
       body: `### 転職するとどうなるか

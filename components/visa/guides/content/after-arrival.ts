@@ -67,6 +67,7 @@ const afterArrival: VisaGuideArticle = {
   sections: [
     {
       id: "evisa",
+      navLabel: "eVisa",
       title: "UKVI アカウントと eVisa",
       subtitle: "これが無いと、自分の在留資格を証明できません",
       body: `### eVisa とは
@@ -128,6 +129,7 @@ GOV.UK の [Get access to your eVisa](https://www.gov.uk/get-access-evisa) か�
     },
     {
       id: "share-code",
+      navLabel: "share code",
       title: "share code の発行",
       subtitle: "就職・入居のたびに必要になります",
       body: `### share code とは
@@ -166,6 +168,7 @@ GOV.UK の [Get access to your eVisa](https://www.gov.uk/get-access-evisa) か�
     },
     {
       id: "nino",
+      navLabel: "NINo",
       title: "National Insurance 番号（NINo）",
       subtitle: "働き始める前に申請してください",
       body: `### NINo とは
@@ -214,6 +217,7 @@ GOV.UK の [Get access to your eVisa](https://www.gov.uk/get-access-evisa) か�
     },
     {
       id: "gp",
+      navLabel: "GP登録",
       title: "GP（かかりつけ医）への登録",
       subtitle: "IHS を払っているなら、使わないと損です",
       body: `### なぜ最優先で登録すべきか
@@ -264,6 +268,7 @@ IHS は年 ${gbp(IHS_PER_YEAR.standard)}（学生・YMS は ${gbp(IHS_PER_YEAR.d
     },
     {
       id: "bank",
+      navLabel: "銀行口座",
       title: "銀行口座の開設",
       subtitle: "「住所証明」の壁をどう越えるか",
       body: `### 何が難しいのか
@@ -311,6 +316,7 @@ Monzo、Starling、Revolut などは、**住所証明なしでスマホから開
     },
     {
       id: "keep-updated",
+      navLabel: "継続してやること",
       title: "滞在中、継続してやるべきこと",
       subtitle: "更新・永住申請のときに効いてきます",
       body: `### 1. UKVI アカウントを最新に保つ

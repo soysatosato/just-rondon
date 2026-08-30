@@ -4,23 +4,25 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import { SITE_URL } from "@/lib/seo";
 import { faqPageJsonLd } from "@/lib/jsonld";
 import GuideCallout from "@/components/guides/GuideCallout";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
+import GuideNotes from "@/components/guides/GuideNotes";
+import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import GuideSources from "@/components/guides/GuideSources";
-import GuideToc from "@/components/guides/GuideToc";
 import {
   VISA_BASE,
+  VISA_CATEGORY_LABELS,
   getVisaGuideMeta,
   visaGuideArticleJsonLd,
   visaGuideBreadcrumbJsonLd,
   visaGuidePath,
   visaGuides,
 } from "./guides";
+import VisaRouteFactsPanel from "./VisaRouteFactsPanel";
 import type { VisaGuideArticle } from "./types";
 
 export default function VisaGuideLayout({
@@ -32,6 +34,12 @@ export default function VisaGuideLayout({
   const meta = getVisaGuideMeta(article.slug);
   const pageUrl = `${SITE_URL}${visaGuidePath(article.slug)}`;
 
+  // navLabel が無い記事は見出しをそのまま出す(ビザ7本はすべて持つ)。
+  const navSections = article.sections.map((sec) => ({
+    id: sec.id,
+    navLabel: sec.navLabel ?? sec.title,
+  }));
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={visaGuideBreadcrumbJsonLd(article)} />
@@ -42,43 +50,56 @@ export default function VisaGuideLayout({
 
       <Breadcrumbs path="/visa" current={meta?.label ?? article.title} />
 
-      <header className="mt-6 space-y-3">
+      <header className="mt-6">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           {article.engTitle}
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="mt-3">
+          <GuideFreshness
+            dataAsOf={article.dataAsOf}
+            updatedAt={article.updatedAt}
+          />
+        </div>
+        <p className="mt-4 text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+          {article.audience}
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
           {article.summary}
         </p>
-        <GuideFreshness
-          dataAsOf={article.dataAsOf}
-          updatedAt={article.updatedAt}
-        />
       </header>
 
-      <Separator className="my-6" />
+      {/*
+        ルートの要件を、本文より先に。ビザ記事は本文が長く、読者が
+        最初に確定させたいのは「使えるのか・いくらか・永住に効くか」で、
+        そこは5ルートで同じ形をしている。
+      */}
+      <div className="mt-8">
+        {meta?.routeFacts && <VisaRouteFactsPanel facts={meta.routeFacts} />}
+      </div>
 
       {/*
-        要約表。ビザ記事は本文が長いので、読者が最初に確定させたい
-        「いくら・どれくらい・何が要る」を目次より前に置く。
+        ルート固有の条件。共通の7項目は routeFacts が持つので、
+        ここに残るのはこの記事にしか無い話だけ。
+        MarkdownBody に通すのは、以前ここを素の文字列で描いていて
+        6本の記事の ** が生のまま読者に出ていたため。
       */}
       {article.atAGlance && article.atAGlance.length > 0 && (
-        <section className="mb-8 overflow-hidden rounded-lg border border-gray-300 dark:border-neutral-700">
-          <h2 className="border-b border-gray-300 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 px-4 py-2 text-sm font-semibold">
-            このビザの概要
+        <section className="mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+          <h2 className="text-base font-bold">
+            {meta?.routeFacts ? "このルート固有の条件" : "このガイドの要点"}
           </h2>
-          <dl className="divide-y divide-gray-200 dark:divide-neutral-700">
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
             {article.atAGlance.map((fact) => (
-              <div
-                key={fact.label}
-                className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4"
-              >
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
+              <div key={fact.label}>
+                <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
+                  <MarkdownBody>{fact.value}</MarkdownBody>
+                </dd>
               </div>
             ))}
           </dl>
@@ -91,11 +112,16 @@ export default function VisaGuideLayout({
         </section>
       )}
 
-      <GuideToc sections={article.sections} />
-
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
 
-      <div className="mt-8 space-y-8">
+      {/*
+        固定の目次ではなく追従ナビにするのは、ビザ記事が申請作業の
+        最中に開かれるため。書類を集めながら「必要書類」へ、
+        銀行残高を見ながら「資金証明」へと往復する。
+      */}
+      <GuideSectionNav sections={navSections} />
+
+      <div className="space-y-8">
         {article.sections.map((section, i) => (
           <Card
             key={section.id}
@@ -114,18 +140,7 @@ export default function VisaGuideLayout({
               <MarkdownBody>{section.body}</MarkdownBody>
 
               {section.tips && section.tips.length > 0 && (
-                <div className="mt-5 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/60 p-4">
-                  <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
-                    実務メモ
-                  </p>
-                  <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 dark:text-gray-300 marker:text-gray-400">
-                    {section.tips.map((tip) => (
-                      <li key={tip} className="leading-relaxed">
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <GuideNotes items={section.tips} />
               )}
 
               {section.callout && <GuideCallout {...section.callout} />}
@@ -153,27 +168,41 @@ export default function VisaGuideLayout({
         犯罪歴がある場合など）では OISC 登録アドバイザーまたは事務弁護士にご相談ください。
       </p>
 
+      {/*
+        ほかのガイド。以前は blurb つきのカードを7枚並べていて、
+        どの記事の末尾にも同じ長さの尾がついていた。ハブが状況から
+        選ばせる形になったので、ここは索引に徹する。スポンサーの
+        要否と初期費用だけ添えるのは、その2つで候補が絞れるから。
+      */}
       <section className="mt-12">
         <h2 className="text-lg font-semibold">ほかのビザガイド</h2>
-        <div className="mt-4 space-y-3">
+        <ul className="mt-4 divide-y divide-gray-200 dark:divide-neutral-800">
           {relatedGuides.map((g) => (
-            <Link key={g.slug} href={visaGuidePath(g.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-emerald-400 dark:hover:border-emerald-500">
-                <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-emerald-600">
-                    {g.eyebrow}
-                  </span>
-                  <span className="mt-1 block text-base font-semibold">
-                    {g.label}
-                  </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {g.blurb}
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+            <li key={g.slug}>
+              <Link
+                href={visaGuidePath(g.slug)}
+                className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2.5 transition hover:text-emerald-700 dark:hover:text-emerald-400"
+              >
+                <span className="text-sm font-semibold">{g.label}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {VISA_CATEGORY_LABELS[g.category]}
+                </span>
+                {g.routeFacts && (
+                  <>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {g.routeFacts.sponsor === "none"
+                        ? "スポンサー不要"
+                        : "スポンサー要"}
+                    </span>
+                    <span className="text-xs text-gray-400 dark:text-neutral-500">
+                      {g.routeFacts.upfrontCost}
+                    </span>
+                  </>
+                )}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">

@@ -60,24 +60,12 @@ const youthMobilityScheme: VisaGuideArticle = {
 
 このページは、その資金証明を確実に通すことを軸に、申請の最初から最後までを案内します。`,
   atAGlance: [
-    { label: "対象", value: "申請時に18〜30歳の日本国籍" },
-    { label: "滞在できる期間", value: "最長2年（延長不可・生涯1回のみ）" },
-    {
-      label: "必要な資金",
-      value: `${gbp(VISA_THRESHOLDS.youthMobility.funds)} を28日間連続で保持（本人名義）`,
-    },
-    {
-      label: "費用の総額",
-      value: `約${gbp(ymsTotalCost(2))}（申請料＋IHS 2年分＋生体情報登録）`,
-    },
-    { label: "スポンサー", value: "不要。内定も英語力の証明も要りません" },
     { label: "日本の枠", value: `年${JAPAN_YMS_QUOTA.toLocaleString("ja-JP")}人・抽選なし・通年申請可` },
-    { label: "審査期間", value: `標準で約${PROCESSING_WEEKS.work}週間` },
-    { label: "永住へのカウント", value: "**されません**（1日も算入されない）" },
   ],
   sections: [
     {
       id: "eligibility",
+      navLabel: "申請できるか",
       title: "まず確認：あなたは申請できるか",
       subtitle: "5つすべてに「はい」なら、申請できます",
       body: `### 要件チェック
@@ -116,6 +104,7 @@ const youthMobilityScheme: VisaGuideArticle = {
     },
     {
       id: "funds",
+      navLabel: "資金要件",
       title: "資金要件：ここだけで却下の大半が決まる",
       subtitle: `${gbp(VISA_THRESHOLDS.youthMobility.funds)}を28日間、1日も下回らずに`,
       body: `### ルールの正確な意味
@@ -173,6 +162,7 @@ const youthMobilityScheme: VisaGuideArticle = {
     },
     {
       id: "bank-documents",
+      navLabel: "英文残高証明",
       title: "日本の銀行で、英文残高証明をどう取るか",
       subtitle: "窓口で何と言えばいいか、何を確認するか",
       body: `資金証明は、**英文残高証明書**と**通帳のコピー**の2点で出すのが最も安全です。片方だけでも通ることはありますが、併用すると不備の余地が減ります。
@@ -221,6 +211,7 @@ const youthMobilityScheme: VisaGuideArticle = {
     },
     {
       id: "cost",
+      navLabel: "費用の総額",
       title: "費用の総額",
       subtitle: "申請料だけ見ていると、実際の請求額で驚きます",
       body: `IHS（医療サーチャージ）は**滞在年数分を申請時に一括前払い**します。ここが総額の大部分を占めます。
@@ -264,6 +255,7 @@ const youthMobilityScheme: VisaGuideArticle = {
     },
     {
       id: "apply",
+      navLabel: "申請の手順",
       title: "申請の手順",
       subtitle: "オンライン申請 → 支払い → 本人確認 → 待つ",
       body: `**YMS は英国外から申請します**。日本にいる間に済ませてください。
@@ -316,6 +308,7 @@ GOV.UK の [Youth Mobility Scheme 申請ページ](https://www.gov.uk/youth-mobi
     },
     {
       id: "what-you-can-do",
+      navLabel: "できること",
       title: "できること・できないこと",
       subtitle: "違反すると、その場のビザ取消だけでは終わりません",
       body: `### できること
@@ -359,6 +352,7 @@ GOV.UK の [Youth Mobility Scheme 申請ページ](https://www.gov.uk/youth-mobi
     },
     {
       id: "next-route",
+      navLabel: "2年後どうするか",
       title: "2年後どうするか：Skilled Worker への切り替え",
       subtitle: "2025年7月から、この道は明確に狭くなりました",
       body: `YMS からは、**英国内にいるまま Skilled Worker へ切り替える**ことが制度上は可能です。ただし2025年7月22日の制度改正で、**難易度が大きく上がりました**。

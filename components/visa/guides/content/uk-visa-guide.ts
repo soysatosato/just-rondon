@@ -81,6 +81,7 @@ const ukVisaGuide: VisaGuideArticle = {
   sections: [
     {
       id: "three-questions",
+      navLabel: "候補を絞る",
       title: "質問1〜3：候補を絞る",
       subtitle: "上から順に答えてください。3問で候補は2〜3個まで減ります",
       body: `### 質問1：滞在は6ヶ月以内ですか？
@@ -125,6 +126,7 @@ const ukVisaGuide: VisaGuideArticle = {
     },
     {
       id: "all-routes",
+      navLabel: "9ルート一覧",
       title: "日本国籍が実際に使う9ルート一覧",
       subtitle: "費用・滞在期間・永住までの距離を並べて比較する",
       body: `金額はいずれも**申請料のみ**です。実際にはこれに IHS（医療サーチャージ）が年額で乗ります（後述）。
@@ -164,6 +166,7 @@ YMS・Graduate・High Potential Individual はいずれも「英国で働ける�
     },
     {
       id: "costs",
+      navLabel: "費用の全体像",
       title: "費用の全体像",
       subtitle: "申請料だけを見ていると、実際の請求額で驚きます",
       body: `英国ビザの費用は**申請料だけではありません**。多くの人が想定を外すのは IHS（医療サーチャージ）で、これは滞在年数分を**申請時に一括前払い**します。
@@ -209,6 +212,7 @@ YMS・Graduate・High Potential Individual はいずれも「英国で働ける�
     },
     {
       id: "processing",
+      navLabel: "審査期間",
       title: "審査期間と、申請できる時期",
       subtitle: "家族ビザだけが極端に長いので、逆算が必要です",
       body: `### 標準審査期間（英国外からの申請）
@@ -250,6 +254,7 @@ YMS・Graduate・High Potential Individual はいずれも「英国で働ける�
     },
     {
       id: "settlement",
+      navLabel: "永住までの距離",
       title: "永住（ILR）までの距離と、10年化の議論",
       subtitle: "2026年8月時点で、10年化はまだ施行されていません",
       body: `**ILR（Indefinite Leave to Remain＝無期限残留許可）** が、日本語でいう永住権です。取得すると、滞在期限もビザの条件も無くなり、就労も転職も自由になります。
@@ -294,6 +299,7 @@ YMS・Graduate・High Potential Individual はいずれも「英国で働ける�
     },
     {
       id: "recent-changes",
+      navLabel: "最近の改正",
       title: "2025〜2026年に何が変わったか",
       subtitle: "古い情報で計画を立てると、確実に外します",
       body: `英国の移民制度はこの2年で大きく動きました。**2024年以前に書かれた情報は、就労ルートに関してはほぼ使えません。**
@@ -330,6 +336,7 @@ YMS・Graduate・High Potential Individual はいずれも「英国で働ける�
     },
     {
       id: "rejection",
+      navLabel: "却下されたら",
       title: "却下されたときにできること",
       subtitle: "多くのルートに「上訴」はありません",
       body: `### まず、却下理由書を読む
@@ -358,6 +365,7 @@ YMS・Graduate・High Potential Individual はいずれも「英国で働ける�
     },
     {
       id: "glossary",
+      navLabel: "用語集",
       title: "用語集",
       subtitle: "GOV.UK を読むときに必要な最小限の語彙",
       body: `| 略語 | 正式名称 | 意味 |
