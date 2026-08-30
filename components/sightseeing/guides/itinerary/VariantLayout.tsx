@@ -97,7 +97,14 @@ export default function VariantLayout({
         </div>
       </header>
 
-      <GuideSectionNav sections={sections} />
+      {/*
+        ナビに渡すのは id と navLabel だけ。VariantSection をそのまま渡すと
+        blocks(本文の markdown)ごとクライアント向けの RSC ペイロードに
+        直列化され、記事1本ぶんの本文がページに二重で載る。
+      */}
+      <GuideSectionNav
+        sections={sections.map((s) => ({ id: s.id, navLabel: s.navLabel }))}
+      />
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
 
