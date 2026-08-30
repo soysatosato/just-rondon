@@ -1,27 +1,15 @@
 import type { TravelGuideArticle } from "../types";
-import itinerary from "./itinerary";
 import itineraryLayover from "./itinerary-layover";
 import itineraryRainyDay from "./itinerary-rainy-day";
 import itineraryWithKids from "./itinerary-with-kids";
 
 /**
- * slug → 記事。
- *
- * guides.ts の travelGuides は8件だが、こちらは7件でよい。
- * transport は単一記事から /sightseeing/transport 配下のハブ＋9本に
- * 分割されたため、実体は components/sightseeing/transport/content/ にある。
- */
-export const travelGuideArticles: Record<string, TravelGuideArticle> = {
-  itinerary,
-};
-
-/**
  * モデルコースの分岐版。親からの相対 slug をキーにする。
  * /sightseeing/itinerary/[slug] が引く。
  *
- * 親(itinerary)と違ってトップレベルのガイドではないので
- * travelGuideArticles には混ぜない。混ぜると
- * TravelGuideLayout の「ほかの旅行ガイド」に並んでしまう。
+ * トップレベルの旅行ガイド8本は、markdown の TravelGuideArticle から
+ * それぞれ専用の構造化データ(components/sightseeing/guides/<slug>/)へ
+ * 移したので、ここには残っていない。
  */
 export const itineraryVariantArticles: Record<string, TravelGuideArticle> = {
   "rainy-day": itineraryRainyDay,
@@ -29,9 +17,4 @@ export const itineraryVariantArticles: Record<string, TravelGuideArticle> = {
   layover: itineraryLayover,
 };
 
-export {
-  itinerary,
-  itineraryRainyDay,
-  itineraryWithKids,
-  itineraryLayover,
-};
+export { itineraryRainyDay, itineraryWithKids, itineraryLayover };
