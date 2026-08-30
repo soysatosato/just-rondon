@@ -11,7 +11,6 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Sparkles } from "lucide-react";
-import ContactDialog from "@/components/form/ContactDialog";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
 import {
@@ -179,12 +178,6 @@ export default async function ArtworkDetailPage({
               </ReactMarkdown>
             ))}
           </ul>
-          {(params.slug === "british-museum" ||
-            params.slug === "national-gallery") && (
-            <div className="my-6 ">
-              <ContactDialog />
-            </div>
-          )}
         </section>
       )}
     </main>
