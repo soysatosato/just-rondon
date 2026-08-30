@@ -39,9 +39,8 @@ module.exports = {
       },
     ],
   },
-  // /sightseeing/all のフィルター付きURLはここでブロックしない。
-  // クロールを止めるとページ側の noindex を読めず、
-  // 「robots.txt によりブロックされましたがインデックスに登録されました」になるため。
+  // 一覧ページの絞り込みはクライアント側で完結し、URLパラメータを持たない。
+  // ブロック対象のクエリ付きURLはもう生成されない。
   // sitemapSize: 5000, // ページ数が多い場合に分割
 
   /**
@@ -158,8 +157,8 @@ module.exports = {
       "/restaurants/pub-etiquette",
       "/sightseeing",
       "/sightseeing/all",
-      // 入場無料スポットの一覧。/sightseeing/all の free フィルターは
-      // noindex なので、検索の受け皿としてこの静的URLを別に持つ。
+      // 入場無料スポットの一覧。/sightseeing/all の「無料」絞り込みは
+      // クライアント側でURLを持たないので、検索の受け皿はこの静的URL。
       "/sightseeing/free",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
       // travelGuides と一致させること。

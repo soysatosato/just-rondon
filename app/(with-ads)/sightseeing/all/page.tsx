@@ -1,185 +1,85 @@
-import Image from "next/image";
-import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Pagination from "@/components/home/Pagination";
-import { fetchAllAttractions } from "@/utils/actions/attractions";
-import AttractionFilterBar from "@/components/attractions/AttractionFilterBar";
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
+export const revalidate = 60 * 60;
+
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import AttractionBrowser from "@/components/attractions/AttractionBrowser";
+import { fetchAllAttractions } from "@/utils/actions/attractions";
 import { AD_SLOTS } from "@/lib/adsense";
-import type { Metadata } from "next";
 import { buildPageMetadata } from "@/lib/seo";
 
-// フィルター UI（前回提供したやつ）
-
 /**
- * このページは page / sort / rec / mustSee / kids / free / category の
- * 7パラメータで組み合わせ爆発する。フィルター付きは noindex にして
- * クリーンURLへ canonical を寄せ、クロール予算を実ページに回す。
- *
- * robots.txt でブロックしてはいけない。クロールできないと noindex も読めず
- * 「robots.txt によりブロックされましたがインデックスに登録されました」になる。
+ * 以前はこのページが page / sort / rec / mustSee / kids / free / category の
+ * 7パラメータを受け、組み合わせを noindex にして canonical を寄せていた。
+ * 絞り込みをクライアント側に移したのでURLは1本になり、noindex の出し分けも
+ * ページ送りも要らなくなった。既存の ?page=2 等は同じ内容を返し、
+ * canonical が /sightseeing/all を指すのでそこに寄る。
  */
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: {
-    page?: string;
-    sort?: string;
-    rec?: string;
-    mustSee?: string;
-    kids?: string;
-    free?: string;
-    category?: string;
-  };
-}): Promise<Metadata> {
-  const page = Number(searchParams.page) || 1;
-  const hasFilter = Boolean(
-    searchParams.sort ||
-      searchParams.rec ||
-      searchParams.mustSee ||
-      searchParams.kids ||
-      searchParams.free ||
-      searchParams.category,
-  );
+const PAGE_TITLE = "ロンドンの観光スポット一覧 | 料金・所要時間・エリアで探す";
+const PAGE_DESCRIPTION =
+  "ロンドンの観光スポットを、歴史・王室・美術館・エンタメ・庭園・建築・ツアー・買い物・季節限定に分けて一覧掲載。大人料金、滞在時間の目安、最寄り駅を各スポットに表示し、無料のもの、子ども向き、1時間以内で回れるものといった条件で絞り込めます。";
 
-  return buildPageMetadata({
-    path:
-      !hasFilter && page > 1
-        ? `/sightseeing/all?page=${page}`
-        : "/sightseeing/all",
-    title:
-      page > 1 && !hasFilter
-        ? `ロンドン観光施設一覧（${page}ページ目）`
-        : "ロンドン観光施設一覧",
-    description:
-      "ロンドンの観光施設を一覧で紹介。話題のスポットから歴史ある名所まで、まとめてチェックできます。",
-    noindex: hasFilter,
-  });
-}
+export const metadata = buildPageMetadata({
+  path: "/sightseeing/all",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  keywords: [
+    "ロンドン 観光 スポット 一覧",
+    "ロンドン 観光 施設",
+    "ロンドン 観光 無料",
+    "ロンドン 観光 所要時間",
+    "ロンドン 観光 料金",
+    "ロンドン 子連れ 観光",
+  ],
+});
 
-export default async function FacilitiesListPage({
-  searchParams,
-}: {
-  searchParams: {
-    page?: string;
-    sort?: string;
-    rec?: string;
-    mustSee?: string;
-    kids?: string;
-    free?: string;
-    category?: string;
-  };
-}) {
-  const currentPage = Number(searchParams.page) || 1;
-  const itemsPerPage = 10;
+export default async function AllAttractionsPage() {
+  const attractions = await fetchAllAttractions();
 
-  const { page, ...restParams } = searchParams;
-  // QueryString → フィルター条件に変換
-  const filters = {
-    sort: searchParams.sort || null,
-    rec: searchParams.rec ? Number(searchParams.rec) : null,
-    mustSee: searchParams.mustSee === "true",
-    kids: searchParams.kids === "true",
-    free: searchParams.free === "true",
-    categories: searchParams.category ? searchParams.category.split(",") : [],
-  };
-
-  // データ取得（フィルタ条件を渡す）
-  const { facilities, totalCount } = await fetchAllAttractions({
-    page: currentPage,
-    limit: itemsPerPage,
-    filters,
-  });
+  // 導入文で使う概況。件数を本文に直書きすると、スポットが増減したとき
+  // 黙って古くなる。
+  const freeCount = attractions.filter((a) => a.isFree).length;
+  const kidsCount = attractions.filter((a) => a.isForKids).length;
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <Breadcrumbs path="/sightseeing/all" className="mb-6" />
+    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
+      <div className="mb-6">
+        <Breadcrumbs path="/sightseeing/all" />
+      </div>
 
-      <h1 className="text-2xl font-bold mb-4">ロンドン観光施設一覧</h1>
-      <p className="text-base text-muted-foreground mb-2">
-        ロンドンには、急いで巡らなくても楽しめる場所がたくさんあります。
-        この観光施設一覧は、その“たくさん”をひとまず俯瞰できるようにまとめたものです。
-        歴史ある名所もあれば、何気ないけれど妙に記憶に残るスポットも並んでいます。
-      </p>
-      <p className="text-base text-muted-foreground mb-8">
-        リストを眺めながら、気になったものがあれば軽い気持ちで詳細ページを見てみてください。
-        意外な発見があったり、旅のルートが自然と形になったりするかもしれません。
-        見過ごしたつもりでも、つい思い返してしまう。それくらいロンドンは、印象の残りやすい街です。
-      </p>
+      <header className="mb-8 space-y-4">
+        <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          All Spots
+        </span>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          ロンドンの観光スポット 全{attractions.length}件
+        </h1>
+        <div className="max-w-3xl space-y-3 text-sm leading-relaxed text-muted-foreground">
+          <p>
+            掲載している観光スポットをすべて並べています。うち{freeCount}件は無料、
+            {kidsCount}件は子ども連れでも持ちこたえられる場所です。
+            ロンドンは有料の施設が高い街で、£30を超えるものが珍しくない一方、
+            公園も主要な博物館も無料で開いています。その両方が同じ一覧に並んでいます。
+          </p>
+          <p>
+            {attractions.length}件を名前だけ並べても選べないので、
+            <strong className="font-semibold text-foreground">種類</strong>
+            で章に分けました。歴史・王室・美術館・エンタメ・庭園・建築・ツアー・買い物・季節限定の順です。
+            気になる区分の見出しから読み進めてください。
+          </p>
+          <p>
+            行き先の見当がついているなら、絞り込みが早いです。
+            大人料金、滞在時間の目安、最寄り駅は各カードに出しているので、
+            「1時間以内」「£20以下」「無料」といった条件と、
+            エリアガイドの街区で絞り込めます。
+          </p>
+        </div>
+      </header>
 
-      {/* 追加：フィルターバー */}
-      <AttractionFilterBar />
-      <div className="mt-4 justify-center flex">
+      <div className="mb-8 flex justify-center">
         <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
       </div>
-      <div className="grid gap-8">
-        {facilities.map((f) => (
-          <Card key={f.id} className="overflow-hidden">
-            <CardHeader>
-              <CardTitle className="text-base flex flex-wrap items-center gap-1">
-                <span className="whitespace-nowrap">{f.name}</span>
-                <Badge
-                  variant="secondary"
-                  className="whitespace-nowrap flex-none"
-                >
-                  {f.engName}
-                </Badge>
-              </CardTitle>
-              <CardDescription className="text-sm italic">
-                {f.tagline}
-              </CardDescription>
-            </CardHeader>
 
-            <CardContent>
-              <AspectRatio
-                ratio={16 / 9}
-                className="rounded-md overflow-hidden"
-              >
-                <img
-                  src={f.image}
-                  alt={f.name}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                />
-              </AspectRatio>
-
-              {f.summary && (
-                <p className="mt-4 text-gray-700 dark:text-neutral-300">
-                  {f.summary}
-                </p>
-              )}
-
-              <div className="mt-4">
-                <Link
-                  href={`/sightseeing/${f.slug}`}
-                  className="inline-block px-3 py-1 border rounded border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-600 transition"
-                >
-                  詳細を見る
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Pagination
-        currentPage={currentPage}
-        totalItems={totalCount}
-        itemsPerPage={itemsPerPage}
-        baseUrl="/sightseeing/all"
-        query={restParams}
-      />
-    </div>
+      <AttractionBrowser attractions={attractions} />
+    </main>
   );
 }
