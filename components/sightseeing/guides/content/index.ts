@@ -1,5 +1,4 @@
 import type { TravelGuideArticle } from "../types";
-import budget from "./budget";
 import itinerary from "./itinerary";
 import itineraryLayover from "./itinerary-layover";
 import itineraryRainyDay from "./itinerary-rainy-day";
@@ -16,7 +15,6 @@ import tippingAndPayment from "./tipping-and-payment";
  */
 export const travelGuideArticles: Record<string, TravelGuideArticle> = {
   itinerary,
-  budget,
   "tipping-and-payment": tippingAndPayment,
   "step-free": stepFree,
 };
@@ -37,7 +35,6 @@ export const itineraryVariantArticles: Record<string, TravelGuideArticle> = {
 
 export {
   itinerary,
-  budget,
   tippingAndPayment,
   stepFree,
   itineraryRainyDay,

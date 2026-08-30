@@ -1,9 +1,9 @@
-import TravelGuideLayout from "@/components/sightseeing/guides/TravelGuideLayout";
+import BudgetGuide from "@/components/sightseeing/guides/budget/BudgetGuide";
 import { buildTravelGuideMetadata } from "@/components/sightseeing/guides/guides";
-import budget from "@/components/sightseeing/guides/content/budget";
+import { budgetMeta } from "@/components/sightseeing/guides/budget/content";
 
-export const metadata = buildTravelGuideMetadata(budget);
+export const metadata = buildTravelGuideMetadata(budgetMeta);
 
 export default function Page() {
-  return <TravelGuideLayout article={budget} />;
+  return <BudgetGuide />;
 }
