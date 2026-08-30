@@ -1,30 +1,41 @@
-"use client";
-import { motion } from "framer-motion";
-
-export default function ArtworksIntro({ museumName }: { museumName: string }) {
-  const sentences = [
-    `${museumName}では、時間を忘れるほど没入できるコレクションが揃っています。`,
-    "ここでは、絶対に見逃せない主要作品の解説を掲載しており、各作品ページではさらに詳しい背景や見どころを紹介しています。",
-    "気になる展示作品を選んで、自分だけのアート旅を始めましょう。",
-    `${museumName}で、想像力と情熱を解き放つ冒険だ!`,
+export default function ArtworksIntro({
+  museumName,
+  total,
+  mustSeeCount,
+  roomCount,
+}: {
+  museumName: string;
+  total: number;
+  mustSeeCount: number;
+  roomCount: number;
+}) {
+  const stats = [
+    { label: "掲載作品", value: `${total}点` },
+    { label: "必見", value: `${mustSeeCount}点` },
+    { label: "展示室", value: `${roomCount}室` },
   ];
+
   return (
-    <section className="mb-12 text-left md:text-center">
-      <h1 className="text-xl lg:text-4xl font-extrabold mb-4">
+    <header className="mb-8 space-y-4">
+      <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+        Collection
+      </span>
+      <h1 className="text-xl font-extrabold leading-tight tracking-tight md:text-3xl">
         {museumName} の有名作品・主要作品のガイド・徹底解説
       </h1>
-      <div className="text-xs md:text-base text-muted-foreground md:leading-relaxed max-w-4xl mx-auto flex flex-col gap-2">
-        {sentences.map((text, i) => (
-          <motion.p
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.3, duration: 0.6 }}
-          >
-            {text}
-          </motion.p>
+      <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base">
+        館内で回りやすいように、展示室ごとに並べています。作品名・作者名での検索、
+        時間がないときの「必見のみ」への絞り込みができます。
+        カードを選ぶと、その作品の背景と見どころの解説ページに移ります。
+      </p>
+      <dl className="flex flex-wrap gap-x-6 gap-y-2">
+        {stats.map((s) => (
+          <div key={s.label} className="flex items-baseline gap-1.5">
+            <dt className="text-xs text-muted-foreground">{s.label}</dt>
+            <dd className="text-base font-bold tabular-nums">{s.value}</dd>
+          </div>
         ))}
-      </div>
-    </section>
+      </dl>
+    </header>
   );
 }

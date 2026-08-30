@@ -385,9 +385,23 @@ export const fetchMuseumDetailsBySlug = (slug: string) => {
 // };
 
 export const fetchArtworks = async (museumId: string) => {
+  // 一覧ページ用。description まで取ると1館200件超で数十万字を
+  // ページの payload に載せることになるので、カードに出す列だけ選ぶ。
   const artworks = await db.artwork.findMany({
     where: {
       museumId,
+    },
+    select: {
+      id: true,
+      title: true,
+      engTitle: true,
+      artist: true,
+      year: true,
+      room: true,
+      image: true,
+      mustSee: true,
+      recommendLevel: true,
+      highlights: true,
     },
     orderBy: {
       room: "asc",

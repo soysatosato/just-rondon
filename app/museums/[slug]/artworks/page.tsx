@@ -1,68 +1,49 @@
-import ArtworksAccordion from "@/components/artworks/ArtworksAccordion";
+import ArtworkBrowser, {
+  type BrowsableArtwork,
+} from "@/components/artworks/ArtworkBrowser";
 import { buildPageMetadata } from "@/lib/seo";
 import ArtworksIntro from "@/components/artworks/ArtworksIntro";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
+import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { fetchArtworks, fetchMuseumIDandName } from "@/utils/actions/museums";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-// ---------- Roomごとに分類 ----------
-const groupByRoom = (items: any[]) => {
-  const roomsMap: Record<string, any[]> = {};
+type ArtworkRow = Awaited<ReturnType<typeof fetchArtworks>>[number];
 
-  items.forEach((art) => {
-    const room = art.room || "Unknown Room";
+// 展示室名を「基準名 + 部屋番号」に分解する。"Room 9" が "Room 10" より後ろに
+// 来ないよう、番号は文字列ではなく数値で比べる。
+const roomSortKey = (room: string): [string, number, string] => {
+  const withBase = room.match(/^(.+?)\s*\(Room\s*(\d+)(\w*)\)$/i);
+  if (withBase) return [withBase[1], parseInt(withBase[2], 10), withBase[3]];
 
-    // baseRoom と数字部分を抽出
-    let match = room.match(/^(.+?)\s*\(Room\s*(\d+\w*)\)$/i);
-    let baseRoom: string, roomNum: string;
-    if (match) {
-      baseRoom = match[1];
-      roomNum = match[2];
-    } else if (/^Room\s*\d+/i.test(room)) {
-      // 単純な Room X
-      match = room.match(/^Room\s*(\d+\w*)/i);
-      baseRoom = "Room";
-      roomNum = match ? match[1] : "";
-    } else {
-      // それ以外は文字列として
-      baseRoom = room;
-      roomNum = "";
-    }
+  const plain = room.match(/^Room\s*(\d+)(\w*)$/i);
+  if (plain) return ["Room", parseInt(plain[1], 10), plain[2]];
 
-    const key = `${baseRoom}___${roomNum}`;
-    if (!roomsMap[key]) roomsMap[key] = [];
-    roomsMap[key].push(art);
-  });
-
-  // ソート済みキーを作る
-  const sortedKeys = Object.keys(roomsMap).sort((a, b) => {
-    const [aName, aNum] = a.split("___");
-    const [bName, bNum] = b.split("___");
-
-    if (aName !== bName) return aName.localeCompare(bName);
-
-    // 数字部分で自然順ソート
-    const numA = parseInt(aNum.match(/\d+/)?.[0] || "0", 10);
-    const numB = parseInt(bNum.match(/\d+/)?.[0] || "0", 10);
-    if (numA !== numB) return numA - numB;
-
-    // サフィックスがあれば文字順
-    const suffixA = aNum.replace(/\d+/, "");
-    const suffixB = bNum.replace(/\d+/, "");
-    return suffixA.localeCompare(suffixB);
-  });
-
-  // 表示用 Record に変換
-  const sortedRooms: Record<string, any[]> = {};
-  sortedKeys.forEach((key) => {
-    const artworks = roomsMap[key];
-    const roomName = artworks[0].room || "Unknown Room";
-    sortedRooms[roomName] = artworks;
-  });
-
-  return sortedRooms;
+  return [room, 0, ""];
 };
+
+const compareRooms = (a: string, b: string) => {
+  const [aName, aNum, aSuffix] = roomSortKey(a);
+  const [bName, bNum, bSuffix] = roomSortKey(b);
+  return (
+    aName.localeCompare(bName) || aNum - bNum || aSuffix.localeCompare(bSuffix)
+  );
+};
+
+// 同じ部屋の中では、必見 → おすすめ度の高い順に並べる。
+const compareArtworks = (a: ArtworkRow, b: ArtworkRow) =>
+  Number(b.mustSee) - Number(a.mustSee) ||
+  b.recommendLevel - a.recommendLevel ||
+  a.title.localeCompare(b.title, "ja");
+
+// カードでは1行のリード文として出すだけなので、マークダウン記法は落とす。
+const toPlainText = (text: string) =>
+  text
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[*_`]/g, "")
+    .trim();
 
 export async function generateMetadata({
   params,
@@ -77,6 +58,7 @@ export async function generateMetadata({
     description: `${museum?.name}の主要作品を解説。ロンドン観光で絶対に見たい美術館・注目作品、必見作品の情報をわかりやすくガイドします。`,
   });
 }
+
 export default async function ArtworksPage({
   params,
 }: {
@@ -86,10 +68,40 @@ export default async function ArtworksPage({
   if (!museum) notFound();
   const artworks = await fetchArtworks(museum.id);
   if (!artworks || artworks.length === 0) notFound();
-  const rooms = groupByRoom(artworks);
+
+  const sorted = [...artworks].sort(
+    (a, b) =>
+      compareRooms(a.room ?? "Unknown Room", b.room ?? "Unknown Room") ||
+      compareArtworks(a, b),
+  );
+
+  // 本文(description)や2件目以降のハイライトは一覧では使わないので payload に載せない
+  const items: BrowsableArtwork[] = sorted.map((art) => ({
+    id: art.id,
+    title: art.title,
+    engTitle: art.engTitle,
+    artist: art.artist,
+    year: art.year,
+    room: art.room ?? "Unknown Room",
+    image: art.image,
+    mustSee: art.mustSee,
+    recommendLevel: art.recommendLevel,
+    highlight: art.highlights[0] ? toPlainText(art.highlights[0]) : null,
+  }));
+
+  const rooms = Array.from(new Set(items.map((a) => a.room)));
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-4 text-foreground">
+      <JsonLd
+        data={breadcrumbListJsonLd({
+          path: "/museums",
+          trail: [{ label: museum.name, href: `/museums/${params.slug}` }],
+          current: "コレクション",
+          currentHref: `/museums/${params.slug}/artworks`,
+        })}
+      />
+
       <div className="mb-6">
         <Breadcrumbs
           path="/museums"
@@ -97,8 +109,15 @@ export default async function ArtworksPage({
           current="コレクション"
         />
       </div>
-      <ArtworksIntro museumName={museum.name} />
-      <ArtworksAccordion rooms={rooms} slug={params.slug} />
+
+      <ArtworksIntro
+        museumName={museum.name}
+        total={items.length}
+        mustSeeCount={items.filter((a) => a.mustSee).length}
+        roomCount={rooms.length}
+      />
+
+      <ArtworkBrowser slug={params.slug} artworks={items} rooms={rooms} />
     </div>
   );
 }
