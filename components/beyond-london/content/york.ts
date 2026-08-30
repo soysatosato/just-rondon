@@ -27,20 +27,12 @@ const york: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "鉄道で約2時間（最速1時間50分程度）" },
-    { label: "滞在の目安", value: "1泊2日が適切。日帰りだと大聖堂で終わります" },
-    {
-      label: "ヨーク・ミンスター",
-      value: `${gbpRange(ADMISSIONS.yorkMinster)} 程度。塔に登るなら追加料金`,
-    },
-    {
-      label: "JORVIK",
-      value: `${gbpRange(ADMISSIONS.jorvik)} 程度。事前予約を勧めます`,
-    },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "街の規模", value: "城壁の内側は徒歩圏。市内交通は不要です" },
-  ],
+  verdict: {
+    stayLength: "1泊2日が適切。日帰りだと大聖堂で終わります",
+    watchOut:
+      "日帰りにするなら対象を2つに絞ること。ミンスターとJORVIKだけで半日が埋まります。JORVIKは事前予約を勧めます",
+    suitedTo: "ローマ・ヴァイキング・中世が徒歩圏に積み重なる街を、夜まで含めて見たい人",
+  },
   gettingThere: {
     fromStation: "キングス・クロス",
     operator: "LNER（ほかに Grand Central・Lumo の便もあります）",
@@ -145,6 +137,7 @@ const york: DestinationArticle = {
   sections: [
     {
       id: "why-stay",
+      navLabel: "なぜ泊まるのか",
       title: "日帰りできるのに、なぜ泊まるのか",
       body: `正直に書くと、**ヨークは日帰り可能です**。片道2時間、朝8時の列車に乗れば10時前に着き、19時の列車で戻れば21時にはロンドンです。実働9時間。
 
@@ -177,6 +170,7 @@ const york: DestinationArticle = {
     },
     {
       id: "minster",
+      navLabel: "ミンスター",
       title: "ヨーク・ミンスターで何を見るか",
       body: `**北ヨーロッパ最大級のゴシック大聖堂**です。250年かけて建てられ、13世紀から15世紀の様式が一つの建物に共存しています。
 
@@ -200,6 +194,7 @@ const york: DestinationArticle = {
     },
     {
       id: "vikings",
+      navLabel: "ヴァイキング",
       title: "ヴァイキングの首都だった時代",
       body: `9世紀、**デーン人（ヴァイキング）がヨークを征服**し、ここを拠点に王国を築きました。街の名前 York は、ヴァイキングが呼んだ **Jórvík（ヨルヴィク）** が訛ったものです。
 
@@ -218,6 +213,7 @@ const york: DestinationArticle = {
     },
     {
       id: "walls-and-streets",
+      navLabel: "城壁とシャンブルズ",
       title: "城壁を歩き、シャンブルズを歩く",
       body: `**城壁（City Walls）** は英国で最も完全に残る中世の城壁です。全長約3.4km、その大部分の上を歩けます。**無料**です。
 

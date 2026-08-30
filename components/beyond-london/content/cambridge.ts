@@ -21,14 +21,12 @@ const cambridge: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "約1時間20分（最速50分台）" },
-    { label: "滞在の目安", value: "1日。半日でも中心部は歩けます" },
-    { label: "パントの相場", value: "案内人つきで1人£25〜35程度、自分で漕ぐなら舟1艘£30前後" },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "最大の注意", value: "カレッジは学期中・試験期間に見学が止まります" },
-    { label: "向いている人", value: "川沿いの風景と、落ち着いた街歩きが好きな人" },
-  ],
+  verdict: {
+    stayLength: "1日。半日でも中心部は歩けます",
+    watchOut:
+      "カレッジは学期中・試験期間に見学が止まります。加えて駅から中心部まで徒歩25分あるので、時間が限られるならバスを使ってください",
+    suitedTo: "川沿いの風景と、落ち着いた街歩きが好きな人",
+  },
   gettingThere: {
     fromStation: "キングス・クロスまたはリヴァプール・ストリート",
     operator: "Great Northern／Thameslink（キングス・クロス）、Greater Anglia（リヴァプール・ストリート）",
@@ -119,6 +117,7 @@ const cambridge: DestinationArticle = {
   sections: [
     {
       id: "getting-there",
+      navLabel: "駅から中心部",
       title: "駅から中心部までが、意外と遠い",
       body: `ロンドンからの列車は**キングス・クロス**と**リヴァプール・ストリート**の2駅から出ています。合わせて毎時3〜4本。
 
@@ -141,6 +140,7 @@ const cambridge: DestinationArticle = {
     },
     {
       id: "punting",
+      navLabel: "パント",
       title: "パントの相場と、客引きの避け方",
       subtitle: "ケンブリッジ特有の落とし穴",
       body: `**パント（punting）** は、長い棒で川底を突いて進む平底舟です。ケンブリッジに来たならこれをやる価値があります。カレッジ群を川面から見上げる構図は、陸からは絶対に見られません。
@@ -175,6 +175,7 @@ const cambridge: DestinationArticle = {
     },
     {
       id: "colleges",
+      navLabel: "カレッジ見学",
       title: "カレッジ見学は、行く前に確認する",
       body: `オックスフォードと同じ事情です。**カレッジは学生が生活し勉強する場所**で、観光施設ではありません。
 
@@ -200,6 +201,7 @@ const cambridge: DestinationArticle = {
     },
     {
       id: "half-day-plan",
+      navLabel: "半日の順路",
       title: "半日で回るなら、この順番",
       body: `駅から中心部への移動を含めて組み立てます。
 
@@ -222,6 +224,7 @@ const cambridge: DestinationArticle = {
     },
     {
       id: "vs-oxford",
+      navLabel: "オックスフォードと比較",
       title: "オックスフォードとどちらに行くべきか",
       body: `方角が違うので、**1回の滞在で行けるのはどちらか一方**です。判断の基準はこうです。
 

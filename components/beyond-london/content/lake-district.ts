@@ -22,14 +22,12 @@ const lakeDistrict: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "約3時間20分（乗り換え1回）" },
-    { label: "滞在の目安", value: "1泊2日で湖の東岸。全域は2〜3泊必要です" },
-    { label: "車の要否", value: "東岸（ウィンダミア湖周辺）なら車なしで回れます" },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "現地の足", value: "船（湖上）とバス555系統。どちらも観光として成立します" },
-    { label: "最大の注意", value: "天候。雨が多い地域で、装備が体験の質を決めます" },
-  ],
+  verdict: {
+    stayLength: "1泊2日で湖の東岸。全域なら2〜3泊必要です",
+    watchOut:
+      "天候が体験の質をそのまま決めます。雨の多い地域なので防水の上着と靴で行くこと。西側の谷へ回るなら車が要ります",
+    suitedTo: "歩くことそのものが目的で、天気に賭けられる人",
+  },
   gettingThere: {
     fromStation: "ユーストン",
     operator: "Avanti West Coast（オクセンホルムまで）＋ Northern（支線）",
@@ -130,6 +128,7 @@ const lakeDistrict: DestinationArticle = {
   sections: [
     {
       id: "without-a-car",
+      navLabel: "車なしで回る",
       title: "車がなくても回れる範囲",
       subtitle: "この行き先で最も誤解されている点",
       body: `結論から書きます。**ウィンダミア湖の周辺なら、車なしで成立します。**
@@ -163,6 +162,7 @@ const lakeDistrict: DestinationArticle = {
     },
     {
       id: "getting-there",
+      navLabel: "乗り換え",
       title: "オクセンホルムでの乗り換え",
       body: `ロンドンからは**ユーストン**発です。経路はこうなります。
 
@@ -186,6 +186,7 @@ const lakeDistrict: DestinationArticle = {
     },
     {
       id: "one-night-plan",
+      navLabel: "1泊2日の組み立て",
       title: "1泊2日の組み立て",
       body: `**初日**
 
@@ -213,6 +214,7 @@ const lakeDistrict: DestinationArticle = {
     },
     {
       id: "weather",
+      navLabel: "天候と装備",
       title: "天候が体験の質を決める",
       body: `**湖水地方は英国で最も雨の多い地域のひとつです**。山が大西洋からの湿った空気を受け止めるため、年間を通じて雨が降ります。
 

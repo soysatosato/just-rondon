@@ -28,22 +28,12 @@ const brighton: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "約1時間（最速55分程度）" },
-    { label: "滞在の目安", value: "半日〜1日。街はコンパクトです" },
-    {
-      label: "ロイヤル・パビリオン",
-      value: `${gbpRange(ADMISSIONS.royalPavilion)} 程度`,
-    },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "浜の注意", value: "砂浜ではなく小石。裸足で歩くと痛いです" },
-    {
-      label: "セブンシスターズ",
-      value:
-        "白亜の断崖。ブライトンからバスで約1時間、往復＋歩きで終日仕事になります",
-    },
-    { label: "向いている人", value: "海が見たい人／個性的な店を巡りたい人" },
-  ],
+  verdict: {
+    stayLength: "半日〜1日。街はコンパクトです",
+    watchOut:
+      "浜は砂ではなく小石で、裸足で歩くと痛みます。セブンシスターズは往復と歩きで終日仕事になるので、街歩きと同じ日には入れないこと",
+    suitedTo: "海が見たい人／個性的な店を巡りたい人",
+  },
   gettingThere: {
     fromStation: "ヴィクトリアまたはロンドン・ブリッジ",
     operator: "Southern／Thameslink／Gatwick Express の一部",
@@ -162,6 +152,7 @@ const brighton: DestinationArticle = {
   sections: [
     {
       id: "getting-there",
+      navLabel: "当日でも行ける",
       title: "本数が多いので、当日決めても行ける",
       body: `ロンドンからブライトンへは**ヴィクトリア**と**ロンドン・ブリッジ**の両方から出ています。合わせて**毎時4本以上**。
 
@@ -187,6 +178,7 @@ const brighton: DestinationArticle = {
     },
     {
       id: "the-beach",
+      navLabel: "浜は小石",
       title: "浜は小石。これだけは先に知っておく",
       body: `**ブライトンの浜は砂ではありません**。拳大までの丸い小石が敷き詰められています。英語では shingle beach と呼ばれる地形です。
 
@@ -210,6 +202,7 @@ const brighton: DestinationArticle = {
     },
     {
       id: "seven-sisters",
+      navLabel: "セブンシスターズ",
       title: "セブンシスターズまで足を延ばす",
       subtitle: "街歩きとは別の一日になります",
       body: `ブライトンの浜が小石で、期待していた「海」と違ったという人に、もうひとつの選択肢があります。**セブンシスターズ（Seven Sisters）** です。
@@ -245,6 +238,7 @@ const brighton: DestinationArticle = {
     },
     {
       id: "seven-sisters-walk",
+      navLabel: "断崖の歩き方",
       title: "どこからどこまで歩くか",
       body: `**歩かずに眺めるだけでも成立します**。Exceat（カントリー・パーク）でバスを降りて、川沿いを海まで歩けば、対岸に断崖が見えます。往復1時間ほど。**七つの起伏を正面から見る**には、実はこれで足ります。
 
@@ -276,6 +270,7 @@ const brighton: DestinationArticle = {
     },
     {
       id: "royal-pavilion",
+      navLabel: "ロイヤル・パビリオン",
       title: "ロイヤル・パビリオンは、英国のどこにも似ていない",
       body: `ブライトンで最も見る価値があるのは、実は海ではなく**ロイヤル・パビリオン**かもしれません。
 
@@ -293,6 +288,7 @@ const brighton: DestinationArticle = {
     },
     {
       id: "the-lanes",
+      navLabel: "レーンズ",
       title: "レーンズを歩く",
       body: `**レーンズ（The Lanes）** は、細い路地が入り組んだ旧市街です。ブライトンの空気がいちばん濃い区画で、ここを歩かずに帰るのは惜しい。
 
@@ -311,6 +307,7 @@ const brighton: DestinationArticle = {
     },
     {
       id: "rainy-day",
+      navLabel: "雨の日",
       title: "天気が外れた日の過ごし方",
       body: `ブライトンは**天候で成否が分かれる**行き先です。予報が悪いと分かっているなら、**そもそも別の行き先に振り替える**のが最善です。
 

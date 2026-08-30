@@ -19,6 +19,16 @@ export type GuideSectionData = {
   /** 目次アンカー用。ページ内で一意。kebab-case。 */
   id: string;
   title: string;
+  /**
+   * 追従ナビ(GuideSectionNav)に出す短いラベル。
+   *
+   * title と分けているのは、見出しが「ルートは2つ。速さか、
+   * 乗り換えなしか」のような一文になる記事があるから。そのまま
+   * ナビに流すと、横一列のチップが文章の帯になって現在地が読めない。
+   * 省略すると title がそのまま使われるので、長い見出しを持つ記事は
+   * 必ず埋めること。
+   */
+  navLabel?: string;
   subtitle?: string;
   /** markdown(GFMテーブル可) */
   body: string;

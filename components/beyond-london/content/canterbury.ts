@@ -26,17 +26,12 @@ const canterbury: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "高速列車で約1時間、在来線で約1時間30分" },
-    { label: "滞在の目安", value: "半日。大聖堂だけなら2時間ほど" },
-    {
-      label: "大聖堂の入場料",
-      value: `${gbpRange(ADMISSIONS.canterburyCathedral)} 程度`,
-    },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "街の規模", value: "城壁に囲まれた徒歩圏。市内交通は不要です" },
-    { label: "向いている人", value: "英国史・建築・宗教改革に関心がある人" },
-  ],
+  verdict: {
+    stayLength: "半日。大聖堂だけなら2時間ほど",
+    watchOut:
+      "礼拝の時間は大聖堂の見学が制限されます。高速列車と在来線で到着駅も違うので、切符を買うときに確認してください",
+    suitedTo: "英国史・建築・宗教改革に関心がある人",
+  },
   gettingThere: {
     fromStation: "セント・パンクラス（高速）またはヴィクトリア／チャリング・クロス（在来線）",
     operator: "Southeastern",
@@ -122,6 +117,7 @@ const canterbury: DestinationArticle = {
   sections: [
     {
       id: "two-routes",
+      navLabel: "2つのルート",
       title: "高速列車と在来線、到着駅が違う",
       body: `ロンドンからカンタベリーへは**2つのルート**があり、**到着する駅が違います**。
 
@@ -145,6 +141,7 @@ const canterbury: DestinationArticle = {
     },
     {
       id: "cathedral",
+      navLabel: "大聖堂",
       title: "大聖堂で何を見るか",
       body: `入場料は ${gbpRange(
         ADMISSIONS.canterburyCathedral
@@ -171,6 +168,7 @@ const canterbury: DestinationArticle = {
     },
     {
       id: "reformation",
+      navLabel: "宗教改革",
       title: "破壊した側と、された側が並んでいる",
       subtitle: "この街の面白さの核心",
       body: `カンタベリーが歴史の教材として優れているのは、**宗教改革の前後が両方残っている**からです。
@@ -194,6 +192,7 @@ const canterbury: DestinationArticle = {
     },
     {
       id: "town",
+      navLabel: "城壁の中",
       title: "城壁の中を歩く",
       body: `カンタベリーは**中世の城壁に囲まれた街**の構造がよく残っています。現存する城壁は部分的ですが、街の輪郭が当時のままです。
 

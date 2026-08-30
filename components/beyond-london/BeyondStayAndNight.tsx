@@ -1,16 +1,18 @@
-import { Card, CardContent } from "@/components/ui/card";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import type { StayAndNight } from "./types";
 
 /**
  * 「宿と夜」。週末1泊圏の記事だけに出る。
  *
- * 行き方(BeyondGettingThere)のすぐ下に置く。1泊する行き先では
- * 「どう行くか」の次に来る判断が「どこに泊まって、夜どうするか」で、
- * 見どころより先に決まるため。
+ * 行き方のすぐ下に置く。1泊する行き先では「どう行くか」の次に来る
+ * 判断が「どこに泊まって、夜どうするか」で、見どころより先に決まる。
  *
- * levyNote だけ色を変えているのは、宿泊税が「予約時の表示価格に
- * 含まれないことがある」お金の話だから。他の行と同じ見た目にすると
+ * 灰色の label/value 表をやめたのは、上の「行き方」と体裁が同じ
+ * だったから。1泊圏の記事では、要点・行き方・着いてから・宿と夜で
+ * 同型の表が4つ続いていた。
+ *
+ * levyNote だけ枠を変えているのは、宿泊税が「予約時の表示価格に
+ * 含まれないことがある」お金の話だから。他と同じ見た目にすると
  * 読み飛ばされて、現地で予定外の支払いになる。
  */
 export default function BeyondStayAndNight({ data }: { data: StayAndNight }) {
@@ -22,40 +24,32 @@ export default function BeyondStayAndNight({ data }: { data: StayAndNight }) {
   ];
 
   return (
-    <section className="mb-8">
-      <Card className="border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
-        <CardContent className="p-0">
-          <h2 className="border-b border-gray-300 bg-gray-100 px-4 py-2 text-sm font-semibold dark:border-neutral-700 dark:bg-neutral-800">
-            宿と夜
-          </h2>
-          <dl className="divide-y divide-gray-200 dark:divide-neutral-700">
-            {rows.map((row) => (
-              <div
-                key={row.label}
-                className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4"
-              >
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
-                  {row.label}
-                </dt>
-                <dd className="text-sm leading-relaxed">
-                  <MarkdownBody>{row.value}</MarkdownBody>
-                </dd>
-              </div>
-            ))}
+    <section className="mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+      <h2 className="text-base font-bold">宿と夜</h2>
 
-            {data.levyNote && (
-              <div className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
-                  宿泊税
-                </dt>
-                <dd className="text-sm leading-relaxed text-amber-800 dark:text-amber-300">
-                  <MarkdownBody>{data.levyNote}</MarkdownBody>
-                </dd>
-              </div>
-            )}
-          </dl>
-        </CardContent>
-      </Card>
+      <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+        {rows.map((row) => (
+          <div key={row.label}>
+            <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              {row.label}
+            </dt>
+            <dd className="mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <MarkdownBody>{row.value}</MarkdownBody>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      {data.levyNote && (
+        <div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 dark:bg-amber-950/25">
+          <p className="text-xs font-bold text-gray-600 dark:text-gray-400">
+            宿泊税
+          </p>
+          <div className="mt-1 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+            <MarkdownBody>{data.levyNote}</MarkdownBody>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

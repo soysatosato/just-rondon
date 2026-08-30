@@ -29,19 +29,12 @@ const penzance: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "昼行で約5時間、寝台で約8時間（就寝中）" },
-    { label: "滞在の目安", value: "1泊2日が最低線。2泊するとかなり楽になります" },
-    {
-      label: "寝台列車",
-      value: `個室1人用 ${gbp(
-        NIGHT_RIVIERA.singleCabinFrom
-      )}〜／2人用は1人あたり ${gbp(NIGHT_RIVIERA.twinCabinPerPersonFrom)}〜（運賃に上乗せ）`,
-    },
-    { label: "運行", value: `${NIGHT_RIVIERA.runsNightly}。土曜夜は走りません` },
-    { label: "現地の足", value: "バスかレンタカー。鉄道だけでは回りきれません" },
-    { label: "向いている人", value: "海岸線と、移動そのものを楽しめる人" },
-  ],
+  verdict: {
+    stayLength: "1泊2日が最低線。2泊するとかなり楽になります",
+    watchOut:
+      "セント・マイケルズ・マウントは潮で参道が沈みます。潮見表を先に見てから予定を組んでください。寝台は土曜の夜だけ走りません",
+    suitedTo: "海岸線と、移動そのものを楽しめる人",
+  },
   gettingThere: {
     fromStation: "パディントン",
     operator: "GWR",
@@ -145,6 +138,7 @@ const penzance: DestinationArticle = {
   sections: [
     {
       id: "sleeper-or-day",
+      navLabel: "寝台か昼行か",
       title: "寝台か、昼行か",
       subtitle: "この判断が旅程を決めます",
       body: `選択肢は2つです。
@@ -183,6 +177,7 @@ const penzance: DestinationArticle = {
     },
     {
       id: "st-michaels-mount",
+      navLabel: "潮と城",
       title: "セント・マイケルズ・マウントは潮で決まる",
       body: `コーンウォールで最も知られた風景が、**セント・マイケルズ・マウント**です。湾に浮かぶ岩山の上に、城と教会が建っています。
 
@@ -210,6 +205,7 @@ const penzance: DestinationArticle = {
     },
     {
       id: "minack-and-lands-end",
+      navLabel: "ミナックと最果て",
       title: "ミナック劇場と、島の最果て",
       body: `**ミナック劇場（Minack Theatre）** は、この地方でいちばん説明の難しい場所です。
 
@@ -230,6 +226,7 @@ const penzance: DestinationArticle = {
     },
     {
       id: "getting-around",
+      navLabel: "現地の足",
       title: "現地の足をどうするか",
       body: `**鉄道だけでは回りきれません**。ペンザンスまでは鉄道で行けますが、その先——マラザイオン、ポースカーノ（ミナック）、ランズエンド——は鉄道が通っていません。
 
@@ -253,6 +250,7 @@ const penzance: DestinationArticle = {
     },
     {
       id: "why-cornwall",
+      navLabel: "なぜここまで",
       title: "なぜここまで来るのか",
       body: `片道5時間かけて行く価値があるかどうか。判断材料を書いておきます。
 

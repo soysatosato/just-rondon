@@ -33,7 +33,13 @@ export type BeyondFaq = GuideFaqItem;
 export type BeyondSource = GuideSourceLink;
 export type BeyondRelatedLink = GuideRelatedLink;
 
-/** 記事冒頭の要約表の1行。 */
+/**
+ * 要約表の1行。RailHowToArticle だけが使う。
+ *
+ * 行き先記事は BeyondVerdict に移した。あちらは行き方・見どころと
+ * 事実が重複するので型で締める必要があったが、BritRail Pass のような
+ * 制度の記事には対応する表が他に無く、持つべき項目も記事ごとに違う。
+ */
 export type BeyondFact = {
   label: string;
   /** markdown不可。短く言い切る。 */
@@ -170,6 +176,38 @@ export type StayAndNight = {
   levyNote?: string;
 };
 
+/**
+ * 「自分に向いているか」の判断材料。行き先記事が必ず持つ。
+ *
+ * これは atAGlance(自由な label/value の表)を置き換えたもの。
+ * 自由形式だったころ、11記事すべてが所要時間と Oyster の行を持ち、
+ * その2つは gettingThere が同じことを書いていた。入場料の行も
+ * highlights[].admission と同じ ADMISSIONS を参照していた。
+ * つまり冒頭の「要点」表は、半分が下の表の先出しだった。
+ * 同じ見た目の灰色の表が2つ続き、片方を読んでももう片方を
+ * 読まされる形になっていた。
+ *
+ * そこで、行き方でも見どころでもないもの——読者が
+ * 「そもそも自分はここに行くべきか」を決めるのに要る3点だけを
+ * 型で持つ。事実は gettingThere と highlights が一箇所で持ち、
+ * ここは判断だけを持つ。フィールドを固定しているのは、自由形式に
+ * 戻すと必ずまた事実が写し取られてくるから。
+ */
+export type BeyondVerdict = {
+  /** どれだけ時間を見ておくか。1文。 */
+  stayLength: string;
+  /**
+   * この行き先で最も外しやすい一点。
+   *
+   * 記事ごとに違う(ウィンザーは開館曜日、ペンザンスは潮、
+   * オックスフォードは学期)。ここが空欄になる行き先は無い——
+   * 無いなら、その行き先はまだ調べ足りていない。
+   */
+  watchOut: string;
+  /** 誰に向くか。裏返せば、誰には向かないか。 */
+  suitedTo: string;
+};
+
 export type DestinationArticle = {
   kind: "destination";
   slug: string;
@@ -182,8 +220,8 @@ export type DestinationArticle = {
   description: string;
   keywords: string[];
   mainText: string;
-  /** 冒頭の要約表。3〜6行。 */
-  atAGlance?: BeyondFact[];
+  /** 判断材料。必須。冒頭に出す。 */
+  verdict: BeyondVerdict;
   /** 行き方。必須。 */
   gettingThere: GettingThere;
   /** 現地での回り方。必須。 */

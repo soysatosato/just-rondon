@@ -21,14 +21,12 @@ const cotswolds: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "鉄道で約1時間30分〜2時間（村による）" },
-    { label: "滞在の目安", value: "終日。日帰りでは2〜3か村が限度です" },
-    { label: "最大の注意", value: "村どうしを結ぶ公共交通がほとんどありません" },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "現実的な手段", value: "ロンドン発ツアー、レンタカー、または鉄道＋タクシー" },
-    { label: "向いている人", value: "田園風景が目的で、移動の不便を許容できる人" },
-  ],
+  verdict: {
+    stayLength: "終日。日帰りでは2〜3か村が限度です",
+    watchOut:
+      "村どうしを結ぶ公共交通がほとんどありません。路線バスをあてにせず、ロンドン発ツアー・レンタカー・鉄道＋タクシーのどれで動くかを先に決めてください",
+    suitedTo: "田園風景が目的で、移動の不便を許容できる人",
+  },
   gettingThere: {
     fromStation: "パディントン",
     operator: "GWR",
@@ -120,6 +118,7 @@ const cotswolds: DestinationArticle = {
   sections: [
     {
       id: "three-options",
+      navLabel: "3つの選択肢",
       title: "選択肢は3つ。それぞれの向き不向き",
       body: `コッツウォルズを日帰りで回る方法は、実質的に3つです。
 
@@ -144,6 +143,7 @@ const cotswolds: DestinationArticle = {
     },
     {
       id: "by-train",
+      navLabel: "鉄道で行く",
       title: "鉄道で行くなら、モートン・イン・マーシュ",
       body: `それでも鉄道で行きたい場合、**モートン・イン・マーシュ**（Moreton-in-Marsh）が唯一の現実的な選択肢です。
 
@@ -170,6 +170,7 @@ const cotswolds: DestinationArticle = {
     },
     {
       id: "which-villages",
+      navLabel: "どの村へ",
       title: "どの村に行くべきか",
       body: `村ごとに性格が違います。全部は回れないので、優先順位をつけてください。
 
@@ -201,6 +202,7 @@ const cotswolds: DestinationArticle = {
     },
     {
       id: "expectations",
+      navLabel: "期待値の調整",
       title: "期待値の調整：ここは「観光地」ではない",
       body: `コッツウォルズについて、正直に書いておきます。
 

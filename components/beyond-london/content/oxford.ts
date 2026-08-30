@@ -26,17 +26,12 @@ const oxford: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "鉄道で約1時間（最速45分）" },
-    { label: "滞在の目安", value: "1日。半日でも街の中心は歩けます" },
-    {
-      label: "カレッジ入場料",
-      value: `クライスト・チャーチで ${gbpRange(ADMISSIONS.christChurch)} 程度`,
-    },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "最大の注意", value: "カレッジは学期中・試験期間に見学が止まります" },
-    { label: "向いている人", value: "建築と街歩きが好きな人／ハリー・ポッター好き" },
-  ],
+  verdict: {
+    stayLength: "1日。半日でも街の中心は歩けます",
+    watchOut:
+      "カレッジは学期中・試験期間に見学が止まります。「行けば入れる」ではないので、行く前に各カレッジの公式で見学可否を確認してください",
+    suitedTo: "建築と街歩きが好きな人／ハリー・ポッター好き",
+  },
   gettingThere: {
     fromStation: "パディントン（鉄道）またはヴィクトリア・コーチステーション（バス）",
     operator: "GWR（鉄道）／Oxford Tube・X90 などの長距離バス",
@@ -130,6 +125,7 @@ const oxford: DestinationArticle = {
   sections: [
     {
       id: "train-or-bus",
+      navLabel: "鉄道かバスか",
       title: "鉄道とバス、どちらで行くか",
       subtitle: "オックスフォードは珍しくバスが有力",
       body: `ロンドンからの日帰り先としては珍しく、**バスが実用的な選択肢**になります。
@@ -156,6 +152,7 @@ const oxford: DestinationArticle = {
     },
     {
       id: "college-access",
+      navLabel: "カレッジ見学",
       title: "カレッジは「行けば入れる」わけではない",
       subtitle: "この記事でいちばん重要な節",
       body: `**カレッジは大学の施設であって、観光施設ではありません。**
@@ -185,6 +182,7 @@ const oxford: DestinationArticle = {
     },
     {
       id: "what-to-see",
+      navLabel: "半日で見る",
       title: "半日で見るなら、どこを選ぶか",
       body: `カレッジを全部回ることはできません。**38あります**。現実的には1〜2つです。
 
@@ -216,6 +214,7 @@ const oxford: DestinationArticle = {
     },
     {
       id: "vs-cambridge",
+      navLabel: "ケンブリッジと比較",
       title: "ケンブリッジとどちらに行くべきか",
       body: `**両方は行けません**。方角が違い、それぞれ日帰りで1日仕事です。判断の基準を示します。
 

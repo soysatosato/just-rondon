@@ -26,20 +26,12 @@ const bathStonehenge: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "バースまで鉄道で約1時間30分" },
-    { label: "滞在の目安", value: "バース単体なら1日。2か所なら終日ツアー" },
-    {
-      label: "ローマ浴場",
-      value: `${gbpRange(ADMISSIONS.romanBaths)} 程度（曜日・季節で変動）`,
-    },
-    {
-      label: "ストーンヘンジ",
-      value: `${gbpRange(ADMISSIONS.stonehenge)} 程度。事前予約制`,
-    },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "結論", value: "2か所回るならツアー、バースだけなら鉄道" },
-  ],
+  verdict: {
+    stayLength: "バース単体なら1日。2か所回るなら終日ツアー",
+    watchOut:
+      "「バースだけか、両方か」を最初に決めること。2か所回るならツアー、バースだけなら鉄道で、手配の仕方が根本から変わります。ストーンヘンジは入場自体が事前予約制です",
+    suitedTo: "ローマの遺構と古代の石を、同じ日にまとめて見たい人",
+  },
   gettingThere: {
     fromStation: "パディントン（バース行き）",
     operator: "GWR",
@@ -138,6 +130,7 @@ const bathStonehenge: DestinationArticle = {
   sections: [
     {
       id: "decide-first",
+      navLabel: "まず決める",
       title: "まず決める：バースだけか、両方か",
       subtitle: "ここで移動手段が変わります",
       body: `**バースだけ行く場合（鉄道）**
@@ -161,6 +154,7 @@ const bathStonehenge: DestinationArticle = {
     },
     {
       id: "roman-baths",
+      navLabel: "ローマ浴場",
       title: "ローマ浴場は、なぜこれほど残っているのか",
       body: `英国にローマ時代の遺構は各地にありますが、**ローマ浴場ほどまとまった形で残っている場所はありません**。石畳の床、湯を引いた鉛の導管、温泉が湧き出る泉——これらが1900年前の位置にそのままあります。
 
@@ -184,6 +178,7 @@ const bathStonehenge: DestinationArticle = {
     },
     {
       id: "bath-town",
+      navLabel: "バースの街",
       title: "バースの街そのものが世界遺産",
       body: `ローマ浴場だけ見て帰る人がいますが、**街全体を歩く価値があります**。バースは市街地そのものが世界遺産に登録されています。
 
@@ -207,6 +202,7 @@ const bathStonehenge: DestinationArticle = {
     },
     {
       id: "stonehenge",
+      navLabel: "ストーンヘンジ",
       title: "ストーンヘンジで期待値を間違えないために",
       body: `正直に書きます。**ストーンヘンジは、写真で見たときの印象より小さく感じる人が多い**です。
 
@@ -230,6 +226,7 @@ const bathStonehenge: DestinationArticle = {
     },
     {
       id: "tour-tips",
+      navLabel: "ツアー選び",
       title: "ツアーを選ぶときに確認すること",
       body: `両方回るならツアーが現実的、と書きました。ただし**ツアーの中身にはかなり差があります**。予約前に確認すべき点を挙げます。
 

@@ -29,20 +29,12 @@ const edinburgh: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "鉄道で約4時間20分。飛行機なら約1時間30分" },
-    { label: "滞在の目安", value: "1泊2日で市内は回れます。2泊あると余裕" },
-    {
-      label: "エディンバラ城",
-      value: `${gbpRange(ADMISSIONS.edinburghCastle)} 程度。事前予約を勧めます`,
-    },
-    {
-      label: "宿泊税",
-      value: `${jpDate(EDINBURGH_LEVY.startedOn)}開始。宿泊費の${EDINBURGH_LEVY.rate}`,
-    },
-    { label: "Oyster", value: "使えません。市内交通も別制度です" },
-    { label: "最大の注意", value: "8月のフェスティバル期は宿が取れず高騰します" },
-  ],
+  verdict: {
+    stayLength: "1泊2日で市内は回れます。2泊あると余裕",
+    watchOut:
+      "8月のフェスティバル期は宿が取れず高騰します。宿泊税も予約サイトの表示価格に含まれないことがあるので、総額で見積もってください",
+    suitedTo: "英国の中の「別の国」を、紙幣や制度の違いごと見たい人",
+  },
   gettingThere: {
     fromStation: "キングス・クロス",
     operator: "LNER（ほかに Lumo・Avanti West Coast の経路もあります）",
@@ -155,6 +147,7 @@ const edinburgh: DestinationArticle = {
   sections: [
     {
       id: "visitor-levy",
+      navLabel: "宿泊税",
       title: "宿泊税が始まりました",
       subtitle: "英国初の制度です",
       body: `**${jpDate(EDINBURGH_LEVY.startedOn)}から、エディンバラで宿泊する人は宿泊税（Visitor Levy）を払います**。英国で初めて導入された都市です。
@@ -179,6 +172,7 @@ const edinburgh: DestinationArticle = {
     },
     {
       id: "getting-there",
+      navLabel: "鉄道か飛行機か",
       title: "鉄道か、飛行機か",
       body: `**鉄道**はキングス・クロスから**最速4時間20分**。毎時1〜2本走っています。運行はLNERが中心ですが、Lumo という格安事業者も同じ区間を走っており、こちらは安いかわりに設備が簡素です。
 
@@ -200,6 +194,7 @@ const edinburgh: DestinationArticle = {
     },
     {
       id: "old-and-new",
+      navLabel: "旧市街と新市街",
       title: "旧市街と新市街は、別の時代の街",
       body: `エディンバラの世界遺産登録は、**旧市街と新市街の対比**に対してなされています。両方を歩くと、その意味が分かります。
 
@@ -222,6 +217,7 @@ const edinburgh: DestinationArticle = {
     },
     {
       id: "scottish-differences",
+      navLabel: "スコットランドの違い",
       title: "スコットランドで戸惑うこと",
       body: `同じ国のようで、いくつか違います。**知らないと現地で戸惑う**ものを挙げます。
 
@@ -248,6 +244,7 @@ Oyster もタッチ決済の上限額も**関係ありません**。エディン
     },
     {
       id: "one-night-plan",
+      navLabel: "1泊2日の組み立て",
       title: "1泊2日の組み立て",
       body: `**初日**
 

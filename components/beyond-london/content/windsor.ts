@@ -27,19 +27,12 @@ const windsor: DestinationArticle = {
   ],
   dataAsOf: RAIL_AS_OF,
   updatedAt: RAIL_UPDATED_AT,
-  atAGlance: [
-    { label: "所要（片道）", value: "約30分〜1時間（ルートによる）" },
-    { label: "滞在の目安", value: "半日。城だけなら3時間ほどで足ります" },
-    {
-      label: "城の入場料",
-      value: `事前 ${gbp(ADMISSIONS.windsorCastle.advance)}／当日 ${gbp(
-        ADMISSIONS.windsorCastle.onTheDay
-      )}`,
-    },
-    { label: "Oyster", value: "使えません。目的地までの切符を買ってください" },
-    { label: "予約", value: "城は事前購入を推奨。列車は当日でも可" },
-    { label: "向いている人", value: "王室に関心があり、丸一日は使いたくない人" },
-  ],
+  verdict: {
+    stayLength: "半日。城だけなら3時間ほどで足ります",
+    watchOut:
+      "城の開館日は資料によって食い違います。行く日に開いているかを公式で確かめてから、切符と入場券を買ってください",
+    suitedTo: "王室に関心があり、丸一日は使いたくない人",
+  },
   gettingThere: {
     fromStation: "ウォータールー（直通）またはパディントン（スラウで乗り換え）",
     operator: "South Western Railway（ウォータールー発）／GWR（パディントン発）",
@@ -135,6 +128,7 @@ const windsor: DestinationArticle = {
   sections: [
     {
       id: "two-routes",
+      navLabel: "2つのルート",
       title: "ルートは2つ。速さか、乗り換えなしか",
       body: `ロンドンからウィンザーへは、**始発駅の違う2つのルート**があります。ウィンザーには駅が2つあり、どちらに着くかも変わります。
 
@@ -156,6 +150,7 @@ const windsor: DestinationArticle = {
     },
     {
       id: "oyster-warning",
+      navLabel: "Oyster",
       title: "Oyster は使えません",
       subtitle: "ここだけは出発前に片付ける",
       body: `**ウィンザーはロンドンのゾーンの外にあります。**
@@ -175,6 +170,7 @@ const windsor: DestinationArticle = {
     },
     {
       id: "castle",
+      navLabel: "城の入場料",
       title: "城の入場料と、開いている日",
       body: `入場料は**事前購入 ${gbp(
         ADMISSIONS.windsorCastle.advance
@@ -197,6 +193,7 @@ const windsor: DestinationArticle = {
     },
     {
       id: "half-day-plan",
+      navLabel: "半日の順路",
       title: "半日で回るなら、この順番",
       body: `ウィンザーは**歩く距離が短い**のが利点です。駅を出た時点で城が見えているので、移動に時間を取られません。
 
@@ -220,6 +217,7 @@ const windsor: DestinationArticle = {
     },
     {
       id: "who-should-go",
+      navLabel: "選ぶべきか",
       title: "ウィンザーを選ぶべきか、他を選ぶべきか",
       body: `ロンドン発の日帰りは選択肢が多いので、**ウィンザーが向いているかどうか**をはっきりさせておきます。
 

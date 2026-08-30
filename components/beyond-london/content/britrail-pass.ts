@@ -82,6 +82,7 @@ const britrailPass: RailHowToArticle = {
   sections: [
     {
       id: "who-can-buy",
+      navLabel: "買えるのか",
       title: "まず、あなたは買えるのか",
       subtitle: "在住者は対象外です",
       body: `BritRail Pass は**非居住者専用の商品**です。公式規定では、**英国に${BRITRAIL.ineligibleAfterMonthsResident}ヶ月以上居住している人は購入できません**。
@@ -103,6 +104,7 @@ const britrailPass: RailHowToArticle = {
     },
     {
       id: "consecutive-vs-flexi",
+      navLabel: "券種の選択",
       title: "Consecutive と Flexi のどちらを選ぶか",
       body: `パスには大きく2種類あります。
 
@@ -126,6 +128,7 @@ const britrailPass: RailHowToArticle = {
     },
     {
       id: "the-real-comparison",
+      navLabel: "実際に比べる",
       title: "実際に比べてみる",
       subtitle: "パスの価格ではなく、Advance の合計と比べる",
       body: `ここが記事の核心です。**パスの価格を単体で見ても、高いか安いかは判断できません**。比べるべきは「同じ移動を個別に買った場合の合計」です。
@@ -158,6 +161,7 @@ ${LONG_DISTANCE_ROUTES.map(
     },
     {
       id: "what-it-does-not-cover",
+      navLabel: "乗れないもの",
       title: "パスで乗れないもの",
       body: `**ロンドン地下鉄（Underground）では使えません**。これが最大の誤解です。パスを持っていても、市内の地下鉄・バスには別途タッチ決済かOysterが必要です（[運賃と支払い方法](/sightseeing/transport/fares)を参照）。
 
@@ -181,6 +185,7 @@ ${LONG_DISTANCE_ROUTES.map(
     },
     {
       id: "discounts",
+      navLabel: "割引と価格",
       title: "割引区分と、価格の調べ方",
       body: `年齢などによる割引があります。
 
