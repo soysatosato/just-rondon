@@ -4,20 +4,27 @@ import {
   SIGHTSEEING_PUBLISHER,
   sightseeingBreadcrumbJsonLd,
 } from "../jsonld";
-import type { TravelGuideArticle } from "./types";
-
 /**
  * metadata と JSON-LD を組み立てるのに要る最小限のフィールド。
  *
- * ETA だけは markdown の TravelGuideArticle をやめ、専用の構造化データ
- * (components/sightseeing/guides/eta/)に移した。sections を持たない
- * そちらからも同じヘルパーを使えるよう、引数を実際に読む範囲まで狭めてある。
- * 既存7本は TravelGuideArticle のまま渡せる。
+ * 旅行ガイド8本はいずれも markdown の記事オブジェクトをやめ、
+ * それぞれ専用の構造化データ(components/sightseeing/guides/<slug>/)に
+ * 移した。共通で要るのはここに並ぶ5つだけなので、ヘルパーの引数も
+ * 実際に読む範囲に絞ってある。各ガイドはこれを満たす meta を持つ。
  */
-export type TravelGuideMetaSource = Pick<
-  TravelGuideArticle,
-  "slug" | "title" | "description" | "keywords" | "updatedAt"
->;
+export type TravelGuideMetaSource = {
+  /**
+   * URL の末尾。子ページは `itinerary/rainy-day` のように
+   * 親 slug からの相対パスをスラッシュ区切りで持つ。
+   * travelGuidePath() がそのまま /sightseeing に連結する。
+   */
+  slug: string;
+  title: string;
+  description: string;
+  keywords: string[];
+  /** ISO日付(YYYY-MM-DD)。Article.dateModified と og:modified_time に使う。 */
+  updatedAt: string;
+};
 
 export { SITE_URL, SIGHTSEEING_BASE };
 
@@ -57,11 +64,10 @@ export type TravelGuideMeta = {
  * next-sitemap.config.js の staticPages、/sightseeing ハブの
  * 「旅の準備」カード表示順と一致させること。
  *
- * transport だけは例外で、実体が TravelGuideArticle ではなく
+ * transport だけは例外で、実体が1本の記事ではなく
  * /sightseeing/transport 配下のハブ(components/sightseeing/transport/)になっている。
  * このリストに残しているのは、/sightseeing ハブのカードと
- * TravelGuideLayout の相互リンクに出したいから。content/index.ts に
- * 対応する記事は無い。
+ * 各ガイド末尾の相互リンクに出したいから。
  */
 export const travelGuides: TravelGuideMeta[] = [
   {
@@ -150,7 +156,7 @@ export function buildTravelGuideMetadata(article: TravelGuideMetaSource) {
  * parent を渡さなければ従来どおり 観光ガイド → 記事 の2段。
  */
 export function travelGuideBreadcrumbJsonLd(
-  article: Pick<TravelGuideArticle, "slug" | "title">,
+  article: Pick<TravelGuideMetaSource, "slug" | "title">,
   parent?: { name: string; slug: string }
 ) {
   const meta = getTravelGuideMeta(article.slug);
@@ -181,31 +187,5 @@ export function travelGuideArticleJsonLd(article: TravelGuideMetaSource) {
     dateModified: article.updatedAt,
     author: SIGHTSEEING_PUBLISHER,
     publisher: SIGHTSEEING_PUBLISHER,
-  };
-}
-
-/**
- * モデルコース記事の Day セクションを ItemList として出す。
- *
- * HowTo は使わない。Google が 2023年9月に HowTo リッチリザルトを
- * ウェブ検索から撤去したため、記述コストに対して見返りが無い。
- */
-export function itineraryItemListJsonLd(article: TravelGuideArticle) {
-  const url = `${SITE_URL}${travelGuidePath(article.slug)}`;
-  const days = article.sections.filter((s) => /^day-\d+$/.test(s.id));
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "@id": `${url}#itinerary`,
-    name: article.title,
-    itemListOrder: "https://schema.org/ItemListOrderAscending",
-    numberOfItems: days.length,
-    itemListElement: days.map((s, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: s.title,
-      url: `${url}#${s.id}`,
-    })),
   };
 }

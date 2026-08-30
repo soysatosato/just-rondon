@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import TravelGuideLayout from "@/components/sightseeing/guides/TravelGuideLayout";
+import VariantLayout from "@/components/sightseeing/guides/itinerary/VariantLayout";
+import { variants } from "@/components/sightseeing/guides/itinerary/variants";
 import { buildTravelGuideMetadata } from "@/components/sightseeing/guides/guides";
 import {
   itineraryVariantPath,
   itineraryVariantSlugs,
-  itineraryVariants,
 } from "@/components/sightseeing/guides/itinerary-variants";
-import { itineraryVariantArticles } from "@/components/sightseeing/guides/content";
 import { buildPageMetadata } from "@/lib/seo";
-
-const PARENT = { name: "ロンドン モデルコース（1〜5日）", slug: "itinerary" };
 
 export function generateStaticParams() {
   return itineraryVariantSlugs.map((slug) => ({ slug }));
@@ -21,9 +18,9 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const article = itineraryVariantArticles[params.slug];
+  const variant = variants[params.slug];
 
-  if (!article) {
+  if (!variant) {
     return buildPageMetadata({
       path: itineraryVariantPath(params.slug),
       title: "ロンドンのモデルコース",
@@ -33,7 +30,7 @@ export async function generateMetadata({
     });
   }
 
-  return buildTravelGuideMetadata(article);
+  return buildTravelGuideMetadata(variant.meta);
 }
 
 export default function ItineraryVariantPage({
@@ -41,20 +38,9 @@ export default function ItineraryVariantPage({
 }: {
   params: { slug: string };
 }) {
-  const article = itineraryVariantArticles[params.slug];
+  const variant = variants[params.slug];
 
-  if (!article) return notFound();
+  if (!variant) return notFound();
 
-  return (
-    <TravelGuideLayout
-      article={article}
-      parent={PARENT}
-      childGuides={itineraryVariants.map((v) => ({
-        href: itineraryVariantPath(v.slug),
-        eyebrow: v.eyebrow,
-        label: v.label,
-        blurb: v.blurb,
-      }))}
-    />
-  );
+  return <VariantLayout {...variant} />;
 }
