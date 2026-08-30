@@ -1,9 +1,9 @@
-import TravelGuideLayout from "@/components/sightseeing/guides/TravelGuideLayout";
+import HotelsGuide from "@/components/sightseeing/guides/hotels/HotelsGuide";
 import { buildTravelGuideMetadata } from "@/components/sightseeing/guides/guides";
-import hotels from "@/components/sightseeing/guides/content/hotels";
+import { hotelsMeta } from "@/components/sightseeing/guides/hotels/content";
 
-export const metadata = buildTravelGuideMetadata(hotels);
+export const metadata = buildTravelGuideMetadata(hotelsMeta);
 
 export default function Page() {
-  return <TravelGuideLayout article={hotels} />;
+  return <HotelsGuide />;
 }
