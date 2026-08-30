@@ -8,6 +8,8 @@ import MarkdownBody from "@/components/jobs/MarkdownBody";
 import GuideCallout from "@/components/guides/GuideCallout";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
+import GuideNotes from "@/components/guides/GuideNotes";
+import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import GuideSources from "@/components/guides/GuideSources";
 import { SITE_URL } from "@/lib/seo";
 import { faqPageJsonLd } from "../../jsonld";
@@ -20,7 +22,6 @@ import {
 } from "../guides";
 import EtaChecklist from "./EtaChecklist";
 import EtaGlossary from "./EtaGlossary";
-import EtaSectionNav from "./EtaSectionNav";
 import {
   etaAfter,
   etaChecklistNotes,
@@ -159,7 +160,7 @@ export default function EtaGuide() {
         </p>
       </header>
 
-      <EtaSectionNav />
+      <GuideSectionNav sections={etaSections} />
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
 
@@ -239,7 +240,7 @@ export default function EtaGuide() {
             </div>
           </div>
 
-          <Notes items={etaVerdict.notes} />
+          <GuideNotes items={etaVerdict.notes} />
           <GuideCallout {...etaVerdict.callout} />
         </Section>
 
@@ -275,7 +276,7 @@ export default function EtaGuide() {
             {etaTransit.exemptionScope}
           </p>
 
-          <Notes items={etaTransit.notes} />
+          <GuideNotes items={etaTransit.notes} />
           <GuideCallout {...etaTransit.callout} />
         </Section>
 
@@ -287,7 +288,7 @@ export default function EtaGuide() {
           <div className="mt-5">
             <EtaChecklist />
           </div>
-          <Notes items={etaChecklistNotes} />
+          <GuideNotes items={etaChecklistNotes} />
         </Section>
 
         <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
@@ -406,7 +407,7 @@ export default function EtaGuide() {
             </div>
           </div>
 
-          <Notes items={etaQuestions.notes} />
+          <GuideNotes items={etaQuestions.notes} />
         </Section>
 
         {/* --------------------------------------------- 6. 対訳 */}
@@ -628,7 +629,7 @@ export default function EtaGuide() {
             ))}
           </div>
 
-          <Notes items={etaRejected.notes} />
+          <GuideNotes items={etaRejected.notes} />
         </Section>
 
         {/* --------------------------------------------- 10. 公式 */}
@@ -765,25 +766,5 @@ function Section({
       </h2>
       {children}
     </section>
-  );
-}
-
-/** 「実務メモ」。TravelGuideLayout の tips と同じ見た目にそろえている。 */
-function Notes({ items }: { items: readonly string[] }) {
-  if (items.length === 0) return null;
-
-  return (
-    <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-      <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
-        実務メモ
-      </p>
-      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
-        {items.map((item) => (
-          <li key={item} className="leading-relaxed">
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

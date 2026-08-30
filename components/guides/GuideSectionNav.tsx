@@ -1,24 +1,34 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { etaSections } from "./content";
+
+export type GuideNavSection = {
+  /** 対応するセクションの DOM id。 */
+  id: string;
+  /** ナビに出す短いラベル。横一列に収めるので長くしないこと。 */
+  navLabel: string;
+};
 
 /**
  * スクロール追従の節ナビ。
  *
- * 目次を冒頭に1つ置くだけでは、この記事では足りない。読者はアプリを
- * 操作しながら「対訳表 → 手順 → 対処」を行き来するので、10節ぶんを
- * 遡ってスクロールし直すことになる。現在地を出したまま横に並べておく。
+ * 冒頭に目次を1つ置くだけでは足りない記事のために作った。ETA も
+ * 実用情報も、読者は「手順 → 対訳 → 対処」「服装 → 電源 → 治安」と
+ * 節をまたいで往復する。そのたびに10節ぶん遡らせないための部品。
  *
- * スマホでは横スクロールさせ、現在地のチップを可視域へ寄せる。
- * 縦に折り返すと、ナビだけで画面の3割を占めてしまうため。
+ * スマホでは横スクロールさせる。縦に折り返すと、ナビだけで画面の
+ * 3割を占めてしまうため。現在地のチップは可視域へ寄せる。
  */
-export default function EtaSectionNav() {
-  const [activeId, setActiveId] = useState<string>(etaSections[0].id);
+export default function GuideSectionNav({
+  sections,
+}: {
+  sections: readonly GuideNavSection[];
+}) {
+  const [activeId, setActiveId] = useState<string>(sections[0]?.id ?? "");
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const targets = etaSections
+    const targets = sections
       .map((s) => document.getElementById(s.id))
       .filter((el): el is HTMLElement => el !== null);
     if (targets.length === 0) return;
@@ -36,7 +46,7 @@ export default function EtaSectionNav() {
           if (entry.isIntersecting) visible.add(entry.target.id);
           else visible.delete(entry.target.id);
         }
-        const first = etaSections.find((s) => visible.has(s.id));
+        const first = sections.find((s) => visible.has(s.id));
         if (first) setActiveId(first.id);
       },
       // 上端はナビの高さぶん、下端は「節の頭が入ったら切り替える」ため深く取る。
@@ -45,7 +55,7 @@ export default function EtaSectionNav() {
 
     targets.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [sections]);
 
   // 現在地のチップが画面外に出たままにならないよう、横スクロールを追従させる。
   useEffect(() => {
@@ -73,7 +83,7 @@ export default function EtaSectionNav() {
         ref={listRef}
         className="flex gap-1 overflow-x-auto px-1 py-2 [scrollbar-width:none] sm:px-4 [&::-webkit-scrollbar]:hidden"
       >
-        {etaSections.map((section, i) => {
+        {sections.map((section, i) => {
           const active = section.id === activeId;
           return (
             <li key={section.id} className="shrink-0">

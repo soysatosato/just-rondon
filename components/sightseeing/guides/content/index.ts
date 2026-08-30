@@ -7,7 +7,6 @@ import itineraryRainyDay from "./itinerary-rainy-day";
 import itineraryWithKids from "./itinerary-with-kids";
 import stepFree from "./step-free";
 import tippingAndPayment from "./tipping-and-payment";
-import travelTips from "./travel-tips";
 
 /**
  * slug → 記事。
@@ -21,7 +20,6 @@ export const travelGuideArticles: Record<string, TravelGuideArticle> = {
   hotels,
   budget,
   "tipping-and-payment": tippingAndPayment,
-  "travel-tips": travelTips,
   "step-free": stepFree,
 };
 
@@ -44,7 +42,6 @@ export {
   hotels,
   budget,
   tippingAndPayment,
-  travelTips,
   stepFree,
   itineraryRainyDay,
   itineraryWithKids,
