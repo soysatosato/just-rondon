@@ -41,60 +41,69 @@ export function buildBriefJsonLd(
         // 案内してしまうことになる。
         item.status === "confirmed"
     )
-    .map((item) => ({
-      "@context": "https://schema.org",
-      "@type": "Event",
-      name: item.title,
-      description: item.description.replace(/[#*_`>\[\]()]/g, "").slice(0, 300),
-      startDate: item.startDate!.toISOString().slice(0, 10),
-      ...(item.endDate
-        ? { endDate: item.endDate.toISOString().slice(0, 10) }
-        : {}),
-      eventStatus: "https://schema.org/EventScheduled",
-      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-      ...(item.venue || item.area
-        ? {
-            location: {
-              "@type": "Place",
-              name: item.venue ?? item.area,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: item.area ?? "London",
-                addressCountry: "GB",
-              },
-            },
-          }
-        : {}),
-      ...(item.website ? { url: item.website } : {}),
-      // 号のビジュアルを催しの image として借りる。催し個別の画像はDBにないが、
-      // 号の画像はその週の催しを写したものなので、無関係な絵にはならない。
-      ...(brief.image ? { image: brief.image } : {}),
-      // 有料の催しは priceInfo が「大人£33、18〜24歳£21.50」のような日本語の
-      // 散文で、price に入れられる数値がない。値段を捏造するかわりに、
-      // 買える場所(website)だけを Offer として出す。
-      ...(item.isFree
-        ? {
-            offers: {
-              "@type": "Offer",
-              price: 0,
-              priceCurrency: "GBP",
-              availability: "https://schema.org/InStock",
-              validFrom,
-            },
-          }
-        : item.website
+    .map((item) => {
+      // description は Google の必須フィールド。マークダウン記号を落とした
+      // 結果が空になる項目でもフィールドごと消えないよう、タイトルにフォールバックする。
+      const description =
+        item.description.replace(/[#*_`>\[\]()]/g, "").trim().slice(0, 300) ||
+        item.title;
+
+      // location も Event の必須フィールド。会場も地域も分からない催しは
+      // 開催都市(London)だけを Place として出す。省くと Google が
+      // 「Missing field location」でエラーにする。
+      const location = {
+        "@type": "Place",
+        name: item.venue ?? item.area ?? "London",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: item.area ?? "London",
+          addressCountry: "GB",
+        },
+      };
+
+      return {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        name: item.title,
+        description,
+        startDate: item.startDate!.toISOString().slice(0, 10),
+        ...(item.endDate
+          ? { endDate: item.endDate.toISOString().slice(0, 10) }
+          : {}),
+        eventStatus: "https://schema.org/EventScheduled",
+        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        location,
+        ...(item.website ? { url: item.website } : {}),
+        // 号のビジュアルを催しの image として借りる。催し個別の画像はDBにないが、
+        // 号の画像はその週の催しを写したものなので、無関係な絵にはならない。
+        ...(brief.image ? { image: brief.image } : {}),
+        // 有料の催しは priceInfo が「大人£33、18〜24歳£21.50」のような日本語の
+        // 散文で、price に入れられる数値がない。値段を捏造するかわりに、
+        // 買える場所(website)だけを Offer として出す。
+        ...(item.isFree
           ? {
               offers: {
                 "@type": "Offer",
-                url: item.website,
+                price: 0,
+                priceCurrency: "GBP",
                 availability: "https://schema.org/InStock",
                 validFrom,
               },
             }
-          : {}),
-      // kind は分類なので、そのまま検索側の手がかりにしておく。
-      keywords: getKindMeta(item.kind).label,
-    }));
+          : item.website
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  url: item.website,
+                  availability: "https://schema.org/InStock",
+                  validFrom,
+                },
+              }
+            : {}),
+        // kind は分類なので、そのまま検索側の手がかりにしておく。
+        keywords: getKindMeta(item.kind).label,
+      };
+    });
 
   return [article, ...events];
 }

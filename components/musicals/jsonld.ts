@@ -3,10 +3,12 @@ import type { Musical } from "@prisma/client";
 import { SITE_URL } from "@/lib/seo";
 export { SITE_URL };
 
-// 一覧に出すのは名前・URL・画像だけ。全カラムを要求すると、
-// 呼び出し側が JSON-LD のためだけに description まで取る羽目になる。
+// hasPart は CollectionPage の構成要素なので CreativeWork で出す。
+// ここを TheaterEvent にすると Google が Event として検証し、日程のない
+// 一覧項目が「location / startDate が無い」と警告される。個別公演の
+// TheaterEvent は詳細ページ側に完全な形で載せている。
 export function collectionPageJsonLd(
-  musicals: Pick<Musical, "name" | "slug" | "image">[],
+  musicals: Pick<Musical, "name" | "slug" | "image" | "summary">[],
 ) {
   return {
     "@context": "https://schema.org",
@@ -14,10 +16,11 @@ export function collectionPageJsonLd(
     name: "ロンドン観光・ミュージカル・劇場・シアターガイド",
     url: `${SITE_URL}/musicals`,
     hasPart: musicals.map((m) => ({
-      "@type": "TheaterEvent",
+      "@type": "CreativeWork",
       name: m.name,
       url: `${SITE_URL}/musicals/${m.slug}`,
       image: m.image,
+      description: m.summary,
     })),
   };
 }
