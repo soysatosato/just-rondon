@@ -13,7 +13,7 @@ const mealDeal: FoodGuideArticle = {
   slug: "meal-deal",
   title: "ロンドンの Meal Deal 完全攻略｜チェーン別の価格と損しない組み合わせ",
   engTitle: "Getting the Most Out of a London Meal Deal",
-  audience: "毎日の昼食代を確実に下げたい人（旅行者・在住者どちらも）",
+  audience: "昼食代を今日から下げたい人（旅行者・在住者どちらも）",
   summary: `メイン＋スナック＋ドリンクをセットで買うと割引になる仕組みで、ロンドンの昼食の基本形です。Tesco は会員価格で${gbp(
     MEAL_DEALS.tesco.member
   )}、Morrisons は${gbp(
@@ -70,35 +70,11 @@ const mealDeal: FoodGuideArticle = {
   sections: [
     {
       id: "chain-prices",
+      navLabel: "チェーン別の価格",
       title: "チェーン別の価格 —— どこが安いのか",
       subtitle: "会員価格の有無で順位が入れ替わる",
-      body: `${FOOD_AS_OF}時点の主なチェーンの Meal Deal 価格です。
-
-| チェーン | 通常価格 | 会員価格 | 会員制度 |
-| --- | --- | --- | --- |
-| ${MEAL_DEALS.morrisons.label} | ${gbp(
-        MEAL_DEALS.morrisons.standard
-      )} | **${gbp(MEAL_DEALS.morrisons.member)}** | More Card |
-| ${MEAL_DEALS.coop.label} | ${gbp(MEAL_DEALS.coop.standard)} | **${gbp(
-        MEAL_DEALS.coop.member
-      )}** | Co-op Member |
-| ${MEAL_DEALS.tesco.label} | ${gbp(MEAL_DEALS.tesco.standard)} | **${gbp(
-        MEAL_DEALS.tesco.member
-      )}** | Clubcard |
-| ${MEAL_DEALS.sainsburys.label} | ${gbp(
-        MEAL_DEALS.sainsburys.standard
-      )} | **${gbp(MEAL_DEALS.sainsburys.member)}** | Nectar |
-| ${MEAL_DEALS.greggs.label} | ${gbp(MEAL_DEALS.greggs.standard)} | — | — |
-| ${MEAL_DEALS.boots.label} | ${gbp(MEAL_DEALS.boots.standard)} | **${gbp(
-        MEAL_DEALS.boots.member
-      )}** | Advantage Card |
-| ${MEAL_DEALS.whsmith.label} | ${gbp(MEAL_DEALS.whsmith.standard)} | — | — |
-| ${MEAL_DEALS.marksAndSpencer.label} | ${gbp(
-        MEAL_DEALS.marksAndSpencer.standard
-      )} | — | — |
-| ${MEAL_DEALS.waitrose.label} | ${gbp(MEAL_DEALS.waitrose.standard)} | — | — |
-
-### 実際にどう選ぶか
+      panel: "meal-deal-prices",
+      body: `### 実際にどう選ぶか
 
 **Morrisons と Co-op が最安**ですが、ロンドン中心部では店舗が少なく、狙って行くものではありません。現実には **Tesco か Sainsbury's** が近くにあるはずなので、そのどちらかで会員価格を使うのが基本になります。
 
@@ -128,6 +104,7 @@ const mealDeal: FoodGuideArticle = {
     },
     {
       id: "maximise",
+      navLabel: "得な組み合わせ",
       title: "同じ値段で最大の価値を取る",
       subtitle: "セット価格なので、単品が高いものを選ぶのが正解",
       body: `Meal Deal は「どれを選んでも同じ値段」です。つまり**単品価格が高いものを選べば選ぶほど得**という、極めて単純な構造をしています。
@@ -156,23 +133,25 @@ const mealDeal: FoodGuideArticle = {
 
 ### 組み合わせの例
 
-| 選び方 | 単品合計の目安 | 実質の得 |
-| --- | --- | --- |
-| 寿司＋ナッツ＋スムージー | ${gbp(
+どちらも支払いは ${gbp(MEAL_DEALS.tesco.member)} です。
+
+- **寿司＋ナッツ＋スムージー** —— 単品で買えば${gbp(
         MEAL_DEAL_MAX_VALUE.mainSingleHigh +
           MEAL_DEAL_MAX_VALUE.snackSingleHigh +
           MEAL_DEAL_MAX_VALUE.drinkSingleHigh
-      )} | **${gbp(
+      )}。実質${gbp(
         MEAL_DEAL_MAX_VALUE.mainSingleHigh +
           MEAL_DEAL_MAX_VALUE.snackSingleHigh +
           MEAL_DEAL_MAX_VALUE.drinkSingleHigh -
           MEAL_DEALS.tesco.member
-      )}** |
-| チーズサンド＋チップス＋水 | ${gbp(2 + 0.85 + 0.65)} | ${gbp(
-        Math.max(0, 2 + 0.85 + 0.65 - MEAL_DEALS.tesco.member)
-      )}（ほぼ得なし） |
+      )}の得
+- **チーズサンド＋チップス＋水** —— 単品で買えば${gbp(
+        2 + 0.85 + 0.65
+      )}。セットにすると${gbp(
+        MEAL_DEALS.tesco.member - (2 + 0.85 + 0.65)
+      )}高くつきます
 
-下の組み合わせだと、**Meal Deal にした意味がほぼありません**。同じ支払いで倍近い価値を取れるので、枠ごとに高いものを選ぶ癖をつけてください。`,
+後者は得どころか損で、**Meal Deal にした意味がありません**。同じ支払いで倍近い価値を取れるので、枠ごとに高いものを選ぶ癖をつけてください。`,
       tips: [
         "値札に単品価格が併記されているので、迷ったら数字を見比べる。慣れれば数秒で判断できる",
         "寿司パックは Meal Deal 対象に入っていることが多く、対象内では最も割高な商品。日本食が恋しいときの現実的な選択肢になる",
@@ -181,6 +160,7 @@ const mealDeal: FoodGuideArticle = {
     },
     {
       id: "timing",
+      navLabel: "買う時間帯",
       title: "時間帯 —— 12時を過ぎると選べなくなる",
       subtitle: "棚が空になると「損な組み合わせ」しか残らない",
       body: `Meal Deal の落とし穴は価格ではなく**在庫**です。

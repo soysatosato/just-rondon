@@ -5,7 +5,7 @@ const whereToBuy: FoodGuideArticle = {
   slug: "where-to-buy",
   title: "ロンドンで食材を安く買う店｜Lidl・Aldi とエスニックスーパー",
   engTitle: "Where to Actually Buy Cheap Food in London",
-  audience: "自炊をする人。滞在が数週間以上ある人",
+  audience: "自炊をする人。食材そのものを安く買いたい人",
   summary:
     "Lidl と Aldi は Tesco・Sainsbury's より体感2〜3割安く、自炊するなら第一候補です。さらにトルコ系・中華系のスーパーは野菜・米・肉が別次元の価格で、日本食材も Japan Centre より安く手に入ります。買う店を変えるのが、食費削減としては最も効果が大きい選択です。",
   description:
@@ -41,6 +41,7 @@ const whereToBuy: FoodGuideArticle = {
   sections: [
     {
       id: "lidl-aldi",
+      navLabel: "Lidl / Aldi",
       title: "Lidl と Aldi —— 自炊の第一候補",
       subtitle: "同じものが体感2〜3割安い",
       body: `ドイツ系のディスカウントスーパーで、**Tesco や Sainsbury's より明確に安い**です。牛乳、卵、パン、鶏肉、野菜といった基本的な食材で差が出ます。
@@ -73,6 +74,7 @@ const whereToBuy: FoodGuideArticle = {
     },
     {
       id: "ethnic-supermarkets",
+      navLabel: "エスニックスーパー",
       title: "エスニックスーパー —— 野菜・米・肉が別次元",
       subtitle: "ロンドンの食費節約で最も過小評価されている選択肢",
       body: `移民人口の多いロンドンには、各国のコミュニティ向けのスーパーが多数あります。**価格は主要チェーンと比べて明確に安く**、とくに野菜・果物・米・豆・スパイス・肉で差が大きくなります。
@@ -116,6 +118,7 @@ East London（Whitechapel、Tooting、Southall など）に多数あります。
     },
     {
       id: "markets",
+      navLabel: "青果市場",
       title: "青果市場 —— 量で買うなら最安",
       subtitle: "観光市場と生活市場は別物",
       body: `ロンドンの市場は、**観光客向けの市場**と**地元の生活市場**に明確に分かれます。節約の対象になるのは後者です。
@@ -151,18 +154,17 @@ Borough Market は行く価値のある場所ですが、**節約の文脈で行
     },
     {
       id: "strategy",
+      navLabel: "組み合わせ方",
       title: "組み合わせ方",
       subtitle: "1店で完結させない",
       body: `現実的な運用は、**用途で店を分ける**ことです。
 
-| 買うもの | どこで |
-| --- | --- |
-| 日常の基本食材（牛乳・卵・パン・鶏肉） | **Lidl / Aldi** |
-| 野菜・果物 | **エスニックスーパー / 市場** |
-| 米・豆・スパイス（大袋） | **エスニックスーパー** |
-| 日本食材の基本（醤油・味噌・海苔） | **中華系 / 韓国系スーパー** |
-| どうしても必要なブランド品 | Tesco / Sainsbury's |
-| 昼食（外で買う） | [Meal Deal](/food/meal-deal) |
+- 日常の基本食材（牛乳・卵・パン・鶏肉）→ **Lidl / Aldi**
+- 野菜・果物 → **エスニックスーパー / 市場**
+- 米・豆・スパイス（大袋）→ **エスニックスーパー**
+- 日本食材の基本（醤油・味噌・海苔）→ **中華系 / 韓国系スーパー**
+- どうしても必要なブランド品 → Tesco / Sainsbury's
+- 昼食（外で買う）→ [Meal Deal](/food/meal-deal)
 
 すべてを1店で済ませようとすると、必ずどこかで高く買うことになります。**週1回の大きな買い物をディスカウント店＋エスニックスーパーで済ませ、細かい補充を近所の店で行う**のが、手間と価格のバランスとして現実的です。
 

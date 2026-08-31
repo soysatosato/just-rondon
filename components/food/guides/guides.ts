@@ -8,11 +8,12 @@ export const FOOD_BASE = "/food";
 export const FOOD_SECTION_NAME = "食費を抑える";
 
 /**
- * ハブでの分類。「今日すぐ効くか、仕込みが要るか」で分ける。
+ * 記事の分類。「今日すぐ効くか、仕込みが要るか」で分ける。
  *
- * 読者は短期の旅行者と長期滞在者に二分され、刺さる技が違う。
- * 旅行者にバイトの賄いの話をしても意味がなく、在住者に
- * Meal Deal の初歩を出しても既知。カテゴリでそこを振り分ける。
+ * 以前はハブがこれで見出しを立て、6本を4グループに分けて並べていた。
+ * ただしその一覧はページ上部の状況カードと同じ6本・同じリンクで、
+ * 6つから1つ選ぶ作業は選択肢を2箇所に割っても楽にならない。
+ * カテゴリ別の一覧は畳み、ラベルだけが記事末尾の索引に残っている。
  */
 export type FoodCategory = "today" | "timing" | "where" | "longstay";
 
@@ -22,13 +23,6 @@ export const FOOD_CATEGORY_LABELS: Record<FoodCategory, string> = {
   where: "買う場所を変える",
   longstay: "長期滞在者向け",
 };
-
-export const FOOD_CATEGORY_ORDER: FoodCategory[] = [
-  "today",
-  "timing",
-  "where",
-  "longstay",
-];
 
 export type FoodGuideMeta = {
   slug: string;
@@ -47,7 +41,7 @@ export type FoodGuideMeta = {
  * アプリの話を先に置くと「インストールが面倒」で離脱する。
  *
  * next-sitemap.config.js の staticPages と、/food ハブのカード表示順を
- * このリストと一致させること。
+ * このリストと一致させること。ハブは状況カードをこの順で出す。
  */
 export const foodGuides: FoodGuideMeta[] = [
   {
@@ -110,10 +104,6 @@ export function getFoodGuideMeta(slug: string) {
 
 /** /food/[slug] が実際に生成するページ。 */
 export const foodGuideSlugs = foodGuides.map((g) => g.slug);
-
-export function foodGuidesByCategory(category: FoodCategory) {
-  return foodGuides.filter((g) => g.category === category);
-}
 
 /**
  * 記事データから Next.js の metadata を組み立てる。

@@ -3,23 +3,20 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import MarkdownBody from "@/components/jobs/MarkdownBody";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
+import MealDealPrices from "@/components/food/MealDealPrices";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import {
   FOOD_BASE,
-  FOOD_CATEGORY_LABELS,
-  FOOD_CATEGORY_ORDER,
   FOOD_SECTION_NAME,
   foodGuidePath,
   foodGuides,
-  foodGuidesByCategory,
   foodHubCollectionJsonLd,
+  getFoodGuideMeta,
 } from "@/components/food/guides/guides";
+import { foodGuideArticles } from "@/components/food/guides/content";
 import {
   CLOSING_DISCOUNTS,
   FOOD_AS_OF,
@@ -55,63 +52,55 @@ export const metadata = buildPageMetadata({
  * 食費の節約は「滞在期間」と「自炊するか」で有効な手段が完全に変わる。
  * 数日の旅行者に米の大袋を勧めても意味がなく、在住者に Meal Deal の
  * 初歩を出しても既知。抽象的な目次ではなく、読者が自分の状況を選べる形にする。
+ *
+ * 以前はこの一覧の下に「食費節約ガイド一覧」があり、同じ6本を同じリンクで
+ * もう一度カードにしていた。読者の仕事は6つから1つ選ぶことなので、
+ * 選択肢を2箇所に分けて出す意味がない。カテゴリ別の見出しごと畳んで
+ * ここに一本化してある。
+ *
+ * 状況の文言は各記事の audience から引く。types.ts が「ハブのカードが
+ * 振り分け先の説明に使う」と決めているのに、以前のハブは似た文言を
+ * 別に持っていて、すでに表現がずれていた。ハブ側の書き方のほうが
+ * 具体的だったので、その文言を記事の audience へ移してある。
  */
-const SCENARIOS: {
-  situation: string;
-  answer: string;
-  detail: string;
-  href: string;
-  cta: string;
-}[] = [
+const SCENARIOS: { slug: string; answer: string; detail: string }[] = [
   {
-    situation: "昼食代を今日から下げたい",
+    slug: "meal-deal",
     answer: "Meal Deal",
     detail: `メイン＋スナック＋ドリンクで ${MEAL_DEALS.tesco.label} 会員価格${gbp(
       MEAL_DEALS.tesco.member
     )}。同じ値段でも選ぶものによって価値が倍近く変わります。12時前に行くのが要点。`,
-    href: "/food/meal-deal",
-    cta: "Meal Deal の攻略を見る",
   },
   {
-    situation: "スーパーで同じ商品に2つの値段が書いてある",
+    slug: "loyalty-cards",
     answer: "会員カードの二重価格",
     detail: `Clubcard も Nectar も無料で、その場で作れます。持たないと Meal Deal だけで毎回${gbp(
       mealDealSaving(MEAL_DEALS.tesco)
     )}損します。旅行者でも作れます。`,
-    href: "/food/loyalty-cards",
-    cta: "カードの作り方を見る",
   },
   {
-    situation: "日本食が恋しいが、店に入ると高い",
+    slug: "discount-timing",
     answer: "閉店前の半額",
     detail: `${CLOSING_DISCOUNTS.wasabi.label} や ${CLOSING_DISCOUNTS.itsu.label} は閉店${CLOSING_DISCOUNTS.wasabi.minutesBefore}分前を目安に${CLOSING_DISCOUNTS.wasabi.offMin}〜${CLOSING_DISCOUNTS.wasabi.offMax}%引き。まともな寿司に手頃な値段でありつけます。`,
-    href: "/food/discount-timing",
-    cta: "値引きの時間帯を見る",
   },
   {
-    situation: "アプリを入れる手間はかけられる",
+    slug: "apps-and-coupons",
     answer: "クーポンを回し続ける",
     detail:
       "マクドナルドのレシートアンケートは、クーポンで買ったレシートからまた応募できます。ただしキオスク注文が必須。Too Good To Go も併用の価値があります。",
-    href: "/food/apps-and-coupons",
-    cta: "アプリとクーポンを見る",
   },
   {
-    situation: "自炊する。食材そのものを安く買いたい",
+    slug: "where-to-buy",
     answer: "買う店を変える",
     detail:
       "Lidl と Aldi は体感2〜3割安い。さらにトルコ系・中華系スーパーは野菜と米が別次元で、日本の調味料も専門店より安く手に入ります。",
-    href: "/food/where-to-buy",
-    cta: "安い店の一覧を見る",
   },
   {
-    situation: "数ヶ月以上滞在する。働く予定もある",
+    slug: "long-stay",
     answer: "賄いと生活習慣",
     detail: `飲食店の多くで賄いが出ます。加えて水を買わない（月${gbp(
       WATER_SAVING.perMonth30Days
     )}前後の差）・朝食を家で済ませるという地味な習慣が、月単位では最も効きます。`,
-    href: "/food/long-stay",
-    cta: "長期滞在者向けを見る",
   },
 ];
 
@@ -151,6 +140,43 @@ const FAQ_ITEMS = [
     answer: `公表されていません。担当スタッフのシフトで決まるため、通いたい店に数回夕方に行って実際の時刻を覚えるのが唯一確実な方法です。一般的には${CLOSING_DISCOUNTS.supermarketFirstRound}ごろに1回目、${CLOSING_DISCOUNTS.supermarketFinalRound}に最終の値引きが入ることが多いですが、店舗差が大きいので目安にとどめてください。`,
   },
 ];
+
+/**
+ * 状況カード1枚。読者に選ばせる文言は記事の audience から引く。
+ */
+function ScenarioCard({
+  slug,
+  answer,
+  detail,
+}: {
+  slug: string;
+  answer: string;
+  detail: string;
+}) {
+  const meta = getFoodGuideMeta(slug);
+  if (!meta) return null;
+
+  const audience = foodGuideArticles[slug]?.audience ?? meta.blurb;
+
+  return (
+    <Link href={foodGuidePath(slug)} className="block">
+      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+        <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+          {audience}
+        </p>
+        <p className="mt-3 text-xs font-bold tracking-wide text-sky-600 dark:text-sky-400">
+          → {answer}
+        </p>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          {detail}
+        </p>
+        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+          {meta.label} を読む →
+        </span>
+      </article>
+    </Link>
+  );
+}
 
 export default function FoodHubPage() {
   const pageUrl = `${SITE_URL}${FOOD_BASE}`;
@@ -221,128 +247,103 @@ export default function FoodHubPage() {
         </p>
       </div>
 
-      <Separator className="my-8" />
+      <section aria-labelledby="find-your-stage" className="mt-10">
+        <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
+          自分の状況を選んでください
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          全{foodGuides.length}
+          本。一番近いものが1つ見つかれば、それがあなたの読むべきページです。
+        </p>
 
-      <section aria-labelledby="find-your-stage" className="space-y-5">
-        <div className="space-y-2">
-          <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
-            自分の状況を選んでください
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            一番近いものが1つ見つかれば、それがあなたの読むべきページです。
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
-            <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-                <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
-                    {s.situation}
-                  </p>
-                  <p className="mt-3 text-xs font-bold tracking-wide text-sky-600 dark:text-sky-400">
-                    → {s.answer}
-                  </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {s.detail}
-                  </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
-                    {s.cta} →
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+            <ScenarioCard key={s.slug} {...s} />
           ))}
         </div>
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />
 
-      <section aria-labelledby="price-overview" className="space-y-4">
+      {/*
+        価格の基準線。
+
+        以前ここは GFM のテーブル2つだった。MarkdownBody の min-w-[32rem] が
+        かかるので、このページで最も参照される数字がスマホでは横スクロールの
+        中にあった。しかも Meal Deal の表は meal-deal 記事にも同じものが手書きで
+        あり、2つはすでにずれていて、ハブ側は9社のうち WHSmith が抜けていた。
+        価格は lib/food/prices.ts が持っているので、表示は MealDealPrices に
+        一本化して両方から呼ぶ。
+      */}
+      <section aria-labelledby="price-overview" className="mt-10">
         <h2 id="price-overview" className="text-xl font-bold md:text-2xl">
           価格の基準線
         </h2>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           「これは高いのか安いのか」を判断する目安です。
           <strong>Meal Deal の価格は年に1〜2回改定される</strong>
           ため、最終的な金額は店頭で確認してください。
         </p>
-        <MarkdownBody>
-          {`**Meal Deal のチェーン別価格（${FOOD_AS_OF}時点）**
 
-| チェーン | 通常価格 | 会員価格 |
-|---|---:|---:|
-| ${MEAL_DEALS.morrisons.label} | ${gbp(MEAL_DEALS.morrisons.standard)} | **${gbp(MEAL_DEALS.morrisons.member)}** |
-| ${MEAL_DEALS.coop.label} | ${gbp(MEAL_DEALS.coop.standard)} | **${gbp(MEAL_DEALS.coop.member)}** |
-| ${MEAL_DEALS.tesco.label} | ${gbp(MEAL_DEALS.tesco.standard)} | **${gbp(MEAL_DEALS.tesco.member)}** |
-| ${MEAL_DEALS.sainsburys.label} | ${gbp(MEAL_DEALS.sainsburys.standard)} | **${gbp(MEAL_DEALS.sainsburys.member)}** |
-| ${MEAL_DEALS.greggs.label} | ${gbp(MEAL_DEALS.greggs.standard)} | — |
-| ${MEAL_DEALS.boots.label} | ${gbp(MEAL_DEALS.boots.standard)} | **${gbp(MEAL_DEALS.boots.member)}** |
-| ${MEAL_DEALS.marksAndSpencer.label} | ${gbp(MEAL_DEALS.marksAndSpencer.standard)} | — |
-| ${MEAL_DEALS.waitrose.label} | ${gbp(MEAL_DEALS.waitrose.standard)} | — |
+        <h3 className="mt-6 text-sm font-bold text-gray-700 dark:text-gray-300">
+          Meal Deal ——チェーン別、実際に払う額の安い順
+        </h3>
+        <MealDealPrices asOf={FOOD_AS_OF} />
 
-**その他の目安**
-
-| 項目 | 金額 |
-|---|---|
-| ${CLOSING_DISCOUNTS.wasabi.label} の閉店前 | ${CLOSING_DISCOUNTS.wasabi.offMin}〜${CLOSING_DISCOUNTS.wasabi.offMax}%引き（閉店${CLOSING_DISCOUNTS.wasabi.minutesBefore}分前が目安・店舗差あり） |
-| ${SURPLUS_FOOD_APPS.tooGoodToGo.label} | 袋1つ ${gbp(SURPLUS_FOOD_APPS.tooGoodToGo.bagMin)}〜${gbp(SURPLUS_FOOD_APPS.tooGoodToGo.bagMax)} |
-| ${SURPLUS_FOOD_APPS.olio.label} | 無料（個人間の譲渡） |
-| ボトル水（500ml） | ${gbp(WATER_SAVING.bottlePrice)}前後 → 1日1本で月${gbp(WATER_SAVING.perMonth30Days)}前後 |
-
-値引きの時刻と割引率は**店舗ごとの裁量**で決まります。上の数字は複数店舗で確認した目安で、保証されるものではありません。`}
-        </MarkdownBody>
-      </section>
-
-      <Separator className="my-10" />
-
-      <section aria-labelledby="all-guides" className="space-y-8">
-        <div className="space-y-2">
-          <h2 id="all-guides" className="text-xl font-bold md:text-2xl">
-            食費節約ガイド一覧
-          </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            全{foodGuides.length}
-            本。今日すぐ効くものから、長期滞在者向けの仕込みまで順に並べています。
-          </p>
-        </div>
-
-        {FOOD_CATEGORY_ORDER.map((category) => {
-          const guides = foodGuidesByCategory(category);
-          if (guides.length === 0) return null;
-
-          return (
-            <div key={category} className="space-y-3">
-              <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
-                {FOOD_CATEGORY_LABELS[category]}
-              </h3>
-              <div className="space-y-3">
-                {guides.map((g) => (
-                  <Link
-                    key={g.slug}
-                    href={foodGuidePath(g.slug)}
-                    className="block"
-                  >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-                      <CardContent className="p-5">
-                        <span className="block text-xs font-semibold text-sky-600">
-                          {g.eyebrow}
-                        </span>
-                        <span className="mt-1 block text-base font-semibold">
-                          {g.label}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                          {g.blurb}
-                        </span>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
+        <h3 className="mt-8 text-sm font-bold text-gray-700 dark:text-gray-300">
+          そのほかの目安
+        </h3>
+        <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+          {[
+            {
+              label: `${CLOSING_DISCOUNTS.wasabi.label} の閉店前`,
+              value: `${CLOSING_DISCOUNTS.wasabi.offMin}〜${CLOSING_DISCOUNTS.wasabi.offMax}%引き`,
+              note: `閉店${CLOSING_DISCOUNTS.wasabi.minutesBefore}分前が目安・店舗差あり`,
+            },
+            {
+              label: SURPLUS_FOOD_APPS.tooGoodToGo.label,
+              value: `${gbp(SURPLUS_FOOD_APPS.tooGoodToGo.bagMin)}〜${gbp(
+                SURPLUS_FOOD_APPS.tooGoodToGo.bagMax
+              )}`,
+              note: "袋1つ。中身は店任せ",
+            },
+            {
+              label: SURPLUS_FOOD_APPS.olio.label,
+              value: "無料",
+              note: "個人間の譲渡。内容は運",
+            },
+            {
+              label: "ボトル水（500ml）",
+              value: `月${gbp(WATER_SAVING.perMonth30Days)}`,
+              note: `1本${gbp(
+                WATER_SAVING.bottlePrice
+              )}前後を1日1本買った場合。買わなければ丸ごと浮く`,
+            },
+          ].map((row) => (
+            <div
+              key={row.label}
+              className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+            >
+              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                {row.label}
+              </dt>
+              <dd className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+                {row.value}
+                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-gray-500 dark:text-gray-400">
+                  {row.note}
+                </span>
+              </dd>
             </div>
-          );
-        })}
+          ))}
+        </dl>
+
+        <p className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-amber-950/25 dark:text-gray-300">
+          <strong className="text-gray-900 dark:text-gray-100">
+            値引きの時刻と割引率は、店舗ごとの裁量で決まります。
+          </strong>
+          上の数字は複数店舗で確認した目安で、保証されるものではありません。
+          通いたい店に何度か夕方に行って、実際の時刻を覚えるのが確実です。
+        </p>
       </section>
 
       <GuideFaq items={FAQ_ITEMS} />

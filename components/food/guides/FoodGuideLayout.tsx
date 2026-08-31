@@ -5,20 +5,22 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import { SITE_URL } from "@/lib/seo";
 import { faqPageJsonLd } from "@/lib/jsonld";
 import GuideCallout from "@/components/guides/GuideCallout";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
+import GuideNotes from "@/components/guides/GuideNotes";
+import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import GuideSources from "@/components/guides/GuideSources";
-import GuideToc from "@/components/guides/GuideToc";
+import MealDealPrices from "@/components/food/MealDealPrices";
 import PageCommentSection, {
   type PageCommentItem,
 } from "@/components/comments/PageCommentSection";
 import {
   FOOD_BASE,
+  FOOD_CATEGORY_LABELS,
   foodGuideArticleJsonLd,
   foodGuideBreadcrumbJsonLd,
   foodGuidePath,
@@ -38,6 +40,12 @@ export default function FoodGuideLayout({
   const meta = getFoodGuideMeta(article.slug);
   const pageUrl = `${SITE_URL}${foodGuidePath(article.slug)}`;
 
+  // navLabel が無い記事は見出しをそのまま出す(食費6本はすべて持つ)。
+  const navSections = article.sections.map((sec) => ({
+    id: sec.id,
+    navLabel: sec.navLabel ?? sec.title,
+  }));
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={foodGuideBreadcrumbJsonLd(article)} />
@@ -48,43 +56,52 @@ export default function FoodGuideLayout({
 
       <Breadcrumbs path="/food" current={meta?.label ?? article.title} />
 
-      <header className="mt-6 space-y-3">
+      <header className="mt-6">
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           {article.engTitle}
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="mt-3">
+          <GuideFreshness
+            dataAsOf={article.dataAsOf}
+            updatedAt={article.updatedAt}
+          />
+        </div>
+        {/*
+          audience は「この記事は誰のものか」を summary より先に言う。
+          ハブの状況カードもここを読むので、文言は1つしかない。
+        */}
+        <p className="mt-4 text-sm font-semibold text-sky-700 dark:text-sky-400">
+          {article.audience}
+        </p>
+        <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
           {article.summary}
         </p>
-        <GuideFreshness
-          dataAsOf={article.dataAsOf}
-          updatedAt={article.updatedAt}
-        />
       </header>
 
-      <Separator className="my-6" />
-
       {/*
-        要点表。節約の記事は「結局いくら浮くのか」を先に見せないと
-        本文が読まれないため、目次より前に置く。
+        要点。節約の記事は「結局いくら浮くのか」を先に確定させたい読者が多いので、
+        本文より前に置く。
+
+        以前は罫線で仕切った灰色の label/value 表だった。見た目が仕様書に寄っていて、
+        金額が本文と同じ大きさで並ぶため、いちばん拾いたい数字が沈んでいた。
+        医療ガイドと同じく2列のグリッドに開き、value は MarkdownBody を通すので
+        金額だけ強調できる。
       */}
       {article.atAGlance && article.atAGlance.length > 0 && (
-        <section className="mb-8 overflow-hidden rounded-lg border border-gray-300 dark:border-neutral-700">
-          <h2 className="border-b border-gray-300 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 px-4 py-2 text-sm font-semibold">
-            要点
-          </h2>
-          <dl className="divide-y divide-gray-200 dark:divide-neutral-700">
+        <section className="mt-8 mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+          <h2 className="text-base font-bold">要点</h2>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
             {article.atAGlance.map((fact) => (
-              <div
-                key={fact.label}
-                className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4"
-              >
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
+              <div key={fact.label}>
+                <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
+                  <MarkdownBody>{fact.value}</MarkdownBody>
+                </dd>
               </div>
             ))}
           </dl>
@@ -97,11 +114,16 @@ export default function FoodGuideLayout({
         </section>
       )}
 
-      <GuideToc sections={article.sections} />
-
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
 
-      <div className="mt-8 space-y-8">
+      {/*
+        固定の目次ではなく追従ナビ。食費の記事はレジや棚の前で開かれ、
+        「値引きの時刻」「どの組み合わせが得か」へ直接飛ぶ使われ方をするので、
+        そのたびに冒頭へ戻らせない。
+      */}
+      <GuideSectionNav sections={navSections} />
+
+      <div className="space-y-8">
         {article.sections.map((section, i) => (
           <Card
             key={section.id}
@@ -117,21 +139,16 @@ export default function FoodGuideLayout({
                   {section.subtitle}
                 </p>
               )}
+
+              {/* 定型パネルは本文より前。数字を見てから解説を読む順序にする。 */}
+              {section.panel === "meal-deal-prices" && (
+                <MealDealPrices asOf={article.dataAsOf} />
+              )}
+
               <MarkdownBody>{section.body}</MarkdownBody>
 
               {section.tips && section.tips.length > 0 && (
-                <div className="mt-5 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/60 p-4">
-                  <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
-                    実践メモ
-                  </p>
-                  <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 dark:text-gray-300 marker:text-gray-400">
-                    {section.tips.map((tip) => (
-                      <li key={tip} className="leading-relaxed">
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <GuideNotes items={section.tips} />
               )}
 
               {section.callout && <GuideCallout {...section.callout} />}
@@ -168,27 +185,28 @@ export default function FoodGuideLayout({
         initialComments={comments}
       />
 
+      {/*
+        ほかのガイド。以前は blurb つきのカードを5枚並べていて、
+        どの記事の末尾にも同じ長さの尾がついていた。ハブが状況から
+        選ばせる形になったので、ここは索引に徹する。
+      */}
       <section className="mt-12">
         <h2 className="text-lg font-semibold">ほかの食費節約ガイド</h2>
-        <div className="mt-4 space-y-3">
+        <ul className="mt-4 divide-y divide-gray-200 dark:divide-neutral-800">
           {relatedGuides.map((g) => (
-            <Link key={g.slug} href={foodGuidePath(g.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-sky-400 dark:hover:border-sky-500">
-                <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-sky-600">
-                    {g.eyebrow}
-                  </span>
-                  <span className="mt-1 block text-base font-semibold">
-                    {g.label}
-                  </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {g.blurb}
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
+            <li key={g.slug}>
+              <Link
+                href={foodGuidePath(g.slug)}
+                className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2.5 transition hover:text-sky-700 dark:hover:text-sky-400"
+              >
+                <span className="text-sm font-semibold">{g.label}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {FOOD_CATEGORY_LABELS[g.category]}
+                </span>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">

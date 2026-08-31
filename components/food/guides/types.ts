@@ -25,15 +25,31 @@ import type {
 } from "@/components/guides/types";
 
 export type FoodGuideCallout = GuideCalloutData;
-export type FoodGuideSection = GuideSectionData;
+
+/**
+ * 本文のあとに差し込む定型パネル。
+ *
+ * markdown の表で書き写させないための逃げ道。Meal Deal の価格は
+ * lib/food/prices.ts が持っているのに、以前は記事とハブがそれぞれ
+ * GFM テーブルに手書きしていて、すでに中身がずれていた。
+ * 表示は components/food/MealDealPrices.tsx に一本化してある。
+ */
+export type FoodSectionPanel = "meal-deal-prices";
+
+export type FoodGuideSection = GuideSectionData & {
+  panel?: FoodSectionPanel;
+};
 export type FoodGuideFaq = GuideFaqItem;
 export type FoodGuideSource = GuideSourceLink;
 export type FoodGuideRelatedLink = GuideRelatedLink;
 
-/** 記事冒頭の要約表の1行。 */
+/** 記事冒頭の要点の1行。 */
 export type FoodGuideFact = {
   label: string;
-  /** markdown不可。短く言い切る。 */
+  /**
+   * 短く言い切る。金額など読者が拾いたい箇所は `**` で強調してよい
+   * (MarkdownBody を通す)。
+   */
   value: string;
 };
 
@@ -44,10 +60,23 @@ export type FoodGuideArticle = {
   summary: string;
   description: string;
   keywords: string[];
-  /** 「〜な人向け」。ハブのカードが振り分け先の説明に使う。 */
+  /**
+   * 「〜な人向け」。記事側を正とし、/food ハブのカードはここを参照する。
+   *
+   * 以前はハブが似た文言を別に持っていて、すでに表現がずれていた。
+   * 読者が自分の状況を選ぶ文なので、抽象的な属性ではなく
+   * 「その人が困っている場面」を書くこと。
+   * 記事ページでも summary の前に出るので、単体で読めること。
+   */
   audience: string;
+  /**
+   * 記事冒頭の導入。markdown。
+   *
+   * summary は素の文字列として描画されるので、`**` を書かないこと
+   * (そのまま画面に出る)。強調したい主張はここに書く。
+   */
   mainText: string;
-  /** 冒頭の要約表。3〜6行。 */
+  /** 冒頭の要点。3〜6行。 */
   atAGlance?: FoodGuideFact[];
   sections: FoodGuideSection[];
   /** 情報の基準時点。例 "2026年8月"。通常 FOOD_AS_OF を渡す。 */

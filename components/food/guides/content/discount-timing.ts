@@ -9,7 +9,7 @@ const discountTiming: FoodGuideArticle = {
   slug: "discount-timing",
   title: "閉店前の半額と値引きシール｜ロンドンで安く買う時間帯",
   engTitle: "Yellow Stickers and Closing-Time Discounts",
-  audience: "夕方に買い物ができる人。日本食を安く食べたい人",
+  audience: "日本食が恋しいのに、店に入ると高くて諦めている人",
   summary: `${CLOSING_DISCOUNTS.wasabi.label} や ${CLOSING_DISCOUNTS.itsu.label} は閉店${CLOSING_DISCOUNTS.wasabi.minutesBefore}分前を目安に${CLOSING_DISCOUNTS.wasabi.offMin}〜${CLOSING_DISCOUNTS.wasabi.offMax}%引きになります。日本食が恋しい人が、まともな寿司に手頃な値段でありつける現実的な方法です。スーパーの値引きシールも、店ごとに時刻がほぼ決まっています。`,
   description:
     "ロンドンで食品を安く買うための時間帯ガイド。Wasabiやitsuの閉店前半額、スーパーのyellow sticker（値引きシール）が貼られる時刻の目安、狙い方と注意点を解説します。日本食を安く食べたい人にも。",
@@ -48,6 +48,7 @@ const discountTiming: FoodGuideArticle = {
   sections: [
     {
       id: "japanese-chains",
+      navLabel: "日本食チェーン",
       title: `${CLOSING_DISCOUNTS.wasabi.label} と ${CLOSING_DISCOUNTS.itsu.label} の閉店前`,
       subtitle: "日本食が恋しいときの最有力手段",
       body: `### ${CLOSING_DISCOUNTS.wasabi.label}
@@ -79,16 +80,15 @@ const discountTiming: FoodGuideArticle = {
     },
     {
       id: "yellow-sticker",
+      navLabel: "値引きシール",
       title: "スーパーの値引きシール（yellow sticker）",
       subtitle: "店ごとに時刻がほぼ固定されている",
       body: `Tesco、Sainsbury's、Co-op、M&S Food などでは、消費期限が近い商品に**黄色い値引きシール**が貼られます。イギリスでは「yellow sticker」と呼ばれ、これを狙う人たちのことを yellow sticker hunter と呼ぶ表現まであります。
 
 ### 値引きは通常2段階
 
-| 時間帯 | 値引きの目安 |
-| --- | --- |
-| ${CLOSING_DISCOUNTS.supermarketFirstRound} | 25〜50%引き。品揃えは広い |
-| ${CLOSING_DISCOUNTS.supermarketFinalRound} | **最も安い**。ただし残り物のみ |
+- **1回目：${CLOSING_DISCOUNTS.supermarketFirstRound}** —— 25〜50%引き。品揃えはまだ広い
+- **2回目：${CLOSING_DISCOUNTS.supermarketFinalRound}** —— 最も安いが、残り物しかない
 
 1回目は選べる量が多く、2回目は安いが選べません。**「安さ優先なら閉店前、品揃え優先なら夕方」** という切り分けになります。
 
@@ -120,6 +120,7 @@ const discountTiming: FoodGuideArticle = {
     },
     {
       id: "bakeries",
+      navLabel: "ベーカリー",
       title: "ベーカリーとカフェの閉店前",
       subtitle: "パンは翌日に残せない商品",
       body: `個人経営のベーカリーやカフェも、閉店前にパンやペストリーを値引きします。パンは翌日に持ち越せないため、**閉店間際は投げ売りに近い状態**になることがあります。

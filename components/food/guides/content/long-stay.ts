@@ -12,8 +12,8 @@ const longStay: FoodGuideArticle = {
   slug: "long-stay",
   title: "長期滞在者の食費の裏技｜賄い・水・朝食・学生割引",
   engTitle: "Cutting Food Costs on a Long Stay in London",
-  audience: "数ヶ月以上ロンドンに滞在する人。ワーホリ・留学生",
-  summary: `飲食店で働くと**賄い（staff meal）** が出ることが多く、勤務日の食事が1食まるごと不要になります。加えて、水を買わない・朝食を家で済ませるという地味な習慣が、月単位では最も大きく効きます。ボトル水を1日1本買うだけで月${gbp(
+  audience: "数ヶ月以上滞在する人。働く予定もある人",
+  summary: `飲食店で働くと賄い（staff meal）が出ることが多く、勤務日の食事が1食まるごと不要になります。加えて、水を買わない・朝食を家で済ませるという地味な習慣が、月単位では最も大きく効きます。ボトル水を1日1本買うだけで月${gbp(
     WATER_SAVING.perMonth30Days
   )}前後の出費になります。`,
   description:
@@ -51,6 +51,7 @@ const longStay: FoodGuideArticle = {
   sections: [
     {
       id: "staff-meals",
+      navLabel: "賄い",
       title: "賄い（staff meal）が出る仕事を選ぶ",
       subtitle: "勤務日の1食がまるごと不要になる",
       body: `ロンドンの飲食店では、**勤務中の食事（staff meal / staff food）を無料または大幅な割引で提供する**ところが多くあります。長期滞在者にとって、これは食費を削る手段として最も効果が大きいものの一つです。
@@ -100,6 +101,7 @@ const longStay: FoodGuideArticle = {
     },
     {
       id: "water",
+      navLabel: "水",
       title: "水を買わない",
       subtitle: "最も簡単で、最も見落とされている",
       body: `**ロンドンの水道水は飲めます。** 水質基準は厳格に管理されており、飲用に問題はありません。硬水なので日本の水と口当たりが違い、慣れないうちは気になる人もいますが、安全性の問題ではありません。
@@ -144,6 +146,7 @@ const longStay: FoodGuideArticle = {
     },
     {
       id: "breakfast",
+      navLabel: "朝食",
       title: "朝食を家で済ませる",
       subtitle: "外食の回数を減らすのが本質",
       body: `節約の本質は個々の単価ではなく、**外で食事を買う回数**です。1日3食すべてを外で買えばどうしても高くなり、1食を家で済ませれば構造的に下がります。
@@ -173,6 +176,7 @@ const longStay: FoodGuideArticle = {
     },
     {
       id: "student-discounts",
+      navLabel: "学生割引",
       title: "学生・ユース向けの割引",
       subtitle: "学生証があるなら使い切る",
       body: `学生であれば、飲食店でも割引が受けられます。

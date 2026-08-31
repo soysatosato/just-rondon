@@ -12,12 +12,12 @@ const loyaltyCards: FoodGuideArticle = {
   slug: "loyalty-cards",
   title: "Clubcard と Nectar は必ず作る｜イギリスの二重価格の話",
   engTitle: "Why You Must Get a Clubcard or Nectar Card",
-  audience: "イギリスでスーパーを一度でも使う人（旅行者を含む）",
+  audience: "スーパーの棚で、同じ商品に2つの値段が書いてあるのを見た人",
   summary: `イギリスのスーパーは、会員価格と通常価格の二本立てになっています。同じ商品が会員なら数十ペンス〜${gbp(
     1
   )}以上安く、Meal Deal も Tesco なら1回${gbp(
     mealDealSaving(MEAL_DEALS.tesco)
-  )}変わります。カードは**無料**でその場で作れるので、作らない理由がありません。短期の旅行者でも作れます。`,
+  )}変わります。カードは無料でその場で作れるので、作らない理由がありません。短期の旅行者でも作れます。`,
   description:
     "イギリスのスーパーの会員カード（Tesco Clubcard・Sainsbury's Nectar）を作るべき理由と作り方。会員価格と通常価格の差、旅行者でも作れるのか、住所欄に何を書くか、アプリでの使い方まで解説します。",
   keywords: [
@@ -50,17 +50,16 @@ const loyaltyCards: FoodGuideArticle = {
   sections: [
     {
       id: "which-cards",
+      navLabel: "どれを作るか",
       title: "どのカードを作るか",
       subtitle: "近所にある店で決める",
       body: `優先順位は**自分の生活圏に何があるか**で決まります。
 
-| カード | チェーン | 特徴 |
-| --- | --- | --- |
-| **Clubcard** | ${MEAL_DEALS.tesco.label} | 店舗数が最多。まず作るべき1枚 |
-| **Nectar** | ${MEAL_DEALS.sainsburys.label} | Tesco と並ぶ大手。Argos でも使える |
-| Co-op Member | ${MEAL_DEALS.coop.label} | 小型店が多く、住宅街で強い |
-| More Card | ${MEAL_DEALS.morrisons.label} | Meal Deal が最安クラス |
-| Advantage Card | ${MEAL_DEALS.boots.label} | 駅・病院の近くで助かる |
+- **${MEAL_DEALS.tesco.scheme}**（${MEAL_DEALS.tesco.label}）—— 店舗数が最多。まず作るべき1枚
+- **${MEAL_DEALS.sainsburys.scheme}**（${MEAL_DEALS.sainsburys.label}）—— Tesco と並ぶ大手。Argos でも使える
+- **${MEAL_DEALS.coop.scheme}**（${MEAL_DEALS.coop.label}）—— 小型店が多く、住宅街で強い
+- **${MEAL_DEALS.morrisons.scheme}**（${MEAL_DEALS.morrisons.label}）—— Meal Deal が最安クラス
+- **${MEAL_DEALS.boots.scheme}**（${MEAL_DEALS.boots.label}）—— 駅・病院の近くで助かる
 
 ### 現実的な判断
 
@@ -88,6 +87,7 @@ const loyaltyCards: FoodGuideArticle = {
     },
     {
       id: "how-to-register",
+      navLabel: "作り方",
       title: "作り方 —— 旅行者でも作れる",
       subtitle: "住所欄で詰まる人が多い",
       body: `### 手順
@@ -122,6 +122,7 @@ Clubcard も Nectar もポイントが貯まりますが、**旅行者にとっ�
     },
     {
       id: "beyond-discounts",
+      navLabel: "会員価格以外",
       title: "会員価格以外の使いどころ",
       subtitle: "クーポンと、たまにある大きな特典",
       body: `### 個別クーポン

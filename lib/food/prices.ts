@@ -26,20 +26,53 @@ export const FOOD_UPDATED_AT = "2026-08-12";
 /**
  * 各チェーンの Meal Deal 価格。
  *
- * standard = 通常価格、member = 会員価格(Clubcard / Nectar / Advantage Card)。
- * 会員価格が無い店は member を省略する。
+ * standard = 通常価格、member = 会員価格、scheme = その会員価格に要る
+ * カードの名前。会員価格が無い店は member と scheme を省略する。
+ *
+ * scheme を持たせているのは、以前このデータが3箇所に手書きで散っていたため。
+ * /food ハブと meal-deal 記事がそれぞれ GFM テーブルを持ち、さらに
+ * loyalty-cards 記事が「どのチェーンにどのカードか」の表を別に持っていた。
+ * ハブの表は9社のうち WHSmith が抜けたまま気づかれずにいる。
+ * 表示は components/food/MealDealPrices.tsx に一本化し、
+ * 記事側は書き写さないこと。
+ *
+ * 並び順は「実際に払う額(member ?? standard)の安い順」で
+ * mealDealsByPrice() が出す。ここでの記述順には意味を持たせない。
  */
 export const MEAL_DEALS = {
-  tesco: { label: "Tesco", standard: 4.0, member: 3.6 },
-  sainsburys: { label: "Sainsbury's", standard: 4.0, member: 3.75 },
-  boots: { label: "Boots", standard: 4.25, member: 3.99 },
-  morrisons: { label: "Morrisons", standard: 3.75, member: 3.5 },
-  coop: { label: "Co-op", standard: 4.0, member: 3.5 },
+  tesco: { label: "Tesco", standard: 4.0, member: 3.6, scheme: "Clubcard" },
+  sainsburys: {
+    label: "Sainsbury's",
+    standard: 4.0,
+    member: 3.75,
+    scheme: "Nectar",
+  },
+  boots: {
+    label: "Boots",
+    standard: 4.25,
+    member: 3.99,
+    scheme: "Advantage Card",
+  },
+  morrisons: {
+    label: "Morrisons",
+    standard: 3.75,
+    member: 3.5,
+    scheme: "More Card",
+  },
+  coop: { label: "Co-op", standard: 4.0, member: 3.5, scheme: "Co-op Member" },
   waitrose: { label: "Waitrose", standard: 5.0 },
   marksAndSpencer: { label: "M&S", standard: 4.5 },
   greggs: { label: "Greggs", standard: 3.85 },
   whsmith: { label: "WHSmith", standard: 4.29 },
 } as const;
+
+/** Meal Deal 1件ぶんの表示用データ。 */
+export type MealDeal = {
+  label: string;
+  standard: number;
+  member?: number;
+  scheme?: string;
+};
 
 /** Meal Deal の中で単品価格が高く、組み合わせて得になりやすい商品の目安。 */
 export const MEAL_DEAL_MAX_VALUE = {
@@ -126,4 +159,24 @@ export function gbp(amount: number): string {
 export function mealDealSaving(deal: { standard: number; member?: number }) {
   if (deal.member === undefined) return 0;
   return Math.round((deal.standard - deal.member) * 100) / 100;
+}
+
+/** その店で実際に払う額。会員価格があればそれ、無ければ通常価格。 */
+export function mealDealEffectivePrice(deal: MealDeal) {
+  return deal.member ?? deal.standard;
+}
+
+/**
+ * 実際に払う額の安い順。同額なら通常価格の安い順。
+ *
+ * 記述順ではなくこの順で出すのは、読者がこの一覧に求めるものが
+ * 「どこが安いか」だからで、会員価格の有無で順位が入れ替わるため。
+ * Waitrose と M&S は会員価格が無いので必ず下に来る。
+ */
+export function mealDealsByPrice(): MealDeal[] {
+  return [...Object.values(MEAL_DEALS)].sort(
+    (a, b) =>
+      mealDealEffectivePrice(a) - mealDealEffectivePrice(b) ||
+      a.standard - b.standard
+  );
 }

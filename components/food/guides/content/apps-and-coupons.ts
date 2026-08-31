@@ -12,12 +12,12 @@ const appsAndCoupons: FoodGuideArticle = {
   title:
     "ロンドンで使う節約アプリとクーポン｜マクドナルドのアンケートで無限にクーポンを出す",
   engTitle: "Apps and Coupons That Actually Cut Your Food Bill",
-  audience: "スマホを使ってでも確実に食費を削りたい人",
+  audience: "アプリを入れる手間はかけられる人",
   summary: `Too Good To Go は閉店前の売れ残りを袋1つ${gbp(
     SURPLUS_FOOD_APPS.tooGoodToGo.bagMin
   )}〜${gbp(
     SURPLUS_FOOD_APPS.tooGoodToGo.bagMax
-  )}で買える仕組みです。そしてマクドナルドのレシートアンケートは、**クーポンで買ったレシートからさらにアンケートに答えられる**ため、条件を満たすかぎり半永久的に回り続けます。ただしキオスク注文が必須という落とし穴があります。`,
+  )}で買える仕組みです。そしてマクドナルドのレシートアンケートは、クーポンで買ったレシートからさらにアンケートに答えられるため、条件を満たすかぎり半永久的に回り続けます。ただしキオスク注文が必須という落とし穴があります。`,
   description:
     "ロンドンの食費を削る節約アプリとクーポンの実務ガイド。マクドナルドのレシートアンケートでクーポンを無限に発行する手順（キオスク注文が必須）、Too Good To Go、Olio、Greggsアプリのスタンプまで具体的に解説します。",
   keywords: [
@@ -52,6 +52,7 @@ const appsAndCoupons: FoodGuideArticle = {
   sections: [
     {
       id: "mcdonalds-loop",
+      navLabel: "マクドナルド",
       title: "マクドナルドのアンケートを回し続ける",
       subtitle: "クーポンで買ったレシートから、次のクーポンが出る",
       body: `イギリスのマクドナルドは、レシートに記載された URL からアンケート（Food for Thoughts）に答えると、**次回使えるクーポンコード**が発行されます。
@@ -97,6 +98,7 @@ const appsAndCoupons: FoodGuideArticle = {
     },
     {
       id: "too-good-to-go",
+      navLabel: "Too Good To Go",
       title: "Too Good To Go —— 閉店前の売れ残りを袋で買う",
       subtitle: "中身は選べないが、単価は圧倒的に安い",
       body: `店がその日に売り切れなかった食品を、**中身を店側が詰めた「Magic Bag」として安く売る**アプリです。袋1つ${gbp(
@@ -128,6 +130,7 @@ const appsAndCoupons: FoodGuideArticle = {
     },
     {
       id: "olio",
+      navLabel: "Olio",
       title: "Olio —— 近所の人から無料で譲ってもらう",
       subtitle: "費用ゼロ。ただし内容は完全に運",
       body: `個人や店が**余った食品を無料で譲る**アプリです。引っ越しで冷蔵庫を空にする人、買いすぎた人、閉店後のベーカリーなどが出品します。
@@ -149,6 +152,7 @@ const appsAndCoupons: FoodGuideArticle = {
     },
     {
       id: "chain-apps",
+      navLabel: "チェーンのアプリ",
       title: "チェーン各社のアプリ",
       subtitle: "入れるだけで効くもの",
       body: `### Greggs
