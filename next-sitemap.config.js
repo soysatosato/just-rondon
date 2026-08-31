@@ -11,6 +11,10 @@ module.exports = {
   generateRobotsTxt: true,
   exclude: [
     "/api/*",
+    // SNS共有カードの生成ルート。画像を返すだけでページではない。
+    // robots.txt では Disallow にしない(Twitterbot 等が og:image を
+    // 取りに来られなくなるため)ので、sitemap 側だけで外す。
+    "/og/*",
     "/profile",
     "/profile/*",
     "/jobs/service-charges/dashboard",

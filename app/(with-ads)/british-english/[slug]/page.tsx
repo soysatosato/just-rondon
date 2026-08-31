@@ -6,6 +6,7 @@ import {
   fetchBritishEnglishBySlug,
 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
+import { britishEnglishOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import {
@@ -44,7 +45,10 @@ export async function generateMetadata({ params }: Props) {
     type: "article",
     publishedTime: content.createdAt.toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
-    images: content.image ? [content.image] : undefined,
+    // 記事内の挿絵(content.image)ではなく、その単語を大きく置いた
+    // 生成カードを共有画像にする。挿絵は任意項目で無い記事が多く、
+    // あってもテーマの写真なので、タイムライン上では何の記事か分からない。
+    images: [britishEnglishOgImage(content)],
   });
 }
 

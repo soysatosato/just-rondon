@@ -1,4 +1,5 @@
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { SITE_NAME, SITE_URL, absoluteImage } from "@/lib/seo";
+import { britishEnglishOgImage } from "@/lib/og";
 
 export const BRITISH_ENGLISH_BASE = "/british-english";
 
@@ -14,6 +15,7 @@ export function britishEnglishPath(slug: string) {
 
 export function britishEnglishArticleJsonLd(content: {
   title: string;
+  engTitle: string | null;
   summary: string | null;
   slug: string;
   createdAt: Date;
@@ -32,7 +34,9 @@ export function britishEnglishArticleJsonLd(content: {
     mainEntityOfPage: url,
     datePublished: content.createdAt.toISOString(),
     dateModified: content.updatedAt.toISOString(),
-    ...(content.image ? { image: content.image } : {}),
+    // 挿絵が無い記事のほうが多いので、そのときは共有カードを画像として出す。
+    // Article に image が無いと Google の記事カードに画像が付かない。
+    image: absoluteImage(content.image || britishEnglishOgImage(content).url),
     author: BRITISH_ENGLISH_PUBLISHER,
     publisher: BRITISH_ENGLISH_PUBLISHER,
   };
