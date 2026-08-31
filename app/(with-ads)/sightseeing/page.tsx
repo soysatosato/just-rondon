@@ -2,6 +2,7 @@ export const revalidate = 60 * 60;
 
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import { CalendarRange } from "lucide-react";
 
 import {
   Accordion,
@@ -467,6 +468,34 @@ export default async function Page() {
             </li>
           ))}
         </ol>
+
+        {/*
+          ガイドを読んで行き先が決まった人の受け皿。travelGuides には
+          入れていない——あちらは読み物の並びで、関連ガイドの一覧や
+          CollectionPage の JSON-LD にも流れる。道具を記事として
+          数えると、どちらの一覧も意味がぼやける。
+        */}
+        <Link
+          href="/sightseeing/plan"
+          className="group mt-4 flex items-center gap-4 rounded-xl border border-indigo-300 bg-indigo-50/60 p-4 transition hover:border-indigo-500 dark:border-indigo-900 dark:bg-indigo-950/30"
+        >
+          <CalendarRange
+            className="h-6 w-6 shrink-0 text-indigo-600 dark:text-indigo-400"
+            aria-hidden
+          />
+          <span className="min-w-0 flex-1">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">
+              Trip Planner
+            </span>
+            <span className="mt-0.5 block text-sm font-bold leading-snug decoration-1 underline-offset-2 group-hover:underline">
+              行き先が決まったら、旅行プランを組む
+            </span>
+            <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
+              選んだスポットを日別に並べて、入場料の合計・滞在時間・スポット間の
+              徒歩距離を出します。1日に詰め込みすぎているときは警告します。
+            </span>
+          </span>
+        </Link>
       </section>
 
       {/* 5. FAQ。FAQPage の JSON-LD と対で残す。 */}

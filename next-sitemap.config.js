@@ -161,6 +161,9 @@ module.exports = {
       "/restaurants/pub-etiquette",
       "/sightseeing",
       "/sightseeing/all",
+      // 読者が自分で組む旅行プラン。共有リンク(?spots=)はクライアントでしか
+      // 読まないので、生えるURLはこの1本だけ。
+      "/sightseeing/plan",
       // 入場無料スポットの一覧。/sightseeing/all の「無料」絞り込みは
       // クライアント側でURLを持たないので、検索の受け皿はこの静的URL。
       "/sightseeing/free",

@@ -36,6 +36,7 @@ import {
   attractionPath,
 } from "@/components/sightseeing/jsonld";
 import AttractionFactBar from "@/components/sightseeing/AttractionFactBar";
+import AddToPlanButton from "@/components/attractions/plan/AddToPlanButton";
 import AttractionVisitFlow from "@/components/sightseeing/AttractionVisitFlow";
 import AttractionLocation from "@/components/sightseeing/AttractionLocation";
 import AttractionSpotRail from "@/components/sightseeing/AttractionSpotRail";
@@ -402,6 +403,17 @@ export default async function AttractionDetail({
           nearestStation={attraction.nearestStation}
           openingHours={attraction.openingHours}
           website={attraction.website}
+        />
+
+        {/*
+          行くと決めた人の次の一手。ファクトバー(料金・所要時間)のすぐ下に
+          置いているのは、行くかどうかがここで決まるため。本文を読み終えた
+          最下部に置くと、決めた瞬間から押せる場所までの距離が遠すぎる。
+        */}
+        <AddToPlanButton
+          slug={attraction.slug}
+          name={attraction.name}
+          variant="detail"
         />
 
         {/* summary は導入文として本文の書体で出す。以前は丸いアイコン付きの

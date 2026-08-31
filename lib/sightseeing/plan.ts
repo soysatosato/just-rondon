@@ -1,0 +1,427 @@
+import {
+  parseDurationMinutes,
+  parsePriceGbp,
+} from "@/components/attractions/facts";
+import { distanceKm } from "./geo";
+
+/**
+ * 読者が自分で組む旅行プラン(/sightseeing/plan)の計算まわり。
+ *
+ * /sightseeing/itinerary が編集部の書いた固定のモデルコースなのに対して、
+ * こちらは144件から選んだスポットを日別に並べて、合計と移動を出す道具。
+ * 記事のほうは「どこへ行くか」を提案し、ここは「選んだ先が1日に収まるか」
+ * を答える。役割が違うので別ページにしてある。
+ *
+ * 計算はすべてこのファイルに集め、React 側には持ち込まない。理由は
+ * 移動時間の見積もりが「直線距離からの推定」でしかなく、どこまでを
+ * 数字として出してよいかの判断が1か所にまとまっていないと、表示側で
+ * 勝手に精度の高そうな数字を作ってしまうため。
+ */
+
+/** プランの1行が必要とする列。詳細ページの本文には触れない。 */
+export type PlanSpot = {
+  slug: string;
+  name: string;
+  engName: string | null;
+  image: string;
+  address: string;
+  lat: number;
+  lng: number;
+  category: string;
+  area: string | null;
+  priceAdult: string | null;
+  durationText: string | null;
+  openingHours: string | null;
+  nearestStation: string | null;
+  isFree: boolean;
+  mustSee: boolean;
+  recommendLevel: number | null;
+};
+
+/** 保存されるのは slug と何日目かだけ。中身は毎回DBの最新を引く。 */
+export type PlanEntry = { slug: string; day: number };
+
+/** 日数の上限。これ以上は旅程ではなく別の旅行。 */
+export const MAX_DAYS = 10;
+/** スポット数の上限。共有URLの長さと、画面の見通しの両方から。 */
+export const MAX_SPOTS = 40;
+
+/* ------------------------------------------------------------------ *
+ * 共有リンク
+ * ------------------------------------------------------------------ */
+
+/**
+ * slug は144件すべてが [a-z0-9-] だけでできている。
+ *
+ * 区切りに `.` と `_` を選んだのは、どちらも slug に現れないうえ、
+ * URL のクエリで percent-encode されない文字だから。`,` も slug には
+ * 現れないが、URLSearchParams を通すと %2C になり、送られたリンクが
+ * 読みにくくなる(値としては同じものが戻るので動きはする)。
+ * 共有リンクは人が LINE やメールに貼るものなので、見た目のまま残す。
+ */
+const SLUG_PATTERN = /^[a-z0-9-]+$/;
+const DAY_SEPARATOR = "_";
+const SPOT_SEPARATOR = ".";
+
+/**
+ * 日ごとに slug を並べた文字列にする。
+ *
+ * 日は normalizeDays で常に 1..n に詰めてあるので、途中が空になることは
+ * 画面からの操作では起きない。それでも 1..lastDay を素直に回して空の
+ * 区切りを残すのは、手で書き換えられたURLを読み戻したときに日番号が
+ * ずれないようにするため。
+ */
+export function encodePlan(entries: PlanEntry[]): string {
+  if (entries.length === 0) return "";
+  const lastDay = Math.max(...entries.map((e) => e.day));
+  const days: string[] = [];
+  for (let day = 1; day <= lastDay; day++) {
+    days.push(
+      entries
+        .filter((e) => e.day === day)
+        .map((e) => e.slug)
+        .join(SPOT_SEPARATOR),
+    );
+  }
+  return days.join(DAY_SEPARATOR);
+}
+
+/**
+ * 共有リンクを読み戻す。
+ *
+ * 他人が手で書き換えたURLも届くので、slug の形をしていないもの、重複、
+ * 上限超えは黙って捨てる。プランが1件でも残るなら開く価値があるので、
+ * 壊れた入力でもエラーにはしない。
+ */
+export function decodePlan(param: string | null | undefined): PlanEntry[] {
+  if (!param) return [];
+  const seen = new Set<string>();
+  const entries: PlanEntry[] = [];
+
+  param
+    .split(DAY_SEPARATOR)
+    .slice(0, MAX_DAYS)
+    .forEach((segment, index) => {
+      for (const slug of segment.split(SPOT_SEPARATOR)) {
+        if (!SLUG_PATTERN.test(slug)) continue;
+        if (seen.has(slug)) continue;
+        if (entries.length >= MAX_SPOTS) return;
+        seen.add(slug);
+        entries.push({ slug, day: index + 1 });
+      }
+    });
+
+  return normalizeDays(entries);
+}
+
+/**
+ * 空の日を詰めて 1..n に振り直す。
+ *
+ * 途中の日を空にしたまま「3日目」だけが残ると、日の見出しと実際の
+ * 旅程がずれる。中身のある日だけを順に数え直す。
+ */
+export function normalizeDays(entries: PlanEntry[]): PlanEntry[] {
+  const used = [...new Set(entries.map((e) => e.day))].sort((a, b) => a - b);
+  const remap = new Map(used.map((day, i) => [day, i + 1]));
+  return entries.map((e) => ({ ...e, day: remap.get(e.day) ?? 1 }));
+}
+
+/* ------------------------------------------------------------------ *
+ * スポット間の移動
+ * ------------------------------------------------------------------ */
+
+/**
+ * 住所を持たないスポット。ロンドンパスや市内周遊バスのような商品で、
+ * 座標は便宜的な一点でしかない(address が "-" の5件)。
+ * 距離を出すと「大英博物館からロンドンパスまで徒歩12分」になるので、
+ * このスポットが絡む区間は移動を出さない。
+ */
+export function hasRealLocation(spot: PlanSpot): boolean {
+  return Boolean(spot.address) && spot.address !== "-";
+}
+
+export type LegKind = "walk" | "transit" | "daytrip";
+
+export type PlanLeg = {
+  kind: LegKind;
+  /** 直線距離(km)。表示にも使うので丸めずに持つ。 */
+  km: number;
+  /** 旅程の合計に足す分数。 */
+  minutes: number;
+};
+
+/** 実際に歩く道のりは直線距離の1.3倍前後になる。 */
+const STREET_FACTOR = 1.3;
+/** 信号と人混みを含めた実効の歩行速度。観光客の速度で見積もる。 */
+const WALK_KMH = 4.5;
+/** これを超えたら歩かせない。中心部で1.2kmは徒歩15分強。 */
+const WALK_MAX_KM = 1.2;
+/** これを超えたらロンドン市内の移動ではない(ウィンザー、ビスター等)。 */
+const DAYTRIP_KM = 15;
+
+/**
+ * 地下鉄・バスでの移動に置く固定値。
+ *
+ * 直線距離から乗換回数や待ち時間は出せない。区間ごとに違う数字を出すと
+ * 精度があるように見えてしまうので、市内は一律30分、郊外は片道90分で
+ * 置く。実際の所要は乗換案内で確かめてもらう前提で、ここは「1日に
+ * 収まるかどうか」の判断材料に徹する。
+ */
+const TRANSIT_MINUTES = 30;
+const DAYTRIP_MINUTES = 90;
+
+/** 区間ひとつぶんの移動。どちらかが住所を持たないスポットなら null。 */
+export function legBetween(from: PlanSpot, to: PlanSpot): PlanLeg | null {
+  if (!hasRealLocation(from) || !hasRealLocation(to)) return null;
+
+  const km = distanceKm(from, to);
+
+  if (km <= WALK_MAX_KM) {
+    const minutes = Math.max(
+      1,
+      Math.round(((km * STREET_FACTOR) / WALK_KMH) * 60),
+    );
+    return { kind: "walk", km, minutes };
+  }
+
+  if (km <= DAYTRIP_KM) {
+    return { kind: "transit", km, minutes: TRANSIT_MINUTES };
+  }
+
+  return { kind: "daytrip", km, minutes: DAYTRIP_MINUTES };
+}
+
+/* ------------------------------------------------------------------ *
+ * 1日ぶんの集計
+ * ------------------------------------------------------------------ */
+
+/**
+ * 「大型施設」の線引き。滞在の目安が2時間以上のもの。
+ *
+ * /sightseeing/itinerary が「大型施設は1日2ヶ所まで」を勧めている。
+ * 記事とこの道具が違うことを言うと、どちらを信じればよいか分からなく
+ * なるので、警告の基準を記事に合わせてある。記事側を直すときはここも直すこと。
+ */
+const BIG_VENUE_MINUTES = 120;
+export const BIG_VENUES_PER_DAY = 2;
+
+/** 1日の上限。朝9時に出て夜6時に戻る想定。 */
+const DAY_BUDGET_MINUTES = 9 * 60;
+
+export type PlanWarning = {
+  /** 同じ日に2つ出しても意味のない警告があるので種別を持つ。 */
+  kind: "big-venues" | "too-long" | "daytrip";
+  message: string;
+};
+
+export type PlanRow = {
+  spot: PlanSpot;
+  /** 直前のスポットからの移動。その日の先頭は null。 */
+  legFromPrevious: PlanLeg | null;
+};
+
+export type DayPlan = {
+  day: number;
+  rows: PlanRow[];
+  /** 滞在時間の合計(分)。durationText が空のスポットは数えない。 */
+  stayMinutes: number;
+  /** 移動時間の合計(分)。 */
+  travelMinutes: number;
+  /** 滞在時間が分からなかったスポット数。合計の下に断りを出すのに使う。 */
+  unknownDurationCount: number;
+  /** 大人料金の合計(£)。 */
+  totalGbp: number;
+  /** 料金が分からなかったスポット数。 */
+  unknownPriceCount: number;
+  warnings: PlanWarning[];
+};
+
+/** 1日ぶんのスポット列から、移動・合計・警告を組み立てる。 */
+export function buildDayPlan(day: number, spots: PlanSpot[]): DayPlan {
+  const rows: PlanRow[] = spots.map((spot, i) => ({
+    spot,
+    legFromPrevious: i === 0 ? null : legBetween(spots[i - 1], spot),
+  }));
+
+  let stayMinutes = 0;
+  let unknownDurationCount = 0;
+  let totalGbp = 0;
+  let unknownPriceCount = 0;
+  let bigVenues = 0;
+
+  for (const spot of spots) {
+    const minutes = parseDurationMinutes(spot.durationText);
+    if (minutes === null) {
+      unknownDurationCount++;
+    } else {
+      stayMinutes += minutes;
+      if (minutes >= BIG_VENUE_MINUTES) bigVenues++;
+    }
+
+    const price = parsePriceGbp(spot.priceAdult);
+    if (price === null) unknownPriceCount++;
+    else totalGbp += price;
+  }
+
+  const travelMinutes = rows.reduce(
+    (sum, row) => sum + (row.legFromPrevious?.minutes ?? 0),
+    0,
+  );
+
+  const warnings: PlanWarning[] = [];
+
+  if (bigVenues > BIG_VENUES_PER_DAY) {
+    warnings.push({
+      kind: "big-venues",
+      message: `滞在2時間以上の施設が${bigVenues}ヶ所あります。1日2ヶ所までに減らすと、残りを街歩きに使えます。`,
+    });
+  }
+
+  const total = stayMinutes + travelMinutes;
+  if (total > DAY_BUDGET_MINUTES) {
+    warnings.push({
+      kind: "too-long",
+      message: `滞在と移動で${formatMinutes(total)}。朝9時に出ても夜6時には戻れません。どれかを別の日に移してください。`,
+    });
+  }
+
+  const daytripCount = rows.filter(
+    (row) => row.legFromPrevious?.kind === "daytrip",
+  ).length;
+  if (daytripCount > 0) {
+    warnings.push({
+      kind: "daytrip",
+      message:
+        "ロンドン市外への移動が入っています。ウィンザーやビスターは往復だけで半日かかるので、その日は1ヶ所に絞るのが現実的です。",
+    });
+  }
+
+  return {
+    day,
+    rows,
+    stayMinutes,
+    travelMinutes,
+    unknownDurationCount,
+    totalGbp,
+    unknownPriceCount,
+    warnings,
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ * 並べ替え
+ * ------------------------------------------------------------------ */
+
+/**
+ * 地理的に近い順へ並べ替える(最近傍法)。
+ *
+ * 選んだ順に回ると、ロンドン塔 → 大英博物館 → タワーブリッジ のように
+ * 同じ道を往復する旅程ができあがる。厳密な最短経路(TSP)は解かないが、
+ * 1日ぶんは数ヶ所しかないので、最近傍で組むだけで往復はほぼ消える。
+ *
+ * 起点は動かさない。「朝いちばんにここへ行きたい」という意図が
+ * 並べ替えで消えるほうが、数百m遠回りするより困るため。
+ * 住所を持たないスポット(パス類)は距離を測れないので末尾に置く。
+ */
+export function orderByProximity(spots: PlanSpot[]): PlanSpot[] {
+  const locatable = spots.filter(hasRealLocation);
+  const rest = spots.filter((spot) => !hasRealLocation(spot));
+  if (locatable.length <= 2) return [...locatable, ...rest];
+
+  const remaining = locatable.slice(1);
+  const ordered = [locatable[0]];
+
+  while (remaining.length > 0) {
+    const current = ordered[ordered.length - 1];
+    let nearest = 0;
+    let nearestKm = Infinity;
+    remaining.forEach((spot, i) => {
+      const km = distanceKm(current, spot);
+      if (km < nearestKm) {
+        nearestKm = km;
+        nearest = i;
+      }
+    });
+    ordered.push(remaining.splice(nearest, 1)[0]);
+  }
+
+  return [...ordered, ...rest];
+}
+
+/* ------------------------------------------------------------------ *
+ * 表示用の整形
+ * ------------------------------------------------------------------ */
+
+/** 分を「3時間20分」の形にする。0分は "0分"。 */
+export function formatMinutes(minutes: number): string {
+  if (minutes < 60) return `${minutes}分`;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m === 0 ? `${h}時間` : `${h}時間${m}分`;
+}
+
+/** 距離を「600m」「2.4km」の形にする。1km未満は10m単位に丸める。 */
+export function formatKm(km: number): string {
+  if (km >= 1) return `${km.toFixed(1)}km`;
+  // 座標がほぼ同じスポット同士で「0m」と出ると壊れて見えるので下限を置く。
+  return `${Math.max(10, Math.round(km * 100) * 10)}m`;
+}
+
+/** 合計金額。端数の出ない額は整数で出す。 */
+export function formatGbp(amount: number): string {
+  return Number.isInteger(amount) ? `£${amount}` : `£${amount.toFixed(2)}`;
+}
+
+const LEG_LABELS: Record<LegKind, string> = {
+  walk: "徒歩",
+  transit: "地下鉄・バス",
+  daytrip: "市外へ移動",
+};
+
+export function legLabel(leg: PlanLeg): string {
+  if (leg.kind === "walk") {
+    return `徒歩${leg.minutes}分 (${formatKm(leg.km)})`;
+  }
+  // 市内・市外は固定値で置いているので「約」を付けて、直線距離を添える。
+  return `${LEG_LABELS[leg.kind]}で約${formatMinutes(leg.minutes)} (直線${formatKm(leg.km)})`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Google マップ
+ * ------------------------------------------------------------------ */
+
+/** Directions API のURLが受け取れる経由地の数。 */
+const MAX_WAYPOINTS = 9;
+
+/**
+ * その日のルートを Google マップの経路検索で開くURL。
+ *
+ * 名前ではなく座標を渡す。日本語名では引けず、英名でも "The Shard" のような
+ * 一般名詞に近いものが別の場所に当たることがあるため。
+ * 2ヶ所未満、または住所を持たないスポットだけの日では null を返す。
+ */
+export function dayDirectionsUrl(spots: PlanSpot[]): string | null {
+  const points = spots.filter(hasRealLocation);
+  if (points.length < 2) return null;
+
+  const coords = (spot: PlanSpot) => `${spot.lat},${spot.lng}`;
+  const origin = coords(points[0]);
+  const destination = coords(points[points.length - 1]);
+  const waypoints = points
+    .slice(1, -1)
+    .slice(0, MAX_WAYPOINTS)
+    .map(coords)
+    .join("|");
+
+  const params = new URLSearchParams({
+    api: "1",
+    origin,
+    destination,
+    // 徒歩を既定にする。中心部の旅程はほとんど歩きで、地下鉄が要る区間は
+    // マップ側で切り替えたほうが早い。
+    travelmode: "walking",
+  });
+  if (waypoints) params.set("waypoints", waypoints);
+
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}

@@ -1,0 +1,244 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+
+import {
+  MAX_DAYS,
+  MAX_SPOTS,
+  normalizeDays,
+  type PlanEntry,
+} from "@/lib/sightseeing/plan";
+
+/**
+ * 旅行プランの保存先。ブラウザの localStorage だけで完結する。
+ *
+ * ログインを挟まないのは、プランを作るのが旅行前の一度きりで、
+ * そのためにアカウントを作らせると大半がそこで離脱するため。
+ * 端末をまたぎたい人には共有リンク(?spots=)を渡す。
+ *
+ * 持つのは slug と何日目かだけ。名前や料金まで保存すると、料金改定の
+ * あとも古い値がブラウザに残り続ける。中身は開くたびにDBから引き直す。
+ *
+ * 状態を React の外に置いているのは、「プランに追加」ボタンが一覧の
+ * カードにも詳細ページにも出るため。Context で包むには描画位置が
+ * 散らばりすぎており、useSyncExternalStore なら購読している行だけが
+ * 再描画される。
+ */
+
+const STORAGE_KEY = "just-rondon-plan-v1";
+
+/** サーバー描画時のスナップショット。毎回同じ参照を返す必要がある。 */
+const EMPTY: PlanEntry[] = [];
+
+let entries: PlanEntry[] = EMPTY;
+let hydrated = false;
+const listeners = new Set<() => void>();
+
+function emit() {
+  for (const listener of listeners) listener();
+}
+
+/**
+ * localStorage から読む。
+ *
+ * 読み込みは subscribe の中(=描画のあと)で行う。描画中に読むと、
+ * サーバーが返した空のHTMLとクライアントの初回描画が食い違い、
+ * hydration エラーになる。useSyncExternalStore は購読直後に
+ * スナップショットを取り直すので、ここで更新すれば正しく反映される。
+ */
+function hydrate() {
+  hydrated = true;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    const parsed: unknown = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return;
+
+    const restored: PlanEntry[] = [];
+    for (const item of parsed) {
+      if (
+        item &&
+        typeof item === "object" &&
+        typeof (item as PlanEntry).slug === "string" &&
+        Number.isInteger((item as PlanEntry).day)
+      ) {
+        const entry = item as PlanEntry;
+        restored.push({
+          slug: entry.slug,
+          day: Math.min(Math.max(entry.day, 1), MAX_DAYS),
+        });
+      }
+    }
+    entries = normalizeDays(restored.slice(0, MAX_SPOTS));
+  } catch {
+    // プライベートモード、保存拒否、壊れたJSON。
+    // プランが空から始まるだけで、他の機能には影響しない。
+  }
+}
+
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  } catch {
+    // 同上。この画面の中では動き続ける。
+  }
+}
+
+/**
+ * 書き込みの唯一の入口。日を 1..n に詰め直し、日ごとにまとめてから保存する。
+ * 配列の並びがそのまま「その日に回る順」になるので、順序を崩さない
+ * 安定ソートであることに依存している。
+ */
+function write(next: PlanEntry[]) {
+  const normalized = normalizeDays(next.slice(0, MAX_SPOTS));
+  entries = [...normalized].sort((a, b) => a.day - b.day);
+  persist();
+  emit();
+}
+
+function subscribe(listener: () => void) {
+  if (!hydrated) hydrate();
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+/**
+ * 別のタブで足したスポットを、開きっぱなしのタブにも反映する。
+ * 一覧で選びながら別タブでプランを開く見方をされるので、
+ * 片方が古いままだと「追加したのに出ない」に見える。
+ */
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key !== STORAGE_KEY) return;
+    hydrated = false;
+    entries = EMPTY;
+    hydrate();
+    emit();
+  });
+}
+
+function getSnapshot() {
+  return entries;
+}
+
+function getServerSnapshot() {
+  return EMPTY;
+}
+
+/* ------------------------------------------------------------------ *
+ * 読み取り
+ * ------------------------------------------------------------------ */
+
+/**
+ * 購読を通さずに今の中身を読む。共有リンクの取り込みで使う。
+ *
+ * 取り込みは useEffect の中で「今すでに自分のプランがあるか」を見て
+ * 分岐する。描画時のスナップショットを見ると、localStorage の読み込みが
+ * 済む前の空の配列を「プランは空」と誤って判断し、人のプランで
+ * 上書きしてしまう。エフェクトの実行順に依存させないための入口。
+ */
+export function readPlan(): PlanEntry[] {
+  if (!hydrated) hydrate();
+  return entries;
+}
+
+export function usePlanEntries(): PlanEntry[] {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+/**
+ * そのスポットが何日目に入っているか。入っていなければ 0。
+ *
+ * 数値を返しているのは、カードごとに購読しても再描画が起きないようにするため。
+ * 配列やオブジェクトを返すと参照が毎回変わり、144枚のカードが
+ * 1件の追加で全部描き直される。
+ */
+export function usePlanDay(slug: string): number {
+  return useSyncExternalStore(
+    subscribe,
+    () => entries.find((e) => e.slug === slug)?.day ?? 0,
+    () => 0,
+  );
+}
+
+export function usePlanCount(): number {
+  return useSyncExternalStore(
+    subscribe,
+    () => entries.length,
+    () => 0,
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * 書き込み
+ * ------------------------------------------------------------------ */
+
+/** 現在の日数。空のプランは 0。 */
+function lastDay(): number {
+  return entries.reduce((max, e) => Math.max(max, e.day), 0);
+}
+
+/**
+ * スポットを足す。行き先は最終日。
+ *
+ * 「いま埋めている日」に足すのがいちばん外れが少ない。一覧を眺めながら
+ * 1日目から順に組む読まれ方をするため。違う日に入れたいときは
+ * プラン画面の日の選択で移せる。
+ */
+export function addToPlan(slug: string): boolean {
+  if (entries.some((e) => e.slug === slug)) return false;
+  if (entries.length >= MAX_SPOTS) return false;
+  write([...entries, { slug, day: Math.max(lastDay(), 1) }]);
+  return true;
+}
+
+export function removeFromPlan(slug: string) {
+  write(entries.filter((e) => e.slug !== slug));
+}
+
+export function togglePlan(slug: string) {
+  if (entries.some((e) => e.slug === slug)) removeFromPlan(slug);
+  else addToPlan(slug);
+}
+
+/** 日を移す。day に「今の最終日 + 1」を渡すと新しい日になる。 */
+export function moveToDay(slug: string, day: number) {
+  if (day < 1 || day > MAX_DAYS) return;
+  write(entries.map((e) => (e.slug === slug ? { ...e, day } : e)));
+}
+
+/** 同じ日の中で1つ前後に動かす。日をまたいでは動かさない。 */
+export function moveWithinDay(slug: string, direction: -1 | 1) {
+  const index = entries.findIndex((e) => e.slug === slug);
+  if (index === -1) return;
+
+  const day = entries[index].day;
+  const sameDay = entries
+    .map((e, i) => ({ e, i }))
+    .filter(({ e }) => e.day === day);
+  const position = sameDay.findIndex(({ i }) => i === index);
+  const target = sameDay[position + direction];
+  if (!target) return;
+
+  const next = [...entries];
+  next[index] = target.e;
+  next[target.i] = entries[index];
+  write(next);
+}
+
+/** その日のスポットを、渡された順に並べ替える。 */
+export function reorderDay(day: number, slugsInOrder: string[]) {
+  const others = entries.filter((e) => e.day !== day);
+  write([...others, ...slugsInOrder.map((slug) => ({ slug, day }))]);
+}
+
+export function clearPlan() {
+  write([]);
+}
+
+/** 共有リンクを開いたときの読み込み。今のプランを丸ごと置き換える。 */
+export function replacePlan(next: PlanEntry[]) {
+  write(next);
+}

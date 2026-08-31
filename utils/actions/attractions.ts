@@ -3,6 +3,11 @@
 import db from "../db";
 import type { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
+import {
+  KM_PER_LAT_DEG,
+  KM_PER_LNG_DEG_LONDON,
+  distanceKm,
+} from "@/lib/sightseeing/geo";
 
 const getTotalCount = unstable_cache(
   async () => db.attraction.count({ where: { isPublished: true } }),
@@ -111,10 +116,6 @@ const NEARBY_EXCLUDED_SLUGS = new Set([
   "the-total-london-experience-tour",
 ]);
 
-/** 緯度1度 ≒ 111km。ロンドン(北緯51.5度)の経度1度 ≒ 69km。 */
-const KM_PER_LAT_DEG = 111;
-const KM_PER_LNG_DEG_LONDON = 69;
-
 export const fetchNearbyAttractions = async (
   origin: { lat: number; lng: number },
   excludeSlug: string,
@@ -149,14 +150,12 @@ export const fetchNearbyAttractions = async (
 
   return candidates
     .map((spot) => {
-      const dLat = (spot.lat - origin.lat) * KM_PER_LAT_DEG;
-      const dLng = (spot.lng - origin.lng) * KM_PER_LNG_DEG_LONDON;
-      const distanceKm = Math.sqrt(dLat * dLat + dLng * dLng);
+      const km = distanceKm(spot, origin);
       return {
         ...spot,
-        distanceKm,
+        distanceKm: km,
         // 表示は実距離、並べ替えだけスコアを使う。
-        score: distanceKm - (spot.recommendLevel ?? 0) * RECOMMEND_BONUS_KM,
+        score: km - (spot.recommendLevel ?? 0) * RECOMMEND_BONUS_KM,
       };
     })
     .filter(
@@ -305,3 +304,39 @@ export async function fetchAllAttractions() {
     },
   });
 }
+
+/**
+ * /sightseeing/plan 用。公開中の全件を、プランの計算に要る列だけ返す。
+ *
+ * fetchAllAttractions と分けているのは緯度経度と開館時間のため。
+ * 一覧(/sightseeing/all)はカードに出さないので引いていないが、
+ * プランはスポット間の距離と「その日に開いているか」を出すので要る。
+ * 逆に tagline / summary はプランでは使わないので引かない。
+ */
+export const fetchPlanSpots = unstable_cache(
+  async () =>
+    db.attraction.findMany({
+      where: { isPublished: true },
+      select: {
+        slug: true,
+        name: true,
+        engName: true,
+        image: true,
+        address: true,
+        lat: true,
+        lng: true,
+        category: true,
+        area: true,
+        priceAdult: true,
+        durationText: true,
+        openingHours: true,
+        nearestStation: true,
+        isFree: true,
+        mustSee: true,
+        recommendLevel: true,
+      },
+      orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+    }),
+  ["plan-spots"],
+  { revalidate: 60 * 60 * 24 },
+);

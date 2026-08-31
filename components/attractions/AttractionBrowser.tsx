@@ -12,6 +12,8 @@ import {
   CATEGORY_SECTIONS,
   categoryLabel,
 } from "@/components/sightseeing/categories";
+import AddToPlanButton from "@/components/attractions/plan/AddToPlanButton";
+import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import {
   DURATION_FILTERS,
   PRICE_FILTERS,
@@ -395,6 +397,9 @@ export default function AttractionBrowser({
       )}
 
       <div className="flex flex-wrap justify-center gap-3 pt-2">
+        <Button asChild>
+          <Link href="/sightseeing/plan">選んだスポットでプランを組む</Link>
+        </Button>
         <Button asChild variant="outline">
           <Link href="/sightseeing">観光ガイドのトップへ</Link>
         </Button>
@@ -405,6 +410,8 @@ export default function AttractionBrowser({
           <Link href="/sightseeing/free">無料で楽しむ</Link>
         </Button>
       </div>
+
+      <PlanFloatingBar />
     </div>
   );
 }
@@ -432,91 +439,107 @@ function SpotCard({
   spot: Decorated;
   showCategory: boolean;
 }) {
+  /*
+   * カード全体をリンクにしつつ、「プランに追加」だけを上に浮かせる。
+   *
+   * 以前は <Link> でカードごと包んでいたが、その中にボタンを置くと
+   * <a> の中に <button> が入り、押しても詳細ページへ遷移してしまう
+   * (入れ子の対話要素はHTMLとして不正でもある)。リンクを絶対配置の
+   * 覆いにして、ボタンだけを z-10 で前に出す。
+   */
   return (
-    <Link href={`/sightseeing/${a.slug}`} className="group block">
-      <Card className="flex h-full flex-col overflow-hidden border border-border transition hover:border-indigo-400 hover:shadow-lg">
-        <div className="relative h-40 w-full overflow-hidden bg-muted">
-          <img
-            src={a.image}
-            alt={a.name}
-            className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
-            loading="lazy"
-            decoding="async"
-          />
-          <div className="absolute right-2 top-2 flex flex-wrap justify-end gap-1">
-            {a.isForKids && (
-              <Badge className="bg-sky-600 text-white hover:bg-sky-600">
-                キッズ
-              </Badge>
-            )}
-            {a.isFree && (
-              <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">
-                無料
-              </Badge>
+    <Card className="group relative flex h-full flex-col overflow-hidden border border-border transition hover:border-indigo-400 hover:shadow-lg">
+      <Link
+        href={`/sightseeing/${a.slug}`}
+        className="absolute inset-0 z-0"
+        aria-label={`${a.name}の詳細を見る`}
+      />
+      <div className="relative h-40 w-full overflow-hidden bg-muted">
+        <img
+          src={a.image}
+          alt={a.name}
+          className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute right-2 top-2 flex flex-wrap justify-end gap-1">
+          {a.isForKids && (
+            <Badge className="bg-sky-600 text-white hover:bg-sky-600">
+              キッズ
+            </Badge>
+          )}
+          {a.isFree && (
+            <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">
+              無料
+            </Badge>
+          )}
+        </div>
+        {showCategory && (
+          <span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+            {categoryLabel(a.category)}
+          </span>
+        )}
+        {a.mustSee && (
+          <span className="absolute bottom-2 right-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
+            定番
+          </span>
+        )}
+      </div>
+
+      <CardContent className="flex flex-1 flex-col gap-2 p-4">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="font-bold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+              {a.name}
+            </h3>
+            {a.engName && (
+              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                {a.engName}
+              </p>
             )}
           </div>
-          {showCategory && (
-            <span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
-              {categoryLabel(a.category)}
-            </span>
-          )}
-          {a.mustSee && (
-            <span className="absolute bottom-2 right-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
-              定番
-            </span>
+          {(a.recommendLevel ?? 0) >= 5 && (
+            <Star className="mt-0.5 h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
           )}
         </div>
 
-        <CardContent className="flex flex-1 flex-col gap-2 p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h3 className="font-bold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                {a.name}
-              </h3>
-              {a.engName && (
-                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                  {a.engName}
-                </p>
-              )}
+        {a.tagline && (
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+            {a.tagline}
+          </p>
+        )}
+
+        {/* 料金・所要時間・最寄駅。null は行ごと出さない(推測で埋めない方針)。 */}
+        <dl className="mt-auto space-y-1 border-t border-border pt-2 text-xs text-muted-foreground">
+          {a.priceAdult && (
+            <div className="flex items-center gap-1.5">
+              <Wallet className="h-3.5 w-3.5 shrink-0" />
+              <dt className="sr-only">大人料金</dt>
+              <dd className="truncate">{a.priceAdult}</dd>
             </div>
-            {(a.recommendLevel ?? 0) >= 5 && (
-              <Star className="mt-0.5 h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
-            )}
-          </div>
-
-          {a.tagline && (
-            <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-              {a.tagline}
-            </p>
           )}
+          {a.durationText && (
+            <div className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 shrink-0" />
+              <dt className="sr-only">滞在時間の目安</dt>
+              <dd className="truncate">{a.durationText}</dd>
+            </div>
+          )}
+          {a.nearestStation && (
+            <div className="flex items-center gap-1.5">
+              <TrainFront className="h-3.5 w-3.5 shrink-0" />
+              <dt className="sr-only">最寄り駅</dt>
+              <dd className="truncate">{a.nearestStation}</dd>
+            </div>
+          )}
+        </dl>
+      </CardContent>
 
-          {/* 料金・所要時間・最寄駅。null は行ごと出さない(推測で埋めない方針)。 */}
-          <dl className="mt-auto space-y-1 border-t border-border pt-2 text-xs text-muted-foreground">
-            {a.priceAdult && (
-              <div className="flex items-center gap-1.5">
-                <Wallet className="h-3.5 w-3.5 shrink-0" />
-                <dt className="sr-only">大人料金</dt>
-                <dd className="truncate">{a.priceAdult}</dd>
-              </div>
-            )}
-            {a.durationText && (
-              <div className="flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 shrink-0" />
-                <dt className="sr-only">滞在時間の目安</dt>
-                <dd className="truncate">{a.durationText}</dd>
-              </div>
-            )}
-            {a.nearestStation && (
-              <div className="flex items-center gap-1.5">
-                <TrainFront className="h-3.5 w-3.5 shrink-0" />
-                <dt className="sr-only">最寄り駅</dt>
-                <dd className="truncate">{a.nearestStation}</dd>
-              </div>
-            )}
-          </dl>
-        </CardContent>
-      </Card>
-    </Link>
+      {/* プランに追加。リンクの覆いより前に出すため z-10 を付ける。 */}
+      <div className="relative z-10 border-t border-border p-3">
+        <AddToPlanButton slug={a.slug} name={a.name} />
+      </div>
+    </Card>
   );
 }
 

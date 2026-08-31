@@ -39,6 +39,7 @@ const TREE = {
   // ---- 観光 ----------------------------------------------------------
   "/museums": { label: "美術館ナビ", parent: "/sightseeing" },
   "/sightseeing/all": { label: "観光スポット一覧", parent: "/sightseeing" },
+  "/sightseeing/plan": { label: "旅行プラン作成", parent: "/sightseeing" },
   "/sightseeing/areas": { label: "エリアガイド", parent: "/sightseeing" },
   "/sightseeing/transport": { label: "交通ガイド", parent: "/sightseeing" },
   "/sightseeing/football": {
