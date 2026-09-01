@@ -81,3 +81,41 @@
 .dark .prose blockquote {
   @apply text-gray-400; /* ダークモードでは少し明るめのグレー */
 }
+
+/*
+ * 印刷。旅行プラン(/plan)を現地で紙のまま使うために入れている。
+ *
+ * ナビとフッターはそれぞれのコンポーネントに print:hidden を付けてある。
+ * ここに残すのは、クラスを付けられないもの(AdSense が後から差し込む
+ * ins 要素)と、テーマの色の打ち消しだけ。
+ *
+ * 背景色は落として文字は黒に寄せる。ダークテーマのまま刷ると
+ * 紙が真っ黒になるうえ、多くのブラウザは既定で背景を印刷しない
+ * ため、白抜き文字が消えて何も読めない紙が出てくる。
+ */
+@media print {
+  ins.adsbygoogle {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  /* 見出しと1日ぶんのカードはページ跨ぎで割らない。 */
+  h1,
+  h2,
+  h3 {
+    break-after: avoid-page;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+}

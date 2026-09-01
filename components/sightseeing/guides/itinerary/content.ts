@@ -655,6 +655,7 @@ export const itinerarySources: GuideSourceLink[] = [
 ];
 
 export const itineraryRelatedLinks: GuideRelatedLink[] = [
+  { href: "/plan", label: "旅行プランを作る（この記事の順路をひな形から）" },
   { href: "/sightseeing/must-see", label: "ロンドンの必見スポット一覧" },
   { href: "/museums/best-10-museums", label: "ロンドンの美術館・博物館ベスト10" },
   { href: "/musicals", label: "ウエストエンドのミュージカル情報" },

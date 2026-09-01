@@ -10,6 +10,7 @@ import HeroIntro from "@/components/home/HeroIntro";
 import HeroMosaic from "@/components/home/HeroMosaic";
 import PhotoRail from "@/components/home/PhotoRail";
 import LiveStrip from "@/components/live/LiveStrip";
+import PlanPromo from "@/components/home/PlanPromo";
 import Reveal, { RevealGroup, RevealItem } from "@/components/home/Reveal";
 import {
   fetchColumns,
@@ -48,10 +49,15 @@ export const metadata = buildPageMetadata({
  * 一覧は最下部の索引1つに集約し、途中では一切繰り返さない。
  *
  *   1. ヒーロー      名前つきの写真モザイク + このサイトが何かの1文 + 検索
- *   2. 今日と今週    LiveStrip と週次ダイジェストを1帯に統合(旧は3帯に分散)
- *   3. 英国を読む    自分たちが書いたものが主役。旧は10ブロック中の9番目だった
- *   4. 見る・する    DBの写真を横スクロールの棚に5列。旧の観光+体験の置き換え
- *   5. サイト索引    全区分のテキスト索引 + サイト概要
+ *   2. 今日          LiveStrip。天気・運行・為替の要約
+ *   3. 旅程を組む    旅行プラン作成。名所のタイルをその場で押して始められる
+ *   4. 今週          週次ダイジェスト(旧は3帯に分散していたものを1帯に統合)
+ *   5. 英国を読む    自分たちが書いたものが主役。旧は10ブロック中の9番目だった
+ *   6. 見る・する    DBの写真を横スクロールの棚に5列。旧の観光+体験の置き換え
+ *   7. サイト索引    全区分のテキスト索引 + サイト概要
+ *
+ * 3 をこの位置に置いているのは、このサイトで唯一の「読む」ではなく
+ * 「する」ものだから。下に置くと、旅程を組めること自体に気づかれない。
  *
  * 色の使い分けは踏襲する(観光=赤、体験=琥珀、旅=空、在住=翠、読み物=菫)。
  * ただし色を載せるのは索引の細い罫と棚の見出しだけにした。旧トップは
@@ -175,6 +181,7 @@ const SITE_INDEX = [
     label: "旅の準備",
     stripe: "bg-sky-500",
     links: [
+      { href: "/plan", label: "旅行プランを作る" },
       { href: "/sightseeing/eta-uk-visa-guide", label: "ETA（電子渡航認証）" },
       { href: "/sightseeing/itinerary", label: "モデルコース（1〜5日）" },
       { href: "/sightseeing/hotels", label: "宿泊エリアの選び方" },
@@ -342,7 +349,21 @@ export default async function Page() {
       </section>
 
       {/*
-        2. 今週のロンドン。
+        3. 旅程を組む。
+        このサイトで唯一「読む」ではなく「する」もの。説明カードを置く
+        代わりに、押せる名所のタイルをそのまま出している。押した内容は
+        本物のプランに入るので、/plan を開くと組みかけの旅程がある。
+      */}
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+          <Reveal>
+            <PlanPromo spots={rails.planTiles} />
+          </Reveal>
+        </div>
+      </section>
+
+      {/*
+        4. 今週のロンドン。
         旧トップは「今日の帯」「注意の帯」「今週号の帯」を別々の全幅バンドに
         分けていて、同じ問い(いま何が起きているか)に3画面使っていた。
         LiveStrip を上の細帯に残し、注意は今週号の項目リストの先頭に畳んだ。
@@ -444,7 +465,7 @@ export default async function Page() {
       )}
 
       {/*
-        3. 英国を読む。
+        5. 英国を読む。
         旧トップでは10ブロック中の9番目にあり、ほぼ誰にも届いていなかった。
         自分たちが書いたものがこのサイトの本体なので、名所の棚より先に置く。
       */}
@@ -586,7 +607,7 @@ export default async function Page() {
       </div>
 
       {/*
-        4. 見る・する。
+        6. 見る・する。
         旧トップの「観光」「体験する」2セクション(カード計20枚超・約5画面)の
         置き換え。アイコン付きカードで category を説明する代わりに、
         DBにある写真と固有名詞を横スクロールの棚で見せる。
@@ -672,7 +693,7 @@ export default async function Page() {
       </section>
 
       {/*
-        5. サイト索引 + 概要。
+        7. サイト索引 + 概要。
         旧トップは同じ導線をヒーロー直下のハブ(カード9枚)と各セクション末尾の
         ボタンで二度出していた。ここ1箇所に集約し、途中では繰り返さない。
       */}

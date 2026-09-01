@@ -2,10 +2,11 @@ import {
   parseDurationMinutes,
   parsePriceGbp,
 } from "@/components/attractions/facts";
-import { distanceKm } from "./geo";
+import { distanceKm } from "@/lib/sightseeing/geo";
+import { formatClosedDays, parseClosedDays, weekdayIndex } from "./dates";
 
 /**
- * 読者が自分で組む旅行プラン(/sightseeing/plan)の計算まわり。
+ * 読者が自分で組む旅行プラン(/plan)の計算まわり。
  *
  * /sightseeing/itinerary が編集部の書いた固定のモデルコースなのに対して、
  * こちらは144件から選んだスポットを日別に並べて、合計と移動を出す道具。
@@ -210,7 +211,7 @@ const DAY_BUDGET_MINUTES = 9 * 60;
 
 export type PlanWarning = {
   /** 同じ日に2つ出しても意味のない警告があるので種別を持つ。 */
-  kind: "big-venues" | "too-long" | "daytrip";
+  kind: "big-venues" | "too-long" | "daytrip" | "closed";
   message: string;
 };
 
@@ -218,6 +219,11 @@ export type PlanRow = {
   spot: PlanSpot;
   /** 直前のスポットからの移動。その日の先頭は null。 */
   legFromPrevious: PlanLeg | null;
+  /**
+   * その日が休館日だと原文から読み取れた場合の曜日一覧(「月・火」)。
+   * 出発日が未設定のとき、および openingHours が曜日に触れていないときは null。
+   */
+  closedOn: string | null;
 };
 
 export type DayPlan = {
@@ -236,12 +242,32 @@ export type DayPlan = {
   warnings: PlanWarning[];
 };
 
-/** 1日ぶんのスポット列から、移動・合計・警告を組み立てる。 */
-export function buildDayPlan(day: number, spots: PlanSpot[]): DayPlan {
-  const rows: PlanRow[] = spots.map((spot, i) => ({
-    spot,
-    legFromPrevious: i === 0 ? null : legBetween(spots[i - 1], spot),
-  }));
+/**
+ * 1日ぶんのスポット列から、移動・合計・警告を組み立てる。
+ *
+ * date を渡すと、その曜日に閉まっているスポットを警告に足す。渡さない
+ * (出発日が未設定の)ときは曜日の判定そのものを行わない。開館曜日は
+ * openingHours の原文から読めるぶんだけを見ているので、警告が出ないことは
+ * 「開いている」ではなく「原文に書かれていない」を意味する。
+ */
+export function buildDayPlan(
+  day: number,
+  spots: PlanSpot[],
+  date?: Date | null,
+): DayPlan {
+  const weekday = date ? weekdayIndex(date) : null;
+
+  const rows: PlanRow[] = spots.map((spot, i) => {
+    const closedDays = weekday === null ? null : parseClosedDays(spot.openingHours);
+    return {
+      spot,
+      legFromPrevious: i === 0 ? null : legBetween(spots[i - 1], spot),
+      closedOn:
+        closedDays && weekday !== null && closedDays.includes(weekday)
+          ? formatClosedDays(closedDays)
+          : null,
+    };
+  });
 
   let stayMinutes = 0;
   let unknownDurationCount = 0;
@@ -282,6 +308,18 @@ export function buildDayPlan(day: number, spots: PlanSpot[]): DayPlan {
     warnings.push({
       kind: "too-long",
       message: `滞在と移動で${formatMinutes(total)}。朝9時に出ても夜6時には戻れません。どれかを別の日に移してください。`,
+    });
+  }
+
+  // 休館日は真っ先に出す。詰め込みすぎは現地で削れば済むが、閉まっている
+  // 日に行くのは出発前にしか直せない。
+  const closedRows = rows.filter((row) => row.closedOn);
+  if (closedRows.length > 0) {
+    warnings.unshift({
+      kind: "closed",
+      message: `この日は${closedRows
+        .map((row) => `${row.spot.name}(${row.closedOn}休)`)
+        .join("・")}が閉まっています。別の日に移すか、外してください。`,
     });
   }
 

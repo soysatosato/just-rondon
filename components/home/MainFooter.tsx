@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function MainFooter() {
   return (
-    <footer className="border-t bg-background py-8 text-xs text-muted-foreground">
+    <footer className="border-t bg-background py-8 text-xs text-muted-foreground print:hidden">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-3">
           <Link href="/contact">お問い合わせ</Link>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -8,8 +10,10 @@ import {
   Bus,
   CalendarClock,
   Clock,
+  DoorClosed,
   Footprints,
   Map as MapIcon,
+  MapPin,
   Route,
   TrainFront,
   Wallet,
@@ -24,14 +28,26 @@ import {
   orderByProximity,
   type DayPlan,
   type LegKind,
-} from "@/lib/sightseeing/plan";
-import { MAX_DAYS } from "@/lib/sightseeing/plan";
+} from "@/lib/plan";
+import { MAX_DAYS } from "@/lib/plan";
+import { formatPlanDate } from "@/lib/plan/dates";
 import {
   moveToDay,
   moveWithinDay,
   removeFromPlan,
   reorderDay,
 } from "./plan-store";
+
+/**
+ * 地図は leaflet が window を触るのでサーバーでは描けない。
+ * ここで分けておくと、地図を開かない読者には bundle も届かない。
+ */
+const PlanDayMap = dynamic(() => import("./PlanDayMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[260px] w-full animate-pulse bg-muted sm:h-[320px]" />
+  ),
+});
 
 const LEG_ICONS: Record<LegKind, typeof Footprints> = {
   walk: Footprints,
@@ -46,15 +62,27 @@ const LEG_ICONS: Record<LegKind, typeof Footprints> = {
  * 「この日は収まるか」だから。スポットの並びは、それが収まらないと
  * 分かってから直すもので、順序が逆だと1件ずつ足しては下までスクロール
  * することになる。
+ *
+ * 地図は最初の3日ぶんだけ開いた状態で出す。順路が一筆書きなのか行ったり
+ * 来たりなのかは「徒歩12分」を4つ並べても読み取れず、地図でしか分からない
+ * ので、畳んで出すとこの道具でいちばん効く情報を自分から隠すことになる。
+ * 一方で上限の10日ぶんを一度に開くとタイルの取得が10面ぶん走る。
+ * 3日も見れば地図が何を示すかは伝わるので、そこで足切りしている。
  */
+const OPEN_MAP_UNTIL_DAY = 3;
 export default function PlanDay({
   plan,
   dayCount,
+  date,
 }: {
   plan: DayPlan;
   /** プラン全体の日数。「◯日目へ移す」の選択肢を作るのに要る。 */
   dayCount: number;
+  /** 出発日が決まっているときのその日の日付。未設定なら null。 */
+  date: Date | null;
 }) {
+  const [showMap, setShowMap] = useState(plan.day <= OPEN_MAP_UNTIL_DAY);
+
   const spots = plan.rows.map((row) => row.spot);
   const totalMinutes = plan.stayMinutes + plan.travelMinutes;
   const directions = dayDirectionsUrl(spots);
@@ -66,10 +94,15 @@ export default function PlanDay({
     proximityOrder.some((slug, i) => slug !== spots[i].slug);
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-border">
+    <section className="overflow-hidden rounded-2xl border border-border print:break-inside-avoid print:rounded-none">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3">
-        <div className="flex items-baseline gap-3">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h2 className="text-lg font-bold tracking-tight">{plan.day}日目</h2>
+          {date && (
+            <span className="rounded-full bg-indigo-600/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+              {formatPlanDate(date)}
+            </span>
+          )}
           <span className="text-xs text-muted-foreground">
             {spots.length}ヶ所
           </span>
@@ -114,30 +147,47 @@ export default function PlanDay({
       )}
 
       {plan.warnings.length > 0 && (
-        <ul className="space-y-2 border-b border-border bg-amber-50 px-4 py-3 dark:bg-amber-950/30">
-          {plan.warnings.map((warning) => (
-            <li
-              key={warning.kind}
-              className="flex items-start gap-2 text-xs leading-relaxed text-amber-900 dark:text-amber-200"
-            >
-              <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>
-                {warning.message}
-                {warning.kind === "big-venues" && (
-                  <>
-                    {" "}
-                    <Link
-                      href="/sightseeing/itinerary"
-                      className="underline underline-offset-2"
-                    >
-                      モデルコースの組み方
-                    </Link>
-                  </>
-                )}
-              </span>
-            </li>
-          ))}
+        <ul className="divide-y divide-border border-b border-border">
+          {plan.warnings.map((warning) => {
+            // 休館日だけ色を分ける。詰め込みすぎは現地で削れるが、
+            // 閉まっている日に行くのは出発前にしか直せない。
+            const isClosed = warning.kind === "closed";
+            const Icon = isClosed ? DoorClosed : AlertTriangle;
+            return (
+              <li
+                key={warning.kind}
+                className={`flex items-start gap-2 px-4 py-3 text-xs leading-relaxed ${
+                  isClosed
+                    ? "bg-red-50 text-red-900 dark:bg-red-950/30 dark:text-red-200"
+                    : "bg-amber-50 text-amber-900 dark:bg-amber-950/30 dark:text-amber-200"
+                }`}
+              >
+                <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span>
+                  {warning.message}
+                  {warning.kind === "big-venues" && (
+                    <>
+                      {" "}
+                      <Link
+                        href="/sightseeing/itinerary"
+                        className="underline underline-offset-2"
+                      >
+                        モデルコースの組み方
+                      </Link>
+                    </>
+                  )}
+                </span>
+              </li>
+            );
+          })}
         </ul>
+      )}
+
+      {/* 地図。印刷では出さない——タイルは読み込みに繋がりが要る。 */}
+      {showMap && spots.length > 0 && (
+        <div className="border-b border-border print:hidden">
+          <PlanDayMap spots={spots} />
+        </div>
       )}
 
       <ol className="divide-y divide-border">
@@ -147,7 +197,7 @@ export default function PlanDay({
             : null;
 
           return (
-            <li key={row.spot.slug}>
+            <li key={row.spot.slug} className="print:break-inside-avoid">
               {row.legFromPrevious && LegIcon && (
                 <p className="flex items-center gap-2 border-b border-dashed border-border bg-muted/20 px-4 py-1.5 text-[11px] text-muted-foreground">
                   <LegIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
@@ -166,7 +216,7 @@ export default function PlanDay({
                 <img
                   src={row.spot.image}
                   alt=""
-                  className="hidden h-16 w-16 shrink-0 rounded-lg object-cover sm:block"
+                  className="hidden h-16 w-16 shrink-0 rounded-lg object-cover sm:block print:hidden"
                   loading="lazy"
                   decoding="async"
                 />
@@ -178,6 +228,13 @@ export default function PlanDay({
                   >
                     {row.spot.name}
                   </Link>
+
+                  {row.closedOn && (
+                    <p className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-800 dark:bg-red-950/50 dark:text-red-200">
+                      <DoorClosed className="h-3 w-3 shrink-0" aria-hidden />
+                      この日は休み（{row.closedOn}休）
+                    </p>
+                  )}
 
                   <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                     {row.spot.durationText && (
@@ -198,12 +255,26 @@ export default function PlanDay({
                       <div className="flex min-w-0 items-center gap-1">
                         <CalendarClock className="h-3 w-3 shrink-0" aria-hidden />
                         <dt className="sr-only">開館時間</dt>
-                        <dd className="truncate">{row.spot.openingHours}</dd>
+                        <dd className="truncate print:whitespace-normal">
+                          {row.spot.openingHours}
+                        </dd>
                       </div>
                     )}
                   </dl>
 
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                  {/*
+                    住所は画面では隠し、印刷にだけ出す。現地で紙を見る人には
+                    いちばん要る一行だが、画面では1行増えるだけで、
+                    タップすれば詳細ページに全部載っている。
+                  */}
+                  {row.spot.address && row.spot.address !== "-" && (
+                    <p className="hidden items-start gap-1 text-[11px] text-muted-foreground print:flex">
+                      <MapPin className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                      {row.spot.address}
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap items-center gap-2 pt-1 print:hidden">
                     <div className="flex items-center rounded-full border border-border">
                       <IconButton
                         label={`${row.spot.name}を前に動かす`}
@@ -262,31 +333,38 @@ export default function PlanDay({
         })}
       </ol>
 
-      {(canReorder || directions) && (
-        <footer className="flex flex-wrap gap-2 border-t border-border bg-muted/20 px-4 py-3">
-          {canReorder && (
-            <button
-              type="button"
-              onClick={() => reorderDay(plan.day, proximityOrder)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
-            >
-              <Route className="h-3.5 w-3.5" aria-hidden />
-              近い順に並べ替える
-            </button>
-          )}
-          {directions && (
-            <a
-              href={directions}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
-            >
-              <MapIcon className="h-3.5 w-3.5" aria-hidden />
-              この順路をGoogleマップで開く
-            </a>
-          )}
-        </footer>
-      )}
+      <footer className="flex flex-wrap gap-2 border-t border-border bg-muted/20 px-4 py-3 print:hidden">
+        <button
+          type="button"
+          onClick={() => setShowMap((open) => !open)}
+          aria-expanded={showMap}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+        >
+          <MapIcon className="h-3.5 w-3.5" aria-hidden />
+          {showMap ? "地図を閉じる" : "地図を見る"}
+        </button>
+        {canReorder && (
+          <button
+            type="button"
+            onClick={() => reorderDay(plan.day, proximityOrder)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+          >
+            <Route className="h-3.5 w-3.5" aria-hidden />
+            近い順に並べ替える
+          </button>
+        )}
+        {directions && (
+          <a
+            href={directions}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+          >
+            <MapIcon className="h-3.5 w-3.5" aria-hidden />
+            この順路をGoogleマップで開く
+          </a>
+        )}
+      </footer>
     </section>
   );
 }

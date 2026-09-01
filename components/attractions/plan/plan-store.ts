@@ -7,7 +7,7 @@ import {
   MAX_SPOTS,
   normalizeDays,
   type PlanEntry,
-} from "@/lib/sightseeing/plan";
+} from "@/lib/plan";
 
 /**
  * 旅行プランの保存先。ブラウザの localStorage だけで完結する。
@@ -16,8 +16,8 @@ import {
  * そのためにアカウントを作らせると大半がそこで離脱するため。
  * 端末をまたぎたい人には共有リンク(?spots=)を渡す。
  *
- * 持つのは slug と何日目かだけ。名前や料金まで保存すると、料金改定の
- * あとも古い値がブラウザに残り続ける。中身は開くたびにDBから引き直す。
+ * 持つのは slug と何日目か、それに出発日だけ。名前や料金まで保存すると、
+ * 料金改定のあとも古い値がブラウザに残り続ける。中身は開くたびにDBから引き直す。
  *
  * 状態を React の外に置いているのは、「プランに追加」ボタンが一覧の
  * カードにも詳細ページにも出るため。Context で包むには描画位置が
@@ -27,10 +27,15 @@ import {
 
 const STORAGE_KEY = "just-rondon-plan-v1";
 
+/** 保存された出発日の形。壊れた値を読んで日付が1日ずれるのを防ぐ。 */
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
 /** サーバー描画時のスナップショット。毎回同じ参照を返す必要がある。 */
 const EMPTY: PlanEntry[] = [];
 
 let entries: PlanEntry[] = EMPTY;
+/** 出発日 "YYYY-MM-DD"。未設定なら null で、その場合は「1日目」表記に戻る。 */
+let startDate: string | null = null;
 let hydrated = false;
 const listeners = new Set<() => void>();
 
@@ -52,10 +57,26 @@ function hydrate() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return;
     const parsed: unknown = JSON.parse(saved);
-    if (!Array.isArray(parsed)) return;
+
+    /*
+     * 保存の形は2つある。出発日を足す前は配列そのものを書いていた。
+     * 鍵を変えず両方を受けるのは、鍵を変えると移行の間だけ「プランが
+     * 消えた」ように見えるため。古い形は次の保存で新しい形に置き換わる。
+     */
+    const raw: unknown = Array.isArray(parsed)
+      ? parsed
+      : (parsed as { entries?: unknown } | null)?.entries;
+    if (!Array.isArray(raw)) return;
+
+    if (!Array.isArray(parsed)) {
+      const savedStart = (parsed as { startDate?: unknown } | null)?.startDate;
+      if (typeof savedStart === "string" && ISO_DATE.test(savedStart)) {
+        startDate = savedStart;
+      }
+    }
 
     const restored: PlanEntry[] = [];
-    for (const item of parsed) {
+    for (const item of raw) {
       if (
         item &&
         typeof item === "object" &&
@@ -78,7 +99,7 @@ function hydrate() {
 
 function persist() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ entries, startDate }));
   } catch {
     // 同上。この画面の中では動き続ける。
   }
@@ -114,6 +135,7 @@ if (typeof window !== "undefined") {
     if (event.key !== STORAGE_KEY) return;
     hydrated = false;
     entries = EMPTY;
+    startDate = null;
     hydrate();
     emit();
   });
@@ -160,6 +182,20 @@ export function usePlanDay(slug: string): number {
     subscribe,
     () => entries.find((e) => e.slug === slug)?.day ?? 0,
     () => 0,
+  );
+}
+
+/**
+ * 出発日。設定されていなければ null。
+ *
+ * 文字列を返すので、購読している行だけが再描画される。Date を返すと
+ * 参照が毎回変わり、日付を持つ行が全部描き直される。
+ */
+export function usePlanStartDate(): string | null {
+  return useSyncExternalStore(
+    subscribe,
+    () => startDate,
+    () => null,
   );
 }
 
@@ -235,10 +271,31 @@ export function reorderDay(day: number, slugsInOrder: string[]) {
 }
 
 export function clearPlan() {
+  startDate = null;
   write([]);
 }
 
-/** 共有リンクを開いたときの読み込み。今のプランを丸ごと置き換える。 */
-export function replacePlan(next: PlanEntry[]) {
+/**
+ * 出発日を決める。null で「1日目」表記に戻す。
+ *
+ * 日付そのものは検証しない——入口が <input type="date"> だけなので、
+ * ここに来る値は必ず YYYY-MM-DD になっている。壊れた値が入りうるのは
+ * localStorage から読むときだけで、そちらは hydrate で弾いている。
+ */
+export function setStartDate(next: string | null) {
+  startDate = next;
+  persist();
+  emit();
+}
+
+/** 共有リンクとひな形の読み込み。今のプランを丸ごと置き換える。 */
+export function replacePlan(next: PlanEntry[], nextStartDate?: string | null) {
+  if (nextStartDate !== undefined) startDate = nextStartDate;
   write(next);
+}
+
+/** 購読を通さずに今の出発日を読む。共有リンクの取り込みで使う。 */
+export function readStartDate(): string | null {
+  if (!hydrated) hydrate();
+  return startDate;
 }

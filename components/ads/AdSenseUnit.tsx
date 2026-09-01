@@ -51,7 +51,10 @@ export default function AdSenseUnit({
   if (!allowed) return null;
 
   return (
-    <div className={className} style={{ minHeight: reservedHeight }}>
+    <div
+      className={`print:hidden ${className ?? ""}`}
+      style={{ minHeight: reservedHeight }}
+    >
       <ins
         // 同じ位置のコンポーネントはルート遷移でDOMが再利用され、
         // 前ページの広告が残ってしまう。key で <ins> を作り直す。

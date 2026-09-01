@@ -6,6 +6,7 @@ import Providers from "./providers";
 import { defaultMetadata } from "./metadata";
 import MainFooter from "@/components/home/MainFooter";
 import Navbar from "@/components/navbar/Navbar";
+import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import { ADSENSE_CLIENT } from "@/lib/adsense";
 
@@ -30,6 +31,8 @@ export default function RootLayout({
             <Navbar />
             <main className="container py-4">{children}</main>
             <MainFooter />
+            {/* 組みかけの旅程はどのページからでも開ける。空なら何も出ない。 */}
+            <PlanFloatingBar />
           </Providers>
 
           {/* 開発環境で読み込むと無効トラフィック計上とコンソールノイズの原因になる */}

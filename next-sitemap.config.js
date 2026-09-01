@@ -79,6 +79,10 @@ module.exports = {
   additionalPaths: async (config) => {
     const paths = [];
     const staticPages = [
+      // 読者が自分で組む旅行プラン。サイトの中心に置いている道具なので
+      // 区分の一覧より先に出す。共有リンク(?spots=)はクライアントでしか
+      // 読まないので、生えるURLはこの1本だけ。
+      "/plan",
       "/museums",
       "/museums/banksy-artworks",
       "/museums/all-museums",
@@ -161,9 +165,6 @@ module.exports = {
       "/restaurants/pub-etiquette",
       "/sightseeing",
       "/sightseeing/all",
-      // 読者が自分で組む旅行プラン。共有リンク(?spots=)はクライアントでしか
-      // 読まないので、生えるURLはこの1本だけ。
-      "/sightseeing/plan",
       // 入場無料スポットの一覧。/sightseeing/all の「無料」絞り込みは
       // クライアント側でURLを持たないので、検索の受け皿はこの静的URL。
       "/sightseeing/free",

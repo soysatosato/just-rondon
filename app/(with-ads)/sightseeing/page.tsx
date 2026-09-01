@@ -476,7 +476,7 @@ export default async function Page() {
           数えると、どちらの一覧も意味がぼやける。
         */}
         <Link
-          href="/sightseeing/plan"
+          href="/plan"
           className="group mt-4 flex items-center gap-4 rounded-xl border border-indigo-300 bg-indigo-50/60 p-4 transition hover:border-indigo-500 dark:border-indigo-900 dark:bg-indigo-950/30"
         >
           <CalendarRange
@@ -492,7 +492,8 @@ export default async function Page() {
             </span>
             <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
               選んだスポットを日別に並べて、入場料の合計・滞在時間・スポット間の
-              徒歩距離を出します。1日に詰め込みすぎているときは警告します。
+              徒歩距離を出します。順路は地図に出て、1日に詰め込みすぎているときは
+              警告します。決めかねているなら、ひな形を読み込んで削っていくのが早いです。
             </span>
           </span>
         </Link>

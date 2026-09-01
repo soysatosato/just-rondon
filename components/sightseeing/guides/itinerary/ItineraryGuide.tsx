@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CalendarRange } from "lucide-react";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -154,6 +155,35 @@ export default function ItineraryGuide() {
           </p>
         </div>
       </header>
+
+      {/*
+        この記事の受け皿。記事は「どこへ行くか」を決めるもので、決めた先が
+        1日に収まるかには答えられない。検索から来た読者がいちばん多いのが
+        この記事なので、次にやることへの入口を目次より前に置いている。
+        道具側の警告基準(大型施設は1日2ヶ所まで)はこの記事に合わせてある。
+      */}
+      <Link
+        href="/plan"
+        className="group mt-8 flex items-center gap-4 rounded-xl border border-indigo-300 bg-indigo-50/60 p-4 transition hover:border-indigo-500 dark:border-indigo-900 dark:bg-indigo-950/30"
+      >
+        <CalendarRange
+          className="h-6 w-6 shrink-0 text-indigo-600 dark:text-indigo-400"
+          aria-hidden
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">
+            Trip Planner
+          </span>
+          <span className="mt-0.5 block text-sm font-bold leading-snug decoration-1 underline-offset-2 group-hover:underline">
+            この順路を自分の日程に組み直す
+          </span>
+          <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
+            Day 1〜3 はひな形として1タップで読み込めます。行き先を入れ替えると、
+            入場料の合計・滞在時間・スポット間の移動が出て、詰め込みすぎの日には
+            警告が出ます。順路は地図に、同行者にはURLで送れます。
+          </span>
+        </span>
+      </Link>
 
       <GuideSectionNav sections={itinerarySections} />
 

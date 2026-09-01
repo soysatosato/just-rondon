@@ -13,7 +13,6 @@ import {
   categoryLabel,
 } from "@/components/sightseeing/categories";
 import AddToPlanButton from "@/components/attractions/plan/AddToPlanButton";
-import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import {
   DURATION_FILTERS,
   PRICE_FILTERS,
@@ -398,7 +397,7 @@ export default function AttractionBrowser({
 
       <div className="flex flex-wrap justify-center gap-3 pt-2">
         <Button asChild>
-          <Link href="/sightseeing/plan">選んだスポットでプランを組む</Link>
+          <Link href="/plan">選んだスポットでプランを組む</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href="/sightseeing">観光ガイドのトップへ</Link>
@@ -410,8 +409,6 @@ export default function AttractionBrowser({
           <Link href="/sightseeing/free">無料で楽しむ</Link>
         </Button>
       </div>
-
-      <PlanFloatingBar />
     </div>
   );
 }

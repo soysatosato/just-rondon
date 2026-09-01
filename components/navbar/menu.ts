@@ -35,6 +35,8 @@ export const NAV_ACCENTS = {
   rose: { text: "text-rose-600", underline: "decoration-rose-400" },
   // Beyond London(ロンドンの外へ)。
   teal: { text: "text-teal-600", underline: "decoration-teal-400" },
+  // 旅行プラン作成。記事ではなく道具なので、読み物系のどの色とも被らせない。
+  indigo: { text: "text-indigo-600", underline: "decoration-indigo-400" },
 } as const satisfies Record<string, NavAccent>;
 
 export type NavLink = { href: string; label: string };
@@ -302,6 +304,12 @@ export const NAV_SECTIONS: NavSection[] = [
         ],
       },
     ],
+  },
+  {
+    kind: "link",
+    label: "旅行プランを作る",
+    href: "/plan",
+    accent: NAV_ACCENTS.indigo,
   },
   {
     kind: "link",

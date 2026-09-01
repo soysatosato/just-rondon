@@ -14,7 +14,7 @@ export default function WithAdsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       {children}
-      <div className="mt-2">
+      <div className="mt-2 print:hidden">
         <AdMaxSwitch id="32ceb65479d99deacb56072aecc7aa0b" />
       </div>
     </div>

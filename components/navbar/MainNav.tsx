@@ -39,7 +39,7 @@ export default function Navbar() {
   const linkSections = NAV_SECTIONS.filter((s) => s.kind === "link");
 
   return (
-    <nav className="w-full">
+    <nav className="w-full print:hidden">
       {/* モバイル */}
       <div className="md:hidden">
         <div className="flex justify-between px-6 py-2">

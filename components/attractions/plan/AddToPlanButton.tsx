@@ -66,7 +66,7 @@ export default function AddToPlanButton({
 
       {variant === "detail" && added && (
         <Link
-          href="/sightseeing/plan"
+          href="/plan"
           className="text-sm font-medium text-indigo-600 underline underline-offset-4 hover:text-indigo-700 dark:text-indigo-400"
         >
           プランを見る

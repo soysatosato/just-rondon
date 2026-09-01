@@ -6,7 +6,7 @@ import { Check, Clock, Plus, Search, TrainFront, Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { categoryLabel } from "@/components/sightseeing/categories";
 import { getAreaMeta } from "@/components/sightseeing/areas/areas";
-import type { PlanSpot } from "@/lib/sightseeing/plan";
+import type { PlanSpot } from "@/lib/plan";
 import { addToPlan, removeFromPlan, usePlanDay } from "./plan-store";
 
 /**

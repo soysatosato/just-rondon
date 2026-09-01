@@ -306,7 +306,7 @@ export async function fetchAllAttractions() {
 }
 
 /**
- * /sightseeing/plan 用。公開中の全件を、プランの計算に要る列だけ返す。
+ * /plan 用。公開中の全件を、プランの計算に要る列だけ返す。
  *
  * fetchAllAttractions と分けているのは緯度経度と開館時間のため。
  * 一覧(/sightseeing/all)はカードに出さないので引いていないが、

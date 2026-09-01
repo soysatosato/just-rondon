@@ -1,33 +1,40 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { Check, Link2, MapPin, Plus, Trash2 } from "lucide-react";
+import { Check, Link2, Plus, Printer, Trash2 } from "lucide-react";
 
 import {
   buildDayPlan,
   decodePlan,
   encodePlan,
   formatGbp,
+  formatMinutes,
   MAX_SPOTS,
   type PlanEntry,
   type PlanSpot,
-} from "@/lib/sightseeing/plan";
+} from "@/lib/plan";
+import { dateForDay, parseIsoDate } from "@/lib/plan/dates";
 import PlanDay from "./PlanDay";
+import PlanDateBar from "./PlanDateBar";
 import PlanSpotPicker from "./PlanSpotPicker";
+import PlanStarter from "./PlanStarter";
 import {
   clearPlan,
   readPlan,
+  readStartDate,
   replacePlan,
   usePlanEntries,
+  usePlanStartDate,
 } from "./plan-store";
 
 const SHARE_PARAM = "spots";
+const START_PARAM = "start";
 
-/** 共有リンクを開いたあと、アドレス欄から ?spots= を落とす。 */
-function stripShareParam() {
+/** 共有リンクを開いたあと、アドレス欄から取り込み用のクエリを落とす。 */
+function stripShareParams() {
   const url = new URL(window.location.href);
   url.searchParams.delete(SHARE_PARAM);
+  url.searchParams.delete(START_PARAM);
   window.history.replaceState(null, "", `${url.pathname}${url.search}`);
 }
 
@@ -35,13 +42,17 @@ function stripShareParam() {
  * 旅行プランの本体。公開中の全スポットを受け取り、
  * 保存されている slug を突き合わせて日別に組み立てる。
  *
- * 保存しているのが slug だけなので、料金や開館時間はここで引き直した
- * 最新の値になる。ブラウザに数ヶ月前のプランが残っていても、
+ * 保存しているのが slug と出発日だけなので、料金や開館時間はここで
+ * 引き直した最新の値になる。ブラウザに数ヶ月前のプランが残っていても、
  * 出る数字は今のもの。
  */
 export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const entries = usePlanEntries();
-  const [incoming, setIncoming] = useState<PlanEntry[] | null>(null);
+  const startDate = usePlanStartDate();
+  const [incoming, setIncoming] = useState<{
+    entries: PlanEntry[];
+    startDate: string | null;
+  } | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -71,28 +82,36 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
    * 空のときだけ自動で開き、中身があるときは選ばせる。
    */
   useEffect(() => {
-    const param = new URLSearchParams(window.location.search).get(SHARE_PARAM);
+    const params = new URLSearchParams(window.location.search);
+    const param = params.get(SHARE_PARAM);
     if (!param) return;
 
     const decoded = decodePlan(param).filter((entry) => bySlug.has(entry.slug));
     if (decoded.length === 0) {
-      stripShareParam();
+      stripShareParams();
       return;
     }
+    // 日付の形をしていないものは捨てる。相手の旅程がずれるより出ないほうがよい。
+    const incomingStart = parseIsoDate(params.get(START_PARAM))
+      ? params.get(START_PARAM)
+      : null;
 
     // 描画時のスナップショットではなく保存内容を直接読む。
     // localStorage の読み込み前だと空に見えてしまうため。
     const current = readPlan();
     if (current.length === 0) {
-      replacePlan(decoded);
-      stripShareParam();
+      replacePlan(decoded, incomingStart);
+      stripShareParams();
       return;
     }
-    if (encodePlan(current) === encodePlan(decoded)) {
-      stripShareParam();
+    if (
+      encodePlan(current) === encodePlan(decoded) &&
+      readStartDate() === incomingStart
+    ) {
+      stripShareParams();
       return;
     }
-    setIncoming(decoded);
+    setIncoming({ entries: decoded, startDate: incomingStart });
   }, [bySlug]);
 
   const days = useMemo(() => {
@@ -106,9 +125,10 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
           .filter((entry) => entry.day === day)
           .map((entry) => bySlug.get(entry.slug))
           .filter((spot): spot is PlanSpot => Boolean(spot)),
+        dateForDay(startDate, day),
       ),
     );
-  }, [entries, bySlug]);
+  }, [entries, bySlug, startDate]);
 
   const spotCount = days.reduce((sum, day) => sum + day.rows.length, 0);
   const totalGbp = days.reduce((sum, day) => sum + day.totalGbp, 0);
@@ -116,9 +136,22 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     (sum, day) => sum + day.unknownPriceCount,
     0,
   );
+  const totalMinutes = days.reduce(
+    (sum, day) => sum + day.stayMinutes + day.travelMinutes,
+    0,
+  );
 
   const handleShare = async () => {
-    const url = `${window.location.origin}/sightseeing/plan?${SHARE_PARAM}=${encodePlan(entries)}`;
+    // URLSearchParams を通さずに組み立てる。encodePlan の区切り(. と _)は
+    // percent-encode されない文字だが、通すと読みにくくなる書き方に化ける
+    // ものがある。共有リンクは人が LINE やメールに貼るので見た目のまま残す。
+    const query = [
+      `${SHARE_PARAM}=${encodePlan(entries)}`,
+      startDate ? `${START_PARAM}=${startDate}` : null,
+    ]
+      .filter(Boolean)
+      .join("&");
+    const url = `${window.location.origin}/plan?${query}`;
     setShareUrl(url);
     try {
       await navigator.clipboard.writeText(url);
@@ -144,8 +177,8 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
         <div className="space-y-3 rounded-2xl border border-indigo-300 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-950/40">
           <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
             共有されたプランが開かれています（
-            {incoming.length}ヶ所・
-            {new Set(incoming.map((entry) => entry.day)).size}日間）
+            {incoming.entries.length}ヶ所・
+            {new Set(incoming.entries.map((entry) => entry.day)).size}日間）
           </p>
           <p className="text-xs leading-relaxed text-indigo-800 dark:text-indigo-300">
             いま保存されているあなたのプラン（{entries.length}ヶ所）とは別のものです。
@@ -155,9 +188,9 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             <button
               type="button"
               onClick={() => {
-                replacePlan(incoming);
+                replacePlan(incoming.entries, incoming.startDate);
                 setIncoming(null);
-                stripShareParam();
+                stripShareParams();
               }}
               className="rounded-full bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
             >
@@ -167,7 +200,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
               type="button"
               onClick={() => {
                 setIncoming(null);
-                stripShareParam();
+                stripShareParams();
               }}
               className="rounded-full border border-indigo-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-indigo-500 dark:border-indigo-800"
             >
@@ -178,11 +211,15 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       )}
 
       {spotCount === 0 ? (
-        <EmptyState />
+        <PlanStarter spots={spots} />
       ) : (
         <>
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-muted/40 px-4 py-4">
-            <dl className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {/*
+            合計はこの道具の答えそのものなので、いちばん大きく出す。
+            以前は他の操作ボタンと同じ帯に小さく並べていた。
+          */}
+          <div className="space-y-4 rounded-2xl border border-border bg-muted/40 px-4 py-4 print:border-0 print:bg-transparent print:px-0">
+            <dl className="flex flex-wrap items-end gap-x-8 gap-y-3">
               <Stat label="日数" value={`${days.length}日`} />
               <Stat label="スポット" value={`${spotCount}ヶ所`} />
               <Stat
@@ -194,9 +231,13 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                     : undefined
                 }
               />
+              <Stat
+                label="滞在と移動の合計"
+                value={formatMinutes(totalMinutes)}
+              />
             </dl>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 print:hidden">
               <button
                 type="button"
                 onClick={handleShare}
@@ -211,6 +252,14 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
               </button>
               <button
                 type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-2 text-xs font-semibold transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+              >
+                <Printer className="h-3.5 w-3.5" aria-hidden />
+                印刷する
+              </button>
+              <button
+                type="button"
                 onClick={handleClear}
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
               >
@@ -220,8 +269,12 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             </div>
           </div>
 
+          <div className="print:hidden">
+            <PlanDateBar dayCount={days.length} />
+          </div>
+
           {shareUrl && (
-            <div className="space-y-2 rounded-2xl border border-border p-4">
+            <div className="space-y-2 rounded-2xl border border-border p-4 print:hidden">
               <p className="text-xs text-muted-foreground">
                 このURLを開くと同じプランが復元されます。同行者に送ってください。
                 プランはブラウザにだけ保存されているので、機種変更のときも
@@ -240,13 +293,18 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
 
           <div className="space-y-6">
             {days.map((day) => (
-              <PlanDay key={day.day} plan={day} dayCount={days.length} />
+              <PlanDay
+                key={day.day}
+                plan={day}
+                dayCount={days.length}
+                date={dateForDay(startDate, day.day)}
+              />
             ))}
           </div>
         </>
       )}
 
-      <section className="space-y-3 rounded-2xl border border-border p-4 sm:p-5">
+      <section className="space-y-3 rounded-2xl border border-border p-4 print:hidden sm:p-5">
         <h2 className="flex items-center gap-2 text-base font-bold tracking-tight">
           <Plus className="h-4 w-4 text-indigo-600" aria-hidden />
           スポットを追加する
@@ -281,37 +339,8 @@ function Stat({
       <dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {label}
       </dt>
-      <dd className="text-lg font-bold tabular-nums">{value}</dd>
+      <dd className="text-2xl font-bold tabular-nums">{value}</dd>
       {note && <p className="text-[10px] text-muted-foreground">{note}</p>}
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="rounded-2xl border border-dashed border-border px-6 py-10 text-center">
-      <MapPin className="mx-auto h-8 w-8 text-muted-foreground" aria-hidden />
-      <p className="mt-3 text-sm font-semibold">
-        まだスポットが入っていません
-      </p>
-      <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-muted-foreground">
-        下の検索から足すか、
-        <Link
-          href="/sightseeing/all"
-          className="underline underline-offset-2 hover:text-foreground"
-        >
-          観光スポット一覧
-        </Link>
-        ・各スポットのページにある「旅行プランに追加」から選んでください。
-        どこから始めるか決まっていないなら、
-        <Link
-          href="/sightseeing/itinerary"
-          className="underline underline-offset-2 hover:text-foreground"
-        >
-          モデルコース
-        </Link>
-        の順路をなぞって足していくのが早いです。
-      </p>
     </div>
   );
 }
