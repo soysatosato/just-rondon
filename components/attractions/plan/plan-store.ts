@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 import {
+  isValidStayMinutes,
   MAX_DAYS,
   MAX_SPOTS,
   normalizeDays,
@@ -84,10 +85,13 @@ function hydrate() {
         Number.isInteger((item as PlanEntry).day)
       ) {
         const entry = item as PlanEntry;
-        restored.push({
-          slug: entry.slug,
-          day: Math.min(Math.max(entry.day, 1), MAX_DAYS),
-        });
+        const day = Math.min(Math.max(entry.day, 1), MAX_DAYS);
+        // 壊れた滞在時間は落とす。掲載値に戻るだけで、プランは残る。
+        restored.push(
+          isValidStayMinutes(entry.minutes)
+            ? { slug: entry.slug, day, minutes: entry.minutes }
+            : { slug: entry.slug, day },
+        );
       }
     }
     entries = normalizeDays(restored.slice(0, MAX_SPOTS));
@@ -264,15 +268,46 @@ export function moveWithinDay(slug: string, direction: -1 | 1) {
   write(next);
 }
 
-/** その日のスポットを、渡された順に並べ替える。 */
+/**
+ * その日のスポットを、渡された順に並べ替える。
+ *
+ * 並びだけを変えたいので、既存の entry をそのまま引き当てて並べる。
+ * ここで { slug, day } を作り直すと、読者が入れた滞在時間が
+ * 「近い順に並べ替える」を押すたびに消える。
+ */
 export function reorderDay(day: number, slugsInOrder: string[]) {
   const others = entries.filter((e) => e.day !== day);
-  write([...others, ...slugsInOrder.map((slug) => ({ slug, day }))]);
+  const bySlug = new Map(entries.map((e) => [e.slug, e]));
+  const reordered = slugsInOrder
+    .map((slug) => bySlug.get(slug))
+    .filter((entry): entry is PlanEntry => Boolean(entry))
+    .map((entry) => ({ ...entry, day }));
+  write([...others, ...reordered]);
 }
 
 export function clearPlan() {
   startDate = null;
   write([]);
+}
+
+/**
+ * 滞在時間を上書きする。null を渡すと掲載値に戻る。
+ *
+ * 掲載値と同じ数を入れても上書きとして持つ。ここで「同じだから」と
+ * 落とすと、掲載値が改定されたときに読者が決めた数まで一緒に動く。
+ * 読者が明示的に押した値は、掲載値と一致していても読者のものとして残す。
+ */
+export function setSpotMinutes(slug: string, minutes: number | null) {
+  write(
+    entries.map((entry) => {
+      if (entry.slug !== slug) return entry;
+      if (minutes === null || !isValidStayMinutes(minutes)) {
+        const { minutes: _dropped, ...rest } = entry;
+        return rest;
+      }
+      return { ...entry, minutes };
+    }),
+  );
 }
 
 /**

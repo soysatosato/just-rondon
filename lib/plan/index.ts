@@ -39,13 +39,46 @@ export type PlanSpot = {
   recommendLevel: number | null;
 };
 
-/** 保存されるのは slug と何日目かだけ。中身は毎回DBの最新を引く。 */
-export type PlanEntry = { slug: string; day: number };
+/**
+ * 保存されるのは slug と何日目か、それに滞在時間を変えたならその分数だけ。
+ * 名前や料金は持たない。中身は毎回DBの最新を引く。
+ */
+export type PlanEntry = {
+  slug: string;
+  day: number;
+  /**
+   * 読者が入れた滞在時間(分)。掲載値より優先する。
+   * 変えていなければ持たない——既定と同じ値を書き込むと、掲載値が
+   * 変わったときに古い既定がプランに残り続ける。
+   */
+  minutes?: number;
+};
 
 /** 日数の上限。これ以上は旅程ではなく別の旅行。 */
 export const MAX_DAYS = 10;
 /** スポット数の上限。共有URLの長さと、画面の見通しの両方から。 */
 export const MAX_SPOTS = 40;
+
+/**
+ * 読者が入れられる滞在時間の幅。
+ *
+ * 下限を5分にしているのは、0分を入れられると「その日に行くが時間は
+ * かからない」という状態になり、合計から消えるため。上限の12時間は
+ * 1日の予算(9時間)より大きく取ってある。上限で丸めると、入れた値と
+ * 出る値が食い違って壊れて見える。
+ */
+export const MIN_STAY_MINUTES = 5;
+export const MAX_STAY_MINUTES = 12 * 60;
+
+/** 滞在時間として受け付けられる値か。共有URLと localStorage の両方で使う。 */
+export function isValidStayMinutes(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= MIN_STAY_MINUTES &&
+    value <= MAX_STAY_MINUTES
+  );
+}
 
 /* ------------------------------------------------------------------ *
  * 共有リンク
@@ -63,6 +96,12 @@ export const MAX_SPOTS = 40;
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
 const DAY_SEPARATOR = "_";
 const SPOT_SEPARATOR = ".";
+/**
+ * 滞在時間を変えたスポットは `slug~90` の形にする。
+ * `~` も RFC 3986 の unreserved なので percent-encode されず、
+ * slug にも現れない。区切りの3文字がどれも生のまま残る。
+ */
+const MINUTES_SEPARATOR = "~";
 
 /**
  * 日ごとに slug を並べた文字列にする。
@@ -80,7 +119,11 @@ export function encodePlan(entries: PlanEntry[]): string {
     days.push(
       entries
         .filter((e) => e.day === day)
-        .map((e) => e.slug)
+        .map((e) =>
+          isValidStayMinutes(e.minutes)
+            ? `${e.slug}${MINUTES_SEPARATOR}${e.minutes}`
+            : e.slug,
+        )
         .join(SPOT_SEPARATOR),
     );
   }
@@ -103,12 +146,21 @@ export function decodePlan(param: string | null | undefined): PlanEntry[] {
     .split(DAY_SEPARATOR)
     .slice(0, MAX_DAYS)
     .forEach((segment, index) => {
-      for (const slug of segment.split(SPOT_SEPARATOR)) {
+      for (const token of segment.split(SPOT_SEPARATOR)) {
+        const [slug, rawMinutes] = token.split(MINUTES_SEPARATOR);
         if (!SLUG_PATTERN.test(slug)) continue;
         if (seen.has(slug)) continue;
         if (entries.length >= MAX_SPOTS) return;
         seen.add(slug);
-        entries.push({ slug, day: index + 1 });
+
+        // 滞在時間が壊れていてもスポットは残す。プランの中身のほうが
+        // 惜しく、落とした分は掲載値に戻るだけで済む。
+        const minutes = Number(rawMinutes);
+        entries.push(
+          rawMinutes !== undefined && isValidStayMinutes(minutes)
+            ? { slug, day: index + 1, minutes }
+            : { slug, day: index + 1 },
+        );
       }
     });
 
@@ -224,16 +276,35 @@ export type PlanRow = {
    * 出発日が未設定のとき、および openingHours が曜日に触れていないときは null。
    */
   closedOn: string | null;
+  /**
+   * 合計に入れた滞在時間(分)。掲載値も読者の入力も無ければ null。
+   * 表示側はこの値を出す——原文と合計が食い違って見えないように。
+   */
+  stayMinutes: number | null;
+  /** 掲載値から読める滞在時間(分)。「既定に戻す」の宛先。無ければ null。 */
+  defaultMinutes: number | null;
+  /** 読者が入れた値を使っているか。 */
+  overridden: boolean;
+};
+
+export type BuildDayOptions = {
+  /** その日の日付。渡すと曜日で閉まるスポットを警告に足す。 */
+  date?: Date | null;
+  /** slug → 読者が入れた滞在時間(分)。掲載値より優先する。 */
+  overrides?: ReadonlyMap<string, number>;
 };
 
 export type DayPlan = {
   day: number;
   rows: PlanRow[];
-  /** 滞在時間の合計(分)。durationText が空のスポットは数えない。 */
+  /** 滞在時間の合計(分)。掲載値も読者の入力も無いスポットは数えない。 */
   stayMinutes: number;
   /** 移動時間の合計(分)。 */
   travelMinutes: number;
-  /** 滞在時間が分からなかったスポット数。合計の下に断りを出すのに使う。 */
+  /**
+   * 滞在時間が分からなかったスポット数。合計の下に断りを出すのに使う。
+   * 読者が自分で入れれば0になる。
+   */
   unknownDurationCount: number;
   /** 大人料金の合計(£)。 */
   totalGbp: number;
@@ -253,12 +324,25 @@ export type DayPlan = {
 export function buildDayPlan(
   day: number,
   spots: PlanSpot[],
-  date?: Date | null,
+  options: BuildDayOptions = {},
 ): DayPlan {
+  const { date, overrides } = options;
   const weekday = date ? weekdayIndex(date) : null;
 
   const rows: PlanRow[] = spots.map((spot, i) => {
     const closedDays = weekday === null ? null : parseClosedDays(spot.openingHours);
+
+    /*
+     * 滞在時間は掲載値を既定にして、読者が入れていればそちらを採る。
+     *
+     * 掲載値のほうを書き換えないのは、原文が「1〜1時間半」のように幅と
+     * 注記を持っているため。読者が入れるのは合計に足す1つの数で、
+     * 原文の代わりにはならない。両方を持って、出す側で選ぶ。
+     */
+    const defaultMinutes = parseDurationMinutes(spot.durationText);
+    const override = overrides?.get(spot.slug);
+    const overridden = isValidStayMinutes(override);
+
     return {
       spot,
       legFromPrevious: i === 0 ? null : legBetween(spots[i - 1], spot),
@@ -266,6 +350,9 @@ export function buildDayPlan(
         closedDays && weekday !== null && closedDays.includes(weekday)
           ? formatClosedDays(closedDays)
           : null,
+      stayMinutes: overridden ? override : defaultMinutes,
+      defaultMinutes,
+      overridden,
     };
   });
 
@@ -275,8 +362,8 @@ export function buildDayPlan(
   let unknownPriceCount = 0;
   let bigVenues = 0;
 
-  for (const spot of spots) {
-    const minutes = parseDurationMinutes(spot.durationText);
+  for (const row of rows) {
+    const minutes = row.stayMinutes;
     if (minutes === null) {
       unknownDurationCount++;
     } else {
@@ -284,7 +371,7 @@ export function buildDayPlan(
       if (minutes >= BIG_VENUE_MINUTES) bigVenues++;
     }
 
-    const price = parsePriceGbp(spot.priceAdult);
+    const price = parsePriceGbp(row.spot.priceAdult);
     if (price === null) unknownPriceCount++;
     else totalGbp += price;
   }

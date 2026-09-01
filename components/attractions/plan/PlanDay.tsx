@@ -31,6 +31,7 @@ import {
 } from "@/lib/plan";
 import { MAX_DAYS } from "@/lib/plan";
 import { formatPlanDate } from "@/lib/plan/dates";
+import PlanStayEditor from "./PlanStayEditor";
 import {
   moveToDay,
   moveWithinDay,
@@ -143,6 +144,8 @@ export default function PlanDay({
             .filter(Boolean)
             .join("と")}
           は合計に入っていません。実際はこれより増えます。
+          {plan.unknownDurationCount > 0 &&
+            "滞在時間は各スポットの時計の欄から入れられます。"}
         </p>
       )}
 
@@ -237,13 +240,17 @@ export default function PlanDay({
                   )}
 
                   <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-                    {row.spot.durationText && (
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3 shrink-0" aria-hidden />
-                        <dt className="sr-only">滞在時間の目安</dt>
-                        <dd>{row.spot.durationText}</dd>
-                      </div>
-                    )}
+                    {/*
+                      掲載値の無いスポットでも出す。42件が滞在時間を持って
+                      おらず、そこが合計から落ちたままなのがこの道具の
+                      いちばん大きな穴だった。入口が無いと埋めようがない。
+                    */}
+                    <div>
+                      <dt className="sr-only">滞在時間</dt>
+                      <dd>
+                        <PlanStayEditor row={row} />
+                      </dd>
+                    </div>
                     {row.spot.priceAdult && (
                       <div className="flex items-center gap-1">
                         <Wallet className="h-3 w-3 shrink-0" aria-hidden />

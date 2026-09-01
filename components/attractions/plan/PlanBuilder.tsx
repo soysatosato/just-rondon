@@ -114,6 +114,15 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     setIncoming({ entries: decoded, startDate: incomingStart });
   }, [bySlug]);
 
+  /** 読者が入れた滞在時間。slug で引けるようにして計算側へ渡す。 */
+  const overrides = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const entry of entries) {
+      if (entry.minutes !== undefined) map.set(entry.slug, entry.minutes);
+    }
+    return map;
+  }, [entries]);
+
   const days = useMemo(() => {
     const numbers = [...new Set(entries.map((entry) => entry.day))].sort(
       (a, b) => a - b,
@@ -125,10 +134,10 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
           .filter((entry) => entry.day === day)
           .map((entry) => bySlug.get(entry.slug))
           .filter((spot): spot is PlanSpot => Boolean(spot)),
-        dateForDay(startDate, day),
+        { date: dateForDay(startDate, day), overrides },
       ),
     );
-  }, [entries, bySlug, startDate]);
+  }, [entries, bySlug, startDate, overrides]);
 
   const spotCount = days.reduce((sum, day) => sum + day.rows.length, 0);
   const totalGbp = days.reduce((sum, day) => sum + day.totalGbp, 0);
