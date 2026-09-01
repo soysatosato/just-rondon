@@ -52,9 +52,9 @@ export function britishEnglishHubCollectionJsonLd(
     "@type": "CollectionPage",
     "@id": `${url}#collection`,
     url,
-    name: "イギリス英語 | フレーズと表現を毎日1つ紹介",
+    name: "イギリス英語 | フレーズと表現を1つずつ紹介",
     description:
-      "イギリス英語ならではの単語・言い回し・スラングを毎日1つ、由来や使い方とあわせて紹介します。",
+      "イギリス英語ならではの単語・言い回し・スラングを1つずつ、由来や使い方とあわせて紹介します。",
     inLanguage: "ja",
     publisher: BRITISH_ENGLISH_PUBLISHER,
     hasPart: items.map((item) => ({

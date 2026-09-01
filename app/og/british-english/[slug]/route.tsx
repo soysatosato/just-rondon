@@ -73,7 +73,7 @@ export async function GET(
   // 1行に収まる長さで切る。2行に伸ばすと下のサイト名と詰まって窮屈になる。
   const summary = content
     ? ogPlainText(content.summary || content.mainText || "", 38)
-    : "単語・言い回し・スラングを毎日1つ。";
+    : "単語・言い回し・スラングを1つずつ。";
 
   // engTitle が無い記事は日本語の見出しを主役にする。
   const heroText = eng || title;

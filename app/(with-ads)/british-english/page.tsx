@@ -17,9 +17,9 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 export const metadata = buildPageMetadata({
   path: "/british-english",
-  title: "イギリス英語 | フレーズと表現を毎日1つ紹介",
+  title: "イギリス英語 | フレーズと表現を1つずつ紹介",
   description:
-    "イギリス英語ならではの単語・言い回し・スラングを毎日1つ、由来や使い方とあわせてお届けします。アメリカ英語との違いも解説。",
+    "イギリス英語ならではの単語・言い回し・スラングを1つずつ、由来や使い方とあわせてお届けします。アメリカ英語との違いも解説。",
   keywords: [
     "イギリス英語",
     "英国英語",
@@ -61,7 +61,7 @@ export default async function BritishEnglishHubPage() {
             </span>
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            単語・言い回し・スラングを毎日1つ。由来や使い方、アメリカ英語との違いまで、
+            単語・言い回し・スラングを1つずつ。由来や使い方、アメリカ英語との違いまで、
             笑いながら読めるように掘り下げます。
           </p>
         </div>
@@ -93,7 +93,7 @@ export default async function BritishEnglishHubPage() {
               Archive
             </span>
             <h2 className="mt-3 text-xl font-bold tracking-tight sm:text-2xl">
-              これまでの1日1語
+              これまでの言葉
             </h2>
           </div>
           {entries.length > 0 && (

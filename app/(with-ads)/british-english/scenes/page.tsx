@@ -83,7 +83,7 @@ export default function BritishEnglishScenesPage() {
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           このページは「とりあえず口に出す」ための逆引きです。なぜイギリス人が
-          そんな言い方をするのかは、1日1語のアーカイブのほうで掘り下げています。
+          そんな言い方をするのかは、1語ずつのアーカイブのほうで掘り下げています。
         </p>
         <Link
           href="/british-english"

@@ -184,7 +184,7 @@ export const sections: Section[] = [
       {
         title: "イギリス英語トップ",
         description:
-          "イギリス英語ならではの単語・言い回し・スラングを毎日1つ紹介。",
+          "イギリス英語ならではの単語・言い回し・スラングを1つずつ紹介。",
         href: "/british-english",
       },
     ],
