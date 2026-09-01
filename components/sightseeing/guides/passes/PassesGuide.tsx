@@ -8,6 +8,8 @@ import GuideFreshness from "@/components/guides/GuideFreshness";
 import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import GuideSources from "@/components/guides/GuideSources";
 import { SITE_URL } from "@/lib/seo";
+import { fetchLondonPassAttractions } from "@/utils/actions/attractions";
+import { CATEGORY_SECTIONS, categoryLabel } from "../../categories";
 import { gbp } from "@/lib/sightseeing/budget";
 import { faqPageJsonLd } from "../../jsonld";
 import {
@@ -20,6 +22,7 @@ import {
 import {
   breakEven,
   conditions,
+  covered,
   freeSection,
   goldenPassNote,
   notIncluded,
@@ -48,12 +51,31 @@ import {
  * 2. 分岐点の積み上げ。パス代を超えた行から色を変える。「3つ回っても
  *    届かない」という記事の中心的な事実を、表を読まずに見て取れるようにする。
  */
-export default function PassesGuide() {
+export default async function PassesGuide() {
   const meta = getTravelGuideMeta(passesMeta.slug);
   const pageUrl = `${SITE_URL}${travelGuidePath(passesMeta.slug)}`;
   const relatedGuides = travelGuides.filter((g) => g.slug !== passesMeta.slug);
   /** 1日券を基準に色を切り替える。いちばん多く検討されるのがこれ。 */
   const oneDayPrice = breakEven.verdicts[0].price;
+
+  /*
+    対象施設。区分ごとにまとめる。並びは CATEGORY_SECTIONS(初訪問者の
+    関心順)にそろえ、そこに無い区分は末尾へ回す。件数順にすると
+    エンタメが先頭に来て、この一覧が娯楽施設の羅列に見える。
+  */
+  const passSpots = await fetchLondonPassAttractions();
+  const order = CATEGORY_SECTIONS.map((c) => c.slug);
+  const grouped = [...new Set(passSpots.map((s) => s.category))]
+    .sort((a, b) => {
+      const ia = order.indexOf(a);
+      const ib = order.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    })
+    .map((category) => ({
+      category,
+      label: categoryLabel(category),
+      spots: passSpots.filter((s) => s.category === category),
+    }));
 
   return (
     <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
@@ -260,8 +282,65 @@ export default function PassesGuide() {
           />
         </Section>
 
-        {/* --------------------------------------------- 3. 対象外 */}
-        <Section n={3} id="not-included">
+        {/* --------------------------------------------- 3. 対象一覧 */}
+        <Section n={3} id="covered">
+          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            {covered.intro}
+          </p>
+
+          <p className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs leading-relaxed text-gray-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-gray-400">
+            {covered.caveat}
+          </p>
+
+          <div className="mt-5 space-y-5">
+            {grouped.map((g) => (
+              <div key={g.category}>
+                <h3 className="flex items-baseline gap-2 text-sm font-bold text-gray-900 dark:text-gray-100">
+                  {g.label}
+                  <span className="font-mono text-xs font-normal text-gray-400">
+                    {g.spots.length}
+                  </span>
+                </h3>
+                <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                  {g.spots.map((spot) => (
+                    <li key={spot.slug}>
+                      <Link
+                        href={`/sightseeing/${spot.slug}`}
+                        className="block rounded-lg border border-gray-200 p-3 text-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+                      >
+                        <span className="font-semibold text-gray-900 dark:text-gray-100">
+                          {spot.name}
+                        </span>
+                        {spot.londonPassNote && (
+                          <span className="mt-1 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                            {spot.londonPassNote}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* 読者は必ず「大英博物館は？」と探す。無いことの説明を置く。 */}
+          <div className="mt-5 rounded-lg border border-gray-300 p-4 dark:border-neutral-700">
+            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+              無料の館をここに入れていない理由
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              {covered.freeMuseumNote}
+            </p>
+          </div>
+
+          <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+            {covered.updatedNote}
+          </p>
+        </Section>
+
+        {/* --------------------------------------------- 4. 対象外 */}
+        <Section n={4} id="not-included">
           <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
             {notIncluded.intro}
           </p>
@@ -287,8 +366,8 @@ export default function PassesGuide() {
           </p>
         </Section>
 
-        {/* --------------------------------------------- 4. 比較 */}
-        <Section n={4} id="compare">
+        {/* --------------------------------------------- 5. 比較 */}
+        <Section n={5} id="compare">
           <ul className="space-y-3">
             {passComparison.map((p) => (
               <li
@@ -347,8 +426,8 @@ export default function PassesGuide() {
           </div>
         </Section>
 
-        {/* --------------------------------------------- 5. 読み方 */}
-        <Section n={5} id="traps">
+        {/* --------------------------------------------- 6. 読み方 */}
+        <Section n={6} id="traps">
           <ul className="space-y-3">
             {traps.map((t) => (
               <li

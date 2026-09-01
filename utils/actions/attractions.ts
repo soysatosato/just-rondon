@@ -51,6 +51,28 @@ export const fetchAttractionDetails = async (slug: string) => {
 };
 
 /**
+ * ロンドンパスの対象スポット。/sightseeing/passes の一覧に使う。
+ *
+ * 料金は返さない。Attraction.priceAdult は「大人£33、18〜24歳£21.50」の
+ * ような散文で、記事側が使っている検証済みの数値
+ * (lib/sightseeing/budget.ts の ADMISSIONS)と食い違う行がある。
+ * 同じページに2つの値段を出すと、どちらを信じればいいか分からなくなる。
+ * 一覧の役目は「対象かどうか」で、金額は各詳細ページに任せる。
+ */
+export const fetchLondonPassAttractions = async () => {
+  return db.attraction.findMany({
+    where: { isPublished: true, londonPass: true },
+    select: {
+      slug: true,
+      name: true,
+      category: true,
+      londonPassNote: true,
+    },
+    orderBy: { name: "asc" },
+  });
+};
+
+/**
  * 相互リンクの存在確認用。リンクを1本出すために sections の本文まで
  * 引くのは重いので、名前だけ取る。
  */

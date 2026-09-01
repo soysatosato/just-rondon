@@ -17,7 +17,7 @@ import { redirect } from "next/navigation";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Badge } from "@/components/ui/badge";
-import { Baby, Flame, MapPin, Star, Tag, Ticket } from "lucide-react";
+import { Baby, Flame, MapPin, Star, Tag, Ticket, TicketCheck } from "lucide-react";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
@@ -157,6 +157,27 @@ function AttractionBadges({ attraction }: { attraction: any }) {
           <Ticket className="h-3 w-3" />
           無料
         </Badge>
+      )}
+
+      {/*
+        ロンドンパス対象。判定ページへのリンクにしてある。
+        「対象」だけを出すと買う方向にしか押さないが、対象施設が
+        何か所あるかで損得が決まる商品なので、対象だと知った読者が
+        次に必要なのは損益分岐のほう。バッジ単体を出口にしない。
+      */}
+      {attraction.londonPass && (
+        <Link href="/sightseeing/passes">
+          <Badge
+            variant="secondary"
+            className="flex items-center gap-1 border border-emerald-300
+              bg-emerald-50 text-emerald-800 transition hover:border-emerald-500
+              dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300
+            "
+          >
+            <TicketCheck className="h-3 w-3" />
+            ロンドンパス対象
+          </Badge>
+        </Link>
       )}
     </div>
   );
@@ -393,6 +414,15 @@ export default async function AttractionDetail({
             <CategoryLink category={attraction.category} />
             <AreaLink area={attraction.area} />
           </div>
+
+          {/* 「対象だが条件付き」の但し書き。バッジに収まらないので下に出す。
+              これが無いと、乗り降り自由バスのように会社が限られる対象を
+              読者が無条件だと受け取る。 */}
+          {attraction.londonPass && attraction.londonPassNote && (
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              ロンドンパス：{attraction.londonPassNote}
+            </p>
+          )}
         </header>
 
         {/* 訪問前に知りたいこと。埋まっている項目だけが出る。 */}
