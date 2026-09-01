@@ -52,6 +52,36 @@ const nextConfig = {
         permanent: true,
       },
 
+      // 観光パス4種。もともと観光スポットDB(Attraction)に1件ずつ入れて
+      // いたが、パスは場所ではなく買い方なので、場所前提の機能
+      // (近くのスポット・旅程の移動時間・エリア・着いてからの歩き方)を
+      // 足すたびに除外リストが1行増える状態になっていた。
+      //
+      // より効いたのは、商品ページが4枚に割れている限りどのページも
+      // 単体で「お得です」と書くしかなかったこと。損得は比較でしか出ない。
+      // 判定を1本にまとめて /sightseeing/passes に置き、旧URLはそこへ送る。
+      // DB側の4行は削除せず isPublished:false で伏せてある。
+      {
+        source: "/sightseeing/the-london-pass",
+        destination: "/sightseeing/passes",
+        permanent: true,
+      },
+      {
+        source: "/sightseeing/golden-pass-london",
+        destination: "/sightseeing/passes",
+        permanent: true,
+      },
+      {
+        source: "/sightseeing/merlin-london-attractions-pass",
+        destination: "/sightseeing/passes",
+        permanent: true,
+      },
+      {
+        source: "/sightseeing/royal-museums-greenwich-day-pass",
+        destination: "/sightseeing/passes",
+        permanent: true,
+      },
+
       // 旧「美術館25選」。recommendLevel>=4 の26館を並べるページだったが、
       // うち10館は10選ページと丸ごと重複していた。全館一覧に
       // 「おすすめ度が高い」絞り込みを入れて吸収したのでそちらへ送る。

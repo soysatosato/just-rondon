@@ -181,6 +181,7 @@ module.exports = {
       "/sightseeing/hotels",
       "/sightseeing/transport",
       "/sightseeing/budget",
+      "/sightseeing/passes",
       "/sightseeing/tipping-and-payment",
       "/sightseeing/travel-tips",
       "/sightseeing/step-free",
@@ -383,7 +384,11 @@ module.exports = {
       paths.push(await config.transform(config, `/musicals/theatres/${t.slug}`));
     }
 
+    // isPublished で絞る。伏せたスポットの詳細ページは描画されないため、
+    // 絞らないと sitemap が 404 か redirect のURLを申告することになる。
+    // 実際、会期の終わった2件と観光パス4件がこれに当たっていた。
     const attractions = await prisma.attraction.findMany({
+      where: { isPublished: true },
       select: { slug: true },
     });
 

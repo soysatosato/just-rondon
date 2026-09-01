@@ -109,14 +109,24 @@ export const FOOD_PER_DAY: Record<string, FoodDayRow> = {
    オンライン事前購入で安くなる施設が多いため、記事では必ずその旨を書く。
 ----------------------------------------------------- */
 
+/**
+ * 入場料だけの基準時点。BUDGET_AS_OF とは別に持つ。
+ *
+ * 宿・食・交通と改定周期が違ううえ、/sightseeing/passes の損益計算が
+ * この数値に全面的に乗っている。入場料だけを直したときに、検算していない
+ * 宿代まで「最新」と名乗ってしまうのを避けるために分けてある。
+ */
+export const ADMISSIONS_AS_OF = "2026年9月";
+
 export const ADMISSIONS = {
-  towerOfLondon: 35.8,
-  westminsterAbbey: 30,
-  stPaulsCathedral: 26,
+  towerOfLondon: 37,
+  westminsterAbbey: 31,
+  stPaulsCathedral: 27,
   londonEye: 29,
-  churchillWarRooms: 32,
+  churchillWarRooms: 33,
   kewGardens: 22,
-  windsorCastle: 33,
+  windsorCastle: 36,
+  towerBridge: 18,
   shardView: 32,
   /** ワーナー・ブラザース スタジオツアー(ハリー・ポッター)。要事前予約。 */
   harryPotterStudio: 53.5,
