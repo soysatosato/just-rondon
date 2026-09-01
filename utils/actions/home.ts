@@ -42,11 +42,6 @@ export const fetchHomeRails = unstable_cache(
             engName: true,
             image: true,
             tagline: true,
-            // 旅行プラン導線のタイルに出す2つ。ここに相乗りさせているのは、
-            // トップのためだけに attraction をもう一度引くと、静的生成時の
-            // 同時接続がプールの上限(9)を超えてトップの書き出しが落ちるため。
-            priceAdult: true,
-            durationText: true,
           },
           orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
           take: 12,
@@ -127,21 +122,6 @@ export const fetchHomeRails = unstable_cache(
 
     return {
       attractions: toItems(attractions, "/sightseeing"),
-      /**
-       * トップの旅行プラン導線に出す押せるタイル。棚(RailItem)とは
-       * 必要な列が違う(あちらは一言、こちらは料金と所要)ので別に組む。
-       * 元は同じ mustSee の行なので、問い合わせは増えない。
-       */
-      planTiles: attractions
-        .filter((row) => Boolean(row.image))
-        .slice(0, 6)
-        .map((row) => ({
-          slug: row.slug,
-          name: row.name,
-          image: row.image as string,
-          priceAdult: row.priceAdult,
-          durationText: row.durationText,
-        })),
       museums: toItems(museums, "/museums"),
       musicals: toItems(musicals, "/musicals"),
       dishes: toItems(dishes, "/restaurants"),

@@ -50,14 +50,17 @@ export const metadata = buildPageMetadata({
  *
  *   1. ヒーロー      名前つきの写真モザイク + このサイトが何かの1文 + 検索
  *   2. 今日          LiveStrip。天気・運行・為替の要約
- *   3. 旅程を組む    旅行プラン作成。名所のタイルをその場で押して始められる
- *   4. 今週          週次ダイジェスト(旧は3帯に分散していたものを1帯に統合)
- *   5. 英国を読む    自分たちが書いたものが主役。旧は10ブロック中の9番目だった
- *   6. 見る・する    DBの写真を横スクロールの棚に5列。旧の観光+体験の置き換え
- *   7. サイト索引    全区分のテキスト索引 + サイト概要
+ *   3. 使う          旅程を組む / 今週のロンドン。2枚並べて1帯にしている
+ *   4. 英国を読む    自分たちが書いたものが主役。旧は10ブロック中の9番目だった
+ *   5. 見る・する    DBの写真を横スクロールの棚に5列。旧の観光+体験の置き換え
+ *   6. サイト索引    全区分のテキスト索引 + サイト概要
  *
  * 3 をこの位置に置いているのは、このサイトで唯一の「読む」ではなく
  * 「する」ものだから。下に置くと、旅程を組めること自体に気づかれない。
+ * 旅程と今週号はどちらも「見出し+説明+ボタン」の同じ形なので、縦に
+ * 2帯並べず横に2枚並べた。それぞれ中身の一覧(押せる名所タイル・今週号の
+ * 項目リスト)を添えていたが、トップで中身まで見せると帯が長くなるだけで、
+ * 押す先は結局1つしかない。一覧は行き先のページに任せる。
  *
  * 色の使い分けは踏襲する(観光=赤、体験=琥珀、旅=空、在住=翠、読み物=菫)。
  * ただし色を載せるのは索引の細い罫と棚の見出しだけにした。旧トップは
@@ -129,9 +132,15 @@ const READING_SECTIONS = [
  *
  * 旧トップにあった大区分ハブ(カード9枚)と、各セクション末尾の
  * 「◯◯ナビを見る →」ボタンを、ここ1箇所に統合したもの。
- * カードをやめてテキストの列にしたのは、導線の一覧はデザインではなく
- * 網羅性が仕事だから。カードだと1区分に載せられるのは3〜4本だが、
- * 列なら10本以上を同じ面積に置ける。
+ * カードをやめたのは、導線の一覧はデザインではなく網羅性が仕事だから。
+ * カードだと1区分に載せられるのは3〜4本だが、いまの形なら10本以上入る。
+ *
+ * 描き方は「5区分を縦の列に分ける」から「1区分1行、リンクは折り返す札」に
+ * 変えた。列に分けると、区分ごとの本数の差(6本〜13本)がそのまま列の高さの
+ * 差になり、いちばん多い区分に合わせて空白の列が並ぶ。lg(3列)では2段に
+ * 割れて更に間延びし、スマホでは5本の長い箇条書きが縦に積み上がるだけで、
+ * 画面1つぶんを灰色の文字で埋めていた。札にすると横幅を使い切るので、
+ * 本数が違っても行の高さは1〜3段に収まり、余った幅が空白にならない。
  *
  * 区分の振り分け基準は従来どおり一つだけ:
  *   観光 = 見る(場所そのもの) / 体験 = する / 旅の準備 = 旅行者の実務 /
@@ -307,21 +316,6 @@ export default async function Page() {
         ) ?? null
       : null;
 
-  // 号のタイトルだけでは「今週は何があるのか」が伝わらないので、実際の
-  // 項目を数件見せる。支障(alert)を先に、催し(opportunity)を後に置く。
-  // 最上位の注意は別枠で先に出しているので重複させない。
-  const briefPreview = (() => {
-    if (!latestBrief) return [];
-    const rest = latestBrief.items.filter((item) => item.id !== topAlert?.id);
-    const rank = (item: (typeof rest)[number]) => {
-      const group = getKindMeta(item.kind).group;
-      if (group === "alert") return 0;
-      if (group === "opportunity") return 1;
-      return 2;
-    };
-    return [...rest].sort((a, b) => rank(a) - rank(b)).slice(0, 5);
-  })();
-
   return (
     <div className="bg-background">
       {/*
@@ -349,30 +343,20 @@ export default async function Page() {
       </section>
 
       {/*
-        3. 旅程を組む。
-        このサイトで唯一「読む」ではなく「する」もの。説明カードを置く
-        代わりに、押せる名所のタイルをそのまま出している。押した内容は
-        本物のプランに入るので、/plan を開くと組みかけの旅程がある。
+        3. 使う: 旅程を組む / 今週のロンドン。
+        このサイトで唯一「読む」ではなく「する」ものと、唯一毎週変わるもの。
+        どちらも「見出し+説明+ボタン」の同じ形なので、縦に2帯に分けず
+        横に2枚並べている。今週号が無い週は旅程だけを全幅で出す。
       */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <Reveal>
-            <PlanPromo spots={rails.planTiles} />
-          </Reveal>
-        </div>
-      </section>
+          <Reveal
+            className={`grid gap-6 ${latestBrief ? "lg:grid-cols-2 lg:gap-8" : ""}`}
+          >
+            <PlanPromo />
 
-      {/*
-        4. 今週のロンドン。
-        旧トップは「今日の帯」「注意の帯」「今週号の帯」を別々の全幅バンドに
-        分けていて、同じ問い(いま何が起きているか)に3画面使っていた。
-        LiveStrip を上の細帯に残し、注意は今週号の項目リストの先頭に畳んだ。
-      */}
-      {latestBrief && (
-        <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground">
-          <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
-            <Reveal className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-              <div className="min-w-0 lg:col-span-5">
+            {latestBrief && (
+              <div className="flex h-full flex-col rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
                 <p className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-sky-700 dark:text-sky-400">
                   <span className="relative flex h-2 w-2 shrink-0">
                     {/* 今週号のときだけ点滅させる。過去号で光らせると、
@@ -400,72 +384,48 @@ export default async function Page() {
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                   {latestBrief.headline}
                 </p>
-                <Button
-                  asChild
-                  size="lg"
-                  className="mt-6 bg-sky-600 hover:bg-sky-700"
-                >
-                  <Link href="/events">
-                    {freshness?.isPast ? "最新号を読む" : "今週号を読む"} →
-                  </Link>
-                </Button>
-              </div>
 
-              <ul className="min-w-0 divide-y divide-border overflow-hidden rounded-xl border bg-card shadow-sm lg:col-span-7">
+                {/* 号の項目一覧はトップから外したが、深刻な支障だけは1行残す。
+                    ストライキや長期運休は、記事を開かせる前に伝わらないと
+                    意味がない。今週号・来週号のときしか出ない(topAlert)。 */}
                 {topAlert && (
-                  <li className="min-w-0">
-                    <Link
-                      href="/events"
-                      className="flex min-w-0 items-start gap-3 bg-red-50/80 p-4 transition-colors hover:bg-red-100/70 dark:bg-red-950/30 dark:hover:bg-red-950/50"
-                    >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-600/10">
-                        <TriangleAlert className="h-4 w-4 text-red-600" />
+                  <Link
+                    href="/events"
+                    className="mt-5 flex min-w-0 items-start gap-3 rounded-xl bg-red-50/80 p-3.5 transition-colors hover:bg-red-100/70 dark:bg-red-950/30 dark:hover:bg-red-950/50"
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-600/10">
+                      <TriangleAlert className="h-4 w-4 text-red-600" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-red-700 dark:text-red-400">
+                        {freshness?.label}の注意
                       </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-red-700 dark:text-red-400">
-                          {freshness?.label}の注意
-                        </span>
-                        <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
-                          {topAlert.title}
-                        </span>
+                      <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
+                        {topAlert.title}
                       </span>
-                    </Link>
-                  </li>
+                    </span>
+                  </Link>
                 )}
-                {briefPreview.map((item) => {
-                  const meta = getKindMeta(item.kind);
-                  const Icon = meta.icon;
-                  return (
-                    <li key={item.id} className="min-w-0">
-                      <Link
-                        href="/events"
-                        className="group flex min-w-0 items-start gap-3 p-4 transition-colors hover:bg-muted/50"
-                      >
-                        <span
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${meta.iconWrapClass}`}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                            {meta.label}
-                          </span>
-                          <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
-                            {item.title}
-                          </span>
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Reveal>
-          </div>
-        </section>
-      )}
+
+                <div className="mt-6 pt-2 sm:mt-auto">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-sky-600 hover:bg-sky-700"
+                  >
+                    <Link href="/events">
+                      {freshness?.isPast ? "最新号を読む" : "今週号を読む"} →
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Reveal>
+        </div>
+      </section>
 
       {/*
-        5. 英国を読む。
+        4. 英国を読む。
         旧トップでは10ブロック中の9番目にあり、ほぼ誰にも届いていなかった。
         自分たちが書いたものがこのサイトの本体なので、名所の棚より先に置く。
       */}
@@ -607,7 +567,7 @@ export default async function Page() {
       </div>
 
       {/*
-        6. 見る・する。
+        5. 見る・する。
         旧トップの「観光」「体験する」2セクション(カード計20枚超・約5画面)の
         置き換え。アイコン付きカードで category を説明する代わりに、
         DBにある写真と固有名詞を横スクロールの棚で見せる。
@@ -693,7 +653,7 @@ export default async function Page() {
       </section>
 
       {/*
-        7. サイト索引 + 概要。
+        6. サイト索引 + 概要。
         旧トップは同じ導線をヒーロー直下のハブ(カード9枚)と各セクション末尾の
         ボタンで二度出していた。ここ1箇所に集約し、途中では繰り返さない。
       */}
@@ -706,22 +666,27 @@ export default async function Page() {
             このサイトにあるもの
           </h2>
 
-          <div className="mt-8 grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="mt-8 border-t border-border/70">
             {SITE_INDEX.map((group) => (
-              <div key={group.eng} className="min-w-0">
-                <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                  <span
-                    className={`h-3 w-0.5 shrink-0 rounded-full ${group.stripe}`}
-                  />
-                  {group.eng}
-                </p>
-                <p className="mt-1.5 text-sm font-bold">{group.label}</p>
-                <ul className="mt-3 space-y-2">
+              <div
+                key={group.eng}
+                className="grid gap-x-8 gap-y-3 border-b border-border/70 py-5 sm:grid-cols-[10rem_minmax(0,1fr)] sm:py-6"
+              >
+                <div className="min-w-0">
+                  <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                    <span
+                      className={`h-3 w-0.5 shrink-0 rounded-full ${group.stripe}`}
+                    />
+                    {group.eng}
+                  </p>
+                  <p className="mt-1.5 text-sm font-bold">{group.label}</p>
+                </div>
+                <ul className="flex flex-wrap content-start gap-2">
                   {group.links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-xs leading-relaxed text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
+                        className="inline-block rounded-full border border-border bg-background px-3 py-1.5 text-xs leading-none text-muted-foreground transition hover:border-foreground/30 hover:bg-card hover:text-foreground"
                       >
                         {link.label}
                       </Link>
