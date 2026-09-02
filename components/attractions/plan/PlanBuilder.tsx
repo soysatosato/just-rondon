@@ -9,7 +9,6 @@ import {
   encodePlan,
   formatGbp,
   formatMinutes,
-  MAX_SPOTS,
   type PlanEntry,
   type PlanSpot,
 } from "@/lib/plan";
@@ -56,6 +55,12 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
+  /*
+   * 開いている追加欄。"top" は日の一覧の上に置く共通の欄、数値はその日の
+   * カードの中の欄。同時にひとつしか開けないのは、同じ検索欄が縦に
+   * 何個も開くと「いまどの日に足しているのか」が画面から読めなくなるため。
+   */
+  const [picker, setPicker] = useState<number | "top" | null>(null);
   /** 全消しの直前の中身。「元に戻す」が押されるまで持っておく。 */
   const [undo, setUndo] = useState<{
     entries: PlanEntry[];
@@ -135,7 +140,10 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   // 開いた状態が残る。次に何かを足したとき、押していない確認が
   // いきなり出るので閉じておく。
   useEffect(() => {
-    if (entries.length === 0) setConfirmingClear(false);
+    if (entries.length === 0) {
+      setConfirmingClear(false);
+      setPicker(null);
+    }
   }, [entries]);
 
   /** 読者が入れた滞在時間。slug で引けるようにして計算側へ渡す。 */
@@ -288,7 +296,25 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       )}
 
       {spotCount === 0 ? (
-        <PlanStarter spots={spots} />
+        <>
+          <PlanStarter spots={spots} />
+
+          {/*
+            空のときは畳まない。押し下げる日割りがまだ無いうえ、ひな形が
+            どれも刺さらなかった人にとっては、ここが唯一の入口になる。
+          */}
+          <section className="space-y-3 rounded-2xl border border-border p-4 print:hidden sm:p-5">
+            <h2 className="flex items-center gap-2 text-base font-bold tracking-tight">
+              <Plus className="h-4 w-4 text-indigo-600" aria-hidden />
+              行き先を直接えらぶ
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              エリアや種類で絞り込めます。選んだものは1日目に入り、
+              あとから日を分けられます。
+            </p>
+            <PlanSpotPicker spots={spots} />
+          </section>
+        </>
       ) : (
         <>
           {/*
@@ -409,6 +435,38 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             </div>
           )}
 
+          {/*
+            追加をいちばん上に出す。以前はページの末尾にあり、10日ぶんの
+            カードと地図の下だった。組んでいる最中にいちばん多く押すのが
+            追加で、そこへ行くのに毎回数画面ぶんスクロールしていた。
+            畳んであるのは、開いたままだと肝心の日割りが下へ押し出されるから。
+          */}
+          <div className="space-y-3 print:hidden">
+            <button
+              type="button"
+              onClick={() => setPicker(picker === "top" ? null : "top")}
+              aria-expanded={picker === "top"}
+              className={`flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-3.5 text-sm font-bold transition ${
+                picker === "top"
+                  ? "border-indigo-600 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
+                  : "border-indigo-300 text-indigo-700 hover:border-indigo-500 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/40"
+              }`}
+            >
+              <Plus className="h-4 w-4" aria-hidden />
+              {picker === "top" ? "追加をとじる" : "スポットを追加する"}
+            </button>
+
+            {picker === "top" && (
+              <div className="rounded-2xl border border-border p-4 sm:p-5">
+                <PlanSpotPicker
+                  spots={spots}
+                  day={days.length}
+                  dayCount={days.length}
+                />
+              </div>
+            )}
+          </div>
+
           <div className="space-y-6">
             {days.map((day) => (
               <PlanDay
@@ -416,29 +474,16 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                 plan={day}
                 dayCount={days.length}
                 date={dateForDay(startDate, day.day)}
+                allSpots={spots}
+                pickerOpen={picker === day.day}
+                onTogglePicker={() =>
+                  setPicker(picker === day.day ? null : day.day)
+                }
               />
             ))}
           </div>
         </>
       )}
-
-      <section className="space-y-3 rounded-2xl border border-border p-4 print:hidden sm:p-5">
-        <h2 className="flex items-center gap-2 text-base font-bold tracking-tight">
-          <Plus className="h-4 w-4 text-indigo-600" aria-hidden />
-          スポットを追加する
-        </h2>
-        <p className="text-xs text-muted-foreground">
-          追加したスポットは最終日に入ります。日を移すには、各スポットの
-          「◯日目」から選び直してください。
-          {spotCount >= MAX_SPOTS && (
-            <span className="font-semibold text-amber-700 dark:text-amber-400">
-              {" "}
-              上限の{MAX_SPOTS}ヶ所に達しています。
-            </span>
-          )}
-        </p>
-        <PlanSpotPicker spots={spots} />
-      </section>
     </div>
   );
 }

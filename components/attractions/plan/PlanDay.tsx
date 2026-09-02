@@ -14,6 +14,7 @@ import {
   Footprints,
   Map as MapIcon,
   MapPin,
+  Plus,
   Route,
   TrainFront,
   Wallet,
@@ -28,9 +29,11 @@ import {
   orderByProximity,
   type DayPlan,
   type LegKind,
+  type PlanSpot,
 } from "@/lib/plan";
 import { MAX_DAYS } from "@/lib/plan";
 import { formatPlanDate } from "@/lib/plan/dates";
+import PlanSpotPicker from "./PlanSpotPicker";
 import PlanStayEditor from "./PlanStayEditor";
 import {
   moveToDay,
@@ -75,12 +78,20 @@ export default function PlanDay({
   plan,
   dayCount,
   date,
+  allSpots,
+  pickerOpen,
+  onTogglePicker,
 }: {
   plan: DayPlan;
   /** プラン全体の日数。「◯日目へ移す」の選択肢を作るのに要る。 */
   dayCount: number;
   /** 出発日が決まっているときのその日の日付。未設定なら null。 */
   date: Date | null;
+  /** 追加欄に渡す候補。公開中の全スポット。この日の spots とは別物。 */
+  allSpots: PlanSpot[];
+  /** この日の追加欄が開いているか。開けるのは常に1日ぶんだけ。 */
+  pickerOpen: boolean;
+  onTogglePicker: () => void;
 }) {
   const [showMap, setShowMap] = useState(plan.day <= OPEN_MAP_UNTIL_DAY);
 
@@ -341,6 +352,24 @@ export default function PlanDay({
       </ol>
 
       <footer className="flex flex-wrap gap-2 border-t border-border bg-muted/20 px-4 py-3 print:hidden">
+        {/*
+          追加をこの日の中に置く。以前は画面のいちばん下に1つあるだけで、
+          「3日目が薄い」と気づいた位置から数画面ぶん離れていた。
+          戻ってくる頃には、どの日を埋めるつもりだったかが抜けている。
+        */}
+        <button
+          type="button"
+          onClick={onTogglePicker}
+          aria-expanded={pickerOpen}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+            pickerOpen
+              ? "border-indigo-600 bg-indigo-600 text-white"
+              : "border-indigo-300 bg-background text-indigo-700 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/40"
+          }`}
+        >
+          <Plus className="h-3.5 w-3.5" aria-hidden />
+          {pickerOpen ? "追加をとじる" : "この日に追加"}
+        </button>
         <button
           type="button"
           onClick={() => setShowMap((open) => !open)}
@@ -372,6 +401,15 @@ export default function PlanDay({
           </a>
         )}
       </footer>
+
+      {pickerOpen && (
+        <div className="border-t border-border bg-muted/10 p-4 print:hidden">
+          <p className="mb-3 text-xs font-semibold text-muted-foreground">
+            {plan.day}日目に追加するスポットを選ぶ
+          </p>
+          <PlanSpotPicker spots={allSpots} day={plan.day} />
+        </div>
+      )}
     </section>
   );
 }

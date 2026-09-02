@@ -221,16 +221,23 @@ function lastDay(): number {
 }
 
 /**
- * スポットを足す。行き先は最終日。
+ * スポットを足す。行き先を渡さなければ最終日。
  *
- * 「いま埋めている日」に足すのがいちばん外れが少ない。一覧を眺めながら
- * 1日目から順に組む読まれ方をするため。違う日に入れたいときは
- * プラン画面の日の選択で移せる。
+ * サイト内のカードや詳細ページから足すときは日を選べない——読んでいる
+ * 途中で「何日目か」を決めさせるのは、まだ組んでいない人には答えられない
+ * 問いなので、「いま埋めている日」= 最終日に落としている。
+ *
+ * 日を渡せるようにしてあるのは、プラン画面の中の追加欄のため。そこでは
+ * すでに日割りが目の前にあり、「2日目が薄い」と分かったうえで足すので、
+ * 最終日に入れてから移し直させるのは手数がひとつ多い。
+ * 最終日 + 1 を渡すと新しい日になる(normalizeDays が 1..n に詰める)。
  */
-export function addToPlan(slug: string): boolean {
+export function addToPlan(slug: string, day?: number): boolean {
   if (entries.some((e) => e.slug === slug)) return false;
   if (entries.length >= MAX_SPOTS) return false;
-  write([...entries, { slug, day: Math.max(lastDay(), 1) }]);
+  const target = day ?? Math.max(lastDay(), 1);
+  if (!Number.isInteger(target) || target < 1 || target > MAX_DAYS) return false;
+  write([...entries, { slug, day: target }]);
   return true;
 }
 
