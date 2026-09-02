@@ -37,6 +37,17 @@ export type PlanSpot = {
   isFree: boolean;
   mustSee: boolean;
   recommendLevel: number | null;
+  /**
+   * ロンドンパスの対象か。プランの各行にバッジで出す。
+   *
+   * 合計欄には出さない。パスで元が取れるかは日数と組み合わせで決まり、
+   * 「対象が5ヶ所」だけを大きく出すと、£100超のパスを買う判断を
+   * 数えただけの数字で押すことになる。判断は /sightseeing/passes に任せ、
+   * ここは「この施設は対象」という事実だけを持つ。
+   */
+  londonPass: boolean;
+  /** 対象だが条件が付くときの但し書き。無条件なら null。 */
+  londonPassNote: string | null;
 };
 
 /**

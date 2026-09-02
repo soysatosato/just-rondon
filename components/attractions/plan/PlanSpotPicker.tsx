@@ -1,9 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Clock, Plus, Search, TrainFront, Wallet, X } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  Check,
+  Clock,
+  Plus,
+  Search,
+  TrainFront,
+  Wallet,
+  X,
+} from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import LondonPassBadge from "./LondonPassBadge";
 import { CATEGORY_ORDER, categoryLabel } from "@/components/sightseeing/categories";
 import { areaGuides, getAreaMeta } from "@/components/sightseeing/areas/areas";
 import { MAX_DAYS, MAX_SPOTS, type PlanSpot } from "@/lib/plan";
@@ -306,7 +317,28 @@ function PickerRow({
       />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold">{spot.name}</p>
+        {/*
+          候補の段階で詳細に飛べるようにしてある。名前だけ並べても、
+          ロンドンに来たことのない人には「タワーブリッジ」と
+          「ロンドン塔」がどう違うのかが判断できない。別タブで開くのは、
+          確かめに行った先から戻ったときに、組みかけの日割りと
+          開いていた追加欄をそのまま残すため。
+        */}
+        <Link
+          href={`/sightseeing/${spot.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex min-w-0 items-center gap-1 text-sm font-semibold underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"
+        >
+          <span className="truncate">{spot.name}</span>
+          <ArrowUpRight
+            className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+            aria-label="新しいタブで開く"
+          />
+        </Link>
+        {spot.londonPass && (
+          <LondonPassBadge note={spot.londonPassNote} className="mt-1" />
+        )}
         {facts.length > 0 && (
           <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
             {spot.durationText && (

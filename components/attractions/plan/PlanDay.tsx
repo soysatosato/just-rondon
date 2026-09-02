@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   ArrowDown,
   ArrowUp,
+  ArrowUpRight,
   Bus,
   CalendarClock,
   Clock,
@@ -33,6 +34,7 @@ import {
 } from "@/lib/plan";
 import { MAX_DAYS } from "@/lib/plan";
 import { formatPlanDate } from "@/lib/plan/dates";
+import LondonPassBadge from "./LondonPassBadge";
 import PlanSpotPicker from "./PlanSpotPicker";
 import PlanStayEditor from "./PlanStayEditor";
 import {
@@ -236,18 +238,47 @@ export default function PlanDay({
                 />
 
                 <div className="min-w-0 flex-1 space-y-1.5">
+                  {/*
+                    別タブで開く。ここを踏む人は「そもそもどんな場所か」を
+                    確かめに行くので、まだプランを組んでいる途中にいる。
+                    同じタブだと、戻ったときに開いていた追加欄もスクロール
+                    位置も畳まれ、どこまで組んだかを探し直すことになる。
+                    印刷には矢印を出さない——紙には押す先が無い。
+                  */}
                   <Link
                     href={`/sightseeing/${row.spot.slug}`}
-                    className="block font-semibold leading-snug hover:text-indigo-600 hover:underline underline-offset-4 dark:hover:text-indigo-400"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-baseline gap-1 font-semibold leading-snug underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"
                   >
                     {row.spot.name}
+                    <ArrowUpRight
+                      className="h-3.5 w-3.5 shrink-0 self-center text-muted-foreground transition group-hover:text-indigo-600 print:hidden dark:group-hover:text-indigo-400"
+                      aria-label="新しいタブで開く"
+                    />
                   </Link>
 
+                  {/* 休館はパスの対象より先に出す。パスは買い方の話だが、
+                      閉まっている日に行くのは旅程が崩れる話で、直すのに
+                      要る手数も締切も違う。 */}
                   {row.closedOn && (
                     <p className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-800 dark:bg-red-950/50 dark:text-red-200">
                       <DoorClosed className="h-3 w-3 shrink-0" aria-hidden />
                       この日は休み（{row.closedOn}休）
                     </p>
+                  )}
+
+                  {row.spot.londonPass && (
+                    <div className="space-y-1">
+                      <LondonPassBadge note={row.spot.londonPassNote} />
+                      {/* 条件はバッジに収まらないので下に出す。これが無いと、
+                          会社の限られる対象を無条件だと受け取られる。 */}
+                      {row.spot.londonPassNote && (
+                        <p className="text-[11px] leading-relaxed text-muted-foreground">
+                          {row.spot.londonPassNote}
+                        </p>
+                      )}
+                    </div>
                   )}
 
                   <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">

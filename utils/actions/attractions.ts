@@ -356,6 +356,8 @@ export const fetchPlanSpots = unstable_cache(
         isFree: true,
         mustSee: true,
         recommendLevel: true,
+        londonPass: true,
+        londonPassNote: true,
       },
       orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
     }),
