@@ -131,6 +131,13 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     if (undo && entries.length > 0) setUndo(null);
   }, [entries, undo]);
 
+  // 確認を開いたまま最後の1件を「外す」で消すと、下の塊ごと畳まれて
+  // 開いた状態が残る。次に何かを足したとき、押していない確認が
+  // いきなり出るので閉じておく。
+  useEffect(() => {
+    if (entries.length === 0) setConfirmingClear(false);
+  }, [entries]);
+
   /** 読者が入れた滞在時間。slug で引けるようにして計算側へ渡す。 */
   const overrides = useMemo(() => {
     const map = new Map<string, number>();
@@ -328,15 +335,56 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                 <Printer className="h-3.5 w-3.5" aria-hidden />
                 印刷する
               </button>
+              {/*
+                消す色を最初から着せている。以前は灰色で、押すまで
+                赤くならなかった。ホバーの無いスマホでは共有・印刷と
+                見分けがつかず、3つ並んだうちの淡い文字として読み飛ばされる。
+              */}
               <button
                 type="button"
-                onClick={handleClear}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+                onClick={() => setConfirmingClear(true)}
+                aria-expanded={confirmingClear}
+                className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-background px-3 py-2 text-xs font-semibold text-red-600 transition hover:border-red-400 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/40"
               >
                 <Trash2 className="h-3.5 w-3.5" aria-hidden />
                 すべて消す
               </button>
             </div>
+
+            {/*
+              確認は押した場所の真下に出す。何ヶ所・何日分が消えるのかを
+              書けるのがOSのダイアログとの違いで、この画面でいちばん
+              間違えやすいのが「1日目だけ消すつもりだった」なので、
+              消える量を数で見せてから押させる。
+            */}
+            {confirmingClear && (
+              <div className="space-y-3 rounded-xl border border-red-300 bg-red-50 p-4 print:hidden dark:border-red-900 dark:bg-red-950/30">
+                <p className="text-sm font-semibold text-red-900 dark:text-red-200">
+                  {spotCount}ヶ所・{days.length}日分をすべて消します
+                </p>
+                <p className="text-xs leading-relaxed text-red-800 dark:text-red-300">
+                  出発日の設定も一緒に消えます。消したあと、この画面を
+                  離れるまでは「元に戻す」で戻せます。
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    autoFocus
+                    className="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-700"
+                  >
+                    すべて消す
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingClear(false)}
+                    className="rounded-full border border-red-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-red-500 dark:border-red-900"
+                  >
+                    やめる
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="print:hidden">
