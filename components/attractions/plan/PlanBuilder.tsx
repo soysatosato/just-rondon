@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Link2, Plus, Printer, Trash2 } from "lucide-react";
+import { Check, Link2, Plus, Printer, Trash2, Undo2 } from "lucide-react";
 
 import {
   buildDayPlan,
@@ -55,6 +55,12 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   } | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [confirmingClear, setConfirmingClear] = useState(false);
+  /** 全消しの直前の中身。「元に戻す」が押されるまで持っておく。 */
+  const [undo, setUndo] = useState<{
+    entries: PlanEntry[];
+    startDate: string | null;
+  } | null>(null);
 
   const bySlug = useMemo(
     () => new Map(spots.map((spot) => [spot.slug, spot])),
@@ -113,6 +119,17 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     }
     setIncoming({ entries: decoded, startDate: incomingStart });
   }, [bySlug]);
+
+  /*
+   * 消したあとで何かが入ったら「元に戻す」を引っ込める。
+   *
+   * ひな形を読み込んだり新しく足したりしたあとに残っていると、
+   * それを押した人は消える側の中身を戻すつもりで、いま組みはじめた
+   * ぶんを消すことになる。取り消しは直後の一手だけに効かせる。
+   */
+  useEffect(() => {
+    if (undo && entries.length > 0) setUndo(null);
+  }, [entries, undo]);
 
   /** 読者が入れた滞在時間。slug で引けるようにして計算側へ渡す。 */
   const overrides = useMemo(() => {
@@ -173,11 +190,26 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     }
   };
 
+  /*
+   * 全消し。
+   *
+   * 以前は window.confirm で止めていた。OSのダイアログは何ヶ所・何日分を
+   * 消すのかを出せず、スマホでは画面の上端に小さく出るだけで、
+   * 「すべて消す」を押した指の位置とも離れている。押す前に何が消えるかを
+   * その場に出し、押したあとは戻せるようにしてある。
+   *
+   * 戻せるようにしたので、確認は一度きりでよい。旅程は組むのに時間が
+   * かかるものだが、取り返しがつかないのは「戻せないこと」であって
+   * 「押しやすいこと」ではない。
+   */
   const handleClear = () => {
-    if (window.confirm("プランをすべて消します。元に戻せません。")) {
-      clearPlan();
-      setShareUrl(null);
-    }
+    setUndo({ entries: [...readPlan()], startDate: readStartDate() });
+    clearPlan();
+    setConfirmingClear(false);
+    setShareUrl(null);
+    // 消すとページが一気に短くなり、ブラウザが位置を切り詰めて
+    // 下端に落ちる。「元に戻す」は上に出るので、そこまで連れていく。
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -214,6 +246,35 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
               className="rounded-full border border-indigo-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-indigo-500 dark:border-indigo-800"
             >
               いまのプランのままにする
+            </button>
+          </div>
+        </div>
+      )}
+
+      {undo && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-muted/40 px-4 py-3 print:hidden">
+          <p className="text-sm font-semibold">
+            プランを消しました（{undo.entries.length}ヶ所・
+            {new Set(undo.entries.map((entry) => entry.day)).size}日分）
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                replacePlan(undo.entries, undo.startDate);
+                setUndo(null);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
+            >
+              <Undo2 className="h-3.5 w-3.5" aria-hidden />
+              元に戻す
+            </button>
+            <button
+              type="button"
+              onClick={() => setUndo(null)}
+              className="rounded-full px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:text-foreground"
+            >
+              閉じる
             </button>
           </div>
         </div>
