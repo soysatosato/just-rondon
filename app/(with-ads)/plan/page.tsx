@@ -1,7 +1,14 @@
 export const revalidate = 60 * 60 * 24;
 
 import Link from "next/link";
-import { CalendarRange, Map as MapIcon, Route, Share2, Wallet } from "lucide-react";
+import {
+  CalendarRange,
+  Clock,
+  Map as MapIcon,
+  Route,
+  Share2,
+  Wallet,
+} from "lucide-react";
 
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import PlanBuilder from "@/components/attractions/plan/PlanBuilder";
@@ -24,6 +31,10 @@ import { buildPageMetadata } from "@/lib/seo";
  * 1画面ぶんの案内をまたいでいた。この4枚が要るのは初回だけで、
  * そのために毎回の到達を遅くする配分になっていた。読み物としては
  * 残す価値があるので、消さずに前提と限界の手前に置いている。
+ *
+ * 本文の幅だけ他のページより広く取ってある。広い画面では日割りの右に
+ * 地図を貼りつけたままにしており、読み物の幅(max-w-4xl)では地図が
+ * 日割りを潰す。下の説明のほうは読み物なので、そちらだけ幅を戻している。
  *
  * プランの中身はブラウザにしか無く、URL の ?spots= もクライアントで読む。
  * サーバーはどの読者にも同じHTMLを返すので、canonical は素直に
@@ -55,14 +66,19 @@ const CAPABILITIES = [
     body: "有料施設が£30を超えるのは普通で、4ヶ所選べば£100を超えます。合計が先に見えていれば、削る判断が現地ではなく出発前にできます。",
   },
   {
+    icon: Clock,
+    title: "何時に着くかが出る",
+    body: "宿を出る時刻を決めると、滞在と移動を積んで各スポットの到着時刻を出します。閉館に間に合うか、夜の予定に間に合うかは、合計の長さではなく時刻でしか分かりません。",
+  },
+  {
     icon: Route,
     title: "1日に収まるか判定する",
     body: "滞在と移動を足して9時間を超えた日、滞在2時間以上の施設が3ヶ所以上入った日には警告を出します。基準はモデルコース記事と同じです。",
   },
   {
     icon: MapIcon,
-    title: "順路が地図に出る",
-    body: "その日の並びを地図に落とすので、同じ道を往復していればすぐ分かります。近い順への並べ替えと、Googleマップの経路もそのまま開けます。",
+    title: "全日程が1枚の地図に出る",
+    body: "日ごとに色を分けて重ねるので、同じ道の往復も、別々の日に同じ地区へ2回行っていることも一目で分かります。近い順への並べ替えとGoogleマップの経路つき。",
   },
   {
     icon: Share2,
@@ -75,7 +91,7 @@ export default async function PlanPage() {
   const spots = await fetchPlanSpots();
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8 md:py-10">
+    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <div className="mb-6 print:hidden">
         <Breadcrumbs path="/plan" />
       </div>
@@ -91,7 +107,7 @@ export default async function PlanPage() {
         <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground print:hidden">
           掲載中の{spots.length}件から行きたいスポットを選ぶと、日別に並べて
           <strong className="font-semibold text-foreground">
-            入場料の合計・滞在時間・スポット間の移動
+            何時に着いて何時に終わるか・入場料の合計・スポット間の移動
           </strong>
           を出します。ロンドンは中心部に見どころが密集しているぶん、
           詰め込みすぎになりやすい街です。
@@ -100,7 +116,7 @@ export default async function PlanPage() {
 
       <PlanBuilder spots={spots} />
 
-      <section className="mt-12 print:hidden">
+      <section className="mt-12 max-w-3xl print:hidden">
         <h2 className="text-base font-bold tracking-tight">
           この道具でできること
         </h2>
@@ -130,7 +146,7 @@ export default async function PlanPage() {
         移動時間をどう出しているかは書いておかないと、直線距離からの
         概算を乗換案内の代わりに使われる。
       */}
-      <section className="mt-6 space-y-3 rounded-2xl border border-border bg-muted/30 p-5 text-sm leading-relaxed text-muted-foreground print:hidden">
+      <section className="mt-6 max-w-3xl space-y-3 rounded-2xl border border-border bg-muted/30 p-5 text-sm leading-relaxed text-muted-foreground print:hidden">
         <h2 className="text-base font-bold tracking-tight text-foreground">
           この数字の作り方
         </h2>
@@ -143,6 +159,12 @@ export default async function PlanPage() {
             正確な所要時間は現地の乗換案内で確かめてください
           </strong>
           。ここで出しているのは「1日に収まるかどうか」を判断するための概算です。
+        </p>
+        <p>
+          各スポットの到着時刻は、その日に宿を出る時刻から滞在と移動を順に
+          足しただけのものです。食事も休憩も行列も入っていないので、実際は
+          常にこれより遅くなります。滞在時間の分からないスポットを挟んだ日は、
+          そこから先の時刻に「〜」を付けています。
         </p>
         <p>
           料金と滞在時間は各スポットの掲載値をそのまま合計しています。値の無い

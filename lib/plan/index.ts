@@ -91,6 +91,32 @@ export function isValidStayMinutes(value: unknown): value is number {
   );
 }
 
+/**
+ * 1日の開始時刻(0時からの分)。
+ *
+ * これを入れるまで、この道具が出す時間は「滞在と移動で8時間40分」という
+ * 長さだけだった。長さは足し算の答えでしかなく、読者が知りたいのは
+ * 「その日は何時に終わるのか」のほうで、8時間40分が18時に終わるのか
+ * 21時に終わるのかは開始時刻を決めないと出ない。閉館時刻に間に合うか、
+ * 夕食の予約に間に合うかは、長さではなく時刻でしか判断できない。
+ *
+ * 既定の9時は /sightseeing/itinerary のモデルコースと同じ前提。
+ * 変えられるようにしてあるのは、時差で早起きになる人と、
+ * 昼から動き始める人で3時間はずれるため。
+ */
+export const DEFAULT_START_MINUTES = 9 * 60;
+export const MIN_START_MINUTES = 5 * 60;
+export const MAX_START_MINUTES = 15 * 60;
+
+export function isValidStartMinutes(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= MIN_START_MINUTES &&
+    value <= MAX_START_MINUTES
+  );
+}
+
 /* ------------------------------------------------------------------ *
  * 共有リンク
  * ------------------------------------------------------------------ */
@@ -269,8 +295,14 @@ export function legBetween(from: PlanSpot, to: PlanSpot): PlanLeg | null {
 const BIG_VENUE_MINUTES = 120;
 export const BIG_VENUES_PER_DAY = 2;
 
-/** 1日の上限。朝9時に出て夜6時に戻る想定。 */
-const DAY_BUDGET_MINUTES = 9 * 60;
+/**
+ * 1日の上限。9時に出て18時に戻る想定。
+ *
+ * 表示側でも使う——1日ぶんの帯をこの長さで割って、どこまで埋まっているかを
+ * 出している。警告の基準と帯の目盛りが違うと、帯が満杯なのに警告が出ない
+ * (あるいはその逆の)日ができる。
+ */
+export const DAY_BUDGET_MINUTES = 9 * 60;
 
 export type PlanWarning = {
   /** 同じ日に2つ出しても意味のない警告があるので種別を持つ。 */
@@ -296,6 +328,17 @@ export type PlanRow = {
   defaultMinutes: number | null;
   /** 読者が入れた値を使っているか。 */
   overridden: boolean;
+  /**
+   * ここに着く時刻(0時からの分)。開始時刻に、手前の滞在と移動を足したもの。
+   *
+   * 滞在時間の分からないスポットは0分として先へ進める。合計の出し方と
+   * 同じ扱いで、そこを「不明」で打ち切ると、1ヶ所欠けただけでその日の
+   * 残り全部から時刻が消える。ずれる向きは常に「実際はこれより遅い」の
+   * 一方向なので、表示側はその旨を断ったうえで時刻を出す。
+   */
+  arriveMinutes: number;
+  /** ここを出る時刻(0時からの分)。滞在時間が分からなければ到着と同じ。 */
+  leaveMinutes: number;
 };
 
 export type BuildDayOptions = {
@@ -303,6 +346,8 @@ export type BuildDayOptions = {
   date?: Date | null;
   /** slug → 読者が入れた滞在時間(分)。掲載値より優先する。 */
   overrides?: ReadonlyMap<string, number>;
+  /** その日の開始時刻(0時からの分)。省略すると9時。 */
+  startMinutes?: number;
 };
 
 export type DayPlan = {
@@ -322,6 +367,10 @@ export type DayPlan = {
   /** 料金が分からなかったスポット数。 */
   unknownPriceCount: number;
   warnings: PlanWarning[];
+  /** その日の開始時刻(0時からの分)。 */
+  startMinutes: number;
+  /** 最後のスポットを出る時刻(0時からの分)。空の日は開始時刻と同じ。 */
+  endMinutes: number;
 };
 
 /**
@@ -337,8 +386,13 @@ export function buildDayPlan(
   spots: PlanSpot[],
   options: BuildDayOptions = {},
 ): DayPlan {
-  const { date, overrides } = options;
+  const { date, overrides, startMinutes: dayStart = DEFAULT_START_MINUTES } =
+    options;
   const weekday = date ? weekdayIndex(date) : null;
+
+  // 時刻を積み上げながら組む。到着時刻は手前の行が決まらないと出せないので、
+  // map ではなく順に走らせる必要がある。
+  let clock = dayStart;
 
   const rows: PlanRow[] = spots.map((spot, i) => {
     const closedDays = weekday === null ? null : parseClosedDays(spot.openingHours);
@@ -353,17 +407,25 @@ export function buildDayPlan(
     const defaultMinutes = parseDurationMinutes(spot.durationText);
     const override = overrides?.get(spot.slug);
     const overridden = isValidStayMinutes(override);
+    const stayMinutes = overridden ? override : defaultMinutes;
+
+    const legFromPrevious = i === 0 ? null : legBetween(spots[i - 1], spot);
+    const arriveMinutes = clock + (legFromPrevious?.minutes ?? 0);
+    const leaveMinutes = arriveMinutes + (stayMinutes ?? 0);
+    clock = leaveMinutes;
 
     return {
       spot,
-      legFromPrevious: i === 0 ? null : legBetween(spots[i - 1], spot),
+      legFromPrevious,
       closedOn:
         closedDays && weekday !== null && closedDays.includes(weekday)
           ? formatClosedDays(closedDays)
           : null,
-      stayMinutes: overridden ? override : defaultMinutes,
+      stayMinutes,
       defaultMinutes,
       overridden,
+      arriveMinutes,
+      leaveMinutes,
     };
   });
 
@@ -401,11 +463,15 @@ export function buildDayPlan(
     });
   }
 
+  const endMinutes = rows.length === 0 ? dayStart : rows[rows.length - 1].leaveMinutes;
+
   const total = stayMinutes + travelMinutes;
   if (total > DAY_BUDGET_MINUTES) {
     warnings.push({
       kind: "too-long",
-      message: `滞在と移動で${formatMinutes(total)}。朝9時に出ても夜6時には戻れません。どれかを別の日に移してください。`,
+      // 長さではなく終わる時刻で言う。「9時間40分」は多いかどうかの判断が
+      // 要るが、「終わるのは20:40」はその場で分かる。
+      message: `${formatClock(dayStart)}に出ても、終わるのは${formatClock(endMinutes)}です。1ヶ所を別の日に移すと収まります。`,
     });
   }
 
@@ -441,6 +507,8 @@ export function buildDayPlan(
     totalGbp,
     unknownPriceCount,
     warnings,
+    startMinutes: dayStart,
+    endMinutes,
   };
 }
 
@@ -494,6 +562,20 @@ export function formatMinutes(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return m === 0 ? `${h}時間` : `${h}時間${m}分`;
+}
+
+/**
+ * 0時からの分を「9:00」「18:40」の形にする。
+ *
+ * 日をまたいだら「翌1:20」。上限12時間の滞在を並べれば24時を越えられるので、
+ * そこで 0:20 に巻き戻すと、前の行より早い時刻が下に並ぶことになる。
+ */
+export function formatClock(minutes: number): string {
+  const total = Math.max(0, Math.round(minutes));
+  const dayOffset = Math.floor(total / (24 * 60));
+  const h = Math.floor((total % (24 * 60)) / 60);
+  const m = total % 60;
+  return `${dayOffset > 0 ? "翌" : ""}${h}:${String(m).padStart(2, "0")}`;
 }
 
 /** 距離を「600m」「2.4km」の形にする。1km未満は10m単位に丸める。 */

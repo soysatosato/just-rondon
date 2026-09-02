@@ -3,6 +3,8 @@
 import { useSyncExternalStore } from "react";
 
 import {
+  DEFAULT_START_MINUTES,
+  isValidStartMinutes,
   isValidStayMinutes,
   MAX_DAYS,
   MAX_SPOTS,
@@ -37,6 +39,8 @@ const EMPTY: PlanEntry[] = [];
 let entries: PlanEntry[] = EMPTY;
 /** 出発日 "YYYY-MM-DD"。未設定なら null で、その場合は「1日目」表記に戻る。 */
 let startDate: string | null = null;
+/** 1日の開始時刻(0時からの分)。各日の時刻表はここから積み上げる。 */
+let startMinutes: number = DEFAULT_START_MINUTES;
 let hydrated = false;
 const listeners = new Set<() => void>();
 
@@ -74,6 +78,10 @@ function hydrate() {
       if (typeof savedStart === "string" && ISO_DATE.test(savedStart)) {
         startDate = savedStart;
       }
+      // 開始時刻を足す前に保存された分には入っていない。既定のままにする。
+      const savedClock = (parsed as { startMinutes?: unknown } | null)
+        ?.startMinutes;
+      if (isValidStartMinutes(savedClock)) startMinutes = savedClock;
     }
 
     const restored: PlanEntry[] = [];
@@ -103,7 +111,10 @@ function hydrate() {
 
 function persist() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ entries, startDate }));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ entries, startDate, startMinutes }),
+    );
   } catch {
     // 同上。この画面の中では動き続ける。
   }
@@ -140,6 +151,7 @@ if (typeof window !== "undefined") {
     hydrated = false;
     entries = EMPTY;
     startDate = null;
+    startMinutes = DEFAULT_START_MINUTES;
     hydrate();
     emit();
   });
@@ -203,6 +215,15 @@ export function usePlanStartDate(): string | null {
   );
 }
 
+/** 1日の開始時刻(0時からの分)。 */
+export function usePlanStartMinutes(): number {
+  return useSyncExternalStore(
+    subscribe,
+    () => startMinutes,
+    () => DEFAULT_START_MINUTES,
+  );
+}
+
 export function usePlanCount(): number {
   return useSyncExternalStore(
     subscribe,
@@ -256,6 +277,53 @@ export function moveToDay(slug: string, day: number) {
   write(entries.map((e) => (e.slug === slug ? { ...e, day } : e)));
 }
 
+/**
+ * 日と、その日の中の位置をまとめて指定して移す。掴んで動かす操作の受け口。
+ *
+ * moveToDay は日だけを変えるので、行き先の日では常に末尾に付く。掴んだ
+ * ものを「2日目の2番目」に落としたのに末尾に着地すると、動かした先を
+ * 目で追っていた読者にはどこへ行ったのか分からなくなる。
+ *
+ * 落とす位置は、動かすものを抜く前の並びで数えた番号で受け取る。
+ * 同じ日の中で後ろへ動かすときのずれは呼び出し側で吸収している——
+ * その補正に要る「元の位置」を知っているのは掴んだ側だけなので。
+ */
+export function moveToDayAt(slug: string, day: number, index: number) {
+  if (day < 1 || day > MAX_DAYS) return;
+  const moving = entries.find((e) => e.slug === slug);
+  if (!moving) return;
+
+  const without = entries.filter((e) => e.slug !== slug);
+  const target = without.filter((e) => e.day === day);
+  const others = without.filter((e) => e.day !== day);
+
+  target.splice(Math.min(Math.max(index, 0), target.length), 0, {
+    ...moving,
+    day,
+  });
+  write([...others, ...target]);
+}
+
+/**
+ * 2つの日を丸ごと入れ替える。
+ *
+ * 「ロンドン塔は日曜が混むから2日目と3日目を入れ替えたい」は、いまは
+ * 中身を1件ずつ移し替えるしかなかった。8件を手で移す間に順番も崩れる。
+ */
+export function swapDays(a: number, b: number) {
+  if (a === b || a < 1 || b < 1 || a > MAX_DAYS || b > MAX_DAYS) return;
+  write(
+    entries.map((e) =>
+      e.day === a ? { ...e, day: b } : e.day === b ? { ...e, day: a } : e,
+    ),
+  );
+}
+
+/** その日のスポットを全部外す。空いた日は normalizeDays が詰める。 */
+export function clearDay(day: number) {
+  write(entries.filter((e) => e.day !== day));
+}
+
 /** 同じ日の中で1つ前後に動かす。日をまたいでは動かさない。 */
 export function moveWithinDay(slug: string, direction: -1 | 1) {
   const index = entries.findIndex((e) => e.slug === slug);
@@ -294,6 +362,7 @@ export function reorderDay(day: number, slugsInOrder: string[]) {
 
 export function clearPlan() {
   startDate = null;
+  startMinutes = DEFAULT_START_MINUTES;
   write([]);
 }
 
@@ -330,6 +399,14 @@ export function setStartDate(next: string | null) {
   emit();
 }
 
+/** 1日の開始時刻。範囲外は捨てる——入口は選択欄だけなので普通は来ない。 */
+export function setStartMinutes(next: number) {
+  if (!isValidStartMinutes(next)) return;
+  startMinutes = next;
+  persist();
+  emit();
+}
+
 /** 共有リンクとひな形の読み込み。今のプランを丸ごと置き換える。 */
 export function replacePlan(next: PlanEntry[], nextStartDate?: string | null) {
   if (nextStartDate !== undefined) startDate = nextStartDate;
@@ -340,4 +417,32 @@ export function replacePlan(next: PlanEntry[], nextStartDate?: string | null) {
 export function readStartDate(): string | null {
   if (!hydrated) hydrate();
   return startDate;
+}
+
+/* ------------------------------------------------------------------ *
+ * 取り消し
+ * ------------------------------------------------------------------ */
+
+/**
+ * プラン全体の写し。
+ *
+ * 消す操作の前にこれを取っておき、「元に戻す」で書き戻す。中身だけでなく
+ * 出発日と開始時刻まで含めるのは、全消しがその2つも一緒に消すため。
+ * 戻したときに日付だけ空のままだと、各日から日付と休館警告が消える。
+ */
+export type PlanSnapshot = {
+  entries: PlanEntry[];
+  startDate: string | null;
+  startMinutes: number;
+};
+
+export function readSnapshot(): PlanSnapshot {
+  if (!hydrated) hydrate();
+  return { entries: [...entries], startDate, startMinutes };
+}
+
+export function restoreSnapshot(snapshot: PlanSnapshot) {
+  startDate = snapshot.startDate;
+  startMinutes = snapshot.startMinutes;
+  write(snapshot.entries);
 }

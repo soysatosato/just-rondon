@@ -1,30 +1,49 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Check, Link2, Plus, Printer, Trash2, Undo2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { ChevronDown, Map as MapIcon, Plus, Undo2 } from "lucide-react";
 
 import {
   buildDayPlan,
   decodePlan,
   encodePlan,
-  formatGbp,
-  formatMinutes,
+  hasRealLocation,
+  MAX_DAYS,
   type PlanEntry,
   type PlanSpot,
 } from "@/lib/plan";
 import { dateForDay, parseIsoDate } from "@/lib/plan/dates";
+import PlanAddSheet from "./PlanAddSheet";
 import PlanDay from "./PlanDay";
 import PlanDateBar from "./PlanDateBar";
 import PlanSpotPicker from "./PlanSpotPicker";
 import PlanStarter from "./PlanStarter";
+import PlanSummaryBar from "./PlanSummaryBar";
+import type { DragState, DropTarget } from "./drag";
 import {
+  clearDay,
   clearPlan,
+  moveToDayAt,
   readPlan,
+  readSnapshot,
   readStartDate,
   replacePlan,
+  restoreSnapshot,
   usePlanEntries,
   usePlanStartDate,
+  usePlanStartMinutes,
+  type PlanSnapshot,
 } from "./plan-store";
+
+/**
+ * 地図は leaflet が window を触るのでサーバーでは描けない。
+ * ここで分けておくと、地図を開かない読者には bundle も届かない。
+ */
+const PlanTripMap = dynamic(() => import("./PlanTripMap"), {
+  ssr: false,
+  loading: () => <div className="h-[300px] w-full animate-pulse bg-muted" />,
+});
 
 const SHARE_PARAM = "spots";
 const START_PARAM = "start";
@@ -41,13 +60,20 @@ function stripShareParams() {
  * 旅行プランの本体。公開中の全スポットを受け取り、
  * 保存されている slug を突き合わせて日別に組み立てる。
  *
- * 保存しているのが slug と出発日だけなので、料金や開館時間はここで
- * 引き直した最新の値になる。ブラウザに数ヶ月前のプランが残っていても、
+ * 保存しているのが slug と出発日・開始時刻だけなので、料金や開館時間は
+ * ここで引き直した最新の値になる。ブラウザに数ヶ月前のプランが残っていても、
  * 出る数字は今のもの。
+ *
+ * 画面は広いところで2枚に割る。左に日割り、右に地図を貼りつけたまま
+ * 残すのは、旅程を直す作業がずっと「並びを変える → 順路を見る」の
+ * 往復だから。地図が本文の中にあると、その往復のたびにスクロールが要る。
+ * 狭い画面では地図が日割りの上に来る(同じ1枚を CSS の order で動かして
+ * いるので、地図の実体は最後まで1つ)。
  */
 export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const entries = usePlanEntries();
   const startDate = usePlanStartDate();
+  const startMinutes = usePlanStartMinutes();
   const [incoming, setIncoming] = useState<{
     entries: PlanEntry[];
     startDate: string | null;
@@ -55,22 +81,56 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
-  /*
-   * 開いている追加欄。"top" は日の一覧の上に置く共通の欄、数値はその日の
-   * カードの中の欄。同時にひとつしか開けないのは、同じ検索欄が縦に
-   * 何個も開くと「いまどの日に足しているのか」が画面から読めなくなるため。
+  /** 追加の引き出し。開いていればその行き先の日。 */
+  const [addingDay, setAddingDay] = useState<number | null>(null);
+  /** 地図が寄っている日。null なら全日程。 */
+  const [focusDay, setFocusDay] = useState<number | null>(null);
+  const [mapOpen, setMapOpen] = useState(false);
+  /**
+   * これから連れていく先の id。
+   *
+   * 地図を開くのと同じ操作で移動すると、押した時点ではまだ地図が
+   * 入っていない。その場で scrollIntoView を呼ぶと、地図が入るぶんだけ
+   * 下へずれた位置に着く。描画が終わってから動かすために1手ためる。
    */
-  const [picker, setPicker] = useState<number | "top" | null>(null);
-  /** 全消しの直前の中身。「元に戻す」が押されるまで持っておく。 */
+  const [scrollTo, setScrollTo] = useState<string | null>(null);
+  /**
+   * 消したものの写し。「元に戻す」が押されるまで持っておく。
+   *
+   * countAfter は消した直後の件数。ここから件数が動いたら、読者は次の
+   * 一手を打っている——そのあとに戻すと、いま組みはじめたぶんを消すことになる。
+   */
   const [undo, setUndo] = useState<{
-    entries: PlanEntry[];
-    startDate: string | null;
+    label: string;
+    snapshot: PlanSnapshot;
+    countAfter: number;
   } | null>(null);
+  const [drag, setDrag] = useState<DragState>(null);
+  const [drop, setDrop] = useState<DropTarget>(null);
 
   const bySlug = useMemo(
     () => new Map(spots.map((spot) => [spot.slug, spot])),
     [spots],
   );
+
+  /*
+   * 広い画面では地図を開いた状態から始める。
+   *
+   * 貼りついた地図は本文を押しのけないので、開いていて損が無い。狭い画面は
+   * 逆で、開いたままだと日割りが1画面ぶん下がる。SSR では画面幅が分からない
+   * ので、判定は描画後に1度だけ。
+   */
+  useEffect(() => {
+    if (window.matchMedia("(min-width: 1024px)").matches) setMapOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!scrollTo) return;
+    document
+      .getElementById(scrollTo)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setScrollTo(null);
+  }, [scrollTo]);
 
   /*
    * 非公開になったスポットを落とす。
@@ -126,14 +186,14 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   }, [bySlug]);
 
   /*
-   * 消したあとで何かが入ったら「元に戻す」を引っ込める。
+   * 消したあとで中身が動いたら「元に戻す」を引っ込める。
    *
    * ひな形を読み込んだり新しく足したりしたあとに残っていると、
    * それを押した人は消える側の中身を戻すつもりで、いま組みはじめた
    * ぶんを消すことになる。取り消しは直後の一手だけに効かせる。
    */
   useEffect(() => {
-    if (undo && entries.length > 0) setUndo(null);
+    if (undo && entries.length !== undo.countAfter) setUndo(null);
   }, [entries, undo]);
 
   // 確認を開いたまま最後の1件を「外す」で消すと、下の塊ごと畳まれて
@@ -142,7 +202,8 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   useEffect(() => {
     if (entries.length === 0) {
       setConfirmingClear(false);
-      setPicker(null);
+      setAddingDay(null);
+      setFocusDay(null);
     }
   }, [entries]);
 
@@ -166,10 +227,10 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
           .filter((entry) => entry.day === day)
           .map((entry) => bySlug.get(entry.slug))
           .filter((spot): spot is PlanSpot => Boolean(spot)),
-        { date: dateForDay(startDate, day), overrides },
+        { date: dateForDay(startDate, day), overrides, startMinutes },
       ),
     );
-  }, [entries, bySlug, startDate, overrides]);
+  }, [entries, bySlug, startDate, overrides, startMinutes]);
 
   const spotCount = days.reduce((sum, day) => sum + day.rows.length, 0);
   const totalGbp = days.reduce((sum, day) => sum + day.totalGbp, 0);
@@ -181,6 +242,19 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     (sum, day) => sum + day.stayMinutes + day.travelMinutes,
     0,
   );
+
+  /** 地図に渡す形。順路は日ごとに別々の線になる。 */
+  const mapDays = useMemo(
+    () => days.map((day) => ({ day: day.day, spots: day.rows.map((r) => r.spot) })),
+    [days],
+  );
+
+  /*
+   * 地図に載るスポットが1つも無いプランがありうる。ロンドンパスや
+   * 周遊バスのような商品だけを入れた場合で、そこは座標が便宜的な一点
+   * でしかないので載せていない。枠と但し書きだけが残ると壊れて見える。
+   */
+  const hasMappable = mapDays.some((day) => day.spots.some(hasRealLocation));
 
   const handleShare = async () => {
     // URLSearchParams を通さずに組み立てる。encodePlan の区切り(. と _)は
@@ -217,8 +291,12 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
    * かかるものだが、取り返しがつかないのは「戻せないこと」であって
    * 「押しやすいこと」ではない。
    */
-  const handleClear = () => {
-    setUndo({ entries: [...readPlan()], startDate: readStartDate() });
+  const handleClearAll = () => {
+    setUndo({
+      label: `${spotCount}ヶ所・${days.length}日分をすべて消しました`,
+      snapshot: readSnapshot(),
+      countAfter: 0,
+    });
     clearPlan();
     setConfirmingClear(false);
     setShareUrl(null);
@@ -227,8 +305,69 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /*
+   * 1日ぶんを空にする。全消しと違って確認を挟まない。
+   *
+   * 消える量が1日ぶんに限られていて、その中身が画面に出たまま押すことに
+   * なるうえ、直後に「元に戻す」が出る。ここで確認を挟むと、5日ぶんを
+   * 整理する間に5回同じ確認を読むことになる。
+   */
+  const handleClearDay = (day: number) => {
+    const removed = entries.filter((entry) => entry.day === day).length;
+    if (removed === 0) return;
+    setUndo({
+      label: `${day}日目の${removed}ヶ所を外しました`,
+      snapshot: readSnapshot(),
+      countAfter: entries.length - removed,
+    });
+    clearDay(day);
+  };
+
+  /** 掴んだものを落とす。落ちる位置が決まっていなければ何もしない。 */
+  const handleDrop = useCallback(() => {
+    if (drag && drop) {
+      let index = drop.index;
+      // 落ちる位置は「抜く前の並び」で数えてある。同じ日の中で後ろへ
+      // 動かすときだけ、抜いたぶん1つ手前にずれる。
+      if (drag.day === drop.day && drag.index < index) index -= 1;
+      moveToDayAt(drag.slug, drop.day, index);
+    }
+    setDrag(null);
+    setDrop(null);
+  }, [drag, drop]);
+
+  const openAdd = (day: number) => setAddingDay(day);
+
+  /**
+   * 上の日程チップ。押した日へ連れていき、地図もその日に寄せる。
+   * 同じ日をもう一度押すと全日程に戻す。
+   */
+  const selectDay = (day: number | null) => {
+    const next = focusDay === day ? null : day;
+    setFocusDay(next);
+    if (next === null) return;
+    setMapOpen(true);
+    setScrollTo(`plan-day-${next}`);
+  };
+
+  /**
+   * 日のカードにある「この日を地図で」。
+   *
+   * 広い画面では地図が右に貼りついたままなので、寄せるだけでよい。
+   * 狭い画面では地図が日割りの上にあり、押した位置からは見えないので
+   * 地図まで連れていく。ここで日のカードへ戻すと、押した場所に
+   * 戻ってくるだけで何も起きていないように見える。
+   */
+  const showDayOnMap = (day: number) => {
+    setFocusDay(day);
+    setMapOpen(true);
+    if (!window.matchMedia("(min-width: 1024px)").matches) {
+      setScrollTo("plan-map");
+    }
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {incoming && (
         <div className="space-y-3 rounded-2xl border border-indigo-300 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-950/40">
           <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
@@ -268,15 +407,12 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
 
       {undo && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-muted/40 px-4 py-3 print:hidden">
-          <p className="text-sm font-semibold">
-            プランを消しました（{undo.entries.length}ヶ所・
-            {new Set(undo.entries.map((entry) => entry.day)).size}日分）
-          </p>
+          <p className="text-sm font-semibold">{undo.label}</p>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => {
-                replacePlan(undo.entries, undo.startDate);
+                restoreSnapshot(undo.snapshot);
                 setUndo(null);
               }}
               className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
@@ -317,105 +453,55 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
         </>
       ) : (
         <>
+          <PlanSummaryBar
+            days={days}
+            spotCount={spotCount}
+            totalGbp={totalGbp}
+            totalMinutes={totalMinutes}
+            unknownPriceCount={unknownPriceCount}
+            focusDay={focusDay}
+            onSelectDay={selectDay}
+            onAdd={() => openAdd(days.length)}
+            onShare={handleShare}
+            onPrint={() => window.print()}
+            onClear={() => setConfirmingClear(true)}
+            shareCopied={copied}
+          />
+
           {/*
-            合計はこの道具の答えそのものなので、いちばん大きく出す。
-            以前は他の操作ボタンと同じ帯に小さく並べていた。
+            確認は本文の先頭に出す。何ヶ所・何日分が消えるのかを書けるのが
+            OSのダイアログとの違いで、この画面でいちばん間違えやすいのが
+            「1日目だけ消すつもりだった」なので、消える量を数で見せてから押させる。
           */}
-          <div className="space-y-4 rounded-2xl border border-border bg-muted/40 px-4 py-4 print:border-0 print:bg-transparent print:px-0">
-            <dl className="flex flex-wrap items-end gap-x-8 gap-y-3">
-              <Stat label="日数" value={`${days.length}日`} />
-              <Stat label="スポット" value={`${spotCount}ヶ所`} />
-              <Stat
-                label="入場料の合計（大人1人）"
-                value={formatGbp(totalGbp)}
-                note={
-                  unknownPriceCount > 0
-                    ? `${unknownPriceCount}ヶ所は料金不明のため未計上`
-                    : undefined
-                }
-              />
-              <Stat
-                label="滞在と移動の合計"
-                value={formatMinutes(totalMinutes)}
-              />
-            </dl>
-
-            <div className="flex flex-wrap gap-2 print:hidden">
-              <button
-                type="button"
-                onClick={handleShare}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-2 text-xs font-semibold transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
-              >
-                {copied ? (
-                  <Check className="h-3.5 w-3.5" aria-hidden />
-                ) : (
-                  <Link2 className="h-3.5 w-3.5" aria-hidden />
-                )}
-                {copied ? "コピーしました" : "共有リンクを作る"}
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-2 text-xs font-semibold transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
-              >
-                <Printer className="h-3.5 w-3.5" aria-hidden />
-                印刷する
-              </button>
-              {/*
-                消す色を最初から着せている。以前は灰色で、押すまで
-                赤くならなかった。ホバーの無いスマホでは共有・印刷と
-                見分けがつかず、3つ並んだうちの淡い文字として読み飛ばされる。
-              */}
-              <button
-                type="button"
-                onClick={() => setConfirmingClear(true)}
-                aria-expanded={confirmingClear}
-                className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-background px-3 py-2 text-xs font-semibold text-red-600 transition hover:border-red-400 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/40"
-              >
-                <Trash2 className="h-3.5 w-3.5" aria-hidden />
-                すべて消す
-              </button>
-            </div>
-
-            {/*
-              確認は押した場所の真下に出す。何ヶ所・何日分が消えるのかを
-              書けるのがOSのダイアログとの違いで、この画面でいちばん
-              間違えやすいのが「1日目だけ消すつもりだった」なので、
-              消える量を数で見せてから押させる。
-            */}
-            {confirmingClear && (
-              <div className="space-y-3 rounded-xl border border-red-300 bg-red-50 p-4 print:hidden dark:border-red-900 dark:bg-red-950/30">
-                <p className="text-sm font-semibold text-red-900 dark:text-red-200">
-                  {spotCount}ヶ所・{days.length}日分をすべて消します
-                </p>
-                <p className="text-xs leading-relaxed text-red-800 dark:text-red-300">
-                  出発日の設定も一緒に消えます。消したあと、この画面を
-                  離れるまでは「元に戻す」で戻せます。
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={handleClear}
-                    autoFocus
-                    className="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-700"
-                  >
-                    すべて消す
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setConfirmingClear(false)}
-                    className="rounded-full border border-red-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-red-500 dark:border-red-900"
-                  >
-                    やめる
-                  </button>
-                </div>
+          {confirmingClear && (
+            <div className="space-y-3 rounded-2xl border border-red-300 bg-red-50 p-4 print:hidden dark:border-red-900 dark:bg-red-950/30">
+              <p className="text-sm font-semibold text-red-900 dark:text-red-200">
+                {spotCount}ヶ所・{days.length}日分をすべて消します
+              </p>
+              <p className="text-xs leading-relaxed text-red-800 dark:text-red-300">
+                出発日と開始時刻の設定も一緒に消えます。消したあと、この画面を
+                離れるまでは「元に戻す」で戻せます。1日だけ消したいなら、
+                その日の見出しにある消しゴムのボタンを使ってください。
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleClearAll}
+                  autoFocus
+                  className="rounded-full bg-red-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-700"
+                >
+                  すべて消す
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingClear(false)}
+                  className="rounded-full border border-red-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-red-500 dark:border-red-900"
+                >
+                  やめる
+                </button>
               </div>
-            )}
-          </div>
-
-          <div className="print:hidden">
-            <PlanDateBar dayCount={days.length} />
-          </div>
+            </div>
+          )}
 
           {shareUrl && (
             <div className="space-y-2 rounded-2xl border border-border p-4 print:hidden">
@@ -435,75 +521,109 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             </div>
           )}
 
+          <PlanDateBar dayCount={days.length} />
+
           {/*
-            追加をいちばん上に出す。以前はページの末尾にあり、10日ぶんの
-            カードと地図の下だった。組んでいる最中にいちばん多く押すのが
-            追加で、そこへ行くのに毎回数画面ぶんスクロールしていた。
-            畳んであるのは、開いたままだと肝心の日割りが下へ押し出されるから。
+            2枚組み。地図は DOM 上ここ1箇所にしかなく、広い画面では
+            order で右へ回している。狭い画面と広い画面で別々に置くと、
+            タイルを2面ぶん取りに行くことになる。
           */}
-          <div className="space-y-3 print:hidden">
-            <button
-              type="button"
-              onClick={() => setPicker(picker === "top" ? null : "top")}
-              aria-expanded={picker === "top"}
-              className={`flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed px-4 py-3.5 text-sm font-bold transition ${
-                picker === "top"
-                  ? "border-indigo-600 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
-                  : "border-indigo-300 text-indigo-700 hover:border-indigo-500 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/40"
-              }`}
-            >
-              <Plus className="h-4 w-4" aria-hidden />
-              {picker === "top" ? "追加をとじる" : "スポットを追加する"}
-            </button>
+          <div
+            // 紙では1枚に戻す。lg の指定は印刷にも効くので、そのままだと
+            // 消したはずの右の列ぶんだけ本文が細くなる。地図に載るものが
+            // 何も無いプランでも同じことが起きるので、そのときは割らない。
+            className={`print:block ${
+              hasMappable
+                ? "lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start lg:gap-6"
+                : ""
+            }`}
+            onDrop={handleDrop}
+            onDragOver={(e) => {
+              // 落とせる場所であることをブラウザに伝える。これが無いと
+              // 行の上でも「禁止」のカーソルになる。
+              if (drag) e.preventDefault();
+            }}
+          >
+            {hasMappable && (
+              <aside
+                id="plan-map"
+                className="mb-6 scroll-mt-36 lg:sticky lg:top-32 lg:order-2 lg:mb-0 print:hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => setMapOpen((open) => !open)}
+                  aria-expanded={mapOpen}
+                  className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-semibold transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                >
+                  <MapIcon className="h-3.5 w-3.5" aria-hidden />
+                  {mapOpen ? "地図を閉じる" : "順路を地図で見る"}
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition ${mapOpen ? "rotate-180" : ""}`}
+                    aria-hidden
+                  />
+                </button>
 
-            {picker === "top" && (
-              <div className="rounded-2xl border border-border p-4 sm:p-5">
-                <PlanSpotPicker
-                  spots={spots}
-                  day={days.length}
-                  dayCount={days.length}
-                />
-              </div>
+                {mapOpen && (
+                  <div className="overflow-hidden rounded-2xl border border-border">
+                    <PlanTripMap
+                      days={mapDays}
+                      focusDay={focusDay}
+                      className="h-[300px] w-full lg:h-[calc(100vh-16rem)] lg:min-h-[360px]"
+                    />
+                    <p className="border-t border-border bg-muted/30 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
+                      {focusDay
+                        ? `${focusDay}日目だけを濃く出しています。上の日程から「全日程」を選ぶと戻ります。`
+                        : "色は日の色と同じです。線は直線で結んだもので、実際に歩く道のりではありません。"}
+                    </p>
+                  </div>
+                )}
+              </aside>
             )}
-          </div>
 
-          <div className="space-y-6">
-            {days.map((day) => (
-              <PlanDay
-                key={day.day}
-                plan={day}
-                dayCount={days.length}
-                date={dateForDay(startDate, day.day)}
-                allSpots={spots}
-                pickerOpen={picker === day.day}
-                onTogglePicker={() =>
-                  setPicker(picker === day.day ? null : day.day)
-                }
-              />
-            ))}
+            <div className="space-y-5 lg:order-1">
+              {days.map((day) => (
+                <PlanDay
+                  key={day.day}
+                  plan={day}
+                  dayCount={days.length}
+                  date={dateForDay(startDate, day.day)}
+                  focused={focusDay === day.day}
+                  onFocus={() => showDayOnMap(day.day)}
+                  onAdd={() => openAdd(day.day)}
+                  onClear={() => handleClearDay(day.day)}
+                  drag={drag}
+                  drop={drop}
+                  onDragStart={setDrag}
+                  onDragEnd={() => {
+                    setDrag(null);
+                    setDrop(null);
+                  }}
+                  onDropTarget={setDrop}
+                />
+              ))}
+
+              {days.length < MAX_DAYS && (
+                <button
+                  type="button"
+                  onClick={() => openAdd(days.length + 1)}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-border px-4 py-3.5 text-sm font-bold text-muted-foreground transition hover:border-indigo-400 hover:text-indigo-600 print:hidden dark:hover:text-indigo-400"
+                >
+                  <Plus className="h-4 w-4" aria-hidden />
+                  {days.length + 1}日目を作る
+                </button>
+              )}
+            </div>
           </div>
         </>
       )}
-    </div>
-  );
-}
 
-function Stat({
-  label,
-  value,
-  note,
-}: {
-  label: string;
-  value: string;
-  note?: string;
-}) {
-  return (
-    <div>
-      <dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-        {label}
-      </dt>
-      <dd className="text-2xl font-bold tabular-nums">{value}</dd>
-      {note && <p className="text-[10px] text-muted-foreground">{note}</p>}
+      <PlanAddSheet
+        open={addingDay !== null}
+        onOpenChange={(open) => setAddingDay(open ? addingDay : null)}
+        spots={spots}
+        day={addingDay ?? 1}
+        dayCount={days.length}
+      />
     </div>
   );
 }

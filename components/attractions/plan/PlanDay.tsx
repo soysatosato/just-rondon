@@ -1,147 +1,200 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   AlertTriangle,
-  ArrowDown,
-  ArrowUp,
-  ArrowUpRight,
-  Bus,
-  CalendarClock,
-  Clock,
+  ChevronDown,
+  ChevronUp,
   DoorClosed,
-  Footprints,
+  Eraser,
   Map as MapIcon,
-  MapPin,
   Plus,
   Route,
-  TrainFront,
   Wallet,
-  X,
 } from "lucide-react";
 
 import {
+  DAY_BUDGET_MINUTES,
   dayDirectionsUrl,
+  formatClock,
   formatGbp,
   formatMinutes,
-  legLabel,
   orderByProximity,
   type DayPlan,
-  type LegKind,
-  type PlanSpot,
 } from "@/lib/plan";
-import { MAX_DAYS } from "@/lib/plan";
 import { formatPlanDate } from "@/lib/plan/dates";
-import LondonPassBadge from "./LondonPassBadge";
-import PlanSpotPicker from "./PlanSpotPicker";
-import PlanStayEditor from "./PlanStayEditor";
-import {
-  moveToDay,
-  moveWithinDay,
-  removeFromPlan,
-  reorderDay,
-} from "./plan-store";
-
-/**
- * 地図は leaflet が window を触るのでサーバーでは描けない。
- * ここで分けておくと、地図を開かない読者には bundle も届かない。
- */
-const PlanDayMap = dynamic(() => import("./PlanDayMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-[260px] w-full animate-pulse bg-muted sm:h-[320px]" />
-  ),
-});
-
-const LEG_ICONS: Record<LegKind, typeof Footprints> = {
-  walk: Footprints,
-  transit: TrainFront,
-  daytrip: Bus,
-};
+import { dayColor } from "./day-colors";
+import PlanDayRow from "./PlanDayRow";
+import type { DragState, DropTarget } from "./drag";
+import { reorderDay, swapDays } from "./plan-store";
 
 /**
  * 1日ぶんのカード。
  *
- * 合計を上に置いているのは、この画面で読者が最初に確かめたいのが
- * 「この日は収まるか」だから。スポットの並びは、それが収まらないと
- * 分かってから直すもので、順序が逆だと1件ずつ足しては下までスクロール
- * することになる。
+ * 見出しに終了時刻と帯を置いた。この画面で読者が最初に確かめたいのは
+ * 「この日は収まるか」で、それに答えるのは合計の長さではなく
+ * 「9:00に出て18:40に終わる」という時刻と、9時間の枠をどこまで
+ * 使ったかの帯のほう。帯は滞在と移動を分けて積んである——移動が
+ * 3割を占めている日は、並べ替えるだけで1ヶ所ぶんの時間が浮く。
  *
- * 地図は最初の3日ぶんだけ開いた状態で出す。順路が一筆書きなのか行ったり
- * 来たりなのかは「徒歩12分」を4つ並べても読み取れず、地図でしか分からない
- * ので、畳んで出すとこの道具でいちばん効く情報を自分から隠すことになる。
- * 一方で上限の10日ぶんを一度に開くとタイルの取得が10面ぶん走る。
- * 3日も見れば地図が何を示すかは伝わるので、そこで足切りしている。
+ * 地図はこのカードから外した。日ごとに1枚ずつ置くと、日をまたいで
+ * 見比べることが構造的にできない。「この日を地図で」を押すと、
+ * 上(狭い画面)または右(広い画面)の1枚がこの日に寄る。
  */
-const OPEN_MAP_UNTIL_DAY = 3;
 export default function PlanDay({
   plan,
   dayCount,
   date,
-  allSpots,
-  pickerOpen,
-  onTogglePicker,
+  focused,
+  onFocus,
+  onAdd,
+  onClear,
+  drag,
+  drop,
+  onDragStart,
+  onDragEnd,
+  onDropTarget,
 }: {
   plan: DayPlan;
-  /** プラン全体の日数。「◯日目へ移す」の選択肢を作るのに要る。 */
+  /** プラン全体の日数。「◯日目へ移す」の選択肢と、日の入れ替えに要る。 */
   dayCount: number;
   /** 出発日が決まっているときのその日の日付。未設定なら null。 */
   date: Date | null;
-  /** 追加欄に渡す候補。公開中の全スポット。この日の spots とは別物。 */
-  allSpots: PlanSpot[];
-  /** この日の追加欄が開いているか。開けるのは常に1日ぶんだけ。 */
-  pickerOpen: boolean;
-  onTogglePicker: () => void;
+  /** 地図がこの日に寄っているか。 */
+  focused: boolean;
+  onFocus: () => void;
+  onAdd: () => void;
+  onClear: () => void;
+  drag: DragState;
+  drop: DropTarget;
+  onDragStart: (state: NonNullable<DragState>) => void;
+  onDragEnd: () => void;
+  onDropTarget: (target: DropTarget) => void;
 }) {
-  const [showMap, setShowMap] = useState(plan.day <= OPEN_MAP_UNTIL_DAY);
-
   const spots = plan.rows.map((row) => row.spot);
   const totalMinutes = plan.stayMinutes + plan.travelMinutes;
   const directions = dayDirectionsUrl(spots);
+  const color = dayColor(plan.day);
 
   // 並べ替えても結果が変わらないなら、押しても何も起きないボタンになる。
   const proximityOrder = orderByProximity(spots).map((spot) => spot.slug);
   const canReorder =
-    spots.length > 2 &&
-    proximityOrder.some((slug, i) => slug !== spots[i].slug);
+    spots.length > 2 && proximityOrder.some((slug, i) => slug !== spots[i].slug);
+
+  /*
+   * 帯の目盛り。9時間の枠に収まっているうちは枠いっぱいを100%とし、
+   * はみ出した日はその日の長さを100%に取り直す。枠のほうを固定して
+   * 越えたぶんを切り捨てると、11時間の日と9時間半の日が同じ満杯に見える。
+   */
+  const scale = Math.max(DAY_BUDGET_MINUTES, totalMinutes);
+  const stayWidth = (plan.stayMinutes / scale) * 100;
+  const travelWidth = (plan.travelMinutes / scale) * 100;
+  const overBudget = totalMinutes > DAY_BUDGET_MINUTES;
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-border print:break-inside-avoid print:rounded-none">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h2 className="text-lg font-bold tracking-tight">{plan.day}日目</h2>
-          {date && (
-            <span className="rounded-full bg-indigo-600/10 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
-              {formatPlanDate(date)}
+    <section
+      id={`plan-day-${plan.day}`}
+      // 貼りついた要約の裏に見出しが隠れないよう、飛び先を下げておく。
+      className={`scroll-mt-36 overflow-hidden rounded-2xl border bg-card transition print:break-inside-avoid print:rounded-none ${
+        focused ? "border-foreground/30 shadow-sm" : "border-border"
+      }`}
+    >
+      <header
+        className="border-b border-border bg-muted/40 px-4 py-3"
+        style={{ boxShadow: `inset 0 3px 0 0 ${color}` }}
+        onDragOver={(e) => {
+          if (!drag) return;
+          e.preventDefault();
+          // 見出しに落としたら、その日の先頭に入れる。
+          onDropTarget({ day: plan.day, index: 0 });
+        }}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+            <h2 className="text-lg font-bold tracking-tight">{plan.day}日目</h2>
+            {date && (
+              <span
+                className="rounded-full px-2.5 py-0.5 text-xs font-semibold text-white"
+                style={{ backgroundColor: color }}
+              >
+                {formatPlanDate(date)}
+              </span>
+            )}
+            <span className="text-xs text-muted-foreground">
+              {spots.length}ヶ所
             </span>
-          )}
-          <span className="text-xs text-muted-foreground">
-            {spots.length}ヶ所
-          </span>
+          </div>
+
+          {/* 日そのものを動かす操作。中身を1件ずつ移し替えずに順番を変える。 */}
+          <div className="flex items-center gap-1 print:hidden">
+            <DayAction
+              label={`${plan.day}日目を前の日と入れ替える`}
+              disabled={plan.day === 1}
+              onClick={() => swapDays(plan.day, plan.day - 1)}
+            >
+              <ChevronUp className="h-3.5 w-3.5" aria-hidden />
+            </DayAction>
+            <DayAction
+              label={`${plan.day}日目を次の日と入れ替える`}
+              disabled={plan.day === dayCount}
+              onClick={() => swapDays(plan.day, plan.day + 1)}
+            >
+              <ChevronDown className="h-3.5 w-3.5" aria-hidden />
+            </DayAction>
+            <DayAction
+              label={`${plan.day}日目のスポットを全部外す`}
+              disabled={false}
+              onClick={onClear}
+            >
+              <Eraser className="h-3.5 w-3.5" aria-hidden />
+            </DayAction>
+          </div>
         </div>
 
-        <dl className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
-            <dt className="sr-only">滞在と移動の合計</dt>
-            <dd className="font-semibold tabular-nums">
-              {formatMinutes(totalMinutes)}
-              <span className="ml-1 font-normal text-muted-foreground">
-                (滞在{formatMinutes(plan.stayMinutes)} ＋ 移動
-                {formatMinutes(plan.travelMinutes)})
-              </span>
-            </dd>
-          </div>
-          <div className="flex items-center gap-1.5">
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+          <p className="font-bold tabular-nums">
+            {formatClock(plan.startMinutes)}
+            <span className="mx-1 font-normal text-muted-foreground">→</span>
+            <span className={overBudget ? "text-red-600 dark:text-red-400" : ""}>
+              {formatClock(plan.endMinutes)}
+            </span>
+          </p>
+          <p className="tabular-nums text-muted-foreground">
+            滞在{formatMinutes(plan.stayMinutes)} ＋ 移動
+            {formatMinutes(plan.travelMinutes)}
+          </p>
+          <p className="flex items-center gap-1 font-semibold tabular-nums">
             <Wallet className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
-            <dt className="sr-only">大人1人の入場料の合計</dt>
-            <dd className="font-semibold tabular-nums">
-              {formatGbp(plan.totalGbp)}
-            </dd>
+            {formatGbp(plan.totalGbp)}
+          </p>
+        </div>
+
+        {/*
+          滞在と移動を積んだ帯。9時間の目盛りを立てておくと、越えている
+          日は目盛りの右へ帯がはみ出す形になり、どれくらい越えたかが
+          長さで読める。
+        */}
+        <div
+          className="relative mt-2 h-1.5 w-full overflow-hidden rounded-full bg-border print:hidden"
+          aria-hidden
+        >
+          <div className="flex h-full">
+            <span
+              className="h-full"
+              style={{ width: `${stayWidth}%`, backgroundColor: color }}
+            />
+            <span
+              className="h-full opacity-40"
+              style={{ width: `${travelWidth}%`, backgroundColor: color }}
+            />
           </div>
-        </dl>
+          {overBudget && (
+            <span
+              className="absolute inset-y-0 w-px bg-red-600"
+              style={{ left: `${(DAY_BUDGET_MINUTES / scale) * 100}%` }}
+            />
+          )}
+        </div>
       </header>
 
       {(plan.unknownDurationCount > 0 || plan.unknownPriceCount > 0) && (
@@ -158,7 +211,7 @@ export default function PlanDay({
             .join("と")}
           は合計に入っていません。実際はこれより増えます。
           {plan.unknownDurationCount > 0 &&
-            "滞在時間は各スポットの時計の欄から入れられます。"}
+            "その先の時刻もそのぶん遅くなります。滞在時間は各スポットの時計の欄から入れられます。"}
         </p>
       )}
 
@@ -199,216 +252,74 @@ export default function PlanDay({
         </ul>
       )}
 
-      {/* 地図。印刷では出さない——タイルは読み込みに繋がりが要る。 */}
-      {showMap && spots.length > 0 && (
-        <div className="border-b border-border print:hidden">
-          <PlanDayMap spots={spots} />
-        </div>
-      )}
-
       <ol className="divide-y divide-border">
-        {plan.rows.map((row, index) => {
-          const LegIcon = row.legFromPrevious
-            ? LEG_ICONS[row.legFromPrevious.kind]
-            : null;
-
-          return (
-            <li key={row.spot.slug} className="print:break-inside-avoid">
-              {row.legFromPrevious && LegIcon && (
-                <p className="flex items-center gap-2 border-b border-dashed border-border bg-muted/20 px-4 py-1.5 text-[11px] text-muted-foreground">
-                  <LegIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                  {legLabel(row.legFromPrevious)}
-                </p>
-              )}
-
-              <div className="flex gap-3 p-4">
-                <span
-                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white"
-                  aria-hidden
-                >
-                  {index + 1}
-                </span>
-
-                <img
-                  src={row.spot.image}
-                  alt=""
-                  className="hidden h-16 w-16 shrink-0 rounded-lg object-cover sm:block print:hidden"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <div className="min-w-0 flex-1 space-y-1.5">
-                  {/*
-                    別タブで開く。ここを踏む人は「そもそもどんな場所か」を
-                    確かめに行くので、まだプランを組んでいる途中にいる。
-                    同じタブだと、戻ったときに開いていた追加欄もスクロール
-                    位置も畳まれ、どこまで組んだかを探し直すことになる。
-                    印刷には矢印を出さない——紙には押す先が無い。
-                  */}
-                  <Link
-                    href={`/sightseeing/${row.spot.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-baseline gap-1 font-semibold leading-snug underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"
-                  >
-                    {row.spot.name}
-                    <ArrowUpRight
-                      className="h-3.5 w-3.5 shrink-0 self-center text-muted-foreground transition group-hover:text-indigo-600 print:hidden dark:group-hover:text-indigo-400"
-                      aria-label="新しいタブで開く"
-                    />
-                  </Link>
-
-                  {/* 休館はパスの対象より先に出す。パスは買い方の話だが、
-                      閉まっている日に行くのは旅程が崩れる話で、直すのに
-                      要る手数も締切も違う。 */}
-                  {row.closedOn && (
-                    <p className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-800 dark:bg-red-950/50 dark:text-red-200">
-                      <DoorClosed className="h-3 w-3 shrink-0" aria-hidden />
-                      この日は休み（{row.closedOn}休）
-                    </p>
-                  )}
-
-                  {row.spot.londonPass && (
-                    <div className="space-y-1">
-                      <LondonPassBadge note={row.spot.londonPassNote} />
-                      {/* 条件はバッジに収まらないので下に出す。これが無いと、
-                          会社の限られる対象を無条件だと受け取られる。 */}
-                      {row.spot.londonPassNote && (
-                        <p className="text-[11px] leading-relaxed text-muted-foreground">
-                          {row.spot.londonPassNote}
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-                    {/*
-                      掲載値の無いスポットでも出す。42件が滞在時間を持って
-                      おらず、そこが合計から落ちたままなのがこの道具の
-                      いちばん大きな穴だった。入口が無いと埋めようがない。
-                    */}
-                    <div>
-                      <dt className="sr-only">滞在時間</dt>
-                      <dd>
-                        <PlanStayEditor row={row} />
-                      </dd>
-                    </div>
-                    {row.spot.priceAdult && (
-                      <div className="flex items-center gap-1">
-                        <Wallet className="h-3 w-3 shrink-0" aria-hidden />
-                        <dt className="sr-only">大人料金</dt>
-                        <dd>{row.spot.priceAdult}</dd>
-                      </div>
-                    )}
-                    {row.spot.openingHours && (
-                      <div className="flex min-w-0 items-center gap-1">
-                        <CalendarClock className="h-3 w-3 shrink-0" aria-hidden />
-                        <dt className="sr-only">開館時間</dt>
-                        <dd className="truncate print:whitespace-normal">
-                          {row.spot.openingHours}
-                        </dd>
-                      </div>
-                    )}
-                  </dl>
-
-                  {/*
-                    住所は画面では隠し、印刷にだけ出す。現地で紙を見る人には
-                    いちばん要る一行だが、画面では1行増えるだけで、
-                    タップすれば詳細ページに全部載っている。
-                  */}
-                  {row.spot.address && row.spot.address !== "-" && (
-                    <p className="hidden items-start gap-1 text-[11px] text-muted-foreground print:flex">
-                      <MapPin className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
-                      {row.spot.address}
-                    </p>
-                  )}
-
-                  <div className="flex flex-wrap items-center gap-2 pt-1 print:hidden">
-                    <div className="flex items-center rounded-full border border-border">
-                      <IconButton
-                        label={`${row.spot.name}を前に動かす`}
-                        disabled={index === 0}
-                        onClick={() => moveWithinDay(row.spot.slug, -1)}
-                      >
-                        <ArrowUp className="h-3.5 w-3.5" aria-hidden />
-                      </IconButton>
-                      <IconButton
-                        label={`${row.spot.name}を後ろに動かす`}
-                        disabled={index === plan.rows.length - 1}
-                        onClick={() => moveWithinDay(row.spot.slug, 1)}
-                      >
-                        <ArrowDown className="h-3.5 w-3.5" aria-hidden />
-                      </IconButton>
-                    </div>
-
-                    <label className="sr-only" htmlFor={`day-${row.spot.slug}`}>
-                      {row.spot.name}を移す日
-                    </label>
-                    <select
-                      id={`day-${row.spot.slug}`}
-                      value={plan.day}
-                      onChange={(e) =>
-                        moveToDay(row.spot.slug, Number(e.target.value))
-                      }
-                      className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px]"
-                    >
-                      {Array.from({ length: dayCount }, (_, i) => i + 1).map(
-                        (day) => (
-                          <option key={day} value={day}>
-                            {day}日目
-                          </option>
-                        ),
-                      )}
-                      {dayCount < MAX_DAYS && (
-                        <option value={dayCount + 1}>
-                          {dayCount + 1}日目を作る
-                        </option>
-                      )}
-                    </select>
-
-                    <button
-                      type="button"
-                      onClick={() => removeFromPlan(row.spot.slug)}
-                      className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
-                    >
-                      <X className="h-3 w-3" aria-hidden />
-                      外す
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-          );
-        })}
+        {plan.rows.map((row, index) => (
+          <PlanDayRow
+            key={row.spot.slug}
+            row={row}
+            index={index}
+            lastIndex={plan.rows.length - 1}
+            day={plan.day}
+            dayCount={dayCount}
+            // 手前に滞在時間の分からないスポットがあれば、ここから先の
+            // 時刻は「これより遅くなる」側にしかずれない。断りを付けて出す。
+            clockUncertain={plan.rows
+              .slice(0, index)
+              .some((earlier) => earlier.stayMinutes === null)}
+            drag={drag}
+            onDragStart={() =>
+              onDragStart({ slug: row.spot.slug, day: plan.day, index })
+            }
+            onDragEnd={onDragEnd}
+            onDragOverRow={(position) =>
+              onDropTarget({
+                day: plan.day,
+                index: position === "before" ? index : index + 1,
+              })
+            }
+            dropBefore={drop?.day === plan.day && drop.index === index}
+            dropAfter={
+              drop?.day === plan.day &&
+              index === plan.rows.length - 1 &&
+              drop.index === plan.rows.length
+            }
+          />
+        ))}
       </ol>
 
-      <footer className="flex flex-wrap gap-2 border-t border-border bg-muted/20 px-4 py-3 print:hidden">
+      <footer
+        className="flex flex-wrap gap-2 border-t border-border bg-muted/20 px-4 py-3 print:hidden"
+        onDragOver={(e) => {
+          if (!drag) return;
+          e.preventDefault();
+          onDropTarget({ day: plan.day, index: plan.rows.length });
+        }}
+      >
         {/*
-          追加をこの日の中に置く。以前は画面のいちばん下に1つあるだけで、
-          「3日目が薄い」と気づいた位置から数画面ぶん離れていた。
-          戻ってくる頃には、どの日を埋めるつもりだったかが抜けている。
+          追加をこの日の中にも置く。上の共通の追加からでも日は選べるが、
+          「3日目が薄い」と気づいた位置から選び直させると、行き先を
+          もう一度指定する手数が要る。ここから開けば行き先はこの日で入る。
         */}
         <button
           type="button"
-          onClick={onTogglePicker}
-          aria-expanded={pickerOpen}
-          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
-            pickerOpen
-              ? "border-indigo-600 bg-indigo-600 text-white"
-              : "border-indigo-300 bg-background text-indigo-700 hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/40"
-          }`}
+          onClick={onAdd}
+          className="inline-flex items-center gap-1.5 rounded-full border border-indigo-300 bg-background px-3 py-1.5 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-50 dark:border-indigo-800 dark:text-indigo-300 dark:hover:bg-indigo-950/40"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden />
-          {pickerOpen ? "追加をとじる" : "この日に追加"}
+          この日に追加
         </button>
         <button
           type="button"
-          onClick={() => setShowMap((open) => !open)}
-          aria-expanded={showMap}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+          onClick={onFocus}
+          aria-pressed={focused}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+            focused
+              ? "border-foreground bg-foreground text-background"
+              : "border-border bg-background hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+          }`}
         >
           <MapIcon className="h-3.5 w-3.5" aria-hidden />
-          {showMap ? "地図を閉じる" : "地図を見る"}
+          {focused ? "地図に表示中" : "この日を地図で"}
         </button>
         {canReorder && (
           <button
@@ -432,20 +343,11 @@ export default function PlanDay({
           </a>
         )}
       </footer>
-
-      {pickerOpen && (
-        <div className="border-t border-border bg-muted/10 p-4 print:hidden">
-          <p className="mb-3 text-xs font-semibold text-muted-foreground">
-            {plan.day}日目に追加するスポットを選ぶ
-          </p>
-          <PlanSpotPicker spots={allSpots} day={plan.day} />
-        </div>
-      )}
     </section>
   );
 }
 
-function IconButton({
+function DayAction({
   label,
   disabled,
   onClick,
@@ -462,7 +364,8 @@ function IconButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="px-2 py-1 text-muted-foreground transition first:rounded-l-full last:rounded-r-full hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:text-indigo-400"
+      title={label}
+      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition hover:border-indigo-400 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:text-indigo-400"
     >
       {children}
     </button>
