@@ -17,8 +17,13 @@ import { buildPageMetadata } from "@/lib/seo";
  * 次にやることを引き受ける位置づけなので、両方から相互に導線を張っている。
  *
  * 説明を先に3段落置いていたのをやめた。道具のページで最初に出るべきは
- * 道具そのもので、読まなければ始められない説明ではない。前提と限界は
- * 本体の下に落とし、上には何ができるかを4つだけ並べている。
+ * 道具そのもので、読まなければ始められない説明ではない。
+ *
+ * 「何ができるか」の4枚も、同じ理由で本体の下へ落とした。上に置いていた
+ * ときは、プランを持っている再訪者が自分の旅程に辿り着くまでに毎回
+ * 1画面ぶんの案内をまたいでいた。この4枚が要るのは初回だけで、
+ * そのために毎回の到達を遅くする配分になっていた。読み物としては
+ * 残す価値があるので、消さずに前提と限界の手前に置いている。
  *
  * プランの中身はブラウザにしか無く、URL の ?spots= もクライアントで読む。
  * サーバーはどの読者にも同じHTMLを返すので、canonical は素直に
@@ -42,7 +47,7 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-/** 上に並べる「何ができるか」。説明文の代わりに、道具の出力そのものを名指しする。 */
+/** 「何ができるか」。説明文の代わりに、道具の出力そのものを名指しする。 */
 const CAPABILITIES = [
   {
     icon: Wallet,
@@ -93,34 +98,39 @@ export default async function PlanPage() {
         </p>
       </header>
 
-      <ul className="mb-10 grid gap-3 sm:grid-cols-2 print:hidden">
-        {CAPABILITIES.map((item) => (
-          <li
-            key={item.title}
-            className="flex gap-3 rounded-xl border border-border bg-card p-4"
-          >
-            <item.icon
-              className="mt-0.5 h-5 w-5 shrink-0 text-indigo-600 dark:text-indigo-400"
-              aria-hidden
-            />
-            <div className="min-w-0">
-              <p className="text-sm font-bold leading-snug">{item.title}</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                {item.body}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-
       <PlanBuilder spots={spots} />
+
+      <section className="mt-12 print:hidden">
+        <h2 className="text-base font-bold tracking-tight">
+          この道具でできること
+        </h2>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {CAPABILITIES.map((item) => (
+            <li
+              key={item.title}
+              className="flex gap-3 rounded-xl border border-border bg-card p-4"
+            >
+              <item.icon
+                className="mt-0.5 h-5 w-5 shrink-0 text-indigo-600 dark:text-indigo-400"
+                aria-hidden
+              />
+              <div className="min-w-0">
+                <p className="text-sm font-bold leading-snug">{item.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {item.body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       {/*
         前提と限界。本体の下に置く。読まなくても道具は動くが、
         移動時間をどう出しているかは書いておかないと、直線距離からの
         概算を乗換案内の代わりに使われる。
       */}
-      <section className="mt-12 space-y-3 rounded-2xl border border-border bg-muted/30 p-5 text-sm leading-relaxed text-muted-foreground print:hidden">
+      <section className="mt-6 space-y-3 rounded-2xl border border-border bg-muted/30 p-5 text-sm leading-relaxed text-muted-foreground print:hidden">
         <h2 className="text-base font-bold tracking-tight text-foreground">
           この数字の作り方
         </h2>
