@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 
 import db from "./db";
 import type { RailItem } from "./actions/home";
+import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "./rankings";
 
 /**
  * /sightseeing ハブが使うデータ。このファイルはハブ専用で、他からは読まない。
@@ -32,6 +33,38 @@ const RAIL_SELECT = {
 
 /** 棚に並べる最大枚数。PhotoRail は横スクロールなので多めでよい。 */
 const RAIL_SIZE = 12;
+
+/**
+ * ランキング1本の列。順位の並べ替えに id が要るので RAIL_SELECT とは別に持つ。
+ */
+const RANK_SELECT = {
+  id: true,
+  slug: true,
+  name: true,
+  engName: true,
+  image: true,
+} as const;
+
+/** ランキングに出す件数。棚と違って縦に積むので、長くしない。 */
+const RANK_SIZE = 5;
+
+type RankRow = {
+  id: string;
+  slug: string;
+  name: string;
+  engName: string | null;
+  image: string;
+};
+
+function toRankItems(rows: RankRow[]) {
+  return rows.map((row) => ({
+    key: row.slug,
+    href: `/sightseeing/${row.slug}`,
+    title: row.name,
+    subtitle: row.engName,
+    image: row.image,
+  }));
+}
 
 type RailRow = {
   slug: string;
@@ -74,39 +107,69 @@ export type AreaSummary = {
  */
 export const fetchSightseeingHub = unstable_cache(
   async () => {
-    const [mustSeeRows, freeRows, kidsRows, areaRows, totalSpots] =
-      await Promise.all([
-        db.attraction.findMany({
-          // mustSee と★5は重なるが完全には一致しない。ハブの先頭は
-          // 「初めてでも外さないもの」なので両方を拾う。
-          where: {
-            isPublished: true,
-            OR: [{ mustSee: true }, { recommendLevel: 5 }],
-          },
-          select: RAIL_SELECT,
-          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
-          take: RAIL_SIZE,
-        }),
-        db.attraction.findMany({
-          where: { isPublished: true, isFree: true },
-          select: RAIL_SELECT,
-          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
-          // 上の棚と重なった分を後で落とすので、母集団は広めに取る。
-          take: RAIL_SIZE * 4,
-        }),
-        db.attraction.findMany({
-          where: { isPublished: true, isForKids: true },
-          select: RAIL_SELECT,
-          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
-          take: RAIL_SIZE * 4,
-        }),
-        db.attraction.findMany({
-          where: { isPublished: true, area: { not: null } },
-          select: { area: true, image: true },
-          orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
-        }),
-        db.attraction.count({ where: { isPublished: true } }),
-      ]);
+    /*
+     * 週間ランキングだけは2段階になる。DailyView は外部キーを持たないので、
+     * 集計で id を取ってから Attraction を引き直す。非公開になった
+     * スポットはこの引き直しで落ちる。
+     */
+    const weeklyIds = await fetchWeeklyTopIds("attraction", RANK_SIZE);
+
+    const [
+      mustSeeRows,
+      freeRows,
+      kidsRows,
+      areaRows,
+      totalSpots,
+      weeklyRows,
+      allTimeRows,
+    ] = await Promise.all([
+      db.attraction.findMany({
+        // mustSee と★5は重なるが完全には一致しない。ハブの先頭は
+        // 「初めてでも外さないもの」なので両方を拾う。
+        where: {
+          isPublished: true,
+          OR: [{ mustSee: true }, { recommendLevel: 5 }],
+        },
+        select: RAIL_SELECT,
+        orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+        take: RAIL_SIZE,
+      }),
+      db.attraction.findMany({
+        where: { isPublished: true, isFree: true },
+        select: RAIL_SELECT,
+        orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+        // 上の棚と重なった分を後で落とすので、母集団は広めに取る。
+        take: RAIL_SIZE * 4,
+      }),
+      db.attraction.findMany({
+        where: { isPublished: true, isForKids: true },
+        select: RAIL_SELECT,
+        orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+        take: RAIL_SIZE * 4,
+      }),
+      db.attraction.findMany({
+        where: { isPublished: true, area: { not: null } },
+        select: { area: true, image: true },
+        orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
+      }),
+      db.attraction.count({ where: { isPublished: true } }),
+      weeklyIds.length > 0
+        ? db.attraction.findMany({
+            where: { id: { in: weeklyIds }, isPublished: true },
+            select: RANK_SELECT,
+          })
+        : Promise.resolve([]),
+      // 総合。views=0 を除くのは、集計開始前の行を「0位」として
+      // 並べても順位に意味が無いため。
+      db.attraction.findMany({
+        where: { isPublished: true, views: { gt: 0 } },
+        select: RANK_SELECT,
+        orderBy: [{ views: "desc" }, { recommendLevel: "desc" }],
+        take: RANK_SIZE,
+      }),
+    ]);
+
+    const weeklyRanked = orderByIds(weeklyIds, weeklyRows, RANK_SIZE);
 
     /*
      * 大英博物館は必見でも無料でも子ども向けでもある。同じ写真が複数の棚に
@@ -139,6 +202,17 @@ export const fetchSightseeingHub = unstable_cache(
       if (!entry.image && row.image) entry.image = row.image;
     }
 
+    /*
+     * ランキングは棚の消し込み(shown)に加わらない。定番の棚に出ている
+     * スポットが今週いちばん見られていることは普通にあるし、そこで
+     * 落とすと「よく見られている」が実態と食い違う。
+     *
+     * 週間が薄いうちは空で返す。運用開始直後は数件しか並ばず、
+     * それを「今週の順位」として出すとランキングに見えない。
+     */
+    const weekly =
+      weeklyRanked.length >= MIN_WEEKLY ? toRankItems(weeklyRanked) : [];
+
     return {
       rails: {
         // 評価順がそのまま消し込みの順になる。並べ替えないこと。
@@ -146,6 +220,7 @@ export const fetchSightseeingHub = unstable_cache(
         free: nextRail(freeRows),
         kids: nextRail(kidsRows),
       },
+      ranking: { weekly, allTime: toRankItems(allTimeRows) },
       areas,
       totalSpots,
     };

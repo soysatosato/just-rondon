@@ -1,6 +1,7 @@
 "use server";
 
 import db from "../db";
+import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "../rankings";
 
 export const fetchAllMusicals = async () => {
   return db.musical.findMany({
@@ -40,6 +41,66 @@ export const fetchMusicalsForBrowse = async () => {
       theatreName: true,
     },
   });
+};
+
+/** ランキングに出す件数。縦に積むので長くしない。 */
+const MUSICAL_RANK_SIZE = 5;
+
+/** ランキング1件ぶんの列。順位の並べ替えに id が要る。 */
+const MUSICAL_RANK_SELECT = {
+  id: true,
+  slug: true,
+  name: true,
+  engName: true,
+  image: true,
+} as const;
+
+/**
+ * /musicals の「よく見られている作品」。週間と総合の2軸。
+ *
+ * 一覧はおすすめ順・必見のカルーセルとも編集側の並びで、作品を
+ * 入れ替えない限り顔ぶれが動かない。読者側の軸を足して、週ごとに
+ * 変わる面を作る。
+ *
+ * 週間は DailyView から id を集計してから引き直す(外部キーが無いため)。
+ * 件数が MIN_WEEKLY に届かないうちは空で返す——運用開始直後の数件を
+ * 「今週の順位」として出しても、ランキングには見えない。
+ */
+export const fetchMusicalRankings = async (take = MUSICAL_RANK_SIZE) => {
+  const weeklyIds = await fetchWeeklyTopIds("musical", take);
+
+  const [weeklyRows, allTimeRows] = await Promise.all([
+    weeklyIds.length > 0
+      ? db.musical.findMany({
+          where: { id: { in: weeklyIds } },
+          select: MUSICAL_RANK_SELECT,
+        })
+      : Promise.resolve([]),
+    // 総合。views=0 を除くのは、集計開始前の行を並べても順位に
+    // 意味が無いため。
+    db.musical.findMany({
+      where: { views: { gt: 0 } },
+      select: MUSICAL_RANK_SELECT,
+      orderBy: [{ views: "desc" }, { recommendLevel: "desc" }],
+      take,
+    }),
+  ]);
+
+  const weeklyRanked = orderByIds(weeklyIds, weeklyRows, take);
+
+  const toItems = (rows: typeof allTimeRows) =>
+    rows.map((row) => ({
+      key: row.slug,
+      href: `/musicals/${row.slug}`,
+      title: row.name,
+      subtitle: row.engName,
+      image: row.image,
+    }));
+
+  return {
+    weekly: weeklyRanked.length >= MIN_WEEKLY ? toItems(weeklyRanked) : [],
+    allTime: toItems(allTimeRows),
+  };
 };
 
 export const fetchTopMusicals = async (limit: number = 3) => {

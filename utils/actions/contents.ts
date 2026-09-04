@@ -1,6 +1,7 @@
 "use server";
 
 import db from "../db";
+import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "../rankings";
 
 export const fetchEvents2025 = async () => {
   const contents = await db.content.findMany({
@@ -220,33 +221,15 @@ export const fetchPopularReadingContents = async (take = 5) => {
  * 累計は上位が古い記事で固定されるため、ハブのいちばん目立つ場所が
  * 何ヶ月も同じ顔になる。週間はそこを毎週入れ替えるための軸。
  *
- * 集計元は ContentDailyView。運用開始直後は行が無く空で返るので、
- * 呼び出し側は「週間が薄いときは総合だけ出す」を必ず用意すること。
+ * 集計元は DailyView。運用開始直後は行が無い。件数が MIN_WEEKLY に
+ * 届かないうちは空で返すので、呼び出し側は「週間が空なら総合を主役に
+ * 戻す」を必ず用意すること。
  */
 export const fetchWeeklyPopularReadingContents = async (take = 5) => {
-  // 「今週」は今日を含む7日ぶん。曜日で区切らないのは、月曜の朝に
-  // ランキングが空同然になるのを避けるため。
-  const days = 7;
-  const now = new Date();
-  const since = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  const ids = await fetchWeeklyTopIds(
+    ["column", "britishEnglish", "modernBritain"],
+    take,
   );
-  since.setUTCDate(since.getUTCDate() - (days - 1));
-
-  /*
-    件数を絞る前に多めに取るのは、集計対象に非公開・別カテゴリの行が
-    混ざり得るため。groupBy の take で切ってから弾くと、弾いた分だけ
-    ランキングが短くなる。
-  */
-  const grouped = await db.contentDailyView.groupBy({
-    by: ["contentId"],
-    where: { day: { gte: since } },
-    _sum: { count: true },
-    orderBy: { _sum: { count: "desc" } },
-    take: take * 3,
-  });
-
-  const ids = grouped.map((g) => g.contentId);
   if (ids.length === 0) return [];
 
   const contents = await db.content.findMany({
@@ -256,12 +239,8 @@ export const fetchWeeklyPopularReadingContents = async (take = 5) => {
     },
   });
 
-  // findMany は id の並びを保たないので、集計側の順位で並べ直す。
-  const byId = new Map(contents.map((c) => [c.id, c]));
-  return grouped
-    .map((g) => byId.get(g.contentId))
-    .filter((c): c is (typeof contents)[number] => c !== undefined)
-    .slice(0, take);
+  const ranked = orderByIds(ids, contents, take);
+  return ranked.length >= MIN_WEEKLY ? ranked : [];
 };
 
 /**

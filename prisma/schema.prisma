@@ -1268,38 +1268,42 @@ model Content {
   views        Int       @default(0)
   /// 最終閲覧日時。null は一度も見られていない(集計開始前の行を含む)。
   lastViewedAt DateTime?
-  /// 日別の閲覧数。週間ランキングの集計元。
-  dailyViews   ContentDailyView[]
-
   @@index([category, views])
   @@index([category, lastViewedAt])
 }
 
-/// 読み物1本の、ある1日ぶんの閲覧数。
+/// 1件の詳細ページの、ある1日ぶんの閲覧数。
 ///
-/// Content.views は累計しか持たないので、公開から日の浅い記事は
-/// どれだけ読まれても上位に出てこない。/reading の顔が数ヶ月変わらない
-/// のはそのためで、直近の閲覧だけを数えるためにこの表を足した。
+/// Attraction / Museum / Musical / Content はいずれも累計(views)しか
+/// 持っていない。累計だけで並べると上位は公開から時間の経った行で固定され、
+/// ハブのいちばん目立つ場所が何ヶ月も同じ顔になる。直近だけを数える軸を
+/// 別に持たせて、週間ランキングを出せるようにする。
 ///
-/// 累計との二重計上に見えるが、Content.views をこの表から
-/// 導出はしない。この表は古い行を削れるようにしておきたい
-/// (週間ランキングに必要なのは直近7日だけ)一方で、累計は
-/// 消してはいけない値なので、別々に持つ。
+/// 対象ごとに表を分けず、targetType で1つにまとめている。順位付けにしか
+/// 使わないデータなので、外部キーで参照整合を守る価値より、集計と
+/// 加算のコードを1本で済ませられることのほうが大きい。かわりに
+/// 参照先が消えても行は残るので、読み出し側は id で引き直して
+/// 見つからなかったものを落とすこと。
 ///
-/// day は UTC の日付に丸める。週間は7日ぶんの合計なので、
-/// どのタイムゾーンで切っても順位はほぼ変わらない。日単位の
-/// 数字を読者に出す用途ができたら、そのとき切り直すこと。
-model ContentDailyView {
-  id        Int      @id @default(autoincrement())
-  contentId String
-  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+/// 累計を置き換えないのは、この表が消せる前提のデータだから。週間に
+/// 要るのは直近7日ぶんだけで古い行は捨ててよいが、累計は捨てられない。
+///
+/// day は UTC の日付に丸める。週間は7日ぶんの合計なので、どの
+/// タイムゾーンで切っても順位はほぼ変わらない。日単位の数字を読者に
+/// 出す用途ができたら、そのとき切り直すこと。
+model DailyView {
+  id         Int      @id @default(autoincrement())
+  /// 対象の種類。/api/views の TARGETS の値と揃える。
+  targetType String
+  /// 対象の行の id。
+  targetId   String
   /// 集計日(UTC の 00:00 に丸めた日付)。
-  day       DateTime @db.Date
+  day        DateTime @db.Date
   /// その日の閲覧数。
-  count     Int      @default(0)
+  count      Int      @default(0)
 
-  @@unique([contentId, day])
-  @@index([day])
+  @@unique([targetType, targetId, day])
+  @@index([targetType, day])
 }
 
 model ContentSection {

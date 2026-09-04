@@ -148,55 +148,89 @@ function ok() {
 /**
  * 閲覧を1件加算する。
  *
- * updateMany を使うのは、存在しない slug でも例外を投げずに0件で済ませるため。
+ * 累計(views)と日別(DailyView)を同じトランザクションで増やす。片方だけ
+ * 増えると、総合と週間で「同じ閲覧を数えた行」がずれる。
+ *
+ * 加算の前に id を引くのは、日別の記録が slug ではなく id を持つため。
+ * slug は Content では表全体で一意でなく(category が違えば同じ slug が
+ * あり得る)、他の表でも改名され得る。順位付けのキーには id を使う。
+ *
+ * 対象が見つからなければ黙って何もしない。存在しない slug で例外を
+ * 投げないのは、以前 updateMany が0件で済ませていた挙動と同じ。
+ *
  * 非公開(Attraction.isPublished=false)の行は加算しない——伏せたページが
  * ランキングに現れると、リンク先の無いカードを出すことになる。
- *
- * 読み物だけは累計に加えて日別も記録する。/reading に週間ランキングを
- * 置いているため。
  */
 async function incrementView(targetType: TargetType, slug: string) {
+  const id = await findTargetId(targetType, slug);
+  if (!id) return;
+
+  const day = utcDay();
   const data = { views: { increment: 1 }, lastViewedAt: new Date() };
 
-  if (targetType === "attraction") {
-    return db.attraction.updateMany({
-      where: { slug, isPublished: true },
-      data,
-    });
-  }
-  if (targetType === "museum") {
-    return db.museum.updateMany({ where: { slug }, data });
-  }
-  if (targetType === "musical") {
-    return db.musical.updateMany({ where: { slug }, data });
-  }
-
-  /*
-    読み物3種は Content テーブルを共有していて、slug は表全体では一意でない
-    (category が違えば同じ slug があり得る)。category で絞らないと、
-    別セクションの同名 slug に加算してしまう。
-  */
-  const content = await db.content.findFirst({
-    where: { slug, category: TARGETS[targetType] },
-    select: { id: true },
-  });
-
-  // 存在しない slug は黙って何もしない。updateMany が0件で済ませていた
-  // 挙動をそのまま保つ。
-  if (!content) return;
-
-  /*
-    累計と日別を同じトランザクションで増やす。片方だけ増えると、
-    総合と週間で「同じ閲覧を数えた記事」がずれる。
-  */
   return db.$transaction([
-    db.content.update({ where: { id: content.id }, data }),
-    db.contentDailyView.upsert({
-      where: { contentId_day: { contentId: content.id, day: utcDay() } },
-      create: { contentId: content.id, day: utcDay(), count: 1 },
+    updateTotal(targetType, id, data),
+    db.dailyView.upsert({
+      where: {
+        targetType_targetId_day: { targetType, targetId: id, day },
+      },
+      create: { targetType, targetId: id, day, count: 1 },
       update: { count: { increment: 1 } },
     }),
   ]);
+}
+
+/** 加算対象の id。見つからなければ null。 */
+async function findTargetId(targetType: TargetType, slug: string) {
+  if (targetType === "attraction") {
+    const row = await db.attraction.findFirst({
+      where: { slug, isPublished: true },
+      select: { id: true },
+    });
+    return row?.id ?? null;
+  }
+  if (targetType === "museum") {
+    const row = await db.museum.findFirst({
+      where: { slug },
+      select: { id: true },
+    });
+    return row?.id ?? null;
+  }
+  if (targetType === "musical") {
+    const row = await db.musical.findFirst({
+      where: { slug },
+      select: { id: true },
+    });
+    return row?.id ?? null;
+  }
+
+  /*
+    読み物3種は Content テーブルを共有していて、slug は表全体では一意でない。
+    category で絞らないと、別セクションの同名 slug を掴んでしまう。
+  */
+  const row = await db.content.findFirst({
+    where: { slug, category: TARGETS[targetType] },
+    select: { id: true },
+  });
+  return row?.id ?? null;
+}
+
+/** 累計の加算。id で引き当てるので、対象の表を選ぶだけ。 */
+function updateTotal(
+  targetType: TargetType,
+  id: string,
+  data: { views: { increment: number }; lastViewedAt: Date },
+) {
+  if (targetType === "attraction") {
+    return db.attraction.update({ where: { id }, data });
+  }
+  if (targetType === "museum") {
+    return db.museum.update({ where: { id }, data });
+  }
+  if (targetType === "musical") {
+    return db.musical.update({ where: { id }, data });
+  }
+  return db.content.update({ where: { id }, data });
 }
 
 /**

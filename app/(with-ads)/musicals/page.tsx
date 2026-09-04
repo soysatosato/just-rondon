@@ -4,7 +4,10 @@ import MusicalHomePage from "@/components/musicals/MusicalHomePage";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
-import { fetchMusicalsForBrowse } from "@/utils/actions/musicals";
+import {
+  fetchMusicalRankings,
+  fetchMusicalsForBrowse,
+} from "@/utils/actions/musicals";
 import { collectionPageJsonLd } from "@/components/musicals/jsonld";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -17,7 +20,10 @@ export const metadata = buildPageMetadata({
   description: "初めてのロンドン観光でも安心！主要ミュージカルの見どころや必見作品、あらすじやストーリー、便利なアクセス方法をわかりやすく紹介する、観光客向けガイドサイトです。",
 });
 export default async function HomePage() {
-  const musicals = await fetchMusicalsForBrowse();
+  const [musicals, ranking] = await Promise.all([
+    fetchMusicalsForBrowse(),
+    fetchMusicalRankings(),
+  ]);
   if (musicals.length === 0) redirect("/");
 
   return (
@@ -36,7 +42,7 @@ export default async function HomePage() {
 
       <section>
         <Suspense fallback={<LoadingCards />}>
-          <MusicalHomePage musicals={musicals} />
+          <MusicalHomePage musicals={musicals} ranking={ranking} />
         </Suspense>
       </section>
     </>

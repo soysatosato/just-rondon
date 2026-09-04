@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import RecommendStars from "@/components/musicals/shared/RecommendStars";
+import ViewRanking, { type RankedItem } from "@/components/rankings/ViewRanking";
 
 type SortOption = "recommend" | "name";
 type ViewMode = "grid" | "list";
@@ -93,8 +94,14 @@ function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
 
 export default function MusicalHomePage({
   musicals,
+  ranking,
 }: {
   musicals: BrowseMusical[];
+  /**
+   * よく見られている作品。集計はサーバー(fetchMusicalRankings)で済ませ、
+   * ここには並べるぶんだけを渡す。週間が薄いうちは weekly が空で来る。
+   */
+  ranking: { weekly: RankedItem[]; allTime: RankedItem[] };
 }) {
   const [search, setSearch] = useState("");
   const [mustSeeOnly, setMustSeeOnly] = useState(false);
@@ -314,6 +321,25 @@ export default function MusicalHomePage({
           「英語が不安」「子連れ」「時間がない」の3軸で絞り込ませる。
         */}
         <MusicalFinder musicals={musicals} />
+
+        {/*
+          ===== よく見られている作品 =====
+          下の Must See もおすすめ順の一覧も編集側の並びで、作品を
+          入れ替えない限り顔ぶれが動かない。読者側の軸をここに挟んで、
+          週ごとに変わる面を作る。絞り込み中は他の棚と同じく隠す。
+        */}
+        {!isFiltering && (
+          <section>
+            <ViewRanking
+              title="よく見られている作品"
+              description="実際に読まれているページの順位です。今週と、これまでの累計。おすすめ順や必見とは別の並びになります。"
+              weekly={ranking.weekly}
+              allTime={ranking.allTime}
+              weeklyLabel="Weekly ・ 今週よく見られている"
+              accentClassName="bg-primary"
+            />
+          </section>
+        )}
 
         {/* ===== Must See スポットライト ===== */}
         {spotlightMusicals.length > 0 && !isFiltering && (

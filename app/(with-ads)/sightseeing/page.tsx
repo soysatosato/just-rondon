@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import PhotoRail from "@/components/home/PhotoRail";
+import ViewRanking from "@/components/rankings/ViewRanking";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
@@ -177,7 +178,7 @@ const THEMES = [
 ] as const;
 
 export default async function Page() {
-  const { rails, areas, totalSpots } = await fetchSightseeingHub();
+  const { rails, ranking, areas, totalSpots } = await fetchSightseeingHub();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:py-10">
@@ -293,6 +294,22 @@ export default async function Page() {
             accentClassName="bg-red-500"
           />
         </div>
+      </section>
+
+      {/*
+        1-2. よく見られているスポット。
+        上の棚は編集側の都合(必見・無料・子ども連れ)で並んでいて、
+        スポットを足さない限り顔ぶれが変わらない。読者側の軸を1枚
+        挟んで、週ごとに入れ替わる面を作る。
+      */}
+      <section className="mt-16">
+        <ViewRanking
+          title="よく見られているスポット"
+          description="実際に読まれているページの順位です。今週と、これまでの累計。編集側のおすすめとは別の並びになります。"
+          weekly={ranking.weekly}
+          allTime={ranking.allTime}
+          weeklyLabel="Weekly ・ 今週よく見られている"
+        />
       </section>
 
       {/*

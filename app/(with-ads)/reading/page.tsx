@@ -106,14 +106,6 @@ const RANK_LABEL = {
   },
 } as const;
 
-/**
- * 週間を主役にするのに要る最低件数。
- *
- * 日別の集計は運用開始から貯まる。始めた直後に1〜2本だけ並べても
- * ランキングには見えないので、そこまでは総合に戻す。
- */
-const MIN_WEEKLY = 3;
-
 function isCategoryKey(value: string): value is CategoryKey {
   return value in CATEGORY;
 }
@@ -213,11 +205,10 @@ export default async function ReadingHubPage() {
     主役に据えるのは週間。累計だけで並べると上位が古い記事で固定され、
     ハブのいちばん目立つ場所が何ヶ月も同じ顔になる。
 
-    週間が薄いうちは累計に戻す。日別の集計は運用開始から貯まるものなので、
-    始めた直後は1〜2本しか並ばない。それを「今週のランキング」として
-    出すと、ランキングに見えない。
+    週間が薄いうちは累計に戻す。件数が足りないときに空で返るのは
+    fetchWeeklyPopularReadingContents 側の判断(MIN_WEEKLY)。
   */
-  const hasWeekly = weeklyEntries.length >= MIN_WEEKLY;
+  const hasWeekly = weeklyEntries.length > 0;
   const featured = hasWeekly ? weeklyEntries : allTimeEntries;
   const featuredLabel = hasWeekly ? RANK_LABEL.weekly : RANK_LABEL.allTime;
   const lead = featured[0];
