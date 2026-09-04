@@ -151,6 +151,9 @@ function ok() {
  * updateMany を使うのは、存在しない slug でも例外を投げずに0件で済ませるため。
  * 非公開(Attraction.isPublished=false)の行は加算しない——伏せたページが
  * ランキングに現れると、リンク先の無いカードを出すことになる。
+ *
+ * 読み物だけは累計に加えて日別も記録する。/reading に週間ランキングを
+ * 置いているため。
  */
 async function incrementView(targetType: TargetType, slug: string) {
   const data = { views: { increment: 1 }, lastViewedAt: new Date() };
@@ -173,10 +176,41 @@ async function incrementView(targetType: TargetType, slug: string) {
     (category が違えば同じ slug があり得る)。category で絞らないと、
     別セクションの同名 slug に加算してしまう。
   */
-  return db.content.updateMany({
+  const content = await db.content.findFirst({
     where: { slug, category: TARGETS[targetType] },
-    data,
+    select: { id: true },
   });
+
+  // 存在しない slug は黙って何もしない。updateMany が0件で済ませていた
+  // 挙動をそのまま保つ。
+  if (!content) return;
+
+  /*
+    累計と日別を同じトランザクションで増やす。片方だけ増えると、
+    総合と週間で「同じ閲覧を数えた記事」がずれる。
+  */
+  return db.$transaction([
+    db.content.update({ where: { id: content.id }, data }),
+    db.contentDailyView.upsert({
+      where: { contentId_day: { contentId: content.id, day: utcDay() } },
+      create: { contentId: content.id, day: utcDay(), count: 1 },
+      update: { count: { increment: 1 } },
+    }),
+  ]);
+}
+
+/**
+ * 集計日。UTC の 00:00 に丸めた「今日」。
+ *
+ * 週間ランキングは7日ぶんの合計なので、どのタイムゾーンで日を切っても
+ * 順位はほぼ変わらない。日単位の数字を読者に出すことになったら、
+ * そのとき切り直す。
+ */
+function utcDay() {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  );
 }
 
 /**

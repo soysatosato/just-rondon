@@ -1268,9 +1268,38 @@ model Content {
   views        Int       @default(0)
   /// 最終閲覧日時。null は一度も見られていない(集計開始前の行を含む)。
   lastViewedAt DateTime?
+  /// 日別の閲覧数。週間ランキングの集計元。
+  dailyViews   ContentDailyView[]
 
   @@index([category, views])
   @@index([category, lastViewedAt])
+}
+
+/// 読み物1本の、ある1日ぶんの閲覧数。
+///
+/// Content.views は累計しか持たないので、公開から日の浅い記事は
+/// どれだけ読まれても上位に出てこない。/reading の顔が数ヶ月変わらない
+/// のはそのためで、直近の閲覧だけを数えるためにこの表を足した。
+///
+/// 累計との二重計上に見えるが、Content.views をこの表から
+/// 導出はしない。この表は古い行を削れるようにしておきたい
+/// (週間ランキングに必要なのは直近7日だけ)一方で、累計は
+/// 消してはいけない値なので、別々に持つ。
+///
+/// day は UTC の日付に丸める。週間は7日ぶんの合計なので、
+/// どのタイムゾーンで切っても順位はほぼ変わらない。日単位の
+/// 数字を読者に出す用途ができたら、そのとき切り直すこと。
+model ContentDailyView {
+  id        Int      @id @default(autoincrement())
+  contentId String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  /// 集計日(UTC の 00:00 に丸めた日付)。
+  day       DateTime @db.Date
+  /// その日の閲覧数。
+  count     Int      @default(0)
+
+  @@unique([contentId, day])
+  @@index([day])
 }
 
 model ContentSection {

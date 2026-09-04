@@ -14,6 +14,7 @@ import {
   fetchModernBritainEntries,
   fetchBritishEnglishEntries,
   fetchPopularReadingContents,
+  fetchWeeklyPopularReadingContents,
 } from "@/utils/actions/contents";
 import { historyChapters, HISTORY_BASE } from "@/components/history/chapters";
 
@@ -87,6 +88,31 @@ const HISTORY_STYLE = {
   chip: "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300",
   ring: "hover:border-amber-400 dark:hover:border-amber-700",
 };
+
+/**
+ * ランキングの2軸。
+ *
+ * 総合(累計)は上位が古い記事で固まり、ハブの顔が何ヶ月も変わらない。
+ * 週間を足したのはそのため。主役は週間、総合は添えものとして残す。
+ */
+const RANK_LABEL = {
+  weekly: {
+    eyebrow: "Weekly ・ 今週読まれている",
+    dot: "bg-red-500",
+  },
+  allTime: {
+    eyebrow: "Most Read ・ いま最も読まれている",
+    dot: "bg-red-500",
+  },
+} as const;
+
+/**
+ * 週間を主役にするのに要る最低件数。
+ *
+ * 日別の集計は運用開始から貯まる。始めた直後に1〜2本だけ並べても
+ * ランキングには見えないので、そこまでは総合に戻す。
+ */
+const MIN_WEEKLY = 3;
 
 function isCategoryKey(value: string): value is CategoryKey {
   return value in CATEGORY;
@@ -165,21 +191,41 @@ function readingHubCollectionJsonLd() {
 }
 
 export default async function ReadingHubPage() {
-  const [columns, modernBritain, britishEnglish, popular] = await Promise.all([
-    fetchColumns(),
-    fetchModernBritainEntries(),
-    fetchBritishEnglishEntries(),
-    fetchPopularReadingContents(5),
-  ]);
+  const [columns, modernBritain, britishEnglish, popular, weekly] =
+    await Promise.all([
+      fetchColumns(),
+      fetchModernBritainEntries(),
+      fetchBritishEnglishEntries(),
+      fetchPopularReadingContents(5),
+      fetchWeeklyPopularReadingContents(5),
+    ]);
 
   const now = Date.now();
 
-  // 「いま読まれている」。views 最大の1本を主役に据える。
-  const popularEntries = popular
+  const allTimeEntries = popular
     .map(toEntry)
     .filter((e): e is Entry => e !== null);
-  const lead = popularEntries[0];
-  const ranked = popularEntries.slice(1, 5);
+  const weeklyEntries = weekly
+    .map(toEntry)
+    .filter((e): e is Entry => e !== null);
+
+  /*
+    主役に据えるのは週間。累計だけで並べると上位が古い記事で固定され、
+    ハブのいちばん目立つ場所が何ヶ月も同じ顔になる。
+
+    週間が薄いうちは累計に戻す。日別の集計は運用開始から貯まるものなので、
+    始めた直後は1〜2本しか並ばない。それを「今週のランキング」として
+    出すと、ランキングに見えない。
+  */
+  const hasWeekly = weeklyEntries.length >= MIN_WEEKLY;
+  const featured = hasWeekly ? weeklyEntries : allTimeEntries;
+  const featuredLabel = hasWeekly ? RANK_LABEL.weekly : RANK_LABEL.allTime;
+  const lead = featured[0];
+  const ranked = featured.slice(1, 5);
+
+  // 週間を主役にしたときだけ、累計を別枠で添える。同じ並びを
+  // 二度出しても紙面が増えるだけなので、片方のときは出さない。
+  const allTimeAside = hasWeekly ? allTimeEntries.slice(0, 5) : [];
 
   // 「新着」。カテゴリを跨いで createdAt の降順。views とは別軸なので、
   // 主役と重複しても構わない（別の切り口で同じ記事が出るのは自然）。
@@ -218,17 +264,22 @@ export default async function ReadingHubPage() {
       </header>
 
       {/* ------------------------------------------------------------------
-          前段。左に「いま最も読まれている1本」、右に新着タイムライン。
-          views と createdAt という別軸を横に並べることで、
-          「定番から入る / 新しいものから入る」の二択をひと画面で見せる。
+          前段。左に「今週いちばん読まれている1本」、右に新着タイムラインと
+          総合ランキング。週間・新着・総合という3つの軸をひと画面に並べ、
+          「旬から入る / 新しいものから入る / 定番から入る」を選ばせる。
+
+          いちばん大きい枠を週間に譲っているのは、総合だけだとハブの顔が
+          何ヶ月も動かないため。
          ------------------------------------------------------------------ */}
       <section className="mt-8 grid gap-6 lg:grid-cols-12">
         {/* 主役: views 最大 */}
         {lead && (
           <div className="min-w-0 lg:col-span-7">
             <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-              <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-red-500" />
-              Most Read ・ いま最も読まれている
+              <span
+                className={`inline-block h-2 w-2 shrink-0 rounded-full ${featuredLabel.dot}`}
+              />
+              {featuredLabel.eyebrow}
             </p>
 
             <Link href={lead.href} className="group block">
@@ -367,6 +418,42 @@ export default async function ReadingHubPage() {
               ))}
             </ul>
           </div>
+
+          {/* 総合ランキング。週間を主役に据えたときだけ出す添えもの。
+              週間が「いま」を見せるのに対して、こちらは「これまで」——
+              初めて来た読者に定番の入口を残しておくための枠なので、
+              画像は使わず順位と見出しだけに絞る。 */}
+          {allTimeAside.length > 0 && (
+            <div className="mt-6">
+              <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-slate-400" />
+                All Time ・ 総合ランキング
+              </p>
+
+              <ol className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900/60">
+                {allTimeAside.map((entry, i) => (
+                  <li key={entry.href} className="min-w-0">
+                    <Link
+                      href={entry.href}
+                      className="group flex min-w-0 items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    >
+                      <span className="w-5 shrink-0 text-center text-base font-black tabular-nums text-slate-300 dark:text-slate-700">
+                        {i + 1}
+                      </span>
+                      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                        <span className={`text-[10px] font-bold ${entry.cat.text}`}>
+                          {entry.cat.label}
+                        </span>
+                        <span className="min-w-0 line-clamp-2 text-sm font-semibold leading-snug">
+                          {headingOf(entry)}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </div>
       </section>
 
