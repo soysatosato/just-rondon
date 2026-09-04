@@ -106,6 +106,14 @@ export type PageMetadataInput = {
    */
   path: string;
   title: string;
+  /**
+   * SNSカード(og:title / twitter:title)だけ別の文言にしたいときに渡す。
+   *
+   * 検索結果のタイトルは「chuffed の意味 ｜ …」のように検索語を先頭へ寄せると
+   * 効くが、その接頭辞はタイムライン上では邪魔にしかならない。
+   * 検索とSNSで最適な文言が食い違うページだけ、こちらで分ける。既定は title。
+   */
+  ogTitle?: string;
   description: string;
   keywords?: string | string[];
   images?: OgImageInput[];
@@ -151,6 +159,7 @@ function normaliseImage(image: OgImageInput) {
 export function buildPageMetadata({
   path,
   title,
+  ogTitle,
   description,
   keywords,
   images,
@@ -164,6 +173,7 @@ export function buildPageMetadata({
   languages,
 }: PageMetadataInput): Metadata {
   const url = absoluteUrl(path);
+  const socialTitle = ogTitle ?? title;
   // x-default は日本語版を指す。サイトの既定言語であり、全ページ揃っているのはこちらだけ。
   const hreflang = languages
     ? Object.fromEntries([
@@ -197,7 +207,7 @@ export function buildPageMetadata({
     },
     openGraph: {
       type,
-      title,
+      title: socialTitle,
       description,
       url,
       siteName,
@@ -208,7 +218,7 @@ export function buildPageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: socialTitle,
       description,
       images: ogImages.map((i) => i.url),
       // X運用を一旦停止中のため site/creator は非表示

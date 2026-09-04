@@ -7,7 +7,7 @@ import {
   fetchColumnBySlug,
   fetchColumnSeries,
 } from "@/utils/actions/contents";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, truncateDescription } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import { columnArticleJsonLd, columnPath } from "@/components/column/jsonld";
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props) {
   }
 
   const text = content.summary || content.mainText || "";
-  const trimmed = text.replace(/[#>*_\-`]/g, "").slice(0, 110);
+  const trimmed = truncateDescription(text.replace(/[#>*_\-`]/g, ""));
 
   return buildPageMetadata({
     path: `/column/${params.slug}`,
