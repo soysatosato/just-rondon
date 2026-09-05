@@ -9,6 +9,13 @@
  *     (category: column / british-english / modern-britain)
  *   - WeeklyBriefItem.description
  *     (WeeklyBrief.headline / summary はプレーンテキスト表示なので対象外)
+ *   - AttractionStory.body
+ *     (観光スポットの読み物。MarkdownBody で描画される)
+ *
+ * Attraction.summary / tagline と AttractionVisitStep.title / body は
+ * 対象外。いずれもプレーンテキストで描画されるので、** があれば
+ * 壊れているかどうかに関係なく記号のまま出る。直し方が違う(組み替えでは
+ * なく削除)ため、この網に入れると誤った修正をする。現状はいずれも0件。
  *
  * 実行: npx tsx scripts/fix-content-markdown-bold.ts --dry
  *      npx tsx scripts/fix-content-markdown-bold.ts
@@ -42,8 +49,16 @@ function hasBrokenBold(text: string): boolean {
   return renderMd(text).includes("**");
 }
 
-/** 閉じ ** を壊す句読点。全角・半角の両方。 */
-const PUNCT = "。、！？：；）」』】〉》・，．!?:;)\\]\\.";
+/**
+ * 閉じ ** を壊す句読点。全角・半角の両方。
+ *
+ * 全角の引用符(” ’)も入れてある。CommonMark はこれを punctuation として
+ * 扱うので、**…“魔法修行”**として のように閉じ ** の直前に来ると
+ * right-flanking が成立せず、** が生のまま出る。日本語の本文では
+ * 強調の中に “…” を入れる書き方が珍しくないので、対で外へ出せるよう
+ * BRACKET_PAIRS 側にも登録している。
+ */
+const PUNCT = "。、！？：；）」』】〉》・，．”’!?:;)\\]\\.";
 
 /** 閉じ括弧と、それに対応する開き括弧。 */
 const BRACKET_PAIRS: Record<string, string> = {
@@ -55,6 +70,8 @@ const BRACKET_PAIRS: Record<string, string> = {
   "〉": "〈",
   "》": "《",
   "]": "[",
+  "\u201d": "\u201c",
+  "\u2019": "\u2018",
 };
 
 /**
@@ -310,6 +327,60 @@ async function collectWeeklyBriefTargets(): Promise<Target[]> {
   }));
 }
 
+/**
+ * 観光スポットの読み物(AttractionStory.body)。
+ *
+ * 旧 AttractionSection から機械的に移した節(source: "migrated")に、
+ * 日本語の閉じ括弧・句読点の直後で ** を閉じている箇所が残っている。
+ * 移行元がそう書かれていたので、移行スクリプトはそのまま運んだ。
+ *
+ * 表示側の事情がひとつある。visitFlow が入っているページでは
+ * kind: "highlight" の節が伏せられる(components/sightseeing/stories.ts)。
+ * 伏せられている節の ** は読者には見えないが、歩き方を外せば出てくるので
+ * ここでは区別せず直す。ラベルに [非表示] と出るのは、直った結果を
+ * ブラウザで確かめようとして「見つからない」と悩まないための目印。
+ */
+async function collectAttractionStoryTargets(): Promise<Target[]> {
+  const attractions = await db.attraction.findMany({
+    select: {
+      slug: true,
+      isPublished: true,
+      _count: { select: { visitFlow: true } },
+      stories: {
+        select: { id: true, kind: true, body: true, displayOrder: true },
+        orderBy: { displayOrder: "asc" },
+      },
+    },
+  });
+
+  const targets: Target[] = [];
+
+  for (const a of attractions) {
+    for (const st of a.stories) {
+      const hiddenByVisitFlow = a._count.visitFlow > 0 && st.kind === "highlight";
+      const marks = [
+        a.isPublished ? "" : "[非公開]",
+        hiddenByVisitFlow ? "[非表示]" : "",
+      ]
+        .filter(Boolean)
+        .join("");
+
+      targets.push({
+        label: `/sightseeing/${a.slug} story#${st.displayOrder} ${st.kind}${marks ? " " + marks : ""}`,
+        text: st.body,
+        apply: async (fixed) => {
+          await db.attractionStory.update({
+            where: { id: st.id },
+            data: { body: fixed },
+          });
+        },
+      });
+    }
+  }
+
+  return targets;
+}
+
 /** 書き換わった行だけを before/after で並べる。 */
 function printDiff(before: string, after: string) {
   const a = before.split("\n");
@@ -332,6 +403,7 @@ async function main() {
   const targets = [
     ...(await collectContentTargets()),
     ...(await collectWeeklyBriefTargets()),
+    ...(await collectAttractionStoryTargets()),
   ].filter((t) => (only ? t.label.includes(only) : true));
 
   let fixedCount = 0;
