@@ -432,6 +432,8 @@ export default async function AttractionDetail({
           durationText={attraction.durationText}
           nearestStation={attraction.nearestStation}
           openingHours={attraction.openingHours}
+          closedWeekdays={attraction.closedWeekdays}
+          closedNote={attraction.closedNote}
           website={attraction.website}
         />
 

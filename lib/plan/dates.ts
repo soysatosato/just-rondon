@@ -79,101 +79,17 @@ export function formatPlanDate(date: Date): string {
  * 開館曜日
  * ------------------------------------------------------------------ */
 
-/**
- * openingHours の文言から休館曜日を読み取る。
+/*
+ * 休館曜日を openingHours の散文から読み取る parseClosedDays() は撤去した。
  *
- * openingHours は表示用の自由文字列で、曜日に触れているのは144件中12件しかない。
- * 曜日の列を別に持てば確実だが、原文と二重管理になってずれる。原文が
- * はっきり書いているぶんだけを拾い、書いていないものは「分からない」を
- * 返す方針にした。推測で「月曜休館です」と出すと、開いている日に
- * 読者を来させないことになる。読み取れない側に倒すのが常に安全。
+ * 読めていたのは155件中10件で、しかも書き方ひとつで誤読した——「土曜のみ」
+ * と書くと残り6日が休館だと読まれる。2026-09 に15件を追加したとき、
+ * 3件の休館日を正しく読ませるために原文の文言そのものを調整する必要が
+ * あり、書き手が正規表現を意識しないと成立しない仕組みだと分かった。
  *
- * 拾うのは次の3通りだけ:
- *   「月休」「月火休」          — 休みの曜日が名指ししてある
- *   「火〜日 10:00〜18:00」    — 開館曜日の範囲。裏返して休館日を出す
- *   「日曜のみ」               — その曜日だけ開く
- *
- * 誤読しやすいものは先に落とす。日本語には曜日でない「日」「月」が多い:
- *
- *   「平日 10:00 / 土日 11:00」 スカイガーデンは毎日開いている。「平日」の
- *                              日を日曜と読むと「月〜金休館」になる
- *   「12月25日休」             クリスマス休館であって日曜休館ではない
- *   「3か月先を発売」          発売の話で、開館日ではない
- *   「土 9:30 ほか平日の一部」  実際の開館日は原文からは決まらない
- *
- * @returns 休館曜日の番号(0=月)。読み取れなければ null。
+ * 事実は Attraction.closedWeekdays が持つ。値の入れ方と、どこまで
+ * 調べたかは scripts/seed-attraction-closed-days.ts を参照。
  */
-export function parseClosedDays(openingHours: string | null): number[] | null {
-  if (!openingHours) return null;
-
-  // 曜日でない「日」「月」を含む語を先に伏せる。曜日文字を含まない
-  // 記号に置き換えるので、後段の走査には引っかからなくなる。
-  const text = openingHours
-    .replace(/(?:第\s*\d+|毎週|隔週)\s*[月火水木金土日]曜?/g, "・")
-    // 「平日」「週末」は曜日そのもの。消すと開館日の情報まで落ちる
-    // (スカイガーデンが「月〜金休館」になった)ので、範囲に翻訳して残す。
-    .replace(/平日/g, "月〜金")
-    .replace(/週末/g, "土〜日")
-    .replace(
-      /休日|祝日|祭日|半日|終日|毎日|連日|翌日|当日|本日|前日|全日|初日|最終日|開催日|公開日|実施日|定休日|営業日|開館日|閉館日|数日|後日|同日|日程|日本/g,
-      "・",
-    )
-    // 「12月」「25日」「3か月」。数字やカ・か・ヶ に続くものは曜日ではない。
-    .replace(/[0-9０-９]\s*(?:か|カ|ヶ|ケ|箇)?\s*[月日]/g, "・");
-
-  // ここまで伏せても曜日の読みが定まらない書き方。黙るほうを選ぶ。
-  if (/ほか|他|一部|など|等|ほぼ|不定|変動|前後/.test(text)) return null;
-
-  const closed = new Set<number>();
-  const open = new Set<number>();
-  let openKnown = false;
-
-  const addAll = (run: string, into: Set<number>) => {
-    for (const ch of run) into.add(DAY_CHARS.indexOf(ch));
-  };
-
-  // 「月休」「月火休」「月曜休館」。
-  for (const m of text.matchAll(/([月火水木金土日]+)\s*曜?\s*休/g)) {
-    addAll(m[1], closed);
-  }
-
-  const only = text.match(/([月火水木金土日])曜?のみ/);
-  if (only) {
-    openKnown = true;
-    open.add(DAY_CHARS.indexOf(only[1]));
-  } else {
-    // 「火〜日」。「木〜月」のように週をまたぐ範囲があるので巡回で埋める。
-    for (const m of text.matchAll(
-      /([月火水木金土日])曜?\s*[〜～ー-]\s*([月火水木金土日])曜?/g,
-    )) {
-      openKnown = true;
-      const from = DAY_CHARS.indexOf(m[1]);
-      const to = DAY_CHARS.indexOf(m[2]);
-      for (let i = 0; i < 7; i++) {
-        const d = (from + i) % 7;
-        open.add(d);
-        if (d === to) break;
-      }
-    }
-    // 「/ 土日 11:00〜21:00」のように、範囲の外に単独で足された曜日。
-    // 曜日の連なりは丸ごと拾う。ここで前方に .? を置くと、その .? が
-    // 先頭の曜日を食って「土日」が「日」になる。
-    for (const m of text.matchAll(
-      /([月火水木金土日]+)\s*曜?\s*\d{1,2}\s*[:：]/g,
-    )) {
-      openKnown = true;
-      addAll(m[1], open);
-    }
-  }
-
-  if (openKnown) {
-    for (let d = 0; d < 7; d++) if (!open.has(d)) closed.add(d);
-  }
-
-  // 全曜日が休みという読み取りは、解釈を誤ったとき以外に起きない。
-  if (closed.size === 0 || closed.size >= 7) return null;
-  return [...closed].sort((a, b) => a - b);
-}
 
 /** 休館曜日の一覧を「月・火」の形にする。 */
 export function formatClosedDays(days: number[]): string {

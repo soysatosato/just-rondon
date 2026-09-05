@@ -3,7 +3,7 @@ import {
   parsePriceGbp,
 } from "@/components/attractions/facts";
 import { distanceKm } from "@/lib/sightseeing/geo";
-import { formatClosedDays, parseClosedDays, weekdayIndex } from "./dates";
+import { formatClosedDays, weekdayIndex } from "./dates";
 
 /**
  * 読者が自分で組む旅行プラン(/plan)の計算まわり。
@@ -33,6 +33,11 @@ export type PlanSpot = {
   priceAdult: string | null;
   durationText: string | null;
   openingHours: string | null;
+  /**
+   * 休みの曜日。0=月 〜 6=日。空配列は曜日休館なし、または未調査。
+   * 「この日は閉まっています」の警告はこの値だけを見る。
+   */
+  closedWeekdays: number[];
   nearestStation: string | null;
   isFree: boolean;
   mustSee: boolean;
@@ -395,7 +400,15 @@ export function buildDayPlan(
   let clock = dayStart;
 
   const rows: PlanRow[] = spots.map((spot, i) => {
-    const closedDays = weekday === null ? null : parseClosedDays(spot.openingHours);
+    /*
+     * 休館曜日は Attraction.closedWeekdays が持つ。以前は openingHours の
+     * 原文を正規表現で読んでいたが、読めるのが155件中10件しかなかった。
+     *
+     * 空配列は「毎日開いている」と「まだ調べていない」の両方でありうる。
+     * どちらでも警告を出さない点は同じなので、ここでは区別しない
+     * (区別が要るのは点検する側で、closedDaysCheckedAt が持つ)。
+     */
+    const closedDays = weekday === null ? null : spot.closedWeekdays;
 
     /*
      * 滞在時間は掲載値を既定にして、読者が入れていればそちらを採る。

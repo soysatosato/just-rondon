@@ -352,6 +352,7 @@ export const fetchPlanSpots = unstable_cache(
         priceAdult: true,
         durationText: true,
         openingHours: true,
+        closedWeekdays: true,
         nearestStation: true,
         isFree: true,
         mustSee: true,

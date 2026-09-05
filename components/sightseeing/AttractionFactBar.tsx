@@ -1,4 +1,4 @@
-import { Clock, Ticket, Train, CalendarClock } from "lucide-react";
+import { Clock, Ticket, Train, CalendarClock, CalendarOff } from "lucide-react";
 
 /**
  * 訪問前に知りたい実用情報を1か所にまとめて出す。
@@ -16,7 +16,12 @@ type Fact = {
   icon: typeof Clock;
   label: string;
   value: string;
+  /** 値だけでは足りないときの但し書き。小さく下に出す。 */
+  note?: string | null;
 };
+
+/** 0=月 〜 6=日。lib/plan/dates.ts の WEEKDAY_LABELS と同じ並び。 */
+const WEEKDAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
 
 export default function AttractionFactBar({
   priceAdult,
@@ -24,6 +29,8 @@ export default function AttractionFactBar({
   durationText,
   nearestStation,
   openingHours,
+  closedWeekdays,
+  closedNote,
   website,
 }: {
   priceAdult: string | null;
@@ -31,6 +38,17 @@ export default function AttractionFactBar({
   durationText: string | null;
   nearestStation: string | null;
   openingHours: string | null;
+  /**
+   * 休みの曜日。0=月 〜 6=日。
+   *
+   * 空配列のときは何も出さない。空は「調べたうえで曜日休館は無い」と
+   * 「まだ調べていない」の両方でありうるので(区別は closedDaysCheckedAt)、
+   * ここで「無休」と書くと、調べていない施設まで毎日開いていることに
+   * なってしまう。出すのは休みが分かっている行だけにする。
+   */
+  closedWeekdays?: number[] | null;
+  /** 曜日では表せない休み。休館日の下に小さく添える。 */
+  closedNote?: string | null;
   /** 公式サイト。下の注意書きから直接飛ばすために受け取る。 */
   website?: string | null;
 }) {
@@ -41,6 +59,16 @@ export default function AttractionFactBar({
       ? `大人 ${priceAdult} ／ 子ども ${priceChild}`
       : (priceAdult ?? priceChild);
 
+  /*
+   * 休館日は開館時間より先に出す。閉まっている日に行けば開館時間は
+   * 意味を持たないうえ、これは現地では取り返せない——旅程を組み直せる
+   * のは出発前だけなので、読者が読み飛ばしにくい位置に置く。
+   */
+  const closedValue =
+    closedWeekdays && closedWeekdays.length > 0
+      ? closedWeekdays.map((d) => WEEKDAY_LABELS[d]).join("・")
+      : null;
+
   const facts: Fact[] = [
     ...(priceValue
       ? [{ icon: Ticket, label: "料金", value: priceValue }]
@@ -50,6 +78,9 @@ export default function AttractionFactBar({
       : []),
     ...(nearestStation
       ? [{ icon: Train, label: "最寄駅", value: nearestStation }]
+      : []),
+    ...(closedValue
+      ? [{ icon: CalendarOff, label: "休館日", value: closedValue, note: closedNote }]
       : []),
     ...(openingHours
       ? [{ icon: CalendarClock, label: "開館時間", value: openingHours }]
@@ -75,6 +106,11 @@ export default function AttractionFactBar({
                 {f.label}
               </dt>
               <dd className="text-sm font-semibold leading-snug">{f.value}</dd>
+              {f.note && (
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {f.note}
+                </p>
+              )}
             </div>
           </div>
         ))}
