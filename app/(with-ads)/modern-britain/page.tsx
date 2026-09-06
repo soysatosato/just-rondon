@@ -8,6 +8,7 @@ import {
   fetchWeeklyPopularContents,
 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
+import { hubOgImage } from "@/lib/og-hubs";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   modernBritainHubCollectionJsonLd,
@@ -32,6 +33,8 @@ export const metadata = buildPageMetadata({
     "英国 政治 経済 解説",
     "イギリス 制度",
   ],
+  // 既定のロゴ(810x665)ではなく、ハブごとの生成カードを配る。
+  images: [hubOgImage("modern-britain")],
 });
 
 /** ランキング各面に並べる本数。1本目を大きく出し、残りを行で続ける。 */

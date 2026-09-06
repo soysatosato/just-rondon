@@ -8,6 +8,7 @@ import {
   fetchColumnSeries,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
+import { columnOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import { columnArticleJsonLd, columnPath } from "@/components/column/jsonld";
@@ -43,7 +44,10 @@ export async function generateMetadata({ params }: Props) {
     type: "article",
     publishedTime: content.createdAt.toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
-    images: content.image ? [content.image] : undefined,
+    // 挿絵(content.image)を直接 og:image に書かない。Wikimedia は
+    // facebookexternalhit を 403 で拒否し、縦長・5MB超の写真は X と LINE に
+    // 捨てられる。自分のドメインから 1200x630 のカードを配る。
+    images: [columnOgImage(content)],
   });
 }
 

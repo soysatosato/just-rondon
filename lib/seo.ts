@@ -14,11 +14,20 @@ export const SITE_NAME = "ジャスト・ロンドン";
 export const TWITTER_HANDLE = "@just_rondon";
 
 /**
- * OG画像のデフォルト。1200x630 の og/default.png を用意したら差し替える。
+ * OG画像のデフォルト。自前の画像を持たないページすべてがこれを指す。
+ *
+ * 以前は /logo.png(810x630ではなく810x665)だった。1.91:1 でないので
+ * X や LINE ではほぼ正方形に切られ、どのページを共有しても「サイトの
+ * アイコンだけ」のカードになっていた。app/metadata.ts が 1200x630 と
+ * 申告していたのも実寸と食い違っていた。
+ *
+ * 中身は scripts/render-default-og.tsx が書き出す。ここだけ動的ルートに
+ * しないのは、落ちたときにサイト中の共有カードが同時に画像を失うため。
+ *
  * SVG は Facebook / X / LINE / Slack のいずれもレンダリングできないため、
  * og:image / twitter:image に logo.svg を使ってはいけない(favicon 用途では可)。
  */
-export const DEFAULT_OG_IMAGE = "/logo.png";
+export const DEFAULT_OG_IMAGE = "/og/default.png";
 
 /** サイト内パス(先頭スラッシュ)を絶対URLにする。 */
 export function absoluteUrl(path: string): string {

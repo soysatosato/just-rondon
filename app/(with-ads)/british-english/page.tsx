@@ -8,6 +8,7 @@ import {
   fetchWeeklyPopularContents,
 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
+import { hubOgImage } from "@/lib/og-hubs";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   britishEnglishHubCollectionJsonLd,
@@ -33,6 +34,8 @@ export const metadata = buildPageMetadata({
     "britishism",
     "イギリス英語 アメリカ英語 違い",
   ],
+  // 既定のロゴ(810x665)ではなく、ハブごとの生成カードを配る。
+  images: [hubOgImage("british-english")],
 });
 
 /** ランキング各面に並べる本数。1語目を大きく出し、残りを行で続ける。 */

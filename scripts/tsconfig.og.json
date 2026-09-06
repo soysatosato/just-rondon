@@ -1,0 +1,7 @@
+{
+  "//": "next/og を Next の外(tsx)で走らせるためだけの設定。ルートの tsconfig は jsx=preserve で、変換を Next に任せている。scripts/render-default-og.tsx はそのままでは React.createElement が解決できないので、ここだけ自動ランタイムに切り替える。",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}

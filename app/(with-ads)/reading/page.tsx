@@ -7,6 +7,7 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
+import { hubOgImage } from "@/lib/og-hubs";
 import { breadcrumbJsonLd } from "@/lib/jsonld";
 import JsonLd from "@/components/seo/JsonLd";
 import {
@@ -35,6 +36,8 @@ export const metadata = buildPageMetadata({
     "英国 時事",
     "英国のいま",
   ],
+  // 既定のロゴ(810x665)ではなく、ハブごとの生成カードを配る。
+  images: [hubOgImage("reading")],
 });
 
 /**

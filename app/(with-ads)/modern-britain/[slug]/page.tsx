@@ -6,6 +6,7 @@ import {
   fetchModernBritainBySlug,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
+import { modernBritainOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import {
@@ -42,7 +43,8 @@ export async function generateMetadata({ params }: Props) {
     type: "article",
     publishedTime: content.createdAt.toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
-    images: content.image ? [content.image] : undefined,
+    // 挿絵を直接 og:image に書かない理由は app/og/column/[slug]/route.tsx。
+    images: [modernBritainOgImage(content)],
   });
 }
 
