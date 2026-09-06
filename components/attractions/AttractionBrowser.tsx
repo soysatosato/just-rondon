@@ -2,7 +2,15 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Clock, Search, Star, TrainFront, Wallet, X } from "lucide-react";
+import {
+  Clock,
+  Search,
+  Star,
+  TicketCheck,
+  TrainFront,
+  Wallet,
+  X,
+} from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +50,8 @@ export type BrowsableAttraction = {
   nearestStation: string | null;
   /** 詳細ページの閲覧数(累計)。数字自体は出さず、人気順の並べ替えにだけ使う。 */
   views: number;
+  londonPass: boolean;
+  londonPassNote: string | null;
 };
 
 type Decorated = BrowsableAttraction & {
@@ -91,6 +101,7 @@ export default function AttractionBrowser({
   const [kidsOnly, setKidsOnly] = useState(false);
   const [mustSeeOnly, setMustSeeOnly] = useState(false);
   const [topOnly, setTopOnly] = useState(false);
+  const [passOnly, setPassOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>("recommended");
 
   const decorated = useMemo<Decorated[]>(
@@ -125,6 +136,7 @@ export default function AttractionBrowser({
       // 「おすすめ度が高い」は 4以上。完全一致にすると「★1だけ」という
       // 誰も求めていない絞り込みしか作れない。
       if (topOnly && (a.recommendLevel ?? 0) < 4) return false;
+      if (passOnly && !a.londonPass) return false;
       if (category !== "all" && a.category !== category) return false;
       if (area !== "all" && a.area !== area) return false;
       // 料金・所要時間は原文が無い行があり、その場合 bucket は null になる。
@@ -161,6 +173,7 @@ export default function AttractionBrowser({
     kidsOnly,
     mustSeeOnly,
     topOnly,
+    passOnly,
     sort,
   ]);
 
@@ -172,7 +185,8 @@ export default function AttractionBrowser({
     price !== "all" ||
     kidsOnly ||
     mustSeeOnly ||
-    topOnly;
+    topOnly ||
+    passOnly;
 
   const mode: "sections" | "results" =
     isFiltering || sort !== "recommended" ? "results" : "sections";
@@ -235,6 +249,7 @@ export default function AttractionBrowser({
     setKidsOnly(false);
     setMustSeeOnly(false);
     setTopOnly(false);
+    setPassOnly(false);
     setSort("recommended");
   }
 
@@ -333,6 +348,11 @@ export default function AttractionBrowser({
               onClick={() => setKidsOnly((v) => !v)}
               label="子ども向き"
             />
+            <Chip
+              on={passOnly}
+              onClick={() => setPassOnly((v) => !v)}
+              label="ロンドンパス対象"
+            />
           </div>
           <div className="ml-auto">
             <Select
@@ -356,6 +376,24 @@ export default function AttractionBrowser({
           {(duration !== "all" || price !== "all") && (
             <p className="text-xs text-muted-foreground">
               — 料金や所要時間が未確認のスポットは、この条件では表示されません
+            </p>
+          )}
+          {/*
+            「対象」の意味をここで言い切っておく。パスが付けるのが音声ガイドや
+            土産のガイドブックだけの無料館は対象に数えていないので、
+            断りなく件数だけ出すと、対象一覧より少ないことが誤りに見える。
+            出口も損益分岐のページにする——対象だと分かった読者が次に要るのは
+            買う理由ではなく、何館回れば元が取れるかのほう。
+          */}
+          {passOnly && (
+            <p className="text-xs text-muted-foreground">
+              — 入場料をパスが肩代わりするスポットだけです（元から無料の館は含みません）。
+              <Link
+                href="/sightseeing/passes"
+                className="ml-1 font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              >
+                元が取れるか見る
+              </Link>
             </p>
           )}
           {(isFiltering || sort !== "recommended") && (
@@ -550,6 +588,25 @@ function SpotCard({
               <TrainFront className="h-3.5 w-3.5 shrink-0" />
               <dt className="sr-only">最寄り駅</dt>
               <dd className="truncate">{a.nearestStation}</dd>
+            </div>
+          )}
+          {/*
+            ロンドンパス。LondonPassBadge を使わないのは、あれが判定ページへの
+            <Link> で、カード全面の覆いリンクと重なる対話要素になるため。
+            ここは印だけ出して、行き先は詳細ページに任せる。
+            条件付き(note あり)を無条件と同じ顔にはしない——会社や商品が
+            限られるものを当てにしてパスを買われるのがいちばん困る。
+          */}
+          {a.londonPass && (
+            <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
+              <TicketCheck className="h-3.5 w-3.5 shrink-0" />
+              <dt className="sr-only">ロンドンパス</dt>
+              <dd className="truncate font-medium">
+                ロンドンパス対象
+                {a.londonPassNote && (
+                  <span className="font-normal">（条件あり）</span>
+                )}
+              </dd>
             </div>
           )}
         </dl>

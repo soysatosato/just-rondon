@@ -324,6 +324,8 @@ export async function fetchAllAttractions() {
       durationText: true,
       nearestStation: true,
       views: true,
+      londonPass: true,
+      londonPassNote: true,
     },
   });
 }
