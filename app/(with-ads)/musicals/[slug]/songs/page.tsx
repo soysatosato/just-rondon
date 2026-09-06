@@ -8,8 +8,6 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
 import Pagination from "@/components/home/Pagination";
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
-import { AD_SLOTS } from "@/lib/adsense";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import JsonLd from "@/components/seo/JsonLd";
 
@@ -27,10 +25,13 @@ export async function generateMetadata({
     };
   }
 
+  // 曲一覧は上演順を示すページで、歌詞そのものはここには無い。
+  // 歌詞本文を持つ各曲ページは第三者の著作物のため noindex にしてあり、
+  // この一覧が「歌詞・和訳」を名乗ると、検索結果に出ない中身を宣伝することになる。
   return buildPageMetadata({
     path: `/musicals/${params.slug}/songs`,
-    title: `${musical?.name} (${musical?.engName}) 歌詞・和訳`,
-    description: `${musical?.name} (${musical?.engName}) の歌詞と和訳を掲載。${musical?.name} の名曲・人気曲を日本語でわかりやすく解説。ミュージカルファン必見の歌詞・翻訳ガイドサイトです。`,
+    title: `${musical?.name} (${musical?.engName}) 曲一覧`,
+    description: `${musical?.name} (${musical?.engName}) で歌われる曲を上演順に並べた一覧。どの場面で何が歌われるかを観劇前に把握できます。`,
     type: "article",
   });
 }
@@ -76,16 +77,13 @@ export default async function SongsPage({
             {musical.name}
           </span>
           <span className="block text-xl font-light text-gray-500 dark:text-gray-300 mt-1">
-            {musical.engName} - 曲一覧・歌詞・和訳
+            {musical.engName} - 曲一覧
           </span>
         </h1>
         <p className="text-center text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
-          {musical.name} ({musical.engName}) の代表曲・人気曲をまとめました。
-          各曲ページでは歌詞の和訳や背景解説もご覧いただけます。
+          {musical.name} ({musical.engName}) で歌われる曲を上演順に並べました。
+          どの場面で何が歌われるかを、観劇前に把握しておけます。
         </p>
-        <div className="my-4">
-          <AdSenseUnit slot={AD_SLOTS.listing} reservedHeight={120} />
-        </div>
         {songs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">
             <p className="text-gray-500 dark:text-gray-400 text-lg text-center">
@@ -130,7 +128,7 @@ export default async function SongsPage({
                         {song.artist}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
-                        歌詞・和訳はこちら
+                        この曲について
                       </p>
                     </div>
                   </div>
@@ -147,8 +145,8 @@ export default async function SongsPage({
           maxPageButtons={5} // 表示するページ番号の数
         />
         <p className=" text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
-          曲の歌詞や和訳を読んでおくと、キャラクターの心情やストーリーの転換点がより深く理解できます。
-          観劇前の予習はもちろん、観たあとの復習としてもおすすめです。チケットの買い方やお得な観劇方法は
+          曲順を先に押さえておくと、どの場面で物語が動くのかが掴めます。英語で観ても
+          筋を見失いにくくなるので、観劇前にひと通り眺めておくのがおすすめです。チケットの買い方やお得な観劇方法は
           <Link
             href="/musicals/west-end-tickets"
             className="text-blue-600 dark:text-blue-300 underline hover:opacity-80 mx-1"
