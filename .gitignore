@@ -52,7 +52,9 @@ next-env.d.ts
 /seed.ts
 
 #claude
-/.claude/
+/.claude/docs/*
+/.claude/task/*
+/.claude/settings.json
 /CLAUDE.md
 
 # MCPサーバー設定にシークレットを直接記載しているため除外
