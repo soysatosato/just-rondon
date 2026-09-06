@@ -208,6 +208,7 @@ export async function fetchAllMuseums() {
       lng: true,
       recommendLevel: true,
       isForChildren: true,
+      views: true,
       museumInfo: {
         select: { recommendedDuration: true, nearestStation: true },
       },

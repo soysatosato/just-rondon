@@ -323,6 +323,7 @@ export async function fetchAllAttractions() {
       priceAdult: true,
       durationText: true,
       nearestStation: true,
+      views: true,
     },
   });
 }

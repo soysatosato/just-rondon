@@ -48,6 +48,8 @@ export type BrowsableMuseum = {
   lng: number;
   recommendLevel: number | null;
   isForChildren: boolean;
+  /** 詳細ページの閲覧数(累計)。数字自体は出さず、人気順の並べ替えにだけ使う。 */
+  views: number;
   museumInfo: {
     recommendedDuration: number | null;
     nearestStation: string | null;
@@ -64,10 +66,11 @@ type DecoratedMuseum = BrowsableMuseum & {
   haystack: string;
 };
 
-type SortKey = "recommended" | "duration" | "name" | "price";
+type SortKey = "recommended" | "popular" | "duration" | "name" | "price";
 
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "recommended", label: "おすすめ順" },
+  { key: "popular", label: "人気順" },
   { key: "duration", label: "短時間で回れる順" },
   { key: "name", label: "名前順" },
   { key: "price", label: "料金が安い順" },
@@ -131,7 +134,11 @@ export default function MuseumBrowser({
     });
 
     const sorted = [...filtered];
-    if (sort === "name") {
+    if (sort === "popular") {
+      // 閲覧数が並ぶ(公開直後は 0 が続く)ので、同数のときは元の並び
+      // ——おすすめ度が高い順——を保つ。sort は安定なのでそのまま残る。
+      sorted.sort((a, b) => b.views - a.views);
+    } else if (sort === "name") {
       sorted.sort((a, b) => a.name.localeCompare(b.name, "ja"));
     } else if (sort === "price") {
       sorted.sort((a, b) => a.price - b.price);
@@ -166,6 +173,19 @@ export default function MuseumBrowser({
         items: visible.filter((m) => m.genre === g.slug),
       })).filter((s) => s.items.length > 0),
     [visible],
+  );
+
+  /**
+   * 閲覧数がまだ1件も貯まっていないうちは「人気順」を出さない。
+   * 全件0のまま並べ替えてもおすすめ順と同じ並びが返るだけで、
+   * 選ばせておいて何も起きない選択肢になる。
+   */
+  const sortOptions = useMemo(
+    () =>
+      museums.some((m) => m.views > 0)
+        ? SORTS
+        : SORTS.filter((s) => s.key !== "popular"),
+    [museums],
   );
 
   const essentials = useMemo(
@@ -293,7 +313,10 @@ export default function MuseumBrowser({
               label="並び順"
               value={sort}
               onChange={(v) => setSort(v as SortKey)}
-              options={SORTS.map((s) => ({ value: s.key, label: s.label }))}
+              options={sortOptions.map((s) => ({
+                value: s.key,
+                label: s.label,
+              }))}
             />
           </div>
         </div>
