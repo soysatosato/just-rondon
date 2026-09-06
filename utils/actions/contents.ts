@@ -194,6 +194,48 @@ export const fetchPopularContents = async (
 };
 
 /**
+ * DailyView.targetType と Content.category の対応。
+ *
+ * 記録側(/api/views の TARGETS)は camelCase のキーで、Content 側は
+ * ケバブケースの category。集計 id を引くときと実体を引き直すときで
+ * 別の文字列が要るので、ここで突き合わせる。
+ */
+const WEEKLY_TARGET_BY_CATEGORY = {
+  column: "column",
+  "british-english": "britishEnglish",
+  "modern-britain": "modernBritain",
+} as const;
+
+/**
+ * 各読み物セクションの「今週読まれている記事」。
+ *
+ * fetchWeeklyPopularReadingContents (/reading 用) との違いは、カテゴリを
+ * 跨がずに 1 セクションだけを数えること。/column や /british-english の
+ * ハブでは、そのセクションの中での順位でないと意味がない。
+ *
+ * 集計元は DailyView。運用開始直後は行が無い。件数が MIN_WEEKLY に
+ * 届かないうちは空で返すので、呼び出し側は「週間が空なら総合を主役に
+ * 戻す」を必ず用意すること。
+ */
+export const fetchWeeklyPopularContents = async (
+  category: "column" | "british-english" | "modern-britain",
+  take = 5,
+) => {
+  const ids = await fetchWeeklyTopIds(
+    WEEKLY_TARGET_BY_CATEGORY[category],
+    take,
+  );
+  if (ids.length === 0) return [];
+
+  const contents = await db.content.findMany({
+    where: { id: { in: ids }, category },
+  });
+
+  const ranked = orderByIds(ids, contents, take);
+  return ranked.length >= MIN_WEEKLY ? ranked : [];
+};
+
+/**
  * 読み物ハブ(/reading)の「いま読まれている記事」。
  *
  * fetchPopularContents との違いはカテゴリを跨ぐこと。ハブでは

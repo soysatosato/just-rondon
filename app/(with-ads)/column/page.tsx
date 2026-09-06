@@ -1,13 +1,18 @@
 export const revalidate = 60 * 60;
 
-import Link from "next/link";
-import { fetchColumns } from "@/utils/actions/contents";
+import {
+  fetchColumns,
+  fetchPopularContents,
+  fetchWeeklyPopularContents,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   columnHubCollectionJsonLd,
 } from "@/components/column/jsonld";
 import ColumnBrowser from "@/components/column/ColumnBrowser";
+import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
+import { toRankingEntries } from "@/lib/reading-ranking";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -27,17 +32,15 @@ export const metadata = buildPageMetadata({
   ],
 });
 
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
+/** ランキング各面に並べる本数。1本目を大きく出し、残りを行で続ける。 */
+const RANK_TAKE = 7;
 
 export default async function ColumnHubPage() {
-  const columns = await fetchColumns();
-  const [latest] = columns;
+  const [columns, allTime, weekly] = await Promise.all([
+    fetchColumns(),
+    fetchPopularContents("column", RANK_TAKE),
+    fetchWeeklyPopularContents("column", RANK_TAKE),
+  ]);
 
   return (
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
@@ -83,47 +86,28 @@ export default async function ColumnHubPage() {
         </div>
       </header>
 
-      {/* 最新コラムを大きく1本 */}
-      {latest && (
-        <section className="mb-12">
-          <span className="inline-block rounded-full bg-rose-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-            New
-          </span>
-          <Link
-            href={`/column/${latest.slug}`}
-            className="group mt-3 block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70"
-          >
-            <div className="flex flex-col sm:flex-row">
-              {latest.image && (
-                <div className="relative h-44 w-full shrink-0 sm:h-auto sm:w-2/5">
-                  <img
-                    src={latest.image}
-                    alt={latest.title}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    decoding="async"
-                  />
-                </div>
-              )}
-              <div className="flex-1 p-5 sm:p-6">
-                <p className="text-xs text-muted-foreground">
-                  {formatDate(latest.createdAt)}
-                </p>
-                <h2 className="mt-2 text-lg font-bold leading-snug tracking-tight group-hover:text-sky-700 dark:group-hover:text-sky-300 sm:text-xl">
-                  {latest.title}
-                </h2>
-                {latest.summary && (
-                  <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                    {latest.summary}
-                  </p>
-                )}
-                <p className="mt-4 text-xs font-medium text-sky-600 dark:text-sky-300">
-                  続きを読む →
-                </p>
-              </div>
-            </div>
-          </Link>
-        </section>
-      )}
+      {/*
+        読者側の軸の棚。
+
+        この下の一覧(ColumnBrowser)は連載・タグ・キーワードという編集側の
+        軸で並んでいて、コラムを足さない限り顔ぶれが動かない。週間・総合・
+        新着をタブで切り替えられる棚を頭に置いて、毎日更新しているものが
+        毎日変わって見えるようにする。
+
+        以前ここにあった「最新1本を大きく出す」枠は、新着タブが同じ役割を
+        兼ねるので畳んだ。同じ記事が2つ隣り合って出るだけになるため。
+      */}
+      <section className="mb-12">
+        <ContentRankingTabs
+          title="よく読まれているコラム"
+          description="実際に読まれている順です。今週の勢い、公開以来の累計、更新順の3つで切り替えられます。"
+          theme="column"
+          unitLabel="コラム"
+          weekly={toRankingEntries("column", weekly)}
+          allTime={toRankingEntries("column", allTime)}
+          latest={toRankingEntries("column", columns.slice(0, 6))}
+        />
+      </section>
 
       {columns.length === 0 ? (
         <p className="text-muted-foreground">近日公開予定です。</p>

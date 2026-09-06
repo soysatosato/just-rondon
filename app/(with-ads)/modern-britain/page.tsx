@@ -2,13 +2,19 @@ export const revalidate = 60 * 60;
 
 import Link from "next/link";
 
-import { fetchModernBritainEntries } from "@/utils/actions/contents";
+import {
+  fetchModernBritainEntries,
+  fetchPopularContents,
+  fetchWeeklyPopularContents,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   modernBritainHubCollectionJsonLd,
 } from "@/components/modern-britain/jsonld";
 import ModernBritainCard from "@/components/modern-britain/ModernBritainCard";
+import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
+import { toRankingEntries } from "@/lib/reading-ranking";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -28,8 +34,15 @@ export const metadata = buildPageMetadata({
   ],
 });
 
+/** ランキング各面に並べる本数。1本目を大きく出し、残りを行で続ける。 */
+const RANK_TAKE = 7;
+
 export default async function ModernBritainHubPage() {
-  const entries = await fetchModernBritainEntries();
+  const [entries, allTime, weekly] = await Promise.all([
+    fetchModernBritainEntries(),
+    fetchPopularContents("modern-britain", RANK_TAKE),
+    fetchWeeklyPopularContents("modern-britain", RANK_TAKE),
+  ]);
 
   return (
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
@@ -74,6 +87,25 @@ export default async function ModernBritainHubPage() {
           </p>
         </div>
       </header>
+
+      {/*
+        読者側の軸の棚。
+
+        下のアーカイブは createdAt の降順で固定で、論考を足さない限り
+        並びが動かない。時事を扱う以上「いま何が読まれているか」が
+        いちばん強い入口になるので、週間を既定にした棚を頭に置く。
+      */}
+      <section className="mb-12">
+        <ContentRankingTabs
+          title="よく読まれている論考"
+          description="実際に読まれている順です。今週の勢い、公開以来の累計、更新順の3つで切り替えられます。"
+          theme="modern-britain"
+          unitLabel="論考"
+          weekly={toRankingEntries("modern-britain", weekly)}
+          allTime={toRankingEntries("modern-britain", allTime)}
+          latest={toRankingEntries("modern-britain", entries.slice(0, 6))}
+        />
+      </section>
 
       <section className="mb-12">
         <div className="mb-5 flex items-baseline justify-between gap-4">

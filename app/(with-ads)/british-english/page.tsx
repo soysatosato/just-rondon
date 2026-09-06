@@ -2,7 +2,11 @@ export const revalidate = 60 * 60;
 
 import Link from "next/link";
 
-import { fetchBritishEnglishEntries } from "@/utils/actions/contents";
+import {
+  fetchBritishEnglishEntries,
+  fetchPopularContents,
+  fetchWeeklyPopularContents,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import JsonLd from "@/components/seo/JsonLd";
 import {
@@ -10,6 +14,8 @@ import {
 } from "@/components/british-english/jsonld";
 import BritishEnglishCard from "@/components/british-english/BritishEnglishCard";
 import BritishEnglishTraits from "@/components/british-english/BritishEnglishTraits";
+import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
+import { toRankingEntries } from "@/lib/reading-ranking";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -29,8 +35,15 @@ export const metadata = buildPageMetadata({
   ],
 });
 
+/** ランキング各面に並べる本数。1語目を大きく出し、残りを行で続ける。 */
+const RANK_TAKE = 7;
+
 export default async function BritishEnglishHubPage() {
-  const entries = await fetchBritishEnglishEntries();
+  const [entries, allTime, weekly] = await Promise.all([
+    fetchBritishEnglishEntries(),
+    fetchPopularContents("british-english", RANK_TAKE),
+    fetchWeeklyPopularContents("british-english", RANK_TAKE),
+  ]);
 
   return (
     <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
@@ -85,6 +98,25 @@ export default async function BritishEnglishHubPage() {
           場面別で引く →
         </span>
       </Link>
+
+      {/*
+        読者側の軸の棚。
+
+        下のアーカイブは createdAt の降順で固定なので、語を足さない限り
+        並びが動かない。週間・総合・新着を切り替えられる棚を挟んで、
+        「いまどの言葉が読まれているか」から入れるようにする。
+      */}
+      <section className="mb-12">
+        <ContentRankingTabs
+          title="よく読まれている言葉"
+          description="実際に読まれている順です。今週の勢い、公開以来の累計、更新順の3つで切り替えられます。"
+          theme="british-english"
+          unitLabel="語"
+          weekly={toRankingEntries("british-english", weekly)}
+          allTime={toRankingEntries("british-english", allTime)}
+          latest={toRankingEntries("british-english", entries.slice(0, 6))}
+        />
+      </section>
 
       <section className="mb-12">
         <div className="mb-5 flex items-baseline justify-between gap-4">
