@@ -4,9 +4,26 @@
  *   npx tsx scripts/set-london-pass-attractions.ts           # 差分を表示
  *   npx tsx scripts/set-london-pass-attractions.ts --apply   # DBへ反映
  *
- * 出典: Go City の対象一覧(2026年9月時点、約110件)。
- *   https://gocity.com/london/en-us/products/all-inclusive
- *   https://www.londoncitypass.com/en/attractions/
+ * 出典: Go City 自身の対象ディレクトリ(2026年9月時点、113件)。
+ *   https://gocity.com/en/london/attractions
+ *   https://gocity.com/en/london/passes/all-inclusive
+ *
+ * ★ londoncitypass.com の一覧を出典に使わないこと。
+ *   あそこは複数のパス商品をまとめて並べる再販サイトで、Go City の
+ *   All-Inclusive に**入っていない**ものが混ざる。2026年9月に照合したとき、
+ *   同サイトにはロンドン・ダンジョン、シーライフ、シュレック・アドベンチャー
+ *   (いずれもマーリン系)、国会議事堂ツアー、アプスリー・ハウス、
+ *   ウェリントン・アーチ、レンジャーズ・ハウスが載っていたが、
+ *   Go City 自身の113件のディレクトリにはどれも無い。
+ *   これを信じると、まさに「対象外の施設を対象と表示する」事故になる。
+ *
+ * ★ All-Inclusive と Explorer を混同しないこと。この列が指すのは
+ *   All-Inclusive のほう。Go City の各スポットのページにある
+ *   「Explore this attraction and 112 more」(=113件)が All-Inclusive の
+ *   全体数なので、ディレクトリに出ていれば All-Inclusive 対象と判断できる。
+ *   Explorer はそこから選ぶ76件の部分集合。
+ *   個人ブログには「アップ・アット・ジ・O2 は Explorer 限定」と書くものが
+ *   あるが、Go City 自身のページは「All passes」と表示しており、古い情報。
  *
  * ## 立てる条件を狭くしてある
  *
@@ -85,6 +102,8 @@ const COVERED: { slug: string; note?: string }[] = [
   { slug: "f1-drive-london" },
   { slug: "chimney-lift-battersea-power-station" },
   { slug: "the-dare-skywalk-tottenham-hotspur-stadium" },
+  { slug: "ifs-cloud-cable-car-london" },
+  { slug: "paddington-bear-experience" },
 
   /* ---- スタジアムツアー ---- */
   { slug: "tottenham-hotspur-stadium-tour" },
@@ -104,6 +123,10 @@ const COVERED: { slug: string; note?: string }[] = [
   {
     slug: "hop-on-hop-off-bus-tour-london",
     note: "対象は Big Bus の2日券です。トゥートバスなど他社のバスには乗れません",
+  },
+  {
+    slug: "up-at-the-o2",
+    note: "対象は昼・夕暮れ・トワイライトの回だけです。夜の回や特別開催の回には使えません",
   },
 ];
 
