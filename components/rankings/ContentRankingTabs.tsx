@@ -8,8 +8,8 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
  * 読み物ハブ(コラム・イギリス英語・いまのイギリス)の「読まれている順」の棚。
  *
  * 一覧はどれも createdAt の降順で、記事を足さない限り顔ぶれが動かない。
- * 読者側の軸(週間・総合)を足して、ハブのいちばん目立つ場所が毎週
- * 入れ替わるようにするのがこの棚の役目。/sightseeing の ViewRanking と
+ * 既定の新着に読者側の軸(週間・総合)を足して、ハブのいちばん目立つ場所が
+ * 毎週入れ替わるようにするのがこの棚の役目。/sightseeing の ViewRanking と
  * 狙いは同じだが、あちらは週間と総合を左右に並べる 2 カラムで、記事本文の
  * 要約を持たないスポット向けの作り。読み物は summary が主役になるので、
  * 3 つの軸をタブで切り替えて 1 軸ぶんの面積を広く使う。
@@ -21,6 +21,8 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
  * タブは「出せるものだけ」出す。日別の集計(DailyView)は運用開始から
  * 貯まるので、始めた直後は週間が空になる。件数の判断は呼び出し側
  * (MIN_WEEKLY)が行い、ここは渡された配列が空かどうかだけを見る。
+ * 既定は先頭のタブ。新着は記事が1本でもあれば出せるので、週間が空の
+ * 立ち上げ直後でも既定が総合に落ちることはない。
  */
 
 export type RankingEntry = {
@@ -115,7 +117,22 @@ export default function ContentRankingTabs({
 }) {
   const theme = THEMES[themeName];
 
+  /*
+    並びは新着・週間・総合。既定(いちばん左)を新着にしているのは、
+    毎日更新しているものが更新した順に見えるのがハブの第一の役目で、
+    再訪した人が最初に知りたいのも「前回から何が増えたか」だから。
+    ランキングは2枚目以降に置いても、タブなら1クリックで届く。
+  */
   const tabs = [
+    latest.length > 0 && {
+      id: "latest",
+      label: "新着",
+      eng: "New",
+      note: "更新順。まだ読んでいない新しいものから。",
+      live: false,
+      items: latest,
+      ranked: false,
+    },
     weekly.length > 0 && {
       id: "weekly",
       label: "週間ランキング",
@@ -134,15 +151,6 @@ export default function ContentRankingTabs({
       items: allTime,
       ranked: true,
     },
-    latest.length > 0 && {
-      id: "latest",
-      label: "新着",
-      eng: "New",
-      note: "更新順。まだ読んでいない新しいものから。",
-      live: false,
-      items: latest,
-      ranked: false,
-    },
   ].filter((t): t is Exclude<typeof t, false | undefined> => Boolean(t));
 
   if (tabs.length === 0) return null;
@@ -156,7 +164,7 @@ export default function ContentRankingTabs({
             <span
               className={clsx("h-3 w-0.5 shrink-0 rounded-full", theme.bar)}
             />
-            Most Read
+            Latest & Ranking
           </p>
           <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
             {title}

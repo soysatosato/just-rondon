@@ -95,13 +95,14 @@ export default async function ModernBritainHubPage() {
         読者側の軸の棚。
 
         下のアーカイブは createdAt の降順で固定で、論考を足さない限り
-        並びが動かない。時事を扱う以上「いま何が読まれているか」が
-        いちばん強い入口になるので、週間を既定にした棚を頭に置く。
+        並びが動かない。時事を扱う以上「何が新しく出たか」がいちばん強い
+        入口になるので、新着を既定にした棚を頭に置く。週間・総合へは
+        タブで1クリック。
       */}
       <section className="mb-12">
         <ContentRankingTabs
-          title="よく読まれている論考"
-          description="実際に読まれている順です。今週の勢い、公開以来の累計、更新順の3つで切り替えられます。"
+          title="新着の論考とランキング"
+          description="既定は更新順です。今週の勢い、公開以来の累計にも切り替えられます。"
           theme="modern-britain"
           unitLabel="論考"
           weekly={toRankingEntries("modern-britain", weekly)}

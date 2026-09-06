@@ -106,13 +106,14 @@ export default async function BritishEnglishHubPage() {
         読者側の軸の棚。
 
         下のアーカイブは createdAt の降順で固定なので、語を足さない限り
-        並びが動かない。週間・総合・新着を切り替えられる棚を挟んで、
-        「いまどの言葉が読まれているか」から入れるようにする。
+        並びが動かない。新着・週間・総合を切り替えられる棚を挟んで、
+        「増えた言葉」と「いま読まれている言葉」の両方から入れるようにする。
+        既定は新着。
       */}
       <section className="mb-12">
         <ContentRankingTabs
-          title="よく読まれている言葉"
-          description="実際に読まれている順です。今週の勢い、公開以来の累計、更新順の3つで切り替えられます。"
+          title="新着の言葉とランキング"
+          description="既定は更新順です。今週の勢い、公開以来の累計にも切り替えられます。"
           theme="british-english"
           unitLabel="語"
           weekly={toRankingEntries("british-english", weekly)}
