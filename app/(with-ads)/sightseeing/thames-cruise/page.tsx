@@ -66,6 +66,11 @@ const article: FeatureArticle = {
       label: "サウスバンクを歩く",
       note: "船着き場が並ぶ南岸の遊歩道。",
     },
+    {
+      href: "/sightseeing/passes",
+      label: "観光パスは元が取れるのか",
+      note: "シティクルーズの24時間パスはロンドンパスの対象。損益分岐の計算はこちら。",
+    },
   ],
 };
 

@@ -80,6 +80,8 @@ const COVERED: { slug: string; note?: string }[] = [
   { slug: "shakespeares-globe-guided-tour" },
   { slug: "hms-belfast" },
   { slug: "old-royal-naval-college" },
+  { slug: "cutty-sark" },
+  { slug: "golden-hinde" },
 
   /* ---- 王室関連 ---- */
   { slug: "kensington-palace" },
@@ -95,6 +97,10 @@ const COVERED: { slug: string; note?: string }[] = [
   { slug: "household-cavalry-museum" },
   { slug: "moco-museum-london" },
   { slug: "royal-observatory-greenwich" },
+  { slug: "postal-museum" },
+  { slug: "courtauld-gallery" },
+  { slug: "guards-museum" },
+  { slug: "cartoon-museum" },
 
   /* ---- 体験・娯楽 ---- */
   { slug: "frameless-london" },
