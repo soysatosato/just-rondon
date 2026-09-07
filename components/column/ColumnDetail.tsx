@@ -136,6 +136,20 @@ export default function ColumnDetail({
             {sec.subtitle && (
               <p className="text-sm text-muted-foreground">{sec.subtitle}</p>
             )}
+            {/* 挿絵。見出しとリード文で何の話か分かった直後に置き、
+                本文はその下から読ませる。無い節はそのまま本文が続く。 */}
+            {sec.image && (
+              <div className="relative w-full h-52 overflow-hidden rounded-xl sm:h-64 md:h-72">
+                <img
+                  src={sec.image}
+                  alt={sec.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
+              </div>
+            )}
             {sec.description && (
               <div className={proseClass}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
