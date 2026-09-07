@@ -21,6 +21,8 @@ import {
   travelGuides,
 } from "../guides";
 import AreaChooser from "./AreaChooser";
+import TravelTimes, { TravelTimesNote } from "./TravelTimes";
+import { BOOKING_FILTER_VOCAB, bookingSearchUrl } from "@/lib/hotels/booking-link";
 import {
   areas,
   needLabel,
@@ -187,7 +189,9 @@ export default function HotelsGuide() {
             }))}
           />
 
-          <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+          <TravelTimesNote />
+
+          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
             {areaNote}
           </p>
 
@@ -324,6 +328,43 @@ export default function HotelsGuide() {
               </li>
             ))}
           </ul>
+
+          {/*
+            予約サイトで実際に打つ英語。このページは twin・lift・エアコンが
+            罠だと知っているのに、これまで読者にその英語を渡していなかった。
+            URLの nflt に埋め込む手もあるが、あれは非公開のコード体系で
+            予告なく変わるうえ、壊れてもこちらから気づけない。語彙として
+            渡せば Booking.com 以外の予約サイトでも使える。
+          */}
+          <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 dark:border-emerald-900 dark:bg-emerald-950/20 sm:p-5">
+            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+              予約サイトでチェックする英語
+            </h3>
+            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              上の落とし穴は、検索画面の絞り込みでほぼ回避できます。日本語表示に切り替えても
+              設備名は英語のまま出ることが多いので、この語で探してください。
+            </p>
+            <ul className="mt-3 space-y-2">
+              {BOOKING_FILTER_VOCAB.map((f) => (
+                <li
+                  key={f.en}
+                  className="rounded-lg bg-white p-3 dark:bg-neutral-900"
+                >
+                  <p className="flex flex-wrap items-baseline gap-x-2">
+                    <span className="font-mono text-sm font-bold text-gray-900 dark:text-gray-100">
+                      {f.en}
+                    </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {f.ja}
+                    </span>
+                  </p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    {f.why}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <GuideNotes items={gotchaNotes} />
         </Section>
@@ -482,6 +523,8 @@ function Section({
  * 一切出ず、JS 無効でも読めなくなる。
  */
 function AreaCard({ area }: { area: Area }) {
+  const searchUrl = bookingSearchUrl(area.id);
+
   return (
     <div
       id={area.id}
@@ -539,6 +582,26 @@ function AreaCard({ area }: { area: Area }) {
             <dd className="text-gray-700 dark:text-gray-300">{area.caution}</dd>
           </div>
         </dl>
+
+        <TravelTimes areaId={area.id} />
+
+        {searchUrl && (
+          /*
+            エリアを決めた読者をそのまま検索結果へ送る。ここが無いと
+            読者は予約サイトで「ロンドン」から検索し直すことになり、
+            このページで決めた答えが引き継がれない。
+            rel に sponsored は付けない(アフィリエイトIDを付けていないため)。
+          */
+          <a
+            href={searchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-emerald-600 px-3.5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-950/40"
+          >
+            {area.name.split("／")[0]}の宿を探す
+            <span aria-hidden className="text-xs">↗</span>
+          </a>
+        )}
       </div>
 
       {area.body && (

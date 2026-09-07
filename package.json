@@ -19,7 +19,8 @@
     "check-souvenir-instagram": "tsx scripts/check-souvenir-instagram.ts",
     "backup-db": "tsx scripts/backup-db.ts",
     "restore-db": "tsx scripts/restore-db.ts",
-    "render-default-og": "TSX_TSCONFIG_PATH=scripts/tsconfig.og.json tsx scripts/render-default-og.tsx"
+    "render-default-og": "TSX_TSCONFIG_PATH=scripts/tsconfig.og.json tsx scripts/render-default-og.tsx",
+    "fill-hotel-travel-times": "tsx scripts/fill-hotel-travel-times.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.1",

@@ -1,0 +1,831 @@
+{
+  "generatedAt": "2026-09-07T14:38:20.178Z",
+  "departure": {
+    "date": "20261110",
+    "time": "1000",
+    "label": "平日10時台の出発"
+  },
+  "areas": {
+    "westminster": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 24,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 10,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 17
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 16,
+        "changes": 1,
+        "walkOnly": false,
+        "walkMinutes": 38
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 24,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 15,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 42,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 39,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 66,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 46,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 34,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "covent-garden": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 13,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 14
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 17,
+        "changes": 1,
+        "walkOnly": false,
+        "walkMinutes": 33
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 6,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 8
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 31,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 22,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 41,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 59,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 68,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 44,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 39,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "south-ken": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 25,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 14,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 15,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 28,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 11,
+        "changes": 0,
+        "walkOnly": true,
+        "walkMinutes": 11
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 41,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 54,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 75,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 54,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 38,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "bloomsbury": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 7,
+        "changes": 0,
+        "walkOnly": true,
+        "walkMinutes": 7
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 20,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 9,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 20
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 31,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 25,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 45,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 62,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 65,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 39,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 41,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "kings-cross": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 15,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 28
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 22,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 11,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 23,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 27,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 40,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 56,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 58,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 34,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 35,
+        "changes": 1,
+        "walkOnly": false
+      }
+    ],
+    "paddington": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 27,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 20,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 14,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 32,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 20,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 39
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 15,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 60,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 72,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 48,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 39,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "city": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 19,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 26,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 17,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 14,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 24
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 35,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 36,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 52,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 51,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 46,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 27,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "southbank": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 23,
+        "changes": 1,
+        "walkOnly": false,
+        "walkMinutes": 32
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 8,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 19
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 9,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 28
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 26,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 25,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 39,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 47,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 68,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 53,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 26,
+        "changes": 1,
+        "walkOnly": false
+      }
+    ],
+    "marylebone": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 23,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 13,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 15,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 28,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 25,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 31,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 59,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 71,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 42,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 33,
+        "changes": 1,
+        "walkOnly": false
+      }
+    ],
+    "shoreditch": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 23,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 23,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 19,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 20,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 34,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 44,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 55,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 65,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 46,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 30,
+        "changes": 1,
+        "walkOnly": false
+      }
+    ],
+    "bayswater": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 33,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 22,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 28,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 36,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 19,
+        "changes": 0,
+        "walkOnly": false,
+        "walkMinutes": 31
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 31,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 66,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 81,
+        "changes": 3,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 52,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 47,
+        "changes": 2,
+        "walkOnly": false
+      }
+    ],
+    "greenwich": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 44,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 35,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 41,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 39,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 52,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 66,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 71,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 88,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 76,
+        "changes": 2,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 32,
+        "changes": 1,
+        "walkOnly": false
+      }
+    ],
+    "stratford": [
+      {
+        "destinationId": "british-museum",
+        "minutes": 28,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "westminster-abbey",
+        "minutes": 27,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "west-end",
+        "minutes": 24,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "tower-of-london",
+        "minutes": 22,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "natural-history-museum",
+        "minutes": 43,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lhr",
+        "minutes": 44,
+        "changes": 0,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lgw",
+        "minutes": 61,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "stn",
+        "minutes": 58,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "ltn",
+        "minutes": 54,
+        "changes": 1,
+        "walkOnly": false
+      },
+      {
+        "destinationId": "lcy",
+        "minutes": 14,
+        "changes": 1,
+        "walkOnly": false
+      }
+    ]
+  }
+}
