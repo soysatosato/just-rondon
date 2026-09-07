@@ -110,6 +110,24 @@ function validatePayload(payload: ColumnPayload) {
         `sections[${i}].imageSummary needs sections[${i}].image`,
       );
     }
+    // 最初の節の挿絵は、記事全体の image のすぐ下に出る。写真が2枚続いて
+    // 本文がなかなか始まらないので、ここには置かせない。
+    if (sec.displayOrder === 0 && sec.image?.trim()) {
+      throw new Error(
+        `sections[${i}].image is not allowed on the first section ` +
+          `(displayOrder 0): it lands right under the article's own image`,
+      );
+    }
+  }
+
+  // 挿絵は多いほど読み物から画像の並んだページに寄る。目安は0〜2枚。
+  // 例外を作れる余地は残したいので、止めずに警告だけ出す。
+  const illustrated = payload.sections.filter((s) => s.image?.trim()).length;
+  if (illustrated > 2) {
+    console.warn(
+      `Warning: ${illustrated} section images. The guideline is 0-2 — ` +
+        `keep only the ones that help the reader understand the section.`,
+    );
   }
 }
 
