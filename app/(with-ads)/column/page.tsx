@@ -104,9 +104,7 @@ export default async function ColumnHubPage() {
       <section className="mb-12">
         <ContentRankingTabs
           title="新着コラムとランキング"
-          description="既定は更新順です。今週の勢い、公開以来の累計にも切り替えられます。"
           theme="column"
-          unitLabel="コラム"
           weekly={toRankingEntries("column", weekly)}
           allTime={toRankingEntries("column", allTime)}
           latest={toRankingEntries("column", columns.slice(0, 6))}

@@ -5,7 +5,8 @@ import clsx from "clsx";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 
 /**
- * 読み物ハブ(コラム・イギリス英語・いまのイギリス)の「読まれている順」の棚。
+ * 読み物ハブ(コラム・イギリス英語・いまのイギリス)の、新着・週間・総合を
+ * 切り替える棚。
  *
  * 一覧はどれも createdAt の降順で、記事を足さない限り顔ぶれが動かない。
  * 既定の新着に読者側の軸(週間・総合)を足して、ハブのいちばん目立つ場所が
@@ -13,6 +14,10 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
  * 狙いは同じだが、あちらは週間と総合を左右に並べる 2 カラムで、記事本文の
  * 要約を持たないスポット向けの作り。読み物は summary が主役になるので、
  * 3 つの軸をタブで切り替えて 1 軸ぶんの面積を広く使う。
+ *
+ * 見出しとタブ以外の文字は置かない。タブの名前(新着・週間ランキング・総合)が
+ * そのまま並べ方の説明になっていて、その下にリード文を足すと、面積を食う割に
+ * 何も足さない一文が毎回2つ挟まる。
  *
  * DB には触らない。集計は呼び出し側(サーバー)で済ませ、ここは並べるだけ。
  * Date を渡さず整形済みの文字列を受けるのも、クライアント境界を跨いで
@@ -99,21 +104,16 @@ type Theme = (typeof THEMES)[RankingThemeName];
 
 export default function ContentRankingTabs({
   title,
-  description,
   weekly,
   allTime,
   latest,
   theme: themeName,
-  unitLabel = "記事",
 }: {
   title: string;
-  description?: string;
   weekly: RankingEntry[];
   allTime: RankingEntry[];
   latest: RankingEntry[];
   theme: RankingThemeName;
-  /** 「全 12 記事」の単位。イギリス英語なら「語」。 */
-  unitLabel?: string;
 }) {
   const theme = THEMES[themeName];
 
@@ -128,7 +128,6 @@ export default function ContentRankingTabs({
       id: "latest",
       label: "新着",
       eng: "New",
-      note: "更新順。まだ読んでいない新しいものから。",
       live: false,
       items: latest,
       ranked: false,
@@ -137,7 +136,6 @@ export default function ContentRankingTabs({
       id: "weekly",
       label: "週間ランキング",
       eng: "Weekly",
-      note: `直近7日でよく読まれた${unitLabel}。毎日入れ替わります。`,
       live: true,
       items: weekly,
       ranked: true,
@@ -146,7 +144,6 @@ export default function ContentRankingTabs({
       id: "all-time",
       label: "総合",
       eng: "All Time",
-      note: `公開以来の累計でよく読まれた${unitLabel}。定番から読むならこちら。`,
       live: false,
       items: allTime,
       ranked: true,
@@ -169,11 +166,6 @@ export default function ContentRankingTabs({
           <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
             {title}
           </h2>
-          {description && (
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {description}
-            </p>
-          )}
         </div>
 
         <TabsPrimitive.List
@@ -218,9 +210,8 @@ export default function ContentRankingTabs({
         <TabsPrimitive.Content
           key={tab.id}
           value={tab.id}
-          className="mt-6 focus-visible:outline-none data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-bottom-1 data-[state=active]:duration-300"
+          className="mt-5 focus-visible:outline-none data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-bottom-1 data-[state=active]:duration-300"
         >
-          <p className="mb-4 text-xs text-muted-foreground">{tab.note}</p>
           {tab.ranked ? (
             <RankedPanel items={tab.items} theme={theme} />
           ) : (

@@ -102,9 +102,7 @@ export default async function ModernBritainHubPage() {
       <section className="mb-12">
         <ContentRankingTabs
           title="新着の論考とランキング"
-          description="既定は更新順です。今週の勢い、公開以来の累計にも切り替えられます。"
           theme="modern-britain"
-          unitLabel="論考"
           weekly={toRankingEntries("modern-britain", weekly)}
           allTime={toRankingEntries("modern-britain", allTime)}
           latest={toRankingEntries("modern-britain", entries.slice(0, 6))}

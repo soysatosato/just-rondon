@@ -113,9 +113,7 @@ export default async function BritishEnglishHubPage() {
       <section className="mb-12">
         <ContentRankingTabs
           title="新着の言葉とランキング"
-          description="既定は更新順です。今週の勢い、公開以来の累計にも切り替えられます。"
           theme="british-english"
-          unitLabel="語"
           weekly={toRankingEntries("british-english", weekly)}
           allTime={toRankingEntries("british-english", allTime)}
           latest={toRankingEntries("british-english", entries.slice(0, 6))}
