@@ -19,6 +19,10 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
  * そのまま並べ方の説明になっていて、その下にリード文を足すと、面積を食う割に
  * 何も足さない一文が毎回2つ挟まる。
  *
+ * 同じ理由で、見出しに並べ方を書かない。「新着とランキング」と名乗ると、
+ * すぐ右のタブと、その上の英字と、同じことを3回言うことになる。見出しは
+ * 「何が置いてあるか」だけを言い、どの軸で並んでいるかはタブに任せる。
+ *
  * DB には触らない。集計は呼び出し側(サーバー)で済ませ、ここは並べるだけ。
  * Date を渡さず整形済みの文字列を受けるのも、クライアント境界を跨いで
  * ロケール差の出る整形をやり直さないため。
@@ -161,7 +165,7 @@ export default function ContentRankingTabs({
             <span
               className={clsx("h-3 w-0.5 shrink-0 rounded-full", theme.bar)}
             />
-            Latest & Ranking
+            Start Here
           </p>
           <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
             {title}

@@ -101,7 +101,7 @@ export default async function ModernBritainHubPage() {
       */}
       <section className="mb-12">
         <ContentRankingTabs
-          title="新着の論考とランキング"
+          title="まずはこの一編から"
           theme="modern-britain"
           weekly={toRankingEntries("modern-britain", weekly)}
           allTime={toRankingEntries("modern-britain", allTime)}

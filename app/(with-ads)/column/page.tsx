@@ -103,7 +103,7 @@ export default async function ColumnHubPage() {
       */}
       <section className="mb-12">
         <ContentRankingTabs
-          title="新着コラムとランキング"
+          title="まずはこの一本から"
           theme="column"
           weekly={toRankingEntries("column", weekly)}
           allTime={toRankingEntries("column", allTime)}

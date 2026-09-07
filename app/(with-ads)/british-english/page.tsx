@@ -112,7 +112,7 @@ export default async function BritishEnglishHubPage() {
       */}
       <section className="mb-12">
         <ContentRankingTabs
-          title="新着の言葉とランキング"
+          title="まずはこの一語から"
           theme="british-english"
           weekly={toRankingEntries("british-english", weekly)}
           allTime={toRankingEntries("british-english", allTime)}
