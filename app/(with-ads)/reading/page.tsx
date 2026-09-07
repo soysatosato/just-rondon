@@ -18,6 +18,7 @@ import {
   fetchWeeklyPopularReadingContents,
 } from "@/utils/actions/contents";
 import { historyChapters, HISTORY_BASE } from "@/components/history/chapters";
+import HubMasthead from "@/components/reading/HubMasthead";
 
 const PAGE_PATH = "/reading";
 const PAGE_NAME = "英国を読む";
@@ -229,6 +230,10 @@ export default async function ReadingHubPage() {
     .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime())
     .slice(0, 8);
 
+  // 題字に出す総数。歴史(全10章)は静的なページなので別に数える。
+  const readingCount =
+    columns.length + modernBritain.length + britishEnglish.length;
+
   const firstChapter = historyChapters[0];
 
   return (
@@ -236,26 +241,35 @@ export default async function ReadingHubPage() {
       <JsonLd data={breadcrumbJsonLd({ name: PAGE_NAME, path: PAGE_PATH })} />
       <JsonLd data={readingHubCollectionJsonLd()} />
 
-      <Breadcrumbs path="/reading" />
+      <Breadcrumbs path="/reading" className="mb-6" />
 
-      {/* 新聞の題字のように、罫線で挟んだヘッダ。 */}
-      <header className="mt-6 border-y-2 border-foreground/80 py-5">
-        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-              Reading Britain
-            </p>
-            <h1 className="mt-1.5 text-3xl font-bold leading-none tracking-tight md:text-5xl">
-              英国を読む
-            </h1>
-          </div>
-          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+      <HubMasthead
+        accent="reading"
+        eyebrow="Reading Britain"
+        kicker="毎日更新"
+        titleLead="英国を"
+        titleAccent="読む"
+        description={
+          <>
             ガイドブックが終わるところから、イギリスは面白くなる。
             <br className="hidden sm:block" />
             歴史を辿り、いまを論じ、言葉を味わう。
-          </p>
-        </div>
-      </header>
+          </>
+        }
+        image={timeline[0]?.item.image}
+        stats={[
+          { label: "読み物", value: `${readingCount}`, unit: "本" },
+          { label: "通史", value: `${historyChapters.length}`, unit: "章" },
+          ...(timeline[0]
+            ? [
+                {
+                  label: "最終更新",
+                  value: relativeDays(timeline[0].item.createdAt, now),
+                },
+              ]
+            : []),
+        ]}
+      />
 
       {/* ------------------------------------------------------------------
           前段。左に「今週いちばん読まれている1本」、右に新着タイムラインと

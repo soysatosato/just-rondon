@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import type { ColumnSeries } from "@/lib/column-grouping";
+import { ArchiveHeading } from "@/components/reading/archive-ui";
 
 /**
  * 連載の入口。
@@ -59,20 +60,12 @@ export default function SeriesRail({ series }: { series: ColumnSeries[] }) {
 
   return (
     <section aria-labelledby="column-series-heading">
-      <div className="mb-5 flex items-end justify-between gap-4 border-b border-foreground/15 pb-4">
-        <div>
-          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-3 w-0.5 shrink-0 rounded-full bg-amber-500" />
-            Series
-          </p>
-          <h2
-            id="column-series-heading"
-            className="mt-2 text-xl font-bold tracking-tight sm:text-2xl"
-          >
-            続きものを読む
-          </h2>
-        </div>
-
+      <ArchiveHeading
+        accent="column"
+        eyebrow="Series"
+        title="続きものを読む"
+        id="column-series-heading"
+      >
         <div className="flex shrink-0 items-center gap-2">
           <span className="hidden text-xs text-muted-foreground sm:inline">
             {series.length} 連載
@@ -98,7 +91,7 @@ export default function SeriesRail({ series }: { series: ColumnSeries[] }) {
             </div>
           )}
         </div>
-      </div>
+      </ArchiveHeading>
 
       <div className="relative">
         <div

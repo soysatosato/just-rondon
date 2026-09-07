@@ -11,6 +11,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { columnHubCollectionJsonLd } from "@/components/column/jsonld";
 import ColumnBrowser from "@/components/column/ColumnBrowser";
 import SeriesRail from "@/components/column/SeriesRail";
+import HubMasthead from "@/components/reading/HubMasthead";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toRankingEntries } from "@/lib/reading-ranking";
 import { groupColumns } from "@/lib/column-grouping";
@@ -64,70 +65,24 @@ export default async function ColumnHubPage() {
 
       <Breadcrumbs path="/column" className="mb-6" />
 
-      {/*
-        題字。読み物のハブなので、雑誌の表紙のように濃い面を1枚敷いて、
-        本文の白い面と切り替える。背景に沈めているのは最新コラムの挿絵。
-        毎日更新されるので、ここも毎日変わる。
-      */}
-      <header className="relative mb-12 overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 text-white sm:px-12 sm:py-16">
-        {newest?.image && (
-          <img
-            src={newest.image}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover opacity-40"
-            fetchPriority="high"
-            decoding="async"
-          />
-        )}
-        {/* 文字は左に寄せているので、左を潰して右に写真を残す。挿絵は
-            コラムごとに明度がばらばらで、1枚の覆いだけでは白い絵のときに
-            見出しが読めなくなる。 */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/55"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-amber-500/25 blur-3xl"
-        />
-
-        <div className="relative">
-          <p className="flex flex-wrap items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.28em] text-amber-300">
-            <span className="h-3 w-0.5 shrink-0 rounded-full bg-amber-400" />
-            Column
-            <span className="text-white/25">/</span>
-            <span className="tracking-[0.2em] text-white/60">毎日更新</span>
-          </p>
-
-          <h1 className="mt-5 text-4xl font-black leading-[1.1] tracking-tight sm:text-6xl">
-            イギリスは、
-            <br className="sm:hidden" />
-            <span className="text-amber-400">掘るほど面白い</span>
-          </h1>
-
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
-            歴史・文化・伝統・制度にまつわる読み物コラム。
-            旅行ガイドだけでは伝えきれない、イギリスの奥深さをじっくり読み解きます。
-          </p>
-
-          {columns.length > 0 && (
-            <dl className="mt-9 flex flex-wrap items-end gap-x-10 gap-y-4 border-t border-white/15 pt-5">
-              <Stat label="公開中" value={`${columns.length}`} unit="本" />
-              {series.length > 0 && (
-                <Stat label="連載" value={`${series.length}`} unit="本" />
-              )}
-              {newest && (
-                <Stat label="最終更新" value={formatUpdated(newest.createdAt)} />
-              )}
-            </dl>
-          )}
-        </div>
-      </header>
+      <HubMasthead
+        accent="column"
+        eyebrow="Column"
+        kicker="毎日更新"
+        titleLead="イギリスは、"
+        titleAccent="掘るほど面白い"
+        description="歴史・文化・伝統・制度にまつわる読み物コラム。旅行ガイドだけでは伝えきれない、イギリスの奥深さをじっくり読み解きます。"
+        image={newest?.image}
+        stats={[
+          { label: "公開中", value: `${columns.length}`, unit: "本" },
+          ...(series.length > 0
+            ? [{ label: "連載", value: `${series.length}`, unit: "本" }]
+            : []),
+          ...(newest
+            ? [{ label: "最終更新", value: formatUpdated(newest.createdAt) }]
+            : []),
+        ]}
+      />
 
       {/*
         読者側の軸の棚。
@@ -164,30 +119,5 @@ export default async function ColumnHubPage() {
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
     </main>
-  );
-}
-
-/** 題字の下に並べる数字。数字を大きく、ラベルを小さく。 */
-function Stat({
-  label,
-  value,
-  unit,
-}: {
-  label: string;
-  value: string;
-  unit?: string;
-}) {
-  return (
-    <div>
-      <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
-        {label}
-      </dt>
-      <dd className="mt-1 text-2xl font-black leading-none tracking-tight">
-        {value}
-        {unit && (
-          <span className="ml-1 text-xs font-bold text-white/60">{unit}</span>
-        )}
-      </dd>
-    </div>
   );
 }
