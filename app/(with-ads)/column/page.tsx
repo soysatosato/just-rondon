@@ -8,12 +8,12 @@ import {
 import { buildPageMetadata } from "@/lib/seo";
 import { hubOgImage } from "@/lib/og-hubs";
 import JsonLd from "@/components/seo/JsonLd";
-import {
-  columnHubCollectionJsonLd,
-} from "@/components/column/jsonld";
+import { columnHubCollectionJsonLd } from "@/components/column/jsonld";
 import ColumnBrowser from "@/components/column/ColumnBrowser";
+import SeriesRail from "@/components/column/SeriesRail";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toRankingEntries } from "@/lib/reading-ranking";
+import { groupColumns } from "@/lib/column-grouping";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -38,6 +38,13 @@ export const metadata = buildPageMetadata({
 /** ランキング各面に並べる本数。1本目を大きく出し、残りを行で続ける。 */
 const RANK_TAKE = 7;
 
+function formatUpdated(date: Date) {
+  return new Intl.DateTimeFormat("ja-JP", {
+    month: "long",
+    day: "numeric",
+  }).format(date);
+}
+
 export default async function ColumnHubPage() {
   const [columns, allTime, weekly] = await Promise.all([
     fetchColumns(),
@@ -45,46 +52,79 @@ export default async function ColumnHubPage() {
     fetchWeeklyPopularContents("column", RANK_TAKE),
   ]);
 
+  // 連載の一覧はレール(横並び)に渡すだけ。書庫側は全件を1つの並びで扱うので、
+  // ここで単発だけを切り出す必要はない。
+  const { series } = groupColumns(columns);
+  const newest = columns[0] ?? null;
+
   return (
-    <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
+    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/column" })} />
       <JsonLd data={columnHubCollectionJsonLd(columns)} />
 
       <Breadcrumbs path="/column" className="mb-6" />
 
-      <header className="relative mb-10 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-background to-sky-50 px-6 py-10 dark:border-amber-900/50 dark:from-amber-950/25 dark:via-background dark:to-sky-950/20 sm:px-10 sm:py-12">
+      {/*
+        題字。読み物のハブなので、雑誌の表紙のように濃い面を1枚敷いて、
+        本文の白い面と切り替える。背景に沈めているのは最新コラムの挿絵。
+        毎日更新されるので、ここも毎日変わる。
+      */}
+      <header className="relative mb-12 overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 text-white sm:px-12 sm:py-16">
+        {newest?.image && (
+          <img
+            src={newest.image}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
+            fetchPriority="high"
+            decoding="async"
+          />
+        )}
+        {/* 文字は左に寄せているので、左を潰して右に写真を残す。挿絵は
+            コラムごとに明度がばらばらで、1枚の覆いだけでは白い絵のときに
+            見出しが読めなくなる。 */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-amber-400/20 blur-3xl dark:bg-amber-500/10"
+          className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/55"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-20 left-[-10%] h-48 w-48 rounded-full bg-sky-400/20 blur-3xl dark:bg-sky-500/10"
+          className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-amber-500/25 blur-3xl"
         />
 
         <div className="relative">
-          <span className="inline-block rounded-full bg-amber-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          <p className="flex flex-wrap items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.28em] text-amber-300">
+            <span className="h-3 w-0.5 shrink-0 rounded-full bg-amber-400" />
             Column
-          </span>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+            <span className="text-white/25">/</span>
+            <span className="tracking-[0.2em] text-white/60">毎日更新</span>
+          </p>
+
+          <h1 className="mt-5 text-4xl font-black leading-[1.1] tracking-tight sm:text-6xl">
             イギリスは、
             <br className="sm:hidden" />
-            <span className="text-amber-700 dark:text-amber-400">
-              掘るほど面白い
-            </span>
+            <span className="text-amber-400">掘るほど面白い</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+
+          <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
             歴史・文化・伝統・制度にまつわる読み物コラム。
             旅行ガイドだけでは伝えきれない、イギリスの奥深さをじっくり読み解きます。
           </p>
+
           {columns.length > 0 && (
-            <p className="mt-5 text-xs text-muted-foreground">
-              現在{" "}
-              <span className="font-bold text-foreground">
-                {columns.length}
-              </span>{" "}
-              本を公開中
-            </p>
+            <dl className="mt-9 flex flex-wrap items-end gap-x-10 gap-y-4 border-t border-white/15 pt-5">
+              <Stat label="公開中" value={`${columns.length}`} unit="本" />
+              {series.length > 0 && (
+                <Stat label="連載" value={`${series.length}`} unit="本" />
+              )}
+              {newest && (
+                <Stat label="最終更新" value={formatUpdated(newest.createdAt)} />
+              )}
+            </dl>
           )}
         </div>
       </header>
@@ -92,16 +132,13 @@ export default async function ColumnHubPage() {
       {/*
         読者側の軸の棚。
 
-        この下の一覧(ColumnBrowser)は連載・タグ・キーワードという編集側の
-        軸で並んでいて、コラムを足さない限り顔ぶれが動かない。新着・週間・
-        総合をタブで切り替えられる棚を頭に置いて、毎日更新しているものが
-        毎日変わって見えるようにする。既定は新着。書いた順に届けるのが
-        いちばんの役目で、再訪した人が最初に知りたいのもそこだから。
-
-        以前ここにあった「最新1本を大きく出す」枠は、新着タブが同じ役割を
-        兼ねるので畳んだ。同じ記事が2つ隣り合って出るだけになるため。
+        下の書庫(ColumnBrowser)は検索・タグという読者が「探す」ための場所で、
+        既定の並びはコラムを足さない限り動かない。新着・週間・総合をタブで
+        切り替えられる棚を頭に置いて、毎日更新しているものが毎日変わって
+        見えるようにする。既定は新着。書いた順に届けるのがいちばんの役目で、
+        再訪した人が最初に知りたいのもそこだから。
       */}
-      <section className="mb-12">
+      <section className="mb-14">
         <ContentRankingTabs
           title="まずはこの一本から"
           theme="column"
@@ -111,15 +148,46 @@ export default async function ColumnHubPage() {
         />
       </section>
 
+      {series.length > 0 && (
+        <div className="mb-14">
+          <SeriesRail series={series} />
+        </div>
+      )}
+
       {columns.length === 0 ? (
         <p className="text-muted-foreground">近日公開予定です。</p>
       ) : (
         <ColumnBrowser columns={columns} />
       )}
 
-      <div className="mt-10">
+      <div className="mt-12">
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
     </main>
+  );
+}
+
+/** 題字の下に並べる数字。数字を大きく、ラベルを小さく。 */
+function Stat({
+  label,
+  value,
+  unit,
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+}) {
+  return (
+    <div>
+      <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+        {label}
+      </dt>
+      <dd className="mt-1 text-2xl font-black leading-none tracking-tight">
+        {value}
+        {unit && (
+          <span className="ml-1 text-xs font-bold text-white/60">{unit}</span>
+        )}
+      </dd>
+    </div>
   );
 }
