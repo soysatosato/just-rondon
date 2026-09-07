@@ -1283,6 +1283,16 @@ model Content {
   description2 String?
   description3 String?
   image        String?
+  /// 挿絵の出典。URL 単体で持たないのは、Commons の CC 画像が作者名と
+  /// ライセンスの表記を要求するため(AttractionStory / BrandImage と同じ扱い)。
+  /// "commons" | "official" | "own" 等。表示側の分岐に使う。
+  imageSource  String?
+  /// 出典・ライセンス表記。commons のときは必須。
+  imageCredit  String?
+  /// Commons のファイル説明ページ。
+  imageLink    String?
+  /// 画像の下に出す説明。何が写っているかと、本文のどこに効くかを書く。
+  imageCaption String?
   website      String?
   category     String           @default("")
   route        String           @default("")
@@ -1355,7 +1365,12 @@ model ContentSection {
   description2 String?
   description3 String?
   displayOrder Int      @default(0)
+  /// 節に添える写真。Content.image と同じ持ち方をする。
   image        String?
+  imageSource  String?
+  imageCredit  String?
+  imageLink    String?
+  imageCaption String?
   contentId    String
   content      Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())

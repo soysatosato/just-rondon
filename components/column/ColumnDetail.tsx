@@ -8,6 +8,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { tagLabel } from "@/lib/column-taxonomy";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
+import ContentFigure from "@/components/content/ContentFigure";
 import type { AdjacentContent } from "@/utils/actions/contents";
 import PageCommentSection, {
   type PageCommentItem,
@@ -102,16 +103,15 @@ export default function ColumnDetail({
       </div>
 
       {content.image && (
-        <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-        </div>
+        <ContentFigure
+          crop
+          image={content.image}
+          alt={content.title}
+          caption={content.imageCaption}
+          source={content.imageSource}
+          credit={content.imageCredit}
+          link={content.imageLink}
+        />
       )}
 
       {content.mainText && (
@@ -135,6 +135,20 @@ export default function ColumnDetail({
             </h2>
             {sec.subtitle && (
               <p className="text-sm text-muted-foreground">{sec.subtitle}</p>
+            )}
+            {/* 写真は節の見出しの直後に置く。その節が名指ししている物を
+                読み始める前に見せるためで、別の節の写真を置くと意味が
+                反転するので、写真は必ず節に紐づける。 */}
+            {sec.image && (
+              <ContentFigure
+                image={sec.image}
+                alt={sec.title}
+                caption={sec.imageCaption}
+                source={sec.imageSource}
+                credit={sec.imageCredit}
+                link={sec.imageLink}
+                className="pt-1"
+              />
             )}
             {sec.description && (
               <div className={proseClass}>

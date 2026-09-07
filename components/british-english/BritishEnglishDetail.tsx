@@ -6,6 +6,7 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
+import ContentFigure from "@/components/content/ContentFigure";
 import type { AdjacentContent } from "@/utils/actions/contents";
 
 const proseClass =
@@ -103,16 +104,16 @@ export default function BritishEnglishDetail({
       )}
 
       {content.image && (
-        <div className="relative mt-8 h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-        </div>
+        <ContentFigure
+          crop
+          className="mt-8"
+          image={content.image}
+          alt={content.title}
+          caption={content.imageCaption}
+          source={content.imageSource}
+          credit={content.imageCredit}
+          link={content.imageLink}
+        />
       )}
 
       {content.mainText && (

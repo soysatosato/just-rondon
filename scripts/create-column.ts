@@ -3,12 +3,29 @@ import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
+import { imageColumns, resolveCommonsImage } from "./lib/commons";
+
+/**
+ * 写真は Commons のファイル名(`File:...`)で渡す。URL を直接持たせないのは、
+ * CC の画像が作者名とライセンスの表示を条件にしているため——URL だけを
+ * 書かせると、表記の無い画像がそのまま公開されてしまう。URL・作者・
+ * ライセンスは投入時に API で解決する(scripts/lib/commons.ts)。
+ *
+ * caption は「何が写っているか」ではなく「その写真が本文のどの主張を
+ * 裏付けるか」を書く。
+ */
+type ColumnImageInput = {
+  commonsFile: string;
+  caption?: string;
+};
 
 type ColumnSectionInput = {
   title: string;
   subtitle?: string;
   description: string;
   displayOrder: number;
+  /** その節が名指ししている物の写真。別の節の写真を置くと意味が反転する。 */
+  image?: ColumnImageInput;
 };
 
 type ColumnPayload = {
@@ -16,7 +33,8 @@ type ColumnPayload = {
   engTitle?: string;
   summary: string;
   mainText?: string;
-  image?: string;
+  /** 記事の顔。横位置のものを選ぶ(表示側で16:9相当に切り抜く)。 */
+  image?: ColumnImageInput;
   website?: string;
   tags: string[];
   seriesName?: string;
@@ -88,6 +106,10 @@ function validatePayload(payload: ColumnPayload) {
     throw new Error("seriesOrder must be 1 or greater");
   }
 
+  if (payload.image && !payload.image.commonsFile?.trim()) {
+    throw new Error("image.commonsFile is required when image is given");
+  }
+
   if (!Array.isArray(payload.sections) || payload.sections.length === 0) {
     throw new Error("sections must be a non-empty array");
   }
@@ -99,7 +121,31 @@ function validatePayload(payload: ColumnPayload) {
     if (typeof sec.displayOrder !== "number") {
       throw new Error(`sections[${i}].displayOrder must be a number`);
     }
+    if (sec.image && !sec.image.commonsFile?.trim()) {
+      throw new Error(`sections[${i}].image.commonsFile is required`);
+    }
   }
+}
+
+/** Commons のファイル名を、DB の画像4列に展開する。 */
+async function resolveImage(input: ColumnImageInput | undefined) {
+  if (!input) return {};
+  const image = await resolveCommonsImage(input.commonsFile);
+  if (!image) {
+    throw new Error(`Commons で解決できなかった: ${input.commonsFile}`);
+  }
+  return {
+    // Commons の API は新しい thumb.wikimedia.org を返すことがある。
+    // 既存の画像URLは upload.wikimedia.org なので揃えておく。
+    ...imageColumns({
+      ...image,
+      url: image.url.replace(
+        "https://thumb.wikimedia.org/",
+        "https://upload.wikimedia.org/",
+      ),
+    }),
+    imageCaption: input.caption ?? null,
+  };
 }
 
 async function main() {
@@ -131,6 +177,22 @@ async function main() {
     }
   }
 
+  // Commons への問い合わせは直列にする。節ごとに1回として最大7回程度だが、
+  // 並列で投げると 429 (Too Many Requests) が返ってくることがある。
+  const hero = await resolveImage(payload.image);
+  const sections = [];
+  for (const s of payload.sections
+    .slice()
+    .sort((a, b) => a.displayOrder - b.displayOrder)) {
+    sections.push({
+      title: s.title,
+      subtitle: s.subtitle,
+      description: s.description,
+      displayOrder: s.displayOrder,
+      ...(await resolveImage(s.image)),
+    });
+  }
+
   try {
     const created = await db.content.create({
       data: {
@@ -139,24 +201,14 @@ async function main() {
         slug,
         summary: payload.summary,
         mainText: payload.mainText,
-        image: payload.image,
+        ...hero,
         website: payload.website,
         category: "column",
         route: "/column",
         tags: payload.tags,
         seriesName: payload.seriesName,
         seriesOrder: payload.seriesOrder,
-        sections: {
-          create: payload.sections
-            .slice()
-            .sort((a, b) => a.displayOrder - b.displayOrder)
-            .map((s) => ({
-              title: s.title,
-              subtitle: s.subtitle,
-              description: s.description,
-              displayOrder: s.displayOrder,
-            })),
-        },
+        sections: { create: sections },
       },
     });
     console.log(`Created column: /column/${created.slug} (id=${created.id})`);

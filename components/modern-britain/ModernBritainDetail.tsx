@@ -7,6 +7,7 @@ import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
+import ContentFigure from "@/components/content/ContentFigure";
 import type { AdjacentContent } from "@/utils/actions/contents";
 
 // 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
@@ -115,16 +116,16 @@ export default function ModernBritainDetail({
       )}
 
       {content.image && (
-        <div className="relative mt-8 h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
-          />
-        </div>
+        <ContentFigure
+          crop
+          className="mt-8"
+          image={content.image}
+          alt={content.title}
+          caption={content.imageCaption}
+          source={content.imageSource}
+          credit={content.imageCredit}
+          link={content.imageLink}
+        />
       )}
 
       {content.mainText && (
