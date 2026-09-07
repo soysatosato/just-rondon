@@ -9,6 +9,10 @@ type ColumnSectionInput = {
   subtitle?: string;
   description: string;
   displayOrder: number;
+  // 節ごとの挿絵。imageSummary は写真の下に出るキャプションで、
+  // image が無いときは書いても表示されない。
+  image?: string;
+  imageSummary?: string;
 };
 
 type ColumnPayload = {
@@ -99,6 +103,13 @@ function validatePayload(payload: ColumnPayload) {
     if (typeof sec.displayOrder !== "number") {
       throw new Error(`sections[${i}].displayOrder must be a number`);
     }
+    // キャプションだけ書いても画面には何も出ない。黙って落とすと
+    // 書いた本人が気づけないので、投入前に止める。
+    if (sec.imageSummary?.trim() && !sec.image?.trim()) {
+      throw new Error(
+        `sections[${i}].imageSummary needs sections[${i}].image`,
+      );
+    }
   }
 }
 
@@ -155,6 +166,8 @@ async function main() {
               subtitle: s.subtitle,
               description: s.description,
               displayOrder: s.displayOrder,
+              image: s.image,
+              imageSummary: s.imageSummary,
             })),
         },
       },

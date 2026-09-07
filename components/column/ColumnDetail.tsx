@@ -137,18 +137,27 @@ export default function ColumnDetail({
               <p className="text-sm text-muted-foreground">{sec.subtitle}</p>
             )}
             {/* 挿絵。見出しとリード文で何の話か分かった直後に置き、
-                本文はその下から読ませる。無い節はそのまま本文が続く。 */}
+                本文はその下から読ませる。無い節はそのまま本文が続く。
+                キャプションは写真の下。本文と違うものが写っていることが
+                あるので、何の写真かはここで断っておく。 */}
             {sec.image && (
-              <div className="relative w-full h-52 overflow-hidden rounded-xl sm:h-64 md:h-72">
-                <img
-                  src={sec.image}
-                  alt={sec.title}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                />
-              </div>
+              <figure className="space-y-2">
+                <div className="relative h-52 w-full overflow-hidden rounded-xl sm:h-64 md:h-72">
+                  <img
+                    src={sec.image}
+                    alt={sec.imageSummary || sec.title}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
+                  />
+                </div>
+                {sec.imageSummary && (
+                  <figcaption className="text-xs leading-relaxed text-muted-foreground">
+                    {sec.imageSummary}
+                  </figcaption>
+                )}
+              </figure>
             )}
             {sec.description && (
               <div className={proseClass}>

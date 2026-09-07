@@ -1356,6 +1356,10 @@ model ContentSection {
   description3 String?
   displayOrder Int      @default(0)
   image        String?
+  /// 挿絵の説明文。写真の下にキャプションとして出す。
+  /// 本文で触れていない「この写真は何か」「いつ・どこか」「出典」を書く欄で、
+  /// image が無いときは無視される。
+  imageSummary String?
   contentId    String
   content      Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
