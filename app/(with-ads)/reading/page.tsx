@@ -19,6 +19,8 @@ import {
 } from "@/utils/actions/contents";
 import { historyChapters, HISTORY_BASE } from "@/components/history/chapters";
 import HubMasthead from "@/components/reading/HubMasthead";
+import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
+import { toReadingRankingEntries } from "@/lib/reading-ranking";
 
 const PAGE_PATH = "/reading";
 const PAGE_NAME = "英国を読む";
@@ -42,9 +44,11 @@ export const metadata = buildPageMetadata({
 });
 
 /**
- * カテゴリの見た目定義。色は各セクションの詳細ページ・ナビと揃える。
- * ハブ内では「どのセクションの記事か」を色だけで判別させるので、
- * 4色は最後まで一貫して使う。
+ * カテゴリの見た目定義。色は各セクションのハブ・詳細ページ・ナビと揃える
+ * (lib/reading-accent.ts と同じ割り当て)。読者は色で「どのセクションか」を
+ * 判断しているので、飛び先と違う色をここで塗らない。
+ *
+ * 紫はこのハブ自身の色なので、どのカテゴリにも使わない。
  */
 const CATEGORY = {
   column: {
@@ -52,11 +56,8 @@ const CATEGORY = {
     label: "コラム",
     eyebrow: "Column",
     blurb: "イギリスの歴史・文化・伝統をじっくり読み解きます。",
-    text: "text-violet-600 dark:text-violet-400",
-    bg: "bg-violet-600",
-    chip: "bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300",
-    ring: "hover:border-violet-400 dark:hover:border-violet-700",
-    glow: "from-violet-500/15",
+    text: "text-amber-700 dark:text-amber-400",
+    ring: "hover:border-amber-400 dark:hover:border-amber-700",
   },
   "modern-britain": {
     base: "/modern-britain",
@@ -64,10 +65,7 @@ const CATEGORY = {
     eyebrow: "Britain, Argued",
     blurb: "最新の英国ニュースを出典付きで紹介し、背景まで掘り下げます。",
     text: "text-indigo-600 dark:text-indigo-400",
-    bg: "bg-indigo-600",
-    chip: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300",
     ring: "hover:border-indigo-400 dark:hover:border-indigo-700",
-    glow: "from-indigo-500/15",
   },
   "british-english": {
     base: "/british-english",
@@ -75,40 +73,32 @@ const CATEGORY = {
     eyebrow: "British English",
     blurb: "現地の言い回しやスラングを、由来や使い方とあわせて紹介します。",
     text: "text-rose-600 dark:text-rose-400",
-    bg: "bg-rose-600",
-    chip: "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300",
     ring: "hover:border-rose-400 dark:hover:border-rose-700",
-    glow: "from-rose-500/15",
   },
 } as const;
 
 type CategoryKey = keyof typeof CATEGORY;
 
+/*
+  歴史は Content ではなく静的な全10章なので、上の3つと同じ形にしない。
+  色は /history 自身と揃えた琥珀。コラムと同じ色になるが、飛び先と違う色を
+  ここで塗るほうが読者を惑わせる。並びの上でも、コラムは2列グリッドの
+  カード・歴史は全幅の章立てレールと形が違うので取り違えにくい。
+*/
 const HISTORY_STYLE = {
-  label: "イギリスの歴史",
   eyebrow: "A History of Britain",
   text: "text-amber-700 dark:text-amber-500",
-  bg: "bg-amber-600",
-  chip: "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300",
   ring: "hover:border-amber-400 dark:hover:border-amber-700",
 };
 
 /**
- * ランキングの2軸。
+ * 棚の各面に並べる本数。
  *
- * 総合(累計)は上位が古い記事で固まり、ハブの顔が何ヶ月も変わらない。
- * 週間を足したのはそのため。主役は週間、総合は添えものとして残す。
+ * セクションのハブ(7本)より多いのは、ここが3セクションの総合だから。
+ * 1セクションあたり2〜3本が載る本数にしておかないと、週によっては
+ * 特定のセクションが1本も出ない面になる。
  */
-const RANK_LABEL = {
-  weekly: {
-    eyebrow: "Weekly ・ 今週読まれている",
-    dot: "bg-red-500",
-  },
-  allTime: {
-    eyebrow: "Most Read ・ いま最も読まれている",
-    dot: "bg-red-500",
-  },
-} as const;
+const RANK_TAKE = 9;
 
 function isCategoryKey(value: string): value is CategoryKey {
   return value in CATEGORY;
@@ -169,8 +159,7 @@ function readingHubCollectionJsonLd() {
     {
       "@type": "CollectionPage" as const,
       name: "イギリスの歴史 全10章",
-      description:
-        "ローマ帝国のブリタニア征服からEU離脱まで、通史を辿ります。",
+      description: "ローマ帝国のブリタニア征服からEU離脱まで、通史を辿ります。",
       url: `${SITE_URL}${HISTORY_BASE}`,
     },
   ];
@@ -192,43 +181,19 @@ export default async function ReadingHubPage() {
       fetchColumns(),
       fetchModernBritainEntries(),
       fetchBritishEnglishEntries(),
-      fetchPopularReadingContents(5),
-      fetchWeeklyPopularReadingContents(5),
+      fetchPopularReadingContents(RANK_TAKE),
+      fetchWeeklyPopularReadingContents(RANK_TAKE),
     ]);
 
   const now = Date.now();
 
-  const allTimeEntries = popular
-    .map(toEntry)
-    .filter((e): e is Entry => e !== null);
-  const weeklyEntries = weekly
-    .map(toEntry)
-    .filter((e): e is Entry => e !== null);
-
-  /*
-    主役に据えるのは週間。累計だけで並べると上位が古い記事で固定され、
-    ハブのいちばん目立つ場所が何ヶ月も同じ顔になる。
-
-    週間が薄いうちは累計に戻す。件数が足りないときに空で返るのは
-    fetchWeeklyPopularReadingContents 側の判断(MIN_WEEKLY)。
-  */
-  const hasWeekly = weeklyEntries.length > 0;
-  const featured = hasWeekly ? weeklyEntries : allTimeEntries;
-  const featuredLabel = hasWeekly ? RANK_LABEL.weekly : RANK_LABEL.allTime;
-  const lead = featured[0];
-  const ranked = featured.slice(1, 5);
-
-  // 週間を主役にしたときだけ、累計を別枠で添える。同じ並びを
-  // 二度出しても紙面が増えるだけなので、片方のときは出さない。
-  const allTimeAside = hasWeekly ? allTimeEntries.slice(0, 5) : [];
-
   // 「新着」。カテゴリを跨いで createdAt の降順。views とは別軸なので、
-  // 主役と重複しても構わない（別の切り口で同じ記事が出るのは自然）。
-  const timeline = [...columns, ...modernBritain, ...britishEnglish]
-    .map(toEntry)
-    .filter((e): e is Entry => e !== null)
-    .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime())
-    .slice(0, 8);
+  // ランキングと重複しても構わない（別の切り口で同じ記事が出るのは自然）。
+  const latest = [...columns, ...modernBritain, ...britishEnglish].sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+  );
+
+  const newest = latest[0] ?? null;
 
   // 題字に出す総数。歴史(全10章)は静的なページなので別に数える。
   const readingCount =
@@ -256,15 +221,15 @@ export default async function ReadingHubPage() {
             歴史を辿り、いまを論じ、言葉を味わう。
           </>
         }
-        image={timeline[0]?.item.image}
+        image={newest?.image}
         stats={[
           { label: "読み物", value: `${readingCount}`, unit: "本" },
           { label: "通史", value: `${historyChapters.length}`, unit: "章" },
-          ...(timeline[0]
+          ...(newest
             ? [
                 {
                   label: "最終更新",
-                  value: relativeDays(timeline[0].item.createdAt, now),
+                  value: relativeDays(newest.createdAt, now),
                 },
               ]
             : []),
@@ -272,197 +237,34 @@ export default async function ReadingHubPage() {
       />
 
       {/* ------------------------------------------------------------------
-          前段。左に「今週いちばん読まれている1本」、右に新着タイムラインと
-          総合ランキング。週間・新着・総合という3つの軸をひと画面に並べ、
-          「旬から入る / 新しいものから入る / 定番から入る」を選ばせる。
+          新着・週間・総合を切り替える棚。3つの軸を1画面に並べていたのを
+          タブに畳んだ。1軸ぶんの面積が3倍になるので、順位表に要約まで
+          載せられる。セクションのハブと同じ部品を使い、同じ手つきで
+          読めるようにする。
 
-          いちばん大きい枠を週間に譲っているのは、総合だけだとハブの顔が
-          何ヶ月も動かないため。
+          ただし、ここはセクションのハブではなく3つの総合なので、同じ顔で
+          置かない。色で二段にする——棚の枠とタブは親の紫、1件ずつの帯と
+          チップは出身セクションの色。上端の細い帯は琥珀(コラム)から
+          薔薇(イギリス英語)を経て藍(英国のいま)へ流れる。3つが1つの棚に
+          注ぎ込んでいることを、説明文を1行も足さずに見せるための帯。
+
+          淡い面を敷いているのも同じ理由で、本文の白から浮かせて
+          「このページの主役はここ」と分かるようにしている。
          ------------------------------------------------------------------ */}
-      <section className="mt-8 grid gap-6 lg:grid-cols-12">
-        {/* 主役: views 最大 */}
-        {lead && (
-          <div className="min-w-0 lg:col-span-7">
-            <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-              <span
-                className={`inline-block h-2 w-2 shrink-0 rounded-full ${featuredLabel.dot}`}
-              />
-              {featuredLabel.eyebrow}
-            </p>
-
-            <Link href={lead.href} className="group block">
-              <article
-                className={`relative h-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/60 ${lead.cat.ring}`}
-              >
-                {lead.item.image ? (
-                  <div className="relative h-56 w-full sm:h-72">
-                    <img
-                      src={lead.item.image}
-                      alt={lead.item.title}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      fetchPriority="high"
-                      decoding="async"
-                    />
-                    {/* 画像の上に見出しを重ねる。カード内に文字を置くより、
-                        雑誌の表紙に近い密度が出る。 */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span
-                          className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white ${lead.cat.bg}`}
-                        >
-                          {lead.cat.label}
-                        </span>
-                        <span className="text-[11px] font-medium text-white/80">
-                          {formatDate(lead.item.createdAt)}
-                        </span>
-                      </div>
-                      <h2 className="mt-2.5 break-words text-xl font-bold leading-snug tracking-tight text-white drop-shadow sm:text-3xl">
-                        {headingOf(lead)}
-                      </h2>
-                      {lead.isEnglish && lead.item.engTitle && (
-                        <p className="mt-1 text-sm font-semibold text-white/85">
-                          {lead.item.title}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className={`bg-gradient-to-br ${lead.cat.glow} to-transparent p-6`}
-                  >
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white ${lead.cat.bg}`}
-                    >
-                      {lead.cat.label}
-                    </span>
-                    <h2 className="mt-3 break-words text-xl font-bold leading-snug tracking-tight sm:text-3xl">
-                      {headingOf(lead)}
-                    </h2>
-                  </div>
-                )}
-
-                {lead.item.summary && (
-                  <div className="p-5 sm:p-6">
-                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                      {lead.item.summary}
-                    </p>
-                    <span
-                      className={`mt-4 inline-block text-sm font-bold transition-transform duration-200 group-hover:translate-x-1 ${lead.cat.text}`}
-                    >
-                      この記事を読む →
-                    </span>
-                  </div>
-                )}
-              </article>
-            </Link>
-
-            {/* 2〜5位。順位を数字で見せて、主役との連続性を出す。 */}
-            {ranked.length > 0 && (
-              <ol className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900/60">
-                {ranked.map((entry, i) => (
-                  <li key={entry.href} className="min-w-0">
-                    <Link
-                      href={entry.href}
-                      className="group flex min-w-0 items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                    >
-                      <span className="w-5 shrink-0 text-center text-lg font-black tabular-nums text-slate-300 dark:text-slate-700 sm:w-6">
-                        {i + 2}
-                      </span>
-                      {/* 狭い画面ではチップと見出しを2段にする。1行に並べると
-                          日本語の見出しが truncate で数文字しか残らない。 */}
-                      <span className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-                        <span
-                          className={`w-fit shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${entry.cat.chip}`}
-                        >
-                          {entry.cat.label}
-                        </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold leading-snug line-clamp-2 sm:truncate">
-                          {headingOf(entry)}
-                        </span>
-                      </span>
-                      <span
-                        className={`hidden shrink-0 text-xs opacity-0 transition-opacity group-hover:opacity-100 sm:inline ${entry.cat.text}`}
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </div>
-        )}
-
-        {/* 新着タイムライン: createdAt 降順、カテゴリ横断。
-            縦線に沿って点を打つことで、一覧ではなく「更新の流れ」に見せる。 */}
-        <div className={`min-w-0 ${lead ? "lg:col-span-5" : "lg:col-span-12"}`}>
-          <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
-            Latest ・ 新着順
-          </p>
-
-          <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60 sm:p-5">
-            <ul className="relative ml-1 space-y-4 border-l border-dashed border-slate-300 pl-5 dark:border-slate-700">
-              {timeline.map((entry) => (
-                <li key={entry.href} className="relative min-w-0">
-                  <span
-                    className={`absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white dark:ring-slate-900 ${entry.cat.bg}`}
-                  />
-                  <Link href={entry.href} className="group block min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className={`text-[10px] font-bold ${entry.cat.text}`}>
-                        {entry.cat.label}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground">
-                        {relativeDays(entry.item.createdAt, now)}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 line-clamp-2 text-sm font-semibold leading-snug transition-colors group-hover:text-foreground/70">
-                      {headingOf(entry)}
-                    </p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 総合ランキング。週間を主役に据えたときだけ出す添えもの。
-              週間が「いま」を見せるのに対して、こちらは「これまで」——
-              初めて来た読者に定番の入口を残しておくための枠なので、
-              画像は使わず順位と見出しだけに絞る。 */}
-          {allTimeAside.length > 0 && (
-            <div className="mt-6">
-              <p className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-slate-400" />
-                All Time ・ 総合ランキング
-              </p>
-
-              <ol className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900/60">
-                {allTimeAside.map((entry, i) => (
-                  <li key={entry.href} className="min-w-0">
-                    <Link
-                      href={entry.href}
-                      className="group flex min-w-0 items-center gap-3 px-4 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                    >
-                      <span className="w-5 shrink-0 text-center text-base font-black tabular-nums text-slate-300 dark:text-slate-700">
-                        {i + 1}
-                      </span>
-                      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                        <span className={`text-[10px] font-bold ${entry.cat.text}`}>
-                          {entry.cat.label}
-                        </span>
-                        <span className="min-w-0 line-clamp-2 text-sm font-semibold leading-snug">
-                          {headingOf(entry)}
-                        </span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
-        </div>
+      <section className="relative mt-8 overflow-hidden rounded-3xl border border-violet-200/70 bg-gradient-to-b from-violet-50/80 via-transparent to-transparent px-4 py-6 dark:border-violet-900/50 dark:from-violet-950/40 sm:px-7 sm:py-8">
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-500"
+        />
+        <ContentRankingTabs
+          title="まずはこの一本から"
+          eyebrow="All Sections"
+          kicker="3セクション横断"
+          theme="reading"
+          weekly={toReadingRankingEntries(weekly)}
+          allTime={toReadingRankingEntries(popular)}
+          latest={toReadingRankingEntries(latest.slice(0, RANK_TAKE))}
+        />
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />

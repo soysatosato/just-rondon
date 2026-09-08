@@ -5,8 +5,13 @@ import clsx from "clsx";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 
 /**
- * 読み物ハブ(コラム・イギリス英語・いまのイギリス)の、新着・週間・総合を
- * 切り替える棚。
+ * 読み物ハブ4面(英国を読む・コラム・イギリス英語・いまのイギリス)の、
+ * 新着・週間・総合を切り替える棚。
+ *
+ * /reading だけは3セクションを跨いだ混成の一覧になる。棚の枠は親の紫、
+ * 1件ずつの帯とチップは出身セクションの色(tone)という二重の配色にして、
+ * 「3つの棚の総合である」ことを色で見せる。セクションのハブでは tone を
+ * 渡さないので、全件が棚と同じ1色になる。
  *
  * 一覧はどれも createdAt の降順で、記事を足さない限り顔ぶれが動かない。
  * 既定の新着に読者側の軸(週間・総合)を足して、ハブのいちばん目立つ場所が
@@ -47,9 +52,17 @@ export type RankingEntry = {
   date: string;
   /** 連載名など。無ければ出さない。 */
   badge?: string | null;
+  /**
+   * その1件だけ色を変えたいときのセクション名。
+   *
+   * 1セクションのハブでは全件が同じ色なので使わない。カテゴリを跨ぐ
+   * /reading の棚だけが、行ごとに出身セクションの色を持つ。
+   */
+  tone?: RankingThemeName | null;
 };
 
-export type RankingThemeName = "column" | "british-english" | "modern-britain";
+export type RankingThemeName =
+  "reading" | "column" | "british-english" | "modern-britain";
 
 /**
  * 配色。Tailwind はクラス名を文字列として拾うので、色を組み立てず
@@ -69,6 +82,21 @@ const THEMES: Record<
     rail: string;
   }
 > = {
+  /*
+    3セクションを束ねる /reading の棚だけが使う色。紫は各セクションの
+    琥珀・薔薇・藍のどれとも喧嘩しないので、混ざった一覧の枠に置ける。
+  */
+  reading: {
+    bar: "bg-violet-500",
+    dot: "bg-violet-500",
+    trigger:
+      "data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-500 data-[state=active]:to-fuchsia-500 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-violet-500/30 focus-visible:ring-violet-400",
+    ring: "hover:border-violet-300 dark:hover:border-violet-800",
+    text: "text-violet-700 dark:text-violet-400",
+    chip: "bg-violet-100 text-violet-800 dark:bg-violet-950/60 dark:text-violet-300",
+    hero: "from-violet-500 via-fuchsia-500 to-indigo-500",
+    rail: "bg-violet-500",
+  },
   column: {
     bar: "bg-amber-500",
     dot: "bg-amber-500",
@@ -106,14 +134,28 @@ const THEMES: Record<
 
 type Theme = (typeof THEMES)[RankingThemeName];
 
+/**
+ * その1件に使う色。tone を持つのはカテゴリを跨ぐ /reading の棚だけで、
+ * 1セクションのハブでは棚の色がそのまま全件の色になる。
+ */
+function toneOf(entry: RankingEntry, fallback: Theme): Theme {
+  return entry.tone ? THEMES[entry.tone] : fallback;
+}
+
 export default function ContentRankingTabs({
   title,
+  eyebrow = "Start Here",
+  kicker,
   weekly,
   allTime,
   latest,
   theme: themeName,
 }: {
   title: string;
+  /** 見出しの上の英字。既定は各セクションのハブと同じ "Start Here"。 */
+  eyebrow?: string;
+  /** 英字の右に添える一言。/reading の「3セクション横断」など。 */
+  kicker?: string;
   weekly: RankingEntry[];
   allTime: RankingEntry[];
   latest: RankingEntry[];
@@ -161,11 +203,19 @@ export default function ContentRankingTabs({
       {/* 見出しとタブ。広い画面では同じ行に並べ、狭い画面ではタブが下に落ちる。 */}
       <div className="flex flex-col gap-4 border-b border-foreground/15 pb-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
-          <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+          <p className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
             <span
               className={clsx("h-3 w-0.5 shrink-0 rounded-full", theme.bar)}
             />
-            Start Here
+            {eyebrow}
+            {kicker && (
+              <>
+                <span className="text-foreground/20">/</span>
+                <span className={clsx("tracking-[0.2em]", theme.text)}>
+                  {kicker}
+                </span>
+              </>
+            )}
           </p>
           <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
             {title}
@@ -243,6 +293,10 @@ function RankedPanel({
   const [lead, ...rest] = items;
   if (!lead) return null;
 
+  // 混成の一覧では、1位の枠と地紋をその記事のセクション色にする。
+  // 切り替えた瞬間に「どのセクションの記事が首位か」が色で分かる。
+  const leadTheme = toneOf(lead, theme);
+
   return (
     <div className="grid gap-5 lg:grid-cols-12">
       <Link
@@ -253,7 +307,7 @@ function RankedPanel({
         <article
           className={clsx(
             "relative flex h-full min-h-[15rem] flex-col justify-end overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/70",
-            theme.ring,
+            leadTheme.ring,
           )}
         >
           {lead.image ? (
@@ -272,7 +326,7 @@ function RankedPanel({
               <div
                 className={clsx(
                   "absolute inset-0 bg-gradient-to-br",
-                  theme.hero,
+                  leadTheme.hero,
                 )}
               />
               {/* 写真の無いセクション(イギリス英語)向け。番号を大きな
@@ -293,7 +347,14 @@ function RankedPanel({
                 No.1
               </span>
               {lead.badge && (
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur">
+                <span
+                  className={clsx(
+                    "rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
+                    // 連載名は写真に馴染ませる。セクション名(混成の一覧)は
+                    // 見分けが仕事なので、色を塗って前に出す。
+                    lead.tone ? leadTheme.rail : "bg-white/20 backdrop-blur",
+                  )}
+                >
                   {lead.badge}
                 </span>
               )}
@@ -324,60 +385,73 @@ function RankedPanel({
           start={2}
           className="min-w-0 divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900/60 lg:col-span-7"
         >
-          {rest.map((item, i) => (
-            <li key={item.key} className="min-w-0">
-              <Link
-                href={item.href}
-                className="group flex min-w-0 items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 sm:gap-4 sm:px-5"
-              >
-                <span
-                  className={clsx(
-                    "w-6 shrink-0 text-center text-xl font-black tabular-nums transition-colors sm:w-7 sm:text-2xl",
-                    i < 2
-                      ? theme.text
-                      : "text-slate-300 dark:text-slate-700",
-                  )}
+          {rest.map((item, i) => {
+            const t = toneOf(item, theme);
+            return (
+              <li key={item.key} className="min-w-0">
+                <Link
+                  href={item.href}
+                  className="group flex min-w-0 items-center gap-3 px-4 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 sm:gap-4 sm:px-5"
                 >
-                  {i + 2}
-                </span>
-
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt=""
-                    className="hidden h-14 w-14 shrink-0 rounded-lg object-cover sm:block"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
-
-                <span className="min-w-0 flex-1">
-                  {item.eyebrow && (
-                    <span
-                      className={clsx(
-                        "block truncate text-sm font-extrabold tracking-tight",
-                        theme.text,
-                      )}
-                    >
-                      {item.eyebrow}
-                    </span>
-                  )}
-                  <span className="block line-clamp-2 text-sm font-semibold leading-snug">
-                    {item.title}
+                  <span
+                    className={clsx(
+                      "w-6 shrink-0 text-center text-xl font-black tabular-nums transition-colors sm:w-7 sm:text-2xl",
+                      i < 2 ? t.text : "text-slate-300 dark:text-slate-700",
+                    )}
+                  >
+                    {i + 2}
                   </span>
-                  {item.summary && (
-                    <span className="mt-0.5 hidden truncate text-[11px] text-muted-foreground sm:block">
-                      {item.summary}
-                    </span>
-                  )}
-                </span>
 
-                <span className="hidden shrink-0 text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 sm:inline">
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt=""
+                      className="hidden h-14 w-14 shrink-0 rounded-lg object-cover sm:block"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+
+                  <span className="min-w-0 flex-1">
+                    {/* 混成の一覧でだけ、行にセクション名を付ける。同じ順位表に
+                      3セクションが混ざるので、色だけでは初見に伝わらない。 */}
+                    {item.tone && item.badge && (
+                      <span
+                        className={clsx(
+                          "mb-0.5 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                          t.chip,
+                        )}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                    {item.eyebrow && (
+                      <span
+                        className={clsx(
+                          "block truncate text-sm font-extrabold tracking-tight",
+                          t.text,
+                        )}
+                      >
+                        {item.eyebrow}
+                      </span>
+                    )}
+                    <span className="block line-clamp-2 text-sm font-semibold leading-snug">
+                      {item.title}
+                    </span>
+                    {item.summary && (
+                      <span className="mt-0.5 hidden truncate text-[11px] text-muted-foreground sm:block">
+                        {item.summary}
+                      </span>
+                    )}
+                  </span>
+
+                  <span className="hidden shrink-0 text-xs text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 sm:inline">
+                    →
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ol>
       )}
     </div>
@@ -398,66 +472,76 @@ function LatestPanel({
 }) {
   return (
     <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item, i) => (
-        <li key={item.key} className="min-w-0">
-          <Link href={item.href} className="group block h-full">
-            <article
-              className={clsx(
-                "flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70",
-                theme.ring,
-              )}
-            >
-              <div className={clsx("h-1 w-full shrink-0", theme.rail)} />
+      {items.map((item, i) => {
+        // カード上端の帯と文字色は、混成の一覧では記事のセクション色。
+        // 3色が混ざった帯が並ぶこと自体が「横断の棚」の合図になる。
+        const t = toneOf(item, theme);
+        return (
+          <li key={item.key} className="min-w-0">
+            <Link href={item.href} className="group block h-full">
+              <article
+                className={clsx(
+                  "flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70",
+                  t.ring,
+                )}
+              >
+                <div className={clsx("h-1 w-full shrink-0", t.rail)} />
 
-              <div className="flex flex-1 flex-col p-4 sm:p-5">
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  {i === 0 && (
-                    <span
+                <div className="flex flex-1 flex-col p-4 sm:p-5">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    {i === 0 && (
+                      <span
+                        className={clsx(
+                          "rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.18em]",
+                          t.chip,
+                        )}
+                      >
+                        New
+                      </span>
+                    )}
+                    {item.tone && item.badge && (
+                      <span className={clsx("text-[10px] font-bold", t.text)}>
+                        {item.badge}
+                      </span>
+                    )}
+                    <span className="text-[11px] text-muted-foreground">
+                      {item.date}
+                    </span>
+                  </div>
+
+                  {item.eyebrow && (
+                    <p
                       className={clsx(
-                        "rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.18em]",
-                        theme.chip,
+                        "mb-1 break-words text-xl font-extrabold leading-tight tracking-tight",
+                        t.text,
                       )}
                     >
-                      New
-                    </span>
+                      {item.eyebrow}
+                    </p>
                   )}
-                  <span className="text-[11px] text-muted-foreground">
-                    {item.date}
-                  </span>
-                </div>
+                  <h3 className="line-clamp-2 text-sm font-bold leading-snug tracking-tight">
+                    {item.title}
+                  </h3>
+                  {item.summary && (
+                    <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+                      {item.summary}
+                    </p>
+                  )}
 
-                {item.eyebrow && (
                   <p
                     className={clsx(
-                      "mb-1 break-words text-xl font-extrabold leading-tight tracking-tight",
-                      theme.text,
+                      "mt-auto pt-3 text-right text-xs font-semibold transition-transform duration-200 group-hover:translate-x-0.5",
+                      t.text,
                     )}
                   >
-                    {item.eyebrow}
+                    読む →
                   </p>
-                )}
-                <h3 className="line-clamp-2 text-sm font-bold leading-snug tracking-tight">
-                  {item.title}
-                </h3>
-                {item.summary && (
-                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-                    {item.summary}
-                  </p>
-                )}
-
-                <p
-                  className={clsx(
-                    "mt-auto pt-3 text-right text-xs font-semibold transition-transform duration-200 group-hover:translate-x-0.5",
-                    theme.text,
-                  )}
-                >
-                  読む →
-                </p>
-              </div>
-            </article>
-          </Link>
-        </li>
-      ))}
+                </div>
+              </article>
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }
