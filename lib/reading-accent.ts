@@ -1,5 +1,5 @@
 /**
- * 読み物ハブ4面(英国を読む・コラム・イギリス英語・英国のいま)の色。
+ * 読み物ハブ(英国を読む・コラム・イギリス英語・英国のいま・イギリスの歴史)の色。
  *
  * ハブごとの色は詳細ページ・ナビ・OGカードと揃っていて、読者は色で
  * 「どのセクションにいるか」を判断している。題字・絞り込みチップ・
@@ -16,7 +16,8 @@ export type ReadingAccentName =
   | "reading"
   | "column"
   | "british-english"
-  | "modern-britain";
+  | "modern-britain"
+  | "history";
 
 export type ReadingAccent = {
   /** 見出しの左に立てる縦棒。 */
@@ -78,6 +79,24 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     soft: "hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/40 dark:hover:text-rose-400",
     focus:
       "focus:border-rose-400 focus:ring-rose-200 dark:focus:border-rose-500 dark:focus:ring-rose-900/60",
+  },
+  /*
+    歴史はコラムと同じ琥珀。色を分けるより、/history 自身が前から使っている
+    色をそのまま持ってくるほうが読者は迷わない(reading ハブでも同じ判断を
+    している)。キーだけ分けてあるのは、あとで片方だけ動かせるようにするため。
+  */
+  history: {
+    bar: "bg-amber-500",
+    eyebrowOnDark: "text-amber-300",
+    titleOnDark: "text-amber-400",
+    glow: "bg-amber-500/25",
+    text: "text-amber-700 dark:text-amber-400",
+    on: "bg-amber-500 text-white",
+    idle:
+      "hover:border-amber-300 hover:text-amber-700 dark:hover:border-amber-700 dark:hover:text-amber-400",
+    soft: "hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/40 dark:hover:text-amber-400",
+    focus:
+      "focus:border-amber-400 focus:ring-amber-200 dark:focus:border-amber-500 dark:focus:ring-amber-900/60",
   },
   "modern-britain": {
     bar: "bg-indigo-500",

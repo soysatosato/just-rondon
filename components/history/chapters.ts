@@ -37,7 +37,7 @@ export const HISTORY_ERA_BLURBS: Record<HistoryEra, string> = {
   foundation:
     "ローマが道と城壁を敷き、去ったあとにアングロサクソンとヴァイキングが入れ替わり住んだ約1000年。ロンドンという都市の輪郭がここで決まります。",
   kingdom:
-    "1066年の征服から、宗教改革、内戦、そして議会が王に勝つまで。今の英国の政治制度の骨格が、この4章のあいだに出来上がります。",
+    "1066年の征服から、宗教改革、内戦、そして議会が王に勝つまで。今の英国の政治制度の骨格が、この3章のあいだに出来上がります。",
   empire:
     "連合王国の成立、世界の4分の1を支配した帝国、そして産業革命。大英博物館の収蔵品と、ロンドンの街並みそのものがこの時代の産物です。",
   modern:
@@ -197,6 +197,38 @@ export const historyChapters: HistoryChapterMeta[] = [
 
 export function chapterPath(slug: string) {
   return `${HISTORY_BASE}/${slug}`;
+}
+
+/**
+ * 時代の見出しにつける年の幅。「紀元43年〜1066年」のような表記。
+ *
+ * 各章の period から組み立てる。ここに年を直書きすると、章の period を
+ * 直したときにハブの帯だけ古い年が残る。
+ */
+export function eraRange(era: HistoryEra) {
+  const chapters = chaptersByEra(era);
+  if (chapters.length === 0) return "";
+
+  const from = chapters[0].period.split("〜")[0];
+  const to = chapters[chapters.length - 1].period.split("〜")[1] ?? "";
+
+  return to ? `${from}〜${to}` : from;
+}
+
+/** 「第1〜2章」。1章しかない時代では「第6章」。 */
+export function eraChapterRange(era: HistoryEra) {
+  const chapters = chaptersByEra(era);
+  if (chapters.length === 0) return "";
+
+  const first = chapters[0].number;
+  const last = chapters[chapters.length - 1].number;
+
+  return first === last ? `第${first}章` : `第${first}〜${last}章`;
+}
+
+/** 時代の節につけるアンカー。題字の帯から飛ぶ先。 */
+export function eraAnchor(era: HistoryEra) {
+  return `era-${era}`;
 }
 
 export function getChapterMeta(slug: string) {

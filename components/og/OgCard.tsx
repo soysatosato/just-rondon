@@ -54,6 +54,16 @@ export const OG_THEMES = {
     panelGradient: "linear-gradient(160deg, #b91c1c 0%, #1e3a8a 60%, #0f172a 100%)",
     pageGradient: "linear-gradient(135deg, #fef2f2 0%, #ffffff 52%, #eff6ff 100%)",
   },
+  /*
+    歴史は琥珀だが、コラムと同じ配色にすると共有カードで見分けがつかない。
+    コラムが橙〜薔薇の明るい面なのに対し、こちらは石造りの色から琥珀へ。
+  */
+  history: {
+    badgeBg: "#78350f",
+    accent: "#d97706",
+    panelGradient: "linear-gradient(160deg, #0f172a 0%, #78350f 58%, #d97706 100%)",
+    pageGradient: "linear-gradient(135deg, #fafaf9 0%, #ffffff 52%, #fffbeb 100%)",
+  },
   reading: {
     badgeBg: "#0f172a",
     accent: "#64748b",

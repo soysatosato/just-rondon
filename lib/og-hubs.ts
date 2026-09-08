@@ -34,6 +34,13 @@ export const OG_HUBS = {
     glyph: "今",
     theme: "modern-britain",
   },
+  history: {
+    badge: "A HISTORY OF BRITAIN",
+    head: "イギリスの歴史 全10章",
+    tail: "ローマの城壁からEU離脱まで。各章に、実際に立てる場所をつけました。",
+    glyph: "史",
+    theme: "history",
+  },
   reading: {
     badge: "READING BRITAIN",
     head: "英国を読む",
