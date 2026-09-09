@@ -13,6 +13,10 @@ import MusicalSchedule from "@/components/musicals/MusicalSchedule";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
 import { parseAppeals, parseCharacters } from "@/components/musicals/story";
 import {
+  hasMusicalStory,
+  musicalStoryPath,
+} from "@/components/musicals/stories/stories";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -118,6 +122,11 @@ export default async function musicalDetailsPage({
           characters={parseCharacters(musical.characters)}
           appeals={parseAppeals(musical.appeals)}
           storyEnding={musical.storyEnding}
+          storyHref={
+            hasMusicalStory(musical.slug)
+              ? musicalStoryPath(musical.slug)
+              : undefined
+          }
         />
 
         <MusicalInfo

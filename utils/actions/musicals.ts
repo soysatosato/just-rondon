@@ -196,6 +196,31 @@ export const fetchMusicalIdandName = (slug: string) => {
   });
 };
 
+/**
+ * あらすじ専用ページ(/musicals/[slug]/story)が使う観劇の事実。
+ *
+ * 本文は components/musicals/stories/content の静的原稿が持ち、
+ * 上演時間・劇場・推奨年齢だけをここから引く。原稿側に書き写すと、
+ * 演出改訂で上演時間が変わったときに作品ページとあらすじページで
+ * 違う数字が出る。数字の出どころは DB 1箇所に寄せること。
+ */
+export const fetchMusicalStoryFacts = (slug: string) => {
+  return db.musical.findUnique({
+    where: { slug },
+    select: {
+      name: true,
+      engName: true,
+      theatreName: true,
+      theatre: { select: { slug: true } },
+      runtimeMinutes: true,
+      intervalMinutes: true,
+      minAgeGuidance: true,
+      isOnShow: true,
+      _count: { select: { songs: true } },
+    },
+  });
+};
+
 export const fetchSongs = async (
   musicalId: string,
   page: number = 1,

@@ -372,9 +372,24 @@ module.exports = {
       select: { slug: true },
     });
 
+    // あらすじ専用ページ(/musicals/<slug>/story)を持つ作品。
+    //
+    // 全作品には生えない。人が原稿を書いた作品だけが
+    // components/musicals/stories/stories.ts の登録簿に載り、
+    // 未登録の slug は 404 になる(dynamicParams = false)。
+    // ここに書いていない slug を sitemap に出すと 404 を申告することに
+    // なるので、あちらへ足したらこの配列にも同じ slug を足すこと
+    // (このファイルは CJS なので TS を読めない)。
+    const musicalStorySlugs = ["les-miserables"];
+
     for (const mu of musicals) {
       paths.push(await config.transform(config, `/musicals/${mu.slug}`));
       paths.push(await config.transform(config, `/musicals/${mu.slug}/songs`));
+      if (musicalStorySlugs.includes(mu.slug)) {
+        paths.push(
+          await config.transform(config, `/musicals/${mu.slug}/story`)
+        );
+      }
       // 曲詳細(/songs/{id})は sitemap に出さない。ページの大半を占める歌詞が
       // 第三者の著作物のため。ページ側で noindex を宣言済み。
     }

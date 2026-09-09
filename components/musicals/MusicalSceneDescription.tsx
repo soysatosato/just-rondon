@@ -1,6 +1,14 @@
+import Link from "next/link";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { EyeOff, ListOrdered, Sparkles, Theater, Users } from "lucide-react";
+import {
+  ArrowRight,
+  EyeOff,
+  ListOrdered,
+  Sparkles,
+  Theater,
+  Users,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -35,6 +43,7 @@ export default function MusicalSceneDescription({
   characters,
   appeals,
   storyEnding,
+  storyHref,
 }: {
   description: string;
   name: string;
@@ -42,6 +51,11 @@ export default function MusicalSceneDescription({
   characters: MusicalCharacter[];
   appeals: MusicalAppeal[];
   storyEnding: string | null;
+  /**
+   * あらすじ専用ページ(/musicals/[slug]/story)へのリンク。
+   * 原稿を書いた作品にだけ渡す。無い作品では導線ごと出さない。
+   */
+  storyHref?: string;
 }) {
   return (
     <section className="space-y-8">
@@ -117,6 +131,27 @@ export default function MusicalSceneDescription({
             ))}
           </div>
         </div>
+      )}
+
+      {/* あらすじ専用ページがある作品では、そちらを先に案内する。
+          こちらの折りたたみは「作品を選んでいる読者のための要約」で、
+          向こうは上演順に沿った長文。同じ内容の短い版と長い版なので、
+          長い版を探している読者をここで取りこぼさないようにする。 */}
+      {storyHref && (
+        <Link
+          href={storyHref}
+          className="flex items-center justify-between gap-3 rounded-xl border border-primary/40 bg-primary/5 px-5 py-4 transition hover:bg-primary/10"
+        >
+          <span>
+            <span className="block text-sm font-bold text-foreground">
+              {name} の詳しいあらすじを読む
+            </span>
+            <span className="mt-0.5 block text-xs text-muted-foreground">
+              上演順に第一幕・第二幕へ分けた解説。登場人物、時代背景、結末まで
+            </span>
+          </span>
+          <ArrowRight className="h-4 w-4 shrink-0 text-primary" />
+        </Link>
       )}
 
       {/* 筋を追う二層は、どちらも既定で閉じる。観るかどうかを決める段階の
