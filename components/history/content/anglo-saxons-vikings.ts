@@ -94,6 +94,17 @@ const angloSaxonsVikings: HistoryChapter = {
   sections: [
     {
       id: "lundenwic",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/f/fa/Aldwych_street_sign.jpg",
+        alt: "Aldwych の街路標識",
+        caption:
+          "ald（古い）+ wic。城壁の西にあったサクソンの交易集落の名が、通りの名として残っている。",
+        imageSource: "commons",
+        imageCredit: "R/DV/RS (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Aldwych_street_sign.jpg",
+      },
       title: "ロンドンは、いちど別の場所に引っ越していた",
       body: `ローマ撤退後、城壁の中のロンディニウムは放棄されます。石造りの廃墟は、アングロサクソンにとって手に負えない代物でした。彼らは木造建築の民で、古英語の詩はローマの遺構を「巨人の造りしもの（enta geweorc）」と表現しています。自分たちの技術では説明のつかない建物、という認識です。
 
@@ -110,6 +121,17 @@ const angloSaxonsVikings: HistoryChapter = {
     },
     {
       id: "alfred",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/King_Alfred_the_Great_-_geograph.org.uk_-_3761142.jpg/1280px-King_Alfred_the_Great_-_geograph.org.uk_-_3761142.jpg",
+        alt: "アルフレッド大王の像",
+        caption:
+          "イングランド史で the Great を冠されるのは、今もアルフレッドただ一人。",
+        imageSource: "commons",
+        imageCredit: "Peter Trimming (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:King_Alfred_the_Great_-_geograph.org.uk_-_3761142.jpg",
+      },
       title: "アルフレッド大王——なぜ「大王」と呼ばれる唯一の英国王なのか",
       subtitle: "871〜899年",
       body: `イングランド史で **the Great** を冠されるのは、アルフレッドただ一人です。
@@ -134,6 +156,17 @@ const angloSaxonsVikings: HistoryChapter = {
     },
     {
       id: "westminster",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Bayeux_Tapestry_Scene_26_%28cropped%292.png/1280px-Bayeux_Tapestry_Scene_26_%28cropped%292.png",
+        alt: "バイユーのタペストリーに描かれたウェストミンスター寺院",
+        caption:
+          "献堂の一週間後にエドワードは死に、完成したばかりの自分の寺院に葬られた。タペストリーはその場面を左端に描いている。",
+        imageSource: "commons",
+        imageCredit: "Université de Caen Normandie / CNRS / ENSICAEN (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Bayeux_Tapestry_Scene_26_(cropped)2.png",
+      },
       title: "1066年の起点——エドワード懺悔王とウェストミンスター寺院",
       body: `この章の終わりは、次章の始まりに直結します。
 

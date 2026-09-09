@@ -37,7 +37,42 @@ import type {
 } from "@/components/guides/types";
 
 export type HistoryCallout = GuideCalloutData;
-export type HistorySection = GuideSectionData;
+
+/**
+ * 節に添える写真。
+ *
+ * 飾りではなく「その節が名指ししているもの」を見せるための枠なので、
+ * 節の外(章の先頭にまとめる等)には置かない。ブーディカ像の写真を城壁の節に
+ * 置いたら、読者にとっては別の話になる
+ * (components/shopping/types.ts の figure と同じ考え方)。
+ *
+ * 出典表記は省略できない。Commons の CC 画像は作者名とライセンスの表示が
+ * 条件で、HistoryFigure が figcaption の中に必ず出す。
+ */
+export type HistoryFigure = {
+  /** Commons の解決済みURL(thumburl)。幅は250/330/500/960/1280/1920のみ有効。 */
+  image: string;
+  /** alt。読み上げ用に被写体を短く言い切る。 */
+  alt: string;
+  /** 写真の下に出る説明。節の本文と結びつける一言。markdown不可。 */
+  caption: string;
+  /** 現状 "commons" のみ。ImageCredit がこの値で表記を分岐する。 */
+  imageSource: "commons";
+  /** 「作者 (ライセンス)」。 */
+  imageCredit: string;
+  /** Commons のファイル説明ページ。 */
+  imageLink: string;
+  /**
+   * 16:9に切るときの寄せ。既定は中央。
+   * 縦長の肖像や像は "top" にしないと顔が切れる。
+   */
+  focus?: "top" | "center" | "bottom";
+};
+
+export type HistorySection = GuideSectionData & {
+  figure?: HistoryFigure;
+};
+
 export type HistoryFaq = GuideFaqItem;
 export type HistorySource = GuideSourceLink;
 export type HistoryRelatedLink = GuideRelatedLink;

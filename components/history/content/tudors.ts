@@ -97,6 +97,17 @@ const tudors: HistoryChapter = {
   sections: [
     {
       id: "dissolution",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Abbot_Huby%27s_Tower_and_Fountains_Abbey_ruins%2C_Ripon%2C_England.jpg/1280px-Abbot_Huby%27s_Tower_and_Fountains_Abbey_ruins%2C_Ripon%2C_England.jpg",
+        alt: "ファウンテンズ修道院の廃墟",
+        caption:
+          "解散令のあと屋根の鉛が剥がされ、石は建材として持ち去られた。イングランド各地に残るこの種の廃墟が、資産移転の跡そのもの。",
+        imageSource: "commons",
+        imageCredit: "Rosser1954 (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Abbot_Huby%27s_Tower_and_Fountains_Abbey_ruins,_Ripon,_England.jpg",
+      },
       title: "修道院解散——イングランド史上最大の資産移転",
       subtitle: "1536〜1541年",
       body: `国教会の首長になったヘンリーが次に手をつけたのが、修道院でした。
@@ -120,6 +131,17 @@ const tudors: HistoryChapter = {
     },
     {
       id: "elizabeth",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Elizabeth_I_Armada_Portrait_British_School.jpg/1280px-Elizabeth_I_Armada_Portrait_British_School.jpg",
+        alt: "エリザベス1世のアルマダの肖像",
+        caption:
+          "右手は地球儀の上、背後には無敵艦隊の難破。結婚しないことを45年間の外交手段にした女王の、最も有名な肖像。",
+        imageSource: "commons",
+        imageCredit: "Unknown artist, British School (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Elizabeth_I_Armada_Portrait_British_School.jpg",
+      },
       title: "エリザベス1世——「結婚しない」ことを政治にした45年",
       subtitle: "1558〜1603年",
       body: `父ヘンリーが英国国教会を作り、弟エドワード6世がプロテスタント化を進め、姉メアリーがカトリックに戻す——20年で三度も国教が変わった国を、エリザベスは引き継ぎます。
@@ -140,6 +162,17 @@ const tudors: HistoryChapter = {
     },
     {
       id: "shakespeare",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/The_Globe_Theatre%2C_London_-_geograph.org.uk_-_1778892.jpg/1280px-The_Globe_Theatre%2C_London_-_geograph.org.uk_-_1778892.jpg",
+        alt: "テムズ南岸に再建されたシェイクスピアズ・グローブ",
+        caption:
+          "劇場が南岸に集まったのは、シティの司法権が及ばない土地だったから。現在の建物は1997年の再建。",
+        imageSource: "commons",
+        imageCredit: "Peter Trimming (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:The_Globe_Theatre,_London_-_geograph.org.uk_-_1778892.jpg",
+      },
       title: "劇場が生まれた——なぜテムズ川の南岸だったのか",
       body: `エリザベス期は英語文学が爆発した時代です。シェイクスピア、マーロウ、ベン・ジョンソン。常設の商業劇場という形式が、この時期に成立しました。
 

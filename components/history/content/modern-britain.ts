@@ -105,6 +105,18 @@ const modernBritain: HistoryChapter = {
   sections: [
     {
       id: "thatcher",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Margaret_Thatcher_%281983%29.jpg/1280px-Margaret_Thatcher_%281983%29.jpg",
+        alt: "1983年のマーガレット・サッチャー",
+        caption:
+          "民営化、労働組合の弱体化、Right to Buy、金融ビッグバン。英国現代史で最も評価が割れる11年。",
+        imageSource: "commons",
+        imageCredit: "Rob Bogaerts (CC0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Margaret_Thatcher_(1983).jpg",
+        focus: "top",
+      },
       title: "サッチャーの11年——何が変わったのか",
       subtitle: "1979〜1990年",
       body: `英国の現代史で、最も評価が割れる人物です。
@@ -133,6 +145,17 @@ const modernBritain: HistoryChapter = {
     },
     {
       id: "london-remade",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Canary_Wharf_Skyline_2%2C_London_UK_-_Oct_2012.jpg/1280px-Canary_Wharf_Skyline_2%2C_London_UK_-_Oct_2012.jpg",
+        alt: "夜のカナリー・ワーフ",
+        caption:
+          "1980年までにすべて閉鎖されたドックの跡地。1987年に着工した塔が、都心から数キロの荒地を金融街に変えた。",
+        imageSource: "commons",
+        imageCredit: "Diliff (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Canary_Wharf_Skyline_2,_London_UK_-_Oct_2012.jpg",
+      },
       title: "ロンドンの再生——ドックランズと五輪",
       body: `帝国の港湾（第6章）は、20世紀後半に役目を終えました。**コンテナ化**によって、大型船が入れる深水港（ティルベリー、フェリクストウ）に貨物が移り、ロンドン中心部のドックは不要になります。1980年までにほぼすべてが閉鎖されました。
 
@@ -152,6 +175,17 @@ const modernBritain: HistoryChapter = {
     },
     {
       id: "devolution",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/2017-08-26_09-09_Schottland_038_Edinburgh%2C_Scottish_Parliament_Building_%2836948624113%29.jpg/1280px-2017-08-26_09-09_Schottland_038_Edinburgh%2C_Scottish_Parliament_Building_%2836948624113%29.jpg",
+        alt: "ホリールードのスコットランド議会",
+        caption:
+          "1999年に発足し、立法権と課税権の一部を持つ。1707年の合同から約300年を経た巻き戻し。",
+        imageSource: "commons",
+        imageCredit: "Allie_Caulfield (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:2017-08-26_09-09_Schottland_038_Edinburgh,_Scottish_Parliament_Building_(36948624113).jpg",
+      },
       title: "連合王国のほころび——権限移譲と北アイルランド",
       body: `1997年に発足したブレア政権は、**権限移譲（devolution）** を実行します。
 
@@ -171,6 +205,17 @@ const modernBritain: HistoryChapter = {
     },
     {
       id: "brexit",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/David_Cameron_announces_resignation.jpg/1280px-David_Cameron_announces_resignation.jpg",
+        alt: "辞任を表明するデービッド・キャメロン首相",
+        caption:
+          "2016年6月24日朝、国民投票の翌日。離脱51.9%対残留48.1%、投票率72.2%。",
+        imageSource: "commons",
+        imageCredit: "Tom Evans (OGL 3)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:David_Cameron_announces_resignation.jpg",
+      },
       title: "2016年6月23日——51.9%対48.1%",
       body: `国民投票の結果は、**離脱51.9%、残留48.1%**。投票率72.2%。
 
@@ -208,6 +253,17 @@ const modernBritain: HistoryChapter = {
     },
     {
       id: "now",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/London_Skyline_from_Waterloo_Bridge%2C_London%2C_UK_-_Diliff.jpg/1280px-London_Skyline_from_Waterloo_Bridge%2C_London%2C_UK_-_Diliff.jpg",
+        alt: "ウォータールー橋から見たロンドンの街並み",
+        caption:
+          "焼かれ、捨てられ、疫病に襲われ、そのたびに建て直されてきた街。ローマ人が橋の場所を選んでから約2000年。",
+        imageSource: "commons",
+        imageCredit: "Diliff (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:London_Skyline_from_Waterloo_Bridge,_London,_UK_-_Diliff.jpg",
+      },
       title: "そして今——2000年後のロンドン",
       body: `第1章で、ローマ人が「橋を架けられる最も海寄りの地点」という理由でこの場所を選んだ話をしました。
 

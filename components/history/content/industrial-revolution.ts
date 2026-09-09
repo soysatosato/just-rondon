@@ -99,6 +99,17 @@ const industrialRevolution: HistoryChapter = {
   sections: [
     {
       id: "great-stink",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/a/a2/The_silent_highwayman.jpg",
+        alt: "テムズ川を漕ぐ死神を描いた1858年の風刺画",
+        caption:
+          "『パンチ』誌の「沈黙の追い剥ぎ」。汚水を流し込む同じ川から、水道会社が飲料水を取っていた。",
+        imageSource: "commons",
+        imageCredit: "Punch Magazine, 1858 (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:The_silent_highwayman.jpg",
+      },
       title: "大悪臭——議会が自分の鼻で動いた夏",
       subtitle: "1858年",
       body: `19世紀前半のロンドンでは、汚水は地下の汚水溜め（cesspit）に溜めるか、そのままテムズ川に流していました。そして**同じテムズから、水道会社が飲料水を取水していました。**
@@ -128,6 +139,17 @@ const industrialRevolution: HistoryChapter = {
     },
     {
       id: "underground",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Constructing_the_Metropolitan_Railway.jpg/1280px-Constructing_the_Metropolitan_Railway.jpg",
+        alt: "メトロポリタン鉄道の建設現場",
+        caption:
+          "道路を掘って蓋をする開削工法。1863年1月10日に世界初の地下鉄が開業し、初日に約4万人が乗った。",
+        imageSource: "commons",
+        imageCredit: "Percy William Justyne (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Constructing_the_Metropolitan_Railway.jpg",
+      },
       title: "世界初の地下鉄——蒸気機関車をトンネルに走らせた",
       subtitle: "1863年",
       body: `1863年1月10日、**メトロポリタン鉄道**が Paddington（当時 Bishop's Road）から Farringdon まで開業します。世界初の地下鉄でした。
@@ -151,6 +173,17 @@ const industrialRevolution: HistoryChapter = {
     },
     {
       id: "great-exhibition",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Crystal_Palace_-_interior.jpg/1280px-Crystal_Palace_-_interior.jpg",
+        alt: "水晶宮の内部",
+        caption:
+          "ハイド・パークの木をそのまま内部に取り込んだ、工期9か月の組み立て建築。来場者は約600万人。",
+        imageSource: "commons",
+        imageCredit: "J. McNeven (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Crystal_Palace_-_interior.jpg",
+      },
       title: "1851年万国博覧会——儲けた金で博物館を建てた",
       body: `ヴィクトリア女王の夫**アルバート公**が主導した **The Great Exhibition** は、ハイド・パークに建てられた巨大なガラスと鉄の建物 **水晶宮（Crystal Palace）** で開かれました。
 
@@ -179,6 +212,17 @@ const industrialRevolution: HistoryChapter = {
     },
     {
       id: "social-cost",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Descriptive_map_of_London_poverty%2C_1889_Wellcome_L0074438.jpg/1280px-Descriptive_map_of_London_poverty%2C_1889_Wellcome_L0074438.jpg",
+        alt: "チャールズ・ブースのロンドン貧困地図（1889年）",
+        caption:
+          "街路ごとに住民の階層を7色で塗り分けた地図。最下層は黒で、「最下層。悪徳、半ば犯罪的」と記された。",
+        imageSource: "commons",
+        imageCredit: "Charles Booth / Wellcome Collection (CC BY 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Descriptive_map_of_London_poverty,_1889_Wellcome_L0074438.jpg",
+      },
       title: "その代償——児童労働とイーストエンド",
       body: `同じ時代の、別の側面です。
 

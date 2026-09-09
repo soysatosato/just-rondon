@@ -24,6 +24,16 @@ export type WalkStop = {
   /** この地点が受け持つ章。番号は historyChapters と一致させる。 */
   chapters: number[];
   mapQuery: string;
+  /**
+   * 帯に出す写真。Commons の解決済みURL。
+   *
+   * 出典表記が要るので credit / link と3点セットで持たせる。1枚だけ
+   * 欠けた帯にならないよう、任意フィールドにしていない。
+   */
+  image: string;
+  imageAlt: string;
+  imageCredit: string;
+  imageLink: string;
 };
 
 export const HISTORY_WALK: WalkStop[] = [
@@ -34,6 +44,12 @@ export const HISTORY_WALK: WalkStop[] = [
     see: "下4.4メートルがローマ期、その上は中世。赤い瓦の列が境目になっている。",
     chapters: [1],
     mapQuery: "London Wall Tower Hill",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/London_Roman_Wall_-_surviving_section_by_Tower_Hill_gardens_full_section.jpg/1280px-London_Roman_Wall_-_surviving_section_by_Tower_Hill_gardens_full_section.jpg",
+    imageAlt: "タワーヒルに残るロンドン城壁",
+    imageCredit: "Jamzze (CC BY-SA 4.0)",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:London_Roman_Wall_-_surviving_section_by_Tower_Hill_gardens_full_section.jpg",
   },
   {
     place: "ロンドン塔",
@@ -42,6 +58,12 @@ export const HISTORY_WALK: WalkStop[] = [
     see: "征服者が市民を威圧するために建てた白い塔。ローマ城壁の東端でもある。",
     chapters: [3],
     mapQuery: "Tower of London",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/South_Face_of_the_White_Tower_at_the_Tower_of_London_%2801%29.jpg/1280px-South_Face_of_the_White_Tower_at_the_Tower_of_London_%2801%29.jpg",
+    imageAlt: "ロンドン塔のホワイト・タワー",
+    imageCredit: "Ethan Doyle White (CC BY-SA 4.0)",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:South_Face_of_the_White_Tower_at_the_Tower_of_London_(01).jpg",
   },
   {
     place: "セント・ポール大聖堂",
@@ -50,6 +72,12 @@ export const HISTORY_WALK: WalkStop[] = [
     see: "大火のあとレンが35年かけて建て直した聖堂と、ブリッツで焼けた周辺の廃墟教会。",
     chapters: [5, 8],
     mapQuery: "St Paul's Cathedral London",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/St_Paul%27s_Cathedral_Dome_2020_Exterior_Ground.jpg/1280px-St_Paul%27s_Cathedral_Dome_2020_Exterior_Ground.jpg",
+    imageAlt: "セント・ポール大聖堂のドーム",
+    imageCredit: "Julian Herzog (CC BY 4.0)",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:St_Paul%27s_Cathedral_Dome_2020_Exterior_Ground.jpg",
   },
   {
     place: "ウェストミンスター",
@@ -58,6 +86,12 @@ export const HISTORY_WALK: WalkStop[] = [
     see: "戴冠式の寺院と、王が処刑台へ出た窓。議会が王に勝った現場。",
     chapters: [2, 4, 5],
     mapQuery: "Westminster Abbey",
+    image:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Westminster_Abbey_-_geograph.org.uk_-_4765272.jpg/1280px-Westminster_Abbey_-_geograph.org.uk_-_4765272.jpg",
+    imageAlt: "夜のウェストミンスター寺院",
+    imageCredit: "Peter McDermott (CC BY-SA 2.0)",
+    imageLink:
+      "https://commons.wikimedia.org/wiki/File:Westminster_Abbey_-_geograph.org.uk_-_4765272.jpg",
   },
 ];
 

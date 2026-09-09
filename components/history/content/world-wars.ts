@@ -95,6 +95,18 @@ const worldWars: HistoryChapter = {
   sections: [
     {
       id: "ww1",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/May_31_1915_LZ_38_Raids_London.jpg/1280px-May_31_1915_LZ_38_Raids_London.jpg",
+        alt: "1915年5月31日のツェッペリン空襲を報じる新聞1面",
+        caption:
+          "史上初の、本格的な都市への戦略爆撃。海が国を守るという数百年の前提が、この夜に無効になった。",
+        imageSource: "commons",
+        imageCredit: "The Seattle Star, 1 June 1915 (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:May_31_1915_LZ_38_Raids_London.jpg",
+        focus: "top",
+      },
       title: "第一次大戦——空襲という発明と、日常への介入",
       body: `1915年5月31日、ドイツの**ツェッペリン飛行船**がロンドンに爆弾を落としました。史上初の、本格的な都市への戦略爆撃です。
 
@@ -118,6 +130,17 @@ const worldWars: HistoryChapter = {
     },
     {
       id: "blitz",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Londoners_sleeping_in_the_passageway_of_a_London_Underground_station%2C_probably_Aldwych%2C_in_November_1940._D1678.jpg/1280px-Londoners_sleeping_in_the_passageway_of_a_London_Underground_station%2C_probably_Aldwych%2C_in_November_1940._D1678.jpg",
+        alt: "地下鉄構内で眠るロンドン市民（1940年11月）",
+        caption:
+          "政府は当初、駅を防空壕にすることに反対した。市民は切符を買ってホームに降り、そのまま居座った。",
+        imageSource: "commons",
+        imageCredit: "Ministry of Information Photo Division (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Londoners_sleeping_in_the_passageway_of_a_London_Underground_station,_probably_Aldwych,_in_November_1940._D1678.jpg",
+      },
       title: "ブリッツ——57夜連続の爆撃",
       subtitle: "1940年9月〜1941年5月",
       body: `1940年9月7日から、ロンドンは**57夜連続**で爆撃を受けます。1941年5月までのブリッツ全体で、ロンドンだけで約3万人が死亡しました。
@@ -143,6 +166,17 @@ const worldWars: HistoryChapter = {
     },
     {
       id: "war-rooms",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Map_Room%2C_Churchill_War_Rooms.jpg/1280px-Map_Room%2C_Churchill_War_Rooms.jpg",
+        alt: "チャーチル戦争指令室の地図室",
+        caption:
+          "1945年8月15日に明かりが消され、そのまま封鎖された。壁の地図も机の上の書類も、当時の位置のまま残っている。",
+        imageSource: "commons",
+        imageCredit: "JRennocks (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Map_Room,_Churchill_War_Rooms.jpg",
+      },
       title: "地下の政府——チャーチル戦争指令室",
       body: `ホワイトホールの財務省の地下に、戦時内閣が使った作戦室がそのまま残っています。
 
@@ -166,6 +200,17 @@ const worldWars: HistoryChapter = {
     },
     {
       id: "home-front",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Tray_containing_a_ration_book_and_the_weekly_ration_of_sugar%2C_tea%2C_margarine%2C_%27national_butter%27%2C_lard%2C_eggs%2C_bacon_and_cheese_as_issued_to_an_adult_in_Britain_during_1942._D7958.jpg/1280px-thumbnail.jpg",
+        alt: "1942年、成人1人あたり1週間分の配給",
+        caption:
+          "砂糖、紅茶、マーガリン、バター、ラード、卵、ベーコン、チーズ。王室も同じ配給手帳を持っていた。",
+        imageSource: "commons",
+        imageCredit: "Ministry of Information Photo Division (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Tray_containing_a_ration_book_and_the_weekly_ration_of_sugar,_tea,_margarine,_%27national_butter%27,_lard,_eggs,_bacon_and_cheese_as_issued_to_an_adult_in_Britain_during_1942._D7958.jpg",
+      },
       title: "配給と疎開——「全員が同じ条件」という経験",
       body: `戦時の英国社会を理解する鍵は、**配給（rationing）** です。
 

@@ -99,6 +99,18 @@ const unionAndEmpire: HistoryChapter = {
   sections: [
     {
       id: "slavery",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Slaveshipposter.jpg/1280px-Slaveshipposter.jpg",
+        alt: "奴隷船ブルックス号の積載図",
+        caption:
+          "廃止運動が配った積載図。1788年の規制法が「合法」と定めた詰め込み方を、そのまま図にしている。",
+        imageSource: "commons",
+        imageCredit: "Society for Effecting the Abolition of the Slave Trade (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Slaveshipposter.jpg",
+        focus: "top",
+      },
       title: "三角貿易——帝国の資金はどこから来たか",
       body: `18世紀のイギリスの繁栄を語るとき、避けて通れないのが大西洋奴隷貿易です。
 
@@ -123,6 +135,17 @@ const unionAndEmpire: HistoryChapter = {
     },
     {
       id: "east-india",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Anonymous_-_A_Front_View_of_the_East_India_House_in_Leadenhall_Street_-_B1977.14.17465_-_Yale_Center_for_British_Art.jpg/1280px-Anonymous_-_A_Front_View_of_the_East_India_House_in_Leadenhall_Street_-_B1977.14.17465_-_Yale_Center_for_British_Art.jpg",
+        alt: "リーデンホール街の東インド会社本社",
+        caption:
+          "数千万人を統治し、20万を超える常備軍を持った民間企業の本社。跡地には現在ロイズ・ビルが建っている。",
+        imageSource: "commons",
+        imageCredit: "Yale Center for British Art (CC0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Anonymous_-_A_Front_View_of_the_East_India_House_in_Leadenhall_Street_-_B1977.14.17465_-_Yale_Center_for_British_Art.jpg",
+      },
       title: "東インド会社——株式会社が国を統治した",
       body: `大英帝国の特異な点は、その一部が**民間企業によって運営された**ことです。
 
@@ -140,6 +163,17 @@ const unionAndEmpire: HistoryChapter = {
     },
     {
       id: "museum-objects",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Rosetta_Stone%2C_British_Museum.jpg/1280px-Rosetta_Stone%2C_British_Museum.jpg",
+        alt: "大英博物館のロゼッタストーン",
+        caption:
+          "ナポレオンのエジプト遠征中に発見され、1801年の降伏条件として英国が接収した。3点のうち、来歴が最も明快な一点。",
+        imageSource: "commons",
+        imageCredit: "APK (CC BY 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Rosetta_Stone,_British_Museum.jpg",
+      },
       title: "大英博物館の3つの展示品と、その来歴",
       subtitle: "収蔵経緯としての帝国史",
       body: `大英博物館は1753年、医師ハンス・スローンの個人コレクションを議会が買い上げて設立されました。**世界初の国立公共博物館**で、設立時から無料公開が原則です（スローン自身の資産にも、カリブ海のプランテーション由来の富が含まれていました）。
@@ -164,6 +198,17 @@ const unionAndEmpire: HistoryChapter = {
     },
     {
       id: "ireland",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/The_Famine_in_Ireland%2C_Funeral_at_Skibbereen_-_ILN_1847.jpg/1280px-The_Famine_in_Ireland%2C_Funeral_at_Skibbereen_-_ILN_1847.jpg",
+        alt: "1847年、スキバリーンでの葬列を描いた報道画",
+        caption:
+          "『イラストレイテッド・ロンドン・ニュース』が現地に送った画家の記録。この間もアイルランドからは食料が輸出され続けていた。",
+        imageSource: "commons",
+        imageCredit: "Frederick James Smyth (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:The_Famine_in_Ireland,_Funeral_at_Skibbereen_-_ILN_1847.jpg",
+      },
       title: "アイルランドとの合同、そして飢饉",
       body: `1801年、アイルランドが連合王国に組み込まれます。1798年のアイルランド反乱を受けた措置で、アイルランド議会は廃止され、代表はウェストミンスターへ送られることになりました。国名が **United Kingdom of Great Britain and Ireland** となり、国旗に聖パトリックの十字が加わって、現在のユニオンジャックが完成します。
 

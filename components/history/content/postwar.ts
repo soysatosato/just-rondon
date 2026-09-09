@@ -112,6 +112,17 @@ const postwar: HistoryChapter = {
   sections: [
     {
       id: "nhs",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Anenurin_Bevan%2C_Minister_of_Health%2C_on_the_first_day_of_the_National_Health_Service%2C_5_July_1948_at_Park_Hospital%2C_Davyhulme%2C_near_Manchester_%2814465908720%29.jpg/1280px-Anenurin_Bevan%2C_Minister_of_Health%2C_on_the_first_day_of_the_National_Health_Service%2C_5_July_1948_at_Park_Hospital%2C_Davyhulme%2C_near_Manchester_%2814465908720%29.jpg",
+        alt: "NHS初日、パーク病院を訪れたアナイリン・ベヴァン",
+        caption:
+          "1948年7月5日、NHSが始まった日のベヴァン保健相。すべての人を、支払い能力ではなく必要に応じてカバーする制度が動き出した。",
+        imageSource: "commons",
+        imageCredit: "University of Liverpool Faculty of Health & Life Sciences (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Anenurin_Bevan,_Minister_of_Health,_on_the_first_day_of_the_National_Health_Service,_5_July_1948_at_Park_Hospital,_Davyhulme,_near_Manchester_(14465908720).jpg",
+      },
       title: "NHS——「病気は貧しさの罰であってはならない」",
       subtitle: "1948年7月5日",
       body: `NHS 以前のイギリスでは、医療は基本的に有料でした。労働者向けの保険制度はありましたが、家族はカバーされず、多くの人にとって医者にかかることは経済的な決断でした。
@@ -137,6 +148,17 @@ NHS は英国社会で特別な位置を占めています。**2012年ロンド�
     },
     {
       id: "windrush",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/National_Windrush_Monument%2C_2022-06-24.jpg/1280px-National_Windrush_Monument%2C_2022-06-24.jpg",
+        alt: "ウォータールー駅の国民ウィンドラッシュ記念碑",
+        caption:
+          "2022年に置かれた記念碑。スーツケースの上に立つ家族像で、招かれて来た人々を記念している。",
+        imageSource: "commons",
+        imageCredit: "The wub (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:National_Windrush_Monument,_2022-06-24.jpg",
+      },
       title: "ウィンドラッシュ——招かれて来た人々",
       subtitle: "1948年〜",
       body: `1948年6月22日、客船 **エンパイア・ウィンドラッシュ号** がエセックスのティルベリー港に着きます。乗っていたのは、ジャマイカをはじめカリブ海諸国から来た約500人でした。
@@ -158,6 +180,17 @@ NHS は英国社会で特別な位置を占めています。**2012年ロンド�
     },
     {
       id: "windrush-scandal",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Brixton_Library%2C_Windrush_Square.jpg/1280px-Brixton_Library%2C_Windrush_Square.jpg",
+        alt: "ブリクストンのウィンドラッシュ・スクエア",
+        caption:
+          "彼らが根を下ろした街の広場。その多くが2018年に「不法滞在者」として扱われた。",
+        imageSource: "commons",
+        imageCredit: "Colette Lambeth (CC0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Brixton_Library,_Windrush_Square.jpg",
+      },
       title: "そして2018年、彼らは「不法滞在者」にされた",
       body: `この章で最も新しく、最も直視すべき出来事です。
 
@@ -184,6 +217,18 @@ NHS は英国社会で特別な位置を占めています。**2012年ロンド�
     },
     {
       id: "consensus-end",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/1/1b/James_Callaghan_1976.jpg",
+        alt: "1976年のジェームズ・キャラハン",
+        caption:
+          "この年に首相となり、1976年にIMFへ融資を要請し、「不満の冬」のあとの総選挙で敗れた。",
+        imageSource: "commons",
+        imageCredit: "Bert Verhoeff / Anefo (CC0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:James_Callaghan_1976.jpg",
+        focus: "top",
+      },
       title: "戦後合意の終わり",
       body: `1945年から1970年代まで、保守党も労働党も、**福祉国家・混合経済・完全雇用**という基本線を共有していました。これを「戦後合意（postwar consensus）」と呼びます。
 

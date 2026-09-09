@@ -83,6 +83,17 @@ const romanBritain: HistoryChapter = {
   sections: [
     {
       id: "boudica",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Statue_of_Boadicea_by_Westminster_Station%2C_London.jpg/1280px-Statue_of_Boadicea_by_Westminster_Station%2C_London.jpg",
+        alt: "ウェストミンスター橋のたもとに立つブーディカの戦車像",
+        caption:
+          "反乱を率いた女王は、後世に「侵略者に抗った女王」として銅像になった。今もウェストミンスター橋のたもとに立っている。",
+        imageSource: "commons",
+        imageCredit: "Leimenide (CC BY 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Statue_of_Boadicea_by_Westminster_Station,_London.jpg",
+      },
       title: "ブーディカの反乱——ロンドンは一度、完全に焼かれた",
       subtitle: "60/61年",
       body: `ロンディニウム建設から十数年後、この街は灰になります。
@@ -100,6 +111,17 @@ const romanBritain: HistoryChapter = {
     },
     {
       id: "city-wall",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/London_Roman_Wall_-_surviving_section_by_Tower_Hill_gardens_full_section.jpg/1280px-London_Roman_Wall_-_surviving_section_by_Tower_Hill_gardens_full_section.jpg",
+        alt: "タワーヒルに残るロンドン城壁",
+        caption:
+          "タワーヒル駅を出てすぐの城壁。下から約4.4メートルがローマ期の石積みで、その上の粗い部分が中世の増築。",
+        imageSource: "commons",
+        imageCredit: "Jamzze (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:London_Roman_Wall_-_surviving_section_by_Tower_Hill_gardens_full_section.jpg",
+      },
       title: "城壁——2000年後の地図に残った線",
       subtitle: "200年ごろ",
       body: `2世紀末から3世紀にかけて、ロンディニウムは城壁で囲まれます。高さ約6メートル、全長約3キロ。ケント産の石灰岩を船で運んで積み上げた、当時としては巨大な土木事業でした。
@@ -117,6 +139,17 @@ const romanBritain: HistoryChapter = {
     },
     {
       id: "mithras",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/London_Mithraeum_23.jpg/1280px-London_Mithraeum_23.jpg",
+        alt: "復元されたロンドン・ミトラエウムの遺構",
+        caption:
+          "本来の位置・地下7メートルに戻された神殿。ブルームバーグ欧州本社の地下で、無料公開されている。",
+        imageSource: "commons",
+        imageCredit: "Simon Burchell (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:London_Mithraeum_23.jpg",
+      },
       title: "ミトラス神殿——オフィスビルの地下に戻された神殿",
       body: `1954年、戦災を受けたシティの再建工事中に、3世紀の **ミトラス神殿（Temple of Mithras）** が出土しました。ミトラス教はローマ兵の間で流行したペルシア由来の密儀宗教で、キリスト教のライバルだった時期もあります。
 
@@ -133,6 +166,17 @@ const romanBritain: HistoryChapter = {
     },
     {
       id: "withdrawal",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Billingsgate_Roman_House_and_Baths_2025-08-23.jpg/1280px-Billingsgate_Roman_House_and_Baths_2025-08-23.jpg",
+        alt: "ビリングスゲートのローマ浴場跡",
+        caption:
+          "シティの地下に残るローマ期の浴場跡。5世紀まで使われたことが分かっており、ロンディニウムが無人になっていく時期の数少ない物証。",
+        imageSource: "commons",
+        imageCredit: "k7hpn (CC BY 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Billingsgate_Roman_House_and_Baths_2025-08-23.jpg",
+      },
       title: "410年、ローマは去る",
       body: `5世紀初頭、ローマ帝国は本国の防衛で手一杯になります。ブリタニア駐留軍は大陸へ引き揚げられ、410年、皇帝ホノリウスは属州の各都市に「自らの防衛は自ら行え」と通告したと伝えられます。
 

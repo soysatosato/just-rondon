@@ -117,6 +117,24 @@ const QUESTIONS: HistoryQuestion[] = [
 ];
 
 /**
+ * 題字の背景。
+ *
+ * 他の読み物ハブは最新記事の挿絵を沈めているが、通史には「最新」が無く、
+ * 10章のどれか1つを出すと、そこが表紙のように見える。かわりに1616年の
+ * ロンドン俯瞰図を敷いた。全10章のうち4章がこの絵より前の話で、残りは
+ * この絵のあとに起きたことなので、どの章の側にも寄らない。
+ *
+ * パブリックドメインだが、背景として使うときも出典は書いておく。
+ */
+const MASTHEAD = {
+  image:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/London_panorama%2C_1616.jpg/1280px-London_panorama%2C_1616.jpg",
+  caption: "クラース・ヤンスゾーン・フィスヘル「ロンドン俯瞰図」1616年",
+  credit: "Claes Janszoon Visscher II (Public domain)",
+  link: "https://commons.wikimedia.org/wiki/File:London_panorama,_1616.jpg",
+};
+
+/**
  * 題字に出す数字。
  *
  * 「全10章」だけでは分量が伝わらないので、このセクションの取り柄である
@@ -225,6 +243,7 @@ export default function HistoryHubPage() {
             を、最寄り駅と入場可否つきで置いています。
           </>
         }
+        image={MASTHEAD.image}
         stats={[
           { label: "通史", value: `${historyChapters.length}`, unit: "章" },
           { label: "立てる場所", value: `${PLACE_COUNT}`, unit: "か所" },
@@ -232,6 +251,18 @@ export default function HistoryHubPage() {
         ]}
       >
         <EraRail />
+        <p className="mt-6 text-[10px] leading-snug text-white/30">
+          題字の背景: {MASTHEAD.caption}（
+          <a
+            href={MASTHEAD.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white/50"
+          >
+            {MASTHEAD.credit}
+          </a>
+          ）
+        </p>
       </HubMasthead>
 
       {/*

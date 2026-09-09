@@ -102,6 +102,17 @@ const normanConquest: HistoryChapter = {
   sections: [
     {
       id: "tower",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/South_Face_of_the_White_Tower_at_the_Tower_of_London_%2801%29.jpg/1280px-South_Face_of_the_White_Tower_at_the_Tower_of_London_%2801%29.jpg",
+        alt: "ロンドン塔のホワイト・タワー南面",
+        caption:
+          "市壁の内側に、市民に向けて建てられた主塔。高さ約27メートルで、当時のロンドンで最も高い建造物だった。",
+        imageSource: "commons",
+        imageCredit: "Ethan Doyle White (CC BY-SA 4.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:South_Face_of_the_White_Tower_at_the_Tower_of_London_(01).jpg",
+      },
       title: "ロンドン塔は、市民を守るためではなく威圧するために建てられた",
       body: `観光地としてのロンドン塔は「王室の宝物庫」「処刑の舞台」として知られますが、建設の第一目的はもっと単純です。**征服したばかりの都市を、支配下に置き続けるため**でした。
 
@@ -122,6 +133,17 @@ const normanConquest: HistoryChapter = {
     },
     {
       id: "domesday",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Domesday-book-1804x972.jpg/1280px-Domesday-book-1804x972.jpg",
+        alt: "ドゥームズデイ・ブックの2巻を描いた図",
+        caption:
+          "「一頭の牛も、一匹の豚も、記載を免れなかった」。原本は今も英国国立公文書館にある。",
+        imageSource: "commons",
+        imageCredit: "William Andrews (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Domesday-book-1804x972.jpg",
+      },
       title: "ドゥームズデイ・ブック——1086年の全国資産調査",
       body: `征服から20年後、ウィリアムは前例のない事業を行います。イングランド全土を回り、**誰がどの土地を持ち、家畜が何頭いて、水車が何基あるか**を記録させたのです。
 
@@ -137,6 +159,17 @@ const normanConquest: HistoryChapter = {
     },
     {
       id: "magna-carta",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Magna_Carta_%28British_Library_Cotton_MS_Augustus_II.106%29.jpg/1280px-Magna_Carta_%28British_Library_Cotton_MS_Augustus_II.106%29.jpg",
+        alt: "1215年のマグナ・カルタ原本",
+        caption:
+          "大半は封建領主の実務問題を並べた文書。しかし「王であっても法に従う」と成文で認めさせた一条が、後世に効いた。",
+        imageSource: "commons",
+        imageCredit: "British Library, Cotton MS Augustus II.106 (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Magna_Carta_(British_Library_Cotton_MS_Augustus_II.106).jpg",
+      },
       title: "マグナ・カルタ——貴族のわがままが、憲法の起点になった",
       subtitle: "1215年",
       body: `よく「民主主義の礎」と紹介されますが、1215年の実態はもっと即物的です。
@@ -158,6 +191,17 @@ const normanConquest: HistoryChapter = {
     },
     {
       id: "black-death",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Death_of_Wat_Tyler_-_Froissart%2C_Chroniques_de_France_et_d%27Angleterre%2C_Book_II_%28c.1475-1483%29%2C_f.175_-_BL_Royal_MS_18_E_I.jpg/1280px-Death_of_Wat_Tyler_-_Froissart%2C_Chroniques_de_France_et_d%27Angleterre%2C_Book_II_%28c.1475-1483%29%2C_f.175_-_BL_Royal_MS_18_E_I.jpg",
+        alt: "ワット・タイラーの死を描いたフロワサール年代記の挿絵",
+        caption:
+          "疫病で労働力が希少になった30年後、人頭税に反発した農民がロンドンに入った。指導者ワット・タイラーはスミスフィールドで斬られる。",
+        imageSource: "commons",
+        imageCredit: "Jean Froissart, Chroniques (BL Royal MS 18 E I) (CC0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Death_of_Wat_Tyler_-_Froissart,_Chroniques_de_France_et_d%27Angleterre,_Book_II_(c.1475-1483),_f.175_-_BL_Royal_MS_18_E_I.jpg",
+      },
       title: "黒死病と農民一揆——人口の半分が消えたあとに起きたこと",
       subtitle: "1348年〜",
       body: `1348年、ペストがイングランドに到達します。2年ほどで人口の3〜5割が失われました。ロンドンでは埋葬が追いつかず、市外に大規模な集団墓地が掘られます。2013年、クロスレール（エリザベス・ライン）の工事中にファリンドン付近でその一つが発見され、25体の遺骨からペスト菌のDNAが検出されました。
@@ -172,6 +216,17 @@ const normanConquest: HistoryChapter = {
     },
     {
       id: "parliament",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/House_of_Commons_Chamber_1.png/1280px-House_of_Commons_Chamber_1.png",
+        alt: "庶民院の議場",
+        caption:
+          "1265年に州の騎士と都市の市民代表が呼ばれた会議が、この庶民院の出発点。二院制は14世紀から今日まで続いている。",
+        imageSource: "commons",
+        imageCredit: "UK Parliament (CC BY 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:House_of_Commons_Chamber_1.png",
+      },
       title: "議会はどこから来たのか",
       body: `英語の Parliament は、フランス語の parler（話す）に由来します。もとは王が有力者を集めて相談する会議にすぎませんでした。
 

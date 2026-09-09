@@ -102,6 +102,17 @@ const civilWar: HistoryChapter = {
   sections: [
     {
       id: "execution",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/The_Execution_of_Charles_I_of_England.jpg/1280px-The_Execution_of_Charles_I_of_England.jpg",
+        alt: "チャールズ1世の処刑を描いた同時代の絵",
+        caption:
+          "1649年1月30日、バンケティング・ハウスの窓の外に組まれた台の上。首が落ちた瞬間、群衆から上がったのはうめき声だった。",
+        imageSource: "commons",
+        imageCredit: "Formerly attributed to Jan Weesop (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:The_Execution_of_Charles_I_of_England.jpg",
+      },
       title: "1649年1月30日——王が公開で処刑された日",
       body: `内戦は7年続き、議会派が勝ちます。オリバー・クロムウェルが組織した**ニューモデル軍**——出自ではなく能力で昇進させ、規律と給与を制度化した、事実上イングランド初の常備職業軍——が決定的でした。
 
@@ -122,6 +133,17 @@ const civilWar: HistoryChapter = {
     },
     {
       id: "commonwealth",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Oliver_Cromwell_by_Samuel_Cooper.jpg/1280px-Oliver_Cromwell_by_Samuel_Cooper.jpg",
+        alt: "オリバー・クロムウェルの肖像",
+        caption:
+          "王ではないが世襲を認めさせ、議会を解散する権限を持った護国卿。結局のところ、王とよく似た権力だった。",
+        imageSource: "commons",
+        imageCredit: "After Samuel Cooper (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Oliver_Cromwell_by_Samuel_Cooper.jpg",
+      },
       title: "共和政の11年——なぜクリスマスが禁止されたのか",
       subtitle: "1649〜1660年",
       body: `王のいない11年間、イングランドは共和国（Commonwealth）でした。実権を握ったのはクロムウェルで、1653年からは**護国卿（Lord Protector）** を名乗ります。王ではないが世襲を認めさせ、議会を解散する権限を持つ——結局のところ、王とよく似た権力でした。
@@ -147,6 +169,17 @@ const civilWar: HistoryChapter = {
     },
     {
       id: "fire",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/William_Russell_Birch_-_The_Great_Fire_of_London_in_the_Year_1666.jpg/1280px-William_Russell_Birch_-_The_Great_Fire_of_London_in_the_Year_1666.jpg",
+        alt: "1666年のロンドン大火を描いた版画",
+        caption:
+          "4日間で家屋1万3千戸以上、教会87、そしてセント・ポール大聖堂が焼けた。シティの約8割が消えている。",
+        imageSource: "commons",
+        imageCredit: "William Russell Birch (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:William_Russell_Birch_-_The_Great_Fire_of_London_in_the_Year_1666.jpg",
+      },
       title: "疫病と大火——2年でロンドンが作り替えられた",
       subtitle: "1665〜1666年",
       body: `王政復古から間もなく、ロンドンは連続で災厄に見舞われます。
@@ -172,6 +205,17 @@ const civilWar: HistoryChapter = {
     },
     {
       id: "glorious-revolution",
+      figure: {
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/c/c2/British_%28English%29_School_-_Landing_of_William_III_at_Torbay%2C_5_November_1688_-_BHC0326_-_Royal_Museums_Greenwich.jpg",
+        alt: "1688年、トーベイに上陸するウィリアム3世の艦隊",
+        caption:
+          "1万5千の兵とともに上陸。招請状を送ったのは、英国の政治指導者たち自身だった。",
+        imageSource: "commons",
+        imageCredit: "British (English) School, Royal Museums Greenwich (Public domain)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:British_(English)_School_-_Landing_of_William_III_at_Torbay,_5_November_1688_-_BHC0326_-_Royal_Museums_Greenwich.jpg",
+      },
       title: "1688年の名誉革命——招かれた侵略",
       body: `チャールズ2世に嫡子がなく、弟のジェームズ2世が即位します（1685年）。彼は**公然たるカトリック**でした。
 

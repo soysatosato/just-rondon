@@ -13,6 +13,7 @@ import GuideSources from "@/components/guides/GuideSources";
 import GuideToc from "@/components/guides/GuideToc";
 import ChapterNav from "./ChapterNav";
 import ChapterProgress from "./ChapterProgress";
+import HistoryFigure from "./HistoryFigure";
 import {
   HISTORY_AS_OF,
   HISTORY_BASE,
@@ -173,6 +174,16 @@ export default function HistoryChapterLayout({
                 </p>
               )}
               <MarkdownBody>{section.body}</MarkdownBody>
+
+              {/*
+                写真は本文の後。通史の節は「その像は今もウェストミンスター橋の
+                たもとに立っています」のように、最後の一文が物に着地する形で
+                書いてある。先に絵を出すと、その着地が予告済みの答え合わせに
+                なる(components/shopping/ShoppingGuideLayout.tsx と同じ判断)。
+              */}
+              {section.figure && (
+                <HistoryFigure figure={section.figure} className="mt-5" />
+              )}
 
               {section.tips && section.tips.length > 0 && (
                 <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
