@@ -5,7 +5,18 @@ import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import { ServiceCharge } from "@prisma/client";
 import { sendAdminMail } from "../mail";
-import { DISTRIBUTION_LABEL, labelOf } from "../labels";
+import {
+  DISTRIBUTION_LABEL,
+  JOB_ROLE_LABEL,
+  WORK_PERIOD_LABEL,
+  YES_NO_UNKNOWN_LABEL,
+  labelOf,
+} from "../labels";
+import {
+  buildOverview,
+  type ChargeRecord,
+  type ServiceChargeOverview,
+} from "../service-charge";
 
 type ActionState = { ok: true } | { ok: false; message: string };
 
@@ -44,6 +55,36 @@ export async function searchStores(query: string): Promise<StoreSearchResult[]> 
     postcode: s.postcode,
   }));
 }
+
+/* ============================================================
+ * 回答の受け取り
+ * ========================================================== */
+
+/** 選択式の設問。想定外の値が POST されても列に入れない。 */
+function pickEnum<T extends string>(
+  formData: FormData,
+  name: string,
+  allowed: readonly T[],
+): T | null {
+  const raw = formData.get(name)?.toString();
+  if (!raw) return null;
+  return (allowed as readonly string[]).includes(raw) ? (raw as T) : null;
+}
+
+/** 数値の設問。空欄と不正値はどちらも「未回答」に落とす。 */
+function pickNumber(
+  formData: FormData,
+  name: string,
+  max: number,
+): number | null {
+  const raw = formData.get(name)?.toString().trim();
+  if (!raw) return null;
+  const parsed = Number(raw);
+  if (Number.isNaN(parsed) || parsed < 0 || parsed > max) return null;
+  return parsed;
+}
+
+const YES_NO_UNKNOWN = ["yes", "no", "unknown"] as const;
 
 export async function submitSurvey(
   _prev: ActionState,
@@ -102,20 +143,9 @@ export async function submitSurvey(
 
     const collected = formData.get("collected") === "yes";
 
-    const amountValueStr = formData.get("amountValue")?.toString().trim() ?? "";
-    const hasAmountValue = amountValueStr !== "";
-
-    let amountValue: number | null = null;
-    if (collected && hasAmountValue) {
-      const parsed = Number(amountValueStr);
-      if (Number.isNaN(parsed) || parsed < 0) {
-        return {
-          ok: false,
-          message: "サービスチャージ金額は0以上の数値で入力してください。",
-        };
-      }
-      amountValue = parsed;
-    }
+    const amountValue = pickNumber(formData, "amountValue", 100000);
+    // 月に744時間(31日×24)を超える申告は入力ミスなので受け取らない。
+    const monthlyHours = pickNumber(formData, "monthlyHours", 744);
 
     created = await db.serviceCharge.create({
       data: {
@@ -129,13 +159,49 @@ export async function submitSurvey(
         postcode,
         isVerified,
         serviceChargeCollected: collected,
+
+        workPeriod: pickEnum(formData, "workPeriod", [
+          "current",
+          "within1y",
+          "1to3y",
+          "over3y",
+        ]),
+        jobRole: pickEnum(formData, "jobRole", [
+          "floor",
+          "kitchen",
+          "both",
+          "other",
+        ]),
+
         distributionType: collected
-          ? formData.get("distribution")?.toString() ?? null
+          ? pickEnum(formData, "distribution", [
+              "equal",
+              "gradient",
+              "fixed",
+              "none",
+            ])
           : null,
+        chargeRatePercent: collected
+          ? pickNumber(formData, "chargeRatePercent", 100)
+          : null,
+        kitchenIncluded: collected
+          ? pickEnum(formData, "kitchenIncluded", YES_NO_UNKNOWN)
+          : null,
+        onPayslip: collected
+          ? pickEnum(formData, "onPayslip", YES_NO_UNKNOWN)
+          : null,
+        // 徴収していない職場では、この設問はそもそも表示していない。
+        // 途中で「徴収なし」に変えた場合に前の選択が残るのを防ぐため、ここでも落とす。
+        writtenPolicy: collected
+          ? pickEnum(formData, "writtenPolicy", YES_NO_UNKNOWN)
+          : null,
+
         // 金額の設問は月額に一本化した。過去データには週額(weekly)も存在するため
         // amountPeriod 列は残し、新規回答には常に monthly を記録する。
         amountPeriod: collected && amountValue !== null ? "monthly" : null,
         amountValue: collected ? amountValue : null,
+        monthlyHours: collected ? monthlyHours : null,
+
         serviceChargeComment:
           formData.get("serviceChargeComment")?.toString().slice(0, 1000) ||
           null,
@@ -182,13 +248,27 @@ function buildSurveyMailBody(charge: ServiceCharge): string {
     `日時: ${charge.createdAt.toLocaleString("ja-JP", {
       timeZone: "Asia/Tokyo",
     })}`,
+    `時期: ${labelOf(WORK_PERIOD_LABEL, charge.workPeriod)}`,
+    `職種: ${labelOf(JOB_ROLE_LABEL, charge.jobRole)}`,
     `サービスチャージ: ${charge.serviceChargeCollected ? "あり" : "なし"}`,
   ];
 
   if (charge.serviceChargeCollected) {
+    const hours = charge.monthlyHours;
+    const amount = charge.amountValue;
     lines.push(
+      `料率: ${charge.chargeRatePercent !== null ? `${charge.chargeRatePercent}%` : "未回答"}`,
       `分配方法: ${labelOf(DISTRIBUTION_LABEL, charge.distributionType)}`,
-      `金額: ${charge.amountValue !== null ? `月額 約£${charge.amountValue}` : "未回答"}`
+      `キッチンにも分配: ${labelOf(YES_NO_UNKNOWN_LABEL, charge.kitchenIncluded)}`,
+      `給与明細に記載: ${labelOf(YES_NO_UNKNOWN_LABEL, charge.onPayslip)}`,
+      `書面のチップポリシー: ${labelOf(YES_NO_UNKNOWN_LABEL, charge.writtenPolicy)}`,
+      `月額: ${amount !== null ? `約£${amount}` : "未回答"}`,
+      `月の勤務時間: ${hours !== null ? `約${hours}時間` : "未回答"}`,
+      `時給換算: ${
+        amount !== null && hours !== null && hours > 0
+          ? `£${(amount / hours).toFixed(2)}`
+          : "算出不可"
+      }`
     );
   }
 
@@ -218,157 +298,111 @@ function buildSurveyMailBody(charge: ServiceCharge): string {
   return lines.join("\n");
 }
 
-export async function fetchServiceCharges(q?: string) {
-  const data = await db.serviceCharge.groupBy({
-    by: ["placeId", "storeName", "storeAddress"],
-    where: {
-      isVerified: true,
-      ...(q
-        ? {
-            OR: [
-              { storeName: { contains: q, mode: "insensitive" } },
-              { postcode: { contains: q, mode: "insensitive" } },
-            ],
-          }
-        : {}),
-    },
-    _count: {
-      placeId: true, // ← ここ重要
-    },
-    orderBy: {
-      _count: {
-        placeId: "desc",
-      },
-    },
-  });
+/* ============================================================
+ * 集計の取り出し
+ *
+ * 集計はSQLではなくJS側でまとめて行う。回答は数十件しかなく、
+ * groupBy を設問の数だけ並べるより、1回読んで utils/service-charge.ts の
+ * 純関数に渡すほうが、店舗単位と回答単位の数字が食い違わない。
+ * ========================================================== */
 
-  return data;
+/** 集計に使う列だけを選ぶ。自由記述は別途取るのでここには含めない。 */
+const RECORD_SELECT = {
+  id: true,
+  placeId: true,
+  storeName: true,
+  storeAddress: true,
+  borough: true,
+  postcode: true,
+  lat: true,
+  lng: true,
+  createdAt: true,
+  serviceChargeCollected: true,
+  distributionType: true,
+  amountPeriod: true,
+  amountValue: true,
+  monthlyHours: true,
+  chargeRatePercent: true,
+  jobRole: true,
+  workPeriod: true,
+  kitchenIncluded: true,
+  onPayslip: true,
+  writtenPolicy: true,
+  serviceChargeComment: true,
+  mealComment: true,
+  generalComment: true,
+} as const;
+
+export async function fetchServiceChargeOverview(): Promise<ServiceChargeOverview> {
+  const records = await db.serviceCharge.findMany({
+    where: { isVerified: true },
+    orderBy: { createdAt: "desc" },
+    select: RECORD_SELECT,
+  });
+  return buildOverview(records as ChargeRecord[]);
 }
 
+/**
+ * 店舗詳細で使う回答。ここだけ isVerified を見ない。
+ * 手入力で登録された回答は一覧には出さないが、通知メールのリンクから
+ * 内容を確認できる必要があるため。
+ */
 export async function fetchServiceChargesByPlaceId(
   placeId: string
-): Promise<ServiceCharge[]> {
-  return db.serviceCharge.findMany({
+): Promise<ChargeRecord[]> {
+  const records = await db.serviceCharge.findMany({
     where: { placeId },
     orderBy: { createdAt: "desc" },
+    select: RECORD_SELECT,
   });
+  return records as ChargeRecord[];
 }
 
-type ChargeFilter = { q?: string; collected?: "yes" | "no" };
+export type ResponseFeedFilter = {
+  /** 分配方法での絞り込み。 */
+  dist?: string;
+  /** 自由記述のある回答だけに絞る。 */
+  withComment?: boolean;
+};
 
-function buildWhere(filter?: ChargeFilter) {
+function feedWhere(filter?: ResponseFeedFilter) {
   const clauses: any[] = [{ isVerified: true }];
-  if (filter?.q) {
+  if (
+    filter?.dist &&
+    ["equal", "gradient", "fixed", "none"].includes(filter.dist)
+  ) {
+    clauses.push({ distributionType: filter.dist });
+  }
+  if (filter?.withComment) {
     clauses.push({
       OR: [
-        { storeName: { contains: filter.q, mode: "insensitive" } },
-        { postcode: { contains: filter.q, mode: "insensitive" } },
+        { serviceChargeComment: { not: null } },
+        { mealComment: { not: null } },
+        { generalComment: { not: null } },
       ],
     });
   }
-  if (filter?.collected === "yes") clauses.push({ serviceChargeCollected: true });
-  if (filter?.collected === "no") clauses.push({ serviceChargeCollected: false });
   return { AND: clauses };
 }
 
-export async function fetchServiceChargeCount(filter?: ChargeFilter) {
-  const count = await db.serviceCharge.count({ where: buildWhere(filter) });
-  return count;
+export async function fetchResponseCount(
+  filter?: ResponseFeedFilter
+): Promise<number> {
+  return db.serviceCharge.count({ where: feedWhere(filter) });
 }
 
-export async function fetchServiceChargesPaged(
+/** 回答を1件ずつ新着順に返す。店舗ごとにまとめない「声の一覧」用。 */
+export async function fetchResponseFeed(
   page: number,
   itemsPerPage: number,
-  filter?: ChargeFilter
-) {
-  return db.serviceCharge.groupBy({
-    by: ["placeId", "storeName"],
-    where: buildWhere(filter),
-    _count: {
-      placeId: true,
-    },
-    _max: {
-      createdAt: true,
-      storeAddress: true,
-    },
-    orderBy: [{ _max: { createdAt: "desc" } }],
+  filter?: ResponseFeedFilter
+): Promise<ChargeRecord[]> {
+  const records = await db.serviceCharge.findMany({
+    where: feedWhere(filter),
+    orderBy: { createdAt: "desc" },
     skip: (page - 1) * itemsPerPage,
     take: itemsPerPage,
+    select: RECORD_SELECT,
   });
-}
-
-export type ServiceChargeStats = {
-  totalReviews: number;
-  totalStores: number;
-  collectedCount: number;
-  notCollectedCount: number;
-  distribution: { type: string | null; count: number }[];
-  workAtmosphere: { value: string | null; count: number }[];
-  amountByPeriod: { period: string; avg: number; count: number }[];
-};
-
-export async function fetchServiceChargeStats(): Promise<ServiceChargeStats> {
-  const [
-    totalReviews,
-    collectedGroup,
-    distributionGroup,
-    atmosphereGroup,
-    amountGroup,
-    storeGroup,
-  ] = await Promise.all([
-    db.serviceCharge.count({ where: { isVerified: true } }),
-    db.serviceCharge.groupBy({
-      by: ["serviceChargeCollected"],
-      where: { isVerified: true },
-      _count: { _all: true },
-    }),
-    db.serviceCharge.groupBy({
-      by: ["distributionType"],
-      where: { isVerified: true, serviceChargeCollected: true },
-      _count: { _all: true },
-    }),
-    db.serviceCharge.groupBy({
-      by: ["workAtmosphere"],
-      where: { isVerified: true },
-      _count: { _all: true },
-    }),
-    db.serviceCharge.groupBy({
-      by: ["amountPeriod"],
-      where: {
-        isVerified: true,
-        serviceChargeCollected: true,
-        amountValue: { not: null },
-      },
-      _avg: { amountValue: true },
-      _count: { _all: true },
-    }),
-    db.serviceCharge.groupBy({ by: ["placeId"], where: { isVerified: true } }),
-  ]);
-
-  const collectedCount =
-    collectedGroup.find((g) => g.serviceChargeCollected)?._count._all ?? 0;
-  const notCollectedCount =
-    collectedGroup.find((g) => !g.serviceChargeCollected)?._count._all ?? 0;
-
-  return {
-    totalReviews,
-    totalStores: storeGroup.length,
-    collectedCount,
-    notCollectedCount,
-    distribution: distributionGroup.map((g) => ({
-      type: g.distributionType,
-      count: g._count._all,
-    })),
-    workAtmosphere: atmosphereGroup.map((g) => ({
-      value: g.workAtmosphere,
-      count: g._count._all,
-    })),
-    amountByPeriod: amountGroup
-      .filter((g) => g.amountPeriod)
-      .map((g) => ({
-        period: g.amountPeriod as string,
-        avg: g._avg.amountValue ?? 0,
-        count: g._count._all,
-      })),
-  };
+  return records as ChargeRecord[];
 }

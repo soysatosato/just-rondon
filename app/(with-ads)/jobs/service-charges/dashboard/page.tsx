@@ -2,240 +2,246 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  fetchServiceCharges,
-  fetchServiceChargeStats,
+  fetchResponseFeed,
+  fetchServiceChargeOverview,
 } from "@/utils/actions/jobs";
-import ServiceChargeStats from "@/components/jobs/ServiceChargeStats";
-import StoreResultCard from "@/components/jobs/StoreResultCard";
+import Overview from "@/components/jobs/dashboard/Overview";
+import StoreExplorer from "@/components/jobs/dashboard/StoreExplorer";
+import VoiceList from "@/components/jobs/dashboard/VoiceList";
 
 import { noindexMetadata } from "@/lib/seo";
 
-export const metadata = noindexMetadata("サービスチャージ集計ダッシュボード");
+export const metadata = noindexMetadata("サービスチャージ実態調査");
 
-type Props = {
-  searchParams?: {
-    q?: string;
-  };
-};
+function formatDate(date: Date | null): string {
+  if (!date) return "—";
+  return date.toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
-export default async function DashboardPage({ searchParams }: Props) {
-  const q = searchParams?.q?.trim() ?? "";
-
-  // 状態判定
-  const hasQuery = q.length > 0;
-  const isSearchable = q.length >= 3;
-
-  // 統計は常に取得
-  const stats = await fetchServiceChargeStats();
-
-  // 3文字以上のときのみ検索
-  const records = isSearchable ? await fetchServiceCharges(q) : [];
+export default async function DashboardPage() {
+  const [overview, voices] = await Promise.all([
+    fetchServiceChargeOverview(),
+    // 旧設問の畳み込みしか入っていない回答は VoiceList 側で落とすので、多めに取る。
+    fetchResponseFeed(1, 12, { withComment: true }),
+  ]);
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-8 md:py-12">
         {/* ヘッダー */}
-        <header className="max-w-2xl space-y-3">
+        <header className="max-w-2xl space-y-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            実態調査データ
+            ロンドンの飲食店 実態調査
           </p>
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-            ロンドン日本食レストラン
-            <br className="sm:hidden" />
-            サービスチャージ調査
+          <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-[2.5rem] md:leading-[1.15]">
+            サービスチャージは、
+            <br className="hidden sm:block" />
+            本当にスタッフに渡っているのか
           </h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            現場で働く人から寄せられた、サービスチャージの分配実態と労働環境の記録です。
-            店舗名（英名）で検索できます。投稿はすべて匿名です。
+          <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+            2024年10月から、チップとサービスチャージは全額が働いた人のものになりました。
+            では現場でそのとおりになっているのか。実際にロンドンの店で働いた人から匿名で集めた回答を、
+            店舗ごとに公開しています。
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {formatDate(overview.firstAt)} 〜 {formatDate(overview.latestAt)}に寄せられた
+            {overview.totalResponses}件・{overview.totalStores}店舗の回答にもとづく
           </p>
         </header>
 
-        {/* 検索 */}
-        <section className="mt-8">
-          <form className="flex max-w-xl gap-2" method="GET">
-            <Input
-              name="q"
-              placeholder="店舗名を英字で入力（3文字以上）"
-              defaultValue={q}
-              aria-invalid={hasQuery && !isSearchable}
-              aria-label="店舗名で検索"
-              className="h-11"
-            />
-            <Button type="submit" size="lg" className="shrink-0">
-              検索
-            </Button>
-          </form>
-
-          {hasQuery && !isSearchable && (
-            <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-              検索は<strong className="text-foreground">3文字以上</strong>
-              の英字で行ってください（例：
-              <code className="mx-1 rounded bg-muted px-1 py-0.5 text-xs">
-                yok
-              </code>
-              ）。
-              <Link
-                href="/jobs/service-charges/dashboard/archive"
-                className="underline underline-offset-2 hover:text-foreground"
-              >
-                全件一覧から探す
-              </Link>
-              こともできます。
-            </p>
-          )}
+        {/* 集計 */}
+        <section className="mt-10">
+          <Overview overview={overview} />
         </section>
 
-        {/* 検索結果 */}
-        {isSearchable && (
-          <section className="mt-8 space-y-3">
-            <div className="flex items-baseline justify-between gap-4">
-              <h2 className="text-sm font-semibold text-foreground">
-                「{q}」の検索結果
-              </h2>
-              {records.length > 0 && (
-                <p className="text-xs text-muted-foreground">
-                  {records.length}店舗
-                </p>
-              )}
+        {/* 診断への導線 */}
+        <section className="mt-12 rounded-xl border border-border bg-muted/40 p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-xl">
+              <p className="text-base font-semibold text-foreground">
+                自分の職場はどうなのか、3分で判定できます
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                設問に答えると、送信する前にその場で判定と次にやることが出ます。
+                回答はこのページの集計に匿名で加わります。
+              </p>
             </div>
+            <Button asChild size="lg" className="shrink-0">
+              <Link href="/jobs/service-charges/survey">診断をはじめる</Link>
+            </Button>
+          </div>
+        </section>
 
-            {records.length > 0 ? (
-              <div className="grid gap-2">
-                {records.map((r) => (
-                  <StoreResultCard
-                    key={r.placeId}
-                    placeId={r.placeId}
-                    storeName={r.storeName}
-                    storeAddress={r.storeAddress}
-                    reviewCount={r._count.placeId}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-xl border border-dashed border-border p-8 text-center">
-                <p className="text-sm font-medium text-foreground">
-                  該当する店舗は見当たりません
-                </p>
-                <p className="mx-auto mt-1.5 max-w-sm text-sm text-muted-foreground">
-                  この店舗の情報は、まだ誰も登録していません。あなたが最初の回答者になれます。
-                </p>
-                <Button asChild className="mt-4">
-                  <Link href="/jobs/service-charges/survey">
-                    この店舗の情報を登録する
-                  </Link>
-                </Button>
-              </div>
-            )}
-          </section>
-        )}
+        {/* 店舗一覧 */}
+        <section className="mt-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 className="text-xl font-bold tracking-tight">店舗別の回答</h2>
+            <p className="text-xs text-muted-foreground">
+              回答の状態が悪いものから並んでいます
+            </p>
+          </div>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            バッジは、その店舗に寄せられた回答のうち
+            <span className="font-medium text-foreground">最も深刻なもの</span>
+            を示します。1件でも「分配されていない」という回答があれば、他に良い回答があっても赤く出ます。
+          </p>
 
-        {/* 全体の統計 */}
-        <section className="mt-12 space-y-4">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 className="text-lg font-bold tracking-tight">全体の集計</h2>
+          <div className="mt-5">
+            <StoreExplorer stores={overview.stores} />
+          </div>
+        </section>
+
+        {/* 現場の声 */}
+        <section className="mt-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 className="text-xl font-bold tracking-tight">現場の声</h2>
             <Link
-              href="/jobs/service-charges/dashboard/archive"
+              href="/jobs/service-charges/dashboard/voices"
               className="shrink-0 text-sm text-muted-foreground underline underline-offset-4 transition hover:text-foreground"
             >
-              全件一覧を見る
+              すべての回答を読む
             </Link>
           </div>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            回答者が自分の言葉で書いた部分です。原文のまま掲載しています。
+          </p>
 
-          <ServiceChargeStats stats={stats} />
+          <VoiceList records={voices} className="mt-5" />
         </section>
 
-        {/* 導線（回答 → 制度解説 → 実例の順で1つにまとめる） */}
-        <section className="mt-12 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-border bg-muted/40 p-5">
-            <p className="font-semibold text-foreground">
-              あなたの職場の情報を登録する
-            </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              所要3分・匿名。分配方法と受け取っている金額を聞いています。
-            </p>
-            <Button asChild className="mt-4 w-full sm:w-auto">
-              <Link href="/jobs/service-charges/survey">
-                アンケートに回答する
-              </Link>
-            </Button>
-          </div>
-
-          <div className="rounded-xl border border-border p-5">
-            <p className="font-semibold text-foreground">
-              制度と法律を確認する
-            </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              サービスチャージは Tipping Act 2023
-              で全額スタッフに帰属すると定められています。
-            </p>
-            <Button
-              asChild
-              variant="outline"
-              className="mt-4 w-full sm:w-auto"
+        {/* 法律の要点 */}
+        <section className="mt-12 rounded-xl border border-border p-5 sm:p-6">
+          <h2 className="text-base font-bold tracking-tight">
+            数字を読む前に知っておくこと
+          </h2>
+          <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            {[
+              {
+                term: "全額がスタッフのもの",
+                desc: "2024年10月1日以降、雇用主が差し引けるのは税金と国民保険料だけです。管理費や手数料の控除は違法です。",
+              },
+              {
+                term: "分配ルールは書面で公開",
+                desc: "分配の責任者・方法・サービスチャージの扱いを書面にし、働く人が読める状態にしておく義務があります。",
+              },
+              {
+                term: "記録は3年、閲覧できる",
+                desc: "雇用主には3年間の記録保存義務があり、従業員は過去3年分の支払い記録を閲覧する権利を持ちます。",
+              },
+              {
+                term: "申立ての期限",
+                desc: "未払いチップは12か月以内、ポリシーや記録の不開示は3か月以内。辞めたあとでも請求できます。",
+              },
+            ].map((item) => (
+              <div key={item.term}>
+                <dt className="text-sm font-semibold text-foreground">
+                  {item.term}
+                </dt>
+                <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {item.desc}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-5 text-sm">
+            <Link
+              href="/jobs/service-charges"
+              className="font-medium text-foreground underline underline-offset-4 hover:opacity-80"
             >
-              <Link href="/jobs/service-charges">
-                サービスチャージの仕組み
-              </Link>
-            </Button>
-          </div>
+              サービスチャージ完全ガイドを読む →
+            </Link>
+          </p>
+        </section>
 
-          <div className="rounded-xl border border-border p-5">
-            <p className="font-semibold text-foreground">
-              未払いで申立てた実例を見る
+        {/* 導線 */}
+        <section className="mt-12 grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/jobs/service-charges/case-story"
+            className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              実例・裁判記録
+            </p>
+            <p className="mt-1.5 font-semibold text-foreground">
+              未払いで審判所に申立てた記録
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
               Acasでの相談からEmployment
-              Tribunalの判決、強制執行まで。実際の計算方法も公開しています。
+              Tribunalの判決、強制執行まで。実際に認容された計算方法も公開しています。
             </p>
-            <Button
-              asChild
-              variant="outline"
-              className="mt-4 w-full sm:w-auto"
-            >
-              <Link href="/jobs/service-charges/case-story">
-                裁判記録を見る
-              </Link>
-            </Button>
-          </div>
+          </Link>
+
+          <Link
+            href="/jobs/service-charges/case-story/check-your-service-charge"
+            className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              計算する
+            </p>
+            <p className="mt-1.5 font-semibold text-foreground">
+              自分の未払い額を計算する
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              必要なのは売上記録・シフト表・給与明細の3つだけ。審判所で認容された計算式をそのまま公開。
+            </p>
+          </Link>
+
+          <Link
+            href="/jobs/minimum-wage"
+            className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              給与明細の見方
+            </p>
+            <p className="mt-1.5 font-semibold text-foreground">
+              最低賃金と給与明細のチェック方法
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              サービスチャージは最低賃金に算入されません。違法な天引きの見分け方も解説。
+            </p>
+          </Link>
+
+          <Link
+            href="/jobs/employment-contract"
+            className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              労働契約の基本
+            </p>
+            <p className="mt-1.5 font-semibold text-foreground">
+              雇用契約・就業規則で確認すべきこと
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              written statementや試用期間、解雇・退職の通知期間について。
+            </p>
+          </Link>
         </section>
 
-        {/* あわせて読む */}
-        <section className="mt-12">
-          <p className="text-sm font-semibold text-foreground">あわせて読む</p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            <Link
-              href="/jobs/minimum-wage"
-              className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                給与明細の見方
-              </p>
-              <p className="mt-1.5 font-semibold text-foreground">
-                最低賃金と給与明細のチェック方法
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                サービスチャージは最低賃金に算入されません。違法な天引きの見分け方も解説。
-              </p>
-            </Link>
-
-            <Link
-              href="/jobs/employment-contract"
-              className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                労働契約の基本
-              </p>
-              <p className="mt-1.5 font-semibold text-foreground">
-                雇用契約・就業規則で確認すべきこと
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                written statementや試用期間、解雇・退職の通知期間について。
-              </p>
-            </Link>
-          </div>
+        {/* 但し書き */}
+        <section className="mt-12 border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-foreground">
+            このデータの限界
+          </h2>
+          <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-muted-foreground">
+            <li>
+              ・回答は自己申告で、裏付けを取っていません。同じ店でも人によって見え方は違います。
+            </li>
+            <li>
+              ・1店舗あたりの回答数は多くありません。件数を添えているので、そこを見て判断してください。
+            </li>
+            <li>
+              ・回答は寄せられた時点のもので、その後に運用が変わっている可能性があります。
+            </li>
+            <li>
+              ・記載内容に事実と異なる点がある場合は、店舗の方からのご連絡で確認・修正します。
+            </li>
+          </ul>
         </section>
       </div>
     </main>

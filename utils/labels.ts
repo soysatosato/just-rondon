@@ -25,6 +25,54 @@ export const DISTRIBUTION_LEGAL_NOTE: Record<DistributionType, string> = {
   none: "違法の可能性が高い",
 };
 
+/* ========= 設問刷新(2026-09)で足したもの ========= */
+
+/**
+ * 「いつの話か」。Tipping Act 2023 の施行は2024年10月1日で、それより前の
+ * 経験は法制度そのものが違う。現在の実態として並べてよいかの線引きに使う。
+ */
+export type WorkPeriod = "current" | "within1y" | "1to3y" | "over3y";
+
+export const WORK_PERIOD_LABEL: Record<WorkPeriod, string> = {
+  current: "いまも働いている",
+  within1y: "1年以内に働いていた",
+  "1to3y": "1〜3年前に働いていた",
+  over3y: "3年以上前に働いていた",
+};
+
+/** 一覧やグラフで日付の代わりに出す短縮形。 */
+export const WORK_PERIOD_SHORT_LABEL: Record<WorkPeriod, string> = {
+  current: "在職中",
+  within1y: "1年以内",
+  "1to3y": "1〜3年前",
+  over3y: "3年以上前",
+};
+
+/**
+ * 職種。キッチンが分配から外されているという証言が繰り返し出るため、
+ * その証言がどちら側から見たものかを区別する。
+ */
+export type JobRole = "floor" | "kitchen" | "both" | "other";
+
+export const JOB_ROLE_LABEL: Record<JobRole, string> = {
+  floor: "ホール（フロア）",
+  kitchen: "キッチン",
+  both: "ホールとキッチンの両方",
+  other: "その他（マネージャー・バー・レセプションなど）",
+};
+
+/**
+ * 「はい／いいえ／わからない」。分からないことを分からないまま送れないと、
+ * 回答者は当てずっぽうを選ぶか離脱する。集計では unknown を分母から外す。
+ */
+export type YesNoUnknown = "yes" | "no" | "unknown";
+
+export const YES_NO_UNKNOWN_LABEL: Record<YesNoUnknown, string> = {
+  yes: "はい",
+  no: "いいえ",
+  unknown: "わからない",
+};
+
 export type AmountPeriod = "weekly" | "monthly";
 
 export const AMOUNT_PERIOD_LABEL: Record<AmountPeriod, string> = {

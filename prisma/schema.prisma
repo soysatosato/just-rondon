@@ -1584,6 +1584,16 @@ model ServiceCharge {
   workAtmosphere         String?
   mealComment            String?
 
+  // 2026-09 の設問刷新で足した列。すべて任意回答なので null 可。
+  // 意味は utils/labels.ts の各ラベルマップが持つ。
+  workPeriod             String?
+  jobRole                String?
+  chargeRatePercent      Float?
+  kitchenIncluded        String?
+  onPayslip              String?
+  writtenPolicy          String?
+  monthlyHours           Float?
+
   @@index([placeId])
   @@index([serviceChargeCollected])
 }

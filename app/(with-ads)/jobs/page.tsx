@@ -132,7 +132,7 @@ export default function JobsHubPage() {
                   ロンドン市内のサービスチャージ実態調査
                 </span>
                 <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                  実際に働いている・働いていた人からの独自調査データを、店舗ごとに検索・閲覧できます。
+                  働いた人からの匿名回答を店舗ごとに公開。3分の設問に答えると、自分の職場が法律どおりかその場で判定できます。
                 </span>
               </CardContent>
             </Card>

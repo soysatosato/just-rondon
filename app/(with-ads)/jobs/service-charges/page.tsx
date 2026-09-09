@@ -100,27 +100,27 @@ function SurveyCallout() {
   return (
     <aside className="rounded-xl border border-border bg-muted/40 p-5 sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        実態調査にご協力ください
+        自分の職場を確かめる
       </p>
       <p className="mt-2 text-base font-semibold text-foreground">
-        あなたの職場では、サービスチャージはどう分配されていますか？
+        あなたの職場のサービスチャージは、法律どおりに配られていますか？
       </p>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        ロンドンの日本食レストランで働く人から、分配方法と実際に受け取っている金額を集めています。
-        所要3分・匿名で、店舗名以外に個人が特定される情報は聞きません。
+        設問に答えると、送信する前にその場で判定と次にやることが出ます。所要3分・匿名で、
+        店舗名以外に個人が特定される情報は聞きません。回答はロンドンの飲食店の実態データとして集計されます。
       </p>
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <Link
           href="/jobs/service-charges/survey"
           className="inline-flex items-center justify-center rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background transition hover:opacity-90"
         >
-          アンケートに回答する（3分）
+          診断をはじめる（3分）
         </Link>
         <Link
           href="/jobs/service-charges/dashboard"
           className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
         >
-          集まった回答を見る
+          集まったデータを見る
         </Link>
       </div>
     </aside>
@@ -238,7 +238,7 @@ export default function ServiceChargeGuidePage() {
                     店舗別のサービスチャージ実態
                   </p>
                   <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                    ロンドン市内の日本食レストランで働く人からの声を集約。店舗名（英名）で検索できます。
+                    ロンドンの飲食店で働いた人からの匿名回答を、店舗ごとに公開。分配方法・受取額・現場の声まで読めます。
                   </p>
                 </Link>
 

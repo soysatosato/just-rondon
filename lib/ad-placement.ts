@@ -18,7 +18,7 @@
 /**
  * 広告を出さないパスの接頭辞。
  *
- * 前方一致で見るので、配下のページ(dashboard/[id] や dashboard/archive)も
+ * 前方一致で見るので、配下のページ(dashboard/[id] や dashboard/voices)も
  * まとめて対象になる。
  */
 const AD_FREE_PREFIXES = [
