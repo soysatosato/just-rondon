@@ -4,6 +4,8 @@ import db from "../db";
 import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import { ServiceCharge } from "@prisma/client";
+import { sendAdminMail } from "../mail";
+import { DISTRIBUTION_LABEL, labelOf } from "../labels";
 
 type ActionState = { ok: true } | { ok: false; message: string };
 
@@ -47,6 +49,10 @@ export async function submitSurvey(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  // 通知メールは保存が確定してから送る。redirect() は例外で抜けるため、
+  // 保存した回答を try の外へ持ち出しておく。
+  let created: ServiceCharge | null = null;
+
   try {
     let placeId = formData.get("storePlaceId")?.toString();
     const manualName = formData.get("manualStoreName")?.toString().trim();
@@ -111,7 +117,7 @@ export async function submitSurvey(
       amountValue = parsed;
     }
 
-    await db.serviceCharge.create({
+    created = await db.serviceCharge.create({
       data: {
         id: randomUUID(),
         placeId,
@@ -148,7 +154,68 @@ export async function submitSurvey(
       message: "送信に失敗しました。時間をおいて再度お試しください。",
     };
   }
+
+  // 回答は管理画面を見に行かないと気付けないので、届いたことをメールで知らせる。
+  // 送信に失敗しても回答自体は保存済みなので、握りつぶして完了ページへ進める。
+  if (created) {
+    try {
+      await sendAdminMail({
+        subject: `【アンケート】サービスチャージ: ${created.storeName || "店舗名なし"}`,
+        text: buildSurveyMailBody(created),
+      });
+    } catch (error) {
+      console.error("アンケート通知メールの送信に失敗しました", error);
+    }
+  }
+
   redirect("/jobs/service-charges/thanks");
+}
+
+/** 管理者宛の通知メール本文。回答をそのまま読める形に整えるだけ。 */
+function buildSurveyMailBody(charge: ServiceCharge): string {
+  const siteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL ?? "";
+  const lines: string[] = [
+    "サービスチャージのアンケートに新しい回答が届きました。",
+    "",
+    `店舗: ${charge.storeName || "(未入力)"}`,
+    `住所: ${charge.storeAddress || "(未入力)"}`,
+    `日時: ${charge.createdAt.toLocaleString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    })}`,
+    `サービスチャージ: ${charge.serviceChargeCollected ? "あり" : "なし"}`,
+  ];
+
+  if (charge.serviceChargeCollected) {
+    lines.push(
+      `分配方法: ${labelOf(DISTRIBUTION_LABEL, charge.distributionType)}`,
+      `金額: ${charge.amountValue !== null ? `月額 約£${charge.amountValue}` : "未回答"}`
+    );
+  }
+
+  const comments: [string, string | null][] = [
+    ["サービスチャージについて", charge.serviceChargeComment],
+    ["賄いについて", charge.mealComment],
+    ["その他", charge.generalComment],
+  ];
+  for (const [label, body] of comments) {
+    if (!body) continue;
+    lines.push("", `${label}:`, "----", body, "----");
+  }
+
+  if (!charge.isVerified) {
+    lines.push(
+      "",
+      "※ 店舗が候補になく手入力で登録された回答です。集計には反映されていません。",
+      "実在する店舗であれば ServiceCharge.isVerified と Store.isVerified を true にしてください。"
+    );
+  }
+
+  lines.push(
+    "",
+    `詳細: ${siteUrl}/jobs/service-charges/dashboard/${charge.placeId}`
+  );
+
+  return lines.join("\n");
 }
 
 export async function fetchServiceCharges(q?: string) {
