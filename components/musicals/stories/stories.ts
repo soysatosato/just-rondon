@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { buildPageMetadata, fitTitle } from "@/lib/seo";
 import type { MusicalStory } from "./types";
 import { lesMiserablesStory } from "./content/les-miserables";
+import { wickedStory } from "./content/wicked";
+import { lionKingStory } from "./content/disneys-the-lion-king";
+import { phantomStory } from "./content/phantom-of-the-opera";
 
 /**
  * あらすじ専用ページを持つ作品の登録簿。
@@ -14,7 +17,12 @@ import { lesMiserablesStory } from "./content/les-miserables";
  * ★ 足したら next-sitemap.config.js の musicalStorySlugs にも
  *   同じ slug を書くこと。あちらは CJS でこの TS を読めない。
  */
-const STORIES: MusicalStory[] = [lesMiserablesStory];
+const STORIES: MusicalStory[] = [
+  lesMiserablesStory,
+  wickedStory,
+  lionKingStory,
+  phantomStory,
+];
 
 const BY_SLUG = new Map(STORIES.map((story) => [story.slug, story]));
 

@@ -380,7 +380,12 @@ module.exports = {
     // ここに書いていない slug を sitemap に出すと 404 を申告することに
     // なるので、あちらへ足したらこの配列にも同じ slug を足すこと
     // (このファイルは CJS なので TS を読めない)。
-    const musicalStorySlugs = ["les-miserables"];
+    const musicalStorySlugs = [
+      "les-miserables",
+      "wicked",
+      "disneys-the-lion-king",
+      "phantom-of-the-opera",
+    ];
 
     for (const mu of musicals) {
       paths.push(await config.transform(config, `/musicals/${mu.slug}`));
