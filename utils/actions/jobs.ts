@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import { ServiceCharge } from "@prisma/client";
 import { sendAdminMail } from "../mail";
+import { storePath, storeSlug } from "@/lib/jobs/store-slug";
 import {
   DISTRIBUTION_LABEL,
   JOB_ROLE_LABEL,
@@ -13,9 +14,12 @@ import {
   labelOf,
 } from "../labels";
 import {
+  aggregateStore,
   buildOverview,
+  postcodeArea,
   type ChargeRecord,
   type ServiceChargeOverview,
+  type StoreAggregate,
 } from "../service-charge";
 
 type ActionState = { ok: true } | { ok: false; message: string };
@@ -290,10 +294,7 @@ function buildSurveyMailBody(charge: ServiceCharge): string {
     );
   }
 
-  lines.push(
-    "",
-    `詳細: ${siteUrl}/jobs/service-charges/dashboard/${charge.placeId}`
-  );
+  lines.push("", `詳細: ${siteUrl}${storePath(storeSlug(charge))}`);
 
   return lines.join("\n");
 }
@@ -317,6 +318,7 @@ const RECORD_SELECT = {
   lat: true,
   lng: true,
   createdAt: true,
+  isVerified: true,
   serviceChargeCollected: true,
   distributionType: true,
   amountPeriod: true,
@@ -356,6 +358,82 @@ export async function fetchServiceChargesByPlaceId(
     select: RECORD_SELECT,
   });
   return records as ChargeRecord[];
+}
+
+/**
+ * 店舗ページ1枚ぶん。slug から引く。
+ *
+ * 回答は69件しかないので、1回全部読んで JS 側で店舗ごとにまとめる。
+ * slug は店名とポストコードから作る決まりで、SQLの where に書けない
+ * (書けば lib/jobs/store-slug.js と規則が二重になる)ため、
+ * ここでも集計と同じ関数を通して突き合わせる。
+ *
+ * isVerified で絞らないのは fetchServiceChargesByPlaceId と同じ理由。
+ * 手入力で登録された店舗もURLを知っていれば読めるが、indexable が false に
+ * なるので検索結果にも sitemap にも出ない。
+ */
+export async function fetchStorePage(slug: string): Promise<{
+  store: StoreAggregate;
+  records: ChargeRecord[];
+  /** 同じポストコード地区の他店舗。回遊と内部リンクのため。 */
+  nearby: StoreAggregate[];
+} | null> {
+  const all = (await db.serviceCharge.findMany({
+    orderBy: { createdAt: "desc" },
+    select: RECORD_SELECT,
+  })) as ChargeRecord[];
+
+  const byStore = new Map<string, ChargeRecord[]>();
+  for (const r of all) {
+    const list = byStore.get(r.placeId);
+    if (list) list.push(r);
+    else byStore.set(r.placeId, [r]);
+  }
+
+  const stores = [...byStore.values()].map(aggregateStore);
+  const store = stores.find((s) => s.slug === slug);
+  if (!store) return null;
+
+  const area = postcodeArea(store.postcode);
+  const nearby = area
+    ? stores
+        .filter(
+          (s) =>
+            s.placeId !== store.placeId &&
+            s.verifiedCount > 0 &&
+            postcodeArea(s.postcode) === area,
+        )
+        .sort((a, b) => b.responseCount - a.responseCount)
+        .slice(0, 6)
+    : [];
+
+  return {
+    store,
+    records: byStore.get(store.placeId) ?? [],
+    nearby,
+  };
+}
+
+/**
+ * 店舗ページの slug 一覧。generateStaticParams から呼ぶ。
+ *
+ * noindex の店舗も含めて全部返す。ビルド時に描いておけば、
+ * 一覧から辿った人にも検索から来た人にも待ち時間が無い。
+ */
+export async function fetchStoreSlugs(): Promise<string[]> {
+  const records = (await db.serviceCharge.findMany({
+    orderBy: { createdAt: "desc" },
+    select: RECORD_SELECT,
+  })) as ChargeRecord[];
+
+  const byStore = new Map<string, ChargeRecord[]>();
+  for (const r of records) {
+    const list = byStore.get(r.placeId);
+    if (list) list.push(r);
+    else byStore.set(r.placeId, [r]);
+  }
+
+  return [...byStore.values()].map((rows) => aggregateStore(rows).slug);
 }
 
 export type ResponseFeedFilter = {

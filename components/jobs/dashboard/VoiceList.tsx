@@ -1,5 +1,6 @@
 // components/jobs/dashboard/VoiceList.tsx
 import Link from "next/link";
+import { storePath, storeSlug } from "@/lib/jobs/store-slug";
 import { cn } from "@/lib/utils";
 import {
   excerpt,
@@ -85,7 +86,7 @@ export default function VoiceList({
         return (
           <li key={record.id}>
             <Link
-              href={`/jobs/service-charges/dashboard/${record.placeId}`}
+              href={storePath(storeSlug(record))}
               className="group flex h-full flex-col rounded-xl border border-border bg-card p-5 transition hover:border-foreground/30 hover:bg-muted/30"
             >
               <div className="flex items-start justify-between gap-3">

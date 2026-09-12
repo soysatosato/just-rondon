@@ -80,6 +80,10 @@ const TREE = {
     label: "サービスチャージ",
     parent: "/jobs",
   },
+  "/jobs/service-charges/stores": {
+    label: "店舗別サービスチャージ",
+    parent: "/jobs/service-charges",
+  },
   "/jobs/service-charges/case-story": {
     label: "当事者の記録",
     parent: "/jobs/service-charges",

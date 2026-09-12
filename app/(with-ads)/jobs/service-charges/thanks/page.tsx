@@ -108,8 +108,8 @@ export default function ThanksPage() {
 
         <div className="mt-10 flex flex-col gap-2 sm:flex-row">
           <Button asChild className="flex-1">
-            <Link href="/jobs/service-charges/dashboard">
-              集まったデータを見る
+            <Link href="/jobs/service-charges/stores">
+              店舗別のデータを見る
             </Link>
           </Button>
           <Button asChild variant="outline" className="flex-1">

@@ -117,10 +117,10 @@ function SurveyCallout() {
           診断をはじめる（3分）
         </Link>
         <Link
-          href="/jobs/service-charges/dashboard"
+          href="/jobs/service-charges/stores"
           className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
         >
-          集まったデータを見る
+          店舗別のデータを見る
         </Link>
       </div>
     </aside>
@@ -228,7 +228,7 @@ export default function ServiceChargeGuidePage() {
               </p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <Link
-                  href="/jobs/service-charges/dashboard"
+                  href="/jobs/service-charges/stores"
                   className="group block rounded-xl border border-border p-5 transition hover:border-foreground/40 hover:bg-muted/40"
                 >
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

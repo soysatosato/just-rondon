@@ -97,11 +97,36 @@ export const TITLE_MAX_LENGTH = 34;
  * 短いものを無理に付けると「〜の見どころ・所要時」のように語尾が欠けた
  * タイトルが検索結果に出てしまい、名前だけを出すより明らかに印象が悪い。
  */
-export function fitTitle(name: string, suffixes: string[]): string {
+export function fitTitle(
+  name: string,
+  suffixes: string[],
+  /**
+   * 長さの測り方。既定は文字数。
+   *
+   * 名前がほぼ全角のページ(観光地・美術館・演目)は文字数で合っている。
+   * 半角の名前が並ぶページだけ displayWidth を渡す。
+   */
+  measure: (text: string) => number = (text) => text.length
+): string {
   const fitting = suffixes.find(
-    (suffix) => name.length + suffix.length <= TITLE_MAX_LENGTH
+    (suffix) => measure(name) + measure(suffix) <= TITLE_MAX_LENGTH
   );
   return fitting ? `${name}${fitting}` : name;
+}
+
+/**
+ * 検索結果での表示幅。ASCIIを半角(0.5文字)として数える。
+ *
+ * "Hiden - Japanese Curry Cafe" のように半角だけで27文字ある名前は、
+ * 文字数で測ると上限の34に足りず、実際には収まるサフィックスまで
+ * 落としてしまう。表示されるのは全角換算で約14文字ぶんしかない。
+ */
+export function displayWidth(text: string): number {
+  let width = 0;
+  for (const char of text) {
+    width += char.charCodeAt(0) < 0x100 ? 0.5 : 1;
+  }
+  return width;
 }
 
 export type OgImageInput =

@@ -82,12 +82,15 @@ export default async function DashboardPage() {
         <section className="mt-12">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h2 className="text-xl font-bold tracking-tight">店舗別の回答</h2>
-            <p className="text-xs text-muted-foreground">
-              回答の状態が悪いものから並んでいます
-            </p>
+            <Link
+              href="/jobs/service-charges/stores"
+              className="shrink-0 text-sm text-muted-foreground underline underline-offset-4 transition hover:text-foreground"
+            >
+              エリア別の一覧を見る
+            </Link>
           </div>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            バッジは、その店舗に寄せられた回答のうち
+            回答の状態が悪いものから並んでいます。バッジは、その店舗に寄せられた回答のうち
             <span className="font-medium text-foreground">最も深刻なもの</span>
             を示します。1件でも「分配されていない」という回答があれば、他に良い回答があっても赤く出ます。
           </p>

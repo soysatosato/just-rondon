@@ -291,6 +291,10 @@ export const NAV_SECTIONS: NavSection[] = [
             href: "/jobs/service-charges",
             label: "サービスチャージ完全ガイド",
           },
+          {
+            href: "/jobs/service-charges/stores",
+            label: "店舗別サービスチャージ",
+          },
         ],
       },
       {

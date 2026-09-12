@@ -162,7 +162,7 @@ The full route, deadlines, costs, and checklists.
 **[UK service charge guide](/jobs/service-charges)** *(in Japanese)*
 Comprehensive coverage of the Tipping Act 2023, mandatory versus discretionary charges, tronc schemes, and the relationship with the minimum wage.
 
-**[London service charge survey](/jobs/service-charges/dashboard)** *(in Japanese)*
+**[London service charge survey](/jobs/service-charges/stores)** *(in Japanese)*
 Original research into how service charges are handled at actual venues.`,
     },
   ],

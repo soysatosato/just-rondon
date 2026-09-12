@@ -5,6 +5,10 @@
 // 同じ判定を使うため、"use server" も "use client" も付けない。
 
 import {
+  isIndexableStore,
+  storeSlug,
+} from "@/lib/jobs/store-slug";
+import {
   DISTRIBUTION_LABEL,
   type DistributionType,
   type JobRole,
@@ -27,6 +31,8 @@ export type ChargeRecord = {
   lat: number | null;
   lng: number | null;
   createdAt: Date;
+  /** 店舗候補から選ばれた回答は true。手入力で登録された回答は false。 */
+  isVerified: boolean;
   serviceChargeCollected: boolean;
   distributionType: string | null;
   amountPeriod: string | null;
@@ -61,12 +67,16 @@ export const STORE_STATUS_LABEL: Record<StoreStatus, string> = {
 
 export type StoreAggregate = {
   placeId: string;
+  /** 店舗ページのURL末尾。規則は lib/jobs/store-slug.js が持つ。 */
+  slug: string;
   storeName: string;
   storeAddress: string;
   borough: string | null;
   postcode: string | null;
   status: StoreStatus;
   responseCount: number;
+  /** うち、店舗候補から選ばれた(実在が確認できている)回答の数。 */
+  verifiedCount: number;
   collectedCount: number;
   /** 分配方法ごとの件数。徴収ありの回答だけが対象。 */
   distribution: Record<DistributionType, number>;
@@ -77,6 +87,12 @@ export type StoreAggregate = {
   monthly: number | null;
   monthlySampleSize: number;
   commentCount: number;
+  /** 法定義務の3項目。徴収ありの回答だけが対象。 */
+  writtenPolicy: ObligationTally;
+  onPayslip: ObligationTally;
+  kitchenIncluded: ObligationTally;
+  /** 検索結果に出してよい中身があるか。判定は lib/jobs/store-slug.js。 */
+  indexable: boolean;
   latestAt: Date;
 };
 
@@ -227,28 +243,59 @@ export function aggregateStore(records: ChargeRecord[]): StoreAggregate {
   // 住所は空で送られてくる回答があるので、埋まっているものを拾う。
   const address = records.find((r) => r.storeAddress)?.storeAddress ?? "";
 
+  const commentCount = records.filter(
+    (r) => r.serviceChargeComment || r.mealComment || r.generalComment,
+  ).length;
+  const verifiedCount = records.filter((r) => r.isVerified).length;
+
+  // slug は head の1件だけから作る。回答一覧のリンク(回答1件しか持たない)と
+  // 同じ値になる必要があるため、ここで他の回答から値を補ってはいけない。
+  const slug = storeSlug(head);
+
   return {
     placeId: head.placeId,
+    slug,
     storeName: head.storeName,
     storeAddress: address,
     borough: records.find((r) => r.borough)?.borough ?? null,
     postcode: records.find((r) => r.postcode)?.postcode ?? null,
     status: statusOf(records),
     responseCount: records.length,
+    verifiedCount,
     collectedCount: collected.length,
     distribution,
     hourly: median(hourlyValues),
     hourlySampleSize: hourlyValues.length,
     monthly: median(monthlyValues),
     monthlySampleSize: monthlyValues.length,
-    commentCount: records.filter(
-      (r) => r.serviceChargeComment || r.mealComment || r.generalComment,
-    ).length,
+    commentCount,
+    writtenPolicy: tally(collected.map((r) => r.writtenPolicy)),
+    onPayslip: tally(collected.map((r) => r.onPayslip)),
+    kitchenIncluded: tally(collected.map((r) => r.kitchenIncluded)),
+    indexable: isIndexableStore({
+      verifiedCount,
+      responseCount: records.length,
+      commentCount,
+      amountCount: monthlyValues.length,
+    }),
     latestAt: records.reduce<Date>(
       (max, r) => (r.createdAt > max ? r.createdAt : max),
       records[0].createdAt,
     ),
   };
+}
+
+/**
+ * ポストコードの地区記号。"NW5 2JT" → "NW"、"W1D 4EE" → "W"。
+ *
+ * ロンドンの住所はこの記号だけで大まかな位置が伝わる(W1=ウエストエンド、
+ * N1=イズリントン…)ので、店舗一覧のまとまりと「近くの店舗」の判定に使う。
+ * ロンドン以外(BT/RG など)も同じ規則で区切れるため、例外扱いはしない。
+ */
+export function postcodeArea(postcode: string | null): string | null {
+  const head = (postcode ?? "").trim().toUpperCase().split(/\s+/)[0];
+  const letters = head.match(/^[A-Z]+/);
+  return letters ? letters[0] : null;
 }
 
 /** 店舗一覧の既定の並び。問題の報告がある店を上に、同じ状態なら回答の多い順。 */

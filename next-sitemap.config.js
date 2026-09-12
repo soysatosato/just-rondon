@@ -1,4 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
+const {
+  isIndexableStore,
+  storePath,
+  storeSlug,
+} = require("./lib/jobs/store-slug");
 const prisma = new PrismaClient();
 
 /** @type {import('next-sitemap').IConfig} */
@@ -330,6 +335,9 @@ module.exports = {
       "/jobs/workplace-harassment",
       "/jobs/workplace-pension",
       "/jobs/service-charges",
+      // 店舗別サービスチャージの一覧。各店舗ページ(/stores/<slug>)は
+      // DB 由来なので下の additionalPaths が出す。
+      "/jobs/service-charges/stores",
       "/jobs/service-charges/case-story",
       "/jobs/service-charges/case-story/background",
       "/jobs/service-charges/case-story/acas-early-conciliation",
@@ -458,6 +466,50 @@ module.exports = {
       paths.push(
         await config.transform(config, `/events/archive/2025/${e.slug}`),
       );
+    }
+
+    // 店舗別サービスチャージのページ。回答が1件でも届いた店舗にURLは生えるが、
+    // sitemap に出すのは中身のあるものだけ。判定と slug の規則は
+    // lib/jobs/store-slug.js が持っていて、ページ側の noindex も同じ関数を
+    // 読んでいるので、「sitemap に出したのに noindex」は起きない。
+    const charges = await prisma.serviceCharge.findMany({
+      select: {
+        placeId: true,
+        storeName: true,
+        postcode: true,
+        isVerified: true,
+        serviceChargeCollected: true,
+        amountValue: true,
+        serviceChargeComment: true,
+        mealComment: true,
+        generalComment: true,
+      },
+      // 集計側(utils/service-charge.ts の aggregateStore)と同じ並びにする。
+      // slug は先頭の1件から作るので、並びが違うと別のURLになる。
+      orderBy: { createdAt: "desc" },
+    });
+
+    const chargesByStore = new Map();
+    for (const c of charges) {
+      const list = chargesByStore.get(c.placeId);
+      if (list) list.push(c);
+      else chargesByStore.set(c.placeId, [c]);
+    }
+
+    for (const rows of chargesByStore.values()) {
+      const indexable = isIndexableStore({
+        verifiedCount: rows.filter((r) => r.isVerified).length,
+        responseCount: rows.length,
+        commentCount: rows.filter(
+          (r) => r.serviceChargeComment || r.mealComment || r.generalComment,
+        ).length,
+        amountCount: rows.filter(
+          (r) => r.serviceChargeCollected && r.amountValue !== null,
+        ).length,
+      });
+      if (!indexable) continue;
+
+      paths.push(await config.transform(config, storePath(storeSlug(rows[0]))));
     }
 
     // 料理ページ。/restaurants ハブ自体は上の staticPages 側にある。

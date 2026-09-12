@@ -1,5 +1,6 @@
 // components/jobs/dashboard/ResponseCard.tsx
 import Link from "next/link";
+import { storePath, storeSlug } from "@/lib/jobs/store-slug";
 import { cn } from "@/lib/utils";
 import {
   excerpt,
@@ -94,7 +95,7 @@ export default function ResponseCard({
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border bg-muted/30 px-5 py-3">
         {showStoreName ? (
           <Link
-            href={`/jobs/service-charges/dashboard/${record.placeId}`}
+            href={storePath(storeSlug(record))}
             className="min-w-0 truncate font-medium text-foreground underline-offset-4 hover:underline"
           >
             {record.storeName || "（店舗名不明）"}

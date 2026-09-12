@@ -214,7 +214,7 @@ const SITE_INDEX = [
       { href: "/housing/where-to-live", label: "住むエリアの選び方" },
       { href: "/jobs", label: "働く・労働問題" },
       {
-        href: "/jobs/service-charges/dashboard",
+        href: "/jobs/service-charges/stores",
         label: "サービスチャージ店舗別データベース",
       },
       { href: "/money", label: "お金・銀行" },

@@ -125,7 +125,7 @@ export default function JobsHubPage() {
               </CardContent>
             </Card>
           </Link>
-          <Link href="/jobs/service-charges/dashboard" className="block">
+          <Link href="/jobs/service-charges/stores" className="block">
             <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
               <CardContent className="p-5">
                 <span className="block text-base font-semibold">

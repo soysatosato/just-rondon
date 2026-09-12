@@ -6,27 +6,14 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import {
-  STORE_STATUS_LABEL,
-  type StoreAggregate,
-  type StoreStatus,
-} from "@/utils/service-charge";
+import StoreRow from "@/components/jobs/stores/StoreRow";
+import { type StoreAggregate } from "@/utils/service-charge";
 
 /**
  * 店舗一覧。以前は3文字以上の検索をしないと何も出ない作りで、
  * 初めて来た人にはデータが1件も無いページに見えていた。
  * 対象店舗は数十件しかないので全件を渡し、絞り込みは手元で行う。
  */
-
-const STATUS_STYLE: Record<StoreStatus, string> = {
-  unpaid:
-    "border-[#d03b3b]/40 bg-[#d03b3b]/10 text-[#a82f2f] dark:border-[#e05a5a]/40 dark:bg-[#e05a5a]/10 dark:text-[#e88a8a]",
-  fixed: "border-border bg-muted text-foreground/80",
-  shared:
-    "border-[#2a78d6]/40 bg-[#2a78d6]/10 text-[#215fa9] dark:border-[#3987e5]/40 dark:bg-[#3987e5]/10 dark:text-[#8db8ee]",
-  "no-charge": "border-border bg-transparent text-muted-foreground",
-  unknown: "border-border bg-transparent text-muted-foreground",
-};
 
 type Tab = "all" | "unpaid" | "shared" | "no-charge";
 
@@ -36,14 +23,6 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "shared", label: "分配されている" },
   { key: "no-charge", label: "徴収なし" },
 ];
-
-/** 住所から末尾の「, London」「イギリス」などを落として短く見せる。 */
-function shortAddress(address: string): string {
-  return address
-    .replace(/\s*イギリス\s*$/, "")
-    .replace(/,?\s*(UK|United Kingdom)\s*$/i, "")
-    .trim();
-}
 
 export default function StoreExplorer({
   stores,
@@ -122,55 +101,7 @@ export default function StoreExplorer({
       {visible.length > 0 ? (
         <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border">
           {visible.map((s) => (
-            <li key={s.placeId}>
-              <Link
-                href={`/jobs/service-charges/dashboard/${s.placeId}`}
-                className="group flex items-start gap-4 bg-card p-4 transition hover:bg-muted/50"
-              >
-                <div className="min-w-0 flex-1 space-y-1.5">
-                  <p className="truncate font-medium text-foreground">
-                    {s.storeName || "（店舗名不明）"}
-                  </p>
-                  {s.storeAddress && (
-                    <p className="truncate text-xs text-muted-foreground">
-                      {shortAddress(s.storeAddress)}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                    <span
-                      className={cn(
-                        "rounded-full border px-2 py-0.5 text-[0.6875rem] font-medium",
-                        STATUS_STYLE[s.status],
-                      )}
-                    >
-                      {STORE_STATUS_LABEL[s.status]}
-                    </span>
-                    {s.hourly !== null && (
-                      <span className="rounded-full border border-border px-2 py-0.5 text-[0.6875rem] tabular-nums text-muted-foreground">
-                        時給換算 £{s.hourly.toFixed(2)}
-                      </span>
-                    )}
-                    {s.commentCount > 0 && (
-                      <span className="rounded-full border border-border px-2 py-0.5 text-[0.6875rem] text-muted-foreground">
-                        現場の声 {s.commentCount}件
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex shrink-0 items-center gap-3 pt-0.5">
-                  <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium tabular-nums text-muted-foreground">
-                    {s.responseCount}件
-                  </span>
-                  <span
-                    aria-hidden
-                    className="text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground"
-                  >
-                    →
-                  </span>
-                </div>
-              </Link>
-            </li>
+            <StoreRow key={s.placeId} store={s} />
           ))}
         </ul>
       ) : (
