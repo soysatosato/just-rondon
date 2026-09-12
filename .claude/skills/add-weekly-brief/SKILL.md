@@ -414,3 +414,25 @@ git の操作(commit, push, branch作成など)は一切行わない。
 - 目玉として推したイベントとその理由
 - `severity: high` の項目があればその内容
 - `published` の状態(下書きのままなら、公開するコマンドも添える)
+
+## Step 8 — ツイート案を出す
+
+完了報告に続けて、公式X用のツイート案を**4〜5案**書き出す。ユーザーに
+頼まれなくても毎回出す。DBには登録しない(下書き登録が要るときだけ
+`/add-tweets` を使う)。投稿は人が `/tweets` からコピペで行う。
+
+- **140字以内**。URLを含めた実文字数で数え、各案に字数を添える
+- 1行目は見出し **【今週のロンドン】**
+- 末尾に号のURL `https://www.just-rondon.com/events/week/<slug>`
+- 4〜5案は切り口をずらす(目玉イベント・無料開放・今週で終わる展覧会・
+  影響の大きい支障情報など)。日付や締切は号の本文と必ず一致させる
+
+字数は目分量で数えず、実測する。
+
+```bash
+python3 -c 'import sys; t=sys.stdin.read().rstrip("\n"); print(len(t), "OK" if len(t)<=140 else "NG")' <<'TWEET'
+【今週のロンドン】
+…本文…
+https://www.just-rondon.com/events/week/<slug>
+TWEET
+```

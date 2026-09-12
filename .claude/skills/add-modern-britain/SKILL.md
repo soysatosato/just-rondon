@@ -237,3 +237,25 @@ npx tsx scripts/create-modern-britain.ts <一時ファイルのパス>
 git の操作(commit, push, branch作成など)は一切行わない。
 最後に、公開された記事のタイトルと `/modern-britain/<slug>` のURL、
 および参照した主な出典をユーザーに報告する。
+
+## Step 7 — ツイート案を出す
+
+完了報告に続けて、公式X用のツイート案を**4〜5案**書き出す。ユーザーに
+頼まれなくても毎回出す。DBには登録しない(下書き登録が要るときだけ
+`/add-tweets` を使う)。投稿は人が `/tweets` からコピペで行う。
+
+- **140字以内**。URLを含めた実文字数で数え、各案に字数を添える
+- 1行目は見出し **【いまのイギリス】**
+- 末尾に記事URL `https://www.just-rondon.com/modern-britain/<slug>`
+- 4〜5案は切り口をずらす(ニュースの要点・効いてくる数字・日本との対比・
+  問題提起など)。速報ではないので煽りすぎない
+
+字数は目分量で数えず、実測する。
+
+```bash
+python3 -c 'import sys; t=sys.stdin.read().rstrip("\n"); print(len(t), "OK" if len(t)<=140 else "NG")' <<'TWEET'
+【いまのイギリス】
+…本文…
+https://www.just-rondon.com/modern-britain/<slug>
+TWEET
+```
