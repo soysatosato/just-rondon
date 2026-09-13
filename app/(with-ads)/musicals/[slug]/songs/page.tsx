@@ -1,4 +1,9 @@
-import { fetchMusicalIdandName, fetchSongs } from "@/utils/actions/musicals";
+import {
+  fetchMusicalIdandName,
+  fetchSongCountsBySlug,
+  fetchSongs,
+} from "@/utils/actions/musicals";
+import { SONGS_PUBLISHED, hasSongList } from "@/lib/musicals/song-pages";
 import { buildPageMetadata } from "@/lib/seo";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -7,9 +12,31 @@ import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
-import Pagination from "@/components/home/Pagination";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import JsonLd from "@/components/seo/JsonLd";
+
+/**
+ * 一覧を生やす作品は lib/musicals/song-pages.js の hasSongList が決める。
+ * 曲が無い作品と、SONGS_PUBLISHED が false の間は全作品が 404 になる。
+ *
+ * ページ内の notFound() では 404 にならない。app/loading.tsx があるため
+ * 先にステータス200でストリーミングが始まり、中身の無いページが残る。
+ * dynamicParams = false ならルーティングの段階で弾かれる。
+ *
+ * ★ このページで searchParams を読まないこと。読むと動的レンダリングになり、
+ *   dynamicParams = false が効かず、曲の無い作品の一覧も200で返る
+ *   (以前の ?page= のページ送りで実際にそうなっていた)。
+ *   1作品あたり20曲前後なので、上演順は1ページに通しで並べている。
+ */
+export async function generateStaticParams() {
+  if (!SONGS_PUBLISHED) return [];
+  const musicals = await fetchSongCountsBySlug();
+  return musicals
+    .filter((m) => hasSongList(m._count.songs))
+    .map(({ slug }) => ({ slug }));
+}
+
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -38,22 +65,13 @@ export async function generateMetadata({
 
 export default async function SongsPage({
   params,
-  searchParams,
 }: {
   params: { slug: string };
-  searchParams: { page?: string };
 }) {
   const musical = await fetchMusicalIdandName(params.slug);
   if (!musical) redirect("/musicals");
 
-  const currentPage = parseInt(searchParams.page || "1", 10);
-  const itemsPerPage = 10;
-
-  const { songs, total } = await fetchSongs(
-    musical.id,
-    currentPage,
-    itemsPerPage,
-  );
+  const songs = await fetchSongs(musical.id);
 
   return (
     <>
@@ -84,66 +102,48 @@ export default async function SongsPage({
           {musical.name} ({musical.engName}) で歌われる曲を上演順に並べました。
           どの場面で何が歌われるかを、観劇前に把握しておけます。
         </p>
-        {songs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 space-y-4 rounded-2xl shadow-inner">
-            <p className="text-gray-500 dark:text-gray-400 text-lg text-center">
-              このミュージカルにはまだ曲が登録されていません。
-            </p>
-            <Link href={`/musicals/${params.slug}`}>
-              <Button variant="default">戻る</Button>
-            </Link>
-          </div>
-        ) : (
-          <ul className="divide-y divide-gray-200 dark:divide-gray-700 rounded-2xl shadow-md overflow-hidden">
-            {songs.map((song: any) => (
-              <li key={song.id}>
-                <Link
-                  href={`/musicals/${params.slug}/songs/${song.id}`}
-                  className="flex w-full items-center px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition rounded-lg"
-                >
-                  <div className="flex items-center space-x-4 min-w-0 w-full">
-                    <span className="text-gray-500 dark:text-gray-400 font-semibold w-6 text-center shrink-0">
-                      {song.index}
-                    </span>
+        <ul className="divide-y divide-gray-200 dark:divide-gray-700 rounded-2xl shadow-md overflow-hidden">
+          {songs.map((song: any) => (
+            <li key={song.id}>
+              <Link
+                href={`/musicals/${params.slug}/songs/${song.id}`}
+                className="flex w-full items-center px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition rounded-lg"
+              >
+                <div className="flex items-center space-x-4 min-w-0 w-full">
+                  <span className="text-gray-500 dark:text-gray-400 font-semibold w-6 text-center shrink-0">
+                    {song.index}
+                  </span>
 
-                    {song.youtubeId && (
-                      <div className="w-16 h-10 relative flex-shrink-0 rounded overflow-hidden">
-                        <img
-                          src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
-                          alt={song.name}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          loading="lazy"
-                          decoding="async"
-                          fetchPriority="low"
-                        />
-                      </div>
-                    )}
-
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
-                        {song.name}
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300 text-xs truncate">
-                        <span className="font-semibold">Artist:</span>{" "}
-                        {song.artist}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        この曲について
-                      </p>
+                  {song.youtubeId && (
+                    <div className="w-16 h-10 relative flex-shrink-0 rounded overflow-hidden">
+                      <img
+                        src={`https://img.youtube.com/vi/${song.youtubeId}/mqdefault.jpg`}
+                        alt={song.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
+                      />
                     </div>
+                  )}
+
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                      {song.name}
+                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 text-xs truncate">
+                      <span className="font-semibold">Artist:</span>{" "}
+                      {song.artist}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      この曲について
+                    </p>
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-        <Pagination
-          currentPage={currentPage}
-          totalItems={total}
-          itemsPerPage={itemsPerPage}
-          baseUrl={`/musicals/${params.slug}/songs`}
-          maxPageButtons={5} // 表示するページ番号の数
-        />
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
         <p className=" text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
           曲順を先に押さえておくと、どの場面で物語が動くのかが掴めます。英語で観ても
           筋を見失いにくくなるので、観劇前にひと通り眺めておくのがおすすめです。チケットの買い方やお得な観劇方法は

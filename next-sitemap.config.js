@@ -4,6 +4,7 @@ const {
   storePath,
   storeSlug,
 } = require("./lib/jobs/store-slug");
+const { hasSongList } = require("./lib/musicals/song-pages");
 const prisma = new PrismaClient();
 
 /** @type {import('next-sitemap').IConfig} */
@@ -367,19 +368,25 @@ module.exports = {
     }
 
     const museums = await prisma.museum.findMany({
-      select: { slug: true },
+      select: { slug: true, _count: { select: { artworks: true } } },
     });
 
     for (const m of museums) {
       paths.push(await config.transform(config, `/museums/${m.slug}`));
-      paths.push(await config.transform(config, `/museums/${m.slug}/artworks`));
+      // 作品一覧は作品が1件以上ある館にだけ生える(それ以外は 404)。
+      // 判定はページ側の generateStaticParams と同じ。
+      if (m._count.artworks > 0) {
+        paths.push(
+          await config.transform(config, `/museums/${m.slug}/artworks`)
+        );
+      }
       // 作品詳細(/artworks/{id})は sitemap に出さない。DB から機械的に量産され、
       // 1件あたりの固有本文が数百字しかないページが 490 件あり、
       // sitemap 全体の 4 割を占めて記事コンテンツの評価を薄めていた。
       // ページ側で noindex を宣言済み。一覧からは辿れるので回遊導線は残る。
     }
     const musicals = await prisma.musical.findMany({
-      select: { slug: true },
+      select: { slug: true, _count: { select: { songs: true } } },
     });
 
     // あらすじ専用ページ(/musicals/<slug>/story)を持つ作品。
@@ -399,14 +406,20 @@ module.exports = {
 
     for (const mu of musicals) {
       paths.push(await config.transform(config, `/musicals/${mu.slug}`));
-      paths.push(await config.transform(config, `/musicals/${mu.slug}/songs`));
+      // 曲一覧を出すかは lib/musicals/song-pages.js が決める。
+      // SONGS_PUBLISHED が false の間は全作品で出さない(ページも 404)。
+      if (hasSongList(mu._count.songs)) {
+        paths.push(
+          await config.transform(config, `/musicals/${mu.slug}/songs`)
+        );
+      }
       if (musicalStorySlugs.includes(mu.slug)) {
         paths.push(
           await config.transform(config, `/musicals/${mu.slug}/story`)
         );
       }
       // 曲詳細(/songs/{id})は sitemap に出さない。ページの大半を占める歌詞が
-      // 第三者の著作物のため。ページ側で noindex を宣言済み。
+      // 第三者の著作物のため。公開中もページ側で noindex を宣言している。
     }
     // 劇場ページ。ハブ(/musicals/theatres)は上の staticPages 側にある。
     const theatres = await prisma.theatre.findMany({ select: { slug: true } });

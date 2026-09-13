@@ -3,7 +3,9 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import {
   fetchMusicalIdandName,
   fetchSongDetails,
+  fetchSongPageParams,
 } from "@/utils/actions/musicals";
+import { SONGS_PUBLISHED } from "@/lib/musicals/song-pages";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -12,6 +14,15 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import JsonLd from "@/components/seo/JsonLd";
+
+// 本文が歌詞の全文なので、SONGS_PUBLISHED が false の間は全曲 404。
+// notFound() ではなく dynamicParams で弾く理由は ../page.tsx を参照。
+export async function generateStaticParams() {
+  if (!SONGS_PUBLISHED) return [];
+  return fetchSongPageParams();
+}
+
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,

@@ -221,23 +221,29 @@ export const fetchMusicalStoryFacts = (slug: string) => {
   });
 };
 
-export const fetchSongs = async (
-  musicalId: string,
-  page: number = 1,
-  limit: number = 10
-) => {
-  const songs = await db.song.findMany({
+export const fetchSongs = (musicalId: string) => {
+  return db.song.findMany({
     where: { musicalId },
     orderBy: { index: "asc" },
-    skip: (page - 1) * limit,
-    take: limit,
   });
+};
 
-  const total = await db.song.count({
-    where: { musicalId },
+/**
+ * 曲一覧ページ(/musicals/[slug]/songs)の generateStaticParams 用。
+ * どの作品に一覧を生やすかは lib/musicals/song-pages.js の hasSongList が決める。
+ */
+export const fetchSongCountsBySlug = () => {
+  return db.musical.findMany({
+    select: { slug: true, _count: { select: { songs: true } } },
   });
+};
 
-  return { songs, total };
+/** 曲詳細ページ(/musicals/[slug]/songs/[id])の generateStaticParams 用。 */
+export const fetchSongPageParams = async () => {
+  const songs = await db.song.findMany({
+    select: { id: true, musical: { select: { slug: true } } },
+  });
+  return songs.map((song) => ({ slug: song.musical.slug, id: song.id }));
 };
 
 export const fetchSongDetails = async (id: string) => {

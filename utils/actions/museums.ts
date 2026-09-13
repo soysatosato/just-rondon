@@ -422,6 +422,18 @@ export const fetchArtworks = async (museumId: string) => {
   return artworks;
 };
 
+/**
+ * 作品一覧ページ(/museums/[slug]/artworks)の generateStaticParams 用。
+ * 作品が1件も無い館に一覧を生やすと、本文の無い空ページになる。
+ */
+export const fetchMuseumSlugsWithArtworks = async () => {
+  const museums = await db.museum.findMany({
+    where: { artworks: { some: {} } },
+    select: { slug: true },
+  });
+  return museums.map(({ slug }) => ({ slug }));
+};
+
 export const fetchArtworkDetails = (id: string) => {
   return db.artwork.findUnique({
     where: {

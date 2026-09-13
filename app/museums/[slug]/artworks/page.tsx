@@ -6,9 +6,27 @@ import ArtworksIntro from "@/components/artworks/ArtworksIntro";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
-import { fetchArtworks, fetchMuseumIDandName } from "@/utils/actions/museums";
+import {
+  fetchArtworks,
+  fetchMuseumIDandName,
+  fetchMuseumSlugsWithArtworks,
+} from "@/utils/actions/museums";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+/**
+ * 作品が1件以上ある館にだけ一覧を生やし、それ以外は 404 にする。
+ *
+ * ページ内の notFound() だけでは 404 にならない。app/museums/loading.tsx が
+ * あるため先にステータス200でストリーミングが始まり、本文の空ページが
+ * noindex 付きで返っていた(46館)。dynamicParams = false ならルーティングの
+ * 段階で弾かれる。作品を初めて登録した館の一覧は、次のデプロイで生える。
+ */
+export async function generateStaticParams() {
+  return fetchMuseumSlugsWithArtworks();
+}
+
+export const dynamicParams = false;
 
 type ArtworkRow = Awaited<ReturnType<typeof fetchArtworks>>[number];
 

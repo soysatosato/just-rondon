@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import RecommendStars from "@/components/musicals/shared/RecommendStars";
+import { hasSongList } from "@/lib/musicals/song-pages";
 
 export default function MusicalHero({
   name,
@@ -36,7 +37,9 @@ export default function MusicalHero({
   theatreName: string;
   songsCount: number;
 }) {
-  const hasSongs = songsCount > 1;
+  // 曲一覧ページが生えている作品だけボタンを出す。押せないボタンを
+  // 並べても、未完成のページがあると伝えるだけになる。
+  const hasSongs = hasSongList(songsCount);
 
   return (
     <div>
@@ -126,13 +129,9 @@ export default function MusicalHero({
                 予約する
               </Link>
             </Button>
-            {hasSongs ? (
+            {hasSongs && (
               <Button asChild size="lg" variant="outline">
                 <Link href={`/musicals/${slug}/songs`}>曲一覧へ</Link>
-              </Button>
-            ) : (
-              <Button size="lg" variant="outline" disabled>
-                曲一覧へ
               </Button>
             )}
           </div>
