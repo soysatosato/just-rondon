@@ -28,6 +28,18 @@ module.exports = {
     "/jobs/service-charges/survey",
     "/jobs/service-charges/thanks",
     "/contact/confirm",
+    // ★ next-sitemap は additionalPaths とは別に、generateStaticParams で
+    //   ビルド時に生成したページを prerender-manifest から全部拾ってくる。
+    //   この exclude が効くのはその自動収集分だけで、additionalPaths には効かない。
+    //
+    //   店舗ページは noindex の店も含めて全店を事前生成しているので、
+    //   ここで外さないと下の isIndexableStore の絞り込みが素通りになり、
+    //   noindex の店舗が sitemap に載る(実際に49店中14店が載っていた)。
+    //   載せる店舗は additionalPaths 側だけで決める。
+    "/jobs/service-charges/stores/*",
+    // 曲詳細は本文が歌詞で、公開中も noindex。SONGS_PUBLISHED を true に
+    // 戻すと108曲ぶん事前生成されるので、同じ理由でここで外す。
+    "/musicals/*/songs/*",
   ],
   robotsTxtOptions: {
     policies: [
