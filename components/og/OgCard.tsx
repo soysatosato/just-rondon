@@ -70,6 +70,16 @@ export const OG_THEMES = {
     panelGradient: "linear-gradient(160deg, #1e293b 0%, #334155 55%, #0f172a 100%)",
     pageGradient: "linear-gradient(135deg, #f8fafc 0%, #ffffff 52%, #f1f5f9 100%)",
   },
+  /*
+    お金まわりの道具。ナビの「住む・働く」と同じ緑系にして、読み物の
+    カード(橙・藍・赤)と並んだときに道具だと分かるようにする。
+  */
+  money: {
+    badgeBg: "#047857",
+    accent: "#10b981",
+    panelGradient: "linear-gradient(160deg, #022c22 0%, #047857 58%, #0ea5e9 100%)",
+    pageGradient: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 52%, #f0f9ff 100%)",
+  },
 } satisfies Record<string, OgCardTheme>;
 
 export type OgThemeName = keyof typeof OG_THEMES;

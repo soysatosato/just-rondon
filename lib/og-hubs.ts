@@ -1,4 +1,5 @@
 import { OG_CARD_VERSION, OG_SIZE } from "@/lib/og";
+import { CURRENT_TAX_YEAR } from "@/lib/money/take-home/tax-years";
 import type { OgThemeName } from "@/components/og/OgCard";
 
 /**
@@ -48,6 +49,18 @@ export const OG_HUBS = {
     glyph: "読",
     theme: "reading",
   },
+  /*
+    読み物のハブではないが、挿絵を持たない点は同じなので同じ版面を使う。
+    文面に年度が入るため、hubOgImage には年度を revision として渡す
+    (年度を更新したとき、SNS に残った去年のカードを外すため)。
+  */
+  "salary-calculator": {
+    badge: "TAKE-HOME PAY",
+    head: "イギリスの手取り計算機",
+    tail: `年収・時給を入れると、${CURRENT_TAX_YEAR.label}年度の所得税・NI・年金・学生ローンを引いた手取りが出ます。`,
+    glyph: "£",
+    theme: "money",
+  },
 } satisfies Record<
   string,
   {
@@ -66,10 +79,11 @@ export type OgHubSlug = keyof typeof OG_HUBS;
  *
  * 中身は文面を書き換えたときにしか変わらないので、?v= は意匠の
  * バージョンだけでよい。記事のように updatedAt を持たない。
+ * 文面が定期的に変わるカード(年度を含む計算機など)だけ revision を渡す。
  */
-export function hubOgImage(slug: OgHubSlug) {
+export function hubOgImage(slug: OgHubSlug, revision?: string) {
   return {
-    url: `/og/hub/${slug}?v=${OG_CARD_VERSION}`,
+    url: `/og/hub/${slug}?v=${OG_CARD_VERSION}${revision ? `-${revision}` : ""}`,
     width: OG_SIZE.width,
     height: OG_SIZE.height,
     alt: `${OG_HUBS[slug].head} | ジャスト・ロンドン`,

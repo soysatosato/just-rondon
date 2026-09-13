@@ -92,6 +92,19 @@ export default function JobsHubPage() {
               </Card>
             </Link>
           ))}
+          {/* 最低賃金・年金のガイドを読んだ人が、次に確かめたくなるのが自分の手取り。 */}
+          <Link href="/money/salary-calculator" className="block">
+            <Card className="border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/60 dark:bg-emerald-950/20 shadow-sm transition hover:border-emerald-400 dark:hover:border-emerald-600">
+              <CardContent className="p-5">
+                <span className="block text-base font-semibold">
+                  イギリスの手取り計算機
+                </span>
+                <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  時給・年収から、所得税・National Insurance・職場年金・学生ローンを引いた手取りを計算。給与明細の税コードを入れると、多く引かれている額も分かります。
+                </span>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </section>
 

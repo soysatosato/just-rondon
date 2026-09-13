@@ -142,6 +142,8 @@ PAYE（Pay As You Earn）という仕組みで、給与から自動的に源泉�
 
 **渡英直後や転職直後は、この税コードが正しく設定されず、税金を多く引かれることがあります。** 給与明細に「BR」「0T」「W1」「M1」といった表記があれば、緊急税コードが適用されている可能性があります。
 
+明細の税コードを[手取り計算機](/money/salary-calculator)の「詳しい条件」に入れると、標準の 1257L と比べて年にいくら多く引かれているかが出ます。
+
 ### 払いすぎた税金は戻る
 
 多く引かれた分は還付されます。
@@ -228,6 +230,7 @@ NIN は個人を特定する情報です。雇用主、HMRC、年金関連の正
   ],
   sources: [...MONEY_SOURCES],
   relatedLinks: [
+    { href: "/money/salary-calculator", label: "イギリスの手取り計算機（税コードの差額も出る）" },
     { href: "/money/opening-an-account", label: "渡英直後に開ける口座はどれか" },
     { href: "/jobs", label: "イギリスで働く" },
     { href: "/jobs/minimum-wage", label: "最低賃金と給与明細の読み方" },

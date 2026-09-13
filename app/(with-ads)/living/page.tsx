@@ -55,7 +55,10 @@ const SECTIONS: HubSection[] = [
     label: "お金・銀行",
     blurb:
       "住所証明が無くても開ける口座、日本からの送金、税と年金の基礎。渡英直後にいちばん詰まるのが口座開設なので、そこから書いています。",
-    links: [{ href: "/money/opening-an-account", label: "渡英直後に開ける口座" }],
+    links: [
+      { href: "/money/opening-an-account", label: "渡英直後に開ける口座" },
+      { href: "/money/salary-calculator", label: "手取り計算機" },
+    ],
   },
   {
     href: "/health",

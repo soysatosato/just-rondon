@@ -102,6 +102,14 @@ const SCENARIOS: {
     href: "/money/national-insurance-number",
     cta: "NIN の取り方を見る",
   },
+  {
+    situation: "オファーの年収が、手取りでいくらになるか知りたい",
+    answer: "手取り計算機で確かめる",
+    detail:
+      "所得税・National Insurance・職場年金・学生ローンを引いた月の手取りを、日本円の目安と一緒に出します。時給と週の労働時間からも計算できます。",
+    href: "/money/salary-calculator",
+    cta: "手取りを計算する",
+  },
 ];
 
 const FAQ_ITEMS = [
@@ -215,8 +223,30 @@ export default function MoneyHubPage() {
         lib/money/rates.ts は「率だけを持ち実額は書かない」方針なので、
         変動する数字は記事本文に混ぜず、出典と日付を添えたこの枠に隔離する。
       */}
-      <div className="mt-8">
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
         <FxRateWidget />
+        {/*
+          手取り計算機は「英国で受け取る」段階の道具。為替の早見と並べるのは、
+          読者がここで知りたいのが結局「手元にいくら残り、円でいくらか」だから。
+        */}
+        <Link href="/money/salary-calculator" className="block">
+          <Card className="h-full border-emerald-300 bg-emerald-50/60 shadow-sm transition hover:border-emerald-500 dark:border-emerald-900/70 dark:bg-emerald-950/20 dark:hover:border-emerald-600">
+            <CardContent className="flex h-full flex-col p-5">
+              <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
+                Take-Home Pay Calculator
+              </span>
+              <span className="mt-2 text-base font-bold text-gray-900 dark:text-gray-100">
+                イギリスの手取り計算機
+              </span>
+              <span className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                年収・時給を入れると、所得税・National Insurance・職場年金・学生ローンを引いた手取りがすぐに出ます。給与明細の読み方と、税コード（1257L・BR・0T）の確認にも。
+              </span>
+              <span className="mt-4 text-sm font-medium text-emerald-700 dark:text-emerald-400">
+                手取りを計算する →
+              </span>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       <Separator className="my-8" />

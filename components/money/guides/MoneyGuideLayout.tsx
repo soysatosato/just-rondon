@@ -190,6 +190,14 @@ export default function MoneyGuideLayout({
               お金・銀行ガイド トップ
             </Link>
           </li>
+          <li>
+            <Link
+              href="/money/salary-calculator"
+              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+            >
+              イギリスの手取り計算機｜年収・時給から所得税とNIを計算
+            </Link>
+          </li>
           {article.relatedLinks?.map((link) => (
             <li key={link.href}>
               <Link

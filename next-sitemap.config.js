@@ -328,6 +328,8 @@ module.exports = {
       "/money/choosing-a-bank",
       "/money/sending-money-from-japan",
       "/money/national-insurance-number",
+      // 手取り計算機。moneyGuides(記事)ではなく独立したページなので、ここに別に書く。
+      "/money/salary-calculator",
       "/jobs",
       "/jobs/minimum-wage",
       "/jobs/employment-contract",

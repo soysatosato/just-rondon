@@ -8,6 +8,13 @@ import {
   gbp,
   hourlyGbp,
 } from "@/lib/jobs/rates";
+import { calculatorHref } from "@/lib/money/take-home/url-state";
+
+/** 最低賃金の時給を入れた状態で開く手取り計算機。 */
+const takeHomeAtMinimumWage = calculatorHref("/money/salary-calculator", {
+  per: "hour",
+  pay: WAGE_BANDS[0].hourlyRate,
+});
 
 const minimumWage: JobGuideArticle = {
   slug: "minimum-wage",
@@ -72,7 +79,9 @@ ${WAGE_BANDS.map(
 
 - 総支給額 ÷ 実労働時間 が、自分の年齢区分の最低賃金以上になっているか計算する
 - 「training fee」「uniform charge」「breakage（食器破損などの罰金）」といった名目の天引きがないか確認する
-- 天引き後の実質時給が最低賃金を下回っていないか確認する（天引きが合法かどうかに関わらず、天引き後の金額が最低賃金を下回れば違法となるケースがあります）`,
+- 天引き後の実質時給が最低賃金を下回っていないか確認する（天引きが合法かどうかに関わらず、天引き後の金額が最低賃金を下回れば違法となるケースがあります）
+
+所得税・National Insurance・職場年金を引いた手取りが明細の net pay と合っているかは、[手取り計算機](${takeHomeAtMinimumWage})に時給と週の労働時間を入れると確かめられます。明細の税コードを入れれば、緊急税コードで多く引かれている額も出ます。`,
     },
     {
       title: "違法になりやすい天引き・支払いパターン",
@@ -106,6 +115,10 @@ HMRCが最低賃金違反を認定した場合、雇用主は未払い分の即�
     },
   ],
   relatedLinks: [
+    {
+      href: "/money/salary-calculator",
+      label: "イギリスの手取り計算機｜時給・年収から税金とNIを引いた額",
+    },
     {
       href: "/money/national-insurance-number",
       label: "National Insurance番号の取り方｜給与から引かれる前に",

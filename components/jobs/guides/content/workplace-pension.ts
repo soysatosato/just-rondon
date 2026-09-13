@@ -96,6 +96,8 @@ Nest以外にも、Smart Pension、The People's Pension、NOW: Pensionsなどが
 
 Payslipに \`ER Pension\` や \`Employer Pension\` という項目があれば、それは雇用主が出している分です。**これはあなたの給料から引かれているお金ではなく、雇用主が上乗せで払っているお金**です。脱退すると、この上乗せ分ももらえなくなります。
 
+なお Nest のような RAS（relief at source）方式の年金では、Payslipに載るのはこの額の80%です。残りの20%は税の還付として、年金会社が HMRC から受け取って口座に足します。年金を払ったまま・やめた場合で手取りがいくら変わるかは、[手取り計算機](/money/salary-calculator)の「職場年金」を切り替えると比べられます。
+
 Payslipそのものの読み方は[最低賃金・給与明細の見方](/jobs/minimum-wage)で詳しく解説しています。`,
     },
     {
@@ -240,6 +242,10 @@ Nestはオンラインで完結する制度なので、**日本に帰国して�
     },
   ],
   relatedLinks: [
+    {
+      href: "/money/salary-calculator",
+      label: "イギリスの手取り計算機｜年金をやめた場合の手取りを比べる",
+    },
     {
       href: "/money/national-insurance-number",
       label: "National Insurance番号｜年金記録が紐づく番号",

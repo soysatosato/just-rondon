@@ -270,6 +270,7 @@ export const NAV_SECTIONS: NavSection[] = [
         links: [
           { href: "/money", label: "お金・銀行ガイド トップ" },
           { href: "/money/opening-an-account", label: "渡英直後に開ける口座" },
+          { href: "/money/salary-calculator", label: "手取り計算機" },
         ],
       },
       {
