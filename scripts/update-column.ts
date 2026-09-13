@@ -21,6 +21,10 @@ type SectionInput = {
   subtitle?: string;
   description: string;
   displayOrder: number;
+  // 省略した節の挿絵・キャプションはDB側をそのまま残す(undefined は
+  // Prisma が更新対象から外す)。挿絵を持たない古いJSONを流しても消えない。
+  image?: string;
+  imageSummary?: string;
 };
 
 type ColumnPayload = {
@@ -70,7 +74,10 @@ async function main() {
         !cur ||
         cur.title !== s.title ||
         (cur.subtitle ?? undefined) !== s.subtitle ||
-        (cur.description ?? "") !== s.description;
+        (cur.description ?? "") !== s.description ||
+        (s.image !== undefined && (cur.image ?? undefined) !== s.image) ||
+        (s.imageSummary !== undefined &&
+          (cur.imageSummary ?? undefined) !== s.imageSummary);
       console.log(
         `  [${s.displayOrder}] ${changed ? (cur ? "update" : "create") : "same  "} ${s.title}`,
       );
@@ -108,6 +115,8 @@ async function main() {
             title: s.title,
             subtitle: s.subtitle,
             description: s.description,
+            image: s.image,
+            imageSummary: s.imageSummary,
           },
         });
       } else {
@@ -118,6 +127,8 @@ async function main() {
             subtitle: s.subtitle,
             description: s.description,
             displayOrder: s.displayOrder,
+            image: s.image,
+            imageSummary: s.imageSummary,
           },
         });
       }
