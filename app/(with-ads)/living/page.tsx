@@ -10,7 +10,7 @@ export const metadata = buildPageMetadata({
   path: PATH,
   title: "イギリスで住む・働く｜ビザ・住まい・お金・医療のガイド",
   description:
-    "英国ビザ、ロンドンの部屋探し、銀行口座と送金、NHSでの受診、食費、労働問題、人間関係、トラブル対応。イギリスで暮らす人が渡英前から順に必要になる実務を、手続きの流れごとにまとめています。",
+    "英国ビザ、ロンドンの部屋探し、銀行口座と送金、光熱費と Council Tax、NHSでの受診、食費、労働問題、人間関係、トラブル対応。イギリスで暮らす人が渡英前から順に必要になる実務を、手続きの流れごとにまとめています。",
   keywords: [
     "イギリス 移住",
     "ロンドン 生活",
@@ -58,6 +58,17 @@ const SECTIONS: HubSection[] = [
     links: [
       { href: "/money/opening-an-account", label: "渡英直後に開ける口座" },
       { href: "/money/salary-calculator", label: "手取り計算機" },
+    ],
+  },
+  {
+    href: "/bills",
+    eyebrow: "Household Bills",
+    label: "光熱費・生活の契約",
+    blurb:
+      "Council Tax、ガス・電気、水道、TV Licence、ネット回線、携帯。家賃のほかに入居した日から出ていくお金を、誰が払っていくらか、入居の前後にどの順で片づけるかで並べています。",
+    links: [
+      { href: "/bills/council-tax", label: "Council Tax とは" },
+      { href: "/bills/bills-included", label: "bills included の中身" },
     ],
   },
   {

@@ -71,6 +71,7 @@ const TREE = {
   "/visa": { label: "ビザガイド", parent: "/living" },
   "/housing": { label: "住まい探し", parent: "/living" },
   "/money": { label: "お金・銀行", parent: "/living" },
+  "/bills": { label: "光熱費・生活の契約", parent: "/living" },
   "/health": { label: "医療・NHS", parent: "/living" },
   "/food": { label: "食費を抑える", parent: "/living" },
   "/social": { label: "出会いと人間関係", parent: "/living" },

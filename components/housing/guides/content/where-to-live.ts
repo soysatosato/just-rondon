@@ -313,6 +313,7 @@ Elizabeth line（2022年開業）は新しく、速く、比較的空いてい�
   sources: [...HOUSING_SOURCES],
   relatedLinks: [
     { href: "/housing/viewing", label: "内見チェックリスト" },
+    { href: "/bills/council-tax", label: "Council Tax とは（払う人・金額・割引）" },
     {
       href: "/housing/rightmove-zoopla-openrent",
       label: "Rightmove・Zoopla・OpenRent の使い分け",

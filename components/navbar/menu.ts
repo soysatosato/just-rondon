@@ -274,6 +274,13 @@ export const NAV_SECTIONS: NavSection[] = [
         ],
       },
       {
+        heading: "光熱費・生活の契約",
+        links: [
+          { href: "/bills", label: "光熱費・契約ガイド トップ" },
+          { href: "/bills/council-tax", label: "Council Tax とは" },
+        ],
+      },
+      {
         heading: "医療・NHS",
         links: [
           { href: "/health", label: "医療・NHS ガイド トップ" },

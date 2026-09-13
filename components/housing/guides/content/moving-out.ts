@@ -327,6 +327,7 @@ ADR は使えません（スキームに預けられていないため）。こ�
     { href: "/housing/tenancy-types", label: "契約形態の地図（2026年5月の法改正後）" },
     { href: "/housing/viewing", label: "内見チェックリスト" },
     { href: "/visa/after-arrival", label: "渡英後の手続きガイド（住所変更）" },
+    { href: "/bills", label: "光熱費・生活の契約ガイド（Council Tax・光熱費の精算）" },
   ],
   commentPrompt:
     "退去時のデポジット交渉で実際にあったやり取りや、ADRを使ってみた結果があれば教えてください。inventoryの残し方で工夫した点も歓迎です。",

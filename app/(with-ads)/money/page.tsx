@@ -411,6 +411,14 @@ ${TRANSFER_SERVICES.map(
           </li>
           <li>
             <Link
+              href="/bills"
+              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+            >
+              光熱費・生活の契約ガイド｜Council Tax からネット回線まで
+            </Link>
+          </li>
+          <li>
+            <Link
               href="/food"
               className="text-blue-600 hover:opacity-80 dark:text-blue-400"
             >

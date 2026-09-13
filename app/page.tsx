@@ -218,6 +218,7 @@ const SITE_INDEX = [
         label: "サービスチャージ店舗別データベース",
       },
       { href: "/money", label: "お金・銀行" },
+      { href: "/bills", label: "光熱費・Council Tax" },
       { href: "/health", label: "医療・NHS" },
       { href: "/trouble", label: "トラブルに遭ったら" },
       { href: "/social", label: "人づきあいと社会" },

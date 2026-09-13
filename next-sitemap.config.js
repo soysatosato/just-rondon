@@ -331,6 +331,16 @@ module.exports = {
       "/money/national-insurance-number",
       // 手取り計算機。moneyGuides(記事)ではなく独立したページなので、ここに別に書く。
       "/money/salary-calculator",
+      // 光熱費・生活の契約ガイド。並びは components/bills/guides/guides.ts の
+      // billsGuides と一致させること。
+      "/bills",
+      "/bills/bills-included",
+      "/bills/council-tax",
+      "/bills/energy",
+      "/bills/water",
+      "/bills/tv-licence",
+      "/bills/broadband",
+      "/bills/mobile",
       "/jobs",
       "/jobs/minimum-wage",
       "/jobs/employment-contract",

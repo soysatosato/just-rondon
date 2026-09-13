@@ -166,7 +166,7 @@ Gas Safety Certificate（CP12）を見せてもらい、日付を確認します
 
 特に **council tax** は月£125〜170程度と大きいので、含まれるかどうかで実質負担が大きく変わります。「bills included」の一言で納得せず、**上の5項目を一つずつ確認してください**。
 
-また「included だが上限あり（fair usage cap）」という条件付きの場合もあります。上限を超えた分は請求されるので、上限額も聞いておくこと。`,
+また「included だが上限あり（fair usage cap）」という条件付きの場合もあります。上限を超えた分は請求されるので、上限額も聞いておくこと。含まれない分の目安と、そのまま送れる英語の質問は[「bills included」の中身](/bills/bills-included)にまとめています。`,
       },
     },
     {
@@ -337,6 +337,7 @@ Gas Safety Certificate（CP12）を見せてもらい、日付を確認します
     { href: "/housing/where-to-live", label: "エリアの選び方と、家賃と交通費の総額" },
     { href: "/housing/moving-out", label: "退去とデポジット返還交渉" },
     { href: "/housing/tenancy-types", label: "契約形態の地図（2026年5月の法改正後）" },
+    { href: "/bills/bills-included", label: "「bills included」の中身と家賃の比べ方" },
   ],
   commentPrompt:
     "内見で「これを見ておけばよかった」と思った点や、同居人を見極めるために実際に聞いた質問があれば教えてください。",
