@@ -45,7 +45,7 @@ export default function Navbar() {
         <div className="flex justify-between px-6 py-2">
           <Link href="/">
             <div className="flex flex-col">
-              <span className="font-bold text-2xl text-red-400">
+              <span className="font-bold text-2xl text-[#ff6147]">
                 ロンド
                 <img
                   src="/logo.png"
@@ -170,7 +170,7 @@ export default function Navbar() {
         <div className="flex flex-col items-center justify-center py-2">
           <Link href="/">
             <div className="flex flex-col items-center">
-              <span className="font-bold text-2xl text-red-600">
+              <span className="font-bold text-2xl text-[#ff6147]">
                 ロンド
                 <img
                   src="/logo.png"
