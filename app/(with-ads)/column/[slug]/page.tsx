@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CommentTargetType } from "@prisma/client";
 import {
   fetchAdjacentContents,
+  fetchColumnAttractions,
   fetchColumnBySlug,
   fetchColumnSeries,
 } from "@/utils/actions/contents";
@@ -56,11 +57,14 @@ export default async function ColumnDetailPage({ params }: Props) {
 
   if (!content) return notFound();
 
-  const series = await fetchColumnSeries(content.seriesName);
-  const { prev, next } = await fetchAdjacentContents("column", {
-    id: content.id,
-    createdAt: content.createdAt,
-  });
+  const [series, { prev, next }, spots] = await Promise.all([
+    fetchColumnSeries(content.seriesName),
+    fetchAdjacentContents("column", {
+      id: content.id,
+      createdAt: content.createdAt,
+    }),
+    fetchColumnAttractions(content.id),
+  ]);
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
   // 投稿APIから revalidatePath で更新される。
@@ -97,6 +101,7 @@ export default async function ColumnDetailPage({ params }: Props) {
         series={series}
         prev={prev}
         next={next}
+        spots={spots}
         comments={comments}
       />
 

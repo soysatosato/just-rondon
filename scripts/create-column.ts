@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
+import { resolveAttractionSlugs } from "./lib/column-attractions";
 
 type ColumnSectionInput = {
   title: string;
@@ -26,6 +27,10 @@ type ColumnPayload = {
   seriesName?: string;
   seriesOrder?: number;
   sections: ColumnSectionInput[];
+  // 本文に出てくる観光スポットの slug。コラム末尾と、各スポットの詳細ページの
+  // 両方にリンクが出る。主題に近い順に並べる。候補は
+  // scripts/link-column-attractions.ts suggest --file <この JSON> で出せる。
+  attractions?: string[];
 };
 
 function toSlugBase(title: string): string {
@@ -140,6 +145,10 @@ async function main() {
   const payload: ColumnPayload = JSON.parse(readFileSync(path, "utf-8"));
   validatePayload(payload);
 
+  // 存在しない・非公開の slug は、コラムを作る前に弾く。
+  // 作ってから失敗すると、リンクの無いコラムだけが公開されてしまう。
+  const attractionIds = await resolveAttractionSlugs(payload.attractions ?? []);
+
   const baseSlug = toSlugBase(payload.engTitle || payload.title);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -188,9 +197,18 @@ async function main() {
               imageSummary: s.imageSummary,
             })),
         },
+        attractionLinks: {
+          create: attractionIds.map((attractionId, i) => ({
+            attractionId,
+            displayOrder: i,
+          })),
+        },
       },
     });
     console.log(`Created column: /column/${created.slug} (id=${created.id})`);
+    if (attractionIds.length > 0) {
+      console.log(`Linked attractions: ${payload.attractions!.join(", ")}`);
+    }
   } catch (e) {
     if (
       e instanceof Prisma.PrismaClientKnownRequestError &&

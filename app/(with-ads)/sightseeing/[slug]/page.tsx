@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CommentTargetType } from "@prisma/client";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
+  fetchAttractionColumns,
   fetchAttractionDetails,
   fetchNearbyAttractions,
   fetchRandomAttractionsByCategory,
@@ -40,6 +41,7 @@ import AddToPlanButton from "@/components/attractions/plan/AddToPlanButton";
 import AttractionVisitFlow from "@/components/sightseeing/AttractionVisitFlow";
 import AttractionLocation from "@/components/sightseeing/AttractionLocation";
 import AttractionSpotRail from "@/components/sightseeing/AttractionSpotRail";
+import AttractionColumnLinks from "@/components/sightseeing/AttractionColumnLinks";
 import {
   areaGuidePath,
   getAreaMeta,
@@ -279,13 +281,15 @@ export default async function AttractionDetail({
   if (!attraction) redirect("/");
 
   // 近隣スポットは徒歩導線、同カテゴリーは興味の近さ。役割が違うので両方出す。
-  const [nearby, related] = await Promise.all([
+  // コラムは ContentAttraction に登録されたものだけ。無ければ枠ごと出ない。
+  const [nearby, related, columns] = await Promise.all([
     fetchNearbyAttractions(
       { lat: attraction.lat, lng: attraction.lng },
       params.slug,
       4,
     ),
     fetchRandomAttractionsByCategory(attraction.category, params.slug, 2),
+    fetchAttractionColumns(attraction.id),
   ]);
 
   // 近隣枠に出したスポットを同カテゴリー枠で繰り返さない。
@@ -549,6 +553,12 @@ export default async function AttractionDetail({
             description="注目作品、所要時間の目安、開館時間、館内の回り方は美術館ガイド側にまとめています。"
           />
         )}
+
+        {/* 美術館ガイドと同じく「もっと深く読む」ための導線なので、隣に置く。 */}
+        <AttractionColumnLinks
+          attractionName={attraction.name}
+          columns={columns}
+        />
 
         <PageCommentSection
           targetType={CommentTargetType.ATTRACTION}

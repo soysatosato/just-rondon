@@ -55,6 +55,24 @@ export const fetchColumnSeries = async (seriesName: string | null) => {
   return contents;
 };
 
+/**
+ * コラムの本文に出てくる観光スポット。コラム詳細の末尾に出す。
+ *
+ * 対応は ContentAttraction に人が登録したものだけ(名前一致で自動には出さない。
+ * 理由はスキーマのコメント)。終了した期間限定の催しなど、非公開の
+ * スポットは詳細ページが無いので落とす。
+ */
+export const fetchColumnAttractions = async (contentId: string) => {
+  const links = await db.contentAttraction.findMany({
+    where: { contentId, attraction: { isPublished: true } },
+    orderBy: { displayOrder: "asc" },
+    select: {
+      attraction: { select: { slug: true, name: true, image: true } },
+    },
+  });
+  return links.map((l) => l.attraction);
+};
+
 export type AdjacentContent = {
   title: string;
   slug: string;

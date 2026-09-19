@@ -649,6 +649,9 @@ model Attraction {
   /// 読み物本文。AttractionSection の後継(移行中)。
   stories AttractionStory[]
 
+  /// このスポットが登場するコラム。ContentAttraction を参照。
+  contentLinks ContentAttraction[]
+
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
   ///
@@ -1292,6 +1295,8 @@ model Content {
   seriesName   String?
   seriesOrder  Int?
   sections     ContentSection[]
+  /// 本文に登場する観光スポット。ContentAttraction を参照。
+  attractionLinks ContentAttraction[]
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @default(now()) @updatedAt
 
@@ -1364,6 +1369,40 @@ model ContentSection {
   content      Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
+}
+
+/// コラムと、その本文に登場する観光スポットの対応。
+///
+/// コラム側には「この記事に出てくる観光スポット」、スポット側には
+/// 「このスポットが出てくるコラム」を出す。1行で両方向の導線になる。
+///
+/// 本文中の名前から表示時に自動で導出しない。2026-09 に既存コラム57本で
+/// 名前一致の候補を出すと38本・95組が挙がったが、読んで残したのは27組
+/// だった。残りは「大英博物館から歩いてすぐ」「セント・ポール大聖堂も、
+/// バッキンガム宮殿の正面も、この系統の石だ」のような、目印や列挙の一部
+/// としての言及である。スポット側にこれを並べると、そのスポットの話を
+/// 読みに来た読者に、ほとんど触れていない記事を勧めることになる。
+/// 逆に、赤い電話ボックスの回は試作品が立つロイヤル・アカデミーを
+/// 「ロイヤル・アカデミー」としか書いておらず、1642年の議会の回は
+/// 「国会議事堂」という語を使わずに議事堂の話をしている。どちらも
+/// 名前一致では拾えなかった(前者は別名表に足してある)。
+///
+/// 名前一致は候補出しにだけ使う(scripts/link-column-attractions.ts suggest)。
+///
+/// Content に対して張っているのは、コラムが Content テーブルに
+/// category: "column" で入っているため。表示側は column だけを読む。
+model ContentAttraction {
+  id           Int        @id @default(autoincrement())
+  contentId    String
+  content      Content    @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  attractionId String
+  attraction   Attraction @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+  /// コラム側での並び順。そのコラムの主題に近いスポットを先に置く。
+  displayOrder Int        @default(0)
+  createdAt    DateTime   @default(now())
+
+  @@unique([contentId, attractionId])
+  @@index([attractionId])
 }
 
 model Event {

@@ -12,6 +12,9 @@ import type { AdjacentContent } from "@/utils/actions/contents";
 import PageCommentSection, {
   type PageCommentItem,
 } from "@/components/comments/PageCommentSection";
+import AttractionSpotRail, {
+  type RailSpot,
+} from "@/components/sightseeing/AttractionSpotRail";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -38,12 +41,15 @@ export default function ColumnDetail({
   series = [],
   prev = null,
   next = null,
+  spots = [],
   comments,
 }: {
   content: ColumnWithSections;
   series?: SeriesEntry[];
   prev?: AdjacentContent | null;
   next?: AdjacentContent | null;
+  /** 本文に出てくる観光スポット(ContentAttraction)。無ければ枠ごと出ない。 */
+  spots?: RailSpot[];
   comments: PageCommentItem[];
 }) {
   const sections = content.sections.slice().sort(
@@ -169,6 +175,14 @@ export default function ColumnDetail({
           </section>
         ))}
       </div>
+
+      {/* 本文に出てきた場所へ。読み終えた直後に置く。本文の途中に
+          リンクを埋めると、読んでいる最中に記事の外へ連れ出すことになる。 */}
+      <AttractionSpotRail
+        heading="この記事に出てくる観光スポット"
+        description="記事に登場した場所の見どころ・料金・アクセスは観光ガイドにまとめています。"
+        spots={spots}
+      />
 
       {/* 連載の全話リスト。どの回からでも他の回に飛べるようにする */}
       {hasSeries && (

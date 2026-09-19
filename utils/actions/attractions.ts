@@ -83,6 +83,33 @@ export const fetchAttractionName = async (slug: string) => {
   });
 };
 
+/**
+ * このスポットが出てくるコラム。スポット詳細の末尾に出す。
+ *
+ * コラム側の fetchColumnAttractions と同じ ContentAttraction を逆から引く。
+ * Content にはコラム以外(british-english 等)も入っているので category で絞る。
+ * 新しい順。
+ */
+export const fetchAttractionColumns = async (attractionId: string) => {
+  const links = await db.contentAttraction.findMany({
+    where: { attractionId, content: { category: "column" } },
+    orderBy: { content: { createdAt: "desc" } },
+    select: {
+      content: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          summary: true,
+          image: true,
+          seriesName: true,
+        },
+      },
+    },
+  });
+  return links.map((l) => l.content);
+};
+
 function hashToUint32(input: string): number {
   let h = 2166136261; // FNV-1a 32-bit seed-ish
   for (let i = 0; i < input.length; i++) {
