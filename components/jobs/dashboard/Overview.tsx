@@ -6,8 +6,10 @@
 //  - 凡例やツールチップに隠れず、全ての値がそのまま文字で読める
 // ため。色は補強でしかなく、どの棒にも名前と件数と割合が直接書いてある。
 
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { surveyHref } from "@/components/jobs/survey/entry";
 import type {
   ObligationTally,
   ServiceChargeOverview,
@@ -57,22 +59,15 @@ function Tile({
   label,
   value,
   sub,
-  muted,
 }: {
   label: string;
   value: string;
   sub?: string;
-  muted?: boolean;
 }) {
   return (
     <Card className="p-4">
       <p className="text-xs leading-snug text-muted-foreground">{label}</p>
-      <p
-        className={cn(
-          "mt-1.5 text-2xl font-bold tracking-tight md:text-3xl",
-          muted ? "text-muted-foreground" : "tabular-nums",
-        )}
-      >
+      <p className="mt-1.5 text-2xl font-bold tabular-nums tracking-tight md:text-3xl">
         {value}
       </p>
       {sub && (
@@ -84,14 +79,51 @@ function Tile({
   );
 }
 
-/** 回答が集まっていない設問の置き場所。空白ではなく理由を書く。 */
+/**
+ * 回答が集まっていない数字のタイル。
+ *
+ * 「収集中」とだけ書いても読み手には何もできないが、この欄を埋められるのは
+ * まさにこのページを読んでいる人なので、アンケートへの入口にしてある。
+ */
+function InviteTile({ label, sub }: { label: string; sub: string }) {
+  return (
+    <Link
+      href={surveyHref()}
+      className="group flex flex-col rounded-xl border border-dashed border-foreground/25 p-4 transition hover:border-foreground/50 hover:bg-muted/40"
+    >
+      <p className="text-xs leading-snug text-muted-foreground">{label}</p>
+      <p className="mt-1.5 text-2xl font-bold tracking-tight text-muted-foreground md:text-3xl">
+        まだ0件
+      </p>
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+        {sub}
+      </p>
+      <p className="mt-auto pt-2 text-xs font-medium text-foreground underline-offset-4 group-hover:underline">
+        最初の1件を送る →
+      </p>
+    </Link>
+  );
+}
+
+/**
+ * 回答が集まっていない設問の置き場所。空白ではなく理由を書き、
+ * 埋めるための入口を添える。
+ */
 function Pending({ title, body }: { title: string; body: string }) {
   return (
-    <div className="rounded-lg border border-dashed border-border p-4">
-      <p className="text-sm font-medium text-foreground">{title}</p>
-      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-        {body}
-      </p>
+    <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="text-sm font-medium text-foreground">{title}</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          {body}
+        </p>
+      </div>
+      <Link
+        href={surveyHref()}
+        className="shrink-0 text-sm font-medium text-foreground underline underline-offset-4 transition hover:opacity-80"
+      >
+        設問に答える →
+      </Link>
     </div>
   );
 }
@@ -235,11 +267,9 @@ export default function Overview({
               }`}
             />
           ) : (
-            <Tile
+            <InviteTile
               label="サービスチャージの時給換算（中央値）"
-              value="収集中"
-              muted
-              sub="勤務時間を聞く設問を2026年9月に追加しました"
+              sub="勤務時間を聞く設問を2026年9月に追加しました。"
             />
           )}
           {monthly.median !== null ? (
@@ -249,7 +279,10 @@ export default function Overview({
               sub={`${monthly.sampleSize}件の回答から`}
             />
           ) : (
-            <Tile label="1ヶ月の受取額（中央値）" value="収集中" muted />
+            <InviteTile
+              label="1ヶ月の受取額（中央値）"
+              sub="受け取っている額の回答が集まると、ここに出ます。"
+            />
           )}
         </div>
       </div>

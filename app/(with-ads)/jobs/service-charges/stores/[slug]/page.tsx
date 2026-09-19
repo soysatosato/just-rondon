@@ -13,7 +13,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import dynamicImport from "next/dynamic";
+import { PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { surveyHref } from "@/components/jobs/survey/entry";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
@@ -72,6 +74,12 @@ export default async function StorePage({ params }: Props) {
   if (!data) notFound();
 
   const { store, records, nearby } = data;
+  // アンケートは店舗候補に載っている店だけを選んだ状態で開ける(fetchSurveyStore)。
+  // 手入力で登録された未確認の店舗では、店名から入ってもらう。
+  const prefilled = store.verifiedCount > 0;
+  const answerHref = prefilled
+    ? surveyHref({ store: store.placeId })
+    : surveyHref();
   // 地図は座標が入っている回答から拾う。手入力の回答には座標が無い。
   const located = records.find((r) => r.lat != null && r.lng != null) as
     | { lat: number; lng: number }
@@ -121,6 +129,15 @@ export default async function StorePage({ params }: Props) {
               </a>
             )}
           </div>
+
+          {/* 検索から来た元従業員が、読み終える前でも答えに行けるように。 */}
+          <Link
+            href={answerHref}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-foreground/40 hover:bg-muted/50"
+          >
+            <PenLine aria-hidden className="h-3.5 w-3.5 shrink-0" />
+            この店で働いたことがある方は、回答を追加できます
+          </Link>
         </header>
 
         <section className="mt-8">
@@ -160,12 +177,17 @@ export default async function StorePage({ params }: Props) {
             この店舗で働いた経験がありますか？
           </p>
           <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-muted-foreground">
-            回答が増えるほど、実態が正確に見えるようになります。所要3分・匿名で、
+            {store.responseCount === 1
+              ? "この店への回答はまだ1件だけです。2件目があると、1人の見え方なのか店の運用なのかが見えてきます。"
+              : "回答が増えるほど、実態が正確に見えるようになります。"}
+            {prefilled
+              ? "所要3分・匿名で、店名を選んだ状態から始まります。"
+              : "所要3分・匿名です。"}
             送信する前にその場で判定が出ます。
           </p>
           <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
             <Button asChild>
-              <Link href="/jobs/service-charges/survey">診断をはじめる</Link>
+              <Link href={answerHref}>この店について答える</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/jobs/service-charges/stores">他の店舗を見る</Link>

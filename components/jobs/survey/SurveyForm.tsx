@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { submitSurvey } from "@/utils/actions/jobs";
+import { submitSurvey, type StoreSearchResult } from "@/utils/actions/jobs";
 import StoreSearch, { SelectedStore } from "@/components/jobs/StoreSearch";
 import Choice, { Question } from "./Choice";
 import DiagnosisPanel from "./DiagnosisPanel";
@@ -106,16 +106,24 @@ export default function SurveyForm({
   hourlyMedian,
   responseCount,
   storeCount,
+  initialStore,
+  initialQuery,
 }: {
   hourlyMedian: number | null;
   responseCount: number;
   storeCount: number;
+  /** 店舗ページやダッシュボードで選んできた店舗。あれば2問目から始める。 */
+  initialStore?: StoreSearchResult | null;
+  /** ダッシュボードで打ちかけた店名。 */
+  initialQuery?: string;
 }) {
   const [state, action] = useFormState<ActionState, FormData>(submitSurvey, {
     ok: true,
   });
 
-  const [store, setStore] = useState<SelectedStore | null>(null);
+  const [store, setStore] = useState<SelectedStore | null>(
+    initialStore ? { mode: "matched", store: initialStore } : null,
+  );
   const [workPeriod, setWorkPeriod] = useState<WorkPeriod | null>(null);
   const [jobRole, setJobRole] = useState<JobRole | null>(null);
   const [collected, setCollected] = useState<"yes" | "no" | null>(null);
@@ -133,7 +141,8 @@ export default function SurveyForm({
   const [monthlyHours, setMonthlyHours] = useState("");
   const [showError, setShowError] = useState(true);
 
-  const [currentStep, setCurrentStep] = useState(1);
+  // 店舗が決まって来た人に、同じ店を探し直させない。
+  const [currentStep, setCurrentStep] = useState(initialStore ? 2 : 1);
 
   // 徴収していない職場には、分配の中身を聞く意味がない。
   const steps = useMemo(
@@ -156,22 +165,23 @@ export default function SurveyForm({
     return false;
   }, [currentStep, store, workPeriod, collected]);
 
+  function goTo(step: number) {
+    setCurrentStep(step);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
   function goNext() {
-    if (!isLastStep) {
-      setCurrentStep(steps[stepIndex + 1]);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    if (!isLastStep) goTo(steps[stepIndex + 1]);
   }
   function goBack() {
-    if (!isFirstStep) {
-      setCurrentStep(steps[stepIndex - 1]);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    if (!isFirstStep) goTo(steps[stepIndex - 1]);
   }
 
   function stepClass(n: number) {
     return cn("space-y-8", currentStep !== n && "hidden");
   }
+
+  const storeName =
+    store?.mode === "matched" ? store.store.name : store?.name ?? null;
 
   const amountNumber = amountValue === "" ? null : Number(amountValue);
   const hoursNumber = monthlyHours === "" ? null : Number(monthlyHours);
@@ -254,6 +264,23 @@ export default function SurveyForm({
         </p>
       </div>
 
+      {/* どの店について答えているか。2問目以降は店舗欄が見えないので、ここに残す。 */}
+      {storeName && currentStep !== 1 && (
+        <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-3.5 py-2.5">
+          <p className="min-w-0 truncate text-sm">
+            <span className="text-muted-foreground">回答する店舗：</span>
+            <span className="font-medium text-foreground">{storeName}</span>
+          </p>
+          <button
+            type="button"
+            onClick={() => goTo(1)}
+            className="shrink-0 text-xs text-muted-foreground underline underline-offset-4 transition hover:text-foreground"
+          >
+            変更
+          </button>
+        </div>
+      )}
+
       {showError && !state.ok && (
         <Alert variant="destructive" className="mt-6">
           <AlertTitle>入力内容をご確認ください</AlertTitle>
@@ -269,6 +296,8 @@ export default function SurveyForm({
             hint={`これまでに ${storeCount} 店舗・${responseCount} 件の回答が集まっています。候補に出てこない場合は手入力もできます。`}
           >
             <StoreSearch
+              initialStore={initialStore ?? undefined}
+              initialQuery={initialQuery}
               onSelect={(selection) => {
                 setStore(selection);
                 setShowError(false);

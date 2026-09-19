@@ -12,14 +12,26 @@ import { cn } from "@/lib/utils";
  * 共有シート(スマホ)を並べ、X と LINE は文面つきで開く。
  * 文面に数字を入れるのは、SNS のカード画像は全員共通のため、
  * 結果を伝えられるのが本文だけだから。
+ *
+ * サービスチャージ調査の完了画面でも、調査そのものを知り合いに渡すのに使う。
+ * そちらは今いるページ(完了画面)ではなく path で渡したページを共有する。
  */
 export default function ShareActions({
-  query,
+  query = "",
+  path,
   shareText,
+  title = "イギリスの手取り計算機",
+  copyLabel = "この条件のリンク",
 }: {
   /** 現在の条件のクエリ文字列(? なし)。 */
-  query: string;
+  query?: string;
+  /** 共有するページのパス。省略すると今いるページ。 */
+  path?: string;
   shareText: string;
+  /** ネイティブの共有シートに渡す題。 */
+  title?: string;
+  /** コピーボタンの文言。 */
+  copyLabel?: string;
 }) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
@@ -35,7 +47,7 @@ export default function ShareActions({
   }, [copied]);
 
   const url = () =>
-    `${window.location.origin}${window.location.pathname}${query ? `?${query}` : ""}`;
+    `${window.location.origin}${path ?? window.location.pathname}${query ? `?${query}` : ""}`;
 
   const copy = async () => {
     try {
@@ -49,7 +61,7 @@ export default function ShareActions({
 
   const share = async () => {
     try {
-      await navigator.share({ title: "イギリスの手取り計算機", text: shareText, url: url() });
+      await navigator.share({ title, text: shareText, url: url() });
     } catch {
       // 共有シートを閉じただけのときも例外になるので、何もしない。
     }
@@ -80,7 +92,7 @@ export default function ShareActions({
         )}
       >
         {copied ? <Check className="h-3.5 w-3.5" aria-hidden /> : <Link2 className="h-3.5 w-3.5" aria-hidden />}
-        <span aria-live="polite">{copied ? "コピーしました" : "この条件のリンク"}</span>
+        <span aria-live="polite">{copied ? "コピーしました" : copyLabel}</span>
       </button>
       {canShare && (
         <button

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import StoreRow from "@/components/jobs/stores/StoreRow";
+import { surveyHref } from "@/components/jobs/survey/entry";
 import { type StoreAggregate } from "@/utils/service-charge";
 
 /**
@@ -43,17 +44,20 @@ export default function StoreExplorer({
     [stores],
   );
 
-  const filtered = useMemo(() => {
+  const { filtered, queryHasMatch } = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return stores.filter((s) => {
-      if (tab !== "all" && s.status !== tab) return false;
-      if (!q) return true;
-      return (
-        s.storeName.toLowerCase().includes(q) ||
-        s.storeAddress.toLowerCase().includes(q) ||
-        (s.postcode ?? "").toLowerCase().includes(q)
-      );
-    });
+    const matches = (s: StoreAggregate) =>
+      !q ||
+      s.storeName.toLowerCase().includes(q) ||
+      s.storeAddress.toLowerCase().includes(q) ||
+      (s.postcode ?? "").toLowerCase().includes(q);
+    return {
+      filtered: stores.filter(
+        (s) => (tab === "all" || s.status === tab) && matches(s),
+      ),
+      // タブで隠れているだけなのか、どの店にも当たらないのかを分ける。
+      queryHasMatch: stores.some(matches),
+    };
   }, [stores, query, tab]);
 
   const INITIAL = 12;
@@ -104,19 +108,25 @@ export default function StoreExplorer({
             <StoreRow key={s.placeId} store={s} />
           ))}
         </ul>
+      ) : query.trim() && !queryHasMatch ? (
+        // 店名で探して見つからなかった人は、その店で働いた人かもしれない。
+        // 打った店名を持ったままアンケートへ渡し、探し直させない。
+        <div className="rounded-xl border border-dashed border-border p-8 text-center">
+          <p className="text-sm font-medium text-foreground">
+            「{query.trim()}」への回答はまだありません
+          </p>
+          <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">
+            その店で働いたことがあれば、あなたが最初の回答者になれます。匿名・所要3分です。
+          </p>
+          <Button asChild className="mt-4">
+            <Link href={surveyHref({ q: query })}>この店について答える</Link>
+          </Button>
+        </div>
       ) : (
         <div className="rounded-xl border border-dashed border-border p-8 text-center">
           <p className="text-sm font-medium text-foreground">
             条件に一致する店舗はありません
           </p>
-          <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            この店舗の情報は、まだ誰も登録していません。あなたが最初の回答者になれます。
-          </p>
-          <Button asChild className="mt-4">
-            <Link href="/jobs/service-charges/survey">
-              この店舗の情報を登録する
-            </Link>
-          </Button>
         </div>
       )}
 

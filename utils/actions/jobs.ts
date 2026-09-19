@@ -2,10 +2,11 @@
 
 import db from "../db";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
 import { ServiceCharge } from "@prisma/client";
 import { sendAdminMail } from "../mail";
-import { storePath, storeSlug } from "@/lib/jobs/store-slug";
+import { STORES_BASE, storePath, storeSlug } from "@/lib/jobs/store-slug";
 import {
   DISTRIBUTION_LABEL,
   JOB_ROLE_LABEL,
@@ -58,6 +59,42 @@ export async function searchStores(query: string): Promise<StoreSearchResult[]> 
     borough: s.borough,
     postcode: s.postcode,
   }));
+}
+
+/**
+ * アンケートを店舗を選んだ状態で開くための1件。
+ *
+ * URL の ?store= から引くので、候補リストに正式に載っている店舗だけを返す。
+ * 手入力で登録された未確認の店舗をここで通すと、送信時に「候補から選ばれた
+ * 回答」として isVerified: true で記録されてしまう。
+ */
+export async function fetchSurveyStore(
+  id: string
+): Promise<StoreSearchResult | null> {
+  if (typeof id !== "string" || !id || id.length > 100) return null;
+
+  const store = await db.store.findFirst({
+    where: { id, isVerified: true },
+  });
+  if (!store) return null;
+
+  return {
+    id: store.id,
+    name: store.name,
+    address: store.address,
+    lat: store.lat,
+    lng: store.lng,
+    borough: store.borough,
+    postcode: store.postcode,
+  };
+}
+
+/**
+ * アンケートの店舗候補の数。ダッシュボードで「回答が届いている店舗は
+ * 候補のうち何店舗か」を出す分母にする。
+ */
+export async function fetchStoreCandidateCount(): Promise<number> {
+  return db.store.count({ where: { isVerified: true } });
 }
 
 /* ============================================================
@@ -235,6 +272,17 @@ export async function submitSurvey(
       });
     } catch (error) {
       console.error("アンケート通知メールの送信に失敗しました", error);
+    }
+
+    // 店舗ページと一覧は1時間ごとの再生成なので、そのままだと送った回答が
+    // しばらく出てこない。完了画面から店舗ページへ案内するため、ここで捨てておく。
+    const slug = storeSlug(created);
+    revalidatePath(STORES_BASE);
+    revalidatePath(storePath(slug));
+
+    // 手入力の店舗は確認が済むまで集計に出ないので、店舗ページへは案内しない。
+    if (created.isVerified) {
+      redirect(`/jobs/service-charges/thanks?store=${encodeURIComponent(slug)}`);
     }
   }
 

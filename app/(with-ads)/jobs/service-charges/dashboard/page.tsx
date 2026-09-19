@@ -2,18 +2,33 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
 import {
   fetchResponseFeed,
   fetchServiceChargeOverview,
+  fetchStoreCandidateCount,
 } from "@/utils/actions/jobs";
 import Overview from "@/components/jobs/dashboard/Overview";
 import StoreExplorer from "@/components/jobs/dashboard/StoreExplorer";
 import VoiceList from "@/components/jobs/dashboard/VoiceList";
+import SurveyEntryCard, {
+  type AnsweredStore,
+} from "@/components/jobs/survey/SurveyEntryCard";
+import SurveyStickyBar from "@/components/jobs/survey/SurveyStickyBar";
+import WhyAnswer from "@/components/jobs/survey/WhyAnswer";
+import { surveyHref } from "@/components/jobs/survey/entry";
 
 import { noindexMetadata } from "@/lib/seo";
 
 export const metadata = noindexMetadata("サービスチャージ実態調査");
+
+/**
+ * 追従バーが出る・隠れるを決める目印。冒頭の入口を過ぎたら出し、
+ * 本文中の「答える理由」とページ末尾の但し書きが見えている間は隠す。
+ */
+const ENTRY_ID = "survey-entry";
+const WHY_ID = "why-answer";
+const END_ID = "dashboard-limits";
 
 function formatDate(date: Date | null): string {
   if (!date) return "—";
@@ -25,58 +40,62 @@ function formatDate(date: Date | null): string {
 }
 
 export default async function DashboardPage() {
-  const [overview, voices] = await Promise.all([
+  const [overview, voices, candidateCount] = await Promise.all([
     fetchServiceChargeOverview(),
     // 旧設問の畳み込みしか入っていない回答は VoiceList 側で落とすので、多めに取る。
     fetchResponseFeed(1, 12, { withComment: true }),
+    fetchStoreCandidateCount(),
   ]);
+
+  // 入口の店舗検索で「この店には回答が◯件」と返すための索引。
+  const answered: Record<string, AnsweredStore> = Object.fromEntries(
+    overview.stores.map((s) => [
+      s.placeId,
+      { slug: s.slug, responseCount: s.responseCount, status: s.status },
+    ]),
+  );
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-8 md:py-12">
-        {/* ヘッダー */}
-        <header className="max-w-2xl space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            ロンドンの飲食店 実態調査
-          </p>
-          <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-[2.5rem] md:leading-[1.15]">
-            サービスチャージは、
-            <br className="hidden sm:block" />
-            本当にスタッフに渡っているのか
-          </h1>
-          <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-            2024年10月から、チップとサービスチャージは全額が働いた人のものになりました。
-            では現場でそのとおりになっているのか。実際にロンドンの店で働いた人から匿名で集めた回答を、
-            店舗ごとに公開しています。
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {formatDate(overview.firstAt)} 〜 {formatDate(overview.latestAt)}に寄せられた
-            {overview.totalResponses}件・{overview.totalStores}店舗の回答にもとづく
-          </p>
+        {/* ヘッダー。答える入口を見出しの隣に置き、最初の画面から外さない。 */}
+        <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-12">
+          <div className="space-y-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              ロンドンの飲食店 実態調査
+            </p>
+            <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-[2.5rem] md:leading-[1.15] lg:text-[2.25rem]">
+              サービスチャージは、
+              <br className="hidden sm:block" />
+              本当にスタッフに渡っているのか
+            </h1>
+            <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
+              2024年10月から、チップとサービスチャージは全額が働いた人のものになりました。
+              では現場でそのとおりになっているのか。実際にロンドンの店で働いた人から匿名で集めた回答を、
+              店舗ごとに公開しています。
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {formatDate(overview.firstAt)} 〜 {formatDate(overview.latestAt)}に寄せられた
+              {overview.totalResponses}件・{overview.totalStores}店舗の回答にもとづく
+            </p>
+          </div>
+
+          <SurveyEntryCard id={ENTRY_ID} answered={answered} />
         </header>
 
         {/* 集計 */}
-        <section className="mt-10">
+        <section className="mt-12">
           <Overview overview={overview} />
         </section>
 
-        {/* 診断への導線 */}
-        <section className="mt-12 rounded-xl border border-border bg-muted/40 p-5 sm:p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-xl">
-              <p className="text-base font-semibold text-foreground">
-                自分の職場はどうなのか、3分で判定できます
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                設問に答えると、送信する前にその場で判定と次にやることが出ます。
-                回答はこのページの集計に匿名で加わります。
-              </p>
-            </div>
-            <Button asChild size="lg" className="shrink-0">
-              <Link href="/jobs/service-charges/survey">診断をはじめる</Link>
-            </Button>
-          </div>
-        </section>
+        {/* 答える理由 */}
+        <div className="mt-12">
+          <WhyAnswer
+            id={WHY_ID}
+            overview={overview}
+            candidateCount={candidateCount}
+          />
+        </div>
 
         {/* 店舗一覧 */}
         <section className="mt-12">
@@ -115,7 +134,31 @@ export default async function DashboardPage() {
             回答者が自分の言葉で書いた部分です。原文のまま掲載しています。
           </p>
 
-          <VoiceList records={voices} className="mt-5" />
+          <VoiceList
+            records={voices}
+            limit={5}
+            trailing={
+              <Link
+                href={surveyHref()}
+                className="group flex h-full flex-col justify-between rounded-xl border border-dashed border-foreground/25 p-5 transition hover:border-foreground/50 hover:bg-muted/40"
+              >
+                <div>
+                  <MessageCircle aria-hidden className="h-5 w-5 text-foreground" />
+                  <p className="mt-3 font-medium text-foreground">
+                    あなたの職場の話も、ここに載せられます
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                    分配のされ方、店側の説明、賄い、シフト、良かったこと。
+                    自由記述はすべて任意で、名前は聞かないので載ることもありません。
+                  </p>
+                </div>
+                <p className="mt-4 text-sm font-medium text-foreground underline-offset-4 group-hover:underline">
+                  書いてみる →
+                </p>
+              </Link>
+            }
+            className="mt-5"
+          />
         </section>
 
         {/* 法律の要点 */}
@@ -227,7 +270,7 @@ export default async function DashboardPage() {
         </section>
 
         {/* 但し書き */}
-        <section className="mt-12 border-t border-border pt-6">
+        <section id={END_ID} className="mt-12 border-t border-border pt-6">
           <h2 className="text-sm font-semibold text-foreground">
             このデータの限界
           </h2>
@@ -247,6 +290,8 @@ export default async function DashboardPage() {
           </ul>
         </section>
       </div>
+
+      <SurveyStickyBar anchorId={ENTRY_ID} hideWhenVisible={[WHY_ID, END_ID]} />
     </main>
   );
 }

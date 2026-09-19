@@ -2,10 +2,29 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
+import ShareActions from "@/components/money/salary-calculator/ShareActions";
+import { surveyHref } from "@/components/jobs/survey/entry";
+import { fetchStorePage } from "@/utils/actions/jobs";
+import { storePath } from "@/lib/jobs/store-slug";
 
 import { noindexMetadata } from "@/lib/seo";
 
 export const metadata = noindexMetadata("ご回答ありがとうございました");
+
+type Props = {
+  searchParams?: {
+    /** 回答した店舗の slug。送信処理が、候補から選ばれた店舗のときだけ付ける。 */
+    store?: string;
+  };
+};
+
+/**
+ * 知り合いに渡す文面。渡す先は完了画面ではなくダッシュボード。
+ * 受け取った人は、まず集計を見てから自分も答えるかを決めるので。
+ */
+const SHARE_PATH = "/jobs/service-charges/dashboard";
+const SHARE_TEXT =
+  "ロンドンの飲食店で働いたことがある人へ。サービスチャージがちゃんと配られているか、店舗ごとの実態が見られて、自分の職場も匿名・3分で判定できます。";
 
 /**
  * 送信後の画面。
@@ -44,7 +63,15 @@ const NEXT_STEPS = [
   },
 ];
 
-export default function ThanksPage() {
+export default async function ThanksPage({ searchParams }: Props) {
+  // 送った回答が実際に載ったことを、その店舗のページで確かめられるようにする。
+  // slug が書き換えられていても、該当する店舗が無ければ何も出さないだけ。
+  const storePage =
+    typeof searchParams?.store === "string"
+      ? await fetchStorePage(searchParams.store)
+      : null;
+  const store = storePage?.store;
+
   return (
     <main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-2xl px-4 py-10 md:py-16">
@@ -59,6 +86,26 @@ export default function ThanksPage() {
           回答は匿名で記録され、氏名・連絡先・IPアドレスは保存していません。
           店舗名とあわせて集計され、同じ店で働く次の人が読めるようになります。
         </p>
+
+        {store && (
+          <Link
+            href={storePath(store.slug)}
+            className="group mt-6 flex items-center justify-between gap-4 rounded-xl border border-border p-4 transition hover:border-foreground/40 hover:bg-muted/40"
+          >
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">回答を反映しました</p>
+              <p className="mt-0.5 truncate font-semibold text-foreground">
+                {store.storeName || "（店舗名不明）"}
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                この店への回答は{store.responseCount}件になりました
+              </p>
+            </div>
+            <span className="shrink-0 text-sm font-medium text-foreground underline-offset-4 group-hover:underline">
+              店舗ページを見る →
+            </span>
+          </Link>
+        )}
 
         <section className="mt-10">
           <h2 className="text-lg font-bold tracking-tight">
@@ -104,6 +151,42 @@ export default function ThanksPage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        {/* 答え終えた直後がいちばん「ほかにも」と思える。次の1件の入口を2つ置く。 */}
+        <section className="mt-10 grid gap-3 sm:grid-cols-2">
+          <div className="flex flex-col rounded-xl border border-border p-5">
+            <p className="font-semibold text-foreground">
+              ほかの店でも働いたことがありますか？
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              1店舗ずつ、何店舗でも答えられます。前に働いていた店の回答も、同じだけ役に立ちます。
+            </p>
+            <Button asChild variant="outline" className="mt-4 self-start">
+              <Link href={surveyHref()}>別の店舗について答える</Link>
+            </Button>
+          </div>
+
+          <div className="flex flex-col rounded-xl border border-border p-5">
+            <p className="font-semibold text-foreground">
+              ロンドンで働く知り合いに教える
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              1店舗あたりの回答が増えるほど、1人の見え方なのか店の運用なのかを見分けられるようになります。
+            </p>
+            <div className="mt-4">
+              <ShareActions
+                path={SHARE_PATH}
+                shareText={SHARE_TEXT}
+                title="サービスチャージ実態調査"
+                copyLabel="リンクをコピー"
+              />
+            </div>
+            {/* 回答した直後に同じ店のグループへ送ると、送った人が答えた人だと推測されやすい。 */}
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+              同じ店の人に送るときは少し日をおくと、誰が答えたか推測されにくくなります。
+            </p>
+          </div>
         </section>
 
         <div className="mt-10 flex flex-col gap-2 sm:flex-row">

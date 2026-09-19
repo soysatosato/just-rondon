@@ -198,3 +198,79 @@ export default function DiagnosisPanel({
     </div>
   );
 }
+
+/**
+ * 判定の見本。答える前に「最後に何が返ってくるか」を見せるための縮小版。
+ *
+ * 見本用の文章を別に書くと本物の判定とずれていくので、diagnose() の出力を
+ * そのまま受け取り、見出しと指摘の題だけを抜き出して並べる。
+ */
+export function DiagnosisPreview({
+  diagnosis,
+  className,
+}: {
+  diagnosis: Diagnosis;
+  className?: string;
+}) {
+  const style = LEVEL_STYLE[diagnosis.level];
+  const firstAction = diagnosis.actions[0];
+
+  return (
+    <div className={cn("rounded-xl border p-4", style.ring, className)}>
+      <span
+        className={cn(
+          "inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold",
+          style.chip,
+        )}
+      >
+        {style.label}
+      </span>
+      <p className="mt-2.5 font-bold leading-snug tracking-tight">
+        {diagnosis.headline}
+      </p>
+
+      {diagnosis.findings.length > 0 && (
+        <ul className="mt-3 space-y-2">
+          {diagnosis.findings.slice(0, 3).map((f) => {
+            const tone = TONE_STYLE[f.tone];
+            return (
+              <li key={f.title} className="flex gap-2.5">
+                <span
+                  aria-hidden
+                  className={cn(
+                    "mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-full",
+                    tone.dot,
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-[0.8125rem] font-medium leading-snug",
+                    tone.text,
+                  )}
+                >
+                  {f.title}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {firstAction && (
+        <div className="mt-3.5 border-t border-border/60 pt-3">
+          <p className="text-[0.6875rem] font-medium text-muted-foreground">
+            次にやること
+          </p>
+          <p className="mt-1 text-[0.8125rem] font-semibold leading-snug text-foreground">
+            1. {firstAction.title}
+            {diagnosis.actions.length > 1 && (
+              <span className="ml-1.5 font-normal text-muted-foreground">
+                ほか{diagnosis.actions.length - 1}件
+              </span>
+            )}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -40,11 +40,14 @@ function formatMonth(date: Date): string {
 export default function VoiceList({
   records,
   limit = 6,
+  trailing,
   className,
 }: {
   records: ChargeRecord[];
-  /** 出す件数。2列で並べるので偶数にしておく。 */
+  /** 出す件数。2列で並べるので、trailing と合わせて偶数にしておく。 */
   limit?: number;
+  /** 一覧の最後のマスに置くもの。声を読んだ人への「あなたも」の入口に使う。 */
+  trailing?: React.ReactNode;
   className?: string;
 }) {
   const voices = records
@@ -139,6 +142,7 @@ export default function VoiceList({
           </li>
         );
       })}
+      {trailing && <li>{trailing}</li>}
     </ul>
   );
 }

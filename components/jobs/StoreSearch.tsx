@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { searchStores, StoreSearchResult } from "@/utils/actions/jobs";
+import type { StoreSearchResult } from "@/utils/actions/jobs";
+import { useStoreSearch } from "./useStoreSearch";
 
 export type SelectedStore =
   | { mode: "matched"; store: StoreSearchResult }
@@ -9,31 +10,38 @@ export type SelectedStore =
 
 type Props = {
   onSelect: (selection: SelectedStore | null) => void;
+  /** 店舗ページやダッシュボードで店舗を選んでから来たとき、その店舗。 */
+  initialStore?: StoreSearchResult;
+  /** ダッシュボードで打ちかけた店名。検索欄に入れた状態で始める。 */
+  initialQuery?: string;
 };
 
-export default function StoreSearch({ onSelect }: Props) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<StoreSearchResult[]>([]);
+export default function StoreSearch({
+  onSelect,
+  initialStore,
+  initialQuery,
+}: Props) {
+  const [query, setQuery] = useState(
+    initialStore?.name ?? initialQuery ?? "",
+  );
   const [open, setOpen] = useState(false);
   const [manualMode, setManualMode] = useState(false);
   const [manualName, setManualName] = useState("");
   const [manualAddress, setManualAddress] = useState("");
-  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(
+    initialStore ? `${initialStore.name} / ${initialStore.address}` : null,
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // 選んだあとは検索しない。選んだ店名で検索し直して候補が開き直すのを防ぐ。
+  const { results } = useStoreSearch(
+    query,
+    !manualMode && selectedLabel === null,
+  );
+
   useEffect(() => {
-    if (manualMode) return;
-    if (query.trim().length < 2) {
-      setResults([]);
-      return;
-    }
-    const id = setTimeout(async () => {
-      const r = await searchStores(query);
-      setResults(r);
-      setOpen(true);
-    }, 300);
-    return () => clearTimeout(id);
-  }, [query, manualMode]);
+    if (results.length > 0 && selectedLabel === null) setOpen(true);
+  }, [results, selectedLabel]);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -61,9 +69,12 @@ export default function StoreSearch({ onSelect }: Props) {
     setOpen(false);
     setSelectedLabel(null);
     if (next) {
+      // 候補に出なかった店名を、打ち直さずに手入力欄へ持ち越す。
+      const name = manualName || query.trim();
+      setManualName(name);
       onSelect(
-        manualName.trim().length >= 2
-          ? { mode: "manual", name: manualName, address: manualAddress }
+        name.trim().length >= 2
+          ? { mode: "manual", name, address: manualAddress }
           : null,
       );
     } else {
