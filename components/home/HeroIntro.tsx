@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
-import TitleLogo from "@/components/home/TitleLogo";
 import HeroSearch from "@/components/home/HeroSearch";
 
 /**
@@ -15,6 +14,9 @@ import HeroSearch from "@/components/home/HeroSearch";
  * 中央揃えをやめて左揃えにした。中央揃えの見出し+説明+検索窓という
  * 並びは、どのサイトのトップにもある形で、この配置そのものが
  * 「よくあるサイト」という印象を作っていた。
+ *
+ * サイト名はここには出さない。すぐ上のヘッダーにワードマークがあるので、
+ * 画面の同じ高さに同じ名前が二度並ぶだけだった。
  */
 export default function HeroIntro() {
   const reduceMotion = useReducedMotion();
@@ -30,14 +32,10 @@ export default function HeroIntro() {
 
   return (
     <div className="max-w-xl">
-      <motion.div {...rise(0)}>
-        <TitleLogo />
-      </motion.div>
-
       {/* ページ唯一の h1。 */}
       <motion.h1
-        {...rise(0.08)}
-        className="mt-7 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]"
+        {...rise(0)}
+        className="text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]"
       >
         ロンドン観光・旅行・
         <br className="hidden sm:block" />
@@ -49,7 +47,7 @@ export default function HeroIntro() {
         扱っている幅(3日の旅行から数年の生活まで)を最初の1文に入れる。
       */}
       <motion.p
-        {...rise(0.16)}
+        {...rise(0.08)}
         className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base"
       >
         定番の観光スポットと無料で入れる美術館、ウエストエンドのミュージカル。
@@ -57,7 +55,7 @@ export default function HeroIntro() {
         3日間の旅行から数年の生活まで、日本語でまとめています。
       </motion.p>
 
-      <motion.div {...rise(0.24)} className="mt-8">
+      <motion.div {...rise(0.16)} className="mt-8">
         <HeroSearch />
       </motion.div>
     </div>
