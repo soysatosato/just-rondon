@@ -28,6 +28,7 @@ import { useState } from "react";
 import { MdMail } from "react-icons/md";
 
 import { NAV_SECTIONS, GROUP_COLS, MENU_WIDTH } from "./menu";
+import Wordmark from "./Wordmark";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -45,20 +46,8 @@ export default function Navbar() {
         <div className="flex justify-between px-6 py-2">
           <Link href="/">
             <div className="flex flex-col">
-              <span className="font-bold text-2xl text-[#ff6147]">
-                ロンド
-                <img
-                  src="/logo.png"
-                  alt="Logo"
-                  width={32}
-                  height={32}
-                  className="inline-block mb-2"
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                />
-              </span>
-              <span className="text-xs text-muted-foreground font-normal italic opacity-70">
+              <Wordmark className="h-[30px]" />
+              <span className="mt-1 text-xs text-muted-foreground font-normal italic opacity-70">
                 JUST RONDON - ロンドン観光・旅行・現地ガイド
               </span>
             </div>
@@ -170,20 +159,8 @@ export default function Navbar() {
         <div className="flex flex-col items-center justify-center py-2">
           <Link href="/">
             <div className="flex flex-col items-center">
-              <span className="font-bold text-2xl text-[#ff6147]">
-                ロンド
-                <img
-                  src="/logo.png"
-                  alt="Logo"
-                  width={32}
-                  height={32}
-                  className="inline-block mb-2"
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                />
-              </span>
-              <span className="text-xs text-gray-600 font-normal italic opacity-70">
+              <Wordmark className="h-10" />
+              <span className="mt-1 text-xs text-gray-600 dark:text-gray-400 font-normal italic opacity-70">
                 Live.Love.London. - 最強ロンドンガイド
               </span>
             </div>
