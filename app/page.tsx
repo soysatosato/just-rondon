@@ -78,7 +78,7 @@ const READING_CATEGORY = {
     text: "text-violet-600 dark:text-violet-400",
   },
   area: {
-    base: "/areas",
+    base: "/reading/areas",
     label: "ロンドンの街",
     stripe: "bg-indigo-500",
     badge: "bg-indigo-600",
@@ -105,7 +105,7 @@ const READING_SECTIONS = [
     text: "text-violet-600 dark:text-violet-400",
   },
   {
-    href: "/areas",
+    href: "/reading/areas",
     eyebrow: "London, Neighbourhood by Neighbourhood",
     label: "ロンドンの街",
     stripe: "bg-indigo-500",
@@ -231,7 +231,7 @@ const SITE_INDEX = [
     links: [
       { href: "/reading", label: "読み物トップ" },
       { href: "/column", label: "コラム" },
-      { href: "/areas", label: "ロンドンの街" },
+      { href: "/reading/areas", label: "ロンドンの街" },
       { href: "/history", label: "イギリスの歴史 全10章" },
       { href: "/british-english", label: "イギリス英語" },
       { href: "/events", label: "今週のロンドン" },

@@ -27,7 +27,7 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
   狙うと、どちらも上がらないまま食い合うことになる。
 */
 export const metadata = buildPageMetadata({
-  path: "/areas",
+  path: "/reading/areas",
   title: "ロンドンの街 | 治安・家賃・地名の由来をエリアごとに読み解く",
   description:
     "ロンドンのエリアを1つずつ読み解きます。地名の由来、その街がいまの姿になった経緯、警察と土地登記の統計で見る治安と家賃の実際、そして歩くならどこか。泊まる場所と住む場所を決める前に読むための、街そのものの記録。",
@@ -64,10 +64,10 @@ export default async function AreasHubPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
-      <JsonLd data={breadcrumbListJsonLd({ path: "/areas" })} />
+      <JsonLd data={breadcrumbListJsonLd({ path: "/reading/areas" })} />
       <JsonLd data={areaListCollectionJsonLd(entries)} />
 
-      <Breadcrumbs path="/areas" className="mb-6" />
+      <Breadcrumbs path="/reading/areas" className="mb-6" />
 
       <HubMasthead
         accent="area"

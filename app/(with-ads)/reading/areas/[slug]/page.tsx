@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props) {
   const trimmed = truncateDescription(text.replace(/[#>*_\-`]/g, ""));
 
   return buildPageMetadata({
-    path: `/areas/${params.slug}`,
+    path: `/reading/areas/${params.slug}`,
     title: content.title,
     description:
       trimmed ||
@@ -72,7 +72,7 @@ export default async function AreaDetailPage({ params }: Props) {
     <>
       <JsonLd
         data={breadcrumbListJsonLd({
-          path: "/areas",
+          path: "/reading/areas",
           current: content.title,
           currentHref: areaPath(content.slug),
         })}

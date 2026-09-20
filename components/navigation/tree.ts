@@ -95,7 +95,7 @@ const TREE = {
 
   // ---- 英国を読む ----------------------------------------------------
   "/column": { label: "コラム", parent: "/reading" },
-  "/areas": { label: "ロンドンの街", parent: "/reading" },
+  "/reading/areas": { label: "ロンドンの街", parent: "/reading" },
   "/history": { label: "イギリスの歴史", parent: "/reading" },
   "/british-english": { label: "イギリス英語", parent: "/reading" },
 } as const satisfies Record<string, TreeNode>;

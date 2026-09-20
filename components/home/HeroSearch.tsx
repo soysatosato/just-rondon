@@ -124,7 +124,7 @@ export default function HeroSearch() {
                 コラム
               </span>
             </SelectItem>
-            <SelectItem value="areas">
+            <SelectItem value="reading/areas">
               <span className="flex items-center gap-2">
                 <Building2 className="h-3.5 w-3.5 text-violet-600" />
                 ロンドンの街

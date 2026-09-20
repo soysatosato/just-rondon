@@ -1,14 +1,14 @@
 ---
 name: add-area
-description: just-rondon(イギリス旅行サイト)の「ロンドンの街」セクションに、エリア1つぶんの読みものを1本、DBに直接追加する。まだ書いていない街の候補3つを示してユーザーに選ばせてから($ARGUMENTSで街が指定された場合は選択を飛ばす)、地名の由来・その街がいまの姿になった経緯・警察と土地登記の統計で見る治安と家賃・歩くならどこかを出典付きでまとめて/areasに公開する。「街の記事を書いて」「ロンドンの街を追加して」「/add-area」で起動する。
+description: just-rondon(イギリス旅行サイト)の「ロンドンの街」セクションに、エリア1つぶんの読みものを1本、DBに直接追加する。まだ書いていない街の候補3つを示してユーザーに選ばせてから($ARGUMENTSで街が指定された場合は選択を飛ばす)、地名の由来・その街がいまの姿になった経緯・警察と土地登記の統計で見る治安と家賃・歩くならどこかを出典付きでまとめて/reading/areasに公開する。「街の記事を書いて」「ロンドンの街を追加して」「/add-area」で起動する。
 ---
 
 # /add-area — 「ロンドンの街」の記事をDBに追加する
 
-just-rondon の `/areas` セクション用に、**ロンドンのエリア1つぶんの読みもの**を
+just-rondon の `/reading/areas` セクション用に、**ロンドンのエリア1つぶんの読みもの**を
 1本作成し、本番DB(`Content`/`ContentSection` テーブル、`category: "area"`)に
 直接登録する。git の commit/push は一切不要 — DBに1行INSERTするだけで
-`/areas` と `/areas/[slug]` に(ISR再検証後、最大1時間以内に)反映される。
+`/reading/areas` と `/reading/areas/[slug]` に(ISR再検証後、最大1時間以内に)反映される。
 
 刊行ペースは**週2本**。1本あたりの取材が重い(警察と土地登記の数字を実際に
 引く)ので、本数より1本の厚みを取る方針で決めている。
@@ -20,12 +20,12 @@ just-rondon の `/areas` セクション用に、**ロンドンのエリア1つ�
 
 |                               | 何のページか           | 読者の問い                       |
 | ----------------------------- | ---------------------- | -------------------------------- |
-| **`/areas`(ここ)**            | **街そのものの読みもの** | 「この街はどんな街なのか」       |
+| **`/reading/areas`(ここ)**            | **街そのものの読みもの** | 「この街はどんな街なのか」       |
 | `/sightseeing/areas`          | 半日の回遊ルート(6本)  | 「ここをどう歩くか」             |
 | `/sightseeing/hotels`          | 宿泊エリアの比較表(13) | 「どこに泊まるか」               |
 | `/housing/where-to-live`      | 住まい探しの実務       | 「どこに住むか・どう借りるか」   |
 
-- **`/areas` は住宅地も書く**。観光の3ページは中心部しか扱っていない。
+- **`/reading/areas` は住宅地も書く**。観光の3ページは中心部しか扱っていない。
   ブリクストン、ペッカム、ウォルサムストウ、アクトンのように「泊まる場所」でも
   「観光地」でもない街が、この連載の主戦場である。
 - **決めるページではなく、読むページ**。比較表を作らない。比較は既存の3ページの
@@ -169,7 +169,7 @@ Web検索で確かめる。「賑やかな街です」「多様性のある街�
 
 ### タイトルは「カタカナの街名」で始める(必須)
 
-`/areas/[slug]` の metadata は `title` をそのまま出す。イギリス英語のように
+`/reading/areas/[slug]` の metadata は `title` をそのまま出す。イギリス英語のように
 コードが「の意味」を足したりはしない。**タイトルの先頭がそのまま検索結果の
 先頭に出る**ので、ここを外すと記事は誰にも届かない。
 
@@ -295,7 +295,7 @@ npx tsx scripts/fix-content-markdown-bold.ts --dry
 npx tsx scripts/create-area.ts <一時ファイルのパス>
 ```
 
-成功すると `Created area entry: /areas/<slug> (id=...)` が出力される。
+成功すると `Created area entry: /reading/areas/<slug> (id=...)` が出力される。
 
 エラーが出た場合の対処:
 
@@ -316,7 +316,7 @@ npx tsx scripts/backup-db.ts
 ## Step 9 — 完了報告
 
 git の操作(commit, push, branch作成など)は一切行わない。
-公開された記事のタイトルと `/areas/<slug>` のURL、引いた統計の出典を
+公開された記事のタイトルと `/reading/areas/<slug>` のURL、引いた統計の出典を
 ユーザーに報告する。
 
 ## Step 10 — ツイート案を出す
@@ -326,7 +326,7 @@ git の操作(commit, push, branch作成など)は一切行わない。
 
 - **140字以内**。URLを含めた実文字数で数え、各案に字数を添える
 - 1行目は見出し **【ロンドンの街】**
-- 末尾に記事URL `https://www.just-rondon.com/areas/<slug>`
+- 末尾に記事URL `https://www.just-rondon.com/reading/areas/<slug>`
 - 4〜5案は切り口をずらす(地名の由来・効いてくる数字・古い風評の訂正・
   歩くならどこか)。治安の数字を煽りに使わない
 
@@ -336,6 +336,6 @@ git の操作(commit, push, branch作成など)は一切行わない。
 python3 -c 'import sys; t=sys.stdin.read().rstrip("\n"); print(len(t), "OK" if len(t)<=140 else "NG")' <<'TWEET'
 【ロンドンの街】
 …本文…
-https://www.just-rondon.com/areas/<slug>
+https://www.just-rondon.com/reading/areas/<slug>
 TWEET
 ```

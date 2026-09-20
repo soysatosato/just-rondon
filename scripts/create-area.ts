@@ -207,7 +207,7 @@ async function main() {
           : {}),
       },
     });
-    console.log(`Created area entry: /areas/${created.slug} (id=${created.id})`);
+    console.log(`Created area entry: /reading/areas/${created.slug} (id=${created.id})`);
     if (attractionIds.length > 0) {
       console.log(`  linked ${attractionIds.length} attraction(s)`);
     }

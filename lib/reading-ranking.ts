@@ -18,7 +18,7 @@ import type { RankingEntry } from "@/components/rankings/ContentRankingTabs";
 const BASE = {
   column: "/column",
   "british-english": "/british-english",
-  area: "/areas",
+  area: "/reading/areas",
 } as const;
 
 export type ReadingCategory = keyof typeof BASE;

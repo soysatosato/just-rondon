@@ -90,7 +90,7 @@ export default function AreaDetail({
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
-      <Breadcrumbs path="/areas" current={content.title} />
+      <Breadcrumbs path="/reading/areas" current={content.title} />
 
       <header className="relative mt-6 overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-background to-cyan-50 px-6 py-9 dark:border-indigo-900/50 dark:from-indigo-950/25 dark:via-background dark:to-cyan-950/15 sm:px-10 sm:py-11">
         <div
@@ -307,7 +307,7 @@ export default function AreaDetail({
 
       <div className="mt-10">
         <AdjacentContentNav
-          basePath="/areas"
+          basePath="/reading/areas"
           prev={prev}
           next={next}
           accent="indigo"
@@ -317,7 +317,7 @@ export default function AreaDetail({
       <div className="mt-10 rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/50 px-6 py-7 text-center dark:border-indigo-900/60 dark:bg-indigo-950/20">
         <p className="text-sm font-bold">もう一つの街を、読む。</p>
         <Link
-          href="/areas"
+          href="/reading/areas"
           className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
         >
           ← 街の一覧へ

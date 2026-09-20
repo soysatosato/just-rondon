@@ -53,7 +53,7 @@ export default function AreaCard({ item }: { item: Content }) {
 
   return (
     <Link
-      href={`/areas/${item.slug}`}
+      href={`/reading/areas/${item.slug}`}
       className={`group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70 ${accent.wrap}`}
     >
       <div className={`h-1.5 w-full shrink-0 ${accent.stripe}`} />

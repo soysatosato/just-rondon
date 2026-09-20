@@ -173,7 +173,7 @@ export const sections: Section[] = [
         title: "ロンドンの街 トップ",
         description:
           "ロンドンのエリアを1つずつ。地名の由来、治安と家賃の実際、歩くならどこか。",
-        href: "/areas",
+        href: "/reading/areas",
       },
     ],
   },

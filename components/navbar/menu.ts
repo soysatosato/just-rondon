@@ -342,7 +342,7 @@ export const NAV_SECTIONS: NavSection[] = [
       {
         links: [
           { href: "/column", label: "コラム" },
-          { href: "/areas", label: "ロンドンの街" },
+          { href: "/reading/areas", label: "ロンドンの街" },
           { href: "/history", label: "イギリスの歴史" },
           { href: "/british-english", label: "イギリス英語" },
         ],

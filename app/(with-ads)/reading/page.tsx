@@ -60,7 +60,7 @@ const CATEGORY = {
     ring: "hover:border-amber-400 dark:hover:border-amber-700",
   },
   area: {
-    base: "/areas",
+    base: "/reading/areas",
     label: "ロンドンの街",
     eyebrow: "London, Neighbourhood by Neighbourhood",
     blurb: "エリアを1つずつ、由来から治安・家賃の実際まで読み解きます。",

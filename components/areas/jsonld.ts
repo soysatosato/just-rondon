@@ -3,7 +3,7 @@ import { SITE_NAME, SITE_URL } from "@/lib/seo";
 // 観光の「エリアガイド」(components/sightseeing/areas/areas.ts の AREAS_BASE =
 // /sightseeing/areas)とは別物。あちらは半日の回遊ルート、こちらは街そのものの
 // 読みもの。同じ語を使う2つが並ぶので、import するときは必ず出自を確かめる。
-export const AREAS_BASE = "/areas";
+export const AREAS_BASE = "/reading/areas";
 
 export const AREAS_PUBLISHER = {
   "@type": "Organization",
