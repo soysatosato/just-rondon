@@ -1,5 +1,5 @@
 /**
- * 読み物ハブ(英国を読む・コラム・イギリス英語・英国のいま・イギリスの歴史)の色。
+ * 読み物ハブ(英国を読む・コラム・イギリス英語・ロンドンの街・イギリスの歴史)の色。
  *
  * ハブごとの色は詳細ページ・ナビ・OGカードと揃っていて、読者は色で
  * 「どのセクションにいるか」を判断している。題字・絞り込みチップ・
@@ -16,7 +16,7 @@ export type ReadingAccentName =
   | "reading"
   | "column"
   | "british-english"
-  | "modern-britain"
+  | "area"
   | "history";
 
 export type ReadingAccent = {
@@ -98,7 +98,12 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     focus:
       "focus:border-amber-400 focus:ring-amber-200 dark:focus:border-amber-500 dark:focus:ring-amber-900/60",
   },
-  "modern-britain": {
+  /*
+    「ロンドンの街」は、廃止した時事セクションが使っていた藍をそのまま継いだ。
+    読み物4面のうち琥珀2面・薔薇1面が埋まっていて、残りで題字の白文字が
+    沈まない濃さを持つのがこの藍だったという、それだけの理由である。
+  */
+  area: {
     bar: "bg-indigo-500",
     eyebrowOnDark: "text-indigo-300",
     titleOnDark: "text-indigo-400",

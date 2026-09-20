@@ -26,7 +26,7 @@ export default function ViewTracker({
     | "musical"
     | "column"
     | "britishEnglish"
-    | "modernBritain";
+    | "area";
   slug: string;
 }) {
   // Strict Mode の二重実行と、同一ページ内での再描画で二重に送らないための旗。

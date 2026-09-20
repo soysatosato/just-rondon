@@ -166,14 +166,14 @@ export const sections: Section[] = [
     ],
   },
   {
-    id: "modern-britain",
-    title: "英国のいまを論じる",
+    id: "areas",
+    title: "ロンドンの街",
     items: [
       {
-        title: "英国のいまを論じる トップ",
+        title: "ロンドンの街 トップ",
         description:
-          "最新の英国ニュースを出典付きで掘り下げ、その背景と意味を論じる時事コラム。",
-        href: "/modern-britain",
+          "ロンドンのエリアを1つずつ。地名の由来、治安と家賃の実際、歩くならどこか。",
+        href: "/areas",
       },
     ],
   },

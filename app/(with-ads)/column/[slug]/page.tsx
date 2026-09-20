@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { CommentTargetType } from "@prisma/client";
 import {
   fetchAdjacentContents,
-  fetchColumnAttractions,
+  fetchContentAttractions,
   fetchColumnBySlug,
   fetchColumnSeries,
 } from "@/utils/actions/contents";
@@ -63,7 +63,7 @@ export default async function ColumnDetailPage({ params }: Props) {
       id: content.id,
       createdAt: content.createdAt,
     }),
-    fetchColumnAttractions(content.id),
+    fetchContentAttractions(content.id),
   ]);
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。

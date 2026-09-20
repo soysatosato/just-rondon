@@ -336,13 +336,13 @@ export const NAV_SECTIONS: NavSection[] = [
     href: "/reading",
     hubLabel: "英国を読む トップ",
     description:
-      "実務情報の先にある、じっくり読むコンテンツ。イギリスの歴史や言葉の面白さを、旅の合間や暮らしのなかで。",
+      "実務情報の先にある、じっくり読むコンテンツ。イギリスの歴史や街や言葉の面白さを、旅の合間や暮らしのなかで。",
     accent: NAV_ACCENTS.violet,
     groups: [
       {
         links: [
           { href: "/column", label: "コラム" },
-          { href: "/modern-britain", label: "英国のいまを論じる" },
+          { href: "/areas", label: "ロンドンの街" },
           { href: "/history", label: "イギリスの歴史" },
           { href: "/british-english", label: "イギリス英語" },
         ],

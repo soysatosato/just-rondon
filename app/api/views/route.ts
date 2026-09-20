@@ -20,7 +20,7 @@ import db from "@/utils/db";
 /**
  * 加算対象。キーはクライアントから来るので、ここに無い値は弾く。
  *
- * column / britishEnglish / modernBritain は、いずれも Content テーブルの
+ * column / britishEnglish / area は、いずれも Content テーブルの
  * 1行を指す。値はその行の category に対応する。
  */
 const TARGETS = {
@@ -29,7 +29,7 @@ const TARGETS = {
   musical: "musical",
   column: "column",
   britishEnglish: "british-english",
-  modernBritain: "modern-britain",
+  area: "area",
 } as const;
 
 type TargetType = keyof typeof TARGETS;

@@ -62,12 +62,12 @@ export type RankingEntry = {
 };
 
 export type RankingThemeName =
-  "reading" | "column" | "british-english" | "modern-britain";
+  "reading" | "column" | "british-english" | "area";
 
 /**
  * 配色。Tailwind はクラス名を文字列として拾うので、色を組み立てず
  * 完成したクラス名をそのまま置く。セクションごとの色は各ハブの
- * ヘッダー・カードと揃える(コラム=琥珀、英語=薔薇、いま=藍)。
+ * ヘッダー・カードと揃える(コラム=琥珀、英語=薔薇、街=藍)。
  */
 const THEMES: Record<
   RankingThemeName,
@@ -119,7 +119,7 @@ const THEMES: Record<
     hero: "from-rose-500 via-red-500 to-orange-500",
     rail: "bg-rose-500",
   },
-  "modern-britain": {
+  area: {
     bar: "bg-indigo-500",
     dot: "bg-indigo-500",
     trigger:

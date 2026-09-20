@@ -12,13 +12,13 @@ import type { RankingEntry } from "@/components/rankings/ContentRankingTabs";
  * セクションごとに拾う項目が違う:
  *   コラム         連載名を badge に。連載の途中回が単発に見えないように。
  *   イギリス英語   英単語そのもの(engTitle)を eyebrow に。見出しの主役はこちら。
- *   いまのイギリス どちらも持たないので日付と要約だけ。
+ *   ロンドンの街   街の英語名(engTitle)を eyebrow に。名前で探されるため。
  */
 
 const BASE = {
   column: "/column",
   "british-english": "/british-english",
-  "modern-britain": "/modern-britain",
+  area: "/areas",
 } as const;
 
 export type ReadingCategory = keyof typeof BASE;
@@ -37,7 +37,10 @@ export function toRankingEntries(
     key: item.id,
     href: `${BASE[category]}/${item.slug}`,
     title: item.title,
-    eyebrow: category === "british-english" ? item.engTitle : null,
+    eyebrow:
+      category === "british-english" || category === "area"
+        ? item.engTitle
+        : null,
     summary: item.summary,
     image: item.image,
     date: dateFormatter.format(item.createdAt),
@@ -49,7 +52,7 @@ export function toRankingEntries(
 const SECTION_LABEL: Record<ReadingCategory, string> = {
   column: "コラム",
   "british-english": "イギリス英語",
-  "modern-britain": "英国のいま",
+  area: "ロンドンの街",
 };
 
 function isReadingCategory(value: string): value is ReadingCategory {
@@ -65,7 +68,7 @@ function isReadingCategory(value: string): value is ReadingCategory {
  * 譲らないのは、混成の一覧では「どのセクションか」のほうが先に要る情報で、
  * チップを2つ並べると順位の行が持たないため。
  *
- * category が3セクション以外の行は落とす。DB から読み物以外の Content が
+ * category が読み物3セクション以外の行は落とす。DB から読み物以外の Content が
  * 紛れても、リンク先の無いカードが出ないようにする。
  */
 export function toReadingRankingEntries(items: Content[]): RankingEntry[] {

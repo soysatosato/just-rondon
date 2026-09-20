@@ -86,7 +86,7 @@ export const fetchAttractionName = async (slug: string) => {
 /**
  * このスポットが出てくるコラム。スポット詳細の末尾に出す。
  *
- * コラム側の fetchColumnAttractions と同じ ContentAttraction を逆から引く。
+ * コラム側の fetchContentAttractions と同じ ContentAttraction を逆から引く。
  * Content にはコラム以外(british-english 等)も入っているので category で絞る。
  * 新しい順。
  */

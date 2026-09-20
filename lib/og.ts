@@ -323,7 +323,7 @@ export function splitOgHeadline(title: string): {
 }
 
 /**
- * コラム・「英国のいまを論じる」記事のOGカードURL。
+ * コラム・「ロンドンの街」記事のOGカードURL。
  *
  * パスは app/og/<section>/[slug]/route.tsx と対で、片方だけ変えると
  * 共有カードが404になる(SNS側は失敗しても静かに既定画像へ戻るだけで
@@ -334,7 +334,7 @@ export function splitOgHeadline(title: string): {
  * 古いカードを外すためのもの。
  */
 function readingArticleOgImage(
-  section: "column" | "modern-britain",
+  section: "column" | "areas",
   label: string,
   content: { slug: string; title: string; updatedAt: Date },
 ) {
@@ -356,12 +356,12 @@ export function columnOgImage(content: {
   return readingArticleOgImage("column", "コラム", content);
 }
 
-export function modernBritainOgImage(content: {
+export function areaOgImage(content: {
   slug: string;
   title: string;
   updatedAt: Date;
 }) {
-  return readingArticleOgImage("modern-britain", "英国のいまを論じる", content);
+  return readingArticleOgImage("areas", "ロンドンの街", content);
 }
 
 /**

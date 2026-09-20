@@ -12,7 +12,7 @@ import { breadcrumbJsonLd } from "@/lib/jsonld";
 import JsonLd from "@/components/seo/JsonLd";
 import {
   fetchColumns,
-  fetchModernBritainEntries,
+  fetchAreaEntries,
   fetchBritishEnglishEntries,
   fetchPopularReadingContents,
   fetchWeeklyPopularReadingContents,
@@ -24,9 +24,9 @@ import { toReadingRankingEntries } from "@/lib/reading-ranking";
 
 const PAGE_PATH = "/reading";
 const PAGE_NAME = "英国を読む";
-const TITLE = "英国を読む｜コラム・時事論考・歴史・イギリス英語";
+const TITLE = "英国を読む｜コラム・ロンドンの街・歴史・イギリス英語";
 const DESCRIPTION =
-  "旅行の実務情報の先にある、じっくり読むコンテンツをまとめました。イギリスの歴史や文化を掘り下げるコラム、最新ニュースを論じる時事論考、ローマ時代から現在までの通史、そしてイギリス英語の言い回し。旅の合間や暮らしのなかで読めるように、日々更新しています。";
+  "旅行の実務情報の先にある、じっくり読むコンテンツをまとめました。イギリスの歴史や文化を掘り下げるコラム、エリアごとに街を読み解く「ロンドンの街」、ローマ時代から現在までの通史、そしてイギリス英語の言い回し。旅の合間や暮らしのなかで読めるように、日々更新しています。";
 
 export const metadata = buildPageMetadata({
   path: PAGE_PATH,
@@ -36,8 +36,8 @@ export const metadata = buildPageMetadata({
     "イギリス コラム",
     "イギリス 歴史",
     "イギリス英語",
-    "英国 時事",
-    "英国のいま",
+    "ロンドン 街 エリア",
+    "ロンドン 治安 エリア",
   ],
   // 既定のロゴ(810x665)ではなく、ハブごとの生成カードを配る。
   images: [hubOgImage("reading")],
@@ -59,11 +59,11 @@ const CATEGORY = {
     text: "text-amber-700 dark:text-amber-400",
     ring: "hover:border-amber-400 dark:hover:border-amber-700",
   },
-  "modern-britain": {
-    base: "/modern-britain",
-    label: "英国のいま",
-    eyebrow: "Britain, Argued",
-    blurb: "最新の英国ニュースを出典付きで紹介し、背景まで掘り下げます。",
+  area: {
+    base: "/areas",
+    label: "ロンドンの街",
+    eyebrow: "London, Neighbourhood by Neighbourhood",
+    blurb: "エリアを1つずつ、由来から治安・家賃の実際まで読み解きます。",
     text: "text-indigo-600 dark:text-indigo-400",
     ring: "hover:border-indigo-400 dark:hover:border-indigo-700",
   },
@@ -176,10 +176,10 @@ function readingHubCollectionJsonLd() {
 }
 
 export default async function ReadingHubPage() {
-  const [columns, modernBritain, britishEnglish, popular, weekly] =
+  const [columns, areas, britishEnglish, popular, weekly] =
     await Promise.all([
       fetchColumns(),
-      fetchModernBritainEntries(),
+      fetchAreaEntries(),
       fetchBritishEnglishEntries(),
       fetchPopularReadingContents(RANK_TAKE),
       fetchWeeklyPopularReadingContents(RANK_TAKE),
@@ -189,7 +189,7 @@ export default async function ReadingHubPage() {
 
   // 「新着」。カテゴリを跨いで createdAt の降順。views とは別軸なので、
   // ランキングと重複しても構わない（別の切り口で同じ記事が出るのは自然）。
-  const latest = [...columns, ...modernBritain, ...britishEnglish].sort(
+  const latest = [...columns, ...areas, ...britishEnglish].sort(
     (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
   );
 
@@ -197,7 +197,7 @@ export default async function ReadingHubPage() {
 
   // 題字に出す総数。歴史(全10章)は静的なページなので別に数える。
   const readingCount =
-    columns.length + modernBritain.length + britishEnglish.length;
+    columns.length + areas.length + britishEnglish.length;
 
   const firstChapter = historyChapters[0];
 
@@ -287,8 +287,8 @@ export default async function ReadingHubPage() {
             const items =
               key === "column"
                 ? columns
-                : key === "modern-britain"
-                  ? modernBritain
+                : key === "area"
+                  ? areas
                   : britishEnglish;
             const newest = items[0] ? toEntry(items[0]) : null;
 

@@ -1,12 +1,17 @@
 import Link from "next/link";
 import type { Content } from "@prisma/client";
-import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
+import { areaFacts, areaTagLabel } from "@/lib/area-taxonomy";
 
 /**
- * 論考1本ぶんのカード。
+ * 街1本ぶんのカード。
  *
- * 上端の色帯は slug から決める。以前は一覧の並び順から選んでいたが、
- * ページ送りを入れると同じ記事が面によって色を変えるため。
+ * 一覧で読者が探しているのは「自分が調べている街の名前」なので、
+ * 英語名を見出しの上に置いて字を立てる。日本語タイトルは頭が
+ * カタカナの街名で始まる約束(.claude/skills/add-area/SKILL.md)なので、
+ * 英語名と合わせて「ここだ」と1秒で分かる。
+ *
+ * 上端の色帯は slug から決める。並び順やページ送りで色が変わらないように
+ * するためで、意味は持たせていない。
  */
 
 const ACCENTS = [
@@ -21,38 +26,34 @@ const ACCENTS = [
     more: "text-cyan-600 dark:text-cyan-400",
   },
   {
-    stripe: "bg-fuchsia-500",
-    wrap: "hover:border-fuchsia-300 dark:hover:border-fuchsia-800",
-    more: "text-fuchsia-600 dark:text-fuchsia-400",
+    stripe: "bg-teal-500",
+    wrap: "hover:border-teal-300 dark:hover:border-teal-800",
+    more: "text-teal-600 dark:text-teal-400",
   },
   {
-    stripe: "bg-lime-500",
-    wrap: "hover:border-lime-300 dark:hover:border-lime-800",
-    more: "text-lime-600 dark:text-lime-400",
+    stripe: "bg-sky-500",
+    wrap: "hover:border-sky-300 dark:hover:border-sky-800",
+    more: "text-sky-600 dark:text-sky-400",
   },
 ];
 
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
-
-/** slug から色を選ぶ。並び順が変わっても記事の色が変わらないようにするだけ。 */
+/** slug から色を選ぶ。並び順が変わっても街の色が変わらないようにするだけ。 */
 function accentOf(slug: string) {
   let sum = 0;
   for (let i = 0; i < slug.length; i++) sum = (sum + slug.charCodeAt(i)) % 1000;
   return ACCENTS[sum % ACCENTS.length];
 }
 
-export default function ModernBritainCard({ item }: { item: Content }) {
+export default function AreaCard({ item }: { item: Content }) {
   const accent = accentOf(item.slug);
+  const facts = areaFacts(item);
+  const meta = [facts.zone ? `ゾーン${facts.zone}` : null, facts.borough]
+    .filter(Boolean)
+    .join(" ・ ");
 
   return (
     <Link
-      href={`/modern-britain/${item.slug}`}
+      href={`/areas/${item.slug}`}
       className={`group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70 ${accent.wrap}`}
     >
       <div className={`h-1.5 w-full shrink-0 ${accent.stripe}`} />
@@ -71,15 +72,19 @@ export default function ModernBritainCard({ item }: { item: Content }) {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col px-5 pb-5 pt-4">
-        {/* 並びは createdAt の降順なので、通し番号を振ると記事を足すたびに
-            全カードの番号がずれる。日付だけを出す。 */}
-        <p className="text-[11px] text-muted-foreground">
-          {formatDate(item.createdAt)}
-        </p>
+        {item.engTitle && (
+          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            {item.engTitle}
+          </p>
+        )}
 
         <h3 className="mt-1.5 line-clamp-4 text-[15px] font-bold leading-snug tracking-tight text-foreground">
           {item.title}
         </h3>
+
+        {meta && (
+          <p className="mt-2 text-[11px] text-muted-foreground">{meta}</p>
+        )}
 
         {item.summary && (
           <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
@@ -94,7 +99,7 @@ export default function ModernBritainCard({ item }: { item: Content }) {
                 key={tag}
                 className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
               >
-                {modernBritainTagLabel(tag)}
+                {areaTagLabel(tag)}
               </span>
             ))}
           </div>
@@ -103,7 +108,7 @@ export default function ModernBritainCard({ item }: { item: Content }) {
         <p
           className={`mt-auto pt-4 text-right text-xs font-semibold transition-transform duration-200 group-hover:translate-x-0.5 ${accent.more}`}
         >
-          続きを読む →
+          この街を読む →
         </p>
       </div>
     </Link>

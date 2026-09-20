@@ -12,7 +12,7 @@ import {
   BriefcaseBusiness,
   Newspaper,
   History,
-  Radio,
+  Building2,
   MessageSquareText,
   Search,
 } from "lucide-react";
@@ -124,10 +124,10 @@ export default function HeroSearch() {
                 コラム
               </span>
             </SelectItem>
-            <SelectItem value="modern-britain">
+            <SelectItem value="areas">
               <span className="flex items-center gap-2">
-                <Radio className="h-3.5 w-3.5 text-violet-600" />
-                英国のいまを論じる
+                <Building2 className="h-3.5 w-3.5 text-violet-600" />
+                ロンドンの街
               </span>
             </SelectItem>
             <SelectItem value="history">

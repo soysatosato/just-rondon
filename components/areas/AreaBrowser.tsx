@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import type { Content } from "@prisma/client";
-import ModernBritainCard from "@/components/modern-britain/ModernBritainCard";
-import { MODERN_BRITAIN_TAGS } from "@/lib/modern-britain-taxonomy";
+import AreaCard from "@/components/areas/AreaCard";
+import { AREA_TAGS } from "@/lib/area-taxonomy";
 import {
   ArchiveHeading,
   EmptyResult,
@@ -15,37 +15,38 @@ import {
 import { usePagination } from "@/components/reading/usePagination";
 
 /**
- * 英国のいまの書庫。検索・テーマ・並べ替え・ページ送り。
+ * 街の書庫。検索・方角・並べ替え・ページ送り。
  *
- * 時事なので既定は新着順のまま。ただし「あのニュースの話、どこだっけ」で
- * 戻ってくる読み方も多いので、本文の見出し・要約・英語見出しを対象にした
- * 検索を置く。英語見出しはニュースの原題に近いので、英語で覚えている
- * 読者の手掛かりになる。
+ * ここに来る読者は二通りいる。「ロンドンのどこに住む/泊まるか」をまだ
+ * 決めていない人と、「ブリクストンってどうなの」と街の名前を決めてから
+ * 調べに来た人。前者には方角のチップと新着順、後者には検索と名前順が要る。
+ *
+ * 検索がカタカナと英語の両方に当たるようにしてあるのは、街の名前を
+ * どちらで覚えているかが人によって違うため(「Peckham」と打つ人と
+ * 「ペッカム」と打つ人が同じくらいいる)。日本語タイトルは頭が
+ * カタカナの街名で始まる約束なので、title を対象に入れるだけで拾える。
  */
 
 /** 1ページに並べる本数。3列 × 4行。 */
 const PAGE_SIZE = 12;
 
-type SortKey = "new" | "popular";
+type SortKey = "new" | "popular" | "name";
 
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "new", label: "新着順" },
   { key: "popular", label: "読まれた順" },
+  { key: "name", label: "名前順" },
 ];
 
 function matches(item: Content, query: string): boolean {
   const q = query.trim().toLowerCase();
   if (!q) return true;
-  return [item.title, item.engTitle, item.summary]
+  return [item.title, item.engTitle, item.summary, item.description]
     .filter(Boolean)
     .some((field) => (field as string).toLowerCase().includes(q));
 }
 
-export default function ModernBritainBrowser({
-  entries,
-}: {
-  entries: Content[];
-}) {
+export default function AreaBrowser({ entries }: { entries: Content[] }) {
   const [query, setQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>("new");
@@ -71,6 +72,16 @@ export default function ModernBritainBrowser({
             b.views - a.views || b.createdAt.getTime() - a.createdAt.getTime(),
         );
     }
+    if (sort === "name") {
+      // 英語名で並べる。カタカナは長音や促音の扱いが辞書によって違って
+      // 「同じ規則で並んでいる」と読者に見えないが、英語名なら見た目で
+      // 分かる。英語名が無い行は後ろへ。
+      return filtered
+        .slice()
+        .sort((a, b) =>
+          (a.engTitle ?? "￿").localeCompare(b.engTitle ?? "￿", "en"),
+        );
+    }
     return filtered;
   }, [entries, query, activeTag, sort]);
 
@@ -85,15 +96,15 @@ export default function ModernBritainBrowser({
   };
 
   return (
-    <section aria-labelledby="mb-archive-heading">
+    <section aria-labelledby="areas-archive-heading">
       <ArchiveHeading
-        accent="modern-britain"
+        accent="area"
         eyebrow="Archive"
-        title="これまでの論考"
-        id="mb-archive-heading"
+        title="これまでの街"
+        id="areas-archive-heading"
       >
         <SortToggle
-          accent="modern-britain"
+          accent="area"
           value={sort}
           options={SORTS}
           onChange={setSort}
@@ -102,28 +113,28 @@ export default function ModernBritainBrowser({
 
       <div className="mb-6 space-y-3">
         <SearchBox
-          accent="modern-britain"
+          accent="area"
           value={query}
           onChange={setQuery}
-          placeholder="キーワードで探す（例: 物価、BBC、ストライキ）"
-          label="論考をキーワードで検索"
+          placeholder="街の名前で探す（例: ブリクストン、Peckham、ハックニー区）"
+          label="街をキーワードで検索"
         />
 
         <div className="flex flex-wrap gap-2">
           <FilterChip
-            accent="modern-britain"
+            accent="area"
             active={activeTag === null}
             onClick={() => setActiveTag(null)}
             label="すべて"
             count={entries.length}
           />
-          {MODERN_BRITAIN_TAGS.map((t) => {
+          {AREA_TAGS.map((t) => {
             const count = tagCounts.get(t.key) ?? 0;
             if (count === 0) return null;
             return (
               <FilterChip
                 key={t.key}
-                accent="modern-britain"
+                accent="area"
                 active={activeTag === t.key}
                 onClick={() => setActiveTag(activeTag === t.key ? null : t.key)}
                 label={t.label}
@@ -136,31 +147,31 @@ export default function ModernBritainBrowser({
 
       <div ref={listRef} className="scroll-mt-24">
         {visible.length === 0 ? (
-          <EmptyResult accent="modern-britain" onReset={clearFilters} />
+          <EmptyResult accent="area" onReset={clearFilters} />
         ) : (
           <>
             <p className="mb-4 text-xs text-muted-foreground">
               <span className="font-medium text-foreground">
-                {visible.length} 本
+                {visible.length} の街
               </span>
               {isFiltering ? "が該当" : "を公開中"}
               {totalPages > 1 &&
-                ` ・ ${start + 1}–${start + pageItems.length} 本目を表示`}
+                ` ・ ${start + 1}–${start + pageItems.length} 件目を表示`}
             </p>
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {pageItems.map((item) => (
-                <ModernBritainCard key={item.id} item={item} />
+                <AreaCard key={item.id} item={item} />
               ))}
             </div>
 
             {totalPages > 1 && (
               <Pager
-                accent="modern-britain"
+                accent="area"
                 current={current}
                 total={totalPages}
                 onChange={goTo}
-                label="論考一覧のページ送り"
+                label="街一覧のページ送り"
               />
             )}
           </>

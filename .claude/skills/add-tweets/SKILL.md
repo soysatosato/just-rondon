@@ -206,7 +206,7 @@ import db from "./utils/db";
 `app/(with-ads)/` 配下に実際にディレクトリがあるかで確認する。
 
 URLは `https://www.just-rondon.com` + パスの形にする(`lib/seo.ts` の `SITE_URL`)。
-カテゴリごとのパスは `/column/<slug>`、`/modern-britain/<slug>`、
+カテゴリごとのパスは `/column/<slug>`、`/areas/<slug>`、
 `/british-english/<slug>`、週次ダイジェストは `/events/week/<slug>`
 (`/events/<slug>` ではない。最新号は `/events` にも同じ内容で出る)。
 
