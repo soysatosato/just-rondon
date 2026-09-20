@@ -149,7 +149,7 @@ export default async function DashboardPage() {
                   </p>
                   <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                     分配のされ方、店側の説明、賄い、シフト、良かったこと。
-                    自由記述はすべて任意で、名前は聞かないので載ることもありません。
+                    自由記述はすべて任意です。
                   </p>
                 </div>
                 <p className="mt-4 text-sm font-medium text-foreground underline-offset-4 group-hover:underline">

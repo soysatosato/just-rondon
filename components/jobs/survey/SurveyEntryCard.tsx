@@ -125,14 +125,14 @@ export default function SurveyEntryCard({
     >
       <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-neutral-200">
         <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
-        匿名・所要3分・登録不要
+        匿名アンケート・所要3分
       </p>
       <h2 className="mt-3 text-xl font-bold leading-snug tracking-tight text-white sm:text-[1.375rem]">
-        あなたの職場は、法律どおり？
+        働いた店のことを、次の人のために教えてください
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-neutral-300">
-        働いた店を選んで答えると、送信する前にその場で判定が出ます。
-        辞めた店でも、問題のなかった店でも答えられます。
+        このページの数字も声も、ロンドンの店で働いた人が送ってくれた回答でできています。
+        いまの職場でも、前に働いた店でも構いません。
       </p>
 
       <div ref={containerRef} className="relative mt-5">
@@ -301,7 +301,7 @@ export default function SurveyEntryCard({
         href={picked ? surveyHref({ store: picked.id }) : surveyHref({ q: query })}
         className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 text-[0.9375rem] font-semibold text-neutral-950 shadow-sm transition hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
       >
-        {picked ? "この店について答える" : "診断をはじめる"}
+        {picked ? "この店について答える" : "アンケートに答える"}
         <ArrowRight className="h-4 w-4" aria-hidden />
       </Link>
 

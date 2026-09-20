@@ -6,6 +6,11 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import { Button } from "@/components/ui/button";
+import {
+  SurveyAskCard,
+  SurveyAskLine,
+} from "@/components/jobs/survey/SurveyAsk";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
@@ -96,34 +101,23 @@ const markdownComponents = {
   ),
 };
 
-function SurveyCallout() {
+/** 読み終わりの依頼。ここまで読んだ人は、自分の職場と照らし合わせている。 */
+function GuideSurveyAsk() {
   return (
-    <aside className="rounded-xl border border-border bg-muted/40 p-5 sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        自分の職場を確かめる
+    <SurveyAskCard
+      title="いま読んだ基準で、働いた店のことを教えてください"
+      secondary={
+        <Button asChild size="lg" variant="outline">
+          <Link href="/jobs/service-charges/stores">店舗別のデータを見る</Link>
+        </Button>
+      }
+    >
+      <p>
+        この調査に並ぶ数字も声も、ロンドンの店で働いた人が送ってくれたものです。
+        回答が1件増えるたびに、次にその店で面接を受ける人が、働く前に知れることが増えます。
+        いまの職場でも、前に働いた店でも構いません。必須は3問です。
       </p>
-      <p className="mt-2 text-base font-semibold text-foreground">
-        あなたの職場のサービスチャージは、法律どおりに配られていますか？
-      </p>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        設問に答えると、送信する前にその場で判定と次にやることが出ます。所要3分・匿名で、
-        店舗名以外に個人が特定される情報は聞きません。回答はロンドンの飲食店の実態データとして集計されます。
-      </p>
-      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-        <Link
-          href="/jobs/service-charges/survey"
-          className="inline-flex items-center justify-center rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background transition hover:opacity-90"
-        >
-          診断をはじめる（3分）
-        </Link>
-        <Link
-          href="/jobs/service-charges/stores"
-          className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted"
-        >
-          店舗別のデータを見る
-        </Link>
-      </div>
-    </aside>
+    </SurveyAskCard>
   );
 }
 
@@ -154,6 +148,11 @@ export default function ServiceChargeGuidePage() {
         <p className="text-xs text-muted-foreground">
           {content.lastReviewed}時点の情報
         </p>
+
+        {/* 読み始める前に、答えられる側の人に気づいてもらう。 */}
+        <SurveyAskLine>
+          ロンドンの飲食店で働いたことがありますか。次に働く人のために、
+        </SurveyAskLine>
       </header>
 
       <div className="mt-10 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-12">
@@ -181,11 +180,7 @@ export default function ServiceChargeGuidePage() {
 
         {/* 本文 */}
         <div className="mt-10 min-w-0 lg:mt-0">
-          <div className="max-w-[46rem]">
-            <SurveyCallout />
-          </div>
-
-          <div className="mt-12 space-y-14">
+          <div className="space-y-14">
             {content.sections.map((section, i) => (
               <section
                 key={section.id}
@@ -220,7 +215,7 @@ export default function ServiceChargeGuidePage() {
           <div className="mt-16 max-w-[46rem] space-y-6">
             <Separator />
 
-            <SurveyCallout />
+            <GuideSurveyAsk />
 
             <div>
               <p className="text-sm font-semibold text-foreground">

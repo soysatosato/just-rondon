@@ -102,17 +102,17 @@ export default function SurveyStickyBar({
       <div className="flex items-center gap-3 rounded-2xl bg-neutral-950 py-2.5 pl-4 pr-2 text-neutral-50 shadow-2xl shadow-black/25 ring-1 ring-black/10 dark:bg-neutral-900 dark:ring-white/15">
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold">
-            あなたの職場は、法律どおり？
+            働いた店のことを教えてください
           </p>
           <p className="mt-0.5 truncate text-xs text-neutral-400">
-            匿名・必須3問・送る前に判定が出ます
+            匿名・必須3問・3分で終わります
           </p>
         </div>
         <Link
           href={surveyHref()}
           className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-white px-3.5 text-sm font-semibold text-neutral-950 transition hover:bg-neutral-200"
         >
-          3分で診断
+          答える
           <ArrowRight className="h-4 w-4" aria-hidden />
         </Link>
         <button

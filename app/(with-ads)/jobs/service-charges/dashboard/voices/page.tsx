@@ -7,7 +7,10 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Pagination from "@/components/home/Pagination";
-import { Button } from "@/components/ui/button";
+import {
+  SurveyAskCard,
+  SurveyAskLine,
+} from "@/components/jobs/survey/SurveyAsk";
 import {
   fetchResponseCount,
   fetchResponseFeed,
@@ -81,6 +84,10 @@ export default async function VoicesPage({ searchParams }: Props) {
             届いた順に、1件ずつそのまま並べています。自由記述は原文のままです。
             個人が特定される記述は掲載前に取り除いています。
           </p>
+
+          <SurveyAskLine>
+            あなたの職場のことも、ここに書き残せます。次に働く人のために、
+          </SurveyAskLine>
         </header>
 
         {/* 絞り込み */}
@@ -151,17 +158,15 @@ export default async function VoicesPage({ searchParams }: Props) {
           </div>
         )}
 
-        <section className="mt-12 rounded-xl border border-border bg-muted/40 p-5 text-center">
-          <p className="font-semibold text-foreground">
-            あなたの職場のことも書けます
+        <SurveyAskCard
+          title="ここに並んでいるのは、あなたと同じ立場の人が書いたものです"
+          className="mt-12"
+        >
+          <p>
+            ロンドンの店で働いた人が、匿名で送ってくれた回答です。
+            あなたの職場のことも、次にその店で働く人のために書き残せます。自由記述はすべて任意で、必須は3問です。
           </p>
-          <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-muted-foreground">
-            所要3分・匿名。送信する前に、その場で判定と次にやることが出ます。
-          </p>
-          <Button asChild className="mt-4">
-            <Link href="/jobs/service-charges/survey">診断をはじめる</Link>
-          </Button>
-        </section>
+        </SurveyAskCard>
       </div>
     </main>
   );

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Disclaimer from "@/components/jobs/case-story/Disclaimer";
+import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
 import LocaleSwitch from "@/components/jobs/case-story/LocaleSwitch";
 import {
   CASE_STORY_BASE,
@@ -150,6 +151,10 @@ export default function CaseStoryIndexPage() {
           </strong>
           にすることを目指しました。実際に審判所で認容された計算方法も、そのまま公開しています。
         </p>
+
+        <SurveyAskLine>
+          同じことが、自分の職場でも起きていませんか。次に働く人のために、
+        </SurveyAskLine>
       </header>
 
       <Separator className="my-6" />

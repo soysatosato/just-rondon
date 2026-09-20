@@ -5,7 +5,7 @@ import {
   HeartHandshake,
   ListChecks,
   Scale,
-  ShieldCheck,
+  Store,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { DiagnosisPreview } from "./DiagnosisPanel";
 import { SURVEY_PROMISES, surveyHref, type SurveyPromiseKey } from "./entry";
 
 const PROMISE_ICON: Record<SurveyPromiseKey, LucideIcon> = {
-  anonymous: ShieldCheck,
+  scope: Store,
   short: ListChecks,
   preview: Scale,
   welcome: HeartHandshake,
@@ -180,7 +180,7 @@ export default function WhyAnswer({
           className="h-12 shrink-0 rounded-xl px-6 text-[0.9375rem] font-semibold"
         >
           <Link href={surveyHref()}>
-            診断をはじめる（3分）
+            アンケートに答える（3分）
             <ArrowRight aria-hidden />
           </Link>
         </Button>

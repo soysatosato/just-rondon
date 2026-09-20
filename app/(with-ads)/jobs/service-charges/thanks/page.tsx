@@ -83,8 +83,8 @@ export default async function ThanksPage({ searchParams }: Props) {
         </div>
 
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          回答は匿名で記録され、氏名・連絡先・IPアドレスは保存していません。
-          店舗名とあわせて集計され、同じ店で働く次の人が読めるようになります。
+          回答は匿名のまま店舗名とあわせて集計され、
+          次にその店で働く人が読めるようになります。
         </p>
 
         {store && (

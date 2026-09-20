@@ -9,8 +9,11 @@ export const revalidate = 60 * 60;
 
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  SurveyAskCard,
+  SurveyAskLine,
+} from "@/components/jobs/survey/SurveyAsk";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
@@ -96,6 +99,10 @@ export default async function StoresPage() {
             {formatDate(overview.firstAt)} 〜 {formatDate(overview.latestAt)}に寄せられた
             {overview.totalResponses}件・{overview.totalStores}店舗の回答にもとづく
           </p>
+
+          <SurveyAskLine>
+            働いたことのある店はありますか。次にその店で働く人のために、
+          </SurveyAskLine>
         </header>
 
         <section className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -184,22 +191,16 @@ export default async function StoresPage() {
           </div>
         </section>
 
-        <section className="mt-12 rounded-xl border border-border bg-muted/40 p-5 sm:p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-xl">
-              <p className="text-base font-semibold text-foreground">
-                探している店が無いときは、あなたが最初の1人になれます
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                設問に答えると、送信する前にその場で判定と次にやることが出ます。所要3分・匿名で、
-                店舗名以外に個人が特定される情報は聞きません。
-              </p>
-            </div>
-            <Button asChild size="lg" className="shrink-0">
-              <Link href="/jobs/service-charges/survey">診断をはじめる</Link>
-            </Button>
-          </div>
-        </section>
+        <SurveyAskCard
+          title="探している店が一覧に無いときは、あなたが最初の1人になれます"
+          className="mt-12"
+        >
+          <p>
+            候補に載っている店なら、名前を選ぶだけで始められます。
+            あなたの回答が最初の1件になると、その店のページができ、次にそこで面接を受ける人が読めるようになります。
+            いまの職場でも、前に働いた店でも構いません。
+          </p>
+        </SurveyAskCard>
 
         <section className="mt-12 grid gap-3 sm:grid-cols-2">
           <Link

@@ -21,16 +21,19 @@ export function surveyHref(params?: { store?: string; q?: string }): string {
   return qs ? `${SURVEY_PATH}?${qs}` : SURVEY_PATH;
 }
 
-export type SurveyPromiseKey = "anonymous" | "short" | "preview" | "welcome";
+export type SurveyPromiseKey = "scope" | "short" | "preview" | "welcome";
 
 /**
  * 答える前に知っておいてほしいこと。
  *
- * 回答をためらわせているのは「店に知られないか」「長そう」「問題のない店なら
- * 書かなくていい」の3つだと見ている。それぞれに事実で答える。
+ * 回答をためらわせているのは「長そう」「何を書かされるのか」「問題のない店なら
+ * 書かなくていい」だと見ている。それぞれに事実で答える。
  *
- * ここに書く約束は実装と食い違ってはいけない。保存する項目は
- * utils/actions/jobs.ts の submitSurvey、必須の設問は SurveyForm の
+ * 匿名であることは入口の見出し脇に一言置くだけにして、氏名やIPアドレスを
+ * 保存しないという列挙はしない。並べるほど「特定されうるもの」を数え上げる
+ * ことになり、かえって身構えさせるため。
+ *
+ * ここに書く約束は実装と食い違ってはいけない。必須の設問は SurveyForm の
  * nextDisabled、判定が送信前に出ることは SurveyForm の最終ステップが根拠。
  */
 export const SURVEY_PROMISES: {
@@ -41,10 +44,10 @@ export const SURVEY_PROMISES: {
   body: string;
 }[] = [
   {
-    key: "anonymous",
-    short: "名前・連絡先は聞きません",
-    title: "名前も連絡先も聞きません",
-    body: "記録するのは店名と回答の中身だけで、IPアドレスも保存しません。店に通知が行くこともありません。",
+    key: "scope",
+    short: "聞くのは店のことだけ",
+    title: "聞くのは、店のことだけ",
+    body: "あなた自身のことは聞きません。働いた店で何が起きていたかだけを教えてください。",
   },
   {
     key: "short",

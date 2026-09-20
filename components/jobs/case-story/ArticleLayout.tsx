@@ -5,6 +5,7 @@ import { AD_SLOTS } from "@/lib/adsense";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
+import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
 import ChapterNav from "./ChapterNav";
 import Disclaimer from "./Disclaimer";
 import HtmlLang from "./HtmlLang";
@@ -66,6 +67,17 @@ export default function ArticleLayout({
           <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
             {article.summary}
           </p>
+        )}
+
+        {/*
+          この記録を読むのは、同じことが起きている側の人であることが多い。
+          いちばん当事者に近い読者なのに、これまで入口が1つも無かった。
+          アンケートは日本語だけなので、英語版には出さない。
+        */}
+        {locale === "ja" && (
+          <SurveyAskLine>
+            同じことが、自分の職場でも起きていませんか。次に働く人のために、
+          </SurveyAskLine>
         )}
       </header>
 
