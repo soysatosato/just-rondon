@@ -63,9 +63,10 @@ export async function rerollUsernameAction(): Promise<UsernameResult> {
 /**
  * 退会。サイト側の記録(Profile とスタンプ)を消してから Clerk のアカウントを消す。
  *
- * Clerk の UserProfile にも削除ボタンはあるが、あれは Clerk 側しか消さず、
- * スタンプが持ち主のいないまま DB に残る。だからあちらは隠して(AuthCard)
- * こちらを使わせる。
+ * Clerk の UserProfile や Account Portal にも削除ボタンはあるが、あれは
+ * Clerk 側しか消さず、スタンプが持ち主のいないまま DB に残る。だから
+ * サイトでは UserProfile を使わず、こちらを使わせる。Account Portal の
+ * ほうは、ダッシュボードで本人による削除を切っておくこと。
  *
  * 順番は DB が先。Clerk を先に消してから DB で失敗すると、もう誰も
  * ログインできないアカウントの記録が残り、本人には消す手段が無い。

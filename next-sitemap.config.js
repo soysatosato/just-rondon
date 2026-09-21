@@ -26,7 +26,6 @@ module.exports = {
     // 4つとも noindexMetadata 済み。
     "/stamps",
     "/account",
-    "/account/*",
     "/sign-in",
     "/sign-in/*",
     "/sign-up",

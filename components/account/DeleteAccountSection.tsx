@@ -10,8 +10,8 @@ import { deleteAccountAction } from "@/utils/actions/account";
 /**
  * /account の退会欄。
  *
- * Clerk の画面にある削除ボタンは隠してあり(AuthCard)、退会はここからだけ。
- * 理由は deleteAccountAction に書いた。
+ * サイトでは Clerk の UserProfile を使っていないので、退会はここからだけ。
+ * Clerk の削除ボタンを使わせない理由は deleteAccountAction に書いた。
  *
  * 元に戻せない操作なので2回押させるが、ダイアログは重ねず、同じ場所で
  * 「本当に削除しますか」に切り替える。
