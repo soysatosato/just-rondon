@@ -23,6 +23,10 @@ const DARK_VARIABLES = {
   colorText: "#fafafa",
   colorInputText: "#fafafa",
   colorTextSecondary: "#a3a3a3",
+  // ソーシャルボタンの枠線・カードの影が拠り所にする色。指定しないと
+  // Clerk が colorBackground から自動算出し、黒背景では枠が実質消えて
+  // ボタンが文字だけ浮いた見た目になる(globals.css の --border と同じ値)。
+  colorNeutral: "#262626",
 } as const;
 
 /** ボタンとリンクの色。スタンプと同じ rose-600 に揃える。 */
