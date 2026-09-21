@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { Stamp } from "lucide-react";
 
 import { STAMP_BOOK_HREF } from "@/lib/stamps";
@@ -13,9 +18,16 @@ import { STAMP_BOOK_HREF } from "@/lib/stamps";
  * 未ログインの人が押すと /stamps が「何が貯まるのか」を説明するので、
  * ログイン前の人にこそ見せる必要がある。
  *
- * ログイン状態が要るのはアバター(UserButton)とログインリンクだけ。
- * Clerk の読み込みが終わるまでこの2つは何も描かれないので、
- * 幅の変わるものをここに増やさないこと——ヘッダーがずれる。
+ * デスクトップでログイン状態が要るのはアバター(UserButton)と
+ * ログインリンクだけ。Clerk の読み込みが終わるまでこの2つは何も
+ * 描かれないので、幅の変わるものをここに増やさないこと——ヘッダーがずれる。
+ *
+ * モバイルでは UserButton を使わない。メニューはモーダルのシート
+ * (Radix Dialog)の中にあり、シートは開いている間 body の
+ * pointer-events を切ってフォーカスも閉じ込める。UserButton の
+ * ポップオーバーと Clerk のモーダルは body 直下、つまりシートの外に
+ * 描かれるので、開きはしても「アカウント管理」も「サインアウト」も
+ * 押せない。だからシートの中に普通のリンクとボタンとして並べる。
  */
 export default function AuthMenu({
   variant,
@@ -46,13 +58,22 @@ export default function AuthMenu({
           </Link>
         </SignedOut>
         <SignedIn>
-          <div className="flex items-center gap-x-3">
-            <UserButton
-              afterSignOutUrl="/"
-              appearance={{ elements: { userButtonAvatarBox: "h-7 w-7" } }}
-            />
-            <span className="text-sm text-muted-foreground">アカウント</span>
-          </div>
+          <Link
+            href="/account"
+            className="text-sm text-muted-foreground hover:text-red-600 transition"
+            onClick={onNavigate}
+          >
+            アカウント管理
+          </Link>
+          <SignOutButton redirectUrl="/">
+            <button
+              type="button"
+              className="text-left text-sm text-muted-foreground hover:text-red-600 transition"
+              onClick={onNavigate}
+            >
+              サインアウト
+            </button>
+          </SignOutButton>
         </SignedIn>
       </div>
     );

@@ -23,9 +23,12 @@ module.exports = {
     "/og/*",
     "/profile",
     "/profile/*",
-    // ログイン関連。スタンプ帳は人ごとに中身が違い、ログイン画面と
-    // 登録画面は検索から入っても意味が無い。3つとも noindexMetadata 済み。
+    // ログイン関連。スタンプ帳とアカウント管理は人ごとに中身が違い、
+    // ログイン画面と登録画面は検索から入っても意味が無い。
+    // 4つとも noindexMetadata 済み。
     "/stamps",
+    "/account",
+    "/account/*",
     "/sign-in",
     "/sign-in/*",
     "/sign-up",

@@ -1,10 +1,10 @@
 "use client";
 
-import { SignIn, SignUp } from "@clerk/nextjs";
+import { SignIn, SignUp, UserProfile } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 
 /**
- * Clerk のログイン・登録カード。
+ * Clerk のログイン・登録・アカウント管理カード。
  *
  * ダークモードの色を Clerk 側に渡すためだけのラッパー。Clerk の既定は
  * 白いカードで、サイトが黒のときに画面の真ん中だけ白く光る。
@@ -28,7 +28,11 @@ const DARK_VARIABLES = {
 /** ボタンとリンクの色。スタンプと同じ rose-600 に揃える。 */
 const BRAND = { colorPrimary: "#e11d48" } as const;
 
-export default function AuthCard({ mode }: { mode: "sign-in" | "sign-up" }) {
+export default function AuthCard({
+  mode,
+}: {
+  mode: "sign-in" | "sign-up" | "account";
+}) {
   const { resolvedTheme } = useTheme();
   const appearance = {
     variables:
@@ -39,9 +43,7 @@ export default function AuthCard({ mode }: { mode: "sign-in" | "sign-up" }) {
     },
   };
 
-  return mode === "sign-in" ? (
-    <SignIn appearance={appearance} />
-  ) : (
-    <SignUp appearance={appearance} />
-  );
+  if (mode === "sign-in") return <SignIn appearance={appearance} />;
+  if (mode === "sign-up") return <SignUp appearance={appearance} />;
+  return <UserProfile appearance={appearance} />;
 }
