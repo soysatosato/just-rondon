@@ -58,6 +58,11 @@ export function useAuthAppearance() {
     elements: {
       // Clerk のカードに自前の枠を付けない。影だけで浮かせる。
       cardBox: "shadow-sm",
+      // Clerk のカードは画面幅によらず左右 2.5rem の内余白を取る。
+      // 幅 375px の端末では、サイトの余白と合わせて入力欄が 255px まで
+      // 詰まるので、モバイルだけ半分にする。Clerk のスタイルは head の
+      // 先頭に入るので、同じ強さのクラスなら Tailwind 側が勝つ。
+      card: "max-sm:px-5",
     },
   };
 }
