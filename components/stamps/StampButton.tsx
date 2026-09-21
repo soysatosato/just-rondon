@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { Check, Loader2, MapPin, Sparkles, Stamp } from "lucide-react";
 
+import { useAuthAppearance } from "@/components/stamps/AuthCard";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import {
@@ -111,6 +112,7 @@ export default function StampButton({
   const meta = STAMP_META[type];
   const { isLoaded, isSignedIn } = useAuth();
   const { openSignIn } = useClerk();
+  const authAppearance = useAuthAppearance();
   const pathname = usePathname();
   const { toast } = useToast();
 
@@ -252,7 +254,14 @@ export default function StampButton({
       // 位置情報はユーザー操作の直後にしか取れない。ログインを挟むと
       // 許可ダイアログが出せないので、押しかけは通常のスタンプで消化する。
       writePending(`${type}:${id}`);
-      openSignIn({ forceRedirectUrl: pathname });
+      // 新規登録(Google/LINE で初めて来た人も含む)でもこのページへ戻す。
+      // signUpForceRedirectUrl を渡さないと登録後の既定の行き先(/stamps)に
+      // 飛び、押しかけのスタンプはこのページに戻るまで押されない。
+      openSignIn({
+        forceRedirectUrl: pathname,
+        signUpForceRedirectUrl: pathname,
+        appearance: authAppearance,
+      });
       return;
     }
     void press(withPosition);

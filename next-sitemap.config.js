@@ -21,8 +21,6 @@ module.exports = {
     // robots.txt では Disallow にしない(Twitterbot 等が og:image を
     // 取りに来られなくなるため)ので、sitemap 側だけで外す。
     "/og/*",
-    "/profile",
-    "/profile/*",
     // ログイン関連。スタンプ帳とアカウント管理は人ごとに中身が違い、
     // ログイン画面と登録画面は検索から入っても意味が無い。
     // 4つとも noindexMetadata 済み。
@@ -59,7 +57,7 @@ module.exports = {
         // Disallow は /api/ だけに絞る。
         //
         // 上の exclude で sitemap から外したユーティリティページ
-        // (/profile, /jobs/service-charges/dashboard|survey|thanks,
+        // (/jobs/service-charges/dashboard|survey|thanks,
         //  /contact/confirm) は、各ページが lib/seo.ts の noindexMetadata で
         // noindex を宣言している。ここで Disallow するとクロールが止まり
         // その noindex を読めなくなるため、外部リンク経由で

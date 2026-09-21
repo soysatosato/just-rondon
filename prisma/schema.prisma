@@ -10,25 +10,29 @@ datasource db {
 
 /// ログインした読者。1行が Clerk のアカウント1つに対応する。
 ///
-/// 認証そのもの(パスワード・メール確認・Googleログイン)は Clerk が持ち、
-/// こちらは「そのアカウントがサイト内で作ったもの」を紐づけるための行。
-/// clerkId が外部との唯一の接点なので、他テーブルからの参照もすべて
-/// id ではなく clerkId に張ってある(Stamp / Booking / hasVisited)。
+/// 認証そのもの(パスワード・メール確認・Google/LINE ログイン)は Clerk が持ち、
+/// こちらはサイト内の名前(username)と、そのアカウントが押したスタンプを
+/// 紐づけるための行。clerkId が外部との唯一の接点なので、Stamp からの参照も
+/// id ではなく clerkId に張ってある。
 ///
-/// 行は読者が最初にスタンプを押した瞬間に作られる(lib/stamps.ts の
-/// ensureProfile)。サインアップ直後には作らない。作るには username の
-/// 重複解決が要るのに、その手間をかけた行の大半は何も押さずに終わるため。
+/// メールアドレスと顔写真は持たない。どちらも Clerk にあり、写しを持つと
+/// 本人が Clerk 側で変えても追従せず、退会後に残る個人情報にもなる。
+/// サイトは写真も本名も出さない方針で、読者を表すのは username だけ。
+///
+/// 行は名前かスタンプが初めて要る場面で作る(lib/profile.ts の ensureProfile)。
+/// 名前の規則と、自動で付く名前の作り方は lib/username.ts。
 model Profile {
-  id           String       @id @default(uuid())
-  clerkId      String       @unique
-  username     String       @unique
-  email        String
-  profileImage String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  bookings     Booking[]
-  hasVisited   hasVisited[]
-  stamps       Stamp[]
+  id          String   @id @default(uuid())
+  clerkId     String   @unique
+  /// 表示するユーザーネーム。既定はランダムな「ロンドンの地名+名詞」
+  /// (PimlicoPuffin)で、本人が /account で変えられる。
+  username    String
+  /// 重複判定用に username を小文字にしたもの。PimlicoPuffin と
+  /// pimlicopuffin を別の人に取らせないため、一意制約はこちらに掛ける。
+  usernameKey String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  stamps      Stamp[]
 }
 
 /// 読者が押したスタンプ。1行が「この人がここへ行った(この作品を観た)」1件。
@@ -55,7 +59,7 @@ model Profile {
 model Stamp {
   id String @id @default(cuid())
 
-  /// 押した人。Booking / hasVisited と同じく Profile.clerkId を指す。
+  /// 押した人。Profile.clerkId を指す(id でない理由は Profile のコメント)。
   profileId String
   profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
 
@@ -117,13 +121,11 @@ model Museum {
   summary        String?
   blurb          String?
   artworks       Artwork[]
-  bookings       Booking[]
   exhibition     Exhibition[]
   museumInfo     MuseumInfo?
   openingHours   OpeningHours[]
   trivia         Trivia[]
   highlightSpots Highlight[]    @relation("MuseumHighlightSpots")
-  hasVisited     hasVisited[]
   /// 読者が押したスタンプ。館の本文とは関係なく、消すときは一緒に消える。
   stamps         Stamp[]
 
@@ -164,29 +166,6 @@ model Artwork {
   highlights     String[]
   engTitle       String?
   museum         Museum   @relation(fields: [museumId], references: [id])
-}
-
-model hasVisited {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profileId String
-  museumId  String
-  museum    Museum   @relation(fields: [museumId], references: [id], onDelete: Cascade)
-  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
-}
-
-model Booking {
-  id            String   @id @default(uuid())
-  tourDate      DateTime
-  numGuests     Int
-  paymentStatus Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  profileId     String
-  museumId      String
-  museum        Museum   @relation(fields: [museumId], references: [id], onDelete: Cascade)
-  profile       Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
 }
 
 model OpeningHours {

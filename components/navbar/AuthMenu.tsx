@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import {
-  SignedIn,
-  SignedOut,
-  SignOutButton,
-  UserButton,
-} from "@clerk/nextjs";
-import { Stamp } from "lucide-react";
+import { SignedIn, SignedOut, SignOutButton, useClerk } from "@clerk/nextjs";
+import { Stamp, UserRound } from "lucide-react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { STAMP_BOOK_HREF } from "@/lib/stamps";
 
 /**
@@ -18,16 +20,21 @@ import { STAMP_BOOK_HREF } from "@/lib/stamps";
  * 未ログインの人が押すと /stamps が「何が貯まるのか」を説明するので、
  * ログイン前の人にこそ見せる必要がある。
  *
- * デスクトップでログイン状態が要るのはアバター(UserButton)と
- * ログインリンクだけ。Clerk の読み込みが終わるまでこの2つは何も
- * 描かれないので、幅の変わるものをここに増やさないこと——ヘッダーがずれる。
+ * ログインしている人には、顔写真も名前も出さない。Clerk の UserButton は
+ * Google/LINE の顔写真を丸く出し、開くと氏名とメールアドレスを並べるので
+ * 使っていない。ユーザーネームも出さないのは、ヘッダーが記事ページごと
+ * キャッシュされた共通のHTMLで、名前を出すには描画後に取りに行く必要が
+ * あるのと、名前の長さでヘッダーの幅が揺れるため。名前は /stamps と
+ * /account で出す。
  *
- * モバイルでは UserButton を使わない。メニューはモーダルのシート
- * (Radix Dialog)の中にあり、シートは開いている間 body の
- * pointer-events を切ってフォーカスも閉じ込める。UserButton の
- * ポップオーバーと Clerk のモーダルは body 直下、つまりシートの外に
- * 描かれるので、開きはしても「アカウント管理」も「サインアウト」も
- * 押せない。だからシートの中に普通のリンクとボタンとして並べる。
+ * デスクトップでログイン状態が要るのはアカウントのボタンとログインリンクだけ。
+ * Clerk の読み込みが終わるまでこの2つは何も描かれないので、幅の変わるものを
+ * ここに増やさないこと——ヘッダーがずれる。
+ *
+ * モバイルはメニューがモーダルのシート(Radix Dialog)の中にあるので、
+ * 普通のリンクとボタンとして並べる。シートは開いている間 body の
+ * pointer-events を切ってフォーカスも閉じ込めるため、Clerk の UserButton や
+ * モーダルのように body 直下へ描かれる部品は、開きはしても押せない。
  */
 export default function AuthMenu({
   variant,
@@ -63,7 +70,7 @@ export default function AuthMenu({
             className="text-sm text-muted-foreground hover:text-red-600 transition"
             onClick={onNavigate}
           >
-            アカウント管理
+            アカウント設定
           </Link>
           <SignOutButton redirectUrl="/">
             <button
@@ -71,7 +78,7 @@ export default function AuthMenu({
               className="text-left text-sm text-muted-foreground hover:text-red-600 transition"
               onClick={onNavigate}
             >
-              サインアウト
+              ログアウト
             </button>
           </SignOutButton>
         </SignedIn>
@@ -98,11 +105,36 @@ export default function AuthMenu({
         </Link>
       </SignedOut>
       <SignedIn>
-        <UserButton
-          afterSignOutUrl="/"
-          appearance={{ elements: { userButtonAvatarBox: "h-7 w-7" } }}
-        />
+        <AccountDropdown />
       </SignedIn>
     </div>
+  );
+}
+
+/** デスクトップのアカウントメニュー。人型のアイコンから開く。 */
+function AccountDropdown() {
+  const { signOut } = useClerk();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label="アカウント"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border transition-colors hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+        >
+          <UserRound className="h-4 w-4" aria-hidden />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuItem asChild>
+          <Link href="/account">アカウント設定</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => void signOut({ redirectUrl: "/" })}>
+          ログアウト
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

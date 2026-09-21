@@ -28,13 +28,31 @@ const DARK_VARIABLES = {
 /** ボタンとリンクの色。スタンプと同じ rose-600 に揃える。 */
 const BRAND = { colorPrimary: "#e11d48" } as const;
 
-export default function AuthCard({
-  mode,
-}: {
-  mode: "sign-in" | "sign-up" | "account";
-}) {
+/**
+ * アカウント管理(UserProfile)で隠す欄。
+ *
+ * - profile: 顔写真と氏名の欄。サイトは写真も本名も使わない方針で、
+ *   ここに出るのは Google/LINE でログインしたときに Clerk に入ってきたもの。
+ *   読者の名前は /account のユーザーネーム欄で変える。
+ * - danger: Clerk の「アカウントを削除」。Clerk 側しか消えず、スタンプが
+ *   DB に残る。退会は /account の自前の欄から(deleteAccountAction)。
+ *   Clerk の Account Portal にも同じボタンがあるので、ダッシュボードでも
+ *   本人による削除は切っておくこと。
+ */
+const ACCOUNT_HIDDEN_ELEMENTS = {
+  profileSection__profile: { display: "none" },
+  profileSection__danger: { display: "none" },
+} as const;
+
+/**
+ * サイトの色に合わせた Clerk の見た目。
+ *
+ * カードのほか、openSignIn() で開くモーダル(StampButton)にも渡す。
+ * モーダルはこのカードの外で開くので、渡さないとそこだけ白くなる。
+ */
+export function useAuthAppearance() {
   const { resolvedTheme } = useTheme();
-  const appearance = {
+  return {
     variables:
       resolvedTheme === "dark" ? { ...BRAND, ...DARK_VARIABLES } : BRAND,
     elements: {
@@ -42,8 +60,23 @@ export default function AuthCard({
       cardBox: "shadow-sm",
     },
   };
+}
+
+export default function AuthCard({
+  mode,
+}: {
+  mode: "sign-in" | "sign-up" | "account";
+}) {
+  const appearance = useAuthAppearance();
 
   if (mode === "sign-in") return <SignIn appearance={appearance} />;
   if (mode === "sign-up") return <SignUp appearance={appearance} />;
-  return <UserProfile appearance={appearance} />;
+  return (
+    <UserProfile
+      appearance={{
+        ...appearance,
+        elements: { ...appearance.elements, ...ACCOUNT_HIDDEN_ELEMENTS },
+      }}
+    />
+  );
 }

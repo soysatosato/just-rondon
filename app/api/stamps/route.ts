@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 
 import db from "@/utils/db";
+import { ensureProfile } from "@/lib/profile";
 import {
   isOnSite,
   isStampType,
@@ -73,70 +74,6 @@ async function fetchTargetCoords(
   });
   if (!musical) return null;
   return musical.theatre ?? { lat: musical.lat, lng: musical.lng };
-}
-
-/**
- * Profile の行が無ければ、Clerk のアカウントから作る。
- *
- * サインアップ時ではなく最初にスタンプを押した瞬間に作る。Stamp から
- * Profile.clerkId へ外部キーが張ってあるので、行が無いままでは押せない。
- *
- * username は Profile 側で一意なのに、Clerk では未設定でも構わない列。
- * メールアドレスの @ より前を種にして、衝突したら連番を足す。
- * 読者に名前を決めさせる画面は挟まない——スタンプを押そうとした人に
- * 別のフォームを見せると、そこで半分が帰る。
- */
-async function ensureProfile(clerkId: string): Promise<void> {
-  const existing = await db.profile.findUnique({
-    where: { clerkId },
-    select: { id: true },
-  });
-  if (existing) return;
-
-  const user = await currentUser();
-  const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
-  const base =
-    (user?.username || email.split("@")[0] || "traveller")
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]/g, "")
-      .slice(0, 20) || "traveller";
-
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    const username = attempt === 0 ? base : `${base}-${attempt + 1}`;
-    try {
-      await db.profile.create({
-        data: {
-          clerkId,
-          username,
-          email,
-          profileImage: user?.imageUrl ?? "",
-        },
-      });
-      return;
-    } catch (error) {
-      // P2002 = 一意制約違反。username か、並行リクエストによる clerkId の
-      // 二重作成。clerkId で衝突したなら行はもう在るので、そのまま抜ける。
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === "P2002"
-      ) {
-        const fields = (error.meta?.target ?? []) as string[];
-        if (fields.includes("clerkId")) return;
-        continue;
-      }
-      throw error;
-    }
-  }
-  // 5回試して username が空かないのは、同じメールの持ち主が5人居るとき
-  // くらいしか起きない。最後は乱数で必ず通す。
-  await db.profile.create({
-    data: {
-      clerkId,
-      username: `${base}-${Math.random().toString(36).slice(2, 8)}`,
-      email: "",
-      profileImage: "",
-    },
-  });
 }
 
 /**
@@ -251,6 +188,8 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // Stamp は Profile.clerkId を外部キーで指すので、行が無いままでは押せない。
+  // /stamps を開く前に詳細ページで最初の1個を押した人は、ここで名前が付く。
   await ensureProfile(userId);
 
   try {

@@ -1,11 +1,5 @@
 import * as z from "zod";
 
-export const profileSchema = z.object({
-  username: z
-    .string()
-    .min(4, { message: "Username must be at least 4 characters" }),
-});
-
 export function validateWithZodSchema<T>(
   schema: z.ZodSchema<T>,
   data: unknown
@@ -20,25 +14,6 @@ export function validateWithZodSchema<T>(
   }
 
   return result.data;
-}
-
-export const imageSchema = z.object({
-  image: validateFile(),
-});
-
-function validateFile() {
-  const maxUploadSize = 1024 * 1024 * 100;
-  const acceptedFileTypes = ["image/"];
-  return z
-    .any()
-    .refine((file) => {
-      return !file || file.size <= maxUploadSize;
-    }, "File size must be less than 100 MB")
-    .refine((file) => {
-      return (
-        !file || acceptedFileTypes.some((type) => file.type.startsWith(type))
-      );
-    }, "File must be an image");
 }
 
 // export const createReviewMuseumSchema = z.object({

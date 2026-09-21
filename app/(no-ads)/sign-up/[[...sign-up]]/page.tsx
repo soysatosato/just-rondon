@@ -13,6 +13,9 @@ export default function SignUpPage() {
           スタンプ帳を作るためだけのアカウントです。
           行った場所の記録が端末を変えても残ります。
         </p>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          名前や写真の登録はありません。ユーザーネームはロンドンの地名にちなんだものが自動で付き、あとから変えられます。
+        </p>
       </div>
       <AuthCard mode="sign-up" />
     </section>

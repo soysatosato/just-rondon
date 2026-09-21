@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Sparkles, Stamp } from "lucide-react";
 
 import db from "@/utils/db";
+import { ensureProfile } from "@/lib/profile";
 import StampBook, {
   type StampBookEntry,
 } from "@/components/stamps/StampBook";
@@ -16,14 +17,18 @@ export const metadata = noindexMetadata("スタンプ帳");
  *
  * auth() を読むので動的描画になる。ここは他人のスタンプを混ぜてはいけない
  * ページなので、キャッシュされないことが正しい。
+ *
+ * 見出しにユーザーネームを出す。登録するとまずここに着くので、Profile の行
+ * (と自動で付く名前)もここで作られることが多い(lib/profile.ts)。
  */
 export default async function StampsPage() {
   const { userId } = auth();
 
   if (!userId) return <SignedOut />;
 
-  const [stamps, attractionTotal, museumTotal, musicalTotal] =
+  const [profile, stamps, attractionTotal, museumTotal, musicalTotal] =
     await Promise.all([
+      ensureProfile(userId),
       db.stamp.findMany({
         where: { profileId: userId },
         orderBy: { stampedAt: "desc" },
@@ -84,10 +89,18 @@ export default async function StampsPage() {
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-rose-600 dark:text-rose-400">
           Stamp Book
         </p>
-        <h1 className="mt-2 text-2xl font-semibold">スタンプ帳</h1>
+        <h1 className="mt-2 text-2xl font-semibold [overflow-wrap:anywhere]">
+          {profile.username} のスタンプ帳
+        </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           行った観光スポット・入った美術館・観たミュージカルの記録です。
           各ページの「スタンプを押す」から増えます。
+          <Link
+            href="/account"
+            className="ml-1 font-semibold text-rose-600 hover:underline dark:text-rose-400"
+          >
+            名前を変える
+          </Link>
         </p>
       </header>
 
