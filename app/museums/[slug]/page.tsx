@@ -7,6 +7,7 @@ import { fetchAttractionName } from "@/utils/actions/attractions";
 import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import ViewTracker from "@/components/analytics/ViewTracker";
+import StampButton from "@/components/stamps/StampButton";
 import PageCommentSection, {
   type PageCommentItem,
 } from "@/components/comments/PageCommentSection";
@@ -138,6 +139,15 @@ export default async function MuseumDetailsPage({
           </div>
         </div>
       )}
+
+      {/*
+        入った館を記録する。本文を読み始める前の位置に置いているのは、
+        既に行った人がこのページを開く動機の多くが「記録すること」だから。
+        館内の見どころを読み終えた最下部まで下がらせる理由が無い。
+      */}
+      <div className="mt-6">
+        <StampButton type="museum" id={museum.id} name={museum.name} />
+      </div>
 
       <MuseumAbout description={museum.description} />
 

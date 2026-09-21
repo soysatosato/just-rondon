@@ -2,7 +2,8 @@ import "./globals.css";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Providers from "./providers";
-// import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
+import { jaJP } from "@clerk/localizations";
 import { defaultMetadata } from "./metadata";
 import MainFooter from "@/components/home/MainFooter";
 import Navbar from "@/components/navbar/Navbar";
@@ -23,7 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    /*
+      ログイン状態はクライアント側で解決する。dynamic を渡していないので
+      ClerkProvider はページを動的描画に落とさず、記事ページは今までどおり
+      ISR のキャッシュから返る。サーバー側でログイン状態を見るのは
+      middleware.ts の matcher に挙げたページだけ。
+
+      localization に jaJP を渡しているのは、サインイン画面の文言が
+      英語のままだと、日本語で書かれたサイトの中で Clerk の画面だけが
+      別サービスに飛ばされたように見えるため。
+    */
+    <ClerkProvider localization={jaJP}>
       <html lang="ja" suppressHydrationWarning>
         <body className="bg-background text-foreground transition-colors duration-300">
           <SiteJsonLd />
@@ -49,6 +60,6 @@ export default function RootLayout({
           {isProduction && GA_ID && <GoogleAnalytics gaId={GA_ID} />}
         </body>
       </html>
-    </>
+    </ClerkProvider>
   );
 }

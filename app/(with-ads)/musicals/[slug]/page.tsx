@@ -29,6 +29,7 @@ import MusicalHero from "@/components/musicals/MusicalHero";
 import { theatrePath } from "@/components/musicals/theatres/theatres";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ViewTracker from "@/components/analytics/ViewTracker";
+import StampButton from "@/components/stamps/StampButton";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -109,6 +110,13 @@ export default async function musicalDetailsPage({
           theatreName={musical.theatreName}
           songsCount={musical.songs.length}
         />
+
+        {/*
+          観た作品を記録する。あらすじより前に置いているのは、観た人にとって
+          このページが「結末の確認」ではなく「観た記録」を残す場所になるため。
+          あらすじの後ろに置くと、結末のネタバレを越えないと押せない。
+        */}
+        <StampButton type="musical" id={musical.id} name={musical.name} />
 
         <AdSenseUnit slot={AD_SLOTS.inArticle} />
 

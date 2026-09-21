@@ -1,37 +1,40 @@
-// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-// import { NextResponse } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// const isProtectedRoute = createRouteMatcher([
-//   "/bookings(.*)",
-//   "/checkout(.*)",
-//   "/favorites(.*)",
-//   "/reservations(.*)",
-//   "/reviews(.*)",
-// ]);
-
-// const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
-
-// export default clerkMiddleware((auth, req) => {
-//   const isAdminUser = auth().userId === process.env.ADMIN_USER_ID;
-//   if (isAdminRoute(req) && !isAdminUser) {
-//     //  middleware.ts 専用の サーバーサイドリダイレクト
-//     return NextResponse.redirect(new URL("/", req.url));
-//   }
-//   if (isProtectedRoute(req)) auth().protect();
-// });
-
-// export const config = {
-//   runtime: "nodejs",
-//   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-// };
+/**
+ * Clerk のセッションをサーバー側で読めるようにするミドルウェア。
+ *
+ * auth() や currentUser() は、そのリクエストでこのミドルウェアが
+ * 走っていないと使えない。逆に言えば、サーバー側でログイン状態を
+ * 見ないページには要らない。
+ *
+ * -------------------------------------------------------------------
+ * matcher を全ページに広げていない理由
+ *
+ * このサイトは300ページ超が ISR(revalidate=3600)でキャッシュされた
+ * 読みもので、ログイン状態に関係なく全員に同じHTMLを返す。そこに
+ * ミドルウェアを敷くと、キャッシュ済みのHTMLを返すだけの
+ * リクエストまで毎回エッジ関数を起こすことになり、記事を読むだけの
+ * 読者にレイテンシとコストを足して、得るものが何も無い。
+ *
+ * スタンプのボタンは詳細ページに出るが、押した/押していないの状態は
+ * クライアントから /api/stamps に問い合わせて描く。ページ本体は
+ * ログイン状態を知らないままでよく、だから matcher にも入れていない。
+ * (ログイン状態がHTMLに混ざると、キャッシュされたHTMLを他人が
+ *  受け取ることになるので、そもそも混ぜてはいけない。)
+ * -------------------------------------------------------------------
+ */
+export default clerkMiddleware();
 
 export const config = {
-  runtime: "nodejs",
   matcher: [
-    "/bookings(.*)",
-    "/checkout(.*)",
-    "/favorites(.*)",
-    "/reservations(.*)",
-    "/reviews(.*)",
+    // スタンプ帳。誰のスタンプを出すかをサーバー側で決める。
+    "/stamps",
+    // スタンプの読み書き。押せるのはログインした人だけ。
+    "/api/stamps(.*)",
+    // ログイン・登録画面。Clerk 自身がセッションを見る。
+    "/sign-in(.*)",
+    "/sign-up(.*)",
+    // プロフィール(旧実装)。currentUser() を呼ぶので、ここが無いと 500 になる。
+    "/profile(.*)",
   ],
 };

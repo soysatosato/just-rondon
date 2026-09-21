@@ -29,6 +29,7 @@ import { MdMail } from "react-icons/md";
 
 import { NAV_SECTIONS, GROUP_COLS, MENU_WIDTH } from "./menu";
 import Wordmark from "./Wordmark";
+import AuthMenu from "./AuthMenu";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -147,6 +148,8 @@ export default function Navbar() {
                       お問い合わせ
                     </div>
                   </Link>
+
+                  <AuthMenu variant="mobile" onNavigate={() => setOpen(false)} />
                 </nav>
               </SheetContent>
             </Sheet>
@@ -257,6 +260,12 @@ export default function Navbar() {
                     <MdMail className="w-5 h-5" />
                   </Link>
                 </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              {/* スタンプ帳とログイン。区分の並びとは役割が違うので、
+                  ドロップダウンを持たせず右端に置く。 */}
+              <NavigationMenuItem className="shrink-0 pl-2">
+                <AuthMenu variant="desktop" />
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

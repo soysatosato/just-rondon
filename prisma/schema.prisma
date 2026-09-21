@@ -8,6 +8,16 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+/// ログインした読者。1行が Clerk のアカウント1つに対応する。
+///
+/// 認証そのもの(パスワード・メール確認・Googleログイン)は Clerk が持ち、
+/// こちらは「そのアカウントがサイト内で作ったもの」を紐づけるための行。
+/// clerkId が外部との唯一の接点なので、他テーブルからの参照もすべて
+/// id ではなく clerkId に張ってある(Stamp / Booking / hasVisited)。
+///
+/// 行は読者が最初にスタンプを押した瞬間に作られる(lib/stamps.ts の
+/// ensureProfile)。サインアップ直後には作らない。作るには username の
+/// 重複解決が要るのに、その手間をかけた行の大半は何も押さずに終わるため。
 model Profile {
   id           String       @id @default(uuid())
   clerkId      String       @unique
@@ -18,6 +28,70 @@ model Profile {
   updatedAt    DateTime     @updatedAt
   bookings     Booking[]
   hasVisited   hasVisited[]
+  stamps       Stamp[]
+}
+
+/// 読者が押したスタンプ。1行が「この人がここへ行った(この作品を観た)」1件。
+///
+/// -------------------------------------------------------------------
+/// 対象の持ち方
+///
+/// PageComment のような targetType + targetKey の多態ではなく、対象ごとの
+/// 外部キーを3本並べて「必ず1本だけ埋まる」形にしてある。理由は2つ。
+///
+/// 1. スタンプ帳(/stamps)は押した場所の名前・画像・URLを必ず引く。
+///    外部キーがあれば1回のクエリで取れるが、多態だと3テーブルを
+///    別々に引いて手で突き合わせることになり、突き合わせ漏れが
+///    「スタンプを押したのに一覧に出ない」として表に出る。
+/// 2. スポットが消えたときスタンプも一緒に消えるべきだから。名前も画像も
+///    無い行はスタンプ帳に描けない。コメントは対象が消えても文章として
+///    読めるので残す判断になっているが、スタンプは対象がすべて。
+///
+/// 「3本のうち必ず1本」は Prisma のスキーマでは表現できないため、
+/// DB 側の CHECK 制約 Stamp_one_target で保証している
+/// (prisma/migrations/20260921000000_add_stamps)。Prisma は自分が知らない
+/// CHECK 制約を消さないが、このテーブルを作り直すときは制約も書き直すこと。
+/// -------------------------------------------------------------------
+model Stamp {
+  id String @id @default(cuid())
+
+  /// 押した人。Booking / hasVisited と同じく Profile.clerkId を指す。
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+
+  attractionId String?
+  attraction   Attraction? @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+  museumId     String?
+  museum       Museum?     @relation(fields: [museumId], references: [id], onDelete: Cascade)
+  musicalId    String?
+  musical      Musical?    @relation(fields: [musicalId], references: [id], onDelete: Cascade)
+
+  /// 押した日時。スタンプ帳の並び順と「いつ行ったか」の表示に使う。
+  ///
+  /// 訪問日そのものではない。帰国後にまとめて押す読者がいるので、
+  /// ここを「行った日」として表示してはいけない。
+  stampedAt DateTime @default(now())
+
+  /// 現地で押したか(金のスタンプ)。
+  ///
+  /// 端末の位置情報が施設から lib/stamps.ts の ON_SITE_RADIUS_KM 以内に
+  /// あったときだけ true。判定は必ずサーバー側(/api/stamps)で行う。
+  /// クライアントから来た true をそのまま書いてはいけない——金スタンプは
+  /// 「本当にそこへ行った」ことの唯一の印で、押せば誰でも付くなら
+  /// 赤のスタンプと区別する意味が無くなる。
+  ///
+  /// 家で押したあと現地で押し直すと false から true に上がる。逆は無い。
+  onSite Boolean @default(false)
+
+  /// 同じ場所に2個目のスタンプは押せない。
+  ///
+  /// NULL 同士は衝突しない(Postgres)ので、美術館のスタンプが
+  /// attractionId=NULL で並んでも互いに干渉しない。
+  @@unique([profileId, attractionId])
+  @@unique([profileId, museumId])
+  @@unique([profileId, musicalId])
+  /// スタンプ帳は「自分の分を新しい順」でしか読まない。
+  @@index([profileId, stampedAt])
 }
 
 model Museum {
@@ -50,6 +124,8 @@ model Museum {
   trivia         Trivia[]
   highlightSpots Highlight[]    @relation("MuseumHighlightSpots")
   hasVisited     hasVisited[]
+  /// 読者が押したスタンプ。館の本文とは関係なく、消すときは一緒に消える。
+  stamps         Stamp[]
 
   /// 館内をどの順に歩くか。Attraction.visitFlow と同じ役割。
   visitFlow MuseumVisitStep[]
@@ -392,6 +468,8 @@ model Musical {
   updatedAt                DateTime             @updatedAt
   songs                    Song[]
   performances             MusicalPerformance[]
+  /// 読者が押したスタンプ。観光スポット・美術館と同じ扱い。
+  stamps                   Stamp[]
 
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
@@ -652,6 +730,9 @@ model Attraction {
   /// このスポットが登場するコラム。ContentAttraction を参照。
   contentLinks ContentAttraction[]
 
+  /// 読者が押したスタンプ。スポットの本文とは関係なく、消すときは一緒に消える。
+  stamps Stamp[]
+
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
   ///
@@ -863,7 +944,7 @@ model Restaurant {
   imageCredit String?
   imageLink   String?
 
-  displayOrder Int @default(0)
+  displayOrder Int        @default(0)
   menuPicks    MenuPick[]
 
   createdAt DateTime @default(now())
@@ -890,9 +971,9 @@ model MenuPick {
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   /// メニュー表記。英語のまま書く。指させないと注文できないので訳さない。
-  name String
+  name       String
   /// 日本語の読みと補足。何の料理か分からないと選べない。
-  nameJa String?
+  nameJa     String?
   /// 価格の目安。変動するので幅で書く。
   priceRange String?
 
@@ -904,7 +985,7 @@ model MenuPick {
   role String @default("signature")
 
   /// 料理写真。撮れるまで null のまま運用する。
-  image String?
+  image       String?
   /// "own"(自分で撮影) | "commons" | "official"
   imageSource String?
   imageCredit String?
@@ -1006,12 +1087,12 @@ model SouvenirPick {
   souvenir   Souvenir @relation(fields: [souvenirId], references: [id], onDelete: Cascade)
 
   /// 商品名。英語の正式名称。棚とラベルで一致させるので訳さない。
-  name String
+  name       String
   /// 日本語の読み。英語表記だけだと店員に聞けないので併記する。
-  nameJa String?
+  nameJa     String?
   /// 容量・サイズ。「250g缶」「9ml」など。同じ銘柄でも土産向きの
   /// サイズは決まっているので、名前と分けて持つ。
-  size String?
+  size       String?
   /// 価格の目安。変動するので必ず幅で書く。
   priceRange String?
 
@@ -1025,7 +1106,7 @@ model SouvenirPick {
   role String @default("standard")
 
   /// 商品写真。撮れるまで null のまま運用する。
-  image String?
+  image       String?
   /// "own"(自分で撮影) | "commons" | "official" | "rakuten" | "amazon"
   /// own のときは credit 不要。ImageCredit の分岐と対応させる。
   imageSource String?
@@ -1276,29 +1357,29 @@ model AttractionSection {
 }
 
 model Content {
-  id           String           @id @default(cuid())
-  title        String
-  engTitle     String?
-  slug         String
-  summary      String?
-  mainText     String?
-  description  String?
-  description2 String?
-  description3 String?
-  image        String?
-  website      String?
-  category     String           @default("")
-  route        String           @default("")
+  id              String              @id @default(cuid())
+  title           String
+  engTitle        String?
+  slug            String
+  summary         String?
+  mainText        String?
+  description     String?
+  description2    String?
+  description3    String?
+  image           String?
+  website         String?
+  category        String              @default("")
+  route           String              @default("")
   // コラムのテーマ分類。/column のフィルタに使う（例: ["history", "person"]）
-  tags         String[]         @default([])
+  tags            String[]            @default([])
   // 連載コラムのみ設定。同じ seriesName を持つ Content が1つの連載を構成する
-  seriesName   String?
-  seriesOrder  Int?
-  sections     ContentSection[]
+  seriesName      String?
+  seriesOrder     Int?
+  sections        ContentSection[]
   /// 本文に登場する観光スポット。ContentAttraction を参照。
   attractionLinks ContentAttraction[]
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @default(now()) @updatedAt
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @default(now()) @updatedAt
 
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
@@ -1314,6 +1395,7 @@ model Content {
   views        Int       @default(0)
   /// 最終閲覧日時。null は一度も見られていない(集計開始前の行を含む)。
   lastViewedAt DateTime?
+
   @@index([category, views])
   @@index([category, lastViewedAt])
 }
@@ -1625,13 +1707,13 @@ model ServiceCharge {
 
   // 2026-09 の設問刷新で足した列。すべて任意回答なので null 可。
   // 意味は utils/labels.ts の各ラベルマップが持つ。
-  workPeriod             String?
-  jobRole                String?
-  chargeRatePercent      Float?
-  kitchenIncluded        String?
-  onPayslip              String?
-  writtenPolicy          String?
-  monthlyHours           Float?
+  workPeriod        String?
+  jobRole           String?
+  chargeRatePercent Float?
+  kitchenIncluded   String?
+  onPayslip         String?
+  writtenPolicy     String?
+  monthlyHours      Float?
 
   @@index([placeId])
   @@index([serviceChargeCollected])
