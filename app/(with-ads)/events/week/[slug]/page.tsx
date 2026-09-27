@@ -5,11 +5,12 @@ import type { Metadata } from "next";
 
 import {
   fetchBriefBySlug,
-  fetchLatestBrief,
+  fetchBriefsForEventsPage,
   fetchBackIssues,
   fetchEventsForWeek,
 } from "@/utils/actions/weekly";
 import { buildPageMetadata } from "@/lib/seo";
+import { weeklyOgImage } from "@/lib/og";
 import { formatWeekRange, getIssueFreshness } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import { fetchForecastForWeek } from "@/lib/weather/forecast";
@@ -24,10 +25,18 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const revalidate = 60 * 60;
 
-/** 最新号は /events と同じ内容になるので、canonical をそちらに寄せて重複を避ける。 */
-async function isLatest(slug: string): Promise<boolean> {
-  const latest = await fetchLatestBrief();
-  return latest?.slug === slug;
+/**
+ * /events に本体として出ている号は同じ内容になるので、canonical をそちらに寄せて
+ * 重複を避ける。
+ *
+ * 比べる相手は「公開済みで最も先の週の号」ではなく、/events が実際に出している号。
+ * 号は2週ほど先まで作って公開するので、以前のように最新号と比べると、まだ先の
+ * 週の号が /events(中身は今週号)を canonical・og:url に指してしまい、その号の
+ * リンクを Facebook や LINE で共有すると別の週のカードが出ていた。
+ */
+async function isShownOnEventsPage(slug: string): Promise<boolean> {
+  const { brief } = await fetchBriefsForEventsPage();
+  return brief?.slug === slug;
 }
 
 export async function generateMetadata({
@@ -53,12 +62,13 @@ export async function generateMetadata({
 
   return buildPageMetadata({
     // 最新号のあいだは /events を正とする。翌週になれば自分のURLが正になる。
-    path: (await isLatest(params.slug)) ? "/events" : `/events/week/${params.slug}`,
+    path: (await isShownOnEventsPage(params.slug)) ? "/events" : `/events/week/${params.slug}`,
     title: `${brief.title.replace(/^今週のロンドン/, "ロンドン")} | ストライキ・イベント・耳寄り情報`,
     description: brief.headline.slice(0, 120),
     type: "article",
     publishedTime: brief.createdAt.toISOString(),
     modifiedTime: brief.updatedAt.toISOString(),
+    images: [weeklyOgImage(brief)],
   });
 }
 

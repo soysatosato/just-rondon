@@ -71,6 +71,16 @@ export const OG_THEMES = {
     pageGradient: "linear-gradient(135deg, #f8fafc 0%, #ffffff 52%, #f1f5f9 100%)",
   },
   /*
+    週次ダイジェスト「今週のロンドン」。読み物ではなく速報なので、どの読み物の
+    色とも重ならない紫に振り、/events の琥珀色で締める。
+  */
+  weekly: {
+    badgeBg: "#6d28d9",
+    accent: "#c026d3",
+    panelGradient: "linear-gradient(160deg, #6d28d9 0%, #c026d3 55%, #f59e0b 100%)",
+    pageGradient: "linear-gradient(135deg, #f5f3ff 0%, #ffffff 52%, #fffbeb 100%)",
+  },
+  /*
     お金まわりの道具。ナビの「住む・働く」と同じ緑系にして、読み物の
     カード(橙・藍・赤)と並んだときに道具だと分かるようにする。
   */

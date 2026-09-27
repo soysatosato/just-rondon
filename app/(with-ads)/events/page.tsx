@@ -10,6 +10,7 @@ import {
 } from "@/utils/actions/weekly";
 import { fetchEvents2026 } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
+import { weeklyOgImage } from "@/lib/og";
 import { formatWeekRange } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import { fetchForecastForWeek } from "@/lib/weather/forecast";
@@ -53,6 +54,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `今週のロンドン(${range}) | ストライキ・イベント・耳寄り情報`,
     description: brief.headline.slice(0, 120),
     modifiedTime: brief.updatedAt.toISOString(),
+    // 本体として出している号のカード。週が替わればカードも替わる。
+    images: [weeklyOgImage(brief)],
   });
 }
 

@@ -364,6 +364,95 @@ export function areaOgImage(content: {
   return readingArticleOgImage("areas", "ロンドンの街", content);
 }
 
+/** 号の週を "10/12–10/18" の形にする。週の境界はUTC 0時で持っている。 */
+export function weeklyOgRange(weekStart: Date, weekEnd: Date): string {
+  const md = (d: Date) => `${d.getUTCMonth() + 1}/${d.getUTCDate()}`;
+  return `${md(weekStart)}–${md(weekEnd)}`;
+}
+
+/**
+ * 見出し(つかみ)の上限。OgCard が3行に収める字数で、これを超える1文目だけ
+ * 読点で割る。低くすると「〜が開幕し」のような連用形の切れ端が見出しに残る。
+ */
+const WEEKLY_HEAD_MAX = 44;
+/** 続きの上限。OgCard の tail が3行に収まる字数。 */
+const WEEKLY_TAIL_MAX = 54;
+
+/**
+ * 週次ダイジェストの headline をカードの「つかみ」と「続き」に割る。
+ *
+ * headline は「目玉の1文。ほかの催しの1文。」の形で書いている
+ * (add-weekly-brief スキルの指示)。コラムの見出しのようなダッシュが無いので、
+ * 句点で割る。1文目が長すぎるときは読点で割り、残りを続きに回す。
+ *
+ * 続きは文の途中で切らず、収まる文だけを並べる。1文も収まらないときは
+ * 収まる範囲の最後の読点で切る。
+ */
+export function splitWeeklyHeadline(headline: string): {
+  head: string;
+  tail: string | null;
+} {
+  const text = headline.trim();
+  const firstEnd = text.indexOf("。");
+  let head = firstEnd === -1 ? text : text.slice(0, firstEnd);
+  let rest = firstEnd === -1 ? "" : text.slice(firstEnd + 1);
+
+  if (head.length > WEEKLY_HEAD_MAX) {
+    const comma = head.lastIndexOf("、", WEEKLY_HEAD_MAX);
+    // 読点が頭に寄りすぎていると、つかみが「〜は、」のような切れ端になる。
+    if (comma >= 12) {
+      rest = `${head.slice(comma + 1)}。${rest}`;
+      head = head.slice(0, comma);
+    }
+  }
+
+  const sentences = rest
+    .split("。")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  let tail = "";
+  for (const s of sentences) {
+    const next = tail ? `${tail}。${s}` : s;
+    if (next.length > WEEKLY_TAIL_MAX) break;
+    tail = next;
+  }
+  if (!tail && sentences.length > 0) {
+    // 語の途中で切ると「ロバート・ライマ…」のように固有名詞が欠ける。
+    // 収まる範囲の最後の読点で切り、読点が無いときだけ字数で切る。
+    const first = sentences[0];
+    const comma = first.lastIndexOf("、", WEEKLY_TAIL_MAX);
+    tail = `${comma >= 20 ? first.slice(0, comma) : first.slice(0, WEEKLY_TAIL_MAX)}…`;
+  }
+
+  return {
+    head: head.length > WEEKLY_HEAD_MAX ? `${head.slice(0, WEEKLY_HEAD_MAX)}…` : head,
+    tail: tail || null,
+  };
+}
+
+/**
+ * 「今週のロンドン」各号のOGカードURL。
+ * パスは app/og/events-week/[slug]/route.tsx と対。片方だけ変えると
+ * 共有カードが404になる(SNS側は静かに既定画像へ戻るだけで気付けない)。
+ *
+ * 号は公開後も項目を足したり headline を直したりするので、?v= に
+ * updatedAt を入れる。直した号を共有し直せば新しいカードが取られる。
+ */
+export function weeklyOgImage(brief: {
+  slug: string;
+  title: string;
+  updatedAt: Date;
+}) {
+  return {
+    url:
+      `/og/events-week/${encodeURIComponent(brief.slug)}` +
+      `?v=${OG_CARD_VERSION}-${brief.updatedAt.getTime()}`,
+    width: OG_SIZE.width,
+    height: OG_SIZE.height,
+    alt: `${brief.title} | ジャスト・ロンドン`,
+  };
+}
+
 /**
  * 「イギリス英語」記事のOGカードURL。
  * パスは app/og/british-english/[slug]/route.tsx と対で、片方だけ変えると
