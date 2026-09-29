@@ -15,7 +15,7 @@ import Reveal, { RevealGroup, RevealItem } from "@/components/home/Reveal";
 import {
   fetchColumns,
   fetchBritishEnglishEntries,
-  fetchAreaEntries,
+  fetchModernBritainEntries,
   fetchHeroSlides,
 } from "@/utils/actions/contents";
 import { fetchHomeRails } from "@/utils/actions/home";
@@ -77,9 +77,9 @@ const READING_CATEGORY = {
     badge: "bg-violet-600",
     text: "text-violet-600 dark:text-violet-400",
   },
-  area: {
-    base: "/reading/areas",
-    label: "ロンドンの街",
+  "modern-britain": {
+    base: "/modern-britain",
+    label: "英国のいま",
     stripe: "bg-indigo-500",
     badge: "bg-indigo-600",
     text: "text-indigo-600 dark:text-indigo-400",
@@ -105,9 +105,9 @@ const READING_SECTIONS = [
     text: "text-violet-600 dark:text-violet-400",
   },
   {
-    href: "/reading/areas",
-    eyebrow: "London, Neighbourhood by Neighbourhood",
-    label: "ロンドンの街",
+    href: "/modern-britain",
+    eyebrow: "Britain, Argued",
+    label: "英国のいまを論じる",
     stripe: "bg-indigo-500",
     text: "text-indigo-600 dark:text-indigo-400",
   },
@@ -231,7 +231,7 @@ const SITE_INDEX = [
     links: [
       { href: "/reading", label: "読み物トップ" },
       { href: "/column", label: "コラム" },
-      { href: "/reading/areas", label: "ロンドンの街" },
+      { href: "/modern-britain", label: "英国のいまを論じる" },
       { href: "/history", label: "イギリスの歴史 全10章" },
       { href: "/british-english", label: "イギリス英語" },
       { href: "/events", label: "今週のロンドン" },
@@ -243,14 +243,14 @@ export default async function Page() {
   const now = new Date();
   const [
     latestColumns,
-    latestAreas,
+    latestModernBritain,
     latestBritishEnglish,
     latestBrief,
     heroSlides,
     rails,
   ] = await Promise.all([
     fetchColumns(),
-    fetchAreaEntries(),
+    fetchModernBritainEntries(),
     fetchBritishEnglishEntries(),
     fetchLatestBrief(),
     fetchHeroSlides(6),
@@ -273,7 +273,7 @@ export default async function Page() {
   const readingEntries = (
     [
       ["column", latestColumns],
-      ["area", latestAreas],
+      ["modern-britain", latestModernBritain],
       ["british-english", latestBritishEnglish],
     ] as const
   )

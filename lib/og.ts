@@ -334,7 +334,7 @@ export function splitOgHeadline(title: string): {
  * 古いカードを外すためのもの。
  */
 function readingArticleOgImage(
-  section: "column" | "areas",
+  section: "column" | "areas" | "modern-britain",
   label: string,
   content: { slug: string; title: string; updatedAt: Date },
 ) {
@@ -354,6 +354,14 @@ export function columnOgImage(content: {
   updatedAt: Date;
 }) {
   return readingArticleOgImage("column", "コラム", content);
+}
+
+export function modernBritainOgImage(content: {
+  slug: string;
+  title: string;
+  updatedAt: Date;
+}) {
+  return readingArticleOgImage("modern-britain", "英国のいまを論じる", content);
 }
 
 export function areaOgImage(content: {

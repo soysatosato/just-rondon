@@ -34,7 +34,8 @@ export type RankingTarget =
   | "musical"
   | "column"
   | "britishEnglish"
-  | "area";
+  | "area"
+  | "modernBritain";
 
 /** 集計の起点。今日を含めて WEEKLY_DAYS 日ぶん遡った UTC の日付。 */
 function weekStart() {

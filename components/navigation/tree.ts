@@ -95,6 +95,8 @@ const TREE = {
 
   // ---- 英国を読む ----------------------------------------------------
   "/column": { label: "コラム", parent: "/reading" },
+  "/modern-britain": { label: "英国のいまを論じる", parent: "/reading" },
+  // 伏せてある(導線なし・noindex)。ページ自身がパンくずに使うので木には残す。
   "/reading/areas": { label: "ロンドンの街", parent: "/reading" },
   "/history": { label: "イギリスの歴史", parent: "/reading" },
   "/british-english": { label: "イギリス英語", parent: "/reading" },

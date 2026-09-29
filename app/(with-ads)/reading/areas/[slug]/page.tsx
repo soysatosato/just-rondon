@@ -20,6 +20,12 @@ interface Props {
   };
 }
 
+/*
+  2026-09-30、このセクションは伏せている。ナビ・読み物ハブ・ホーム・
+  検索セレクト・sitemap のどこからも辿れず、noindex を付けてある。
+  URL とコードは生かしたままなので、再開するときはこの noindex を外し、
+  上記5か所に導線を戻すだけでよい(記事は DB に残っている)。
+*/
 export async function generateMetadata({ params }: Props) {
   const content = await fetchAreaBySlug(params.slug);
 
@@ -43,6 +49,7 @@ export async function generateMetadata({ params }: Props) {
 
   return buildPageMetadata({
     path: `/reading/areas/${params.slug}`,
+    noindex: true,
     title: content.title,
     description:
       trimmed ||

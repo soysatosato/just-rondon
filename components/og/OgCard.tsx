@@ -36,6 +36,12 @@ export const OG_THEMES = {
     panelGradient: "linear-gradient(160deg, #f59e0b 0%, #ea580c 55%, #e11d48 100%)",
     pageGradient: "linear-gradient(135deg, #fffbeb 0%, #ffffff 52%, #f0f9ff 100%)",
   },
+  "modern-britain": {
+    badgeBg: "#4338ca",
+    accent: "#6366f1",
+    panelGradient: "linear-gradient(160deg, #4f46e5 0%, #2563eb 55%, #06b6d4 100%)",
+    pageGradient: "linear-gradient(135deg, #eef2ff 0%, #ffffff 52%, #ecfeff 100%)",
+  },
   area: {
     badgeBg: "#4338ca",
     accent: "#6366f1",

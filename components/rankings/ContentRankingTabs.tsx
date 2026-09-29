@@ -62,7 +62,7 @@ export type RankingEntry = {
 };
 
 export type RankingThemeName =
-  "reading" | "column" | "british-english" | "area";
+  "reading" | "column" | "british-english" | "area" | "modern-britain";
 
 /**
  * 配色。Tailwind はクラス名を文字列として拾うので、色を組み立てず
@@ -118,6 +118,17 @@ const THEMES: Record<
     chip: "bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300",
     hero: "from-rose-500 via-red-500 to-orange-500",
     rail: "bg-rose-500",
+  },
+  "modern-britain": {
+    bar: "bg-indigo-500",
+    dot: "bg-indigo-500",
+    trigger:
+      "data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:shadow-indigo-500/30 focus-visible:ring-indigo-400",
+    ring: "hover:border-indigo-300 dark:hover:border-indigo-800",
+    text: "text-indigo-700 dark:text-indigo-400",
+    chip: "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300",
+    hero: "from-indigo-500 via-blue-500 to-cyan-500",
+    rail: "bg-indigo-500",
   },
   area: {
     bar: "bg-indigo-500",

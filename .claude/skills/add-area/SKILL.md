@@ -5,6 +5,12 @@ description: just-rondon(イギリス旅行サイト)の「ロンドンの街」
 
 # /add-area — 「ロンドンの街」の記事をDBに追加する
 
+> **2026-09-30、このセクションは伏せている。** `/reading/areas` はナビ・
+> 読み物ハブ・ホーム・検索セレクト・sitemap のどこからも辿れず、noindex が
+> 付いている。いま記事を足しても読者の目には触れない。実行する前に、
+> 再開するのかをユーザーに確認すること。再開は上記5か所に導線を戻し、
+> 2つのページから `noindex: true` を外すだけでよい。
+
 just-rondon の `/reading/areas` セクション用に、**ロンドンのエリア1つぶんの読みもの**を
 1本作成し、本番DB(`Content`/`ContentSection` テーブル、`category: "area"`)に
 直接登録する。git の commit/push は一切不要 — DBに1行INSERTするだけで

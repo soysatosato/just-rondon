@@ -17,6 +17,7 @@ export type ReadingAccentName =
   | "column"
   | "british-english"
   | "area"
+  | "modern-britain"
   | "history";
 
 export type ReadingAccent = {
@@ -103,6 +104,23 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     読み物4面のうち琥珀2面・薔薇1面が埋まっていて、残りで題字の白文字が
     沈まない濃さを持つのがこの藍だったという、それだけの理由である。
   */
+  /*
+    「英国のいま」。「ロンドンの街」を伏せているあいだ、読み物の4面目は
+    こちら。両方が同時に出ることは無いので、藍を二つ持たせたままにしてある。
+  */
+  "modern-britain": {
+    bar: "bg-indigo-500",
+    eyebrowOnDark: "text-indigo-300",
+    titleOnDark: "text-indigo-400",
+    glow: "bg-indigo-500/25",
+    text: "text-indigo-700 dark:text-indigo-400",
+    on: "bg-indigo-500 text-white",
+    idle:
+      "hover:border-indigo-300 hover:text-indigo-700 dark:hover:border-indigo-700 dark:hover:text-indigo-400",
+    soft: "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-400",
+    focus:
+      "focus:border-indigo-400 focus:ring-indigo-200 dark:focus:border-indigo-500 dark:focus:ring-indigo-900/60",
+  },
   area: {
     bar: "bg-indigo-500",
     eyebrowOnDark: "text-indigo-300",

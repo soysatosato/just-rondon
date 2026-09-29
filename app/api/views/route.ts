@@ -30,6 +30,7 @@ const TARGETS = {
   column: "column",
   britishEnglish: "british-english",
   area: "area",
+  modernBritain: "modern-britain",
 } as const;
 
 type TargetType = keyof typeof TARGETS;

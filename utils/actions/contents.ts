@@ -83,7 +83,7 @@ export type AdjacentContent = {
  * createdAt が同値のレコードがあっても取りこぼさないよう、id をタイブレークに使う。
  */
 export const fetchAdjacentContents = async (
-  category: "column" | "british-english" | "area",
+  category: "column" | "british-english" | "area" | "modern-britain",
   current: { id: string; createdAt: Date },
 ): Promise<{ prev: AdjacentContent | null; next: AdjacentContent | null }> => {
   const [newer, older] = await Promise.all([
@@ -141,6 +141,23 @@ export const fetchBritishEnglishBySlug = async (slug: string) => {
  * 半日で歩く順路を6エリアぶん載せた案内で、こちらは住宅地も含めた
  * 街そのものの記録である。
  */
+export const fetchModernBritainEntries = async () => {
+  const contents = await db.content.findMany({
+    where: { category: "modern-britain" },
+    orderBy: { createdAt: "desc" },
+  });
+  return contents;
+};
+
+export const fetchModernBritainBySlug = async (slug: string) => {
+  // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
+  const content = await db.content.findFirst({
+    where: { slug, category: "modern-britain" },
+    include: { sections: { orderBy: { displayOrder: "asc" } } },
+  });
+  return content;
+};
+
 export const fetchAreaEntries = async () => {
   const contents = await db.content.findMany({
     where: { category: "area" },
@@ -202,7 +219,7 @@ export const fetchEventsForMonth = async (year: number, month: number) => {
  * 後ろに埋もれ続けるのを避けるため。
  */
 export const fetchPopularContents = async (
-  category: "column" | "british-english" | "area",
+  category: "column" | "british-english" | "area" | "modern-britain",
   take = 5,
 ) => {
   const contents = await db.content.findMany({
@@ -224,6 +241,7 @@ const WEEKLY_TARGET_BY_CATEGORY = {
   column: "column",
   "british-english": "britishEnglish",
   area: "area",
+  "modern-britain": "modernBritain",
 } as const;
 
 /**
@@ -238,7 +256,7 @@ const WEEKLY_TARGET_BY_CATEGORY = {
  * 戻す」を必ず用意すること。
  */
 export const fetchWeeklyPopularContents = async (
-  category: "column" | "british-english" | "area",
+  category: "column" | "british-english" | "area" | "modern-britain",
   take = 5,
 ) => {
   const ids = await fetchWeeklyTopIds(
@@ -259,7 +277,7 @@ export const fetchWeeklyPopularContents = async (
  * 読み物ハブ(/reading)の「いま読まれている記事」。
  *
  * fetchPopularContents との違いはカテゴリを跨ぐこと。ハブでは
- * コラム・イギリス英語・ロンドンの街を同じ土俵で並べたいので、
+ * コラム・イギリス英語・いまのイギリスを同じ土俵で並べたいので、
  * 3カテゴリまとめて views の降順に取る。
  *
  * views=0 を除く理由と同数時の扱いは fetchPopularContents と同じ。
@@ -267,7 +285,7 @@ export const fetchWeeklyPopularContents = async (
 export const fetchPopularReadingContents = async (take = 5) => {
   const contents = await db.content.findMany({
     where: {
-      category: { in: ["column", "british-english", "area"] },
+      category: { in: ["column", "british-english", "modern-britain"] },
       views: { gt: 0 },
     },
     orderBy: [{ views: "desc" }, { createdAt: "desc" }],
@@ -289,7 +307,7 @@ export const fetchPopularReadingContents = async (take = 5) => {
  */
 export const fetchWeeklyPopularReadingContents = async (take = 5) => {
   const ids = await fetchWeeklyTopIds(
-    ["column", "britishEnglish", "area"],
+    ["column", "britishEnglish", "modernBritain"],
     take,
   );
   if (ids.length === 0) return [];
@@ -297,7 +315,7 @@ export const fetchWeeklyPopularReadingContents = async (take = 5) => {
   const contents = await db.content.findMany({
     where: {
       id: { in: ids },
-      category: { in: ["column", "british-english", "area"] },
+      category: { in: ["column", "british-english", "modern-britain"] },
     },
   });
 

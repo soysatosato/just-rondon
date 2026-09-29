@@ -28,6 +28,13 @@ export const OG_HUBS = {
     glyph: "英",
     theme: "british-english",
   },
+  "modern-britain": {
+    badge: "BRITAIN, ARGUED",
+    head: "そのニュースは、何を意味するのか",
+    tail: "最新の英国ニュースを、背景・制度・歴史から読み解く時事論考。",
+    glyph: "今",
+    theme: "modern-britain",
+  },
   areas: {
     badge: "LONDON, NEIGHBOURHOOD BY NEIGHBOURHOOD",
     head: "その街は、どうしてそうなったのか",
@@ -45,7 +52,7 @@ export const OG_HUBS = {
   reading: {
     badge: "READING BRITAIN",
     head: "英国を読む",
-    tail: "歴史を辿り、街を歩き、言葉を味わう。ガイドブックが終わるところから。",
+    tail: "歴史を辿り、いまを論じ、言葉を味わう。ガイドブックが終わるところから。",
     glyph: "読",
     theme: "reading",
   },

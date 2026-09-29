@@ -19,6 +19,7 @@ const BASE = {
   column: "/column",
   "british-english": "/british-english",
   area: "/reading/areas",
+  "modern-britain": "/modern-britain",
 } as const;
 
 export type ReadingCategory = keyof typeof BASE;
@@ -53,6 +54,7 @@ const SECTION_LABEL: Record<ReadingCategory, string> = {
   column: "コラム",
   "british-english": "イギリス英語",
   area: "ロンドンの街",
+  "modern-britain": "英国のいま",
 };
 
 function isReadingCategory(value: string): value is ReadingCategory {
