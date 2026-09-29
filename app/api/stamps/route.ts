@@ -4,6 +4,8 @@ import { Prisma } from "@prisma/client";
 
 import db from "@/utils/db";
 import { ensureProfile } from "@/lib/profile";
+import { loadPressProgress } from "@/lib/stamp-progress";
+import { placeKey } from "@/lib/stamp-rallies";
 import {
   isOnSite,
   isStampType,
@@ -77,6 +79,28 @@ async function fetchTargetCoords(
 }
 
 /**
+ * 押した直後の報告(何個目か、どの台紙がいくつ進んだか、称号が上がったか)。
+ *
+ * ボタンはこれを「押した瞬間」の画面に出す。押す操作の手応えはほぼ
+ * ここで決まるので、スタンプ帳を開くまで分からないままにしない。
+ *
+ * 作れなくてもスタンプ自体は押せているので、失敗は null にして押した結果を返す。
+ */
+async function progressAfter(
+  profileId: string,
+  type: StampType,
+  id: string,
+  change: "created" | "upgraded",
+) {
+  try {
+    return await loadPressProgress(profileId, placeKey({ type, id }), change);
+  } catch (error) {
+    console.error("[stamps] progress failed", error);
+    return null;
+  }
+}
+
+/**
  * 押した/押していないを返す。
  *
  * 未ログインでも 200 を返す。ボタンは記事ページに常に出ているので、
@@ -98,7 +122,7 @@ export async function GET(req: NextRequest) {
 
   const stamp = await db.stamp.findFirst({
     where: targetWhere(userId, target.type, target.id),
-    select: { stampedAt: true, onSite: true },
+    select: { id: true, stampedAt: true, onSite: true },
   });
 
   return NextResponse.json({
@@ -106,6 +130,7 @@ export async function GET(req: NextRequest) {
     stamped: Boolean(stamp),
     onSite: stamp?.onSite ?? false,
     stampedAt: stamp?.stampedAt?.toISOString() ?? null,
+    stampId: stamp?.id ?? null,
   });
 }
 
@@ -166,14 +191,17 @@ export async function POST(req: NextRequest) {
       const upgraded = await db.stamp.update({
         where: { id: existing.id },
         data: { onSite: true },
-        select: { stampedAt: true },
+        select: { id: true, stampedAt: true },
       });
       return NextResponse.json({
         signedIn: true,
         stamped: true,
         onSite: true,
         upgraded: true,
+        created: false,
+        stampId: upgraded.id,
         stampedAt: upgraded.stampedAt.toISOString(),
+        progress: await progressAfter(userId, target.type, target.id, "upgraded"),
       });
     }
     return NextResponse.json({
@@ -181,6 +209,8 @@ export async function POST(req: NextRequest) {
       stamped: true,
       onSite: existing.onSite,
       upgraded: false,
+      created: false,
+      stampId: existing.id,
       stampedAt: existing.stampedAt.toISOString(),
       // 現地で押そうとして届かなかったことは、押した本人に伝える必要がある。
       // 黙って赤のままにすると「金にならない」理由が分からない。
@@ -199,15 +229,18 @@ export async function POST(req: NextRequest) {
         [STAMP_FOREIGN_KEY[target.type]]: target.id,
         onSite,
       },
-      select: { stampedAt: true },
+      select: { id: true, stampedAt: true },
     });
     return NextResponse.json({
       signedIn: true,
       stamped: true,
       onSite,
       upgraded: false,
+      created: true,
+      stampId: created.id,
       stampedAt: created.stampedAt.toISOString(),
       outOfRange: Boolean(position) && !onSite,
+      progress: await progressAfter(userId, target.type, target.id, "created"),
     });
   } catch (error) {
     // 連打で2回同時に届いたときの一意制約違反。1個押せていれば目的は
@@ -218,13 +251,15 @@ export async function POST(req: NextRequest) {
     ) {
       const stamp = await db.stamp.findFirst({
         where,
-        select: { onSite: true, stampedAt: true },
+        select: { id: true, onSite: true, stampedAt: true },
       });
       return NextResponse.json({
         signedIn: true,
         stamped: true,
         onSite: stamp?.onSite ?? onSite,
         upgraded: false,
+        created: false,
+        stampId: stamp?.id ?? null,
         stampedAt: stamp?.stampedAt?.toISOString() ?? null,
       });
     }

@@ -33,10 +33,14 @@ export function isStampType(value: unknown): value is StampType {
 type StampTypeMeta = {
   /** スタンプ帳の見出し。 */
   label: string;
+  /** 数えるときの単位。「あと2館」「あと1作」。 */
+  unit: string;
   /** 一覧ハブのURL。まだ1個も押していない人をここへ送る。 */
   hubHref: string;
   /** 詳細ページのURLを作る。 */
   path: (slug: string) => string;
+  /** 押す前にボタンの上に出す誘い文句。 */
+  invite: string;
   /** 押す前のボタン文言。 */
   actionLabel: string;
   /** 押したあとの状態表示。 */
@@ -57,8 +61,10 @@ type StampTypeMeta = {
 export const STAMP_META: Record<StampType, StampTypeMeta> = {
   attraction: {
     label: "観光スポット",
+    unit: "か所",
     hubHref: "/sightseeing/all",
     path: (slug) => `/sightseeing/${slug}`,
+    invite: "行った場所にスタンプを",
     actionLabel: "スタンプを押す",
     doneLabel: "訪問済み",
     onSiteLabel: "現地で押した",
@@ -66,8 +72,10 @@ export const STAMP_META: Record<StampType, StampTypeMeta> = {
   },
   museum: {
     label: "美術館・博物館",
+    unit: "館",
     hubHref: "/museums/all-museums",
     path: (slug) => `/museums/${slug}`,
+    invite: "入った館にスタンプを",
     actionLabel: "スタンプを押す",
     doneLabel: "訪問済み",
     onSiteLabel: "現地で押した",
@@ -75,8 +83,10 @@ export const STAMP_META: Record<StampType, StampTypeMeta> = {
   },
   musical: {
     label: "ミュージカル",
+    unit: "作",
     hubHref: "/musicals",
     path: (slug) => `/musicals/${slug}`,
+    invite: "観た作品にスタンプを",
     actionLabel: "観たスタンプを押す",
     doneLabel: "観劇済み",
     onSiteLabel: "劇場で押した",
@@ -181,14 +191,106 @@ export function isOnSite(
 }
 
 /* ------------------------------------------------------------------ *
+ * 称号
+ * ------------------------------------------------------------------ */
+
+export type StampTitle = {
+  /** 押した数がこれ以上で付く。 */
+  min: number;
+  title: string;
+  eng: string;
+  /** 称号に添える一言。 */
+  note: string;
+};
+
+/**
+ * 押した数で上がっていく称号。観光客からロンドナーになり、その先は叙勲と叙爵。
+ *
+ * 「レベル12」のような数字にしないのは、次の段に名前があるほうが
+ * 「あと3個で男爵」と目標として口に出せるから。
+ *
+ * 刻みは序盤ほど細かい。旅行1回ぶん(10〜20個)の間に4〜5回上がり、
+ * どこで押しても次の称号が近くに見えるようにしてある。後半が粗いのは、
+ * 100個に届くのはロンドンに住んでいる人で、旅行者の目標ではないから。
+ *
+ * note に事実を書くときは確かなことだけにすること。読者はこれも
+ * サイトの文として読む。
+ */
+export const STAMP_TITLES: readonly StampTitle[] = [
+  { min: 0, title: "旅支度中", eng: "Packing", note: "最初の1個を押すと、ロンドンに入国です。" },
+  { min: 1, title: "ツーリスト", eng: "Tourist", note: "ようこそロンドンへ。" },
+  { min: 3, title: "トラベラー", eng: "Traveller", note: "地下鉄を「チューブ」と呼びはじめる頃。" },
+  { min: 6, title: "ロンドン通", eng: "Connoisseur", note: "エスカレーターでは右側に立つ。" },
+  { min: 10, title: "ロンドナー", eng: "Londoner", note: "天気の話で会話を始められる。" },
+  { min: 15, title: "ナイト", eng: "Knight", note: "男性ならサー、女性ならデイムと呼ばれる身分。" },
+  { min: 25, title: "男爵", eng: "Baron", note: "爵位のいちばん下の段。ここからは貴族です。" },
+  { min: 35, title: "子爵", eng: "Viscount", note: "英語の読みはヴァイカウント。s は発音しません。" },
+  { min: 50, title: "伯爵", eng: "Earl", note: "サンドイッチ伯爵やグレイ伯爵(アールグレイ)と同じ位。" },
+  { min: 70, title: "侯爵", eng: "Marquess", note: "爵位の上から2番目。残るは公爵だけです。" },
+  { min: 100, title: "公爵", eng: "Duke", note: "爵位の最上位。この先は、全部押し切るだけです。" },
+];
+
+/** 押した数に対する今の称号と、次の称号(最上位なら null)。 */
+export function stampTitleFor(count: number): {
+  index: number;
+  current: StampTitle;
+  next: StampTitle | null;
+} {
+  let index = 0;
+  STAMP_TITLES.forEach((title, i) => {
+    if (count >= title.min) index = i;
+  });
+  return {
+    index,
+    current: STAMP_TITLES[index],
+    next: STAMP_TITLES[index + 1] ?? null,
+  };
+}
+
+/* ------------------------------------------------------------------ *
  * 表示
  * ------------------------------------------------------------------ */
 
+/**
+ * 日付はロンドン時間で切る。
+ *
+ * スタンプ帳はサーバー(UTC)で、ボタンはブラウザ(多くは日本時間)で
+ * 描くので、端末の時刻に任せると同じスタンプの日付が画面によって
+ * 1日ずれる。どちらでも同じ答えになるよう、押した場所の暦に固定する。
+ */
+const LONDON_DATE = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+});
+
+function londonDate(
+  date: Date | string,
+): { year: number; month: number; day: number } | null {
+  const d = typeof date === "string" ? new Date(date) : date;
+  if (Number.isNaN(d.getTime())) return null;
+  const parts = LONDON_DATE.formatToParts(d);
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((p) => p.type === type)?.value);
+  return { year: part("year"), month: part("month"), day: part("day") };
+}
+
 /** 「2026年9月21日」。スタンプに押された日付として出す。 */
 export function formatStampDate(date: Date | string): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  if (Number.isNaN(d.getTime())) return "";
-  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  const d = londonDate(date);
+  return d ? `${d.year}年${d.month}月${d.day}日` : "";
+}
+
+const POSTMARK_MONTHS = [
+  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+  "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
+];
+
+/** 「21 SEP 2026」。スタンプの印面に彫る日付。 */
+export function formatPostmarkDate(date: Date | string): string {
+  const d = londonDate(date);
+  return d ? `${d.day} ${POSTMARK_MONTHS[d.month - 1]} ${d.year}` : "";
 }
 
 /** スタンプ帳のURL。ボタンからの導線と navbar で同じ値を使う。 */

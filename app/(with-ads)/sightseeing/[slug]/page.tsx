@@ -458,7 +458,13 @@ export default async function AttractionDetail({
           読者は同じ場所に「行く予定」と「行った」の両方を探しに来るので、
           片方を本文の最下部に離すと、探して見つからないほうが必ず出る。
         */}
-        <StampButton type="attraction" id={attraction.id} name={attraction.name} />
+        <StampButton
+          type="attraction"
+          id={attraction.id}
+          name={attraction.name}
+          engName={attraction.engName ?? attraction.name}
+          category={attraction.category || null}
+        />
 
         {/* summary は導入文として本文の書体で出す。以前は丸いアイコン付きの
             白い箱に入れていたが、/overview.png が135ページすべてで同じ位置に

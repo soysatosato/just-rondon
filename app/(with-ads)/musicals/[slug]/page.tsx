@@ -116,7 +116,12 @@ export default async function musicalDetailsPage({
           このページが「結末の確認」ではなく「観た記録」を残す場所になるため。
           あらすじの後ろに置くと、結末のネタバレを越えないと押せない。
         */}
-        <StampButton type="musical" id={musical.id} name={musical.name} />
+        <StampButton
+          type="musical"
+          id={musical.id}
+          name={musical.name}
+          engName={musical.engName}
+        />
 
         <AdSenseUnit slot={AD_SLOTS.inArticle} />
 

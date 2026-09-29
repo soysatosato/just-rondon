@@ -146,7 +146,12 @@ export default async function MuseumDetailsPage({
         館内の見どころを読み終えた最下部まで下がらせる理由が無い。
       */}
       <div className="mt-6">
-        <StampButton type="museum" id={museum.id} name={museum.name} />
+        <StampButton
+          type="museum"
+          id={museum.id}
+          name={museum.name}
+          engName={museum.engName ?? museum.name}
+        />
       </div>
 
       <MuseumAbout description={museum.description} />

@@ -77,11 +77,36 @@ const config: Config = {
           "0%": { transform: "translateX(0)", opacity: "1" },
           "100%": { transform: "translateX(100%) rotate(15deg)", opacity: "0" },
         },
+        // スタンプが上から落ちてきて、ぐっと押される。傾きは印面ごとに
+        // 違うので、要素の --stamp-tilt を最後の姿勢にする。
+        "stamp-press": {
+          "0%": {
+            opacity: "0",
+            transform:
+              "scale(1.8) rotate(calc(var(--stamp-tilt, 0deg) - 14deg))",
+          },
+          "45%": {
+            opacity: "1",
+            transform: "scale(0.92) rotate(var(--stamp-tilt, 0deg))",
+          },
+          "70%": { transform: "scale(1.04) rotate(var(--stamp-tilt, 0deg))" },
+          "100%": {
+            opacity: "1",
+            transform: "scale(1) rotate(var(--stamp-tilt, 0deg))",
+          },
+        },
+        // 進み具合の棒が左から伸びる。transform-origin は使う側で left にする。
+        "bar-fill": {
+          from: { transform: "scaleX(0)" },
+          to: { transform: "scaleX(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         slideOut: "slideOut 1s ease-out forwards",
+        "stamp-press": "stamp-press 0.55s cubic-bezier(0.2, 0.9, 0.3, 1) both",
+        "bar-fill": "bar-fill 0.9s cubic-bezier(0.16, 1, 0.3, 1) both",
       },
     },
   },

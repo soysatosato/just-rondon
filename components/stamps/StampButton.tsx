@@ -4,11 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth, useClerk } from "@clerk/nextjs";
-import { Check, Loader2, MapPin, Sparkles, Stamp } from "lucide-react";
+import { Loader2, MapPin, Stamp } from "lucide-react";
 
 import { useAuthAppearance } from "@/components/stamps/AuthCard";
+import StampCelebration, {
+  type StampCelebrationData,
+} from "@/components/stamps/StampCelebration";
+import StampImpression, {
+  StampSlot,
+  type StampArt,
+} from "@/components/stamps/StampImpression";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import type { StampPressProgress } from "@/lib/stamp-rallies";
 import {
   formatStampDate,
   STAMP_BOOK_HREF,
@@ -31,6 +39,10 @@ import {
  * ちらつきは、押したつもりが押せていない事故に直結する。
  * -------------------------------------------------------------------
  *
+ * 押す前は空いた判の枠を、押したあとはその場所の判そのものを左に置く。
+ * ページそのものにスタンプが押された見た目になり、押した直後は
+ * 判が落ちてくる画面(StampCelebration)で進み具合を見せる。
+ *
  * 押し方は2つ。ただのタップと、位置情報を付けた「現地で押す」。
  * 後者は施設から lib/stamps.ts の ON_SITE_RADIUS_KM 以内でだけ金になる。
  * 判定はサーバー側でやるので、ここは座標を送るだけ。
@@ -40,6 +52,15 @@ type StampState = {
   stamped: boolean;
   onSite: boolean;
   stampedAt: string | null;
+  /** Stamp.id。判の傾きをスタンプ帳と揃えるのに使う。 */
+  stampId: string | null;
+};
+
+const UNSTAMPED: StampState = {
+  stamped: false,
+  onSite: false,
+  stampedAt: null,
+  stampId: null,
 };
 
 /** 押そうとしてログインに飛んだ人の「押しかけ」を覚えておく鍵。 */
@@ -99,15 +120,30 @@ function getPosition(): Promise<
   });
 }
 
+/** 押せた瞬間の小さな振動。対応していない端末(iPhone など)では何もしない。 */
+function thud() {
+  try {
+    if ("vibrate" in navigator) navigator.vibrate(12);
+  } catch {
+    // 振動は飾り。失敗しても押した結果は変わらない。
+  }
+}
+
 export default function StampButton({
   type,
   id,
   name,
+  engName,
+  category = null,
 }: {
   type: StampType;
   /** 対象の id(uuid)。slug ではないので、URLを変えてもスタンプは外れない。 */
   id: string;
   name: string;
+  /** 判の外周に彫る英語名。 */
+  engName: string;
+  /** Attraction.category。判の中央の絵を選ぶ。 */
+  category?: string | null;
 }) {
   const meta = STAMP_META[type];
   const { isLoaded, isSignedIn } = useAuth();
@@ -118,6 +154,10 @@ export default function StampButton({
 
   const [state, setState] = useState<StampState | null>(null);
   const [busy, setBusy] = useState<null | "tap" | "onsite" | "remove">(null);
+  const [celebration, setCelebration] = useState<StampCelebrationData | null>(null);
+  const [celebrating, setCelebrating] = useState(false);
+  /** このページで押したか。押した判にだけ、落ちてくる動きを付ける。 */
+  const [pressedHere, setPressedHere] = useState(false);
 
   /** 二重に押しかけを消化しないための旗。 */
   const resumed = useRef(false);
@@ -131,6 +171,18 @@ export default function StampButton({
     GET の「まだ押していない」で画面が戻ってしまう。
   */
   const writes = useRef(0);
+
+  const artFor = useCallback(
+    (s: StampState): StampArt => ({
+      type,
+      engName,
+      category,
+      stampedAt: s.stampedAt ?? new Date().toISOString(),
+      onSite: s.onSite,
+      seed: s.stampId ?? `${type}:${id}`,
+    }),
+    [category, engName, id, type],
+  );
 
   const press = useCallback(
     async (withPosition: boolean) => {
@@ -167,33 +219,39 @@ export default function StampButton({
           return;
         }
         const data = (await res.json()) as StampState & {
+          created?: boolean;
           upgraded?: boolean;
           outOfRange?: boolean;
+          progress?: StampPressProgress | null;
         };
         writes.current += 1;
-        setState({
+        const next: StampState = {
           stamped: data.stamped,
           onSite: data.onSite,
           stampedAt: data.stampedAt,
-        });
+          stampId: data.stampId ?? null,
+        };
+        setState(next);
 
-        if (data.outOfRange) {
+        if (data.created || data.upgraded) {
+          setPressedHere(true);
+          setCelebration({
+            id: Date.now(),
+            art: artFor(next),
+            name,
+            change: data.upgraded ? "upgraded" : "created",
+            outOfRange: Boolean(data.outOfRange),
+            progress: data.progress ?? null,
+          });
+          setCelebrating(true);
+          thud();
+        } else if (data.outOfRange) {
           toast({
             title: "現地判定にはなりませんでした",
-            description: `${name}から離れた場所のようです。スタンプは押せているので、現地で押し直すと金になります。`,
-          });
-        } else if (data.upgraded) {
-          toast({
-            title: "金のスタンプになりました",
-            description: `${name}で押した記録がスタンプ帳に残ります。`,
+            description: `${name}から離れた場所のようです。現地で押し直すと金になります。`,
           });
         } else {
-          toast({
-            title: data.onSite
-              ? `${meta.onSiteLabel}スタンプを押しました`
-              : "スタンプを押しました",
-            description: `${name}をスタンプ帳に追加しました。`,
-          });
+          toast({ description: `${name}はスタンプ帳に記録済みです。` });
         }
       } catch {
         toast({
@@ -203,14 +261,14 @@ export default function StampButton({
         setBusy(null);
       }
     },
-    [id, meta.onSiteLabel, name, toast, type],
+    [artFor, id, name, toast, type],
   );
 
   // 押した状態を読む。未ログインなら押していない状態として描く。
   useEffect(() => {
     if (!isLoaded) return;
     if (!isSignedIn) {
-      setState({ stamped: false, onSite: false, stampedAt: null });
+      setState(UNSTAMPED);
       return;
     }
     let alive = true;
@@ -223,13 +281,12 @@ export default function StampButton({
           stamped: Boolean(data.stamped),
           onSite: Boolean(data.onSite),
           stampedAt: data.stampedAt ?? null,
+          stampId: data.stampId ?? null,
         });
       })
       .catch(() => {
         // 読めなければ「押していない」として出す。押せば正しい状態に揃う。
-        if (alive && writes.current === seen) {
-          setState({ stamped: false, onSite: false, stampedAt: null });
-        }
+        if (alive && writes.current === seen) setState(UNSTAMPED);
       });
     return () => {
       alive = false;
@@ -276,7 +333,8 @@ export default function StampButton({
       );
       if (res.ok) {
         writes.current += 1;
-        setState({ stamped: false, onSite: false, stampedAt: null });
+        setState(UNSTAMPED);
+        setPressedHere(false);
         toast({ description: `${name}のスタンプを取り消しました。` });
       }
     } catch {
@@ -289,91 +347,138 @@ export default function StampButton({
   const loading = state === null;
   const stamped = state?.stamped ?? false;
   const onSite = state?.onSite ?? false;
+  const disabled = loading || busy !== null;
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      {/* 押す前 / 押したあとで同じ位置に出す主ボタン。 */}
-      <button
-        type="button"
-        onClick={() => (stamped ? undefined : handlePress(false))}
-        disabled={loading || busy !== null || stamped}
-        aria-pressed={stamped}
-        aria-label={stamped ? `${name}は${meta.doneLabel}` : `${name}に${meta.actionLabel}`}
+    <>
+      <div
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold transition",
-          "disabled:cursor-default",
+          "flex items-center gap-4 rounded-2xl border p-3 pr-4 transition-colors sm:gap-5 sm:p-4",
           stamped
             ? onSite
-              ? "border-amber-500 bg-amber-500 text-white shadow-sm shadow-amber-500/30"
-              : "border-rose-600 bg-rose-600 text-white"
-            : "border-border bg-background text-foreground hover:border-rose-400 hover:text-rose-600 disabled:opacity-60 dark:hover:text-rose-400",
+              ? "border-amber-300/80 bg-amber-50/60 dark:border-amber-800/50 dark:bg-amber-950/15"
+              : "border-rose-200 bg-rose-50/50 dark:border-rose-900/50 dark:bg-rose-950/15"
+            : "border-dashed border-rose-200 dark:border-rose-900/50",
         )}
       >
-        {busy === "tap" ? (
-          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
-        ) : stamped ? (
-          onSite ? (
-            <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+        <div className="w-[4.5rem] shrink-0 sm:w-20">
+          {stamped && state ? (
+            <StampImpression
+              // 赤から金に上がったときも、押し直した判として落とし直す。
+              key={`${state.stampId}-${onSite}`}
+              art={artFor(state)}
+              pressing={pressedHere}
+              label={`${name}のスタンプ`}
+            />
           ) : (
-            <Check className="h-4 w-4 shrink-0" aria-hidden />
-          )
-        ) : (
-          <Stamp className="h-4 w-4 shrink-0" aria-hidden />
-        )}
-        {stamped
-          ? `${onSite ? meta.onSiteLabel : meta.doneLabel}${
-              state?.stampedAt ? `・${formatStampDate(state.stampedAt)}` : ""
-            }`
-          : meta.actionLabel}
-      </button>
-
-      {/*
-        現地で押すボタン。まだ金でない間だけ出す。押してある赤いスタンプも
-        ここから金に上げられるので、旅行前に押した人の行き先にもなる。
-      */}
-      {!onSite && (
-        <button
-          type="button"
-          onClick={() => handlePress(true)}
-          disabled={loading || busy !== null}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-amber-500/70 bg-background px-4 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-50 disabled:opacity-60 dark:text-amber-400 dark:hover:bg-amber-500/10"
-        >
-          {busy === "onsite" ? (
-            <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
-          ) : (
-            <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+            // 空いた判の枠も押せるようにする。読み上げと Tab 移動は
+            // 隣の「スタンプを押す」ボタンに任せる。
+            <button
+              type="button"
+              tabIndex={-1}
+              aria-hidden
+              onClick={() => handlePress(false)}
+              disabled={disabled}
+              className="group block w-full disabled:cursor-default"
+            >
+              <StampSlot
+                type={type}
+                engName={engName}
+                category={category}
+                className="text-rose-200 transition group-hover:scale-105 group-hover:text-rose-400 group-disabled:group-hover:scale-100 dark:text-rose-900 dark:group-hover:text-rose-600"
+              />
+            </button>
           )}
-          {stamped ? "現地で押して金にする" : "現地で押す"}
-        </button>
-      )}
+        </div>
 
-      {stamped && (
-        <>
-          <Link
-            href={STAMP_BOOK_HREF}
-            className="text-xs font-medium text-muted-foreground underline hover:text-foreground"
-          >
-            スタンプ帳を見る
-          </Link>
-          <button
-            type="button"
-            onClick={remove}
-            disabled={busy !== null}
-            className="text-xs text-muted-foreground underline hover:text-foreground disabled:opacity-60"
-          >
-            取り消す
-          </button>
-        </>
-      )}
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-rose-600 dark:text-rose-400">
+            Stamp Book
+          </p>
+          <p className="mt-0.5 text-sm font-semibold">
+            {stamped
+              ? `${onSite ? meta.onSiteLabel : meta.doneLabel}${
+                  state?.stampedAt ? `・${formatStampDate(state.stampedAt)}` : ""
+                }`
+              : meta.invite}
+          </p>
 
-      {/* 押す前だけ、何のための機能かを1行で添える。 */}
-      {!stamped && !loading && (
-        <p className="text-xs text-muted-foreground">
-          {isSignedIn
-            ? "押した記録はスタンプ帳に残ります"
-            : "ログインするとスタンプ帳に記録できます"}
-        </p>
-      )}
-    </div>
+          <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">
+            {!stamped && (
+              <button
+                type="button"
+                onClick={() => handlePress(false)}
+                disabled={disabled}
+                aria-label={`${name}に${meta.actionLabel}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-rose-600 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-rose-600/25 transition hover:bg-rose-700 active:scale-95 disabled:opacity-60 disabled:active:scale-100"
+              >
+                {busy === "tap" ? (
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                ) : (
+                  <Stamp className="h-4 w-4 shrink-0" aria-hidden />
+                )}
+                {meta.actionLabel}
+              </button>
+            )}
+
+            {/*
+              現地で押すボタン。まだ金でない間だけ出す。押してある赤いスタンプも
+              ここから金に上げられるので、旅行前に押した人の行き先にもなる。
+            */}
+            {!onSite && (
+              <button
+                type="button"
+                onClick={() => handlePress(true)}
+                disabled={disabled}
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-amber-500/70 bg-background px-4 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-50 active:scale-95 disabled:opacity-60 disabled:active:scale-100 dark:text-amber-400 dark:hover:bg-amber-500/10"
+              >
+                {busy === "onsite" ? (
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                ) : (
+                  <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                )}
+                {stamped ? "現地で押して金にする" : "現地で押す"}
+              </button>
+            )}
+
+            {stamped && (
+              <>
+                <Link
+                  href={STAMP_BOOK_HREF}
+                  className="text-xs font-semibold text-rose-600 underline-offset-2 hover:underline dark:text-rose-400"
+                >
+                  スタンプ帳を見る
+                </Link>
+                <button
+                  type="button"
+                  onClick={remove}
+                  disabled={busy !== null}
+                  className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground disabled:opacity-60"
+                >
+                  取り消す
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* 押す前だけ、押すと何が起きるかを1行で添える。読み込み中も行の高さは取っておく。 */}
+          {!stamped && (
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+              {!isLoaded
+                ? " "
+                : isSignedIn
+                  ? "現地で押すと、金のスタンプになります"
+                  : "ログインするとスタンプ帳に記録できます"}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <StampCelebration
+        data={celebration}
+        open={celebrating}
+        onOpenChange={setCelebrating}
+      />
+    </>
   );
 }
