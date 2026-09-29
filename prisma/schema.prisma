@@ -33,6 +33,12 @@ model Profile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   stamps      Stamp[]
+
+  /// スタンプ帳をつないだ相手(旅仲間)。1組を1行で持つので、自分が
+  /// low と high のどちら側に入っているかで2本に分かれる。
+  friendsLow   StampFriend[] @relation("StampFriendLow")
+  friendsHigh  StampFriend[] @relation("StampFriendHigh")
+  stampInvites StampInvite[]
 }
 
 /// 読者が押したスタンプ。1行が「この人がここへ行った(この作品を観た)」1件。
@@ -96,6 +102,71 @@ model Stamp {
   @@unique([profileId, musicalId])
   /// スタンプ帳は「自分の分を新しい順」でしか読まない。
   @@index([profileId, stampedAt])
+}
+
+/// スタンプ帳のつながり(旅仲間)。1行が「この2人は互いのスタンプを見せ合っている」1組。
+///
+/// パートナーや友人と行った場所を重ね、まだ誰も行っていない場所を並べて
+/// 次の予定を立てるための機能(/stamps/together)。
+///
+/// -------------------------------------------------------------------
+/// 向きを持たない
+///
+/// 「AがBをフォローする」ではなく、招待を受けた時点で両方向に見える。
+/// 片方向にすると「自分のスタンプは見せたが相手のは見えない」組が生まれ、
+/// 一緒に予定を立てる機能として成り立たない。
+///
+/// だから1組を1行で持ち、2人の clerkId を文字列として小さいほうを lowId、
+/// 大きいほうを highId に入れる(CHECK 制約 StampFriend_ordered)。
+/// こうすると同じ2人の組が逆向きにもう1行できることを一意制約で防げ、
+/// 解除もどちらの側から1行消すだけで済む。
+///
+/// 見せ合うのは押した場所と金かどうかまで。押した日時は相手に出さない
+/// (いつロンドンに居たかまで伝わる必要は無い)。
+/// -------------------------------------------------------------------
+model StampFriend {
+  id String @id @default(cuid())
+
+  /// 2人の clerkId のうち、文字列として小さいほう。
+  lowId  String
+  low    Profile @relation("StampFriendLow", fields: [lowId], references: [clerkId], onDelete: Cascade)
+  /// 2人の clerkId のうち、文字列として大きいほう。
+  highId String
+  high   Profile @relation("StampFriendHigh", fields: [highId], references: [clerkId], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([lowId, highId])
+  /// 「自分のつながり」は lowId と highId の両方から引く。lowId 側は
+  /// 上の一意制約の先頭列で足りるので、highId 側にだけ索引を張る。
+  @@index([highId])
+}
+
+/// スタンプ帳をつなぐための招待リンク。
+///
+/// 相手を探す口(ユーザーネーム検索など)は作らない。名前を知っているだけの
+/// 他人から申請が届く作りにすると、断る画面と通報の仕組みまで要る。
+/// リンクを LINE などで直接渡せる相手とだけつながれば、どちらも要らない。
+///
+/// 1本のリンクで1人だけつながれる。グループのトークに貼ったリンクを
+/// 知らない人が踏んでもつながらないように、使った時点で行を消す。
+/// 使われないリンクも INVITE_TTL_DAYS で切れる(lib/stamp-friends-shared.ts)。
+model StampInvite {
+  id String @id @default(cuid())
+
+  /// URL に載せた値の SHA-256(16進)。値そのものは保存しない。
+  /// バックアップの JSON が外に出ても、期限内のリンクを使われないように。
+  tokenHash String @unique
+
+  /// 招待した人。
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([profileId])
+  @@index([expiresAt])
 }
 
 model Museum {
