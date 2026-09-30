@@ -132,6 +132,13 @@ export const MUSEUM_GENRE: Record<string, GenreSlug> = {
   "national-portrait-gallery": "art",
   "kings-gallery": "art",
   "whitechapel-gallery": "art",
+  "guildhall-art-gallery": "art",
+  "hayward-gallery": "art",
+  "dulwich-picture-gallery": "art",
+  "saatchi-gallery": "art",
+  "royal-academy-of-arts": "art",
+  "kenwood-house": "art",
+  "queens-house": "art",
 
   // 世界史と考古学
   "british-museum": "history",
@@ -140,6 +147,7 @@ export const MUSEUM_GENRE: Record<string, GenreSlug> = {
   "london-museum-docklands": "history",
   "clink-prison-museum": "history",
   "foundling-museum": "history",
+  "london-museum-smithfield": "history",
 
   // 自然・科学・宇宙
   "natural-history-museum": "science",
@@ -147,6 +155,8 @@ export const MUSEUM_GENRE: Record<string, GenreSlug> = {
   "wellcome-collection": "science",
   "horniman-museum": "science",
   "royal-observatory-greenwich": "science",
+  "hunterian-museum": "science",
+  "old-operating-theatre": "science",
 
   // デザインと工芸
   "victoria-and-albert-museum": "design",
@@ -154,6 +164,9 @@ export const MUSEUM_GENRE: Record<string, GenreSlug> = {
   "fashion-and-textile-museum": "design",
   "museum-of-brands": "design",
   "japan-house-london": "design",
+  "va-east-museum": "design",
+  "william-morris-gallery": "design",
+  "museum-of-the-home": "design",
 
   // 誰かが住んでいた家
   "sherlock-holmes-museum": "house",
@@ -163,6 +176,10 @@ export const MUSEUM_GENRE: Record<string, GenreSlug> = {
   "charles-dickens-museum": "house",
   "keats-house": "house",
   "apsley-house": "house",
+  "dr-johnsons-house": "house",
+  "handel-hendrix-house": "house",
+  "benjamin-franklin-house": "house",
+  "dennis-severs-house": "house",
 
   // 乗り物と産業
   "london-transport-museum": "transport",
@@ -261,7 +278,7 @@ export const AREAS: AreaMeta[] = [
   {
     slug: "greenwich",
     label: "グリニッジ",
-    note: "4館が公園と一体。船で行って半日たっぷり使う場所です。",
+    note: "5館が公園と一体。船で行って半日たっぷり使う場所です。",
   },
   {
     slug: "outer",
@@ -288,6 +305,8 @@ export const MUSEUM_AREA: Record<string, AreaSlug> = {
   "courtauld-gallery": "trafalgar",
   "london-transport-museum": "trafalgar",
   "sir-john-soanes-museum": "trafalgar",
+  "hunterian-museum": "trafalgar",
+  "benjamin-franklin-house": "trafalgar",
 
   "victoria-and-albert-museum": "south-kensington",
   "natural-history-museum": "south-kensington",
@@ -300,31 +319,43 @@ export const MUSEUM_AREA: Record<string, AreaSlug> = {
   "the-wallace-collection": "mayfair",
   "sherlock-holmes-museum": "mayfair",
   "apsley-house": "mayfair",
+  "royal-academy-of-arts": "mayfair",
+  "handel-hendrix-house": "mayfair",
 
   "tate-modern": "southbank",
   "imperial-war-museum": "southbank",
   "clink-prison-museum": "southbank",
   "fashion-and-textile-museum": "southbank",
   "garden-museum": "southbank",
+  "hayward-gallery": "southbank",
+  "old-operating-theatre": "southbank",
 
   "london-mithraeum": "city",
   "bank-of-england-museum": "city",
+  "london-museum-smithfield": "city",
+  "guildhall-art-gallery": "city",
+  "dr-johnsons-house": "city",
 
   "design-museum": "west",
   "japan-house-london": "west",
   "leighton-house-museum": "west",
   "museum-of-brands": "west",
+  "saatchi-gallery": "west",
 
   "victor-wynd-museum": "east",
   "young-va": "east",
   "vagina-museum": "east",
   "whitechapel-gallery": "east",
   "london-museum-docklands": "east",
+  "va-east-museum": "east",
+  "museum-of-the-home": "east",
+  "dennis-severs-house": "east",
 
   "national-maritime-museum": "greenwich",
   "cutty-sark": "greenwich",
   "royal-observatory-greenwich": "greenwich",
   "fan-museum": "greenwich",
+  "queens-house": "greenwich",
 
   "freud-museum": "outer",
   "keats-house": "outer",
@@ -332,6 +363,9 @@ export const MUSEUM_AREA: Record<string, AreaSlug> = {
   "horniman-museum": "outer",
   "wimbledon-lawn-tennis-museum": "outer",
   "national-army-museum": "outer",
+  "dulwich-picture-gallery": "outer",
+  "kenwood-house": "outer",
+  "william-morris-gallery": "outer",
 };
 
 export function areaOf(slug: string): AreaSlug {

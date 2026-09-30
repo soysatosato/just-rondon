@@ -7,7 +7,7 @@
  * もう片方の情報に辿り着けず、検索でも2ページが同じ語で競合する。
  *
  * 対応付けを DB のリレーションではなくここに置いているのは、両テーブルとも
- * slug が編集の都合で決まっており機械的な導出ができないため。17件は
+ * slug が編集の都合で決まっており機械的な導出ができないため。20件ほどの
  * 増減の少ない固定の事実なので、静的表にしてクエリを増やさない。
  *
  * 追加するときは両方の slug が実在することを確認すること。存在しない slug を
@@ -36,6 +36,12 @@ export const MUSEUM_ATTRACTION_PAIRS: readonly MuseumAttractionPair[] = [
   { museumSlug: "clink-prison-museum", attractionSlug: "the-clink-prison-museum" },
   { museumSlug: "sir-john-soanes-museum", attractionSlug: "sir-john-soanes-museum" },
   { museumSlug: "household-cavalry-museum", attractionSlug: "household-cavalry-museum" },
+  // 2026-09 に Museum 側へ足した4館。作品(フェルメール、アルマダ・ポートレート)
+  // を Museum 側の作品ページで見せるために両方に置いている。
+  { museumSlug: "london-museum-smithfield", attractionSlug: "london-museum-smithfield" },
+  { museumSlug: "royal-academy-of-arts", attractionSlug: "royal-academy-of-arts" },
+  { museumSlug: "kenwood-house", attractionSlug: "kenwood-house-hampstead" },
+  { museumSlug: "queens-house", attractionSlug: "queens-house-greenwich" },
 ] as const;
 
 const BY_MUSEUM = new Map(
