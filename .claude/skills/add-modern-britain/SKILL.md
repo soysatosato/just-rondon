@@ -291,16 +291,28 @@ Step 3 でユーザーが選んだ切り口に沿って、以下の構成で記�
    争点が残るか
 4. **タイトルが主語と動詞で始まっているか。** ダッシュ2段になっていないか
 5. **各節が600字以内か。** 目分量で数えず実測する
+6. **太字が壊れていないか。** この連載は数字と単位を強調したがるので、
+   日本語の `**` の罠を両方踏みやすい。閉じ `**` の直前が句読点や `%` で
+   直後が日本語文字のとき(`**23%**を`)、そして**開き `**` の直前が
+   日本語文字のとき**(`証明書の**23%**`)は、`**` が生のまま出る。
+   開き `**` は文頭か句読点の直後に置き、強調の範囲を文の頭まで広げる
+   (`**発行された証明書の23%**`)。投入後に
+   `npx tsx scripts/fix-content-markdown-bold.ts --dry` で確認する
 
 字数は実測する。JSONを書き出したあと、登録前に:
 
+数えるのは読む文字だけで、**MarkdownリンクのURLは除く**。URLは60〜100字に
+なることがあり、そのまま数えると出典を1本足すたびに本文を削る話になって、
+規則が「出典を減らせ」という意味に化ける。
+
 ```bash
 python3 -c '
-import json, sys
+import json, re, sys
 d = json.load(open(sys.argv[1]))
+strip = lambda t: re.sub(r"\((?:https?://)[^)]*\)", "()", t)
 total = 0
 for i, sec in enumerate(d["sections"]):
-    n = len(sec["description"])
+    n = len(strip(sec["description"]))
     total += n
     flag = "OK" if n <= 600 else "NG(削る)"
     print("section", i, str(n).rjust(5) + "字", flag, sec["title"][:40])
