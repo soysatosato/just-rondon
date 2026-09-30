@@ -39,6 +39,8 @@ model Profile {
   friendsLow   StampFriend[] @relation("StampFriendLow")
   friendsHigh  StampFriend[] @relation("StampFriendHigh")
   stampInvites StampInvite[]
+  /// スタンプ帳を旅のしおりとして公開しているリンク。公開していなければ null。
+  stampShare   StampShare?
 }
 
 /// 読者が押したスタンプ。1行が「この人がここへ行った(この作品を観た)」1件。
@@ -167,6 +169,36 @@ model StampInvite {
 
   @@index([profileId])
   @@index([expiresAt])
+}
+
+/// スタンプ帳を「旅のしおり」として公開するリンク(/stamps/shiori/…)。1人1本。
+///
+/// これから行く友人に、自分が行った場所をエリアごとにまとめて渡すための機能。
+/// リンクを知っていれば、ログインしていない人でも開ける。旅仲間
+/// (StampFriend)と違って相手のスタンプ帳は要らず、見せるのは片方向だけ。
+///
+/// 載せるのはユーザーネーム・称号・押した場所まで。押した日時と金かどうかは
+/// 載せない。誰でも開けるページに日時や現地の印が並ぶと、「いまロンドンの
+/// どこに居るか」を知らない人にまで伝えることになる(lib/stamp-share.ts)。
+///
+/// 作り直すと token が変わり、前のリンクは開けなくなる。公開をやめると行ごと消す。
+model StampShare {
+  id String @id @default(cuid())
+
+  /// 公開した人。1人1本なので一意。
+  profileId String  @unique
+  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+
+  /// URL に載せる値そのもの。
+  ///
+  /// StampInvite と違ってハッシュにしない。招待はアカウント同士をつなぐ権限
+  /// なので、バックアップが漏れても使えないようにしてある。こちらのリンクで
+  /// 見えるのは同じ DB にあるスタンプの一部だけで、バックアップが漏れた時点で
+  /// 中身はもう漏れている。値を持っておけば、本人が /stamps でいつでも同じ
+  /// リンクをコピーし直せる(何人にも、何週間かに分けて渡すものなので要る)。
+  token String @unique
+
+  createdAt DateTime @default(now())
 }
 
 model Museum {

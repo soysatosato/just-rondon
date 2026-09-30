@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import StampBook from "@/components/stamps/StampBook";
 import StampBookIntro from "@/components/stamps/StampBookIntro";
 import StampFriendsCard from "@/components/stamps/friends/StampFriendsCard";
+import ShioriShareCard from "@/components/stamps/shiori/ShioriShareCard";
 import { ensureProfile } from "@/lib/profile";
 import { loadStampBook } from "@/lib/stamp-progress";
 import { noindexMetadata } from "@/lib/seo";
@@ -31,6 +32,7 @@ export default async function StampsPage() {
   return (
     <div className="mx-auto max-w-4xl py-6 sm:py-8">
       <StampBook username={profile.username} data={data}>
+        <ShioriShareCard userId={userId} stampCount={data.entries.length} />
         <StampFriendsCard userId={userId} />
       </StampBook>
     </div>

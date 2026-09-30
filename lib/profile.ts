@@ -133,8 +133,8 @@ export async function rerollUsername(clerkId: string): Promise<UsernameResult> {
 }
 
 /**
- * Profile を消す。スタンプ・旅仲間とのつながり・招待リンクは、
- * 外部キーの ON DELETE CASCADE で一緒に消える。
+ * Profile を消す。スタンプ・旅仲間とのつながり・招待リンク・旅のしおりの
+ * リンクは、外部キーの ON DELETE CASCADE で一緒に消える。
  */
 export async function deleteProfile(clerkId: string): Promise<void> {
   await db.profile.deleteMany({ where: { clerkId } });

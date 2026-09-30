@@ -92,9 +92,10 @@ export default function StampBook({
   username: string;
   data: StampBookData;
   /**
-   * 押したスタンプの一覧のあとに差し込む欄。/stamps が旅仲間の入口
-   * (components/stamps/friends/StampFriendsCard)を置くのに使う。
-   * 旅仲間は自分でデータを引くので、StampBookData には混ぜていない。
+   * 押したスタンプの一覧のあとに差し込む欄。/stamps が旅のしおりと
+   * 旅仲間の入口(components/stamps/shiori/ShioriShareCard と
+   * components/stamps/friends/StampFriendsCard)を置くのに使う。
+   * どちらも自分でデータを引くので、StampBookData には混ぜていない。
    */
   children?: ReactNode;
 }) {
