@@ -87,9 +87,16 @@ const RALLY_ICONS: Record<string, LucideIcon> = {
 export default function StampBook({
   username,
   data,
+  children,
 }: {
   username: string;
   data: StampBookData;
+  /**
+   * 押したスタンプの一覧のあとに差し込む欄。/stamps が旅仲間の入口
+   * (components/stamps/friends/StampFriendsCard)を置くのに使う。
+   * 旅仲間は自分でデータを引くので、StampBookData には混ぜていない。
+   */
+  children?: ReactNode;
 }) {
   const { entries, rallies, totals, counts } = data;
   const now = Date.now();
@@ -106,6 +113,7 @@ export default function StampBook({
       <NextGoals rallies={rallies} />
       <RallyShelf rallies={rallies} now={now} />
       <Collection entries={entries} totals={totals} counts={counts} now={now} />
+      {children}
       <TitleLadder total={entries.length} />
 
       <p className="flex items-start gap-2.5 rounded-2xl border border-dashed border-amber-300/80 bg-amber-50/50 px-4 py-3.5 text-xs leading-relaxed text-muted-foreground dark:border-amber-800/50 dark:bg-amber-950/10">

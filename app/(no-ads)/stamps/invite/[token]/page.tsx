@@ -115,7 +115,7 @@ function Shell({
   children: ReactNode;
 }) {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12">
+    <div className="mx-auto max-w-2xl py-10 sm:py-12">
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-rose-600 dark:text-rose-400">
         Stamp Book Together
       </p>
