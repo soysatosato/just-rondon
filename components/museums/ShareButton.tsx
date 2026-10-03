@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
 import { LuShare2 } from "react-icons/lu";
+import { SITE_URL } from "@/lib/seo";
 
 import {
   TwitterShareButton,
@@ -23,8 +24,7 @@ export default function ShareButton({
   name: string;
   museumId: string;
 }) {
-  const url = process.env.NEXT_PUBLIC_WEBSITE_URL;
-  const shareUrl = `${url}/museums/${museumId}`;
+  const shareUrl = `${SITE_URL}/museums/${museumId}`;
   return (
     <Popover>
       <PopoverTrigger asChild>

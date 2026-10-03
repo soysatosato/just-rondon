@@ -34,18 +34,25 @@ export default async function ConfirmPage({
   const token = searchParams.token;
   let result: Result;
 
-  const request = token ? await confirmContactRequest(token) : null;
+  const confirmed = token ? await confirmContactRequest(token) : null;
 
-  if (!request) {
+  if (!confirmed) {
     result = {
       kicker: "Contact",
       title: "リンクが無効です",
       body: "リンクの有効期限が切れているか、すでに確認が済んでいる可能性があります。お手数ですが、お問い合わせフォームからもう一度お送りください。",
       tone: "error",
     };
+  } else if (!confirmed.firstTime) {
+    result = {
+      kicker: "Contact",
+      title: "お問い合わせは受け付け済みです",
+      body: "このお問い合わせはすでに確認が済んでいます。送り直していただく必要はありません。",
+      tone: "ok",
+    };
   } else {
     try {
-      await sendAdminNotification(request);
+      await sendAdminNotification(confirmed.request);
       result = {
         kicker: "Contact",
         title: "お問い合わせを受け付けました",

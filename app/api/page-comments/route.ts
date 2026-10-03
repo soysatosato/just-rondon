@@ -7,6 +7,7 @@ import { attractionPath } from "@/components/sightseeing/jsonld";
 import { museumPath } from "@/components/museums/jsonld";
 import { housingGuidePath } from "@/components/housing/guides/guides";
 import { sendAdminMail } from "@/utils/mail";
+import { SITE_URL } from "@/lib/seo";
 
 /**
  * 記事ページの汎用コメント API。
@@ -201,7 +202,7 @@ export async function POST(req: NextRequest) {
           timeZone: "Asia/Tokyo",
         })}`,
         path
-          ? `ページ: ${process.env.NEXT_PUBLIC_WEBSITE_URL ?? ""}${path}`
+          ? `ページ: ${SITE_URL}${path}`
           : `対象: ${targetType} / ${targetKey.trim()}`,
         "",
         "----",

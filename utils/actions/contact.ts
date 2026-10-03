@@ -3,6 +3,15 @@ import db from "../db";
 import nodemailer from "nodemailer";
 import { randomUUID } from "crypto";
 import { contactSchema } from "../schemas";
+import { SITE_URL } from "@/lib/seo";
+
+function escapeHtml(s: string) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
 export async function sendContact(prevState: any, formData: FormData) {
   const raw = Object.fromEntries(formData);
@@ -29,7 +38,9 @@ export async function sendContact(prevState: any, formData: FormData) {
     },
   });
 
-  const confirmUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/contact/confirm?token=${token}`;
+  // 環境変数ではなく SITE_URL を使う。以前は NEXT_PUBLIC_WEBSITE_URL から組み立てており、
+  // スキーム無しの値で壊れたリンクを送り続け、1件も確認が完了していなかった。
+  const confirmUrl = `${SITE_URL}/contact/confirm?token=${token}`;
 
   await transporter.sendMail({
     from: process.env.FROM_EMAIL,
@@ -42,7 +53,7 @@ ${confirmUrl}
 
 ※このメールには返信できません。`,
     html: `
-    <p>${name} 様</p>
+    <p>${escapeHtml(name)} 様</p>
     <p>お問い合わせありがとうございます。</p>
     <p>以下のリンクをクリックしてお問い合わせを確定してください：</p>
     <p><a href="${confirmUrl}">${confirmUrl}</a></p>
@@ -67,17 +78,20 @@ export async function createContactRequest(data: {
   return contact;
 }
 
+/**
+ * 確認リンクを踏んだときの処理。初回かどうかも返す。
+ * 2回目以降(再読み込みや、メールのリンクスキャナの先読み)で
+ * 管理者通知を重複して送らないため。
+ */
 export async function confirmContactRequest(token: string) {
-  const request = await db.contact.findUnique({ where: { token } });
-  if (!request) return null;
-  if (request.confirmed) return request;
-
-  const updated = await db.contact.update({
-    where: { token },
+  const { count } = await db.contact.updateMany({
+    where: { token, confirmed: false },
     data: { confirmed: true },
   });
+  const request = await db.contact.findUnique({ where: { token } });
+  if (!request) return null;
 
-  return updated;
+  return { request, firstTime: count > 0 };
 }
 
 export async function sendAdminNotification(request: {

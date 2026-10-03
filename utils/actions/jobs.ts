@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
 import { ServiceCharge } from "@prisma/client";
 import { sendAdminMail } from "../mail";
+import { SITE_URL } from "@/lib/seo";
 import { STORES_BASE, storePath, storeSlug } from "@/lib/jobs/store-slug";
 import {
   DISTRIBUTION_LABEL,
@@ -291,7 +292,7 @@ export async function submitSurvey(
 
 /** 管理者宛の通知メール本文。回答をそのまま読める形に整えるだけ。 */
 function buildSurveyMailBody(charge: ServiceCharge): string {
-  const siteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL ?? "";
+  const siteUrl = SITE_URL;
   const lines: string[] = [
     "サービスチャージのアンケートに新しい回答が届きました。",
     "",
