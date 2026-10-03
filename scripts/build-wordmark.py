@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-ヘッダーのワードマーク public/wordmark.png / wordmark-dark.png を書き出す。
+ヘッダーのワードマーク public/wordmark.png / wordmark-dark.png と、
+X(旧Twitter)のヘッダー画像 public/twitter-header.png を書き出す。
 
 もともとヘッダーは「ロンド」がブラウザのフォント、「ん！」だけが public/logo.png
 という混成だった。和文フォントは端末ごとに違うので字形も太さも揃わず、画像との
@@ -67,6 +68,12 @@ BANG_DOT_SCALE = 1.2  # 「！」の点の直径は棒の太さの何倍か
 
 OUTPUT_HEIGHT = 160  # 実表示 40px の4倍。Retina でも眠くならない
 PALETTE_COLORS = 48  # 平坦な3色の絵なので、減色しても劣化しない
+
+# X のヘッダーはサイトでは使っていない。X に手でアップロードするための画像
+TWITTER_HEADER = ROOT / "public" / "twitter-header.png"
+TWITTER_SIZE = (1500, 500)  # X の推奨寸法
+# 左下にプロフィール画像が重なり、端末によって上下も切れるので、中央に小さめに置く
+TWITTER_WORDMARK_WIDTH = 985
 
 SVG_NS = {"svg": "http://www.w3.org/2000/svg"}
 
@@ -212,10 +219,29 @@ def build(logo, font_path: Path, dark: bool) -> Image.Image:
     )
     circle(cx, bang_dot_y, bang_dot_r, accent)
 
-    out = canvas.crop(canvas.getbbox())
-    return out.resize(
-        (round(out.width * OUTPUT_HEIGHT / out.height), OUTPUT_HEIGHT), Image.LANCZOS
+    return canvas.crop(canvas.getbbox())
+
+
+def fit_height(image: Image.Image, height: int) -> Image.Image:
+    return image.resize((round(image.width * height / image.height), height), Image.LANCZOS)
+
+
+def save(image: Image.Image, out: Path) -> None:
+    image.quantize(colors=PALETTE_COLORS, method=Image.FASTOCTREE).save(out, optimize=True)
+    kb = out.stat().st_size / 1024
+    print(f"wrote {out.relative_to(ROOT)}  {image.width}x{image.height}  {kb:.1f}KB")
+
+
+def twitter_header(logo, wordmark: Image.Image) -> Image.Image:
+    """ダーク用のワードマークを logo.svg の地色(ネイビー)に置く。
+    プロフィール画像に logo.svg を使うと、地色が続いて見える。"""
+    height = round(wordmark.height * TWITTER_WORDMARK_WIDTH / wordmark.width)
+    mark = wordmark.resize((TWITTER_WORDMARK_WIDTH, height), Image.LANCZOS)
+    header = Image.new("RGBA", TWITTER_SIZE, logo["ground"] + (255,))
+    header.alpha_composite(
+        mark, ((TWITTER_SIZE[0] - mark.width) // 2, (TWITTER_SIZE[1] - mark.height) // 2)
     )
+    return header.convert("RGB")
 
 
 def main() -> None:
@@ -226,14 +252,13 @@ def main() -> None:
 
     sizes = set()
     for dark in (False, True):
-        image = build(logo, font_path, dark)
+        full = build(logo, font_path, dark)
+        image = fit_height(full, OUTPUT_HEIGHT)
         sizes.add(image.size)
-        out = ROOT / "public" / ("wordmark-dark.png" if dark else "wordmark.png")
-        image.quantize(colors=PALETTE_COLORS, method=Image.FASTOCTREE).save(
-            out, optimize=True
-        )
-        kb = out.stat().st_size / 1024
-        print(f"wrote {out.relative_to(ROOT)}  {image.width}x{image.height}  {kb:.1f}KB")
+        save(image, ROOT / "public" / ("wordmark-dark.png" if dark else "wordmark.png"))
+        if dark:
+            # 160px に縮めたものを拡大すると眠くなるので、作業解像度から縮める
+            save(twitter_header(logo, full), TWITTER_HEADER)
 
     # Wordmark.tsx は明暗2枚に同じ width/height を渡している
     if len(sizes) != 1:
