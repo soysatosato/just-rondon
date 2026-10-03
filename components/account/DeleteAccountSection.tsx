@@ -57,7 +57,7 @@ export default function DeleteAccountSection() {
         アカウントを削除
       </h2>
       <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-        スタンプ帳も含めて、このアカウントの記録がすべて消えます。元には戻せません。
+        スタンプ帳と旅行プランも含めて、このアカウントの記録がすべて消えます。元には戻せません。
       </p>
 
       {confirming ? (

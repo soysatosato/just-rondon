@@ -13,13 +13,15 @@ import {
   type PlanEntry,
   type PlanSpot,
 } from "@/lib/plan";
-import { dateForDay, parseIsoDate } from "@/lib/plan/dates";
+import { dateForDay, formatPlanDate, parseIsoDate } from "@/lib/plan/dates";
+import { savedPlanContent } from "@/lib/plan/saved";
 import PlanAddSheet from "./PlanAddSheet";
 import PlanDay from "./PlanDay";
 import PlanDateBar from "./PlanDateBar";
 import PlanSpotPicker from "./PlanSpotPicker";
 import PlanStarter from "./PlanStarter";
 import PlanSummaryBar from "./PlanSummaryBar";
+import PlanSyncStatus from "./PlanSyncStatus";
 import type { DragState, DropTarget } from "./drag";
 import {
   clearDay,
@@ -35,6 +37,7 @@ import {
   usePlanStartMinutes,
   type PlanSnapshot,
 } from "./plan-store";
+import { resolvePlanConflict, usePlanSyncStatus } from "./plan-sync";
 
 /**
  * 地図は leaflet が window を触るのでサーバーでは描けない。
@@ -56,6 +59,18 @@ function stripShareParams() {
   window.history.replaceState(null, "", `${url.pathname}${url.search}`);
 }
 
+/** 「5ヶ所・2日間・10月3日(金)出発」。2つのプランを見比べてもらうときの一言。 */
+function describePlan(entries: PlanEntry[], startDate: string | null): string {
+  const days = new Set(entries.map((entry) => entry.day)).size;
+  const start = parseIsoDate(startDate);
+  return [
+    entries.length === 0 ? "空" : `${entries.length}ヶ所・${days}日間`,
+    start && entries.length > 0 ? `${formatPlanDate(start)}出発` : null,
+  ]
+    .filter(Boolean)
+    .join("・");
+}
+
 /**
  * 旅行プランの本体。公開中の全スポットを受け取り、
  * 保存されている slug を突き合わせて日別に組み立てる。
@@ -74,6 +89,9 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const entries = usePlanEntries();
   const startDate = usePlanStartDate();
   const startMinutes = usePlanStartMinutes();
+  const syncStatus = usePlanSyncStatus();
+  const signedIn =
+    syncStatus.kind !== "pending" && syncStatus.kind !== "off";
   const [incoming, setIncoming] = useState<{
     entries: PlanEntry[];
     startDate: string | null;
@@ -112,6 +130,20 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     () => new Map(spots.map((spot) => [spot.slug, spot])),
     [spots],
   );
+
+  /*
+   * アカウントのプランとこのブラウザのプランが両方変わっていたときの、
+   * アカウント側の中身。数えるのは公開中のスポットだけ——伏せた催しの
+   * slug まで数えると、選んだあとに開くプランと件数が食い違う。
+   */
+  const conflictRemote = useMemo(() => {
+    if (syncStatus.kind !== "conflict") return null;
+    const remote = savedPlanContent(syncStatus.remote);
+    return {
+      ...remote,
+      entries: remote.entries.filter((entry) => bySlug.has(entry.slug)),
+    };
+  }, [syncStatus, bySlug]);
 
   /*
    * 広い画面では地図を開いた状態から始める。
@@ -323,6 +355,34 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     clearDay(day);
   };
 
+  /*
+   * 食い違いを片付ける。どちらを選んでも「元に戻す」を出す。
+   *
+   * 選ばなかったほうは、アカウントからもこのブラウザからも消える。
+   * 2つの件数だけを見て選ぶので、開いてみたら思っていたほうではなかった、
+   * は起きうる。戻すと、選ばなかったほうがこのブラウザのプランになり、
+   * それがまたアカウントへ送られる。
+   */
+  const keepAccountPlan = () => {
+    if (!conflictRemote) return;
+    setUndo({
+      label: "アカウントに保存されていたプランに入れ替えました",
+      snapshot: readSnapshot(),
+      countAfter: conflictRemote.entries.length,
+    });
+    resolvePlanConflict("remote");
+  };
+
+  const keepBrowserPlan = () => {
+    if (!conflictRemote) return;
+    setUndo({
+      label: "このブラウザのプランをアカウントに保存しました",
+      snapshot: { ...conflictRemote, entries: [...conflictRemote.entries] },
+      countAfter: entries.length,
+    });
+    resolvePlanConflict("local");
+  };
+
   /** 掴んだものを落とす。落ちる位置が決まっていなければ何もしない。 */
   const handleDrop = useCallback(() => {
     if (drag && drop) {
@@ -368,6 +428,41 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
 
   return (
     <div className="space-y-6">
+      {conflictRemote && (
+        <div className="space-y-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 print:hidden dark:border-amber-800 dark:bg-amber-950/30">
+          <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+            アカウントに、別の端末で保存したプランがあります
+          </p>
+          <dl className="grid gap-1 text-xs text-amber-900 dark:text-amber-200 sm:grid-cols-[auto_1fr] sm:gap-x-3">
+            <dt className="font-semibold">アカウント</dt>
+            <dd>{describePlan(conflictRemote.entries, conflictRemote.startDate)}</dd>
+            <dt className="font-semibold">このブラウザ</dt>
+            <dd>{describePlan(entries, startDate)}</dd>
+          </dl>
+          <p className="text-xs leading-relaxed text-amber-800 dark:text-amber-300">
+            選ばなかったほうは、アカウントからもこのブラウザからも消えます
+            (選んだ直後なら「元に戻す」で戻せます)。選ぶまでは、ここで直した分は
+            アカウントに送られません。
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={keepAccountPlan}
+              className="rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-amber-700"
+            >
+              アカウントのプランを開く
+            </button>
+            <button
+              type="button"
+              onClick={keepBrowserPlan}
+              className="rounded-full border border-amber-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-amber-500 dark:border-amber-800"
+            >
+              このブラウザのプランを残す
+            </button>
+          </div>
+        </div>
+      )}
+
       {incoming && (
         <div className="space-y-3 rounded-2xl border border-indigo-300 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-950/40">
           <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
@@ -433,6 +528,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
 
       {spotCount === 0 ? (
         <>
+          <PlanSyncStatus hasPlan={false} />
           <PlanStarter spots={spots} />
 
           {/*
@@ -507,8 +603,9 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             <div className="space-y-2 rounded-2xl border border-border p-4 print:hidden">
               <p className="text-xs text-muted-foreground">
                 このURLを開くと同じプランが復元されます。同行者に送ってください。
-                プランはブラウザにだけ保存されているので、機種変更のときも
-                このリンクから持ち出せます。
+                {signedIn
+                  ? "自分の別の端末なら、リンクを使わなくてもログインすれば同じプランが開きます。"
+                  : "プランはこのブラウザにだけ保存されているので、機種変更のときもこのリンクから持ち出せます。"}
               </p>
               <input
                 type="text"
@@ -520,6 +617,8 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
               />
             </div>
           )}
+
+          <PlanSyncStatus hasPlan />
 
           <PlanDateBar dayCount={days.length} />
 

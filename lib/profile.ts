@@ -57,7 +57,7 @@ async function withRandomUsername<T>(
  * ログインした人の Profile を返す。まだ無ければランダムな名前で作る。
  *
  * 呼ぶのは名前かスタンプが初めて要る場面(/stamps・/account を開いた、
- * 最初のスタンプを押した)。登録するとまず /stamps に着くので、実際には
+ * 最初のスタンプを押した、旅行プランを初めてアカウントへ送った)。登録するとまず /stamps に着くので、実際には
  * 登録の直後に作られる。Clerk の Webhook を使えば登録の瞬間に作れるが、
  * そのためにパッケージと署名用の秘密鍵を足すほどの差は無い。
  */
@@ -134,7 +134,7 @@ export async function rerollUsername(clerkId: string): Promise<UsernameResult> {
 
 /**
  * Profile を消す。スタンプ・旅仲間とのつながり・招待リンク・旅のしおりの
- * リンクは、外部キーの ON DELETE CASCADE で一緒に消える。
+ * リンク・旅行プランの控えは、外部キーの ON DELETE CASCADE で一緒に消える。
  */
 export async function deleteProfile(clerkId: string): Promise<void> {
   await db.profile.deleteMany({ where: { clerkId } });

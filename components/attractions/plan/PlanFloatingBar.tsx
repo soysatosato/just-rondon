@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { CalendarRange } from "lucide-react";
 
 import { usePlanCount } from "./plan-store";
+import { usePlanSyncStatus } from "./plan-sync";
 
 /**
  * 画面下に貼りつく「プランを見る」。プランが空のときは何も出さない。
@@ -16,6 +17,10 @@ import { usePlanCount } from "./plan-store";
  *
  * 件数を出しているのは、いま何ヶ所選んだかが「1日に詰め込みすぎたか」の
  * 最初の手がかりになるため。
+ *
+ * アカウントのプランと食い違っているときは印を付ける。どちらを残すかは
+ * /plan でしか選べず、選ぶまでは直した分がアカウントへ送られない。
+ * 詳細ページで足すだけの読者は /plan を開かないので、ここで知らせる。
  */
 
 /** ここでは出さないページ。プラン画面自身と、別サイト扱いの lyrixplorer。 */
@@ -23,6 +28,7 @@ const HIDDEN_PREFIXES = ["/plan", "/lyrixplorer"];
 
 export default function PlanFloatingBar() {
   const count = usePlanCount();
+  const needsChoice = usePlanSyncStatus().kind === "conflict";
   const pathname = usePathname();
 
   if (count === 0) return null;
@@ -39,6 +45,11 @@ export default function PlanFloatingBar() {
         <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs tabular-nums">
           {count}
         </span>
+        {needsChoice && (
+          <span className="rounded-full bg-amber-400 px-2 py-0.5 text-[11px] font-bold text-amber-950">
+            要確認
+          </span>
+        )}
       </Link>
     </div>
   );

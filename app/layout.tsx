@@ -8,6 +8,7 @@ import { defaultMetadata } from "./metadata";
 import MainFooter from "@/components/home/MainFooter";
 import Navbar from "@/components/navbar/Navbar";
 import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
+import PlanSync from "@/components/attractions/plan/PlanSync";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import { ADSENSE_CLIENT } from "@/lib/adsense";
 
@@ -44,6 +45,8 @@ export default function RootLayout({
             <MainFooter />
             {/* 組みかけの旅程はどのページからでも開ける。空なら何も出ない。 */}
             <PlanFloatingBar />
+            {/* ログインしていれば、どのページで変えたプランもアカウントへ送る。 */}
+            <PlanSync />
           </Providers>
 
           {/* 開発環境で読み込むと無効トラフィック計上とコンソールノイズの原因になる */}

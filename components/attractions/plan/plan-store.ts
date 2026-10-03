@@ -11,13 +11,17 @@ import {
   normalizeDays,
   type PlanEntry,
 } from "@/lib/plan";
+import type { PlanContent } from "@/lib/plan/saved";
 
 /**
- * 旅行プランの保存先。ブラウザの localStorage だけで完結する。
+ * 旅行プランの保存先。本体はブラウザの localStorage にある。
  *
- * ログインを挟まないのは、プランを作るのが旅行前の一度きりで、
+ * ログインを前提にしないのは、プランを作るのが旅行前の一度きりで、
  * そのためにアカウントを作らせると大半がそこで離脱するため。
- * 端末をまたぎたい人には共有リンク(?spots=)を渡す。
+ * ログインしている読者の分だけ、plan-sync.ts がアカウントへ写しを送り、
+ * 別の端末ではそこから読み戻す。ここは同期のことを知らず、
+ * 「読者が変えた」ことを知らせる口(onLocalChange)と、アカウント側の
+ * 中身で置き換える口(applyRemotePlan)を開けているだけ。
  *
  * 持つのは slug と何日目か、それに出発日だけ。名前や料金まで保存すると、
  * 料金改定のあとも古い値がブラウザに残り続ける。中身は開くたびにDBから引き直す。
@@ -43,9 +47,22 @@ let startDate: string | null = null;
 let startMinutes: number = DEFAULT_START_MINUTES;
 let hydrated = false;
 const listeners = new Set<() => void>();
+/** 読者の操作で中身が変わったときに呼ぶ相手。plan-sync.ts が1つ登録する。 */
+const localChangeListeners = new Set<() => void>();
 
 function emit() {
   for (const listener of listeners) listener();
+}
+
+/**
+ * 読者の操作で中身が変わったことを知らせる。
+ *
+ * 別のタブでの変更(storage イベント)とアカウントからの読み戻しでは
+ * 呼ばない。前者は書いたタブの側が、後者はもともとアカウントにある
+ * 中身なので、ここで知らせると同じものを送り返すことになる。
+ */
+function notifyLocalChange() {
+  for (const listener of localChangeListeners) listener();
 }
 
 /**
@@ -130,6 +147,7 @@ function write(next: PlanEntry[]) {
   entries = [...normalized].sort((a, b) => a.day - b.day);
   persist();
   emit();
+  notifyLocalChange();
 }
 
 function subscribe(listener: () => void) {
@@ -397,6 +415,7 @@ export function setStartDate(next: string | null) {
   startDate = next;
   persist();
   emit();
+  notifyLocalChange();
 }
 
 /** 1日の開始時刻。範囲外は捨てる——入口は選択欄だけなので普通は来ない。 */
@@ -405,6 +424,7 @@ export function setStartMinutes(next: number) {
   startMinutes = next;
   persist();
   emit();
+  notifyLocalChange();
 }
 
 /** 共有リンクとひな形の読み込み。今のプランを丸ごと置き換える。 */
@@ -445,4 +465,39 @@ export function restoreSnapshot(snapshot: PlanSnapshot) {
   startDate = snapshot.startDate;
   startMinutes = snapshot.startMinutes;
   write(snapshot.entries);
+}
+
+/* ------------------------------------------------------------------ *
+ * アカウントとの同期(plan-sync.ts から使う)
+ * ------------------------------------------------------------------ */
+
+/** 読者の操作で中身が変わるたびに呼ばれる。戻り値で登録を外す。 */
+export function onLocalChange(listener: () => void): () => void {
+  localChangeListeners.add(listener);
+  return () => {
+    localChangeListeners.delete(listener);
+  };
+}
+
+/** いまの中身。アカウント側と比べるのに使う。 */
+export function readContent(): PlanContent {
+  if (!hydrated) hydrate();
+  return { entries, startDate, startMinutes };
+}
+
+/**
+ * アカウントに保存されている中身で置き換える。
+ *
+ * replacePlan と違って onLocalChange を呼ばない。アカウントから
+ * 来たものを、変更としてアカウントへ送り返さないため。
+ */
+export function applyRemotePlan(next: PlanContent) {
+  if (!hydrated) hydrate();
+  entries = [...normalizeDays(next.entries.slice(0, MAX_SPOTS))].sort(
+    (a, b) => a.day - b.day,
+  );
+  startDate = next.startDate;
+  startMinutes = next.startMinutes;
+  persist();
+  emit();
 }

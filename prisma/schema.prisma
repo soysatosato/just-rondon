@@ -19,7 +19,7 @@ datasource db {
 /// 本人が Clerk 側で変えても追従せず、退会後に残る個人情報にもなる。
 /// サイトは写真も本名も出さない方針で、読者を表すのは username だけ。
 ///
-/// 行は名前かスタンプが初めて要る場面で作る(lib/profile.ts の ensureProfile)。
+/// 行は名前・スタンプ・旅行プランの控えが初めて要る場面で作る(lib/profile.ts の ensureProfile)。
 /// 名前の規則と、自動で付く名前の作り方は lib/username.ts。
 model Profile {
   id          String   @id @default(uuid())
@@ -41,6 +41,8 @@ model Profile {
   stampInvites StampInvite[]
   /// スタンプ帳を旅のしおりとして公開しているリンク。公開していなければ null。
   stampShare   StampShare?
+  /// 旅行プラン(/plan)のアカウント側の控え。一度も保存していなければ null。
+  tripPlan     TripPlan?
 }
 
 /// 読者が押したスタンプ。1行が「この人がここへ行った(この作品を観た)」1件。
@@ -199,6 +201,52 @@ model StampShare {
   token String @unique
 
   createdAt DateTime @default(now())
+}
+
+/// 旅行プラン(/plan)のアカウント側の控え。1人1本。
+///
+/// プランの本体はいまもブラウザの localStorage にある。ログインしている
+/// 読者の分だけ、ここへ写しを送って端末をまたげるようにしている
+/// (PCで組んだプランを旅先のスマホで開く)。同期の手順は
+/// components/attractions/plan/plan-sync.ts。
+///
+/// -------------------------------------------------------------------
+/// revision
+///
+/// 書くたびに1つ上がる。端末は最後に揃えた revision を覚えておき、
+/// 送るときに「この revision の上に書く」と添える。DB 側がもう先へ
+/// 進んでいたら(別の端末が書いた)書かずに 409 を返し、端末側で
+/// どちらを残すかを読者に選ばせる。黙って後勝ちにすると、スマホで
+/// 直した旅程を、開きっぱなしだったPCのタブが古い中身で上書きする。
+///
+/// updatedAt を版の代わりにしないのは、ミリ秒の丸めと端末の時計の
+/// ずれの両方を気にすることになるため。数を数えるほうが確実。
+/// -------------------------------------------------------------------
+model TripPlan {
+  id String @id @default(cuid())
+
+  /// 持ち主。1人1本なので一意。
+  profileId String  @unique
+  profile   Profile @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+
+  /// 行き先と日割り。共有リンク(?spots=)と同じ形で持つ(lib/plan の encodePlan)。
+  ///
+  /// 名前や料金は持たない理由はブラウザ側と同じで、改定のあとも古い値が
+  /// 残り続けるから。読み戻すときも共有リンクと同じ decodePlan を通すので、
+  /// 壊れた値の弾き方が1か所で済む。空のプランは空文字。
+  spots String
+
+  /// 出発日 "YYYY-MM-DD"。Date 型にしないのは、時差で1日ずれるのを
+  /// 避けるためにブラウザ側でも文字列で持っているから(lib/plan/dates.ts)。
+  startDate String?
+
+  /// 1日の開始時刻(0時からの分)。
+  startMinutes Int
+
+  revision Int @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Museum {

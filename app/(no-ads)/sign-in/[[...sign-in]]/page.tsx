@@ -17,7 +17,8 @@ export default function SignInPage() {
         <h1 className="text-2xl font-semibold">ログイン</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           行った観光スポット・美術館・観たミュージカルにスタンプを押して、
-          自分のスタンプ帳に残せます。記事を読むのにログインは要りません。
+          自分のスタンプ帳に残せます。作った旅行プランもアカウントに保存され、
+          別の端末から開けます。記事を読むのにログインは要りません。
         </p>
       </div>
       <AuthCard mode="sign-in" />

@@ -10,8 +10,8 @@ export default function SignUpPage() {
       <div className="text-center">
         <h1 className="text-2xl font-semibold">アカウント登録</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          スタンプ帳を作るためだけのアカウントです。
-          行った場所の記録が端末を変えても残ります。
+          スタンプ帳と旅行プランのためのアカウントです。
+          行った場所の記録と組んだ旅程が、端末を変えても残ります。
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           名前や写真の登録はありません。ユーザーネームはロンドンの地名にちなんだものが自動で付き、あとから変えられます。
