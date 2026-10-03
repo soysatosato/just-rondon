@@ -4,16 +4,16 @@
  * 以前は「ロンド」だけが素のテキストで、「ん！」が public/logo.png という混成だった。
  * 和文フォントは端末任せなので字形も線の太さも揃わず、画像とのベースラインも
  * 目分量で合わせるしかなかった。いまは全体が1枚の画像で、
- * scripts/build-wordmark.py が書き出す(素材は今までどおり logo.png)。
+ * scripts/build-wordmark.py が書き出す。「ん！」は logo.svg の「ん」と、
+ * それに合わせて作った「！」で、色もワードマーク全体を logo.svg に揃えている。
  *
- * 明暗2枚を出し分けている。ワードマークのネイビー(「ジャスト」・ビッグベン・バス)は
- * ダークテーマの near-black の地にそのまま置くと沈むので、ダーク用は
- * ネイビーだけを明色に差し替えたものを使う。
+ * 明暗2枚を出し分けている。ダーク用は logo.svg のままの白い線、
+ * ライト用は白い地で白が見えないので、白をロゴの地色のネイビーに入れ替えたもの。
  * 出し分けは next-themes の class 方式に合わせて dark: で行う。
  * prefers-color-scheme だと、テーマを手で切り替えた人に追随できない。
  */
 
-const WIDTH = 1112;
+const WIDTH = 1181;
 const HEIGHT = 160;
 
 export default function Wordmark({ className = "" }: { className?: string }) {
