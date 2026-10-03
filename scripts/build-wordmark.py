@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 ヘッダーのワードマーク public/wordmark.png / wordmark-dark.png と、
-X(旧Twitter)のヘッダー画像 public/twitter-header.png を書き出す。
+X(旧Twitter)のヘッダー画像 public/twitter-header.png と、
+構造化データ(Organization.logo)用のロゴ public/logo.png を書き出す。
 
 もともとヘッダーは「ロンド」がブラウザのフォント、「ん！」だけが public/logo.png
 という混成だった。和文フォントは端末ごとに違うので字形も太さも揃わず、画像との
@@ -74,6 +75,10 @@ TWITTER_HEADER = ROOT / "public" / "twitter-header.png"
 TWITTER_SIZE = (1500, 500)  # X の推奨寸法
 # 左下にプロフィール画像が重なり、端末によって上下も切れるので、中央に小さめに置く
 TWITTER_WORDMARK_WIDTH = 985
+
+# Google は Organization.logo にラスタ画像を求める(SVG 不可)。logo.svg をそのまま PNG にする
+LOGO_PNG = ROOT / "public" / "logo.png"
+LOGO_PNG_SIZE = 512
 
 SVG_NS = {"svg": "http://www.w3.org/2000/svg"}
 
@@ -232,6 +237,20 @@ def save(image: Image.Image, out: Path) -> None:
     print(f"wrote {out.relative_to(ROOT)}  {image.width}x{image.height}  {kb:.1f}KB")
 
 
+def logo_png(logo) -> Image.Image:
+    """logo.svg(viewBox 64)を 4 倍で描いてから縮める。"""
+    scale = LOGO_PNG_SIZE * 4 / 64
+    image = Image.new("RGB", (LOGO_PNG_SIZE * 4,) * 2, logo["ground"])
+    draw = ImageDraw.Draw(image)
+    line_r = logo["stroke"] / 2 * scale
+    for px, py in logo["points"]:
+        x, y = px * scale, py * scale
+        draw.ellipse((x - line_r, y - line_r, x + line_r, y + line_r), fill=logo["line"])
+    cx, cy, r = (v * scale for v in logo["dot"])
+    draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill=logo["accent"])
+    return image.resize((LOGO_PNG_SIZE,) * 2, Image.LANCZOS)
+
+
 def twitter_header(logo, wordmark: Image.Image) -> Image.Image:
     """ダーク用のワードマークを logo.svg の地色(ネイビー)に置く。
     プロフィール画像に logo.svg を使うと、地色が続いて見える。"""
@@ -259,6 +278,8 @@ def main() -> None:
         if dark:
             # 160px に縮めたものを拡大すると眠くなるので、作業解像度から縮める
             save(twitter_header(logo, full), TWITTER_HEADER)
+
+    save(logo_png(logo), LOGO_PNG)
 
     # Wordmark.tsx は明暗2枚に同じ width/height を渡している
     if len(sizes) != 1:

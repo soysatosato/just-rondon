@@ -6,7 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { jaJP } from "@clerk/localizations";
 import { defaultMetadata } from "./metadata";
 import MainFooter from "@/components/home/MainFooter";
-import Navbar from "@/components/navbar/Navbar";
+import MainNav from "@/components/navbar/MainNav";
 import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import PlanSync from "@/components/attractions/plan/PlanSync";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
@@ -40,7 +40,7 @@ export default function RootLayout({
         <body className="bg-background text-foreground transition-colors duration-300">
           <SiteJsonLd />
           <Providers>
-            <Navbar />
+            <MainNav />
             <main className="container py-4">{children}</main>
             <MainFooter />
             {/* 組みかけの旅程はどのページからでも開ける。空なら何も出ない。 */}

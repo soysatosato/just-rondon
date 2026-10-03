@@ -23,8 +23,8 @@ import { usePlanSyncStatus } from "./plan-sync";
  * 詳細ページで足すだけの読者は /plan を開かないので、ここで知らせる。
  */
 
-/** ここでは出さないページ。プラン画面自身と、別サイト扱いの lyrixplorer。 */
-const HIDDEN_PREFIXES = ["/plan", "/lyrixplorer"];
+/** ここでは出さないページ。プラン画面自身。 */
+const HIDDEN_PREFIXES = ["/plan"];
 
 export default function PlanFloatingBar() {
   const count = usePlanCount();
