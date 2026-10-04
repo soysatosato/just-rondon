@@ -694,12 +694,26 @@ model Comment {
 }
 
 model Contact {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   email     String
-  token     String  @unique
+  token     String   @unique
   message   String
   name      String
-  confirmed Boolean @default(false)
+  confirmed Boolean  @default(false)
+  // 送信回数の上限(utils/actions/contact.ts)を数えるのに使う。
+  createdAt DateTime @default(now())
+  ip        String?
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+  @@index([createdAt])
+}
+
+/// お問い合わせフォームで受け付けないアドレス(小文字で保存)。
+/// 弾いたことは送信者に知らせず、成功したように見せる。
+model BlockedContactEmail {
+  email     String   @id
+  createdAt DateTime @default(now())
 }
 
 model Attraction {

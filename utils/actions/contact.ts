@@ -2,6 +2,7 @@
 import db from "../db";
 import nodemailer from "nodemailer";
 import { randomUUID } from "crypto";
+import { headers } from "next/headers";
 import { contactSchema } from "../schemas";
 import { SITE_URL } from "@/lib/seo";
 
@@ -15,6 +16,19 @@ function escapeHtml(s: string) {
 
 /** 表示からこれより早い送信は人の手ではないとみなす。 */
 const MIN_FILL_MS = 3000;
+
+const HOUR = 60 * 60 * 1000;
+/**
+ * 送信回数の上限。連投や DoS で DB と SMTP の送信枠を食い潰されないため。
+ * 読者が確認メールを見落として何度か送り直しても届かない数にしてある。
+ */
+const LIMITS = {
+  perEmail: { max: 5, windowMs: 24 * HOUR },
+  perIp: { max: 5, windowMs: HOUR },
+  // サイト全体。これを超えるのは攻撃なので、その間は読者の送信も止める。
+  global: { max: 30, windowMs: HOUR },
+};
+const RATE_LIMITED = "送信回数が多すぎます。しばらく時間をおいてからお試しください。";
 
 /**
  * 営業スパムのボット判定。どれかに当たったら黙って成功を返す
@@ -44,10 +58,40 @@ export async function sendContact(prevState: any, formData: FormData) {
 
   const { name, email, message } = parsed.data;
 
+  const blocked = await db.blockedContactEmail.findUnique({
+    where: { email: email.toLowerCase() },
+  });
+  if (blocked) return { success: true };
+
+  const ip = headers().get("x-forwarded-for")?.split(",")[0]?.trim() || null;
+  const since = (ms: number) => ({ gt: new Date(Date.now() - ms) });
+  const [byEmail, byIp, total] = await Promise.all([
+    db.contact.count({
+      where: {
+        email: { equals: email, mode: "insensitive" },
+        createdAt: since(LIMITS.perEmail.windowMs),
+      },
+    }),
+    ip
+      ? db.contact.count({
+          where: { ip, createdAt: since(LIMITS.perIp.windowMs) },
+        })
+      : 0,
+    db.contact.count({ where: { createdAt: since(LIMITS.global.windowMs) } }),
+  ]);
+  // ブロックリストと違い、こちらは読者本人が当たりうるので理由を見せる。
+  if (
+    byEmail >= LIMITS.perEmail.max ||
+    byIp >= LIMITS.perIp.max ||
+    total >= LIMITS.global.max
+  ) {
+    return { success: false, errors: {}, error: RATE_LIMITED };
+  }
+
   const token = randomUUID();
 
   await db.contact.create({
-    data: { name, email, message, token },
+    data: { name, email, message, token, ip },
   });
 
   const transporter = nodemailer.createTransport({

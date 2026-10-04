@@ -39,7 +39,11 @@ function Field({
 }
 
 export default function ContactForm() {
-  const [state, formAction] = useFormState(sendContact, {
+  const [state, formAction] = useFormState<{
+    success: boolean;
+    errors?: Record<string, string[] | undefined>;
+    error?: string;
+  }, FormData>(sendContact, {
     success: false,
     errors: {},
   });
@@ -97,6 +101,8 @@ export default function ContactForm() {
           <Textarea name="message" rows={7} />
         </Field>
       </div>
+
+      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
 
       <SubmitButton />
     </form>
