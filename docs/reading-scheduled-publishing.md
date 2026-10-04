@@ -19,9 +19,20 @@
 | 予約中 | 運営者が承認済み。公開日時が未来 | 見えない |
 | 公開済み | 承認済みで、公開日時を過ぎた | 見える |
 
-- 公開日時は `Content.createdAt` をそのまま使う(画面の日付と公開日を一致させるため)。
-- 下書きと承認済みを区別する列を `Content` に1つ足す。既存の行はすべて承認済みとして移行する。
-- 「予約中」と「公開済み」は保存せず、承認済みかどうかと公開日時から求める。
+`Content` に **`publishedAt DateTime?`** を1列足し、この1列で3つの状態を表す。
+
+| `publishedAt` | 状態 |
+|---|---|
+| null | 下書き |
+| 未来の時刻 | 予約中 |
+| 過去の時刻 | 公開済み |
+
+- 状態を表す列は別に持たない。承認・日付の変更・下書きに戻すの3つの操作は、すべて `publishedAt` の書き換えで済む(承認 = 公開日時を入れる、下書きに戻す = null にする)。
+- `createdAt` は「記事を書いた日時」のまま触らない。公開日時を `createdAt` に上書きする案は、列の名前と中身が食い違い、書いた日時も失われるので採らなかった。
+- 読者に見せる条件は `publishedAt <= 現在時刻`(null は比較で落ちる)。この条件は1か所にまとめ、各クエリから呼ぶ。
+- **画面に出す日付と並び順の基準を、`createdAt` から `publishedAt` に切り替える。** 対象は §5 の各クエリの `orderBy`、前後の記事の比較(`fetchAdjacentContents`)、ハブの新着や「最終更新」、詳細ページのメタデータの `publishedTime`、OG 画像の日付表示など。`createdAt` を記事の日付として使っている箇所は、実装時に洗い出して漏れなく切り替える。
+- 既存の行は、マイグレーションで `publishedAt = createdAt` を入れる。これで、いま公開されている記事の日付も並び順も変わらない。
+- 読み物以外のカテゴリ(イベントやクリスマスマーケットなど)も同じ `Content` テーブルにある。これらには予約公開を使わないので、`publishedAt` を見ない。マイグレーションでは値を入れておくが、表示や絞り込みには使わない。
 
 ## 3. セクションごとの公開ルール
 
@@ -71,7 +82,7 @@
 - 閲覧数の加算(`app/api/views/route.ts`)
 - sitemap(`next-sitemap.config.js`)
 
-`Content` を読んでいる箇所は、2026-10-04 時点では `utils/actions/contents.ts`、`utils/actions/attractions.ts`、`lib/stamp-share.ts`、`app/api/views/route.ts`、`next-sitemap.config.js` の5ファイル。公開済みかどうかの条件は1か所にまとめ、各クエリから呼ぶ形にする。
+`Content` を読んでいる箇所は、2026-10-04 時点では `utils/actions/contents.ts`、`utils/actions/attractions.ts`、`lib/stamp-share.ts`、`app/api/views/route.ts`、`next-sitemap.config.js` の5ファイル。どれも `publishedAt <= 現在時刻` の共通条件で絞る(§2)。
 
 ## 6. 公開時刻とキャッシュ(Hobby の制約)
 
@@ -83,7 +94,7 @@
 
 ## 7. 執筆スキルとスクリプトの変更
 
-- `/add-column`・`/add-british-english`・`/add-modern-britain` で作成した記事は、**下書き**として登録する。スクリプトの実行で即公開されることはなくなる。
+- `/add-column`・`/add-british-english`・`/add-modern-britain` で作成した記事は、**下書き**(`publishedAt = null`)として登録する。スクリプトの実行で即公開されることはなくなる。
 - スキルの完了報告は「公開しました」ではなく、「下書きに入れました。管理ページで確認してください」にする。
 - 修正依頼に応えられるよう、3セクションとも本文を更新するスクリプトを用意する(いまあるのはコラムの `scripts/update-column.ts` だけ)。
 - ツイート案には「公開日時(○/○ ○:○○ 日本時間)以降に投稿」と添える。公開前に投稿すると、リンク先が404になる。
