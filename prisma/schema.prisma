@@ -909,6 +909,9 @@ model Attraction {
   /// 読者が押したスタンプ。スポットの本文とは関係なく、消すときは一緒に消える。
   stamps Stamp[]
 
+  /// priceAdult / priceChild の変更履歴。DB のトリガーが書く(AttractionPriceChange)。
+  priceChanges AttractionPriceChange[]
+
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。
   ///
@@ -1773,6 +1776,114 @@ model WeeklyBriefItem {
   updatedAt    DateTime @updatedAt
 
   @@index([briefId, displayOrder])
+}
+
+/// 「今月変わったロンドン」月次号の1号分。/changes/<slug> に出る。
+///
+/// 週次の WeeklyBrief が「その週に何が起きるか」を扱うのに対し、こちらは
+/// 「その月から何が変わったか」——運賃・入場料・光熱費・最低賃金・ビザ・
+/// 開業と閉館——を扱う。週次は催しが主役で、改定は週をまたいで効き続けるので
+/// 週次の号には収まらない。
+///
+/// 号を書く手順は .claude/skills/add-monthly-changes/SKILL.md。
+model MonthlyChangeIssue {
+  id           String              @id @default(cuid())
+  /// "2026-10"。号の月。辞書順=時系列順になるよう月は2桁。
+  slug         String              @unique
+  /// その月の1日 00:00 UTC。並べ替えと「何か月前の号か」の判定に使う。
+  monthStart   DateTime
+  title        String
+  /// 「今月いちばん効く変化」の1〜2文。ページ冒頭に大きく出す。
+  headline     String
+  summary      String
+  image        String?
+  /// 調査した日時。ページに「◯月◯日 調査」として必ず出す。
+  /// 予告の項目は調査後に覆ることがあるので、いつ時点かを出さないと誤情報になる。
+  researchedAt DateTime
+
+  /// -------------------------------------------------------------------
+  /// 公開日時。Content.publishedAt と同じ3状態を1列で持つ。
+  ///
+  ///   null       下書き(/admin/reading で承認されるまで読者に見せない)
+  ///   過去の時刻  公開済み
+  ///
+  /// 読み物と違って枠の予約はしない。承認した時点で公開する。
+  /// 読者に見せるクエリは utils/actions/changes.ts を通すこと。
+  /// -------------------------------------------------------------------
+  publishedAt  DateTime?
+
+  items        MonthlyChangeItem[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@index([publishedAt, monthStart])
+}
+
+model MonthlyChangeItem {
+  id      String             @id @default(cuid())
+  issueId String
+  issue   MonthlyChangeIssue @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  /// 何が変わったか。値と表示名は lib/changes.ts の CHANGE_KINDS。
+  /// fare | admission | opening | closure | bills | housing | wage | visa | tax | life
+  kind     String
+  /// 誰に効くか。traveller | resident | both
+  audience String
+  /// changed(この月から変わった) | upcoming(来月以降に変わることが決まった)
+  timing   String @default("changed")
+  /// confirmed | planned。planned は「発表されたが覆りうる」。本文でも明示する。
+  status   String @default("confirmed")
+
+  title       String
+  description String
+
+  /// 変わる前と後の値。「£1,663」「£1,723」のような表示用の短い文字列。
+  /// 金額で言えない変化(開業・制度の開始)では両方 null。
+  before String?
+  after  String?
+  /// 適用日。分からない・月単位でしか決まっていないものは null にして本文に書く。
+  effectiveDate DateTime?
+
+  /// この変化を反映したサイト内のページ("/bills" など)。改定はまずサイト側の
+  /// 数字を直してから号に書くので、ここが読者の次の行き先になる。
+  sitePath   String?
+  /// 出典URL。一次ソース(TfL・Ofgem・GOV.UK・会場公式)優先。必須。
+  source     String
+  /// 二次ソースのときに媒体名を出して読者に判別させる。
+  sourceName String?
+
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([issueId, displayOrder])
+}
+
+/// 観光スポットの料金(priceAdult / priceChild)が変わった記録。
+///
+/// 料金は表示用の文字列で、上書きすると前の値が消える。DBのバックアップは
+/// 10世代(数日分)しか残らないので、月をまたいだ比較には使えない。
+/// 月次号で「今月改定した入場料」を出すために、変わるたびに1行残す。
+///
+/// ★ 書き手はアプリではなく DB のトリガー(record_attraction_price_change)。
+///   料金を書き換えるスクリプトは何本もあり、どれか1本が記録を忘れると
+///   そこから漏れる。トリガーならどの経路で書き換えても残る。
+///   値が同じ更新では記録しない(IS DISTINCT FROM)。
+///
+/// 表記の揺れを直しただけ(「£35.8〜」→「£35.80〜」)の行も残る。
+/// 改定かどうかは号を書くときに人が判断する(scripts/report-monthly-changes.ts)。
+model AttractionPriceChange {
+  id           Int        @id @default(autoincrement())
+  attractionId String
+  attraction   Attraction @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+  /// priceAdult | priceChild
+  field        String
+  before       String?
+  after        String?
+  changedAt    DateTime   @default(now())
+
+  @@index([changedAt])
+  @@index([attractionId, changedAt])
 }
 
 model Lyrics {

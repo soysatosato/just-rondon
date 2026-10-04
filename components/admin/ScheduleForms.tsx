@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
   approveContent,
+  publishChangeIssue,
   rescheduleContent,
   unscheduleContent,
   type AdminActionState,
@@ -128,6 +129,23 @@ export function UnscheduleForm({ id }: { id: string }) {
     >
       <input type="hidden" name="id" value={id} />
       <Submit variant="outline">下書きに戻す</Submit>
+      <Result state={state} />
+    </form>
+  );
+}
+
+/** 「今月変わったロンドン」の号の公開。予約はせず、押した時点で出る。 */
+export function PublishIssueForm({ id }: { id: string }) {
+  const [state, action] = useFormState(publishChangeIssue, null);
+  return (
+    <form
+      action={action}
+      onSubmit={(e) => {
+        if (!confirm("この号をいま公開しますか？公開後は下書きに戻せません。")) e.preventDefault();
+      }}
+    >
+      <input type="hidden" name="id" value={id} />
+      <Submit>承認していま公開</Submit>
       <Result state={state} />
     </form>
   );

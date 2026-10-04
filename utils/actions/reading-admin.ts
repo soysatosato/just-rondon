@@ -139,3 +139,39 @@ export async function unscheduleContent(
   revalidatePath("/admin/reading");
   return { ok: true, message: "下書きに戻しました。" };
 }
+
+/**
+ * 「今月変わったロンドン」の号を公開する。
+ *
+ * 読み物と違って枠の予約はしない。月次号は「その月に何が変わったか」なので、
+ * 承認した時点で出すのがいちばん早く役に立つ。公開済みの号は伏せない
+ * (読み物と同じく、配った URL と食い違うため)。
+ *
+ * 読者に見えるようになるので、ハブと号のページのキャッシュを作り直す。
+ */
+export async function publishChangeIssue(
+  _prev: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  if (!isAdmin()) return NOT_FOUND;
+  const id = String(formData.get("id") ?? "");
+  if (!id) return NOT_FOUND;
+
+  const issue = await db.monthlyChangeIssue.findUnique({
+    where: { id },
+    select: { id: true, slug: true, publishedAt: true },
+  });
+  if (!issue) return NOT_FOUND;
+  if (issue.publishedAt) {
+    return { ok: false, message: "この号はもう公開されています。" };
+  }
+
+  await db.monthlyChangeIssue.update({
+    where: { id: issue.id },
+    data: { publishedAt: new Date() },
+  });
+  revalidatePath("/admin/reading");
+  revalidatePath("/changes");
+  revalidatePath(`/changes/${issue.slug}`);
+  return { ok: true, message: "公開しました。" };
+}

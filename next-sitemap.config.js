@@ -89,7 +89,7 @@ module.exports = {
     const depth = path.split("/").filter(Boolean).length;
 
     // イベント・コラム・時事論考・イギリス英語は追加・更新が続く。ガイド類は書き上げたら滅多に変わらない。
-    const isFresh = /^\/(events|reading|column|modern-britain|british-english)(\/|$)/.test(path);
+    const isFresh = /^\/(events|changes|reading|column|modern-britain|british-english)(\/|$)/.test(path);
 
     let priority;
     if (path === "/") priority = 1.0;
@@ -142,6 +142,8 @@ module.exports = {
       "/events",
       "/events/calendar",
       "/events/archive/2025",
+      // 月次号「今月変わったロンドン」のハブ。各号は下の additionalPaths が出す。
+      "/changes",
       // 「英国を読む」ハブ。column/modern-britain/history/british-english を束ねる。
       // /reading/areas は伏せてあるので載せない(導線なし・noindex)。
       "/reading",
@@ -504,6 +506,17 @@ module.exports = {
     });
     for (const b of briefs.slice(1)) {
       paths.push(await config.transform(config, `/events/week/${b.slug}`));
+    }
+
+    // 月次号「今月変わったロンドン」。下書き(publishedAt が null)は出さない。
+    // 週次と違ってハブは号の本文を持たないので、最新号も自分のURLを正とする。
+    const changeIssues = await prisma.monthlyChangeIssue.findMany({
+      where: { publishedAt: { lte: new Date() } },
+      select: { slug: true },
+      orderBy: { monthStart: "desc" },
+    });
+    for (const issue of changeIssues) {
+      paths.push(await config.transform(config, `/changes/${issue.slug}`));
     }
 
     // 月別イベントページ。URL は年の無い月名だけ(/events/december)で、

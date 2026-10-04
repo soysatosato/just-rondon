@@ -17,6 +17,7 @@ import {
 } from "@/lib/publish-schedule";
 import {
   ApproveForm,
+  PublishIssueForm,
   RescheduleForm,
   UnscheduleForm,
 } from "@/components/admin/ScheduleForms";
@@ -110,7 +111,7 @@ export default async function ReadingAdminPage() {
 
   const now = new Date();
   const category = { in: SCHEDULED_CATEGORIES };
-  const [drafts, queued, recent, latestColumn] = await Promise.all([
+  const [drafts, queued, recent, latestColumn, changeIssues] = await Promise.all([
     db.content.findMany({
       where: { category, publishedAt: null },
       orderBy: { createdAt: "asc" },
@@ -131,6 +132,19 @@ export default async function ReadingAdminPage() {
       where: { category: "column", publishedAt: { not: null } },
       orderBy: { publishedAt: "desc" },
       select: { publishedAt: true },
+    }),
+    // 「今月変わったロンドン」。下書きと、直近に公開した号。
+    db.monthlyChangeIssue.findMany({
+      orderBy: { monthStart: "desc" },
+      take: 4,
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        createdAt: true,
+        publishedAt: true,
+        _count: { select: { items: true } },
+      },
     }),
   ]);
 
@@ -264,6 +278,55 @@ export default async function ReadingAdminPage() {
                   minDate={today}
                 />
                 <UnscheduleForm id={row.id} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/*
+       * 月次号。読み物と違って予約の枠を持たず、承認した時点で公開する。
+       * 号の数は月に1本なので、下書きと公開済みを1つの並びで出す。
+       */}
+      <section className="mt-10">
+        <h2 className="border-b pb-2 text-lg font-semibold">今月変わったロンドン</h2>
+        {changeIssues.length === 0 && (
+          <p className="mt-3 text-sm text-muted-foreground">号はまだありません。</p>
+        )}
+        <ul className="divide-y">
+          {changeIssues.map((issue) => (
+            <li key={issue.id} className="py-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-block rounded bg-emerald-100 px-1.5 py-0.5 text-[11px] font-bold text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200">
+                  {issue.slug}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {issue.publishedAt
+                    ? `公開 ${formatJst(issue.publishedAt)}(日本)`
+                    : `下書き・作成 ${formatJst(issue.createdAt)}(日本)`}
+                  ・{issue._count.items}項目
+                </span>
+              </div>
+              <p className="mt-1 font-semibold leading-snug">{issue.title}</p>
+              <div className="mt-2 flex flex-wrap items-start gap-3">
+                {issue.publishedAt ? (
+                  <Link
+                    href={`/changes/${issue.slug}`}
+                    className="inline-flex h-9 items-center rounded-md border px-3 text-sm font-medium hover:bg-accent"
+                  >
+                    ページを開く
+                  </Link>
+                ) : (
+                  <>
+                    <a
+                      href={`/api/admin/preview?path=${encodeURIComponent(`/changes/${issue.slug}`)}`}
+                      className="inline-flex h-9 items-center rounded-md border px-3 text-sm font-medium hover:bg-accent"
+                    >
+                      プレビュー
+                    </a>
+                    <PublishIssueForm id={issue.id} />
+                  </>
+                )}
               </div>
             </li>
           ))}

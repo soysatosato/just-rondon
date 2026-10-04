@@ -87,6 +87,16 @@ export const OG_THEMES = {
     pageGradient: "linear-gradient(135deg, #f5f3ff 0%, #ffffff 52%, #fffbeb 100%)",
   },
   /*
+    月次号「今月変わったロンドン」。週次(紫)と並んでも見分けがつくよう、
+    改定=お金の話として緑に寄せ、道具(money)より暗い面から始める。
+  */
+  changes: {
+    badgeBg: "#065f46",
+    accent: "#059669",
+    panelGradient: "linear-gradient(160deg, #0f172a 0%, #065f46 55%, #10b981 100%)",
+    pageGradient: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 52%, #f8fafc 100%)",
+  },
+  /*
     お金まわりの道具。ナビの「住む・働く」と同じ緑系にして、読み物の
     カード(橙・藍・赤)と並んだときに道具だと分かるようにする。
   */

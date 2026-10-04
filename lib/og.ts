@@ -462,6 +462,26 @@ export function weeklyOgImage(brief: {
 }
 
 /**
+ * 「今月変わったロンドン」各号のOGカードURL。
+ * パスは app/og/changes/[slug]/route.tsx と対。週次と同じく、号を直したら
+ * 新しいカードが取られるよう ?v= に updatedAt を入れる。
+ */
+export function changesOgImage(issue: {
+  slug: string;
+  title: string;
+  updatedAt: Date;
+}) {
+  return {
+    url:
+      `/og/changes/${encodeURIComponent(issue.slug)}` +
+      `?v=${OG_CARD_VERSION}-${issue.updatedAt.getTime()}`,
+    width: OG_SIZE.width,
+    height: OG_SIZE.height,
+    alt: `${issue.title} | ジャスト・ロンドン`,
+  };
+}
+
+/**
  * 「イギリス英語」記事のOGカードURL。
  * パスは app/og/british-english/[slug]/route.tsx と対で、片方だけ変えると
  * 共有カードが404になる(SNS側は失敗しても静かにロゴへ戻るだけで気付けない)。

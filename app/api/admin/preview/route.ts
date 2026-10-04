@@ -10,11 +10,11 @@ import { SCHEDULED_CATEGORIES } from "@/lib/publish-schedule";
  * draft mode 中は ISR のキャッシュを通らずに描画され、詳細ページは下書きと
  * 予約中の記事も引けるようになる(utils/actions/contents.ts の visibleWhere)。
  *
- * 送り先は読み物の詳細ページだけに絞る。任意の URL を受けると、
- * 運営者を外部サイトへ飛ばすリンクを作れてしまう。
+ * 送り先は読み物の詳細ページと「今月変わったロンドン」の号だけに絞る。
+ * 任意の URL を受けると、運営者を外部サイトへ飛ばすリンクを作れてしまう。
  */
 const PREVIEW_PATH = new RegExp(
-  `^/(${SCHEDULED_CATEGORIES.join("|")})/[a-z0-9-]+$`,
+  `^/(${SCHEDULED_CATEGORIES.join("|")})/[a-z0-9-]+$|^/changes/\\d{4}-\\d{2}$`,
 );
 
 export function GET(req: NextRequest) {

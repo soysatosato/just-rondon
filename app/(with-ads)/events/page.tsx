@@ -9,6 +9,8 @@ import {
   fetchEventsForWeek,
 } from "@/utils/actions/weekly";
 import { fetchEvents2026 } from "@/utils/actions/contents";
+import { fetchLatestChangeIssue } from "@/utils/actions/changes";
+import { formatMonthJa } from "@/lib/changes";
 import { buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
 import { formatWeekRange } from "@/lib/weekly";
@@ -88,7 +90,7 @@ export default async function EventsPage() {
   const { brief, upcoming } = await fetchBriefsForEventsPage();
   if (!brief) return <CalendarFallback />;
 
-  const [staples, backIssues, forecast] = await Promise.all([
+  const [staples, backIssues, forecast, changeIssue] = await Promise.all([
     fetchEventsForWeek(brief.weekStart, brief.weekEnd),
     // 来週号は先頭で案内するので、過去号一覧からは外す。
     fetchBackIssues(6, brief.slug).then((issues) =>
@@ -96,6 +98,7 @@ export default async function EventsPage() {
     ),
     // ここに出るのは常に最新号なので、過去号扱いにはならない。
     fetchForecastForWeek(brief.weekStart, brief.weekEnd, false),
+    fetchLatestChangeIssue(),
   ]);
 
   // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
@@ -140,6 +143,30 @@ export default async function EventsPage() {
       <WeeklyBriefView brief={brief} staples={staples} forecast={forecast} />
 
       <BackIssueList issues={backIssues} />
+
+      {/*
+       * 月次号への導線。週次は「今週起きること」、月次は「今月から変わった
+       * 金額と制度」で、週をまたいで効き続ける改定は週次の号に収まらない。
+       */}
+      {changeIssue && (
+        <section className="mb-12 border-t-2 border-foreground pt-4">
+          <p className="font-serif text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+            This Month
+          </p>
+          <Link href={`/changes/${changeIssue.slug}`} className="group mt-2 block">
+            <h2 className="text-lg font-bold tracking-tight group-hover:underline sm:text-xl dark:text-white">
+              {formatMonthJa(changeIssue.monthStart)}に変わったロンドン
+            </h2>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+              {changeIssue.headline}
+            </p>
+            <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold dark:text-white">
+              運賃・料金・制度の改定を見る
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        </section>
+      )}
 
       {/*
        * 年間カレンダーへの導線。号の本体と同じ罫の組みに揃え、
