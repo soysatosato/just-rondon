@@ -5,6 +5,7 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { guidePath, guides, JOBS_BASE, SITE_URL } from "@/components/jobs/guides/guides";
+import { INDEXABLE_ROBOTS } from "@/lib/seo";
 
 const TITLE = "ロンドンで働く人のための労働問題ガイド";
 const DESCRIPTION =
@@ -22,7 +23,7 @@ export const metadata = {
     "職場 ハラスメント",
     "サービスチャージ",
   ],
-  robots: { index: true, follow: true },
+  robots: INDEXABLE_ROBOTS,
   alternates: { canonical: `${SITE_URL}${JOBS_BASE}` },
   openGraph: {
     title: TITLE,

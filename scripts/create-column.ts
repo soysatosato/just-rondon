@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
 import { resolveAttractionSlugs } from "./lib/column-attractions";
+import { resolveArticleImage } from "./lib/article-image";
 
 type ColumnSectionInput = {
   title: string;
@@ -149,6 +150,12 @@ async function main() {
   // 作ってから失敗すると、リンクの無いコラムだけが公開されてしまう。
   const attractionIds = await resolveAttractionSlugs(payload.attractions ?? []);
 
+  // 主画像は幅1200px以上に限り、1280px版のURLに置き換えて入れる
+  // (Google Discover の条件。scripts/lib/article-image.ts)。
+  const image = payload.image?.trim()
+    ? (await resolveArticleImage(payload.image)).url
+    : undefined;
+
   const baseSlug = toSlugBase(payload.engTitle || payload.title);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -177,7 +184,7 @@ async function main() {
         slug,
         summary: payload.summary,
         mainText: payload.mainText,
-        image: payload.image,
+        image,
         website: payload.website,
         category: "column",
         route: "/column",

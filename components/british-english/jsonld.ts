@@ -36,9 +36,14 @@ export function britishEnglishArticleJsonLd(content: {
     mainEntityOfPage: url,
     datePublished: publishedDateOf(content).toISOString(),
     dateModified: content.updatedAt.toISOString(),
-    // 挿絵が無い記事のほうが多いので、そのときは共有カードを画像として出す。
-    // Article に image が無いと Google の記事カードに画像が付かない。
-    image: absoluteImage(content.image || britishEnglishOgImage(content).url),
+    // 挿絵(幅1200px以上。scripts/lib/article-image.ts で登録時に検査)と、
+    // 1200x630 の共有カードの2枚を渡す。挿絵が無い記事のほうが多く、
+    // そのときはカードだけになる。Article に image が無いと Google の
+    // 記事カードにも Discover にも画像が付かない。
+    image: [
+      ...(content.image ? [absoluteImage(content.image)] : []),
+      absoluteImage(britishEnglishOgImage(content).url),
+    ],
     author: BRITISH_ENGLISH_PUBLISHER,
     publisher: BRITISH_ENGLISH_PUBLISHER,
   };

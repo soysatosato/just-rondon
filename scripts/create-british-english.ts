@@ -2,6 +2,7 @@ import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
+import { resolveArticleImage } from "./lib/article-image";
 
 type BritishEnglishSectionInput = {
   title: string;
@@ -79,6 +80,12 @@ async function main() {
   const payload: BritishEnglishPayload = JSON.parse(readFileSync(path, "utf-8"));
   validatePayload(payload);
 
+  // 挿絵は任意。付けるなら幅1200px以上に限り、1280px版のURLに置き換えて
+  // 入れる(Google Discover の条件。scripts/lib/article-image.ts)。
+  const image = payload.image?.trim()
+    ? (await resolveArticleImage(payload.image)).url
+    : undefined;
+
   const baseSlug = toSlugBase(payload.engTitle);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -90,7 +97,7 @@ async function main() {
         slug,
         summary: payload.summary,
         mainText: payload.mainText,
-        image: payload.image,
+        image,
         website: payload.website,
         category: "british-english",
         route: "/british-english",

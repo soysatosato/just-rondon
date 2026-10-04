@@ -1,4 +1,5 @@
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { SITE_NAME, SITE_URL, absoluteImage } from "@/lib/seo";
+import { columnOgImage } from "@/lib/og";
 import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const COLUMN_BASE = "/column";
@@ -34,7 +35,13 @@ export function columnArticleJsonLd(content: {
     mainEntityOfPage: url,
     datePublished: publishedDateOf(content).toISOString(),
     dateModified: content.updatedAt.toISOString(),
-    ...(content.image ? { image: content.image } : {}),
+    // 挿絵の写真と、1200x630 の共有カードの2枚を渡す。Google Discover は
+    // 幅1200px以上の画像を求めており、写真は登録時にその幅を検査している
+    // (scripts/lib/article-image.ts)。カードは写真の取得に失敗した場合の控え。
+    image: [
+      ...(content.image ? [absoluteImage(content.image)] : []),
+      absoluteImage(columnOgImage(content).url),
+    ],
     author: COLUMN_PUBLISHER,
     publisher: COLUMN_PUBLISHER,
   };

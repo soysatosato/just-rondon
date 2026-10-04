@@ -187,6 +187,13 @@ console.log(Object.entries(c).sort((a, b) => b[1] - a[1]).map(([k, v]) => v + " 
   (`https://upload.wikimedia.org/...`)上のパブリックドメインまたは
   再利用可能ライセンスの画像URL。適切な画像が見つからなければ省略してよい
   (UI側でnull安全に処理される)。
+  - **原本の幅が1200px以上のファイルに限る。** Google Discover が大きな
+    画像のカードを出す条件で、満たさないと登録スクリプトが理由つきで弾く。
+    肖像画などで大きい版が無いときは、関係する場所・建物・物の写真に替える。
+    幅は Commons のファイルページか、API
+    (`prop=imageinfo&iiprop=size`)で確かめる
+  - 原本のURLをそのまま渡してよい。登録スクリプトが1280px版のURLに
+    置き換えて保存する(`scripts/lib/article-image.ts`)
 - `tags`: **必須**。`/column` のテーマ絞り込みに使う。下記から1〜3個選ぶ。
   ここに無い値を入れると登録スクリプトがエラーで弾く
   (正典は `lib/column-taxonomy.ts`)。

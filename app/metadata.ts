@@ -1,6 +1,11 @@
 // app/metadata.ts
 import { Metadata } from "next";
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
+import {
+  DEFAULT_OG_IMAGE,
+  INDEXABLE_ROBOTS,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/seo";
 
 /**
  * ルートレイアウトのデフォルト metadata。
@@ -19,10 +24,7 @@ export const defaultMetadata: Metadata = {
   keywords:
     "ロンドン観光, 美術館, 展覧会, ミュージカル, 映画プレミア, ニュース, イベント, 観光スポット, アート, エンタメ",
   authors: [{ name: "ジャスト・ロンドン 運営", url: SITE_URL }],
-  robots: {
-    index: true, // インデックス許可
-    follow: true, // リンク追従許可
-  },
+  robots: INDEXABLE_ROBOTS,
   openGraph: {
     title: `${SITE_NAME} | ロンドン観光・美術館・ニュース・ミュージカル情報`,
     description:

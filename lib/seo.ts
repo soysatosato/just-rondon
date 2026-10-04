@@ -41,6 +41,25 @@ export function absoluteImage(url: string): string {
 }
 
 /**
+ * インデックスさせるページの robots 指定。
+ *
+ * max-image-preview:large は Google Discover の掲載条件。これが無いと
+ * Discover は大きな画像のカードを出さず、小さなサムネイル扱いになる
+ * (大きな画像のカードのほうがクリックされやすい、と Google 自身が書いている)。
+ * 画像は幅1200px以上が前提で、読み物の主画像は create-column.ts 等で
+ * それを満たすよう登録時に検査している。
+ *
+ * Next はページ側の robots でレイアウト側を丸ごと置き換えるので、
+ * app/metadata.ts に書くだけでは buildPageMetadata を通るページに届かない。
+ * index: true を書く場所はすべてこれを使うこと。
+ */
+export const INDEXABLE_ROBOTS = {
+  index: true,
+  follow: true,
+  "max-image-preview": "large",
+} as const satisfies NonNullable<Metadata["robots"]>;
+
+/**
  * 検索結果に出したくないユーティリティページ用の metadata。
  *
  * robots.txt の Disallow だけでは足りない。クロールを止めると Google は
@@ -232,9 +251,7 @@ export function buildPageMetadata({
     title: titleSuffix ? `${title} | ${SITE_NAME}` : title,
     description,
     ...(keywords ? { keywords } : {}),
-    robots: noindex
-      ? { index: false, follow: true }
-      : { index: true, follow: true },
+    robots: noindex ? { index: false, follow: true } : INDEXABLE_ROBOTS,
     alternates: {
       canonical: url,
       ...(hreflang ? { languages: hreflang } : {}),
