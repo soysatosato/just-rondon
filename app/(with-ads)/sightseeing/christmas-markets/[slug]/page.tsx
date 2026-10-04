@@ -2,7 +2,7 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { notFound } from "next/navigation";
-import { christmasMarkets } from "../data";
+import { christmasMarketPages } from "../data";
 
 import { MapPin, CalendarDays, Sparkles, Compass } from "lucide-react";
 import { buildPageMetadata } from "@/lib/seo";
@@ -40,7 +40,7 @@ const SectionBlock = ({
   </section>
 );
 export function generateStaticParams() {
-  return christmasMarkets.map((m) => ({ slug: m.slug }));
+  return christmasMarketPages.map((m) => ({ slug: m.slug }));
 }
 
 export async function generateMetadata({
@@ -48,7 +48,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }) {
-  const content = christmasMarkets.find((m) => m.slug === params.slug);
+  const content = christmasMarketPages.find((m) => m.slug === params.slug);
 
   // データが存在しない場合（404用メタ）
   if (!content) {
@@ -90,7 +90,7 @@ export async function generateMetadata({
 }
 
 export default function ChristmasMarketDetailPage({ params }: Props) {
-  const content = christmasMarkets.find((m) => m.slug === params.slug);
+  const content = christmasMarketPages.find((m) => m.slug === params.slug);
 
   if (!content) return notFound();
 

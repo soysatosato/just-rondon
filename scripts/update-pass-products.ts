@@ -90,12 +90,12 @@ const FIXES: Fix[] = [
 ];
 
 /**
- * 表示名の年号だけを差し替える。slug は変えない
- * (変えると既存URLが404になり検索流入と外部リンクを失う)。
+ * 表示名の年号だけを差し替える。slug には年を入れない
+ * (2026-10 に付け替え済み。lib/sightseeing/renamed-slugs.js)。
  */
 const RENAMES: { slug: string; from: string; to: string }[] = [
   {
-    slug: "christmas-lights-london-bus-tour-2025",
+    slug: "christmas-lights-london-bus-tour",
     from: "クリスマス・ライト・ロンドン・バスツアー 2025",
     to: "クリスマス・ライト・ロンドン・バスツアー 2026",
   },

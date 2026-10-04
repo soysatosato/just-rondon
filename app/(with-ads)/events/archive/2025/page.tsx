@@ -50,7 +50,7 @@ export default async function Events2025ArchivePage() {
             key={content.id}
             content={content}
             fallbackMonthNumber={index + 1}
-            basePath="/events/archive/2025"
+            archiveBasePath="/events/archive/2025"
           />
         ))}
       </div>

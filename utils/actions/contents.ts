@@ -3,7 +3,12 @@
 import db from "../db";
 import { draftMode } from "next/headers";
 import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "../rankings";
-import { publishedWhere, type ReadingCategory } from "@/lib/publish-schedule";
+import {
+  londonDate,
+  publishedWhere,
+  type ReadingCategory,
+} from "@/lib/publish-schedule";
+import { parseEventMonth } from "@/lib/events";
 
 export const fetchEvents2025 = async () => {
   const contents = await db.content.findMany({
@@ -209,16 +214,53 @@ export const fetchEvents2026 = async () => {
   });
   return contents;
 };
-export const fetchMonthlyEvents2026 = async (slug: string) => {
-  const content = await db.content.findFirst({
-    where: { slug, category: "london-events-2026" },
+/**
+ * 月別イベントページ(/events/<月>)に出す行と、その年。
+ *
+ * URL に年を入れていないので、同じ月の行が複数年あるときにどれを出すかを
+ * ここで決める。まだ終わっていない月のうち最も早い年、どれも終わって
+ * いれば最新の年。たとえば2026年10月に2027年分を入れると、すでに終わった
+ * 1〜9月はその場で2027年版に替わり、10〜12月は2026年の月が終わるたびに
+ * 替わる。年が替わる日に手で何かを切り替える必要は無い。
+ *
+ * 「終わったか」はロンドンの日付で見る。サーバーの時計(UTC)で見ると、
+ * 夏時間の間は月の変わり目が1時間ずれる。
+ *
+ * month は URL の月名("december")。月名でなければ null を返す。
+ */
+export const fetchMonthlyEvents = async (month: string) => {
+  const monthNumber = parseEventMonth(month);
+  if (monthNumber === null) return null;
+
+  const rows = await db.content.findMany({
+    where: {
+      category: { startsWith: "london-events-" },
+      slug: { endsWith: `-${month}` },
+    },
     include: {
       sections: {
         orderBy: { displayOrder: "asc" },
       },
     },
   });
-  return content;
+
+  const dated = rows
+    .map((content) => ({
+      content,
+      year: Number(content.category.match(/^london-events-(\d{4})$/)?.[1]),
+    }))
+    .filter((row) => Number.isInteger(row.year))
+    .sort((a, b) => a.year - b.year);
+  if (dated.length === 0) return null;
+
+  // "2026-10" の形で比べる。文字列の大小がそのまま年月の前後になる。
+  const thisMonth = londonDate(new Date()).slice(0, 7);
+  const monthOf = (year: number) =>
+    `${year}-${String(monthNumber).padStart(2, "0")}`;
+  return (
+    dated.find((row) => monthOf(row.year) >= thisMonth) ??
+    dated[dated.length - 1]
+  );
 };
 
 export const fetchEventsForMonth = async (year: number, month: number) => {

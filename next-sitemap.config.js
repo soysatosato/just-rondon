@@ -477,8 +477,13 @@ module.exports = {
       paths.push(await config.transform(config, `/sightseeing/${a.slug}`));
     }
 
+    // winter-wonderland はスポット版(/sightseeing/hyde-park-winter-wonderland)に
+    // まとめ、マーケット側の URL はそこへ転送している(next.config.mjs)。
     const christmasMarkets = await prisma.content.findMany({
-      where: { category: "christmas-market" },
+      where: {
+        category: "christmas-market",
+        slug: { not: "winter-wonderland" },
+      },
       include: { sections: true },
     });
     for (const cm of christmasMarkets) {
@@ -501,13 +506,25 @@ module.exports = {
       paths.push(await config.transform(config, `/events/week/${b.slug}`));
     }
 
-    // 月別イベントページ。これまでサイトマップに1件も入っていなかった。
-    const events2026 = await prisma.content.findMany({
-      where: { category: "london-events-2026" },
+    // 月別イベントページ。URL は年の無い月名だけ(/events/december)で、
+    // DB の行は年ごとにあるので、月名で重複を落とす。どの年の行を出すかは
+    // ページ側(fetchMonthlyEvents)が決める。
+    const eventMonths = await prisma.content.findMany({
+      where: { category: { startsWith: "london-events-" } },
       select: { slug: true },
     });
-    for (const e of events2026) {
-      paths.push(await config.transform(config, `/events/${e.slug}`));
+    const monthNames = new Set(
+      eventMonths
+        .map((e) =>
+          e.slug.match(
+            /-(january|february|march|april|may|june|july|august|september|october|november|december)$/,
+          ),
+        )
+        .filter(Boolean)
+        .map((m) => m[1]),
+    );
+    for (const month of monthNames) {
+      paths.push(await config.transform(config, `/events/${month}`));
     }
 
     // 2025年版はアーカイブURLに移動。

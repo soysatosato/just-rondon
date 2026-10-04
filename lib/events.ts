@@ -39,6 +39,25 @@ export function getMonthSlug(year: number, month: number): string {
   return `london-events-${year}-${MONTH_NUMBER_TO_NAME[month]}`;
 }
 
+/**
+ * 月別ページの URL。年は入れない(/events/december)。
+ *
+ * DB の行は年ごとにあり、slug も年入り("london-events-2026-december")だが、
+ * それは行を見分けるための内部の名前で、URL には出さない。年が替わるたびに
+ * URL が一から出直すと、同じ月の検索で積んだ評価を毎年捨てることになる。
+ * どの年の行を出すかは fetchMonthlyEvents が決める。
+ */
+export function eventMonthPath(monthNumber: number): string {
+  return `/events/${MONTH_NUMBER_TO_NAME[monthNumber]}`;
+}
+
+/** URL の月名("december")を月番号に。月名でなければ null。 */
+export function parseEventMonth(segment: string): number | null {
+  return Object.prototype.hasOwnProperty.call(MONTH_NAME_TO_NUMBER, segment)
+    ? MONTH_NAME_TO_NUMBER[segment]
+    : null;
+}
+
 export function getSeason(monthNumber: number): Season {
   if (monthNumber >= 3 && monthNumber <= 5) return "spring";
   if (monthNumber >= 6 && monthNumber <= 8) return "summer";

@@ -12,9 +12,9 @@
  * 歩き方(AttractionVisitStep)を入れる前に、まず年次情報を直す。古い年の
  * 日程が載ったページに現地での歩き方だけ足しても、読者は混乱する。
  *
- * slug は "hyde-park-winter-wonderland-2025" のまま変えていない。
- * 変えると既存URLが404になり、検索流入と外部リンクを失うため。
- * 表示名と本文だけを毎年更新する運用にする。
+ * 表示名と本文だけを毎年更新し、slug は毎年同じものを使う。2026-10 に
+ * 年号の入っていた "hyde-park-winter-wonderland-2025" から付け替え、旧URLは
+ * 301で送っている(lib/sightseeing/renamed-slugs.js)。
  *
  * 来年やること: このファイルの YEAR 定数と DATES、目玉アトラクションを
  * 公式サイトで確認して差し替え、再実行する。
@@ -34,7 +34,7 @@
 import db from "@/utils/db";
 
 const APPLY = process.argv.includes("--apply");
-const SLUG = "hyde-park-winter-wonderland-2025";
+const SLUG = "hyde-park-winter-wonderland";
 
 /** 表示名。slug は変えずにここだけ毎年更新する。 */
 const NAME = "ハイドパーク ウィンターワンダーランド（2026）";

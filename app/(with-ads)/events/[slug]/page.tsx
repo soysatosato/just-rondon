@@ -5,11 +5,11 @@ import { Sparkles } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { fetchMonthlyEvents2026, fetchEventsForMonth } from "@/utils/actions/contents";
+import { fetchMonthlyEvents, fetchEventsForMonth } from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { getMonthNumber, getSeasonMeta } from "@/lib/events";
+import { eventMonthPath, getMonthNumber, getSeasonMeta } from "@/lib/events";
 import SeasonBadge from "@/components/events/SeasonBadge";
 import EventDetailCard from "@/components/events/EventDetailCard";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
@@ -18,12 +18,16 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 
+// どの年の分を出すかは日付で替わる(fetchMonthlyEvents)。月が終わった
+// 翌日には翌年版へ切り替わるよう、作り置きを1時間で捨てる。
+export const revalidate = 60 * 60;
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const content = await fetchMonthlyEvents2026(params.slug);
+  const content = (await fetchMonthlyEvents(params.slug))?.content;
 
   if (!content) {
     return {
@@ -52,13 +56,12 @@ export default async function EventDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const content = await fetchMonthlyEvents2026(params.slug);
+  const monthly = await fetchMonthlyEvents(params.slug);
 
-  if (!content) return notFound();
+  if (!monthly) return notFound();
 
+  const { content, year } = monthly;
   const monthNumber = getMonthNumber(content.slug);
-  const yearMatch = content.slug.match(/(\d{4})/);
-  const year = yearMatch ? parseInt(yearMatch[1], 10) : 2026;
   const events = await fetchEventsForMonth(year, monthNumber);
   const meta = getSeasonMeta(monthNumber);
   const Icon = meta.icon;
@@ -69,7 +72,7 @@ export default async function EventDetailPage({
         data={breadcrumbListJsonLd({
           path: "/events",
           current: content.title,
-          currentHref: `/events/${content.slug}`,
+          currentHref: eventMonthPath(monthNumber),
         })}
       />
 

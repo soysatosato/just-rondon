@@ -1,3 +1,7 @@
+import renamedSlugs from "./lib/sightseeing/renamed-slugs.js";
+
+const { RENAMED_ATTRACTION_SLUGS } = renamedSlugs;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
@@ -98,6 +102,35 @@ const nextConfig = {
       {
         source: "/sightseeing/20-fenchurch-street-walkie-talkie",
         destination: "/sightseeing/sky-garden-london",
+        permanent: true,
+      },
+
+      // 季節の催しの slug から年号を外した。理由と対応表は
+      // lib/sightseeing/renamed-slugs.js(旅行プランの読み替えも同じ表を読む)。
+      ...Object.entries(RENAMED_ATTRACTION_SLUGS).map(([from, to]) => ({
+        source: `/sightseeing/${from}`,
+        destination: `/sightseeing/${to}`,
+        permanent: true,
+      })),
+
+      // ウィンター・ワンダーランドは、スポット版とクリスマスマーケット版の
+      // 2ページが同じ催しを別々に書いていた。検索の実績(過去1年でクリック
+      // 55対0)も、旅行プラン・スタンプ・回り方もスポット版にあるので、
+      // そちらへ1本にまとめる。マーケット一覧のカードは残し、リンク先だけ
+      // スポット版にしてある(christmas-markets/data.ts の spotSlug)。
+      {
+        source: "/sightseeing/christmas-markets/winter-wonderland",
+        destination: "/sightseeing/hyde-park-winter-wonderland",
+        permanent: true,
+      },
+
+      // 月別イベントカレンダーの URL から年号を外した。年が替わるたびに
+      // URL が一から出直すのをやめ、同じ月の検索を毎年同じ URL で受ける。
+      // どの年の分を出すかは /events/[slug] が決める(fetchMonthlyEvents)。
+      {
+        source:
+          "/events/london-events-2026-:month(january|february|march|april|may|june|july|august|september|october|november|december)",
+        destination: "/events/:month",
         permanent: true,
       },
 

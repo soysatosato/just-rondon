@@ -13,6 +13,13 @@ export type ChristmasMarket = {
   image: string;
   website: string;
   sections: ChristmasMarketSection[];
+  /**
+   * 観光スポット(/sightseeing/<spotSlug>)のページが本体になっているもの。
+   * 一覧のカードはそちらへリンクし、マーケット側の詳細ページは作らない。
+   * 同じ催しを2ページで別々に書くと、片方だけ更新されて食い違ううえ、
+   * 検索でも2ページが互いの順位を食い合う。
+   */
+  spotSlug?: string;
 };
 
 export const christmasMarkets: ChristmasMarket[] = [
@@ -243,6 +250,7 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "winter-wonderland",
+    spotSlug: "hyde-park-winter-wonderland",
     title: "ウィンター・ワンダーランド",
     engTitle: "Winter Wonderland",
     summary:
@@ -258,18 +266,6 @@ export const christmasMarkets: ChristmasMarket[] = [
         description:
           "[Hyde Park, London W2 2UH](https://www.google.com/maps?q=Hyde+Park,+London+W2+2UH)",
         displayOrder: 1,
-      },
-      {
-        title: "訪問のコツ",
-        description:
-          "午前10時〜正午は“入場無料”だが、オンライン事前予約は必須。**混雑を避けるなら午前中が最強**。",
-        displayOrder: 2,
-      },
-      {
-        title: "周辺でできること",
-        description:
-          "訪問後はそのまま **ロンドン・クリスマスライト散策** に出発するのがおすすめ。ハイドパークからの動線が最適。",
-        displayOrder: 3,
       },
       {
         title: "期間",
@@ -392,3 +388,8 @@ export const christmasMarkets: ChristmasMarket[] = [
     ],
   },
 ];
+
+/** マーケット側に詳細ページを持つもの。spotSlug 付きはスポットのページが本体。 */
+export const christmasMarketPages = christmasMarkets.filter(
+  (market) => !market.spotSlug,
+);

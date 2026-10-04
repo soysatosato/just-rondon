@@ -12,6 +12,7 @@ import {
   type PlanEntry,
 } from "@/lib/plan";
 import type { PlanContent } from "@/lib/plan/saved";
+import { currentAttractionSlug } from "@/lib/sightseeing/renamed-slugs";
 
 /**
  * 旅行プランの保存先。本体はブラウザの localStorage にある。
@@ -111,11 +112,14 @@ function hydrate() {
       ) {
         const entry = item as PlanEntry;
         const day = Math.min(Math.max(entry.day, 1), MAX_DAYS);
+        // URL を付け替えたスポットは今の slug にする。旧 slug のままだと
+        // /plan が「非公開になったスポット」とみなして消してしまう。
+        const slug = currentAttractionSlug(entry.slug);
         // 壊れた滞在時間は落とす。掲載値に戻るだけで、プランは残る。
         restored.push(
           isValidStayMinutes(entry.minutes)
-            ? { slug: entry.slug, day, minutes: entry.minutes }
-            : { slug: entry.slug, day },
+            ? { slug, day, minutes: entry.minutes }
+            : { slug, day },
         );
       }
     }

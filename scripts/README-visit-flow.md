@@ -84,7 +84,7 @@ DB上は `address` が `"-"` になっている。
 - マーリン・ロンドン・アトラクション・パス (`merlin-london-attractions-pass`)
 - ゴールデンパス・ロンドン (`golden-pass-london`)
 - ロイヤル・ミュージアムズ・グリニッジ デイパス (`royal-museums-greenwich-day-pass`)
-- クリスマス・ライト・ロンドン・バスツアー (`christmas-lights-london-bus-tour-2025`)
+- クリスマス・ライト・ロンドン・バスツアー (`christmas-lights-london-bus-tour`)
 
 これらに必要なのは歩き方ではなく「どのパスが誰に向くか」の判断材料。
 `scripts/update-pass-products.ts` で本文側に書く。
@@ -114,13 +114,15 @@ DB上は `address` が `"-"` になっている。
 
 | slug | 現在の掲載 | 更新スクリプト |
 | --- | --- | --- |
-| `hyde-park-winter-wonderland-2025` | 2026年版 | `update-winter-wonderland-2026.ts` |
-| `chelsea-winter-village-2025` | 2026年版 | `update-seasonal-events-2026.ts` |
-| `rhs-chelsea-flower-show-2026` | 2027年版 | `update-seasonal-events-2026.ts` |
-| `christmas-lights-london-bus-tour-2025` | 2026年版 | `update-pass-products.ts` |
+| `hyde-park-winter-wonderland` | 2026年版 | `update-winter-wonderland-2026.ts` |
+| `chelsea-winter-village` | 2026年版 | `update-seasonal-events-2026.ts` |
+| `rhs-chelsea-flower-show` | 2027年版 | `update-seasonal-events-2026.ts` |
+| `christmas-lights-london-bus-tour` | 2026年版 | `update-pass-products.ts` |
 
-**slug は変えない**（変えると既存URLが404になり検索流入を失う）。
-表示名と本文だけを毎年更新する。slug の年号と表示年がずれるのは想定どおり。
+**slug には年を入れない**。年は表示名と本文にだけ書き、毎年そこだけを
+更新する。2026-10 までは年入りの slug(`-2025` など)だったが、毎年
+作り直すと評価を捨て、放置すると表示年とずれるので、年なしに付け替えて
+旧URLは301で送っている(`lib/sightseeing/renamed-slugs.js`)。
 
 毎年の作業: 各スクリプトの冒頭コメントにある日程を公式サイトで確認して
 差し替え、`--apply` で再実行する。いずれも二重適用を防ぐ `done` 判定が

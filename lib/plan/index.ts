@@ -3,6 +3,7 @@ import {
   parsePriceGbp,
 } from "@/components/attractions/facts";
 import { distanceKm } from "@/lib/sightseeing/geo";
+import { currentAttractionSlug } from "@/lib/sightseeing/renamed-slugs";
 import { formatClosedDays, weekdayIndex } from "./dates";
 
 /**
@@ -178,6 +179,9 @@ export function encodePlan(entries: PlanEntry[]): string {
  * 他人が手で書き換えたURLも届くので、slug の形をしていないもの、重複、
  * 上限超えは黙って捨てる。プランが1件でも残るなら開く価値があるので、
  * 壊れた入力でもエラーにはしない。
+ *
+ * URL を付け替えたスポットは、ここで今の slug に読み替える。アカウントに
+ * 保存したプランもこの関数を通るので、共有リンクと両方がここで済む。
  */
 export function decodePlan(param: string | null | undefined): PlanEntry[] {
   if (!param) return [];
@@ -189,8 +193,9 @@ export function decodePlan(param: string | null | undefined): PlanEntry[] {
     .slice(0, MAX_DAYS)
     .forEach((segment, index) => {
       for (const token of segment.split(SPOT_SEPARATOR)) {
-        const [slug, rawMinutes] = token.split(MINUTES_SEPARATOR);
-        if (!SLUG_PATTERN.test(slug)) continue;
+        const [rawSlug, rawMinutes] = token.split(MINUTES_SEPARATOR);
+        if (!SLUG_PATTERN.test(rawSlug)) continue;
+        const slug = currentAttractionSlug(rawSlug);
         if (seen.has(slug)) continue;
         if (entries.length >= MAX_SPOTS) return;
         seen.add(slug);
