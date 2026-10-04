@@ -16,6 +16,7 @@ import {
 import ModernBritainDetail from "@/components/modern-britain/ModernBritainDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import PreviewBanner from "@/components/admin/PreviewBanner";
 
 interface Props {
   params: {
@@ -61,6 +62,7 @@ export default async function ModernBritainDetailPage({ params }: Props) {
 
   return (
     <>
+      <PreviewBanner publishedAt={content.publishedAt} />
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/modern-britain",
