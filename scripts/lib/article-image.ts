@@ -66,7 +66,8 @@ function parseWikimediaUrl(
  * 条件を満たさなければ理由つきで例外を投げる(記事は作らせない)。
  */
 export async function resolveArticleImage(url: string): Promise<ArticleImage> {
-  const parsed = parseWikimediaUrl(url.trim());
+  // API やブラウザからコピーした URL には ?utm_source=... が付いてくる。
+  const parsed = parseWikimediaUrl(url.trim().split(/[?#]/)[0]);
   if (!parsed) {
     throw new Error(
       `image must be an upload.wikimedia.org URL (got ${url}). ` +
@@ -117,14 +118,28 @@ export async function resolveArticleImage(url: string): Promise<ArticleImage> {
 
   // 縮小版は要求されて初めて作られる。ここで一度取り、実際に配れることを
   // 確かめておく(Wikimedia が受け付けない幅だと 400 が返る)。
-  const check = await fetch(served, {
-    method: "HEAD",
-    headers: { "User-Agent": UA },
-  });
+  const check = await headWithRetry(served);
   const type = check.headers.get("content-type") ?? "";
   if (!check.ok || !type.startsWith("image/")) {
     throw new Error(`image URL does not serve an image (${check.status}): ${served}`);
   }
 
   return { url: served, width, height };
+}
+
+/**
+ * HEAD を送る。429 のときだけ待って取り直す。
+ *
+ * Wikimedia は縮小版の新規生成を IP ごとに絞っており、何十本もまとめて
+ * 検査すると数本目から 429 が返る。画像に問題があるわけではないので、
+ * Retry-After(無ければ 2, 4, 8, 16 秒)だけ待って再試行する。
+ */
+async function headWithRetry(url: string): Promise<Response> {
+  for (let attempt = 0; ; attempt += 1) {
+    const res = await fetch(url, { method: "HEAD", headers: { "User-Agent": UA } });
+    if (res.status !== 429 || attempt >= 4) return res;
+    const retryAfter = Number(res.headers.get("retry-after"));
+    const seconds = retryAfter > 0 ? retryAfter : 2 ** (attempt + 1);
+    await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+  }
 }
