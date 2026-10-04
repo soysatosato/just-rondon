@@ -22,6 +22,7 @@ const DESCRIPTION_MAX_LENGTH = 120;
 const MIN_BODY_LENGTH = 20;
 
 type AttractionMetaInput = {
+  slug?: string;
   name: string;
   summary?: string | null;
   tagline?: string | null;
@@ -68,7 +69,27 @@ function durationSuffixes(durationText: string) {
   ];
 }
 
+/**
+ * 手で書いたタイトルと description。ページに汎用の語尾では表せない
+ * 固有の中身があるスポットだけに使う。
+ *
+ * 衛兵交代式は「衛兵交代 時間」「バッキンガム宮殿 衛兵交代 時間」で
+ * 8〜11位に出ていながら、3か月でクリックが0だった(2026-10 時点)。
+ * 検索した人が知りたいのは「何時に、どの日にやるか」で、ページ冒頭に
+ * 今日から7日分の実施予定を出すようにしたので、それをタイトルで約束する。
+ */
+const META_OVERRIDES: Record<string, { title: string; description: string }> = {
+  "changing-the-guard-buckingham-palace": {
+    title: "衛兵交代式の時間と今週の実施日｜バッキンガム宮殿",
+    description:
+      "バッキンガム宮殿の衛兵交代式は11:00開始。毎日ではなく、実施日は公式の日程で決まります。今日から7日間の実施予定を公式カレンダーから1時間ごとに更新。観覧無料・所要45分、よく見える場所と着くべき時刻も。",
+  },
+};
+
 export function attractionTitle(attraction: AttractionMetaInput): string {
+  const override = attraction.slug && META_OVERRIDES[attraction.slug];
+  if (override) return override.title;
+
   const duration = attraction.durationText?.trim();
 
   // 所要時間があればそれを優先する。収まらなければ通常のサフィックスへ落ちる。
@@ -89,6 +110,9 @@ export function attractionTitle(attraction: AttractionMetaInput): string {
  * 最初の一目に入る。事実が1つも無いスポットでは、従来どおり summary だけを出す。
  */
 export function attractionDescription(attraction: AttractionMetaInput): string {
+  const override = attraction.slug && META_OVERRIDES[attraction.slug];
+  if (override) return override.description;
+
   const facts: string[] = [];
 
   if (attraction.durationText?.trim()) {

@@ -55,6 +55,8 @@ import {
 } from "@/components/sightseeing/stories";
 import { categoryChipMap } from "@/components/sightseeing/categories";
 import ViewTracker from "@/components/analytics/ViewTracker";
+import GuardSchedule from "@/components/sightseeing/GuardSchedule";
+import { GUARD_SLUG, fetchGuardSchedule } from "@/lib/guard/schedule";
 
 export async function generateMetadata({
   params,
@@ -283,7 +285,8 @@ export default async function AttractionDetail({
 
   // 近隣スポットは徒歩導線、同カテゴリーは興味の近さ。役割が違うので両方出す。
   // コラムは ContentAttraction に登録されたものだけ。無ければ枠ごと出ない。
-  const [nearby, related, columns] = await Promise.all([
+  // 衛兵交代式のページだけ、公式カレンダーから今日から7日分の実施予定を読む。
+  const [nearby, related, columns, guardSchedule] = await Promise.all([
     fetchNearbyAttractions(
       { lat: attraction.lat, lng: attraction.lng },
       params.slug,
@@ -291,6 +294,7 @@ export default async function AttractionDetail({
     ),
     fetchRandomAttractionsByCategory(attraction.category, params.slug, 2),
     fetchAttractionColumns(attraction.id),
+    params.slug === GUARD_SLUG ? fetchGuardSchedule() : null,
   ]);
 
   // 近隣枠に出したスポットを同カテゴリー枠で繰り返さない。
@@ -429,6 +433,12 @@ export default async function AttractionDetail({
             </p>
           )}
         </header>
+
+        {/*
+          衛兵交代式の実施予定。検索してきた人の問いは「何時に、どの日に
+          やるか」なので、料金や所要時間より先に置く。
+        */}
+        {guardSchedule && <GuardSchedule result={guardSchedule} />}
 
         {/* 訪問前に知りたいこと。埋まっている項目だけが出る。 */}
         <AttractionFactBar
