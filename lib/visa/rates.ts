@@ -130,6 +130,14 @@ export const VISA_THRESHOLDS = {
     maintenanceLondonPerMonth: 1529,
     /** ロンドン外の教育機関。月額 × 最大9ヶ月。 */
     maintenanceOutsideLondonPerMonth: 1171,
+    /**
+     * 2026年11月30日から適用される額(HC 584、2026年10月5日に gov.uk で確認)。
+     * その日を過ぎたら上の2つをこの値に置き換え、このブロックは消す。
+     */
+    from2026Nov30: {
+      maintenanceLondonPerMonth: 1570,
+      maintenanceOutsideLondonPerMonth: 1203,
+    },
     maintenanceMaxMonths: 9,
     /** 資金を連続保持すべき日数。 */
     fundsDays: 28,
@@ -174,6 +182,8 @@ export const VISA_KEY_DATES = {
   careWorkerOverseasClosedFrom: "2025-07-22",
   /** Skilled Worker の英語要件が B1 → B2 へ。 */
   englishB2From: "2027-03-26",
+  /** Student の生活費(maintenance)の要件額が上がる日。HC 584。 */
+  studentMaintenanceRiseFrom: "2026-11-30",
   /** Graduate visa の標準付与期間が2年 → 18ヶ月へ(博士は3年のまま)。 */
   graduate18MonthsFrom: "2027-01-01",
   /** ETA が全面施行され、未取得だと搭乗を拒否されるようになった日。 */

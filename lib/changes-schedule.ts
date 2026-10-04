@@ -1,5 +1,5 @@
 import { TRANSPORT_KEY_DATES, BUS, gbp } from "@/lib/transport/rates";
-import { VISA_KEY_DATES } from "@/lib/visa/rates";
+import { VISA_KEY_DATES, VISA_THRESHOLDS } from "@/lib/visa/rates";
 import { ENERGY_CAP, ELECTRICITY_VAT_CUT } from "@/lib/bills/rates";
 import type { ChangeAudience, ChangeKind } from "@/lib/changes";
 
@@ -158,7 +158,7 @@ export function buildScheduledChanges(now: Date = new Date()): ScheduledChange[]
       kind: "bills",
       audience: "resident",
       title: "ガス・電気の料金上限(Ofgem price cap)の改定",
-      note: "上限は3か月ごとに改定される。金額は前の月の下旬に発表。",
+      note: "上限は3か月ごとに改定される。金額は改定のおよそ5週間前(2・5・8・11月の下旬)に発表される。",
       sitePath: "/bills/energy",
     });
   }
@@ -178,6 +178,20 @@ export function buildScheduledChanges(now: Date = new Date()): ScheduledChange[]
       sitePath: "/bills/energy",
     });
   }
+
+  const student = VISA_THRESHOLDS.student;
+  list.push({
+    id: "student-maintenance-rise",
+    date: VISA_KEY_DATES.studentMaintenanceRiseFrom,
+    precision: "day",
+    kind: "visa",
+    audience: "resident",
+    title: "Student visa の生活費の要件額が上がる(ロンドン・月額)",
+    before: `£${student.maintenanceLondonPerMonth.toLocaleString("en-GB")}`,
+    after: `£${student.from2026Nov30.maintenanceLondonPerMonth.toLocaleString("en-GB")}`,
+    note: `この日から適用。ロンドン外は£${student.maintenanceOutsideLondonPerMonth.toLocaleString("en-GB")}から£${student.from2026Nov30.maintenanceOutsideLondonPerMonth.toLocaleString("en-GB")}に。最大9か月分。`,
+    sitePath: "/visa/student",
+  });
 
   list.push({
     id: "graduate-18-months",
