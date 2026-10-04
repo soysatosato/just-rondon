@@ -1,5 +1,17 @@
 import nodemailer from "nodemailer";
 
+function createTransport() {
+  const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = process.env;
+  if (!EMAIL_HOST || !EMAIL_USER || !EMAIL_PASS) return null;
+
+  return nodemailer.createTransport({
+    host: EMAIL_HOST,
+    port: Number(EMAIL_PORT),
+    secure: false,
+    auth: { user: EMAIL_USER, pass: EMAIL_PASS },
+  });
+}
+
 /**
  * 管理者宛の通知メール。
  *
@@ -16,25 +28,43 @@ export async function sendAdminMail({
   text: string;
   replyTo?: string;
 }): Promise<boolean> {
-  const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, FROM_EMAIL } =
-    process.env;
-
-  if (!EMAIL_HOST || !EMAIL_USER || !EMAIL_PASS) return false;
-
-  const transporter = nodemailer.createTransport({
-    host: EMAIL_HOST,
-    port: Number(EMAIL_PORT),
-    secure: false,
-    auth: { user: EMAIL_USER, pass: EMAIL_PASS },
-  });
+  const transporter = createTransport();
+  if (!transporter) return false;
 
   await transporter.sendMail({
-    from: FROM_EMAIL,
-    to: EMAIL_USER,
+    from: process.env.FROM_EMAIL,
+    to: process.env.EMAIL_USER,
     subject,
     text,
     replyTo,
   });
 
   return true;
+}
+
+/**
+ * 読者宛のメール(確認リンクなど)。管理者通知と違い、届かなければ
+ * 読者はその先に進めないので、送れないときは例外にする。
+ */
+export async function sendReaderMail({
+  to,
+  subject,
+  text,
+  html,
+}: {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+}) {
+  const transporter = createTransport();
+  if (!transporter) throw new Error("EMAIL_* の環境変数がありません");
+
+  await transporter.sendMail({
+    from: process.env.FROM_EMAIL,
+    to,
+    subject,
+    text,
+    html,
+  });
 }

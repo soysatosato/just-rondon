@@ -711,9 +711,41 @@ model Contact {
 
 /// お問い合わせフォームで受け付けないアドレス(小文字で保存)。
 /// 弾いたことは送信者に知らせず、成功したように見せる。
+/// サービスチャージの相談フォームも同じリストで弾く。
 model BlockedContactEmail {
   email     String   @id
   createdAt DateTime @default(now())
+}
+
+/// サービスチャージ未払いの相談(/jobs/service-charges/consult)。
+/// お問い合わせと同じく、確認メールのリンクを踏んだ時点で確定し、運営者に通知する。
+model ServiceChargeConsultation {
+  id         String    @id @default(cuid())
+  token      String    @unique
+  confirmed  Boolean   @default(false)
+  email      String
+  /// 返信の宛名。本名でなくてよい。
+  nickname   String?
+  /// "employed" | "left"
+  employment String
+  /// 最後に給与を受け取った日。期限の目安(lib/jobs/claim-deadline.ts)の起算点。
+  lastPaidOn DateTime? @db.Date
+  /// 例: "12.5%"
+  chargeRate String?
+  /// どう還元されているか。例: "時給に£1上乗せ"
+  sharing    String?
+  /// "not_yet" | "started" | "certificate"
+  acas       String
+  message    String
+  /// 店名や個人が分かる部分を伏せたうえで、Q&Aとして載せてよいか。
+  publishOk  Boolean   @default(false)
+  // 送信回数の上限(utils/actions/consult.ts)を数えるのに使う。
+  createdAt  DateTime  @default(now())
+  ip         String?
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+  @@index([createdAt])
 }
 
 model Attraction {
@@ -1541,7 +1573,7 @@ model Content {
   ///   ときは、下書きを作れるようにする前に null の行へ createdAt を
   ///   写し直すこと(その時点の null は下書きではなく、写し漏れ)。
   /// -------------------------------------------------------------------
-  publishedAt     DateTime?
+  publishedAt DateTime?
 
   /// -------------------------------------------------------------------
   /// 閲覧の記録。読者には出さない内部データ。

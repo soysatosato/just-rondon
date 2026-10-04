@@ -35,6 +35,7 @@ module.exports = {
     "/jobs/service-charges/survey",
     "/jobs/service-charges/thanks",
     "/contact/confirm",
+    "/jobs/service-charges/consult/confirm",
     // 運営者専用(lib/admin.ts)。運営者以外には404を返す。
     "/admin",
     "/admin/*",
@@ -385,6 +386,9 @@ module.exports = {
       "/jobs/service-charges/case-story/check-your-service-charge",
       "/jobs/service-charges/case-story/how-to-file-a-claim",
       "/jobs/service-charges/case-story/resources-and-links",
+      // 当事者の記録から案内する相談フォーム。日本語だけなので /en 版は無い
+      // (下の caseStoryPages の対象にならないよう case-story の外に置いている)。
+      "/jobs/service-charges/consult",
       "/",
     ];
     for (const p of staticPages) {

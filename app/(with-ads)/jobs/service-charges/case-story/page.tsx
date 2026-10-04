@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import Disclaimer from "@/components/jobs/case-story/Disclaimer";
 import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
 import LocaleSwitch from "@/components/jobs/case-story/LocaleSwitch";
+import ConsultAsk from "@/components/jobs/consult/ConsultAsk";
 import {
   CASE_STORY_BASE,
   CASE_STORY_BASE_EN,
@@ -276,6 +277,8 @@ export default function CaseStoryIndexPage() {
           ))}
         </div>
       </section>
+
+      <ConsultAsk className="mt-10" />
 
       {/* 関連 */}
       <div className="mt-12 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-3">

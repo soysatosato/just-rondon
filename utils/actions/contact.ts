@@ -2,8 +2,14 @@
 import db from "../db";
 import nodemailer from "nodemailer";
 import { randomUUID } from "crypto";
-import { headers } from "next/headers";
 import { contactSchema } from "../schemas";
+import {
+  RATE_LIMITED,
+  SEND_LIMITS as LIMITS,
+  clientIp,
+  looksLikeBot,
+  since,
+} from "../form-guard";
 import { SITE_URL } from "@/lib/seo";
 
 function escapeHtml(s: string) {
@@ -12,38 +18,6 @@ function escapeHtml(s: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-}
-
-/** 表示からこれより早い送信は人の手ではないとみなす。 */
-const MIN_FILL_MS = 3000;
-
-const HOUR = 60 * 60 * 1000;
-/**
- * 送信回数の上限。連投や DoS で DB と SMTP の送信枠を食い潰されないため。
- * 読者が確認メールを見落として何度か送り直しても届かない数にしてある。
- */
-const LIMITS = {
-  perEmail: { max: 5, windowMs: 24 * HOUR },
-  perIp: { max: 5, windowMs: HOUR },
-  // サイト全体。これを超えるのは攻撃なので、その間は読者の送信も止める。
-  global: { max: 30, windowMs: HOUR },
-};
-const RATE_LIMITED = "送信回数が多すぎます。しばらく時間をおいてからお試しください。";
-
-/**
- * 営業スパムのボット判定。どれかに当たったら黙って成功を返す
- * (弾いたと知らせると、ボット側が回避策を学ぶ)。
- *
- * - website: 人には見えない入力欄。埋まっていればボット。
- * - startedAt: フォームを描画した時刻。クライアントで入れるので、
- *   JS を動かさずに直接 POST するボットでは空になる。
- */
-function looksLikeBot(formData: FormData) {
-  if (String(formData.get("website") ?? "") !== "") return true;
-
-  const startedAt = Number(formData.get("startedAt"));
-  if (!Number.isFinite(startedAt) || startedAt <= 0) return true;
-  return Date.now() - startedAt < MIN_FILL_MS;
 }
 
 export async function sendContact(prevState: any, formData: FormData) {
@@ -63,8 +37,7 @@ export async function sendContact(prevState: any, formData: FormData) {
   });
   if (blocked) return { success: true };
 
-  const ip = headers().get("x-forwarded-for")?.split(",")[0]?.trim() || null;
-  const since = (ms: number) => ({ gt: new Date(Date.now() - ms) });
+  const ip = clientIp();
   const [byEmail, byIp, total] = await Promise.all([
     db.contact.count({
       where: {

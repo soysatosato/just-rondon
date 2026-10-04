@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
 import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
+import ConsultAsk from "@/components/jobs/consult/ConsultAsk";
 import ChapterNav from "./ChapterNav";
 import Disclaimer from "./Disclaimer";
 import HtmlLang from "./HtmlLang";
@@ -111,6 +112,19 @@ export default function ArticleLayout({
           </Card>
         ))}
       </div>
+
+      {/*
+        読み終えたところで相談の入口を出す。計算の章は自分の未払い額が出た直後で、
+        いちばん相談したくなるところなので目立たせる。相談は日本語だけ。
+      */}
+      {locale === "ja" && (
+        <ConsultAsk
+          variant={
+            article.slug === "check-your-service-charge" ? "emphasis" : "default"
+          }
+          className="mt-10"
+        />
+      )}
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
 

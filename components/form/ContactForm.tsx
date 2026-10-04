@@ -1,12 +1,12 @@
 "use client";
 
 import { sendContact } from "@/utils/actions/contact";
-import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
+import BotGuardFields from "./BotGuardFields";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -47,10 +47,6 @@ export default function ContactForm() {
     success: false,
     errors: {},
   });
-  // ボット判定用。描画時ではなくマウント後に入れる(ページはキャッシュされた
-  // HTMLなので、描画時刻はビルド時刻になってしまう)。
-  const [startedAt, setStartedAt] = useState("");
-  useEffect(() => setStartedAt(String(Date.now())), []);
 
   if (state.success) {
     return (
@@ -79,14 +75,7 @@ export default function ContactForm() {
         送信すると確認メールが届きます。メール内のリンクを開いていただいた時点で、お問い合わせが完了します。
       </p>
 
-      <input type="hidden" name="startedAt" value={startedAt} />
-      {/* ボット除け。人には見えず、埋まっていたら送信を破棄する。 */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-        <label>
-          Website
-          <input name="website" type="text" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
+      <BotGuardFields />
 
       <div className="space-y-6">
         <Field label="お名前" error={state.errors?.name?.[0]}>

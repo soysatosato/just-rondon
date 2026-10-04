@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { isValidLastPaidOn } from "@/lib/jobs/claim-deadline";
 
 export function validateWithZodSchema<T>(
   schema: z.ZodSchema<T>,
@@ -96,4 +97,43 @@ export const contactSchema = z.object({
     .string()
     .min(10, "お問い合わせ内容は10文字以上入力してください")
     .max(1000, "お問い合わせ内容は1000文字以内で入力してください"),
+});
+
+/** 任意の入力欄。空欄は undefined にする(DB には NULL で入る)。 */
+const optionalText = (max: number, label: string) =>
+  z
+    .string()
+    .trim()
+    .max(max, `${label}は${max}文字以内で入力してください`)
+    .transform((val) => val || undefined)
+    .optional();
+
+/** サービスチャージの相談フォーム(utils/actions/consult.ts)。 */
+export const consultationSchema = z.object({
+  employment: z.enum(["employed", "left"], {
+    error: "いまの状況を選んでください",
+  }),
+  lastPaidOn: z
+    .string()
+    .optional()
+    .transform((val) => val || undefined)
+    .refine((val) => val === undefined || isValidLastPaidOn(val), {
+      message: "未来の日付は入力できません",
+    }),
+  acas: z.enum(["not_yet", "started", "certificate"], {
+    error: "Acasへの連絡の状況を選んでください",
+  }),
+  chargeRate: optionalText(50, "サービスチャージの率"),
+  sharing: optionalText(200, "還元のされ方"),
+  message: z
+    .string()
+    .trim()
+    .min(10, "相談したいことは10文字以上で入力してください")
+    .max(3000, "相談したいことは3000文字以内で入力してください"),
+  nickname: optionalText(50, "呼び名"),
+  email: z.string().email("正しいメールアドレスを入力してください"),
+  publishOk: z
+    .string()
+    .optional()
+    .transform((val) => val === "on"),
 });
