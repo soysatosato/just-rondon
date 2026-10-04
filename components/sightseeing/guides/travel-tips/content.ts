@@ -1,4 +1,5 @@
 import { VISA_FEES, gbp } from "@/lib/visa/rates";
+import { getLondonClimate } from "@/lib/london-months/climate";
 import { TRAVEL_GUIDE_AS_OF, TRAVEL_GUIDE_UPDATED_AT } from "../guides";
 import type { TravelGuideMetaSource } from "../guides";
 import type { GuideFaqItem, GuideRelatedLink, GuideSourceLink } from "@/components/guides/types";
@@ -219,6 +220,7 @@ export const power = {
 
 export type MonthWeather = {
   month: number;
+  /** 平年値(lib/london-months/climate.ts)を丸めた値。ここに数字を書かないこと。 */
   high: number;
   low: number;
   /** 平年値の目安から書ける範囲の一言。 */
@@ -235,42 +237,49 @@ export type MonthWeather = {
  * 以前は MarkdownBody の min-w-[32rem] が掛かった12行の表で、
  * スマホでは横スクロールしながら自分の月を探す形になっていた。
  * 月を選んで1件返す形にする(MonthPicker)。
+ *
+ * ここは12か月を見比べるための一言だけ。その月の詳しい服装・天気は
+ * 月別ページ(/events/<月>)にあり、MonthPicker から送る。気温は
+ * 月別ページと同じ平年値を読み、2か所で数字が食い違わないようにする。
  */
-export const months: MonthWeather[] = [
+const monthNotes: Omit<MonthWeather, "high" | "low">[] = [
   {
     month: 1,
-    high: 8,
-    low: 3,
     note: "寒く暗い",
     wear: "厚手のコート、手袋、マフラー。防水の靴",
     daylight: "日照が短い",
   },
-  { month: 2, high: 9, low: 3, note: "1月と同様に寒い", wear: "厚手のコート、手袋、マフラー", daylight: "日照が短い" },
-  { month: 3, high: 12, low: 4, note: "春の始まり", wear: "コートは必要。重ね着で調整", daylight: "最終日曜からBST（英国夏時間）" },
-  { month: 4, high: 15, low: 6, note: "花が咲き始める", wear: "薄手のコートかジャケット。朝晩は冷える" },
+  { month: 2, note: "1月と同様に寒い", wear: "厚手のコート、手袋、マフラー", daylight: "日照が短い" },
+  { month: 3, note: "春の始まり", wear: "コートは必要。重ね着で調整", daylight: "最終日曜からBST（英国夏時間）" },
+  { month: 4, note: "花が咲き始める", wear: "薄手のコートかジャケット。朝晩は冷える" },
   {
     month: 5,
-    high: 18,
-    low: 9,
     note: "過ごしやすい",
     wear: "長袖に羽織るもの1枚",
     best: true,
   },
-  { month: 6, high: 21, low: 12, note: "観光できる時間が長い", wear: "半袖に羽織るもの1枚", daylight: "22時近くまで明るい" },
-  { month: 7, high: 24, low: 14, note: "暑い年は30℃超も", wear: "夏服。ただし朝晩用に羽織るもの1枚" },
-  { month: 8, high: 23, low: 14, note: "7月と同様に暑くなる年がある", wear: "夏服。ただし朝晩用に羽織るもの1枚" },
-  { month: 9, high: 20, low: 12, note: "穏やかで快適", wear: "長袖に羽織るもの1枚", best: true },
-  { month: 10, high: 16, low: 9, note: "秋が深まる", wear: "ジャケットかコート。防水のもの", daylight: "最終日曜にBSTが終わる" },
-  { month: 11, high: 11, low: 6, note: "雨が多い", wear: "コートと防水ジャケット", daylight: "暗くなるのが早い" },
+  { month: 6, note: "観光できる時間が長い", wear: "半袖に羽織るもの1枚", daylight: "22時近くまで明るい" },
+  { month: 7, note: "暑い年は30℃超も", wear: "夏服。ただし朝晩用に羽織るもの1枚" },
+  { month: 8, note: "7月と同様に暑くなる年がある", wear: "夏服。ただし朝晩用に羽織るもの1枚" },
+  { month: 9, note: "穏やかで快適", wear: "長袖に羽織るもの1枚", best: true },
+  { month: 10, note: "秋が深まる", wear: "ジャケットかコート。防水のもの", daylight: "最終日曜にBSTが終わる" },
+  { month: 11, note: "雨が多い", wear: "コートと防水ジャケット", daylight: "暗くなるのが早い" },
   {
     month: 12,
-    high: 8,
-    low: 3,
     note: "寒い。街はイルミネーション",
     wear: "厚手のコート、手袋、マフラー",
     daylight: "16時頃には暗くなる",
   },
 ];
+
+export const months: MonthWeather[] = monthNotes.map((m) => {
+  const climate = getLondonClimate(m.month);
+  return {
+    ...m,
+    high: Math.round(climate.maxTemp),
+    low: Math.round(climate.minTemp),
+  };
+});
 
 export const weatherRules = [
   {

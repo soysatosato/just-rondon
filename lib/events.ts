@@ -45,7 +45,7 @@ export function getMonthSlug(year: number, month: number): string {
  * DB の行は年ごとにあり、slug も年入り("london-events-2026-december")だが、
  * それは行を見分けるための内部の名前で、URL には出さない。年が替わるたびに
  * URL が一から出直すと、同じ月の検索で積んだ評価を毎年捨てることになる。
- * どの年の行を出すかは fetchMonthlyEvents が決める。
+ * どの年を出すかは lib/london-months/year.ts の getDisplayYear が決める。
  */
 export function eventMonthPath(monthNumber: number): string {
   return `/events/${MONTH_NUMBER_TO_NAME[monthNumber]}`;

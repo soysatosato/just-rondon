@@ -15,6 +15,8 @@ import { buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
 import { formatWeekRange } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
+import { eventMonthPath } from "@/lib/events";
+import { londonDate } from "@/lib/publish-schedule";
 import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
 import BackIssueList from "@/components/events/BackIssueList";
@@ -101,6 +103,8 @@ export default async function EventsPage() {
     fetchLatestChangeIssue(),
   ]);
 
+  const thisMonth = Number(londonDate(new Date()).slice(5, 7));
+
   // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
   // 毎週更新されるこの /events を正とみなしてほしいので、記事の JSON-LD も
   // ここを id にする。
@@ -184,12 +188,20 @@ export default async function EventsPage() {
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
               チェルシー・フラワーショーやクリスマスマーケットなど、1年前から日程が決まっている
-              恒例行事は月別カレンダーにまとめています。旅行の時期を決めるときはこちらへ。
+              恒例行事は月別のページにまとめています。月ごとの天気・服装・祝日もそこにあります。
+              旅行の時期を決めるときはこちらへ。
             </p>
           </div>
-          <Button asChild variant="outline" className="shrink-0 sm:mt-1">
-            <Link href="/events/calendar">2026年のカレンダーへ →</Link>
-          </Button>
+          <div className="flex shrink-0 flex-col gap-2 sm:mt-1">
+            <Button asChild variant="outline">
+              <Link href={eventMonthPath(thisMonth)}>
+                {thisMonth}月のロンドン →
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/events/calendar">12か月のカレンダー →</Link>
+            </Button>
+          </div>
         </div>
       </section>
 

@@ -519,9 +519,9 @@ module.exports = {
       paths.push(await config.transform(config, `/changes/${issue.slug}`));
     }
 
-    // 月別イベントページ。URL は年の無い月名だけ(/events/december)で、
-    // DB の行は年ごとにあるので、月名で重複を落とす。どの年の行を出すかは
-    // ページ側(fetchMonthlyEvents)が決める。
+    // 月別ページ「◯月のロンドン」。URL は年の無い月名だけ(/events/december)で、
+    // DB の行は年ごとにあるので、月名で重複を落とす。どの年を出すかは
+    // ページ側(lib/london-months/year.ts)が決める。
     const eventMonths = await prisma.content.findMany({
       where: { category: { startsWith: "london-events-" } },
       select: { slug: true },

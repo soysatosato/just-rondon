@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { eventMonthPath } from "@/lib/events";
 import { months } from "./content";
 
 /**
@@ -13,6 +15,9 @@ import { months } from "./content";
  * 未選択のあいだは12ヶ月ぶんをタイルで出す。JS が無い環境と
  * クローラーにも全月のデータが渡るようにするため。マウント後に
  * 今月を選ぶ(ビルド時の月を焼き込まないよう、サーバーでは選ばない)。
+ *
+ * ここは12か月を見比べる一覧で、その月の詳しい天気・服装・祝日は
+ * 月別ページ(/events/<月>)にある。どちらの表示からもそこへ送る。
  */
 export default function MonthPicker() {
   const [selected, setSelected] = useState<number | null>(null);
@@ -95,33 +100,42 @@ export default function MonthPicker() {
               </div>
             )}
           </dl>
+
+          <Link
+            href={eventMonthPath(current.month)}
+            className="mt-4 inline-block text-sm font-semibold text-emerald-700 underline underline-offset-2 hover:opacity-80 dark:text-emerald-400"
+          >
+            {current.month}月のロンドンを詳しく(天気・服装・祝日・イベント) →
+          </Link>
         </div>
       ) : (
         /* 未選択(サーバー描画時とJS無効時)。全月をここで見せる。 */
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {months.map((m) => (
-            <li
-              key={m.month}
-              className="rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
-            >
-              <p className="flex items-baseline gap-2">
-                <span className="text-base font-bold text-gray-900 dark:text-gray-100">
-                  {m.month}月
-                </span>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {m.high}℃ / {m.low}℃
-                </span>
-              </p>
-              <p className="mt-1 text-xs leading-snug text-gray-600 dark:text-gray-400">
-                {m.wear}
-              </p>
+            <li key={m.month}>
+              <Link
+                href={eventMonthPath(m.month)}
+                className="block h-full rounded-lg border border-gray-200 p-3 transition hover:border-emerald-400 dark:border-neutral-700"
+              >
+                <p className="flex items-baseline gap-2">
+                  <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+                    {m.month}月
+                  </span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {m.high}℃ / {m.low}℃
+                  </span>
+                </p>
+                <p className="mt-1 text-xs leading-snug text-gray-600 dark:text-gray-400">
+                  {m.wear}
+                </p>
+              </Link>
             </li>
           ))}
         </ul>
       )}
 
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-        平年値のおおよその目安です。正確な平年値と予報は Met Office（英国気象庁）でご確認ください。
+        1991〜2020年の平年値（Met Office の Heathrow 観測所）を丸めた値です。その年の天気は Met Office（英国気象庁）の予報でご確認ください。
       </p>
     </div>
   );

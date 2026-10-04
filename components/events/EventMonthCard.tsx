@@ -5,10 +5,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { eventMonthPath, getMonthNumber, getSeasonMeta } from "@/lib/events";
 import SeasonBadge from "@/components/events/SeasonBadge";
+import { getLondonClimate } from "@/lib/london-months/climate";
 
 /**
  * archiveBasePath を渡すと、その年のアーカイブ(年入りの URL)へリンクする。
  * 渡さなければ年の無い月別ページ(/events/december)へ。
+ *
+ * 月別ページへのカードには平年の気温を添える。カレンダーで旅行の時期を
+ * 決める人は、イベントと同じくらい「その月は寒いか」で月を絞るため。
+ * アーカイブ(過去の年の行事)には要らないので出さない。
  */
 export default function EventMonthCard({
   content,
@@ -25,6 +30,7 @@ export default function EventMonthCard({
   const href = archiveBasePath
     ? `${archiveBasePath}/${content.slug}`
     : eventMonthPath(monthNumber);
+  const climate = archiveBasePath ? null : getLondonClimate(monthNumber);
 
   return (
     <Link href={href} className="group block h-full">
@@ -49,6 +55,13 @@ export default function EventMonthCard({
             <h3 className="text-lg font-semibold leading-snug dark:text-white">
               {content.title}
             </h3>
+            {climate && (
+              <p className="mt-1 text-xs tabular-nums text-muted-foreground dark:text-gray-400">
+                平年 最高{Math.round(climate.maxTemp)}℃ / 最低
+                {Math.round(climate.minTemp)}℃・雨の日 月
+                {Math.round(climate.rainDays)}日
+              </p>
+            )}
             {content.summary && (
               <p className="mt-2 line-clamp-3 text-sm text-muted-foreground dark:text-gray-400">
                 {content.summary}

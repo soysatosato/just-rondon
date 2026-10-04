@@ -1,133 +1,469 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import { Sparkles } from "lucide-react";
+import type { Metadata } from "next";
+import type { Event } from "@prisma/client";
 
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { fetchMonthlyEvents, fetchEventsForMonth } from "@/utils/actions/contents";
-import { buildPageMetadata } from "@/lib/seo";
+import {
+  fetchBriefsForMonth,
+  fetchMonthEvents,
+  fetchMonthIntroFallback,
+  fetchWeeklyPicksForMonth,
+} from "@/utils/actions/months";
+import { buildPageMetadata, SITE_URL } from "@/lib/seo";
+import { londonDate } from "@/lib/publish-schedule";
+import { eventMonthPath, getSeasonMeta, parseEventMonth } from "@/lib/events";
+import { getDisplayYear } from "@/lib/london-months/year";
+import {
+  CLIMATE_SOURCES,
+  getLondonClimate,
+  getTokyoClimate,
+  tokyoEquivalentMonth,
+} from "@/lib/london-months/climate";
+import {
+  getClockChange,
+  getMonthSunDays,
+  hoursBehindJapan,
+} from "@/lib/london-months/sun";
+import { BANK_HOLIDAY_SOURCE, getMonthDays } from "@/lib/london-months/holidays";
+import { getMonthGuide } from "@/lib/london-months/content";
+import { months as travelTipsMonths } from "@/components/sightseeing/guides/travel-tips/content";
+import { SIGHTSEEING_PUBLISHER } from "@/components/sightseeing/jsonld";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { eventMonthPath, getMonthNumber, getSeasonMeta } from "@/lib/events";
-import SeasonBadge from "@/components/events/SeasonBadge";
 import EventDetailCard from "@/components/events/EventDetailCard";
+import MonthSection from "@/components/events/month/MonthSection";
+import MonthGlance from "@/components/events/month/MonthGlance";
+import MonthClimate from "@/components/events/month/MonthClimate";
+import MonthSun from "@/components/events/month/MonthSun";
+import MonthHolidays from "@/components/events/month/MonthHolidays";
+import MonthWeeklyPicks from "@/components/events/month/MonthWeeklyPicks";
+import MonthNav from "@/components/events/month/MonthNav";
+import MarkdownBody from "@/components/jobs/MarkdownBody";
+import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
 
-// どの年の分を出すかは日付で替わる(fetchMonthlyEvents)。月が終わった
-// 翌日には翌年版へ切り替わるよう、作り置きを1時間で捨てる。
+/**
+ * 「◯月のロンドン」。URL は年の無い月名(/events/november)。
+ *
+ * 旅行の時期を決める段階から出発前までの読者に、その月の天気・服装・
+ * 日の出入り・祝日・イベントを1ページで渡す。「ロンドン 11月 服装」と
+ * 「ロンドン 11月 イベント」を別々のページに割らず、ここに束ねる。
+ *
+ * 中身の出どころ:
+ *   平年値      lib/london-months/climate.ts(Met Office / 気象庁、固定値)
+ *   日の出入り  lib/london-months/sun.ts(計算)
+ *   祝日        lib/london-months/holidays.ts(gov.uk + 計算)
+ *   本文        lib/london-months/content/(書いた月だけ。年に依存しない)
+ *   イベント    Event テーブル(年ごと)
+ *   週次の掲載  WeeklyBriefItem(号を重ねるほど増える)
+ *
+ * どの年を出すかは getDisplayYear。過ぎた月は来年を出すので、10月に
+ * 1月のページを開くと来年1月の日の出入りと祝日になる。
+ */
+
+// 年の切り替えは月の変わり目、週次の掲載の「終わったものを外す」は日単位。
+// どちらにも間に合うよう1時間で作り直す。
 export const revalidate = 60 * 60;
+
+const SOURCES = [
+  ...CLIMATE_SOURCES,
+  BANK_HOLIDAY_SOURCE,
+  {
+    label: "Met Office – ロンドンの天気予報",
+    url: "https://www.metoffice.gov.uk/weather/forecast/gcpvj0v07",
+  },
+];
+
+function monthTitle(month: number) {
+  return `${month}月のロンドン`;
+}
+
+/** 本文を書いていない月の description。数字で他の月と書き分ける。 */
+function generatedDescription(month: number, year: number): string {
+  const climate = getLondonClimate(month);
+  const sun = getMonthSunDays(year, month);
+  return `${month}月のロンドンは平年で最高${Math.round(climate.maxTemp)}℃・最低${Math.round(climate.minTemp)}℃、東京の${tokyoEquivalentMonth(month)}月並み。雨は月${Math.round(climate.rainDays)}日ほどで、日の入りは${sun[0].sunset}〜${sun[sun.length - 1].sunset}。服装の目安と祝日、その月のイベントをまとめました。`;
+}
+
+function EventGrid({
+  events,
+  iconWrapClass,
+}: {
+  events: Event[];
+  iconWrapClass: string;
+}) {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2">
+      {events.map((event, idx) => (
+        <EventDetailCard
+          key={event.id}
+          event={event}
+          index={idx}
+          iconWrapClass={iconWrapClass}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** 本文を書いていない月の、天気の節の1段落。 */
+function generatedWeather(month: number): string {
+  const climate = getLondonClimate(month);
+  return `平年値は最高${Math.round(climate.maxTemp)}℃・最低${Math.round(climate.minTemp)}℃で、東京の${tokyoEquivalentMonth(month)}月ごろの気温です。1mm以上の雨が降るのは月${Math.round(climate.rainDays)}日ほど、日照は月${Math.round(climate.sunshineHours)}時間です。`;
+}
 
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const content = (await fetchMonthlyEvents(params.slug))?.content;
-
-  if (!content) {
+  const month = parseEventMonth(params.slug);
+  if (month === null) {
     return {
       title: "ロンドンイベントカレンダー | ジャスト・ロンドン",
-      description: "ロンドンで開催されるイベントを月別に紹介します。",
       robots: { index: false, follow: true },
     };
   }
 
-  const text = content.summary || content.mainText || "";
-  const trimmed = text.replace(/[#>*_\-`]/g, "").slice(0, 110);
+  const year = getDisplayYear(month);
+  const guide = getMonthGuide(month);
 
   return buildPageMetadata({
-    path: `/events/${params.slug}`,
-    title: `${content.title} | ロンドンのイベント`,
-    description: trimmed
-      ? `${trimmed}… 開催時期と見どころを紹介します。`
-      : `${content.title}の開催時期や見どころを紹介します。`,
+    path: eventMonthPath(month),
+    title: `${monthTitle(month)}｜天気・服装・イベントと祝日`,
+    description: guide?.description ?? generatedDescription(month, year),
+    keywords: [
+      `ロンドン ${month}月`,
+      `ロンドン ${month}月 服装`,
+      `ロンドン ${month}月 天気`,
+      `ロンドン ${month}月 気温`,
+      `ロンドン ${month}月 イベント`,
+    ],
     type: "article",
-    images: content.image ? [content.image] : undefined,
   });
 }
 
-export default async function EventDetailPage({
+export default async function MonthPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const monthly = await fetchMonthlyEvents(params.slug);
+  const month = parseEventMonth(params.slug);
+  if (month === null) return notFound();
 
-  if (!monthly) return notFound();
+  const year = getDisplayYear(month);
+  const today = londonDate(new Date());
+  const guide = getMonthGuide(month);
+  const travelTips = travelTipsMonths.find((m) => m.month === month);
 
-  const { content, year } = monthly;
-  const monthNumber = getMonthNumber(content.slug);
-  const events = await fetchEventsForMonth(year, monthNumber);
-  const meta = getSeasonMeta(monthNumber);
+  const climate = getLondonClimate(month);
+  const tokyoMonth = tokyoEquivalentMonth(month);
+  const sunDays = getMonthSunDays(year, month);
+  const clockChange = getClockChange(year, month);
+
+  const [
+    { events, fallback },
+    { days, bankHolidaysAvailable },
+    picks,
+    briefs,
+    fallbackIntro,
+  ] = await Promise.all([
+    fetchMonthEvents(year, month),
+    getMonthDays(year, month),
+    fetchWeeklyPicksForMonth(year, month, today),
+    fetchBriefsForMonth(month),
+    guide ? Promise.resolve(null) : fetchMonthIntroFallback(params.slug),
+  ]);
+
+  const hasWeekly =
+    picks.exhibitions.length + picks.events.length + briefs.length > 0;
+
+  const sections = [
+    { id: "weather", navLabel: "天気" },
+    { id: "wear", navLabel: "服装" },
+    { id: "sun", navLabel: "日の出入り" },
+    { id: "holidays", navLabel: "祝日" },
+    ...(guide ? [{ id: "tips", navLabel: "旅のコツ" }] : []),
+    { id: "events", navLabel: "イベント" },
+    ...(hasWeekly ? [{ id: "weekly", navLabel: "展覧会・催し" }] : []),
+  ];
+  const n = (id: string) => sections.findIndex((s) => s.id === id) + 1;
+
+  const title = monthTitle(month);
+  const path = eventMonthPath(month);
+  const meta = getSeasonMeta(month);
   const Icon = meta.icon;
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${SITE_URL}${path}#article`,
+    headline: `${title}｜天気・服装・イベントと祝日`,
+    description: guide?.description ?? generatedDescription(month, year),
+    inLanguage: "ja",
+    mainEntityOfPage: `${SITE_URL}${path}`,
+    author: SIGHTSEEING_PUBLISHER,
+    publisher: SIGHTSEEING_PUBLISHER,
+  };
+
   return (
-    <main className="container mx-auto px-4 py-10">
+    <main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
-          path: "/events",
-          current: content.title,
-          currentHref: eventMonthPath(monthNumber),
+          path: "/events/calendar",
+          current: title,
+          currentHref: path,
         })}
       />
+      <JsonLd data={articleJsonLd} />
 
-      <Breadcrumbs path="/events" current={content.title} className="mb-6" />
+      <Breadcrumbs path="/events/calendar" current={title} className="mb-6" />
 
-      <div className="mb-6">
-        <Link href="/events">
-          <Button variant="outline" className="dark:border-neutral-600">
-            ← 月一覧へ戻る
-          </Button>
-        </Link>
-      </div>
+      <header>
+        <div className="flex items-center gap-3">
+          <span
+            className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
+              meta.iconWrapClass
+            )}
+          >
+            <Icon className="h-5 w-5" />
+          </span>
+          <div>
+            <h1 className="text-2xl font-bold leading-tight md:text-4xl">
+              {title}
+            </h1>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              天気・服装・日の出入り・祝日・イベント
+            </p>
+          </div>
+        </div>
 
-      <div className="mb-4 flex flex-col items-center gap-3 text-center">
-        <span
-          className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-full",
-            meta.iconWrapClass
-          )}
-        >
-          <Icon className="h-7 w-7" />
-        </span>
-        <SeasonBadge monthNumber={monthNumber} />
-        <h1 className="text-xl md:text-3xl font-bold dark:text-white">
-          {content.title}
-        </h1>
-      </div>
+        <p className="mt-3 inline-block rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+          {year}年{month}月の日付で表示しています
+        </p>
 
-      {content.mainText && <ReactMarkdown>{content.mainText}</ReactMarkdown>}
+        {guide ? (
+          <p className="mt-5 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+            {guide.lead}
+          </p>
+        ) : (
+          fallbackIntro && (
+            <MarkdownBody className="mt-2 !text-base text-gray-700 dark:text-gray-300">
+              {fallbackIntro}
+            </MarkdownBody>
+          )
+        )}
 
-      <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
-
-      <Separator className="my-6 dark:bg-neutral-700" />
-
-      <h2 className="mb-4 flex items-center justify-center gap-2 text-2xl font-semibold dark:text-white">
-        <Sparkles className="h-5 w-5 text-primary" />
-        主なイベント一覧
-      </h2>
-
-      <div className="grid gap-5 sm:grid-cols-2">
-        {events.map((event, idx) => (
-          <EventDetailCard
-            key={event.id}
-            event={event}
-            index={idx}
-            iconWrapClass={meta.iconWrapClass}
+        <div className="mt-6">
+          <MonthGlance
+            month={month}
+            climate={climate}
+            tokyoMonth={tokyoMonth}
+            sunDays={sunDays}
+            clockChange={clockChange}
+            hoursBehind={hoursBehindJapan(year, month, 1)}
+            bankHolidays={days.filter((d) => d.kind === "bank")}
           />
-        ))}
+        </div>
+      </header>
+
+      <div className="mt-10">
+        <GuideSectionNav sections={sections} />
+
+        <MonthSection n={n("weather")} id="weather" title="天気と気温">
+          <MonthClimate
+            month={month}
+            climate={climate}
+            tokyoSameMonth={getTokyoClimate(month)}
+            tokyoMonth={tokyoMonth}
+            tokyoEquivalent={getTokyoClimate(tokyoMonth)}
+          />
+          <div className="mt-5 space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            {(guide?.weather ?? [generatedWeather(month)]).map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </div>
+        </MonthSection>
+
+        <MonthSection n={n("wear")} id="wear" title="服装">
+          {guide ? (
+            <>
+              <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-gray-900 dark:bg-emerald-950/30 dark:text-gray-100">
+                {guide.wear.summary}
+              </p>
+              <dl className="mt-4 space-y-3">
+                {guide.wear.items.map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                  >
+                    <dt className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                      {item.label}
+                    </dt>
+                    <dd className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                      {item.body}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-4 rounded-lg bg-gray-50 p-4 dark:bg-neutral-800/60">
+                <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+                  日本から持っていくもの
+                </p>
+                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+                  {guide.wear.pack.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          ) : (
+            travelTips && (
+              <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-gray-900 dark:bg-emerald-950/30 dark:text-gray-100">
+                {travelTips.wear}
+              </p>
+            )
+          )}
+          <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+            ほかの月との比べ方や、季節を問わない服装の基本は
+            <Link
+              href="/sightseeing/travel-tips#weather"
+              className="mx-1 text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            >
+              旅の実用情報
+            </Link>
+            にまとめています。
+          </p>
+        </MonthSection>
+
+        <MonthSection n={n("sun")} id="sun" title="日の出・日の入りと時差">
+          <MonthSun
+            year={year}
+            month={month}
+            sunDays={sunDays}
+            clockChange={clockChange}
+          />
+        </MonthSection>
+
+        <MonthSection n={n("holidays")} id="holidays" title="祝日と、店・交通に影響する日">
+          <MonthHolidays days={days} bankHolidaysAvailable={bankHolidaysAvailable} />
+        </MonthSection>
+
+        <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-10" />
+
+        {guide && (
+          <MonthSection n={n("tips")} id="tips" title="旅の組み立て方">
+            <ul className="space-y-3">
+              {guide.tips.map((tip) => (
+                <li
+                  key={tip.title}
+                  className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+                >
+                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                    {tip.title}
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    {tip.body}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </MonthSection>
+        )}
+
+        <MonthSection n={n("events")} id="events" title={`${month}月のイベント`}>
+          {events.length > 0 && (
+            <>
+              {fallback && (
+                <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                  前の月から{year}年{month}月に続いているもの:
+                </p>
+              )}
+              <EventGrid events={events} iconWrapClass={meta.iconWrapClass} />
+            </>
+          )}
+          {fallback && (
+            <div className={events.length > 0 ? "mt-8" : undefined}>
+              <p className="mb-4 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                {year}年{month}月に始まる行事の日程は、まだ登録していません。下は
+                {fallback.year}
+                年の日程です。定番の行事は毎年ほぼ同じ時期に開かれますが、日付は公式サイトで確かめてください。
+              </p>
+              <EventGrid
+                events={fallback.events}
+                iconWrapClass={meta.iconWrapClass}
+              />
+            </div>
+          )}
+          {events.length === 0 && !fallback && (
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              この月のイベントはまだ登録していません。
+            </p>
+          )}
+        </MonthSection>
+
+        {hasWeekly && (
+          <MonthSection n={n("weekly")} id="weekly" title="週次ダイジェストで紹介した展覧会・催し">
+            <MonthWeeklyPicks
+              month={month}
+              exhibitions={picks.exhibitions}
+              events={picks.events}
+              briefs={briefs}
+            />
+          </MonthSection>
+        )}
       </div>
 
-      <div className="text-center mt-10">
-        <Link href="/events">
-          <Button className="mx-auto">イベント一覧へ戻る</Button>
-        </Link>
-      </div>
+      <section className="mt-12">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          あわせて読む
+        </h2>
+        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+          {[
+            ...(guide?.links ?? []),
+            { href: "/events", label: "今週のロンドン(週次ダイジェスト)" },
+            { href: "/events/calendar", label: "年間イベントカレンダー" },
+          ].map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="block rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-900 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-100"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <MonthNav month={month} />
+
+      <section className="mt-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+          参考・公式情報
+        </h2>
+        <ul className="mt-3 space-y-2 text-sm">
+          {SOURCES.map((source) => (
+            <li key={source.url}>
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+              >
+                {source.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          気温・雨・日照は1991〜2020年の平年値で、その年の天気ではありません。日の出・日の入りは天文計算による目安です。イベントの日程や施設の営業は変わることがあるため、出かける前に各公式サイトで確かめてください。
+        </p>
+      </section>
     </main>
   );
 }
