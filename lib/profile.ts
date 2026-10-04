@@ -2,6 +2,10 @@ import { Prisma } from "@prisma/client";
 
 import db from "@/utils/db";
 import {
+  notifyNewProfile,
+  type ProfileTrigger,
+} from "@/lib/signup-notification";
+import {
   checkUsername,
   randomUsername,
   usernameKey,
@@ -60,9 +64,13 @@ async function withRandomUsername<T>(
  * 最初のスタンプを押した、旅行プランを初めてアカウントへ送った)。登録するとまず /stamps に着くので、実際には
  * 登録の直後に作られる。Clerk の Webhook を使えば登録の瞬間に作れるが、
  * そのためにパッケージと署名用の秘密鍵を足すほどの差は無い。
+ *
+ * 行を新しく作ったときは、運営者に登録の通知を送る(lib/signup-notification.ts)。
+ * trigger はその本文の「きっかけ」になる、行を作ることになった操作。
  */
 export async function ensureProfile(
   clerkId: string,
+  trigger: ProfileTrigger,
 ): Promise<{ username: string }> {
   const existing = await db.profile.findUnique({
     where: { clerkId },
@@ -70,8 +78,9 @@ export async function ensureProfile(
   });
   if (existing) return existing;
 
+  let created: { username: string };
   try {
-    return await withRandomUsername((name) =>
+    created = await withRandomUsername((name) =>
       db.profile.create({
         data: { clerkId, ...name },
         select: { username: true },
@@ -80,6 +89,7 @@ export async function ensureProfile(
   } catch (error) {
     // 同じ人のリクエストが同時に2本来て、もう片方が先に作った
     // (スタンプ帳を開いた直後にスタンプを押した等)。その行を使う。
+    // 通知は作った側が送るので、ここでは送らない。
     if (isUniqueViolation(error, "clerkId")) {
       return db.profile.findUniqueOrThrow({
         where: { clerkId },
@@ -88,6 +98,9 @@ export async function ensureProfile(
     }
     throw error;
   }
+
+  await notifyNewProfile(clerkId, created.username, trigger);
+  return created;
 }
 
 /** 本人が入力した名前に変える。 */
@@ -98,7 +111,7 @@ export async function changeUsername(
   const checked = checkUsername(input);
   if (!checked.ok) return checked;
 
-  await ensureProfile(clerkId);
+  await ensureProfile(clerkId, { kind: "account" });
   try {
     const updated = await db.profile.update({
       where: { clerkId },
@@ -119,7 +132,7 @@ export async function changeUsername(
 
 /** ランダムな名前を引き直す。 */
 export async function rerollUsername(clerkId: string): Promise<UsernameResult> {
-  const current = await ensureProfile(clerkId);
+  const current = await ensureProfile(clerkId, { kind: "account" });
   const updated = await withRandomUsername(
     (name) =>
       db.profile.update({

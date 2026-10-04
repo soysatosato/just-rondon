@@ -78,7 +78,7 @@ export async function publishShare(me: string): Promise<string> {
   if (existing) return existing;
 
   // StampShare は Profile.clerkId を外部キーで指すので、先に行が要る。
-  await ensureProfile(me);
+  await ensureProfile(me, { kind: "shiori" });
   try {
     const created = await db.stampShare.create({
       data: { profileId: me, token: newToken() },
@@ -105,7 +105,7 @@ export async function publishShare(me: string): Promise<string> {
  * やめるなら unpublishShare。
  */
 export async function regenerateShare(me: string): Promise<string> {
-  await ensureProfile(me);
+  await ensureProfile(me, { kind: "shiori" });
   const token = newToken();
   await db.stampShare.upsert({
     where: { profileId: me },

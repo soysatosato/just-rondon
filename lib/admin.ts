@@ -17,9 +17,20 @@ import { auth } from "@clerk/nextjs/server";
 export function isAdmin(): boolean {
   const { userId } = auth();
   if (!userId) return false;
+  return isAdminId(userId);
+}
+
+/**
+ * その Clerk ユーザー ID が運営者のものか。
+ *
+ * ログインしている本人ではなく、渡された ID を見る。権限の判定には
+ * isAdmin を使うこと——こちらは「運営者自身の登録を通知しない」のように、
+ * 処理の対象が誰かを見分けるためのもの。
+ */
+export function isAdminId(clerkId: string): boolean {
   const allowed = (process.env.ADMIN_CLERK_IDS ?? "")
     .split(",")
     .map((id) => id.trim())
     .filter(Boolean);
-  return allowed.includes(userId);
+  return allowed.includes(clerkId);
 }

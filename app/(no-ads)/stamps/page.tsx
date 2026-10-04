@@ -25,7 +25,7 @@ export default async function StampsPage() {
   if (!userId) return <StampBookIntro />;
 
   const [profile, data] = await Promise.all([
-    ensureProfile(userId),
+    ensureProfile(userId, { kind: "stamp-book" }),
     loadStampBook(userId),
   ]);
 

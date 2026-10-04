@@ -138,7 +138,7 @@ export type CreateInviteResult =
  * 同じリンクをあとから出し直すことはできないので、見失ったら作り直してもらう。
  */
 export async function createInvite(me: string): Promise<CreateInviteResult> {
-  await ensureProfile(me);
+  await ensureProfile(me, { kind: "invite-create" });
 
   const friendCount = await db.stampFriend.count({ where: involving(me) });
   if (friendCount >= MAX_FRIENDS) return { ok: false, reason: "full" };
@@ -248,7 +248,7 @@ export async function acceptInvite(
 
   // StampFriend は Profile.clerkId を外部キーで指すので、受け取る側に
   // 行が無いままではつながれない。登録してすぐ招待を開いた人はここで名前が付く。
-  await ensureProfile(me);
+  await ensureProfile(me, { kind: "invite-accept" });
 
   const [mine, theirs] = await Promise.all([
     db.stampFriend.count({ where: involving(me) }),

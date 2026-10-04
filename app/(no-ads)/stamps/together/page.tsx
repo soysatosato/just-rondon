@@ -45,7 +45,7 @@ export default async function TogetherPage({
   if (!userId) return redirectToSignIn();
 
   const [profile, friends] = await Promise.all([
-    ensureProfile(userId),
+    ensureProfile(userId, { kind: "together" }),
     listFriends(userId),
   ]);
 

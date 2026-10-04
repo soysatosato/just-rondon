@@ -118,7 +118,7 @@ export async function PUT(req: NextRequest) {
 
   // TripPlan は Profile を外部キーで指す。プランを先に保存する読者は
   // スタンプ帳をまだ開いておらず、Profile が無いことがある。
-  await ensureProfile(userId);
+  await ensureProfile(userId, { kind: "plan" });
 
   if (input.baseRevision === null) return create(userId, data);
 

@@ -32,7 +32,7 @@ export default async function AccountPage() {
   if (!userId) return redirectToSignIn();
 
   const [profile, user] = await Promise.all([
-    ensureProfile(userId),
+    ensureProfile(userId, { kind: "account" }),
     currentUser(),
   ]);
   if (!user) return redirectToSignIn();

@@ -220,7 +220,11 @@ export async function POST(req: NextRequest) {
 
   // Stamp は Profile.clerkId を外部キーで指すので、行が無いままでは押せない。
   // /stamps を開く前に詳細ページで最初の1個を押した人は、ここで名前が付く。
-  await ensureProfile(userId);
+  await ensureProfile(userId, {
+    kind: "stamp",
+    type: target.type,
+    id: target.id,
+  });
 
   try {
     const created = await db.stamp.create({
