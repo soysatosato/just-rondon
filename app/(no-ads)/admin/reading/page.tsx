@@ -7,6 +7,7 @@ import {
   SCHEDULE_RULES,
   SCHEDULED_CATEGORIES,
   formatJst,
+  formatJstTime,
   formatLondon,
   londonDate,
   nearestSlotDate,
@@ -168,7 +169,7 @@ export default async function ReadingAdminPage() {
                 ロンドン {rule.hour}:{String(rule.minute).padStart(2, "0")}
               </p>
               <p className="text-xs text-muted-foreground">
-                日本 {formatJst(slot).split(" ")[1]}・
+                日本 {formatJstTime(slot)}・
                 {rule.cadence === "daily" ? "毎日" : "不定期"}
               </p>
             </div>
@@ -223,7 +224,7 @@ export default async function ReadingAdminPage() {
                   <ApproveForm
                     id={row.id}
                     nextSlotLabel={
-                      daily ? formatLondon(nextColumnSlot) : undefined
+                      daily ? `ロンドン ${formatLondon(nextColumnSlot)}` : undefined
                     }
                     defaultDate={nearestSlotDate(c, now)}
                     minDate={today}

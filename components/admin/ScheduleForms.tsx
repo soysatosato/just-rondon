@@ -71,7 +71,7 @@ export function ApproveForm({
   minDate,
 }: {
   id: string;
-  /** 毎日のセクションのときだけ渡す。「10/11(日) 12:30」 */
+  /** 毎日のセクションのときだけ渡す。「ロンドン 10/11(日) 12:30」 */
   nextSlotLabel?: string;
   defaultDate: string;
   minDate: string;

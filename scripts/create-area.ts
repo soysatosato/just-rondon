@@ -177,6 +177,9 @@ async function main() {
         category: "area",
         // 既存の宿/観光ガイドと突き合わせる id。対応が無ければ空のまま。
         route: payload.areaId ?? "",
+        // 「ロンドンの街」は管理ページの対象外で、作ったら即公開する。
+        // 読み出し側は publishedAt で公開を判定する(lib/publish-schedule.ts)。
+        publishedAt: new Date(),
         // 見出しの下に並べる事実。対応は lib/area-taxonomy.ts の AreaFacts。
         description: payload.borough,
         description2: payload.zone,

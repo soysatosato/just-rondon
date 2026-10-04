@@ -1,6 +1,6 @@
 ---
 name: add-british-english
-description: just-rondon(イギリス旅行サイト)の「イギリス英語」セクションに、単語・言い回し・スラングを1本、DBに直接追加する。表現の候補3案と、つかみの方向性3案をそれぞれユーザーに選ばせてから($ARGUMENTSで表現が指定された場合は表現の選択を飛ばす)、断定調で飛躍とユーモアの効いた軽く読めるコラムに仕立てて/british-englishに公開する。「イギリス英語のページ追加して」「イギリス英語のネタを書いて」「/add-british-english」で起動する。
+description: just-rondon(イギリス旅行サイト)の「イギリス英語」セクションに、単語・言い回し・スラングを1本、DBに直接追加する。表現の候補3案と、つかみの方向性3案をそれぞれユーザーに選ばせてから($ARGUMENTSで表現が指定された場合は表現の選択を飛ばす)、断定調で飛躍とユーモアの効いた軽く読めるコラムに仕立てて下書きとしてDBに登録する(運営者が管理ページ/admin/readingで承認すると/british-englishに予約公開される)。「イギリス英語のページ追加して」「イギリス英語のネタを書いて」「/add-british-english」で起動する。
 ---
 
 # /add-british-english — イギリス英語の項目をDBに追加する
@@ -191,14 +191,34 @@ Step 3 でユーザーが選んだつかみの方向性に従って構成する�
 npx tsx scripts/create-british-english.ts <一時ファイルのパス>
 ```
 
-成功すると `Created british-english entry: /british-english/<slug> (id=...)`
-が出力される。スラッグ重複エラーが出た場合は原因を確認し、engTitleを
+成功すると `Created draft british-english entry: /british-english/<slug> (id=...). Review and approve it at /admin/reading`
+が出力される。
+
+**記事は下書きとして入る。** この時点では公開されず、一覧にも記事URLにも
+sitemapにも出ない。運営者が管理ページ `/admin/reading` でプレビューして
+承認すると、セクションごとの公開時刻(ロンドン時間。コラム 12:30 毎日 /
+イギリス英語 7:00 不定期 / いまのイギリス 10:00 不定期)に予約される。
+仕組みは `lib/publish-schedule.ts`、要件は `docs/reading-scheduled-publishing.md`。
+
+投入に使ったJSONは消さずに残しておく。プレビューを読んだ運営者から修正を
+頼まれたら、そのJSONを直して次で上書きする(下書き・予約の状態は変わらない)。
+JSONが手元に無ければ、先に `npx tsx scripts/update-reading.ts export british-english <slug> <出力先.json>`
+でDBの今の中身を書き出し、それを直す。
+
+```bash
+npx tsx scripts/update-reading.ts british-english <JSONのパス> <slug> --dry   # 差分の確認
+npx tsx scripts/update-reading.ts british-english <JSONのパス> <slug>
+```
+
+スラッグ重複エラーが出た場合は原因を確認し、engTitleを
 微調整して再実行する。
 
 ## Step 6 — 完了報告
 
 git の操作(commit, push, branch作成など)は一切行わない。
-最後に、公開された項目のタイトルと `/british-english/[slug]` のURLおよび参照した主な出典をユーザーに報告する。
+最後に、登録した記事のタイトル、slug、参照した主な出典を報告し、
+「下書きに入れました。管理ページ(/admin/reading)でプレビューして承認してください」
+と伝える。「公開しました」とは書かない(まだ公開されていない)。
 
 ## Step 7 — ツイート案を出す
 
@@ -209,6 +229,8 @@ git の操作(commit, push, branch作成など)は一切行わない。
 - **140字以内**。URLを含めた実文字数で数え、各案に字数を添える
 - 1行目は見出し **【本日のイギリス英語】**
 - 末尾に記事URL `https://www.just-rondon.com/british-english/<slug>`
+- 記事は下書きなので、投稿は管理ページで承認して公開日時が来てから。
+  それより前に投稿するとリンク先が404になる。案の前にその旨を一言添える
 - 4〜5案は切り口をずらす(王道の要約・意外な数字・失敗談・語源など)
 
 字数は目分量で数えず、実測する。

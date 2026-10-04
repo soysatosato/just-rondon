@@ -116,6 +116,9 @@ async function main() {
         website: payload.website,
         category: "modern-britain",
         route: "/modern-britain",
+        // 下書きとして入れる。管理ページ(/admin/reading)で承認されるまで
+        // 読者には出ない(lib/publish-schedule.ts)。
+        publishedAt: null,
         tags: payload.tags,
         sections: {
           create: payload.sections
@@ -131,7 +134,7 @@ async function main() {
       },
     });
     console.log(
-      `Created modern-britain entry: /modern-britain/${created.slug} (id=${created.id})`,
+      `Created draft modern-britain entry: /modern-britain/${created.slug} (id=${created.id}). Review and approve it at /admin/reading`,
     );
   } catch (e) {
     if (

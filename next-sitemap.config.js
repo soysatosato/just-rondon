@@ -35,6 +35,10 @@ module.exports = {
     "/jobs/service-charges/survey",
     "/jobs/service-charges/thanks",
     "/contact/confirm",
+    // 運営者専用(lib/admin.ts)。運営者以外には404を返す。
+    "/admin",
+    "/admin/*",
+    "/tweets",
     // ★ next-sitemap は additionalPaths とは別に、generateStaticParams で
     //   ビルド時に生成したページを prerender-manifest から全部拾ってくる。
     //   この exclude が効くのはその自動収集分だけで、additionalPaths には効かない。

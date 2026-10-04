@@ -1,6 +1,6 @@
 ---
 name: add-column
-description: just-rondon(イギリス旅行サイト)の「コラム」を1本、DBに直接追加する。既存コラムと重複しないイギリス関連テーマの候補を3案示してユーザーに選ばせてから($ARGUMENTSでテーマが指定された場合は選択を飛ばす)、詳しくて知的好奇心をくすぐる長文記事を書いて/columnに公開する。「コラムを追加して」「コラムを書いて」「/add-column」で起動する。
+description: just-rondon(イギリス旅行サイト)の「コラム」を1本、DBに直接追加する。既存コラムと重複しないイギリス関連テーマの候補を3案示してユーザーに選ばせてから($ARGUMENTSでテーマが指定された場合は選択を飛ばす)、詳しくて知的好奇心をくすぐる長文記事を書いて下書きとしてDBに登録する(運営者が管理ページ/admin/readingで承認すると/columnに予約公開される)。「コラムを追加して」「コラムを書いて」「/add-column」で起動する。
 ---
 
 # /add-column — コラムをDBに追加する
@@ -240,7 +240,23 @@ JSONができたら、リポジトリのルートで以下を実行してDBに�
 npx tsx scripts/create-column.ts <一時ファイルのパス>
 ```
 
-成功すると `Created column: /column/<slug> (id=...)` が出力される。
+成功すると `Created draft column: /column/<slug> (id=...). Review and approve it at /admin/reading` が出力される。
+
+**記事は下書きとして入る。** この時点では公開されず、一覧にも記事URLにも
+sitemapにも出ない。運営者が管理ページ `/admin/reading` でプレビューして
+承認すると、セクションごとの公開時刻(ロンドン時間。コラム 12:30 毎日 /
+イギリス英語 7:00 不定期 / いまのイギリス 10:00 不定期)に予約される。
+仕組みは `lib/publish-schedule.ts`、要件は `docs/reading-scheduled-publishing.md`。
+
+投入に使ったJSONは消さずに残しておく。プレビューを読んだ運営者から修正を
+頼まれたら、そのJSONを直して次で上書きする(下書き・予約の状態は変わらない)。
+JSONが手元に無ければ、先に `npx tsx scripts/update-reading.ts export column <slug> <出力先.json>`
+でDBの今の中身を書き出し、それを直す。
+
+```bash
+npx tsx scripts/update-reading.ts column <JSONのパス> <slug> --dry   # 差分の確認
+npx tsx scripts/update-reading.ts column <JSONのパス> <slug>
+```
 
 エラーが出た場合の対処:
 
@@ -262,7 +278,9 @@ npx tsx scripts/link-column-attractions.ts set <コラムのslug> <スポット�
 ## Step 5 — 完了報告
 
 git の操作(commit, push, branch作成など)は一切行わない。
-最後に、公開されたコラムのタイトルと `/column/<slug>` のURL、および参照した主な出典をユーザーに報告する。
+最後に、登録した記事のタイトル、slug、参照した主な出典を報告し、
+「下書きに入れました。管理ページ(/admin/reading)でプレビューして承認してください」
+と伝える。「公開しました」とは書かない(まだ公開されていない)。
 
 ## Step 6 — ツイート案を出す
 
@@ -273,6 +291,8 @@ git の操作(commit, push, branch作成など)は一切行わない。
 - **140字以内**。URLを含めた実文字数で数え、各案に字数を添える
 - 1行目は見出し **【本日のコラム】**
 - 末尾に記事URL `https://www.just-rondon.com/column/<slug>`
+- 記事は下書きなので、投稿は管理ページで承認して公開日時が来てから。
+  それより前に投稿するとリンク先が404になる。案の前にその旨を一言添える
 - 4〜5案は切り口をずらす(意外な事実・印象的な数字・人物のエピソード・
   読者への問いかけなど)
 

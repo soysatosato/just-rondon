@@ -181,6 +181,9 @@ async function main() {
         website: payload.website,
         category: "column",
         route: "/column",
+        // 下書きとして入れる。管理ページ(/admin/reading)で承認されるまで
+        // 読者には出ない(lib/publish-schedule.ts)。
+        publishedAt: null,
         tags: payload.tags,
         seriesName: payload.seriesName,
         seriesOrder: payload.seriesOrder,
@@ -205,7 +208,9 @@ async function main() {
         },
       },
     });
-    console.log(`Created column: /column/${created.slug} (id=${created.id})`);
+    console.log(
+      `Created draft column: /column/${created.slug} (id=${created.id}). Review and approve it at /admin/reading`,
+    );
     if (attractionIds.length > 0) {
       console.log(`Linked attractions: ${payload.attractions!.join(", ")}`);
     }

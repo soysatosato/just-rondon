@@ -94,6 +94,9 @@ async function main() {
         website: payload.website,
         category: "british-english",
         route: "/british-english",
+        // 下書きとして入れる。管理ページ(/admin/reading)で承認されるまで
+        // 読者には出ない(lib/publish-schedule.ts)。
+        publishedAt: null,
         sections: {
           create: payload.sections
             .slice()
@@ -108,7 +111,7 @@ async function main() {
       },
     });
     console.log(
-      `Created british-english entry: /british-english/${created.slug} (id=${created.id})`
+      `Created draft british-english entry: /british-english/${created.slug} (id=${created.id}). Review and approve it at /admin/reading`
     );
   } catch (e) {
     if (

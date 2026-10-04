@@ -188,3 +188,12 @@ export function formatLondon(at: Date): string {
 export function formatJst(at: Date): string {
   return formatIn(at, "Asia/Tokyo");
 }
+
+/** 日本時間の時刻だけ。"20:30" */
+export function formatJstTime(at: Date): string {
+  return new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(at);
+}
