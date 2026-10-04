@@ -13,6 +13,7 @@ import {
   SortToggle,
 } from "@/components/reading/archive-ui";
 import { usePagination } from "@/components/reading/usePagination";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /**
  * 街の書庫。検索・方角・並べ替え・ページ送り。
@@ -69,7 +70,8 @@ export default function AreaBrowser({ entries }: { entries: Content[] }) {
         .slice()
         .sort(
           (a, b) =>
-            b.views - a.views || b.createdAt.getTime() - a.createdAt.getTime(),
+            b.views - a.views ||
+            publishedDateOf(b).getTime() - publishedDateOf(a).getTime(),
         );
     }
     if (sort === "name") {

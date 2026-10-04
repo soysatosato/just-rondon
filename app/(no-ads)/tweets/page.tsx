@@ -1,4 +1,6 @@
+import { notFound } from "next/navigation";
 import db from "@/utils/db";
+import { isAdmin } from "@/lib/admin";
 import { buildPageMetadata } from "@/lib/seo";
 import TweetDraftCard from "@/components/tweets/TweetDraftCard";
 
@@ -12,6 +14,9 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function TweetsPage() {
+  // 運営者専用。それ以外にはページがあることも知らせない。
+  if (!isAdmin()) notFound();
+
   const drafts = await db.tweetDraft.findMany({
     where: { status: "draft" },
     orderBy: { createdAt: "asc" },

@@ -1,6 +1,7 @@
 import type { Content } from "@prisma/client";
 
 import type { RankingEntry } from "@/components/rankings/ContentRankingTabs";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /**
  * Content の行を、ランキング棚(ContentRankingTabs)が受け取る形に落とす。
@@ -44,7 +45,7 @@ export function toRankingEntries(
         : null,
     summary: item.summary,
     image: item.image,
-    date: dateFormatter.format(item.createdAt),
+    date: dateFormatter.format(publishedDateOf(item)),
     badge: category === "column" ? item.seriesName : null,
   }));
 }

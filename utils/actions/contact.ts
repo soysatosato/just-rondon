@@ -13,7 +13,30 @@ function escapeHtml(s: string) {
     .replace(/"/g, "&quot;");
 }
 
+/** 表示からこれより早い送信は人の手ではないとみなす。 */
+const MIN_FILL_MS = 3000;
+/** 同じアドレスの未確認の問い合わせがこの件数に達したら、以降は受け付けない。 */
+const MAX_UNCONFIRMED_PER_EMAIL = 2;
+
+/**
+ * 営業スパムのボット判定。どれかに当たったら黙って成功を返す
+ * (弾いたと知らせると、ボット側が回避策を学ぶ)。
+ *
+ * - website: 人には見えない入力欄。埋まっていればボット。
+ * - startedAt: フォームを描画した時刻。クライアントで入れるので、
+ *   JS を動かさずに直接 POST するボットでは空になる。
+ */
+function looksLikeBot(formData: FormData) {
+  if (String(formData.get("website") ?? "") !== "") return true;
+
+  const startedAt = Number(formData.get("startedAt"));
+  if (!Number.isFinite(startedAt) || startedAt <= 0) return true;
+  return Date.now() - startedAt < MIN_FILL_MS;
+}
+
 export async function sendContact(prevState: any, formData: FormData) {
+  if (looksLikeBot(formData)) return { success: true };
+
   const raw = Object.fromEntries(formData);
   const parsed = contactSchema.safeParse(raw);
 
@@ -22,6 +45,15 @@ export async function sendContact(prevState: any, formData: FormData) {
   }
 
   const { name, email, message } = parsed.data;
+
+  // 確認リンクを踏まないまま何度も送ってくるアドレスは、スパムが同じ
+  // アドレスを使い回しているとみなす。確認メールの送り直しを1回は許すため、
+  // 1件目では弾かない。確認済みのアドレス(実在の読者)は数えない。
+  const unconfirmed = await db.contact.count({
+    where: { email: { equals: email, mode: "insensitive" }, confirmed: false },
+  });
+  if (unconfirmed >= MAX_UNCONFIRMED_PER_EMAIL) return { success: true };
+
   const token = randomUUID();
 
   await db.contact.create({

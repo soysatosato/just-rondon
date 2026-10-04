@@ -21,6 +21,7 @@ import { historyChapters, HISTORY_BASE } from "@/components/history/chapters";
 import HubMasthead from "@/components/reading/HubMasthead";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toReadingRankingEntries } from "@/lib/reading-ranking";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 const PAGE_PATH = "/reading";
 const PAGE_NAME = "英国を読む";
@@ -187,10 +188,10 @@ export default async function ReadingHubPage() {
 
   const now = Date.now();
 
-  // 「新着」。カテゴリを跨いで createdAt の降順。views とは別軸なので、
+  // 「新着」。カテゴリを跨いで公開日時の降順。views とは別軸なので、
   // ランキングと重複しても構わない（別の切り口で同じ記事が出るのは自然）。
   const latest = [...columns, ...modernBritain, ...britishEnglish].sort(
-    (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    (a, b) => publishedDateOf(b).getTime() - publishedDateOf(a).getTime(),
   );
 
   const newest = latest[0] ?? null;
@@ -229,7 +230,7 @@ export default async function ReadingHubPage() {
             ? [
                 {
                   label: "最終更新",
-                  value: relativeDays(newest.createdAt, now),
+                  value: relativeDays(publishedDateOf(newest), now),
                 },
               ]
             : []),

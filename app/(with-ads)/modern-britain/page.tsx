@@ -21,6 +21,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const metadata = buildPageMetadata({
   path: "/modern-britain",
@@ -76,7 +77,7 @@ export default async function ModernBritainHubPage() {
         stats={[
           { label: "公開中", value: `${entries.length}`, unit: "本" },
           ...(newest
-            ? [{ label: "最終更新", value: formatUpdated(newest.createdAt) }]
+            ? [{ label: "最終更新", value: formatUpdated(publishedDateOf(newest)) }]
             : []),
         ]}
       >
@@ -95,7 +96,7 @@ export default async function ModernBritainHubPage() {
       {/*
         読者側の軸の棚。
 
-        下のアーカイブは createdAt の降順で固定で、論考を足さない限り
+        下のアーカイブは公開日時の降順で固定で、論考を足さない限り
         並びが動かない。時事を扱う以上「何が新しく出たか」がいちばん強い
         入口になるので、新着を既定にした棚を頭に置く。週間・総合へは
         タブで1クリック。

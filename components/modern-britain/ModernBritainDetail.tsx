@@ -8,6 +8,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 // 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
 // 全部インディゴにすると、1段落に何度も出てくる強調が蛍光ペンだらけに見える。
@@ -79,7 +80,7 @@ export default function ModernBritainDetail({
               Britain, Argued
             </span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(content.createdAt)}
+              {formatDate(publishedDateOf(content))}
             </span>
           </div>
 

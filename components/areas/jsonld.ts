@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 // 観光の「エリアガイド」(components/sightseeing/areas/areas.ts の AREAS_BASE =
 // /sightseeing/areas)とは別物。あちらは半日の回遊ルート、こちらは街そのものの
@@ -20,6 +21,7 @@ export function areaArticleJsonLd(content: {
   engTitle: string | null;
   summary: string | null;
   slug: string;
+  publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   image: string | null;
@@ -34,7 +36,7 @@ export function areaArticleJsonLd(content: {
     ...(content.summary ? { description: content.summary } : {}),
     inLanguage: "ja",
     mainEntityOfPage: url,
-    datePublished: content.createdAt.toISOString(),
+    datePublished: publishedDateOf(content).toISOString(),
     dateModified: content.updatedAt.toISOString(),
     ...(content.image ? { image: content.image } : {}),
     /*

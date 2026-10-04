@@ -9,6 +9,7 @@ import {
 import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
 import { ensureProfile } from "@/lib/profile";
 import { placeKey } from "@/lib/stamp-rallies";
+import { publishedWhere } from "@/lib/publish-schedule";
 import {
   stampTitleFor,
   stampType,
@@ -430,7 +431,7 @@ async function loadColumns(candidates: Candidate[]): Promise<ShioriColumn[]> {
     const links = await db.contentAttraction.findMany({
       where: {
         attractionId: { in: [...nameByAttraction.keys()] },
-        content: { category: "column" },
+        content: { category: "column", ...publishedWhere() },
       },
       orderBy: { displayOrder: "asc" },
       select: { attractionId: true, content: { select: COLUMN_SELECT } },
@@ -458,7 +459,11 @@ async function loadColumns(candidates: Candidate[]): Promise<ShioriColumn[]> {
     const links = await db.contentAttraction.findMany({
       where: {
         attraction: { area: { in: [...areas] }, isPublished: true },
-        content: { category: "column", id: { notIn: [...pickedIds] } },
+        content: {
+          category: "column",
+          id: { notIn: [...pickedIds] },
+          ...publishedWhere(),
+        },
       },
       orderBy: [{ content: { views: "desc" } }, { displayOrder: "asc" }],
       select: {
@@ -474,8 +479,12 @@ async function loadColumns(candidates: Candidate[]): Promise<ShioriColumn[]> {
   // 3. よく読まれているコラム
   if (picked.length < COLUMN_LIMIT) {
     const popular = await db.content.findMany({
-      where: { category: "column", id: { notIn: [...pickedIds] } },
-      orderBy: [{ views: "desc" }, { createdAt: "desc" }],
+      where: {
+        category: "column",
+        id: { notIn: [...pickedIds] },
+        ...publishedWhere(),
+      },
+      orderBy: [{ views: "desc" }, { publishedAt: "desc" }],
       take: COLUMN_LIMIT - picked.length,
       select: COLUMN_SELECT,
     });

@@ -1,4 +1,5 @@
 import type { Content } from "@prisma/client";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export type ColumnSeries = {
   name: string;
@@ -44,13 +45,15 @@ export function groupColumns(columns: Content[]): {
   }
 
   series.sort((a, b) => latestAt(b.entries) - latestAt(a.entries));
-  standalone.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  standalone.sort(
+    (a, b) => publishedDateOf(b).getTime() - publishedDateOf(a).getTime(),
+  );
 
   return { series, standalone };
 }
 
 function latestAt(entries: Content[]): number {
-  return Math.max(...entries.map((e) => e.createdAt.getTime()));
+  return Math.max(...entries.map((e) => publishedDateOf(e).getTime()));
 }
 
 /** タグ絞り込み用に、実際に使われているタグと件数を集計する。 */

@@ -15,6 +15,7 @@ import PageCommentSection, {
 import AttractionSpotRail, {
   type RailSpot,
 } from "@/components/sightseeing/AttractionSpotRail";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -74,7 +75,7 @@ export default function ColumnDetail({
       <div>
         <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
           <p className="text-sm text-muted-foreground">
-            {formatDate(content.createdAt)}
+            {formatDate(publishedDateOf(content))}
           </p>
           {content.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">

@@ -19,6 +19,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /*
   検索語は「エリアガイド」系を狙わない。それは半日の回遊ルートを載せた
@@ -87,7 +88,7 @@ export default async function AreasHubPage() {
         stats={[
           { label: "公開中", value: `${entries.length}`, unit: "の街" },
           ...(newest
-            ? [{ label: "最終更新", value: formatUpdated(newest.createdAt) }]
+            ? [{ label: "最終更新", value: formatUpdated(publishedDateOf(newest)) }]
             : []),
         ]}
       >

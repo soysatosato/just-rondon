@@ -19,6 +19,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const metadata = buildPageMetadata({
   path: "/column",
@@ -79,7 +80,7 @@ export default async function ColumnHubPage() {
             ? [{ label: "連載", value: `${series.length}`, unit: "本" }]
             : []),
           ...(newest
-            ? [{ label: "最終更新", value: formatUpdated(newest.createdAt) }]
+            ? [{ label: "最終更新", value: formatUpdated(publishedDateOf(newest)) }]
             : []),
         ]}
       />

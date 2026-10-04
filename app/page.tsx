@@ -22,6 +22,7 @@ import { fetchHomeRails } from "@/utils/actions/home";
 import { fetchLatestBrief } from "@/utils/actions/weekly";
 import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const metadata = buildPageMetadata({
   path: "/",
@@ -295,7 +296,10 @@ export default async function Page() {
         };
       })
     )
-    .sort((a, b) => b.item.createdAt.getTime() - a.item.createdAt.getTime());
+    .sort(
+      (a, b) =>
+        publishedDateOf(b.item).getTime() - publishedDateOf(a.item).getTime(),
+    );
 
   // 主役は画像のある最新記事。画像が無いと見出しを重ねる意匠が成立しない。
   const readingLead =

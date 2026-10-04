@@ -22,6 +22,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const metadata = buildPageMetadata({
   path: "/british-english",
@@ -79,7 +80,7 @@ export default async function BritishEnglishHubPage() {
         stats={[
           { label: "公開中", value: `${entries.length}`, unit: "語" },
           ...(newest
-            ? [{ label: "最終更新", value: formatUpdated(newest.createdAt) }]
+            ? [{ label: "最終更新", value: formatUpdated(publishedDateOf(newest)) }]
             : []),
         ]}
       />
@@ -87,7 +88,7 @@ export default async function BritishEnglishHubPage() {
       {/*
         読者側の軸の棚。
 
-        下のアーカイブは createdAt の降順で固定なので、語を足さない限り
+        下のアーカイブは公開日時の降順で固定なので、語を足さない限り
         並びが動かない。新着・週間・総合を切り替えられる棚を挟んで、
         「増えた言葉」と「いま読まれている言葉」の両方から入れるようにする。
         既定は新着。

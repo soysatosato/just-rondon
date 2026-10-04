@@ -16,6 +16,7 @@ import {
   areaGuideSlugs,
 } from "@/components/sightseeing/areas/areas";
 import type { AdjacentContent } from "@/utils/actions/contents";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 // 太字は数字と地名の強調に使うので、色は付けず字面の太さだけで効かせる。
 const proseClass =
@@ -104,7 +105,7 @@ export default function AreaDetail({
               {content.engTitle ?? "London Neighbourhood"}
             </span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(content.createdAt)}
+              {formatDate(publishedDateOf(content))}
             </span>
           </div>
 

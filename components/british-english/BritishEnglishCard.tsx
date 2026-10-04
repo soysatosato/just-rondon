@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Content } from "@prisma/client";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /**
  * 1語ぶんのカード。
@@ -71,7 +72,7 @@ export default function BritishEnglishCard({ item }: { item: Content }) {
 
       <div className="flex min-w-0 flex-1 flex-col px-5 pb-5 pt-4">
         <p className="text-[11px] text-muted-foreground">
-          {formatDate(item.createdAt)}
+          {formatDate(publishedDateOf(item))}
         </p>
 
         {item.engTitle && (

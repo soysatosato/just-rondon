@@ -14,6 +14,7 @@ import {
   SortToggle,
 } from "@/components/reading/archive-ui";
 import { usePagination } from "@/components/reading/usePagination";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /**
  * コラムの書庫。検索・タグ・並べ替え・ページ送り。
@@ -61,13 +62,14 @@ export default function ColumnBrowser({ columns }: { columns: Content[] }) {
       (c) =>
         matchesQuery(c, query) && (!activeTag || c.tags.includes(activeTag)),
     );
-    // 元の配列は createdAt の降順で届く。新着順はその並びのまま。
+    // 元の配列は公開日時の降順で届く。新着順はその並びのまま。
     if (sort === "popular") {
       return filtered
         .slice()
         .sort(
           (a, b) =>
-            b.views - a.views || b.createdAt.getTime() - a.createdAt.getTime(),
+            b.views - a.views ||
+            publishedDateOf(b).getTime() - publishedDateOf(a).getTime(),
         );
     }
     return filtered;

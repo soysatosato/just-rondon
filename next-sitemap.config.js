@@ -575,8 +575,11 @@ module.exports = {
       paths.push(await config.transform(config, `/souvenirs/${s.slug}`));
     }
 
+    // 読み物は publishedAt が null(下書き)か未来(予約中)なら出さない
+    // (lib/publish-schedule.ts)。sitemap はビルド時にしか作られないので、
+    // 予約していた記事が載るのは公開後の次のデプロイから。
     const columns = await prisma.content.findMany({
-      where: { category: "column" },
+      where: { category: "column", publishedAt: { lte: new Date() } },
       select: { slug: true },
     });
     for (const c of columns) {
@@ -584,7 +587,7 @@ module.exports = {
     }
 
     const modernBritainEntries = await prisma.content.findMany({
-      where: { category: "modern-britain" },
+      where: { category: "modern-britain", publishedAt: { lte: new Date() } },
       select: { slug: true },
     });
     for (const mb of modernBritainEntries) {
@@ -592,7 +595,7 @@ module.exports = {
     }
 
     const britishEnglishEntries = await prisma.content.findMany({
-      where: { category: "british-english" },
+      where: { category: "british-english", publishedAt: { lte: new Date() } },
       select: { slug: true },
     });
     for (const be of britishEnglishEntries) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/utils/db";
+import { publishedWhere } from "@/lib/publish-schedule";
 
 /**
  * 閲覧の記録 API。
@@ -208,9 +209,10 @@ async function findTargetId(targetType: TargetType, slug: string) {
   /*
     読み物3種は Content テーブルを共有していて、slug は表全体では一意でない。
     category で絞らないと、別セクションの同名 slug を掴んでしまう。
+    管理ページのプレビューで開いた下書き・予約中の記事は数えない。
   */
   const row = await db.content.findFirst({
-    where: { slug, category: TARGETS[targetType] },
+    where: { slug, category: TARGETS[targetType], ...publishedWhere() },
     select: { id: true },
   });
   return row?.id ?? null;

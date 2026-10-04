@@ -1,7 +1,9 @@
 "use server";
 
 import db from "../db";
+import { draftMode } from "next/headers";
 import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "../rankings";
+import { publishedWhere, type ReadingCategory } from "@/lib/publish-schedule";
 
 export const fetchEvents2025 = async () => {
   const contents = await db.content.findMany({
@@ -26,10 +28,25 @@ export const fetchMonthlyEvents2025 = async (slug: string) => {
   return content;
 };
 
+/**
+ * 詳細ページ(slug で1件引く)の公開条件。
+ *
+ * 管理ページのプレビュー(Next の draft mode)中だけは、下書きと予約中も
+ * 引けるようにする。draft mode の cookie は /api/admin/preview が運営者にだけ
+ * 発行し、値はビルドごとの秘密なので外から作れない。
+ *
+ * 一覧・ランキング・前後の記事はプレビュー中でも公開済みだけにする。
+ * 見たいのは記事そのものの見た目で、まだ出ていない記事が一覧に混ざった
+ * 画面を見ても確認にならない。
+ */
+function visibleWhere() {
+  return draftMode().isEnabled ? {} : publishedWhere();
+}
+
 export const fetchColumns = async () => {
   const contents = await db.content.findMany({
-    where: { category: "column" },
-    orderBy: { createdAt: "desc" },
+    where: { category: "column", ...publishedWhere() },
+    orderBy: { publishedAt: "desc" },
   });
   return contents;
 };
@@ -37,7 +54,7 @@ export const fetchColumns = async () => {
 export const fetchColumnBySlug = async (slug: string) => {
   // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
   const content = await db.content.findFirst({
-    where: { slug, category: "column" },
+    where: { slug, category: "column", ...visibleWhere() },
     include: { sections: { orderBy: { displayOrder: "asc" } } },
   });
   return content;
@@ -48,7 +65,7 @@ export const fetchColumnBySlug = async (slug: string) => {
 export const fetchColumnSeries = async (seriesName: string | null) => {
   if (!seriesName) return [];
   const contents = await db.content.findMany({
-    where: { category: "column", seriesName },
+    where: { category: "column", seriesName, ...publishedWhere() },
     orderBy: { seriesOrder: "asc" },
     select: { id: true, title: true, slug: true, seriesOrder: true },
   });
@@ -79,46 +96,54 @@ export type AdjacentContent = {
 };
 
 /**
- * 一覧ページと同じ並び順(createdAt desc)での、現在記事の前後1件。
- * createdAt が同値のレコードがあっても取りこぼさないよう、id をタイブレークに使う。
+ * 一覧ページと同じ並び順(publishedAt desc)での、現在記事の前後1件。
+ * publishedAt が同値のレコードがあっても取りこぼさないよう、id をタイブレークに使う。
+ *
+ * 新しい側は予約中の記事に当たりうるので、両側とも公開済みに絞る。
+ * 下書きのプレビュー(publishedAt が null)では前後を出さない。
  */
 export const fetchAdjacentContents = async (
-  category: "column" | "british-english" | "area" | "modern-britain",
-  current: { id: string; createdAt: Date },
+  category: ReadingCategory,
+  current: { id: string; publishedAt: Date | null },
 ): Promise<{ prev: AdjacentContent | null; next: AdjacentContent | null }> => {
+  const at = current.publishedAt;
+  if (!at) return { prev: null, next: null };
+
   const [newer, older] = await Promise.all([
     db.content.findFirst({
       where: {
         category,
+        ...publishedWhere(),
         OR: [
-          { createdAt: { gt: current.createdAt } },
-          { createdAt: current.createdAt, id: { gt: current.id } },
+          { publishedAt: { gt: at } },
+          { publishedAt: at, id: { gt: current.id } },
         ],
       },
-      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      orderBy: [{ publishedAt: "asc" }, { id: "asc" }],
       select: { title: true, slug: true },
     }),
     db.content.findFirst({
       where: {
         category,
+        ...publishedWhere(),
         OR: [
-          { createdAt: { lt: current.createdAt } },
-          { createdAt: current.createdAt, id: { lt: current.id } },
+          { publishedAt: { lt: at } },
+          { publishedAt: at, id: { lt: current.id } },
         ],
       },
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      orderBy: [{ publishedAt: "desc" }, { id: "desc" }],
       select: { title: true, slug: true },
     }),
   ]);
 
-  // 一覧が createdAt desc(新しい順)なので、「次」は自分より新しい記事。
+  // 一覧が publishedAt desc(新しい順)なので、「次」は自分より新しい記事。
   return { prev: older, next: newer };
 };
 
 export const fetchBritishEnglishEntries = async () => {
   const contents = await db.content.findMany({
-    where: { category: "british-english" },
-    orderBy: { createdAt: "desc" },
+    where: { category: "british-english", ...publishedWhere() },
+    orderBy: { publishedAt: "desc" },
   });
   return contents;
 };
@@ -126,7 +151,7 @@ export const fetchBritishEnglishEntries = async () => {
 export const fetchBritishEnglishBySlug = async (slug: string) => {
   // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
   const content = await db.content.findFirst({
-    where: { slug, category: "british-english" },
+    where: { slug, category: "british-english", ...visibleWhere() },
     include: { sections: { orderBy: { displayOrder: "asc" } } },
   });
   return content;
@@ -143,8 +168,8 @@ export const fetchBritishEnglishBySlug = async (slug: string) => {
  */
 export const fetchModernBritainEntries = async () => {
   const contents = await db.content.findMany({
-    where: { category: "modern-britain" },
-    orderBy: { createdAt: "desc" },
+    where: { category: "modern-britain", ...publishedWhere() },
+    orderBy: { publishedAt: "desc" },
   });
   return contents;
 };
@@ -152,7 +177,7 @@ export const fetchModernBritainEntries = async () => {
 export const fetchModernBritainBySlug = async (slug: string) => {
   // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
   const content = await db.content.findFirst({
-    where: { slug, category: "modern-britain" },
+    where: { slug, category: "modern-britain", ...visibleWhere() },
     include: { sections: { orderBy: { displayOrder: "asc" } } },
   });
   return content;
@@ -160,8 +185,8 @@ export const fetchModernBritainBySlug = async (slug: string) => {
 
 export const fetchAreaEntries = async () => {
   const contents = await db.content.findMany({
-    where: { category: "area" },
-    orderBy: { createdAt: "desc" },
+    where: { category: "area", ...publishedWhere() },
+    orderBy: { publishedAt: "desc" },
   });
   return contents;
 };
@@ -169,7 +194,7 @@ export const fetchAreaEntries = async () => {
 export const fetchAreaBySlug = async (slug: string) => {
   // category を絞らないと他カテゴリの Content と slug が衝突しうる（既知のバグパターン）
   const content = await db.content.findFirst({
-    where: { slug, category: "area" },
+    where: { slug, category: "area", ...visibleWhere() },
     include: { sections: { orderBy: { displayOrder: "asc" } } },
   });
   return content;
@@ -219,12 +244,12 @@ export const fetchEventsForMonth = async (year: number, month: number) => {
  * 後ろに埋もれ続けるのを避けるため。
  */
 export const fetchPopularContents = async (
-  category: "column" | "british-english" | "area" | "modern-britain",
+  category: ReadingCategory,
   take = 5,
 ) => {
   const contents = await db.content.findMany({
-    where: { category, views: { gt: 0 } },
-    orderBy: [{ views: "desc" }, { createdAt: "desc" }],
+    where: { category, views: { gt: 0 }, ...publishedWhere() },
+    orderBy: [{ views: "desc" }, { publishedAt: "desc" }],
     take,
   });
   return contents;
@@ -256,7 +281,7 @@ const WEEKLY_TARGET_BY_CATEGORY = {
  * 戻す」を必ず用意すること。
  */
 export const fetchWeeklyPopularContents = async (
-  category: "column" | "british-english" | "area" | "modern-britain",
+  category: ReadingCategory,
   take = 5,
 ) => {
   const ids = await fetchWeeklyTopIds(
@@ -266,7 +291,7 @@ export const fetchWeeklyPopularContents = async (
   if (ids.length === 0) return [];
 
   const contents = await db.content.findMany({
-    where: { id: { in: ids }, category },
+    where: { id: { in: ids }, category, ...publishedWhere() },
   });
 
   const ranked = orderByIds(ids, contents, take);
@@ -287,8 +312,9 @@ export const fetchPopularReadingContents = async (take = 5) => {
     where: {
       category: { in: ["column", "british-english", "modern-britain"] },
       views: { gt: 0 },
+      ...publishedWhere(),
     },
-    orderBy: [{ views: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ views: "desc" }, { publishedAt: "desc" }],
     take,
   });
   return contents;
@@ -316,6 +342,7 @@ export const fetchWeeklyPopularReadingContents = async (take = 5) => {
     where: {
       id: { in: ids },
       category: { in: ["column", "british-english", "modern-britain"] },
+      ...publishedWhere(),
     },
   });
 

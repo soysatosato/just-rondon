@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { tagLabel } from "@/lib/column-taxonomy";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -53,7 +54,7 @@ export default function ColumnCard({
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
           <time className="font-medium text-muted-foreground">
-            {formatDate(item.createdAt)}
+            {formatDate(publishedDateOf(item))}
           </time>
           {item.tags.slice(0, 2).map((t) => (
             <span

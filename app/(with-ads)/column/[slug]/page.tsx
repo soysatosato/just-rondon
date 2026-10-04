@@ -17,6 +17,7 @@ import ColumnDetail from "@/components/column/ColumnDetail";
 import type { PageCommentItem } from "@/components/comments/PageCommentSection";
 import db from "@/utils/db";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 interface Props {
   params: {
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: Props) {
     title: content.title,
     description: trimmed || `${content.title}についてのコラムです。`,
     type: "article",
-    publishedTime: content.createdAt.toISOString(),
+    publishedTime: publishedDateOf(content).toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
     // 挿絵(content.image)を直接 og:image に書かない。Wikimedia は
     // facebookexternalhit を 403 で拒否し、縦長・5MB超の写真は X と LINE に
@@ -61,7 +62,7 @@ export default async function ColumnDetailPage({ params }: Props) {
     fetchColumnSeries(content.seriesName),
     fetchAdjacentContents("column", {
       id: content.id,
-      createdAt: content.createdAt,
+      publishedAt: content.publishedAt,
     }),
     fetchContentAttractions(content.id),
   ]);

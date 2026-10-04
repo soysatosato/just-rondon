@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const COLUMN_BASE = "/column";
 
@@ -16,6 +17,7 @@ export function columnArticleJsonLd(content: {
   title: string;
   summary: string | null;
   slug: string;
+  publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   image: string | null;
@@ -30,7 +32,7 @@ export function columnArticleJsonLd(content: {
     ...(content.summary ? { description: content.summary } : {}),
     inLanguage: "ja",
     mainEntityOfPage: url,
-    datePublished: content.createdAt.toISOString(),
+    datePublished: publishedDateOf(content).toISOString(),
     dateModified: content.updatedAt.toISOString(),
     ...(content.image ? { image: content.image } : {}),
     author: COLUMN_PUBLISHER,

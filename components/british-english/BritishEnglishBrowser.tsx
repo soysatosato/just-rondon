@@ -12,6 +12,7 @@ import {
   SortToggle,
 } from "@/components/reading/archive-ui";
 import { usePagination } from "@/components/reading/usePagination";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /**
  * イギリス英語の書庫。検索・頭文字・並べ替え・ページ送り。
@@ -77,7 +78,8 @@ export default function BritishEnglishBrowser({
         .slice()
         .sort(
           (a, b) =>
-            b.views - a.views || b.createdAt.getTime() - a.createdAt.getTime(),
+            b.views - a.views ||
+            publishedDateOf(b).getTime() - publishedDateOf(a).getTime(),
         );
     }
     return filtered;

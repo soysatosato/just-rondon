@@ -1,5 +1,6 @@
 import { SITE_NAME, SITE_URL, absoluteImage } from "@/lib/seo";
 import { britishEnglishOgImage } from "@/lib/og";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 export const BRITISH_ENGLISH_BASE = "/british-english";
 
@@ -18,6 +19,7 @@ export function britishEnglishArticleJsonLd(content: {
   engTitle: string | null;
   summary: string | null;
   slug: string;
+  publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   image: string | null;
@@ -32,7 +34,7 @@ export function britishEnglishArticleJsonLd(content: {
     ...(content.summary ? { description: content.summary } : {}),
     inLanguage: "ja",
     mainEntityOfPage: url,
-    datePublished: content.createdAt.toISOString(),
+    datePublished: publishedDateOf(content).toISOString(),
     dateModified: content.updatedAt.toISOString(),
     // 挿絵が無い記事のほうが多いので、そのときは共有カードを画像として出す。
     // Article に image が無いと Google の記事カードに画像が付かない。

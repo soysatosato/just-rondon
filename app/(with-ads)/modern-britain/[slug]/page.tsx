@@ -15,6 +15,7 @@ import {
 } from "@/components/modern-britain/jsonld";
 import ModernBritainDetail from "@/components/modern-britain/ModernBritainDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 interface Props {
   params: {
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }: Props) {
     title: content.title,
     description: trimmed || `${content.title}について掘り下げて論じます。`,
     type: "article",
-    publishedTime: content.createdAt.toISOString(),
+    publishedTime: publishedDateOf(content).toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
     // 挿絵を直接 og:image に書かない理由は app/og/column/[slug]/route.tsx。
     images: [modernBritainOgImage(content)],
@@ -55,7 +56,7 @@ export default async function ModernBritainDetailPage({ params }: Props) {
 
   const { prev, next } = await fetchAdjacentContents("modern-britain", {
     id: content.id,
-    createdAt: content.createdAt,
+    publishedAt: content.publishedAt,
   });
 
   return (

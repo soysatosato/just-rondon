@@ -13,6 +13,7 @@ import ViewTracker from "@/components/analytics/ViewTracker";
 import { areaArticleJsonLd, areaPath } from "@/components/areas/jsonld";
 import AreaDetail from "@/components/areas/AreaDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 interface Props {
   params: {
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: Props) {
       trimmed ||
       `${content.engTitle ?? content.title}の治安・家賃・地名の由来と歩き方をまとめました。`,
     type: "article",
-    publishedTime: content.createdAt.toISOString(),
+    publishedTime: publishedDateOf(content).toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
     // 挿絵を直接 og:image に書かない理由は app/og/column/[slug]/route.tsx。
     images: [areaOgImage(content)],
@@ -70,7 +71,7 @@ export default async function AreaDetailPage({ params }: Props) {
   const [{ prev, next }, spots] = await Promise.all([
     fetchAdjacentContents("area", {
       id: content.id,
-      createdAt: content.createdAt,
+      publishedAt: content.publishedAt,
     }),
     fetchContentAttractions(content.id),
   ]);

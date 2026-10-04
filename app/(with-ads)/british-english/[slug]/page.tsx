@@ -15,6 +15,7 @@ import {
 } from "@/components/british-english/jsonld";
 import BritishEnglishDetail from "@/components/british-english/BritishEnglishDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 interface Props {
   params: {
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: Props) {
     ogTitle: content.title,
     description: trimmed || `${content.title}についてのイギリス英語解説です。`,
     type: "article",
-    publishedTime: content.createdAt.toISOString(),
+    publishedTime: publishedDateOf(content).toISOString(),
     modifiedTime: content.updatedAt.toISOString(),
     // 記事内の挿絵(content.image)ではなく、その単語を大きく置いた
     // 生成カードを共有画像にする。挿絵は任意項目で無い記事が多く、
@@ -69,7 +70,7 @@ export default async function BritishEnglishDetailPage({ params }: Props) {
 
   const { prev, next } = await fetchAdjacentContents("british-english", {
     id: content.id,
-    createdAt: content.createdAt,
+    publishedAt: content.publishedAt,
   });
 
   return (

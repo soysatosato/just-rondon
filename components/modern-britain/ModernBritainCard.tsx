@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 /**
  * 論考1本ぶんのカード。
@@ -71,10 +72,10 @@ export default function ModernBritainCard({ item }: { item: Content }) {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col px-5 pb-5 pt-4">
-        {/* 並びは createdAt の降順なので、通し番号を振ると記事を足すたびに
+        {/* 並びは公開日時の降順なので、通し番号を振ると記事を足すたびに
             全カードの番号がずれる。日付だけを出す。 */}
         <p className="text-[11px] text-muted-foreground">
-          {formatDate(item.createdAt)}
+          {formatDate(publishedDateOf(item))}
         </p>
 
         <h3 className="mt-1.5 line-clamp-4 text-[15px] font-bold leading-snug tracking-tight text-foreground">

@@ -8,6 +8,7 @@ import {
   KM_PER_LNG_DEG_LONDON,
   distanceKm,
 } from "@/lib/sightseeing/geo";
+import { publishedWhere } from "@/lib/publish-schedule";
 
 const getTotalCount = unstable_cache(
   async () => db.attraction.count({ where: { isPublished: true } }),
@@ -92,8 +93,11 @@ export const fetchAttractionName = async (slug: string) => {
  */
 export const fetchAttractionColumns = async (attractionId: string) => {
   const links = await db.contentAttraction.findMany({
-    where: { attractionId, content: { category: "column" } },
-    orderBy: { content: { createdAt: "desc" } },
+    where: {
+      attractionId,
+      content: { category: "column", ...publishedWhere() },
+    },
+    orderBy: { content: { publishedAt: "desc" } },
     select: {
       content: {
         select: {

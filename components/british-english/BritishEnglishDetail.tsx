@@ -7,6 +7,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
+import { publishedDateOf } from "@/lib/publish-schedule";
 
 const proseClass =
   "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-rose-600 dark:prose-a:text-rose-400 prose-strong:text-rose-600 dark:prose-strong:text-rose-400 prose-li:marker:text-rose-400";
@@ -70,7 +71,7 @@ export default function BritishEnglishDetail({
               British English
             </span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(content.createdAt)}
+              {formatDate(publishedDateOf(content))}
             </span>
           </div>
 
