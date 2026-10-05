@@ -235,6 +235,7 @@ export const NAV_SECTIONS: NavSection[] = [
           { href: "/trouble", label: "トラブル対応（盗難・紛失）" },
           { href: "/events", label: "今週のロンドン（運休・ストライキ）" },
           { href: "/changes", label: "今月変わったロンドン（運賃・料金の改定）" },
+          { href: "/prices", label: "ロンドンの物価（ポンドと円で）" },
         ],
       },
     ],
@@ -310,7 +311,10 @@ export const NAV_SECTIONS: NavSection[] = [
         // 「旅の準備」にも同じリンクを置いている。月次号は運賃と入場料
         // (旅行者)、光熱費・最低賃金・ビザ(在住者)の両方を扱うため。
         heading: "制度・料金の改定",
-        links: [{ href: "/changes", label: "今月変わったロンドン" }],
+        links: [
+          { href: "/changes", label: "今月変わったロンドン" },
+          { href: "/prices", label: "ロンドンの物価" },
+        ],
       },
       {
         // 「旅の準備」にも同じリンクを置いている。トラブルは旅行者と在住者の

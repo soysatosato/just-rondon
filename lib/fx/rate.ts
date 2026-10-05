@@ -62,6 +62,39 @@ export async function fetchGbpJpyRate(): Promise<FxRate> {
   };
 }
 
+/**
+ * 過去のある日の GBP→JPY。物価ボードの「1年前のレート」と、月次の記録に使う。
+ *
+ * 指定日が週末・祝日なら、ECB の直前の公表日の値が返る(rateDate で分かる)。
+ * 過去の値は変わらないので、キャッシュは長くてよい。
+ */
+export async function fetchGbpJpyRateOn(isoDate: string): Promise<FxRate> {
+  const res = await fetch(
+    `https://api.frankfurter.dev/v1/${isoDate}?base=GBP&symbols=JPY`,
+    {
+      headers: { Accept: "application/json" },
+      next: { revalidate: 60 * 60 * 24 * 7 },
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Frankfurter responded ${res.status}`);
+  }
+
+  const data = (await res.json()) as FrankfurterResponse;
+  const jpy = data.rates?.JPY;
+
+  if (typeof jpy !== "number" || !Number.isFinite(jpy)) {
+    throw new Error("Frankfurter returned no JPY rate");
+  }
+
+  return {
+    jpyPerGbp: jpy,
+    rateDate: data.date,
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
 /** £N をおおよその円に直す。UI の早見表用。 */
 export function toJpy(gbp: number, rate: number): number {
   return Math.round(gbp * rate);

@@ -552,6 +552,7 @@ export const budgetFaq: GuideFaqItem[] = [
 export const budgetSources = [...BUDGET_SOURCES];
 
 export const budgetRelatedLinks: GuideRelatedLink[] = [
+  { href: "/prices", label: "ロンドンの物価｜主な品目をポンドと円で" },
   { href: "/sightseeing/hotels", label: "宿泊エリア別ホテル選び" },
   { href: "/sightseeing/transport", label: "ロンドンの交通ガイド｜運賃と上限額の仕組み" },
   { href: "/food", label: "ロンドンの食費節約" },

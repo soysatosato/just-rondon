@@ -1,0 +1,49 @@
+[
+  {
+    "month": "2026-10",
+    "checkedAt": "2026-10-05",
+    "jpyPerGbp": 208.14,
+    "rateDate": "2026-10-02",
+    "prices": {
+      "tube-single": 3.1,
+      "tube-daily-cap": 8.9,
+      "bus-single": 1.75,
+      "heathrow-piccadilly": 5.9,
+      "heathrow-elizabeth": 15.5,
+      "heathrow-express": 26,
+      "santander-single": 1.65,
+      "meal-deal": 3.85,
+      "pint": 7.2,
+      "coffee": 3.5,
+      "afternoon-tea": 45,
+      "british-museum": 0,
+      "tower-of-london": 38,
+      "westminster-abbey": 32,
+      "st-pauls": 27,
+      "london-eye": 39,
+      "harry-potter-studio": 58.5,
+      "musical-cheap": 25,
+      "musical-mid": 75,
+      "hostel": {
+        "min": 25,
+        "max": 45
+      },
+      "budget-hotel": {
+        "min": 80,
+        "max": 150
+      },
+      "mid-hotel": {
+        "min": 150,
+        "max": 260
+      },
+      "rent": 2332,
+      "room": 915,
+      "travelcard-monthly": 171.7,
+      "council-tax": 2068,
+      "energy": 1723,
+      "water": 639,
+      "tv-licence": 180,
+      "minimum-wage": 12.71
+    }
+  }
+]

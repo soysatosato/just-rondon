@@ -164,6 +164,11 @@ export default async function ChangesHubPage() {
       <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
         予定表の日付と金額は、交通・光熱費・ビザ・仕事の各ガイドが参照している数字と同じものです。
         ガイドの数字を改定に合わせて直すと、この予定表も同時に進みます。
+        いまの値段の一覧は
+        <Link href="/prices" className="mx-0.5 underline underline-offset-2 hover:text-foreground">
+          ロンドンの物価
+        </Link>
+        にあります。
       </p>
     </main>
   );
