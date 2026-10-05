@@ -4,6 +4,7 @@ import {
 } from "@/components/attractions/facts";
 import { distanceKm } from "@/lib/sightseeing/geo";
 import { currentAttractionSlug } from "@/lib/sightseeing/renamed-slugs";
+import type { SpotFareZone } from "@/lib/transport/fare-zones";
 import { formatClosedDays, weekdayIndex } from "./dates";
 
 /**
@@ -46,14 +47,19 @@ export type PlanSpot = {
   /**
    * ロンドンパスの対象か。プランの各行にバッジで出す。
    *
-   * 合計欄には出さない。パスで元が取れるかは日数と組み合わせで決まり、
-   * 「対象が5ヶ所」だけを大きく出すと、£100超のパスを買う判断を
-   * 数えただけの数字で押すことになる。判断は /sightseeing/passes に任せ、
-   * ここは「この施設は対象」という事実だけを持つ。
+   * 「対象が5ヶ所」のような数は合計欄に出さない。パスで元が取れるかは
+   * 日数と組み合わせで決まり、数えただけの数字は£100超のパスを買う方向に
+   * しか押さない。代わりに lib/plan/costs.ts が、旅程の日割りに沿って
+   * 実際の損得(何日券で何ポンド得か損か)を出す。
    */
   londonPass: boolean;
   /** 対象だが条件が付くときの但し書き。無条件なら null。 */
   londonPassNote: string | null;
+  /**
+   * 運賃ゾーン。交通費の見積もりに使う(lib/transport/fare-zones.ts)。
+   * "outside" は Zone 1-6 の外。住所を持たないスポット(パス類)は null。
+   */
+  fareZone: SpotFareZone | null;
 };
 
 /**

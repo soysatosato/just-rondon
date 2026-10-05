@@ -275,6 +275,16 @@ export default async function PassesGuide() {
             </p>
           </div>
 
+          {/*
+            この表は「回る順に積んだら何か所目で超えるか」の一般論で、
+            読者の旅程ではない。自分の行き先と日割りで確かめる先を
+            分岐点のすぐ下に置く。
+          */}
+          <CrossLink
+            href="/plan"
+            label="自分の旅程で損得を計算する"
+            blurb="行きたいスポットを日別に並べると、どの日数券なら元が取れるかを旅程に沿って判定します。交通費の目安と、タッチ決済と7日Travelcardの比較つき。"
+          />
           <CrossLink
             href="/sightseeing/budget"
             label="ロンドン旅行の予算（7日間）"

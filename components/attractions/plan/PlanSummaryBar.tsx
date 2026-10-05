@@ -30,6 +30,7 @@ export default function PlanSummaryBar({
   days,
   spotCount,
   totalGbp,
+  transportGbp,
   totalMinutes,
   unknownPriceCount,
   focusDay,
@@ -43,6 +44,8 @@ export default function PlanSummaryBar({
   days: DayPlan[];
   spotCount: number;
   totalGbp: number;
+  /** 交通費の目安(£)。タッチ決済で払った場合。 */
+  transportGbp: number;
   totalMinutes: number;
   unknownPriceCount: number;
   /** いま選ばれている日。地図と連動する。null は全日程。 */
@@ -64,6 +67,15 @@ export default function PlanSummaryBar({
             label="入場料"
             value={formatGbp(totalGbp)}
             note={unknownPriceCount > 0 ? `${unknownPriceCount}ヶ所不明` : undefined}
+          />
+          {/*
+            交通費は概算なので「約」を付ける。押すと下の費用のまとめへ飛ぶ——
+            パスの損得と払い方はそこにしか無く、日割りが長いと辿り着けない。
+          */}
+          <Figure
+            label="交通費"
+            value={`約${formatGbp(transportGbp)}`}
+            href="#plan-costs"
           />
           <Figure label="滞在＋移動" value={formatMinutes(totalMinutes)} />
         </dl>
@@ -127,10 +139,13 @@ function Figure({
   label,
   value,
   note,
+  href,
 }: {
   label: string;
   value: string;
   note?: string;
+  /** 押すと内訳へ飛ぶ。 */
+  href?: string;
 }) {
   return (
     <div className="flex items-baseline gap-1.5">
@@ -138,7 +153,16 @@ function Figure({
         {label}
       </dt>
       <dd className="text-base font-bold tabular-nums leading-none">
-        {value}
+        {href ? (
+          <a
+            href={href}
+            className="underline decoration-dotted decoration-1 underline-offset-4 hover:text-indigo-600 dark:hover:text-indigo-400"
+          >
+            {value}
+          </a>
+        ) : (
+          value
+        )}
         {note && (
           <span className="ml-1 text-[10px] font-normal text-muted-foreground">
             ({note})

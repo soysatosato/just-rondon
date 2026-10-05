@@ -44,7 +44,7 @@ import { buildPageMetadata } from "@/lib/seo";
  */
 const PAGE_TITLE = "ロンドン旅行プラン作成｜行きたい観光スポットを日別に組み立てる";
 const PAGE_DESCRIPTION =
-  "行きたいロンドンの観光スポットを選ぶだけで、日別の旅行プランに組み立てます。入場料の合計、滞在時間の目安、スポット間の徒歩距離を自動で計算し、1日に詰め込みすぎているときは警告します。順路の地図、近い順への並べ替え、Googleマップの経路、同行者に送れる共有リンクつき。";
+  "行きたいロンドンの観光スポットを選ぶだけで、日別の旅行プランに組み立てます。入場料の合計と日ごとの交通費の目安、その旅程でロンドンパスの元が取れるか、タッチ決済と7日Travelcardのどちらが安いかを自動で計算。滞在時間とスポット間の移動を積んで、詰め込みすぎの日は警告します。順路の地図と共有リンクつき。";
 
 export const metadata = buildPageMetadata({
   path: "/plan",
@@ -57,6 +57,8 @@ export const metadata = buildPageMetadata({
     "ロンドン 観光 ルート",
     "ロンドン 観光 予算",
     "ロンドン 何日",
+    "ロンドンパス 元が取れる",
+    "ロンドン 交通費",
   ],
 });
 
@@ -64,8 +66,8 @@ export const metadata = buildPageMetadata({
 const CAPABILITIES = [
   {
     icon: Wallet,
-    title: "入場料が先に出る",
-    body: "有料施設が£30を超えるのは普通で、4ヶ所選べば£100を超えます。合計が先に見えていれば、削る判断が現地ではなく出発前にできます。",
+    title: "費用の総額が出る",
+    body: "入場料の合計に、日ごとの交通費の目安を足します。その旅程でロンドンパスの元が取れるか、タッチ決済と7日Travelcardのどちらが安いかも、日割りに沿って判定します。",
   },
   {
     icon: Clock,
@@ -114,7 +116,7 @@ export default async function PlanPage() {
         <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted-foreground print:hidden">
           掲載中の{spots.length}件から行きたいスポットを選ぶと、日別に並べて
           <strong className="font-semibold text-foreground">
-            何時に着いて何時に終わるか・入場料の合計・スポット間の移動
+            何時に着いて何時に終わるか・入場料と交通費・ロンドンパスの損得
           </strong>
           を出します。ロンドンは中心部に見どころが密集しているぶん、
           詰め込みすぎになりやすい街です。
@@ -178,6 +180,21 @@ export default async function PlanPage() {
           スポットは合計に入らないので、実際はここに出る額より増えます。
           曜日で閉まるスポットの警告は、開館時間の記載が曜日に触れているものだけが
           対象です。警告が出ないことは開いている保証ではありません。
+        </p>
+        <p>
+          交通費は、宿との往復と徒歩圏でない区間を1回ずつ地下鉄で移動するとして、
+          Zone 1 を通る片道運賃を足し、1日・週の上限額で頭打ちにした概算です。
+          スポットのゾーンは最寄り駅から決めていて、宿のゾーンは「費用の目安」で
+          選べます。ロンドンパスの判定は、旅程の連続した日ごとに対象スポットの
+          入場料を足し、各日数券の価格と比べたものです。入場料は掲載値(多くは
+          オンライン事前購入の最安値)を使うので、
+          <Link
+            href="/sightseeing/passes"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            観光パスの記事
+          </Link>
+          の損益分岐表(窓口価格)よりパスに厳しく出ます。
         </p>
         <p>
           作ったプランはこのブラウザに保存されます。アカウントは要りません。

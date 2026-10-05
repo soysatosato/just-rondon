@@ -9,6 +9,7 @@ import {
   distanceKm,
 } from "@/lib/sightseeing/geo";
 import { publishedWhere } from "@/lib/publish-schedule";
+import { nearestFareZone } from "@/lib/transport/fare-zones";
 
 const getTotalCount = unstable_cache(
   async () => db.attraction.count({ where: { isPublished: true } }),
@@ -370,8 +371,8 @@ export async function fetchAllAttractions() {
  * 逆に tagline / summary はプランでは使わないので引かない。
  */
 export const fetchPlanSpots = unstable_cache(
-  async () =>
-    db.attraction.findMany({
+  async () => {
+    const rows = await db.attraction.findMany({
       where: { isPublished: true },
       select: {
         slug: true,
@@ -395,7 +396,15 @@ export const fetchPlanSpots = unstable_cache(
         londonPassNote: true,
       },
       orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
-    }),
-  ["plan-spots"],
+    });
+    // 交通費の見積もりに使う運賃ゾーン。座標から最寄り駅を引いて決める。
+    // 駅の表はサーバーにだけ置き、ブラウザにはゾーンの値だけを渡す。
+    return rows.map((row) => ({
+      ...row,
+      fareZone:
+        row.address && row.address !== "-" ? nearestFareZone(row).zone : null,
+    }));
+  },
+  ["plan-spots-v2"],
   { revalidate: 60 * 60 * 24 },
 );

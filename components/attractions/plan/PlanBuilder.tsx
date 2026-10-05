@@ -13,9 +13,12 @@ import {
   type PlanEntry,
   type PlanSpot,
 } from "@/lib/plan";
+import { londonPassVerdict, tripTransport } from "@/lib/plan/costs";
 import { dateForDay, formatPlanDate, parseIsoDate } from "@/lib/plan/dates";
 import { savedPlanContent } from "@/lib/plan/saved";
+import { useHomeZone } from "./home-zone";
 import PlanAddSheet from "./PlanAddSheet";
+import PlanCostPanel from "./PlanCostPanel";
 import PlanDay from "./PlanDay";
 import PlanDateBar from "./PlanDateBar";
 import PlanSpotPicker from "./PlanSpotPicker";
@@ -89,6 +92,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const entries = usePlanEntries();
   const startDate = usePlanStartDate();
   const startMinutes = usePlanStartMinutes();
+  const homeZone = useHomeZone();
   const syncStatus = usePlanSyncStatus();
   const signedIn =
     syncStatus.kind !== "pending" && syncStatus.kind !== "off";
@@ -274,6 +278,17 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     (sum, day) => sum + day.stayMinutes + day.travelMinutes,
     0,
   );
+
+  /*
+   * 交通費とロンドンパスの損得。どちらも旅程全体を見ないと出ない
+   * (週の上限額は月曜で区切られ、パスは連続した日数で切れる)ので、
+   * 日ごとの buildDayPlan とは別にここで1度だけ組む。
+   */
+  const transport = useMemo(
+    () => tripTransport(days, homeZone, startDate),
+    [days, homeZone, startDate],
+  );
+  const pass = useMemo(() => londonPassVerdict(days), [days]);
 
   /** 地図に渡す形。順路は日ごとに別々の線になる。 */
   const mapDays = useMemo(
@@ -553,6 +568,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             days={days}
             spotCount={spotCount}
             totalGbp={totalGbp}
+            transportGbp={transport.payg}
             totalMinutes={totalMinutes}
             unknownPriceCount={unknownPriceCount}
             focusDay={focusDay}
@@ -680,10 +696,11 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             )}
 
             <div className="space-y-5 lg:order-1">
-              {days.map((day) => (
+              {days.map((day, i) => (
                 <PlanDay
                   key={day.day}
                   plan={day}
+                  transport={transport.days[i]}
                   dayCount={days.length}
                   date={dateForDay(startDate, day.day)}
                   focused={focusDay === day.day}
@@ -713,6 +730,16 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
               )}
             </div>
           </div>
+
+          <PlanCostPanel
+            days={days}
+            transport={transport}
+            pass={pass}
+            admissionsGbp={totalGbp}
+            unknownPriceCount={unknownPriceCount}
+            homeZone={homeZone}
+            startDate={startDate}
+          />
         </>
       )}
 

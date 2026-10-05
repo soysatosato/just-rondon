@@ -83,7 +83,13 @@ export type CapRow = {
   daily: number;
   /** 1日上限(オフピーク)。Zone 1-6 までは daily と同額。 */
   dailyOffPeak: number;
-  /** 月曜〜日曜の上限。タッチ決済のみ(Oyster の PAYG には適用されない)。 */
+  /**
+   * 月曜〜日曜の上限。タッチ決済と Oyster の PAYG の両方に効く。
+   *
+   * 以前ここに「タッチ決済のみ」と書いていたが、2026年10月にTfLの
+   * capping のページで確かめたところ "It works using adult rate pay as
+   * you go on contactless (card or device) or Oyster." となっていた。
+   */
   weekly: number;
 };
 
@@ -97,12 +103,42 @@ export const CAPS: Record<string, CapRow> = {
 } as const;
 
 /* -----------------------------------------------------
+   地下鉄・DLR・Overground の片道運賃(大人・PAYG)
+   出典: TfL Single Fare Finder(Unified API の FareTo)。2026年10月5日に照会。
+
+   Zone 1 から各ゾーンへの「既定の経路」の運賃。キーは外側のゾーン。
+   Zone 1 を通らない区間(Zone 2 どうしなど)はこれより安いが、旅行者の
+   移動はほぼ中心部をまたぐので、/plan の交通費の見積もりはこの表で足す。
+   Zone 2 の一部の駅(Camden Town など)は Zone 1 と同額の例外がある。
+
+   ピークは平日の 06:30〜09:30 と 16:00〜19:00(PEAK_HOURS)。
+   Zone 1-6 の1日上限はピーク・オフピーク同額なので、上限に届く日は
+   どちらで乗っても払う額は変わらない。
+----------------------------------------------------- */
+
+export type SingleFareRow = { peak: number; offPeak: number };
+
+export const PAYG_SINGLE_FROM_ZONE1: Record<1 | 2 | 3 | 4 | 5 | 6, SingleFareRow> = {
+  1: { peak: 3.1, offPeak: 3.0 },
+  2: { peak: 3.6, offPeak: 3.1 },
+  3: { peak: 3.9, offPeak: 3.3 },
+  4: { peak: 4.8, offPeak: 3.6 },
+  5: { peak: 5.3, offPeak: 3.8 },
+  6: { peak: 5.9, offPeak: 4.0 },
+} as const;
+
+/* -----------------------------------------------------
    Travelcard(定期券)
    出典: TfL "Adult rate prices 2026"
 
    7 Day の価格は週の上限額と完全に一致する。
    つまり通勤者にとっての分岐点は「7 Day を買うか」ではなく
    「Monthly / Annual に上げるか」になる。
+
+   旅行者は事情が違う。週の上限額は月曜〜日曜で区切られるが、7 Day は
+   何曜日からでも始められる。木曜着・水曜発のように月曜をまたぐと、
+   上限額は2週に分かれて効かず、7 Day のほうが安くなることがある。
+   /plan の払い方の比較はこの差を出している。
 ----------------------------------------------------- */
 
 export type TravelcardRow = {
@@ -371,6 +407,16 @@ export function jpDate(iso: string): string {
 export const TFL_FARES_SOURCE = {
   label: "TfL – Adult caps and Travelcard prices（上限額・定期券価格の公式PDF）",
   url: "https://content.tfl.gov.uk/adult-fares.pdf",
+};
+
+export const TFL_CAPPING_SOURCE = {
+  label: "TfL – Fare capping（1日・週の上限額。タッチ決済とOysterの両方に適用）",
+  url: "https://tfl.gov.uk/fares/find-fares/capping",
+};
+
+export const TFL_SINGLE_FARE_SOURCE = {
+  label: "TfL – Single fare finder（区間ごとの片道運賃）",
+  url: "https://tfl.gov.uk/fares/find-fares/tube-and-rail-fares/single-fare-finder",
 };
 
 export const TRANSPORT_SOURCES = [

@@ -351,6 +351,21 @@ export default function TransportHubPage() {
 
 金額はすべて大人料金です。**11歳未満は大人と一緒なら地下鉄・バスとも無料**になります。`}
         </MarkdownBody>
+        {/*
+          早見表は上限額という天井しか言えない。行き先が決まった人には、
+          実際に何回乗ってどこまで行くかで決まる額のほうが要る。
+        */}
+        <Link
+          href="/plan"
+          className="block rounded-lg border border-gray-300 p-4 transition hover:border-blue-400 dark:border-neutral-700 dark:hover:border-blue-500"
+        >
+          <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+            自分の旅程で交通費を計算する
+          </span>
+          <span className="mt-0.5 block text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+            行きたいスポットを日別に並べると、日ごとの交通費の目安と、タッチ決済と7日Travelcardのどちらが安いかを出します。ロンドンパスの損得も一緒に判定します。
+          </span>
+        </Link>
       </section>
 
       <Separator className="my-10" />
@@ -433,6 +448,14 @@ export default function TransportHubPage() {
               className="text-blue-600 hover:opacity-80 dark:text-blue-400"
             >
               ロンドン モデルコース（1〜5日）
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/plan"
+              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+            >
+              旅行プラン作成｜旅程から交通費とロンドンパスの損得を出す
             </Link>
           </li>
           <li>

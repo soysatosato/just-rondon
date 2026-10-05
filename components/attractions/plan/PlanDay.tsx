@@ -10,6 +10,7 @@ import {
   Map as MapIcon,
   Plus,
   Route,
+  TrainFront,
   Wallet,
 } from "lucide-react";
 
@@ -22,6 +23,7 @@ import {
   orderByProximity,
   type DayPlan,
 } from "@/lib/plan";
+import { zoneRangeLabel, type DayTransport } from "@/lib/plan/costs";
 import { formatPlanDate } from "@/lib/plan/dates";
 import { dayColor } from "./day-colors";
 import PlanDayRow from "./PlanDayRow";
@@ -43,6 +45,7 @@ import { reorderDay, swapDays } from "./plan-store";
  */
 export default function PlanDay({
   plan,
+  transport,
   dayCount,
   date,
   focused,
@@ -56,6 +59,8 @@ export default function PlanDay({
   onDropTarget,
 }: {
   plan: DayPlan;
+  /** その日の交通費の目安。旅程全体から組むので親が渡す。 */
+  transport: DayTransport;
   /** プラン全体の日数。「◯日目へ移す」の選択肢と、日の入れ替えに要る。 */
   dayCount: number;
   /** 出発日が決まっているときのその日の日付。未設定なら null。 */
@@ -167,6 +172,28 @@ export default function PlanDay({
             <Wallet className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
             {formatGbp(plan.totalGbp)}
           </p>
+          {(transport.rides > 0 || transport.outsideLegs > 0) && (
+            <p
+              className="flex items-center gap-1 tabular-nums text-muted-foreground"
+              title="経路を引いていない概算。作り方は下の「費用の目安」に書いてあります"
+            >
+              <TrainFront className="h-3.5 w-3.5" aria-hidden />
+              {transport.rides > 0 && (
+                <>
+                  約{formatGbp(transport.gbp)}
+                  <span className="text-[10px]">
+                    ({zoneRangeLabel(transport.reach)}
+                    {transport.capped ? "・上限" : ""})
+                  </span>
+                </>
+              )}
+              {transport.outsideLegs > 0 && (
+                <span className="text-[10px]">
+                  {transport.rides > 0 ? "＋" : ""}市外の鉄道は別途
+                </span>
+              )}
+            </p>
+          )}
         </div>
 
         {/*
