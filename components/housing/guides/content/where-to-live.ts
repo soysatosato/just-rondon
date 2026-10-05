@@ -113,7 +113,7 @@ Zone 2 の部屋が月£1,100、Zone 4 の部屋が月£950。**家賃だけ見�
 
 - 一棟まるごと（フラット・ハウス）の平均：月${gbp(
           LONDON_RENT.onsGreaterLondonMonthly
-        )}（ONS、2026年上半期）
+        )}（ONS、${LONDON_RENT.onsPeriod}）
 - シェアの1部屋：インナーロンドン月${gbp(
           LONDON_RENT.roomInnerLondonMonthly
         )}、アウターロンドン月${gbp(

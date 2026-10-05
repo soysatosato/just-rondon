@@ -3,7 +3,7 @@
  *
  * なぜ定数にするか:
  * Meal Deal の価格は各チェーンが年1〜2回上げてくる。2024年以降だけでも
- * Tesco は £3.40 → £3.60 → £3.90(Clubcard 価格)、Boots は £3.99 → £4.25 と
+ * Tesco は £3.40 → £3.60 → £3.85(Clubcard 価格)、Boots は £3.99 → £4.25 と
  * 動いており、記事本文にべた書きすると改定のたびに全記事を grep して回る
  * ことになる。節約系の記事は金額が命なので、古い数字が残ると記事の信頼が
  * まるごと崩れる。
@@ -40,7 +40,8 @@ export const FOOD_UPDATED_AT = "2026-08-12";
  * mealDealsByPrice() が出す。ここでの記述順には意味を持たせない。
  */
 export const MEAL_DEALS = {
-  tesco: { label: "Tesco", standard: 4.0, member: 3.6, scheme: "Clubcard" },
+  /** 2025年8月に £4.00 / £3.60 から上がった。2026年10月5日に確認。 */
+  tesco: { label: "Tesco", standard: 4.25, member: 3.85, scheme: "Clubcard" },
   sainsburys: {
     label: "Sainsbury's",
     standard: 4.0,
@@ -64,6 +65,29 @@ export const MEAL_DEALS = {
   marksAndSpencer: { label: "M&S", standard: 4.5 },
   greggs: { label: "Greggs", standard: 3.85 },
   whsmith: { label: "WHSmith", standard: 4.29 },
+} as const;
+
+/**
+ * パブのビールとカフェのコーヒー。ONS の価格調査のロンドン分の中央値。
+ *
+ * 以前は予算記事(lib/sightseeing/budget.ts)が「パイント£7・コーヒー£4」を
+ * 出典のない目安として持っていた。ONS は消費者物価指数(CPI)を作るために
+ * 調査員が毎月店頭で価格を集めており、その元データ(price quotes)を
+ * 地域つきで公開している。REGION=2 がロンドン。そこから中央値を取る。
+ *
+ * 平均ではなく中央値にするのは、Wetherspoon のような £2台の店が平均を
+ * 引き下げるため。読者が知りたいのは「ふつうのパブでいくらか」。
+ *
+ * 調査月の翌月中旬に公表される。毎月 scripts/ons-london-prices.ts で
+ * 取り直して、ここを書き換える。
+ */
+export const ONS_LONDON_PRICES = {
+  /** 調査月。 */
+  surveyMonth: "2026-08",
+  /** ラガーの1パイント(4.3〜7.5%)。Peroni・Camden Hells・Madri の帯。ONS の品目名は PREMIUM LAGER - PINT 4.3-7.5%。 */
+  lagerPint: { median: 7.2, quotes: 48 },
+  /** カフェ・レストランのコーヒー1杯。種類の指定はない。ONS の品目名は RESTAURANT CUP OF COFFEE。 */
+  coffee: { median: 3.5, quotes: 33 },
 } as const;
 
 /** Meal Deal 1件ぶんの表示用データ。 */
@@ -120,6 +144,10 @@ export const STUDENT_DISCOUNTS = {
 
 /** 出典。裏取りせずに数値を書き換えないこと。 */
 export const FOOD_SOURCES = [
+  {
+    label: "ONS — Consumer price inflation price quotes(店頭価格の元データ)",
+    url: "https://www.ons.gov.uk/economy/inflationandpriceindices/datasets/consumerpriceindicescpiandretailpricesindexrpiitemindicesandpricequotes",
+  },
   {
     label: "Tesco — Meal Deal（Clubcard 価格）",
     url: "https://www.tesco.com/zones/meal-deal",

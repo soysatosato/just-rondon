@@ -16,7 +16,7 @@ import {
   perDay,
 } from "@/lib/sightseeing/budget";
 import { AIRPORTS, CAPS } from "@/lib/transport/rates";
-import { MEAL_DEALS } from "@/lib/food/prices";
+import { MEAL_DEALS, ONS_LONDON_PRICES } from "@/lib/food/prices";
 import type { TravelGuideMetaSource } from "../guides";
 import type { GuideFaqItem, GuideRelatedLink } from "@/components/guides/types";
 
@@ -340,8 +340,8 @@ export const food = {
     effect: `昼を Meal Deal にするだけで1日£10前後、${TRIP_NIGHTS}日で£70が浮きます。入場料2つぶんです。`,
   },
   eatingOut: [
-    { what: "パブのビール1パイント（ゾーン1）", price: `${gbp(EXTRAS.pintZone1)}前後` },
-    { what: "カフェのコーヒー", price: `${gbp(EXTRAS.coffee)}前後` },
+    { what: "パブのラガー1パイント", price: `${gbp(ONS_LONDON_PRICES.lagerPint.median)}前後` },
+    { what: "カフェのコーヒー", price: `${gbp(ONS_LONDON_PRICES.coffee.median)}前後` },
     { what: "パブの食事（メイン1皿）", price: "£16〜22" },
     { what: "きちんとしたレストランのディナー", price: "1人£45〜" },
   ],

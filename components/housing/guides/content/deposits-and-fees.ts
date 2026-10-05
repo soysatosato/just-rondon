@@ -261,7 +261,7 @@ const depositsAndFees: HousingGuideArticle = {
         LONDON_RENT.roomOuterLondonMonthly
       )}です（SpareRoom、2026年Q2）。一棟まるごとの平均は月${gbp(
         LONDON_RENT.onsGreaterLondonMonthly
-      )}（ONS、2026年上半期）。
+      )}（ONS、${LONDON_RENT.onsPeriod}）。
 
 **月£${EXAMPLE_RENT.toLocaleString()}の部屋を借りる場合:**
 

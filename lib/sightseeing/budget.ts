@@ -6,7 +6,7 @@
  * 落ちる。しかも積算表・内訳・FAQ で同じ金額が何度も出てくるため、
  * 本文にべた書きすると改定のたびに1本の記事の中で取りこぼす。
  *
- * 交通費は lib/transport/rates.ts、食費は lib/food/prices.ts から引く。
+ * 交通費は lib/transport/rates.ts、食費(パブ・カフェの単価を含む)は lib/food/prices.ts から引く。
  * ここに重複して持たないこと。ここが持つのは、
  * 「他のどのファイルにも無い、予算積算のためだけの数字」だけ。
  *
@@ -119,17 +119,20 @@ export const FOOD_PER_DAY: Record<string, FoodDayRow> = {
 export const ADMISSIONS_AS_OF = "2026年9月";
 
 export const ADMISSIONS = {
-  towerOfLondon: 37,
-  westminsterAbbey: 31,
+  /** 2026年10月5日に公式で確認(寄付なし)。 */
+  towerOfLondon: 38,
+  /** 同上。オンラインと当日で同額。 */
+  westminsterAbbey: 32,
   stPaulsCathedral: 27,
-  londonEye: 29,
+  /** 同上。当日窓口の価格。オンラインは日によって£29から。 */
+  londonEye: 39,
   churchillWarRooms: 33,
   kewGardens: 22,
   windsorCastle: 36,
   towerBridge: 18,
   shardView: 32,
-  /** ワーナー・ブラザース スタジオツアー(ハリー・ポッター)。要事前予約。 */
-  harryPotterStudio: 53.5,
+  /** ワーナー・ブラザース スタジオツアー(ハリー・ポッター)。要事前予約。2026年10月5日に公式で確認。2027年分は£61。 */
+  harryPotterStudio: 58.5,
 } as const;
 
 /**
@@ -161,10 +164,6 @@ export const EXTRAS = {
   musicalPremium: 150,
   /** アフタヌーンティー1名。ホテル系は上限がもっと上。 */
   afternoonTeaFrom: 45,
-  /** パブのビール1パイント(ゾーン1)。 */
-  pintZone1: 7,
-  /** カフェのフラットホワイト1杯。 */
-  coffee: 4,
   /** 土産の目安(1週間ぶんの総額)。 */
   souvenirsTypical: 100,
   /** 海外旅行保険(7日間・1名の目安)。円建ての商品なので幅で持つ。 */
@@ -232,6 +231,10 @@ export const BUDGET_SOURCES = [
   },
   {
     label: "Warner Bros. Studio Tour London — チケット",
-    url: "https://www.wbstudiotour.co.uk/tickets-and-prices/",
+    url: "https://www.wbstudiotour.co.uk/tickets/",
+  },
+  {
+    label: "ONS — 店頭価格の元データ(パブのラガー・カフェのコーヒー)",
+    url: "https://www.ons.gov.uk/economy/inflationandpriceindices/datasets/consumerpriceindicescpiandretailpricesindexrpiitemindicesandpricequotes",
   },
 ] as const;
