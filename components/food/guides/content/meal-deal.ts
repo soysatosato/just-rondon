@@ -35,9 +35,9 @@ const mealDeal: FoodGuideArticle = {
   atAGlance: [
     {
       label: "最安クラス",
-      value: `${MEAL_DEALS.morrisons.label} 会員${gbp(
-        MEAL_DEALS.morrisons.member
-      )} / ${MEAL_DEALS.coop.label} 会員${gbp(MEAL_DEALS.coop.member)}`,
+      value: `${MEAL_DEALS.coop.label} 会員${gbp(MEAL_DEALS.coop.member)} / ${
+        MEAL_DEALS.morrisons.label
+      } 会員${gbp(MEAL_DEALS.morrisons.member)}`,
     },
     {
       label: "最も店舗が多い",
@@ -76,7 +76,9 @@ const mealDeal: FoodGuideArticle = {
       panel: "meal-deal-prices",
       body: `### 実際にどう選ぶか
 
-**Morrisons と Co-op が最安**ですが、ロンドン中心部では店舗が少なく、狙って行くものではありません。現実には **Tesco か Sainsbury's** が近くにあるはずなので、そのどちらかで会員価格を使うのが基本になります。
+**Co-op と Morrisons が最安**ですが、ロンドン中心部では店舗が少なく、狙って行くものではありません。現実には **Tesco か Sainsbury's** が近くにあるはずです。Tesco は Clubcard の会員価格で${gbp(
+        MEAL_DEALS.tesco.member
+      )}、Sainsbury's は会員価格が無く誰でも${gbp(MEAL_DEALS.sainsburys.standard)}です。
 
 **Greggs** は Meal Deal というより「ベーカリー系の温かいもの＋ドリンク」の組み合わせで、パンやソーセージロールが主役です。温かいものが食べたい日はここ。
 

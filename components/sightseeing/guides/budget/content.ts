@@ -16,7 +16,7 @@ import {
   perDay,
 } from "@/lib/sightseeing/budget";
 import { AIRPORTS, CAPS } from "@/lib/transport/rates";
-import { MEAL_DEALS, ONS_LONDON_PRICES } from "@/lib/food/prices";
+import { MEAL_DEALS, ONS_LONDON_PRICES, type MealDeal } from "@/lib/food/prices";
 import type { TravelGuideMetaSource } from "../guides";
 import type { GuideFaqItem, GuideRelatedLink } from "@/components/guides/types";
 
@@ -47,6 +47,15 @@ import type { GuideFaqItem, GuideRelatedLink } from "@/components/guides/types";
  */
 
 export { TRIP_NIGHTS, gbp };
+
+/** Meal Deal の1行。会員価格が無い店(Sainsbury's など)は member を出さない。 */
+function mealDealRow(deal: MealDeal): { shop: string; standard: string; member?: string } {
+  return {
+    shop: deal.label,
+    standard: gbp(deal.standard),
+    member: deal.member !== undefined ? gbp(deal.member) : undefined,
+  };
+}
 
 /* ------------------------------------------------------------------ */
 /* メタ情報                                                            */
@@ -332,10 +341,10 @@ export const food = {
     title: "Meal Deal が昼食の基準線",
     body: "スーパーやドラッグストアのメイン＋スナック＋ドリンクのセットです。",
     rows: [
-      { shop: MEAL_DEALS.tesco.label, standard: gbp(MEAL_DEALS.tesco.standard), member: gbp(MEAL_DEALS.tesco.member) },
-      { shop: MEAL_DEALS.sainsburys.label, standard: gbp(MEAL_DEALS.sainsburys.standard), member: gbp(MEAL_DEALS.sainsburys.member) },
-      { shop: MEAL_DEALS.boots.label, standard: gbp(MEAL_DEALS.boots.standard), member: gbp(MEAL_DEALS.boots.member) },
-      { shop: MEAL_DEALS.coop.label, standard: gbp(MEAL_DEALS.coop.standard), member: gbp(MEAL_DEALS.coop.member) },
+      mealDealRow(MEAL_DEALS.tesco),
+      mealDealRow(MEAL_DEALS.sainsburys),
+      mealDealRow(MEAL_DEALS.boots),
+      mealDealRow(MEAL_DEALS.coop),
     ],
     effect: `昼を Meal Deal にするだけで1日£10前後、${TRIP_NIGHTS}日で£70が浮きます。入場料2つぶんです。`,
   },

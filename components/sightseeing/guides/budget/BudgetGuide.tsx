@@ -349,9 +349,11 @@ export default function BudgetGuide() {
                   </span>
                   <span className="font-mono text-gray-900 dark:text-gray-100">
                     {r.standard}
-                    <span className="ml-2 text-emerald-700 dark:text-emerald-400">
-                      会員 {r.member}
-                    </span>
+                    {r.member && (
+                      <span className="ml-2 text-emerald-700 dark:text-emerald-400">
+                        会員 {r.member}
+                      </span>
+                    )}
                   </span>
                 </li>
               ))}

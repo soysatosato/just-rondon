@@ -26,8 +26,9 @@ export const FOOD_UPDATED_AT = "2026-08-12";
 /**
  * 各チェーンの Meal Deal 価格。
  *
- * standard = 通常価格、member = 会員価格、scheme = その会員価格に要る
- * カードの名前。会員価格が無い店は member と scheme を省略する。
+ * standard = 通常価格、member = 会員価格、scheme = その店の会員カードの名前。
+ * Meal Deal に会員価格が無い店は member を省く。会員カード自体はあるなら
+ * scheme は残す(loyalty-cards 記事がカードの一覧に使う)。
  *
  * scheme を持たせているのは、以前このデータが3箇所に手書きで散っていたため。
  * /food ハブと meal-deal 記事がそれぞれ GFM テーブルを持ち、さらに
@@ -42,24 +43,22 @@ export const FOOD_UPDATED_AT = "2026-08-12";
 export const MEAL_DEALS = {
   /** 2025年8月に £4.00 / £3.60 から上がった。2026年10月5日に確認。 */
   tesco: { label: "Tesco", standard: 4.25, member: 3.85, scheme: "Clubcard" },
-  sainsburys: {
-    label: "Sainsbury's",
-    standard: 4.0,
-    member: 3.75,
-    scheme: "Nectar",
-  },
+  /** 会員でもそうでなくても同額。2026年10月6日に公式の商品ページで確認。 */
+  sainsburys: { label: "Sainsbury's", standard: 3.95, scheme: "Nectar" },
   boots: {
     label: "Boots",
     standard: 4.25,
     member: 3.99,
     scheme: "Advantage Card",
   },
+  /** 2026年10月6日に公式のオファーページで確認。 */
   morrisons: {
     label: "Morrisons",
-    standard: 3.75,
-    member: 3.5,
+    standard: 4.0,
+    member: 3.65,
     scheme: "More Card",
   },
+  /** 2026年10月6日に公式で確認(据え置き)。 */
   coop: { label: "Co-op", standard: 4.0, member: 3.5, scheme: "Co-op Member" },
   waitrose: { label: "Waitrose", standard: 5.0 },
   marksAndSpencer: { label: "M&S", standard: 4.5 },

@@ -43,10 +43,10 @@ function formatJpy(value: PriceValue, rate: number, from = false): string | null
   return `${yen(value.min)}〜${yen(value.max)}円`;
 }
 
-/** "2026-11-01" → "11月1日" */
+/** "2026-11-01" → "11月1日"。今年でなければ年も付ける。 */
 function dayJa(iso: string): string {
-  const [, m, d] = iso.split("-").map(Number);
-  return `${m}月${d}日`;
+  const [y, m, d] = iso.split("-").map(Number);
+  return y === new Date().getFullYear() ? `${m}月${d}日` : `${y}年${m}月${d}日`;
 }
 
 export default function PriceRow({

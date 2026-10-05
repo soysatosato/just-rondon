@@ -11,7 +11,7 @@ import {
   TRAVELCARD,
 } from "@/lib/transport/rates";
 import { MEAL_DEALS, ONS_LONDON_PRICES } from "@/lib/food/prices";
-import { ADMISSIONS, EXTRAS, LODGING } from "@/lib/sightseeing/budget";
+import { ADMISSION_CHANGES, ADMISSIONS, EXTRAS, LODGING } from "@/lib/sightseeing/budget";
 import { LONDON_RENT } from "@/lib/housing/rates";
 import { COUNCIL_TAX, ENERGY_CAP, TV_LICENCE, WATER } from "@/lib/bills/rates";
 import { WAGE_BANDS, WAGE_RATES_EFFECTIVE_FROM } from "@/lib/jobs/rates";
@@ -252,6 +252,10 @@ export const PRICE_ITEMS: PriceItem[] = [
     basis: "official",
     basisNote: "大人・事前予約制",
     sourceUrl: "https://www.wbstudiotour.co.uk/tickets/",
+    next: {
+      date: ADMISSION_CHANGES.harryPotterStudio.from,
+      price: ADMISSION_CHANGES.harryPotterStudio.price,
+    },
     href: "/sightseeing/warner-bros-studio-tour-harry-potter",
   },
   {
