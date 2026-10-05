@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { CornerDownRight } from "lucide-react";
 import { SITE_NAME } from "@/lib/seo";
 
 /**
@@ -20,9 +21,10 @@ import { SITE_NAME } from "@/lib/seo";
  * 承認制にしていないので投稿は即時表示される。サーバ側から渡された
  * initialComments に、投稿成功したものを先頭に足していく。
  *
- * 運営の返信は管理ページ(/admin/comments)から付け、コメントの下に
- * ロゴ・「運営」バッジ・ブランドの赤の枠で描く。読者は名前を文字で
- * 入れるだけでアイコンも枠も出せないので、名前を真似ても見分けがつく。
+ * 運営の返信は管理ページ(/admin/comments)から付ける。どのコメントへの
+ * 返信かが一目でわかるよう、元のコメントの枠の中に「〇〇さんへの返信」と
+ * 添えて入れ、ロゴ・「運営」バッジ・ブランドの赤の枠で描く。読者は名前を
+ * 文字で入れるだけでアイコンも枠も出せないので、名前を真似ても見分けがつく。
  */
 
 /** 運営の返信。読者の返信は無いので、名前は持たせない。 */
@@ -48,30 +50,43 @@ function formatDate(iso: string) {
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
 
-function OfficialReply({ reply }: { reply: PageCommentReply }) {
+function OfficialReply({
+  reply,
+  replyTo,
+}: {
+  reply: PageCommentReply;
+  /** 返信先のコメントの名前。「〇〇さんへの返信」に使う。 */
+  replyTo: string;
+}) {
   return (
-    <li className="rounded-r-lg border-l-4 border-rose-600 bg-rose-50 p-4 dark:border-rose-500 dark:bg-rose-950/30">
-      <div className="flex items-center justify-between gap-3">
-        <span className="flex min-w-0 items-center gap-2">
-          <img
-            src="/logo.svg"
-            width={22}
-            height={22}
-            alt=""
-            aria-hidden
-            className="h-[22px] w-[22px] shrink-0 rounded-full"
-            decoding="async"
-          />
-          <span className="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
-            {SITE_NAME}
-          </span>
-          <span className="shrink-0 rounded bg-rose-600 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white">
-            運営
-          </span>
-        </span>
-        <span className="shrink-0 text-xs text-gray-500 dark:text-gray-400">
-          {formatDate(reply.createdAt)}
-        </span>
+    <li className="rounded-r-md border-l-4 border-rose-600 bg-rose-50 p-3 dark:border-rose-500 dark:bg-rose-950/30">
+      {/* 名前の行に日付まで並べると、狭い画面で名前が切れる。日付は2行目に回す。 */}
+      <div className="flex items-start gap-2.5">
+        <img
+          src="/logo.svg"
+          width={28}
+          height={28}
+          alt=""
+          aria-hidden
+          className="mt-0.5 h-7 w-7 shrink-0 rounded-full"
+          decoding="async"
+        />
+        <div className="min-w-0">
+          <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              {SITE_NAME}
+            </span>
+            <span className="rounded bg-rose-600 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white">
+              運営
+            </span>
+          </p>
+          <p className="mt-0.5 flex items-start gap-1 text-xs text-gray-500 dark:text-gray-400">
+            <CornerDownRight className="mt-px h-3 w-3 shrink-0" aria-hidden />
+            <span className="[overflow-wrap:anywhere]">
+              {replyTo}さんへの返信・{formatDate(reply.createdAt)}
+            </span>
+          </p>
+        </div>
       </div>
       <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-800 dark:text-gray-200">
         {reply.content}
@@ -220,25 +235,26 @@ export default function PageCommentSection({
       {comments.length > 0 ? (
         <ul className="mt-6 space-y-3">
           {comments.map((c) => (
-            <li key={c.id}>
-              <div className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4">
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                    {c.author}
-                  </span>
-                  <span className="shrink-0 text-xs text-gray-400">
-                    {formatDate(c.createdAt)}
-                  </span>
-                </div>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  {c.content}
-                </p>
+            <li
+              key={c.id}
+              className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4"
+            >
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                  {c.author}
+                </span>
+                <span className="shrink-0 text-xs text-gray-400">
+                  {formatDate(c.createdAt)}
+                </span>
               </div>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                {c.content}
+              </p>
 
               {c.replies.length > 0 && (
-                <ul className="mt-2 ml-4 space-y-2 sm:ml-8">
+                <ul className="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-neutral-700">
                   {c.replies.map((r) => (
-                    <OfficialReply key={r.id} reply={r} />
+                    <OfficialReply key={r.id} reply={r} replyTo={c.author} />
                   ))}
                 </ul>
               )}
