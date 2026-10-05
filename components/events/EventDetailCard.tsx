@@ -1,6 +1,15 @@
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import { format } from "date-fns";
-import { CalendarDays, MapPin, Train, Ticket, Lightbulb, Check } from "lucide-react";
+import {
+  CalendarDays,
+  MapPin,
+  Train,
+  Ticket,
+  Lightbulb,
+  Check,
+  ArrowRight,
+} from "lucide-react";
 import type { Event } from "@prisma/client";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,10 +25,13 @@ export default function EventDetailCard({
   event,
   index,
   iconWrapClass,
+  guideHref,
 }: {
   event: Event;
   index: number;
   iconWrapClass: string;
+  /** 年中行事ガイド(/events/<slug>)がある行事なら、そのパス。 */
+  guideHref?: string;
 }) {
   const facts = [
     { icon: CalendarDays, label: formatPeriod(event.startDate, event.endDate) },
@@ -100,6 +112,16 @@ export default function EventDetailCard({
                 <p className="mt-1 text-xs text-muted-foreground dark:text-gray-300">{event.tips}</p>
               </div>
             </div>
+          )}
+
+          {guideHref && (
+            <Link
+              href={guideHref}
+              className="mt-4 flex items-center justify-between gap-2 rounded-xl border border-emerald-600/40 bg-emerald-600/5 px-3.5 py-2.5 text-xs font-bold text-emerald-800 transition hover:bg-emerald-600/10 dark:text-emerald-300"
+            >
+              チケット・見る場所・交通の実務ガイド
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            </Link>
           )}
 
           {event.website && (

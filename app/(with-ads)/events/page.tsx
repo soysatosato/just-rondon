@@ -201,6 +201,9 @@ export default async function EventsPage() {
             <Button asChild variant="ghost" size="sm">
               <Link href="/events/calendar">12か月のカレンダー →</Link>
             </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/events/guides">年中行事の実務ガイド →</Link>
+            </Button>
           </div>
         </div>
       </section>

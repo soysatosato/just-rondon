@@ -1,5 +1,8 @@
+import Link from "next/link";
 import { format } from "date-fns";
 import type { Event } from "@prisma/client";
+
+import { eventGuidePath, guideForEventTitle } from "@/lib/annual-events";
 
 function periodLabel(start: Date, end: Date): string {
   if (start.getTime() === end.getTime()) return format(start, "M/d");
@@ -17,32 +20,43 @@ function periodLabel(start: Date, end: Date): string {
 export default function StapleEventList({ events }: { events: Event[] }) {
   return (
     <ul className="divide-y divide-border border-y border-border dark:divide-neutral-800 dark:border-neutral-800">
-      {events.map((event) => (
-        <li
-          key={event.id}
-          className="flex flex-col gap-1 py-3 transition-colors hover:bg-muted/40 sm:flex-row sm:items-baseline sm:gap-5 dark:hover:bg-neutral-900"
-        >
-          <span className="shrink-0 font-serif text-xs tabular-nums text-muted-foreground sm:w-24 dark:text-gray-500">
-            {periodLabel(event.startDate, event.endDate)}
-          </span>
+      {events.map((event) => {
+        const guide = guideForEventTitle(event.title);
+        return (
+          <li
+            key={event.id}
+            className="flex flex-col gap-1 py-3 transition-colors hover:bg-muted/40 sm:flex-row sm:items-baseline sm:gap-5 dark:hover:bg-neutral-900"
+          >
+            <span className="shrink-0 font-serif text-xs tabular-nums text-muted-foreground sm:w-24 dark:text-gray-500">
+              {periodLabel(event.startDate, event.endDate)}
+            </span>
 
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium leading-snug dark:text-white">
-              {event.title}
-              {event.isFree && (
-                <span className="ml-2 align-middle text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-                  無料
-                </span>
-              )}
-            </p>
-            {event.venue && (
-              <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground dark:text-gray-400">
-                {event.venue}
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium leading-snug dark:text-white">
+                {event.title}
+                {event.isFree && (
+                  <span className="ml-2 align-middle text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+                    無料
+                  </span>
+                )}
               </p>
-            )}
-          </div>
-        </li>
-      ))}
+              {event.venue && (
+                <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground dark:text-gray-400">
+                  {event.venue}
+                </p>
+              )}
+              {guide && (
+                <Link
+                  href={eventGuidePath(guide)}
+                  className="mt-1 inline-block text-xs font-semibold underline underline-offset-2 hover:text-primary dark:text-gray-300"
+                >
+                  チケット・見る場所・交通のガイド →
+                </Link>
+              )}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }

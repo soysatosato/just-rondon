@@ -26,11 +26,14 @@ import {
 } from "@/lib/london-months/sun";
 import { BANK_HOLIDAY_SOURCE, getMonthDays } from "@/lib/london-months/holidays";
 import { getMonthGuide } from "@/lib/london-months/content";
+import { getEventGuide, guideForEventTitle, eventGuidePath } from "@/lib/annual-events";
+import { buildEventGuideMetadata } from "@/lib/annual-events/seo";
 import { months as travelTipsMonths } from "@/components/sightseeing/guides/travel-tips/content";
 import { SIGHTSEEING_PUBLISHER } from "@/components/sightseeing/jsonld";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import EventDetailCard from "@/components/events/EventDetailCard";
+import EventGuideView from "@/components/events/guide/EventGuideView";
 import MonthSection from "@/components/events/month/MonthSection";
 import MonthGlance from "@/components/events/month/MonthGlance";
 import MonthClimate from "@/components/events/month/MonthClimate";
@@ -62,6 +65,9 @@ import { cn } from "@/lib/utils";
  *
  * どの年を出すかは getDisplayYear。過ぎた月は来年を出すので、10月に
  * 1月のページを開くと来年1月の日の出入りと祝日になる。
+ *
+ * 同じ階層に年中行事ガイド(/events/new-years-eve-fireworks)も載せる。
+ * 月名でない slug は lib/annual-events のガイドとして引き、無ければ404。
  */
 
 // 年の切り替えは月の変わり目、週次の掲載の「終わったものを外す」は日単位。
@@ -97,14 +103,18 @@ function EventGrid({
 }) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {events.map((event, idx) => (
-        <EventDetailCard
-          key={event.id}
-          event={event}
-          index={idx}
-          iconWrapClass={iconWrapClass}
-        />
-      ))}
+      {events.map((event, idx) => {
+        const guide = guideForEventTitle(event.title);
+        return (
+          <EventDetailCard
+            key={event.id}
+            event={event}
+            index={idx}
+            iconWrapClass={iconWrapClass}
+            guideHref={guide ? eventGuidePath(guide) : undefined}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -122,6 +132,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const month = parseEventMonth(params.slug);
   if (month === null) {
+    const guide = getEventGuide(params.slug);
+    if (guide) return buildEventGuideMetadata(guide, londonDate(new Date()));
     return {
       title: "ロンドンイベントカレンダー | ジャスト・ロンドン",
       robots: { index: false, follow: true },
@@ -152,7 +164,11 @@ export default async function MonthPage({
   params: { slug: string };
 }) {
   const month = parseEventMonth(params.slug);
-  if (month === null) return notFound();
+  if (month === null) {
+    const guide = getEventGuide(params.slug);
+    if (!guide) return notFound();
+    return <EventGuideView guide={guide} today={londonDate(new Date())} />;
+  }
 
   const year = getDisplayYear(month);
   const today = londonDate(new Date());

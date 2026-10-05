@@ -142,6 +142,12 @@ module.exports = {
       "/events",
       "/events/calendar",
       "/events/archive/2025",
+      // 年中行事ガイド。並びは lib/annual-events/index.ts の GUIDES と
+      // 一致させること(このファイルは CJS なので TS を読めない)。
+      "/events/guides",
+      "/events/bonfire-night",
+      "/events/new-years-eve-fireworks",
+      "/events/new-years-day-parade",
       // 月次号「今月変わったロンドン」のハブ。各号は下の additionalPaths が出す。
       "/changes",
       // 「英国を読む」ハブ。column/modern-britain/history/british-english を束ねる。

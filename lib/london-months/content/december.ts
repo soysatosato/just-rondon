@@ -64,6 +64,7 @@ export const december: MonthGuide = {
     },
   ],
   links: [
+    { href: "/events/new-years-eve-fireworks", label: "ロンドンの年越し花火" },
     { href: "/sightseeing/christmas-markets", label: "ロンドンのクリスマスマーケット" },
     { href: "/sightseeing/travel-tips", label: "ロンドン旅行の実用情報(12月25日の過ごし方も)" },
     { href: "/musicals", label: "ロンドンのミュージカル" },

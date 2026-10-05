@@ -61,6 +61,13 @@ export default async function EventsCalendarPage() {
           </Link>
           にまとめています。
         </p>
+        <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground dark:text-gray-400">
+          年越し花火のようにチケットや場所取りが要る大きな行事は、
+          <Link href="/events/guides" className="mx-1 underline hover:text-primary">
+            年中行事ガイド
+          </Link>
+          で行き方を詳しく書いています。
+        </p>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
