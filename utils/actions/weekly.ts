@@ -4,29 +4,16 @@ import db from "../db";
 import { getISOWeekStart } from "../../lib/weekly";
 
 /**
- * 週次ダイジェスト「今週のロンドン」のデータ取得。
+ * 週次ダイジェスト「今週のロンドン」の主役となる号と、その上に併記する「先の週」の号。
  *
- * 号は「次の月曜から始まる週」を先に作って公開する運用なので、
- * 「今週」に限定して探すと公開直後に何も出なくなる。最新の1号を素直に返し、
- * それが今週のものか来週のものかは表示側で weeksAgo から判断する。
- */
-
-export const fetchLatestBrief = async () => {
-  return db.weeklyBrief.findFirst({
-    where: { published: true },
-    orderBy: { weekStart: "desc" },
-    include: { items: { orderBy: { displayOrder: "asc" } } },
-  });
-};
-
-/**
- * /events の主役となる号と、その上に併記する「先の週」の号。
+ * 号は2週ほど先まで作って公開するので、最新号は今週のものとは限らない。
+ * 今週ロンドンに居る人には今週号のほうが要るので、今週の号があればそれを本体に据え、
+ * 来週号は先頭のリンクとして案内する。今週号がまだ無ければ最新号を本体にする。
  *
- * 来週号を公開した時点で今週号が最新から外れるが、今週ロンドンに居る人には
- * 今週号のほうが要る。今週の号があればそれを本体に据え、来週号は先頭の
- * リンクとして案内する。今週号がまだ無ければ従来どおり最新号を本体にする。
+ * トップの「今週のロンドン」と /events はどちらもこれを使う。別々に選ぶと、
+ * トップに先の週の号が出てリンク先(/events は今週号)と食い違う。
  */
-export const fetchBriefsForEventsPage = async () => {
+export const fetchCurrentBriefs = async () => {
   const thisWeekStart = getISOWeekStart(new Date());
 
   const [current, upcoming] = await Promise.all([

@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 import {
   fetchBriefBySlug,
-  fetchBriefsForEventsPage,
+  fetchCurrentBriefs,
   fetchBackIssues,
   fetchEventsForWeek,
 } from "@/utils/actions/weekly";
@@ -35,7 +35,7 @@ export const revalidate = 60 * 60;
  * リンクを Facebook や LINE で共有すると別の週のカードが出ていた。
  */
 async function isShownOnEventsPage(slug: string): Promise<boolean> {
-  const { brief } = await fetchBriefsForEventsPage();
+  const { brief } = await fetchCurrentBriefs();
   return brief?.slug === slug;
 }
 

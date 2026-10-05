@@ -4,7 +4,7 @@ import { CalendarRange, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 
 import {
-  fetchBriefsForEventsPage,
+  fetchCurrentBriefs,
   fetchBackIssues,
   fetchEventsForWeek,
 } from "@/utils/actions/weekly";
@@ -45,7 +45,7 @@ const FALLBACK_METADATA = {
 
 export async function generateMetadata(): Promise<Metadata> {
   // 本文と同じ号を指すようにする(来週号が出ていても本体は今週号)。
-  const { brief } = await fetchBriefsForEventsPage();
+  const { brief } = await fetchCurrentBriefs();
   if (!brief) return buildPageMetadata(FALLBACK_METADATA);
 
   const range = formatWeekRange(brief.weekStart, brief.weekEnd).replace(
@@ -89,7 +89,7 @@ async function CalendarFallback() {
 }
 
 export default async function EventsPage() {
-  const { brief, upcoming } = await fetchBriefsForEventsPage();
+  const { brief, upcoming } = await fetchCurrentBriefs();
   if (!brief) return <CalendarFallback />;
 
   const [staples, backIssues, forecast, changeIssue] = await Promise.all([

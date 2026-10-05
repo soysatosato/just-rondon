@@ -19,7 +19,7 @@ import {
   fetchHeroSlides,
 } from "@/utils/actions/contents";
 import { fetchHomeRails } from "@/utils/actions/home";
-import { fetchLatestBrief } from "@/utils/actions/weekly";
+import { fetchCurrentBriefs } from "@/utils/actions/weekly";
 import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 import { publishedDateOf } from "@/lib/publish-schedule";
@@ -246,14 +246,16 @@ export default async function Page() {
     latestColumns,
     latestModernBritain,
     latestBritishEnglish,
-    latestBrief,
+    { brief: latestBrief },
     heroSlides,
     rails,
   ] = await Promise.all([
     fetchColumns(),
     fetchModernBritainEntries(),
     fetchBritishEnglishEntries(),
-    fetchLatestBrief(),
+    // /events と同じ号を選ぶ。号は2週ほど先まで公開しているので、最新号を
+    // 出すとリンク先(/events は今週号)と別の週が並んでしまう。
+    fetchCurrentBriefs(),
     fetchHeroSlides(6),
     fetchHomeRails(),
   ]);
@@ -313,6 +315,8 @@ export default async function Page() {
   const freshness = latestBrief
     ? getIssueFreshness(latestBrief.weekStart, now)
     : null;
+  // 今週号が無い週は過去号か先の週の号が来る。どちらも「今週」とは名乗らない。
+  const isThisWeek = freshness?.weeksAgo === 0;
   const topAlert =
     latestBrief && freshness && freshness.weeksAgo <= 0
       ? latestBrief.items.find(
@@ -371,16 +375,16 @@ export default async function Page() {
                     )}
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-600" />
                   </span>
-                  {freshness?.isPast
-                    ? "London Weekly ・ ロンドン週報"
-                    : "This Week ・ 今週のロンドン"}
+                  {isThisWeek
+                    ? "This Week ・ 今週のロンドン"
+                    : "London Weekly ・ ロンドン週報"}
                 </p>
                 <h2 className="mt-3 break-words text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
                   {latestBrief.title}
                 </h2>
                 <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
                   {formatWeekRange(latestBrief.weekStart, latestBrief.weekEnd)}
-                  {freshness?.isPast && (
+                  {freshness && !isThisWeek && (
                     <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold">
                       {freshness.label}の号
                     </span>
@@ -419,7 +423,12 @@ export default async function Page() {
                     className="bg-sky-600 hover:bg-sky-700"
                   >
                     <Link href="/events">
-                      {freshness?.isPast ? "最新号を読む" : "今週号を読む"} →
+                      {isThisWeek
+                        ? "今週号を読む"
+                        : freshness?.isPast
+                          ? "最新号を読む"
+                          : `${freshness?.label}の号を読む`}{" "}
+                      →
                     </Link>
                   </Button>
                 </div>
