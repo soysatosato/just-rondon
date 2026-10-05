@@ -224,6 +224,18 @@ export function usePlanDay(slug: string): number {
 }
 
 /**
+ * そのスポットに読者が入れた滞在時間(分)。入っていない、または
+ * 掲載値のままなら 0。数値を返すのは usePlanDay と同じ理由。
+ */
+export function usePlanMinutes(slug: string): number {
+  return useSyncExternalStore(
+    subscribe,
+    () => entries.find((e) => e.slug === slug)?.minutes ?? 0,
+    () => 0,
+  );
+}
+
+/**
  * 出発日。設定されていなければ null。
  *
  * 文字列を返すので、購読している行だけが再描画される。Date を返すと
@@ -281,6 +293,25 @@ export function addToPlan(slug: string, day?: number): boolean {
   const target = day ?? Math.max(lastDay(), 1);
   if (!Number.isInteger(target) || target < 1 || target > MAX_DAYS) return false;
   write([...entries, { slug, day: target }]);
+  return true;
+}
+
+/**
+ * 滞在時間つきで入れる。「時間別の回り方」の「この配分で旅程に入れる」の受け口。
+ *
+ * すでに入っていれば、日と並びはそのままで時間だけを書き換える。
+ * 入っていなければ addToPlan と同じく最終日に足す。
+ * addToPlan と setSpotMinutes を続けて呼ばずに1回の write で済ませるのは、
+ * 途中の状態(時間なし)がアカウントへの同期に一度流れるのを避けるため。
+ */
+export function addToPlanWithMinutes(slug: string, minutes: number): boolean {
+  if (!isValidStayMinutes(minutes)) return false;
+  if (entries.some((e) => e.slug === slug)) {
+    write(entries.map((e) => (e.slug === slug ? { ...e, minutes } : e)));
+    return true;
+  }
+  if (entries.length >= MAX_SPOTS) return false;
+  write([...entries, { slug, day: Math.max(lastDay(), 1), minutes }]);
   return true;
 }
 

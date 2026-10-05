@@ -55,6 +55,9 @@ import { categoryChipMap } from "@/components/sightseeing/categories";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import GuardSchedule from "@/components/sightseeing/GuardSchedule";
 import { GUARD_SLUG, fetchGuardSchedule } from "@/lib/guard/schedule";
+import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
+import TimeRouteDigest from "@/components/time-routes/TimeRouteDigest";
+import { timeRouteForAttraction } from "@/lib/time-routes";
 
 export async function generateMetadata({
   params,
@@ -319,6 +322,7 @@ export default async function AttractionDetail({
   // 同じ館が /museums 側にもある場合は、そちらの詳しい解説へ渡す。
   // 対応表に無ければ null のままで、リンクは出さない。
   const pairedMuseumSlug = museumSlugForAttraction(params.slug);
+  const timeRoute = timeRouteForAttraction(params.slug);
   const pairedMuseum = pairedMuseumSlug
     ? await fetchMuseumIDandName(pairedMuseumSlug)
     : null;
@@ -469,6 +473,23 @@ export default async function AttractionDetail({
             {attraction.summary}
           </p>
         )}
+
+        {/*
+          「◯◯ 所要時間」で来た人への答え。持ち時間ごとの順路。
+          美術館・博物館は順路の本体を /museums 側に置く方針なので、
+          こちらには短い答えとリンクだけを出す。それ以外(セント・ポール、
+          ロンドン塔など)は美術館側のページが無いので、本体をここに出す。
+        */}
+        {timeRoute &&
+          (timeRoute.museumSlug ? (
+            <TimeRouteDigest guide={timeRoute} placeName={attraction.name} />
+          ) : (
+            <TimeRouteSection
+              guide={timeRoute}
+              placeName={attraction.name}
+              variant="sightseeing"
+            />
+          ))}
 
         <SectionToc entries={bodyStories} />
 

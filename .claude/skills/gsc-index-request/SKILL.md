@@ -1,6 +1,6 @@
 ---
 name: gsc-index-request
-description: just-rondon の sitemap.xml から未インデックスの可能性が高いURLを洗い出し、Google Search Console の「インデックス登録をリクエスト」を送る。人手で書いた記事ページ(museums/musicals配下の自動生成詳細ページは除く)を優先し、送信済みURLは記録して重複送信を避ける。「インデックスリクエストして」「今日の分お願いします」「/gsc-index-request」で起動する。
+description: just-rondon の sitemap.xml から未インデックスの可能性が高いURLを洗い出し、Google Search Console の「インデックス登録をリクエスト」を送る。人手で書いた記事ページ(美術館の館ページ /museums/<slug> を含む。作品ページ・歌詞ページなど大量に自動生成される詳細ページは除く)を優先し、送信済みURLは記録して重複送信を避ける。「インデックスリクエストして」「今日の分お願いします」「/gsc-index-request」で起動する。
 ---
 
 # /gsc-index-request — 未インデックスページのインデックス登録リクエスト
@@ -48,7 +48,13 @@ curl -sS "https://www.just-rondon.com/sitemap-0.xml" | grep -o '<loc>[^<]*</loc>
    `/brands`, `/column`, `/british-english`, `/jobs`, `/souvenirs`, `/contact` など、
    `app/(with-ads)/<section>/page.tsx` に対応する固定パス)
 2. **次点**: 上記ハブ配下の人手で書いた個別記事(例 `/trouble/pickpocket`,
-   `/health/gp-registration`)。`[slug]` 配下でも `museums`, `musicals` 以外は対象。
+   `/health/gp-registration`)。`[slug]` 配下でも `musicals` 以外は対象。
+   美術館の館ページ `/museums/<slug>`(47件)もここに含める。2026-08 に手書きの
+   見どころ・歩き方で作り直し、2026-10 には主要6館に時間別の回り方を載せたが、
+   2026-10-05 時点で調べた4館はどれも「Discovered - currently not indexed」の
+   まま一度もクロールされていなかった。とくに時間別の回り方がある6館
+   (national-gallery, british-museum, natural-history-museum, tate-modern,
+   science-museum, imperial-war-museum)を先に送る。
 3. **除外**: `/museums/*/artworks/*`, `/musicals/*/songs/*` などDBから大量自動生成
    される詳細ページ。件数が数百〜千件規模で1件ずつのリクエストが非効率なため、
    ユーザーから明示的に依頼されない限り対象にしない。

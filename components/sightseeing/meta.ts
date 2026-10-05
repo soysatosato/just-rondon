@@ -1,4 +1,5 @@
 import { fitTitle, truncateDescription, TITLE_MAX_LENGTH } from "@/lib/seo";
+import { timeRouteForAttraction } from "@/lib/time-routes";
 
 /**
  * 観光スポット詳細(/sightseeing/[slug])のタイトルと description を組み立てる。
@@ -130,7 +131,15 @@ export function attractionDescription(attraction: AttractionMetaInput): string {
     facts.push(attraction.nearestStation.trim());
   }
 
-  const body = (attraction.summary ?? attraction.tagline ?? "").trim();
+  // 時間別の回り方があるスポットは、その1文の答え(「名画に絞れば1時間、
+  // …半日です。」)を本文の頭に置く。「◯◯ 所要時間」で来た人が探している
+  // のは目安の数字だけでなく、持ち時間ごとに何が見られるかなので、
+  // スニペットの段階でそれに答える。
+  const timeRoute = attraction.slug
+    ? timeRouteForAttraction(attraction.slug)
+    : null;
+  const summary = (attraction.summary ?? attraction.tagline ?? "").trim();
+  const body = timeRoute ? `${timeRoute.answer}${summary}` : summary;
 
   if (facts.length === 0) {
     return truncateDescription(

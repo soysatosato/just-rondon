@@ -31,6 +31,8 @@ import { AD_SLOTS } from "@/lib/adsense";
 import { buildPageMetadata, fitTitle, truncateDescription } from "@/lib/seo";
 import { museumJsonLd, museumPath } from "@/components/museums/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
+import { timeRouteForMuseum } from "@/lib/time-routes";
 
 const TITLE_SUFFIXES = [
   "の見どころ・所要時間・アクセス｜ロンドン美術館ガイド",
@@ -49,6 +51,14 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const museum = await fetchMuseumDetailsBySlug(params.slug);
+  const timeRoute = timeRouteForMuseum(params.slug);
+  // description は本文用のマークダウンで、太字の ** を含む館がある。
+  // スニペットには記号のまま出てしまうので外す。
+  const body = (
+    museum?.description ??
+    museum?.tagline ??
+    "ロンドンの美術館の見どころ、アクセス、注目作品、開催中の企画展を紹介します。"
+  ).replace(/\*\*/g, "");
 
   return buildPageMetadata({
     path: museumPath(params.slug),
@@ -63,11 +73,14 @@ export async function generateMetadata({
     // summary ではなく description を使う。summary は
     // 「・ルネサンス絵画 ・オランダ絵画」という箇条書きで、
     // スニペットに出すと文章として読めない。description は全47件が散文。
-    description: truncateDescription(
-      museum?.description ??
-        museum?.tagline ??
-        "ロンドンの美術館の見どころ、アクセス、注目作品、開催中の企画展を紹介します。",
-    ),
+    //
+    // 時間別の回り方がある館は、「◯◯ 所要時間」への答えの1文を先頭に置く。
+    // 答えと本文を繋げてから truncateDescription に渡すと、句点まで戻る
+    // 切り方のせいで本文が丸ごと落ちることがあるので、本文だけを残りの字数に
+    // 収めてから前置きする(components/sightseeing/meta.ts と同じ理由)。
+    description: timeRoute
+      ? `${timeRoute.answer}${truncateDescription(body, 120 - timeRoute.answer.length - 1)}`
+      : truncateDescription(body),
     images: museum?.image ? [museum.image] : undefined,
   });
 }
@@ -81,6 +94,8 @@ export default async function MuseumDetailsPage({
   // 以前は redirect("/") でトップへ飛ばしていた。存在しない slug は
   // 404 を返さないと、消えたページが延々 200 を返し続けることになる。
   if (!museum) notFound();
+
+  const timeRoute = timeRouteForMuseum(params.slug);
 
   // 同じ館が /sightseeing 側にもある場合は、そちらの観光目線のページへ渡す。
   const pairedAttractionSlug = attractionSlugForMuseum(params.slug);
@@ -140,6 +155,20 @@ export default async function MuseumDetailsPage({
       </div>
 
       <MuseumAbout description={museum.description} />
+
+      {/*
+        「◯◯ 所要時間」で来た人への答え。行く日が決まって時間配分を
+        決めたい読者が最初に探すものなので、見どころより前に置く。
+        美術館・博物館の順路の本体はこちら側に置く方針で、観光ページには
+        短い答えだけを出している(components/time-routes/TimeRouteDigest)。
+      */}
+      {timeRoute && (
+        <TimeRouteSection
+          guide={timeRoute}
+          placeName={museum.name}
+          variant="museum"
+        />
+      )}
 
       <MuseumHighlightSpots
         highlights={museum.highlightSpots}
