@@ -8,10 +8,8 @@ import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import StampButton from "@/components/stamps/StampButton";
-import PageCommentSection, {
-  type PageCommentItem,
-} from "@/components/comments/PageCommentSection";
-import db from "@/utils/db";
+import PageCommentSection from "@/components/comments/PageCommentSection";
+import { loadPageComments } from "@/lib/comments";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -91,24 +89,11 @@ export default async function MuseumDetailsPage({
     : null;
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
-  // 投稿APIから revalidatePath で更新される。targetKey は id(uuid)。
-  const rawComments = await db.pageComment.findMany({
-    where: {
-      targetType: CommentTargetType.MUSEUM,
-      targetKey: museum.id,
-      isHidden: false,
-    },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, author: true, content: true, createdAt: true },
-    take: 200,
-  });
-
-  const comments: PageCommentItem[] = rawComments.map((c) => ({
-    id: c.id,
-    author: c.author,
-    content: c.content,
-    createdAt: c.createdAt.toISOString(),
-  }));
+  // 投稿APIと管理ページの返信から revalidatePath で更新される。targetKey は id(uuid)。
+  const comments = await loadPageComments(
+    CommentTargetType.MUSEUM,
+    museum.id,
+  );
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-12">

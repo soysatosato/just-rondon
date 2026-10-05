@@ -17,7 +17,8 @@ import {
  * (lib/publish-schedule.ts の SCHEDULE_RULES)、ここでは選ばせない。
  */
 
-function Submit({
+/** 管理ページの送信ボタン。送信中は押せなくする。CommentForms でも使う。 */
+export function Submit({
   children,
   variant = "default",
 }: {
@@ -32,7 +33,8 @@ function Submit({
   );
 }
 
-function Result({ state }: { state: AdminActionState }) {
+/** 操作の結果の一言。CommentForms でも使う。 */
+export function Result({ state }: { state: AdminActionState }) {
   if (!state) return null;
   return (
     <p

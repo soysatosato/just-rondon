@@ -14,8 +14,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import { columnArticleJsonLd, columnPath } from "@/components/column/jsonld";
 import ColumnDetail from "@/components/column/ColumnDetail";
-import type { PageCommentItem } from "@/components/comments/PageCommentSection";
-import db from "@/utils/db";
+import { loadPageComments } from "@/lib/comments";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { publishedDateOf } from "@/lib/publish-schedule";
 import PreviewBanner from "@/components/admin/PreviewBanner";
@@ -69,24 +68,11 @@ export default async function ColumnDetailPage({ params }: Props) {
   ]);
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
-  // 投稿APIから revalidatePath で更新される。
-  const rawComments = await db.pageComment.findMany({
-    where: {
-      targetType: CommentTargetType.COLUMN,
-      targetKey: content.slug,
-      isHidden: false,
-    },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, author: true, content: true, createdAt: true },
-    take: 200,
-  });
-
-  const comments: PageCommentItem[] = rawComments.map((c) => ({
-    id: c.id,
-    author: c.author,
-    content: c.content,
-    createdAt: c.createdAt.toISOString(),
-  }));
+  // 投稿APIと管理ページの返信から revalidatePath で更新される。
+  const comments = await loadPageComments(
+    CommentTargetType.COLUMN,
+    content.slug,
+  );
 
   return (
     <>

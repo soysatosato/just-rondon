@@ -2100,6 +2100,17 @@ model PageComment {
   ip         String?
   sessionId  String?
   userAgent  String?
+  /// 返信なら返信先のコメント。返信は1段だけで、返信への返信は作らない。
+  /// targetType・targetKey は返信先と同じ値を入れる。
+  parentId   String?
+  /// 運営の投稿か。管理ページ(/admin/comments)のサーバーアクションだけが
+  /// true にする。公開の投稿 API にはこの値を立てる経路を作らないこと。
+  /// 記事ページの「運営」表示はこの列からしか描かない。
+  isOfficial Boolean           @default(false)
+
+  parent  PageComment?  @relation("PageCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies PageComment[] @relation("PageCommentReplies")
 
   @@index([targetType, targetKey, createdAt])
+  @@index([parentId])
 }

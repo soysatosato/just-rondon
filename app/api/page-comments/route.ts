@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { CommentTargetType } from "@prisma/client";
 import db from "@/utils/db";
-import { columnPath } from "@/components/column/jsonld";
-import { attractionPath } from "@/components/sightseeing/jsonld";
-import { museumPath } from "@/components/museums/jsonld";
-import { housingGuidePath } from "@/components/housing/guides/guides";
+import {
+  COMMENT_MAX_CONTENT,
+  TARGET_LABEL,
+  isReservedAuthor,
+  isTargetType,
+  loadPageComments,
+  resolvePath,
+} from "@/lib/comments";
 import { sendAdminMail } from "@/utils/mail";
 import { SITE_URL } from "@/lib/seo";
 
@@ -14,63 +17,17 @@ import { SITE_URL } from "@/lib/seo";
  *
  * 旧掲示板(/api/chatboard)は入力を一切検証せず、そのまま Prisma に流していた。
  * こちらは公開ページに置くフォームなので、最低限の検証と長さ制限を入れる。
- * ログイン機構が無いため、荒らしは投稿後に isHidden で隠す運用が前提。
+ * ログイン機構が無いため、荒らしは投稿後に管理ページ(/admin/comments)で
+ * 隠す運用が前提。
+ *
+ * ここで作るのは読者の新規コメントだけ。返信(parentId)と運営の印(isOfficial)は
+ * 管理ページのサーバーアクションでしか書かない。
  */
 
 const MAX_AUTHOR = 40;
-const MAX_CONTENT = 2000;
 
 /** 連投抑止。同一 sessionId から同じ記事への投稿を制限する間隔。 */
 const COOLDOWN_MS = 30 * 1000;
-
-function isTargetType(value: unknown): value is CommentTargetType {
-  return (
-    typeof value === "string" &&
-    Object.prototype.hasOwnProperty.call(CommentTargetType, value)
-  );
-}
-
-/** 通知メールの件名に出すコンテンツ種別の表示名。 */
-const TARGET_LABEL: Record<CommentTargetType, string> = {
-  [CommentTargetType.FOOD_TIP]: "食費ガイド",
-  [CommentTargetType.COLUMN]: "コラム",
-  [CommentTargetType.ATTRACTION]: "観光スポット",
-  [CommentTargetType.MUSEUM]: "美術館・博物館",
-  [CommentTargetType.HOUSING]: "住まいガイド",
-};
-
-/**
- * コメント対象のページパス。再検証と通知メールのリンクに使う。
- * ATTRACTION・MUSEUM は targetKey が id(uuid)なので slug を引き直す。
- * 対象が既に消えている場合は null。
- */
-async function resolvePath(
-  targetType: CommentTargetType,
-  targetKey: string
-): Promise<string | null> {
-  switch (targetType) {
-    case CommentTargetType.FOOD_TIP:
-      return `/food/${targetKey}`;
-    case CommentTargetType.HOUSING:
-      return housingGuidePath(targetKey);
-    case CommentTargetType.COLUMN:
-      return columnPath(targetKey);
-    case CommentTargetType.ATTRACTION: {
-      const attraction = await db.attraction.findUnique({
-        where: { id: targetKey },
-        select: { slug: true },
-      });
-      return attraction ? attractionPath(attraction.slug) : null;
-    }
-    case CommentTargetType.MUSEUM: {
-      const museum = await db.museum.findUnique({
-        where: { id: targetKey },
-        select: { slug: true },
-      });
-      return museum ? museumPath(museum.slug) : null;
-    }
-  }
-}
 
 export async function GET(req: NextRequest) {
   const targetType = req.nextUrl.searchParams.get("targetType");
@@ -83,12 +40,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const comments = await db.pageComment.findMany({
-    where: { targetType, targetKey, isHidden: false },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, author: true, content: true, createdAt: true },
-    take: 200,
-  });
+  const comments = await loadPageComments(targetType, targetKey);
 
   return NextResponse.json({ comments });
 }
@@ -128,9 +80,9 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  if (trimmedContent.length > MAX_CONTENT) {
+  if (trimmedContent.length > COMMENT_MAX_CONTENT) {
     return NextResponse.json(
-      { error: `コメントは${MAX_CONTENT}文字以内で入力してください` },
+      { error: `コメントは${COMMENT_MAX_CONTENT}文字以内で入力してください` },
       { status: 400 }
     );
   }
@@ -138,6 +90,19 @@ export async function POST(req: NextRequest) {
   // 名前は任意。空なら「匿名」で通す(名前の入力を必須にすると投稿が減る)。
   const rawAuthor = typeof author === "string" ? author.trim() : "";
   const finalAuthor = (rawAuthor || "匿名").slice(0, MAX_AUTHOR);
+
+  // 「運営」「管理人」などの名前で運営の返信に見せかけるのを防ぐ。
+  // 記事ページの運営表示は isOfficial の列からしか描かないが、名前の文字だけでも
+  // 読者は運営の発言だと受け取りかねない。
+  if (isReservedAuthor(finalAuthor)) {
+    return NextResponse.json(
+      {
+        error:
+          "このお名前は運営と紛らわしいため使えません。別のお名前にしてください。",
+      },
+      { status: 400 }
+    );
+  }
 
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -183,10 +148,7 @@ export async function POST(req: NextRequest) {
   });
 
   // 記事ページは静的生成なので、コメント一覧を差し替えるため明示的に再検証する。
-  // FOOD_TIP・HOUSING・COLUMN は targetKey がそのまま slug。
-  // ATTRACTION・MUSEUM は targetKey が id(uuid)なので、パスを組むために
-  // 一度 slug を引く(PageComment は対象への外部キーを持たないため)。
-  const path = await resolvePath(targetType, targetKey.trim());
+  const path = await resolvePath({ targetType, targetKey: targetKey.trim() });
   if (path) revalidatePath(path);
 
   // 承認制ではなく投稿即公開なので、荒らしに気付けるよう管理者にメールで知らせる。
@@ -209,14 +171,17 @@ export async function POST(req: NextRequest) {
         trimmedContent,
         "----",
         "",
-        "不適切な投稿は PageComment.isHidden を true にすると非表示になります。",
+        `返信・非表示: ${SITE_URL}/admin/comments#c-${created.id}`,
       ].join("\n"),
     });
   } catch (error) {
     console.error("コメント通知メールの送信に失敗しました", error);
   }
 
-  const res = NextResponse.json({ comment: created }, { status: 201 });
+  const res = NextResponse.json(
+    { comment: { ...created, replies: [] } },
+    { status: 201 }
+  );
   res.cookies.set("sessionId", sessionId, {
     path: "/",
     httpOnly: true,

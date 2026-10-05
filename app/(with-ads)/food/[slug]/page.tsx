@@ -7,9 +7,8 @@ import {
   foodGuideSlugs,
 } from "@/components/food/guides/guides";
 import { foodGuideArticles } from "@/components/food/guides/content";
-import type { PageCommentItem } from "@/components/comments/PageCommentSection";
+import { loadPageComments } from "@/lib/comments";
 import { buildPageMetadata } from "@/lib/seo";
-import db from "@/utils/db";
 
 export function generateStaticParams() {
   return foodGuideSlugs.map((slug) => ({ slug }));
@@ -45,24 +44,12 @@ export default async function FoodGuidePage({
   if (!article) return notFound();
 
   // コメントは投稿された時点で表示したいので、記事本文が静的でも
-  // ここだけはリクエスト時に読む。投稿APIから revalidatePath で更新される。
-  const comments = await db.pageComment.findMany({
-    where: {
-      targetType: CommentTargetType.FOOD_TIP,
-      targetKey: article.slug,
-      isHidden: false,
-    },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, author: true, content: true, createdAt: true },
-    take: 200,
-  });
-
-  const initialComments: PageCommentItem[] = comments.map((c) => ({
-    id: c.id,
-    author: c.author,
-    content: c.content,
-    createdAt: c.createdAt.toISOString(),
-  }));
+  // ここだけはリクエスト時に読む。投稿APIと管理ページの返信から
+  // revalidatePath で更新される。
+  const initialComments = await loadPageComments(
+    CommentTargetType.FOOD_TIP,
+    article.slug,
+  );
 
   return <FoodGuideLayout article={article} comments={initialComments} />;
 }

@@ -23,10 +23,8 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo";
-import PageCommentSection, {
-  type PageCommentItem,
-} from "@/components/comments/PageCommentSection";
-import db from "@/utils/db";
+import PageCommentSection from "@/components/comments/PageCommentSection";
+import { loadPageComments } from "@/lib/comments";
 import {
   attractionDescription,
   attractionTitle,
@@ -326,24 +324,11 @@ export default async function AttractionDetail({
     : null;
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
-  // 投稿APIから revalidatePath で更新される。targetKey は id(uuid)。
-  const rawComments = await db.pageComment.findMany({
-    where: {
-      targetType: CommentTargetType.ATTRACTION,
-      targetKey: attraction.id,
-      isHidden: false,
-    },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, author: true, content: true, createdAt: true },
-    take: 200,
-  });
-
-  const comments: PageCommentItem[] = rawComments.map((c) => ({
-    id: c.id,
-    author: c.author,
-    content: c.content,
-    createdAt: c.createdAt.toISOString(),
-  }));
+  // 投稿APIと管理ページの返信から revalidatePath で更新される。targetKey は id(uuid)。
+  const comments = await loadPageComments(
+    CommentTargetType.ATTRACTION,
+    attraction.id,
+  );
 
   return (
     <main className="mx-auto w-full max-w-5xl">

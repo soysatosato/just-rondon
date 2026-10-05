@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { SITE_NAME } from "@/lib/seo";
 
 /**
  * 記事ページ用の汎用コメント欄。
@@ -18,13 +19,25 @@ import { Button } from "@/components/ui/button";
  *
  * 承認制にしていないので投稿は即時表示される。サーバ側から渡された
  * initialComments に、投稿成功したものを先頭に足していく。
+ *
+ * 運営の返信は管理ページ(/admin/comments)から付け、コメントの下に
+ * ロゴ・「運営」バッジ・ブランドの赤の枠で描く。読者は名前を文字で
+ * 入れるだけでアイコンも枠も出せないので、名前を真似ても見分けがつく。
  */
+
+/** 運営の返信。読者の返信は無いので、名前は持たせない。 */
+export type PageCommentReply = {
+  id: string;
+  content: string;
+  createdAt: string;
+};
 
 export type PageCommentItem = {
   id: string;
   author: string;
   content: string;
   createdAt: string;
+  replies: PageCommentReply[];
 };
 
 const MAX_CONTENT = 2000;
@@ -33,6 +46,38 @@ function formatDate(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function OfficialReply({ reply }: { reply: PageCommentReply }) {
+  return (
+    <li className="rounded-r-lg border-l-4 border-rose-600 bg-rose-50 p-4 dark:border-rose-500 dark:bg-rose-950/30">
+      <div className="flex items-center justify-between gap-3">
+        <span className="flex min-w-0 items-center gap-2">
+          <img
+            src="/logo.svg"
+            width={22}
+            height={22}
+            alt=""
+            aria-hidden
+            className="h-[22px] w-[22px] shrink-0 rounded-full"
+            decoding="async"
+          />
+          <span className="truncate text-sm font-semibold text-gray-900 dark:text-gray-100">
+            {SITE_NAME}
+          </span>
+          <span className="shrink-0 rounded bg-rose-600 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white">
+            運営
+          </span>
+        </span>
+        <span className="shrink-0 text-xs text-gray-500 dark:text-gray-400">
+          {formatDate(reply.createdAt)}
+        </span>
+      </div>
+      <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+        {reply.content}
+      </p>
+    </li>
+  );
 }
 
 export default function PageCommentSection({
@@ -175,21 +220,28 @@ export default function PageCommentSection({
       {comments.length > 0 ? (
         <ul className="mt-6 space-y-3">
           {comments.map((c) => (
-            <li
-              key={c.id}
-              className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                  {c.author}
-                </span>
-                <span className="shrink-0 text-xs text-gray-400">
-                  {formatDate(c.createdAt)}
-                </span>
+            <li key={c.id}>
+              <div className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                    {c.author}
+                  </span>
+                  <span className="shrink-0 text-xs text-gray-400">
+                    {formatDate(c.createdAt)}
+                  </span>
+                </div>
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  {c.content}
+                </p>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                {c.content}
-              </p>
+
+              {c.replies.length > 0 && (
+                <ul className="mt-2 ml-4 space-y-2 sm:ml-8">
+                  {c.replies.map((r) => (
+                    <OfficialReply key={r.id} reply={r} />
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
