@@ -18,11 +18,12 @@ import {
   OFF_PEAK_START,
   RAIL_AS_OF,
 } from "@/lib/beyond-london/rates";
+import { EUROSTAR, PARIS, eur } from "@/lib/beyond-london/eurostar";
 import type { BeyondTimeFit } from "../destinations";
 
 export const HUB_TITLE = "Beyond London｜ロンドンから日帰り・週末で行く英国";
 
-export const HUB_DESCRIPTION = `ロンドンから日帰りで行ける7つの行き先と、週末1泊で行ける4つの行き先を、行き方から書いたガイド。どの駅から何分で、片道いくらで、Oysterが使えるのか。空いている時間から行き先を絞り込めます。BritRail Passの損得判定つき。${RAIL_AS_OF}時点の情報です。`;
+export const HUB_DESCRIPTION = `ロンドンから日帰りで行ける7つの行き先と、週末1泊で行ける4つの行き先、それにユーロスターで行くパリを、行き方から書いたガイド。どの駅から何分で、片道いくらで、Oysterが使えるのか。空いている時間から行き先を絞り込めます。BritRail Passの損得判定つき。${RAIL_AS_OF}時点の情報です。`;
 
 export const HUB_KEYWORDS = [
   "ロンドン 日帰り",
@@ -32,10 +33,11 @@ export const HUB_KEYWORDS = [
   "オックスフォード 日帰り",
   "コッツウォルズ 行き方",
   "BritRail Pass",
+  "ロンドン パリ 日帰り",
 ];
 
 export const HUB_LEAD =
-  "ロンドンに数日いると、イギリスの他の場所も見てみたくなります。ここは片道2時間以内の日帰り圏7か所と、1泊すれば届く4か所を、街の紹介ではなく「行き方」から書いたセクションです。";
+  "ロンドンに数日いると、イギリスの他の場所も見てみたくなります。ここは片道2時間以内の日帰り圏7か所と、1泊すれば届く4か所、それに国境を越えるパリを、街の紹介ではなく「行き方」から書いたセクションです。";
 
 /* -----------------------------------------------------
    出発前に効く2つの前提
@@ -60,7 +62,7 @@ export type Prerequisite = {
 export const prerequisites: Prerequisite[] = [
   {
     id: "oyster",
-    headline: "Oyster・タッチ決済は、11の行き先すべてで使えません",
+    headline: "Oyster・タッチ決済は、12の行き先すべてで使えません",
     body: `使えるのは原則ロンドンのゾーン内(Zone 1–9)までです。ウィンザーもブライトンもオックスフォードも圏外で、改札は通れてしまうことがありますが、正しい切符にはなりません。出発前に目的地までの切符を買ってください。`,
     link: {
       href: "/sightseeing/transport/national-rail",
@@ -129,6 +131,7 @@ export const listNotes: readonly string[] = [
   `運賃は片道の目安で、${RAIL_AS_OF}時点のものです。Advance は枚数限定なので、安い枠から売り切れます。`,
   "1日に2か所を詰め込まないこと。移動に片道1〜2時間かかるため、どちらも中途半端になります。例外はバースとストーンヘンジで、これは現地発のツアーなら1日で回れます。",
   `ペンザンスだけは寝台列車(${NIGHT_RIVIERA.route})で行けます。${NIGHT_RIVIERA.runsNightly}の運行で、土曜の夜は走りません。`,
+  `パリだけは国境を越えます。所要は列車に乗っている時間で、ほかにセント・パンクラスで${EUROSTAR.checkIn.stPancras.standardArrive}分、帰りのパリ北駅で${EUROSTAR.checkIn.gareDuNord.standardArrive}分の手続きの時間を見てください。運賃は National Rail の Advance ではなく、ユーロスターの早期購入の最安です。`,
 ];
 
 export const hubFaq = [
@@ -149,8 +152,11 @@ export const hubFaq = [
   },
   {
     question: "宿泊税はかかりますか？",
-    answer:
-      "**エディンバラだけかかります**。2026年7月24日から宿泊費の5%が上乗せされる制度が始まりました（英国初）。ロンドンをはじめイングランドの都市にはまだありません。予約サイトの表示価格に含まれていないことがあるので、[エディンバラの記事](/beyond-london/edinburgh)で詳しく扱っています。",
+    answer: `**英国内ではエディンバラだけかかります**。2026年7月24日から宿泊費の5%が上乗せされる制度が始まりました（英国初）。ロンドンをはじめイングランドの都市にはまだありません。予約サイトの表示価格に含まれていないことがあるので、[エディンバラの記事](/beyond-london/edinburgh)で詳しく扱っています。国外の[パリ](/beyond-london/paris)にも宿泊税があり、3つ星で1泊・大人1人${eur(PARIS.touristTax.threeStar)}です。`,
+  },
+  {
+    question: "パリへは日帰りできますか？",
+    answer: `**できます**。セント・パンクラスからユーロスターで約2時間20分で、朝7時台の便で行き、最終の21時台の便で戻ると、パリに9時間ほどいられます。ただし改札は出発の${EUROSTAR.checkIn.stPancras.standardCloses}分前に閉まり、初めての人はEUの入国審査（EES）で指紋と顔写真を登録します。予約から帰りの審査までを[ユーロスターで行くパリ](/beyond-london/paris)にまとめています。`,
   },
   {
     question: "切符はいつ買うのが安いですか？",

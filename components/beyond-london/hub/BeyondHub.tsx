@@ -140,7 +140,7 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
                 運賃
               </dt>
               <dd className="text-gray-700 dark:text-gray-300">
-                Advance {fare.advanceFrom}
+                {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
                 <span aria-hidden className="mx-1.5 text-gray-400">
                   →
                 </span>

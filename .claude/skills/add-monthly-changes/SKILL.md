@@ -96,6 +96,7 @@ WebSearch / WebFetch で当たる。**検索語は英語。** その月と翌月
 | TfL | `tfl.gov.uk/info-for/media/press-releases`、`tfl.gov.uk/fares` | 運賃・上限額・Congestion Charge・ULEZ の改定、新駅・新路線 |
 | 光熱費 | `ofgem.gov.uk`(price cap) | 四半期ごとの上限。**2・5・8・11月の下旬に次の期間が発表される** |
 | ビザ | `gov.uk/government/collections/immigration-rules-statement-of-changes`、`gov.uk/government/news` | 要件・申請料・ETA の変更。施行日を確認 |
+| EU の入国 | `travel-europe.europa.eu`(ETIAS・EES)、`help.eurostar.com` | **ETIAS の開始日が発表されたか**。決まったら `lib/beyond-london/eurostar.ts` の `EU_BORDER.etias`(`startsOn`・`status`)と /beyond-london/paris の ETIAS の節・FAQ を直し、日付を `lib/changes-schedule.ts` に登録する。号では `traveller` で載せる |
 | 賃金・税 | `gov.uk`(National Minimum Wage、Budget) | 最低賃金は秋に翌4月分が発表される。予算の発表月は特に注意 |
 | 入場料 | 主要スポットの公式チケットページ | 下の「入場料の確かめ方」 |
 | 開業・閉館 | Time Out London のニュース、各施設の公式 | 開業日・閉館日は公式で確定させる |

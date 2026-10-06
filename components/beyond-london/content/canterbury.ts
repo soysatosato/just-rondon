@@ -274,6 +274,10 @@ const canterbury: DestinationArticle = {
       label: "ブライトン日帰りガイド｜同じく南東方面",
     },
     {
+      href: "/beyond-london/paris",
+      label: "ユーロスターで行くパリ｜同じセント・パンクラスから国境を越える",
+    },
+    {
       href: "/beyond-london",
       label: "Beyond London｜ロンドンの外へ",
     },

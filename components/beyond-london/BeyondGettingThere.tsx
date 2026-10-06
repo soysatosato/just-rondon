@@ -48,6 +48,10 @@ export default function BeyondGettingThere({
   meta: BeyondMeta | null;
 }) {
   const fare = meta ? BEYOND_FARE_BANDS[meta.slug] : undefined;
+  const ticketGuide = gettingThere.ticketGuideLink ?? {
+    href: "/sightseeing/transport/national-rail",
+    label: "英国の鉄道切符の買い方",
+  };
   const minutes = meta?.journeyMinutes ?? 0;
   const barWidth = minutes ? Math.max(6, Math.round((minutes / MAX_MINUTES) * 100)) : 0;
 
@@ -86,10 +90,10 @@ export default function BeyondGettingThere({
         </div>
         {!gettingThere.oysterValid && (
           <Link
-            href="/sightseeing/transport/national-rail"
+            href={ticketGuide.href}
             className="mt-2 inline-block text-sm font-semibold text-blue-700 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
           >
-            英国の鉄道切符の買い方 →
+            {ticketGuide.label} →
           </Link>
         )}
       </div>
@@ -135,7 +139,7 @@ export default function BeyondGettingThere({
               </p>
               <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-sm">
                 <span className="font-semibold text-emerald-700 dark:text-emerald-400">
-                  Advance {fare.advanceFrom}
+                  {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
                 </span>
                 <span aria-hidden className="text-gray-400">
                   →

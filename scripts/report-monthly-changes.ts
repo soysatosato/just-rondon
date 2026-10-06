@@ -19,6 +19,7 @@ import { BILLS_UPDATED_AT, ENERGY_CAP } from "../lib/bills/rates";
 import { HEALTH_UPDATED_AT } from "../lib/health/rates";
 import { MONEY_UPDATED_AT } from "../lib/money/rates";
 import { RAIL_UPDATED_AT } from "../lib/beyond-london/rates";
+import { EUROSTAR_UPDATED_AT, EU_BORDER } from "../lib/beyond-london/eurostar";
 import { FOOD_UPDATED_AT } from "../lib/food/prices";
 import { BUDGET_UPDATED_AT } from "../lib/sightseeing/budget";
 import { PASS_UPDATED_AT } from "../lib/sightseeing/passes";
@@ -48,6 +49,7 @@ const RATE_FILES: { file: string; updatedAt: string }[] = [
   { file: "lib/sightseeing/budget.ts(入場料・旅費の目安)", updatedAt: BUDGET_UPDATED_AT },
   { file: "lib/sightseeing/passes.ts(ロンドンパス等)", updatedAt: PASS_UPDATED_AT },
   { file: "lib/beyond-london/rates.ts(鉄道)", updatedAt: RAIL_UPDATED_AT },
+  { file: "lib/beyond-london/eurostar.ts(ユーロスター・EUの入国・パリ)", updatedAt: EUROSTAR_UPDATED_AT },
   { file: "lib/bills/rates.ts(光熱費・Council Tax)", updatedAt: BILLS_UPDATED_AT },
   { file: "lib/jobs/rates.ts(最低賃金)", updatedAt: JOBS_UPDATED_AT },
   { file: "lib/visa/rates.ts(ビザ申請料・要件)", updatedAt: RATES_UPDATED_AT },
@@ -91,6 +93,13 @@ async function main() {
   if (energyNext && energyNext.date <= ymd(now)) {
     console.log(
       `  ! ENERGY_CAP.nextChange(${ENERGY_CAP.nextChange})を過ぎている。lib/bills/rates.ts の price cap を新しい期間に直す`,
+    );
+  }
+  // ETIAS は開始日が何度も延びていて、決まった日を予定表に入れられない。
+  // 未定のあいだは毎月ここで思い出させる。
+  if (EU_BORDER.etias.startsOn === null) {
+    console.log(
+      "  ! ETIAS の開始日は未定のまま(lib/beyond-london/eurostar.ts)。travel-europe.europa.eu で発表を確かめ、決まったら EU_BORDER.etias と /beyond-london/paris を直す",
     );
   }
 

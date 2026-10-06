@@ -170,8 +170,8 @@ module.exports = {
       "/history/world-wars",
       "/history/postwar",
       "/history/modern-britain",
-      // Beyond London。/beyond-london をハブとする12本
-      // (移動の実務1本＋日帰り圏7本＋週末1泊圏4本)。並びは
+      // Beyond London。/beyond-london をハブとする13本
+      // (移動の実務1本＋日帰り圏7本＋週末1泊圏4本＋パリ)。並びは
       // components/beyond-london/destinations.ts の beyondDestinations と
       // 一致させること(このファイルは CJS なので TS を読めない)。
       "/beyond-london",
@@ -187,6 +187,7 @@ module.exports = {
       "/beyond-london/edinburgh",
       "/beyond-london/lake-district",
       "/beyond-london/penzance",
+      "/beyond-london/paris",
       "/souvenirs",
       "/brands",
       "/shopping",

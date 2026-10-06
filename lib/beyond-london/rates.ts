@@ -392,6 +392,7 @@ export const ADMISSIONS = {
  * 曖昧になる(このファイル冒頭の「逆は禁止」が守れなくなる)。
  */
 import { gbp } from "@/lib/transport/rates";
+import { EUROSTAR } from "./eurostar";
 
 export { gbp, jpDate } from "@/lib/transport/rates";
 
@@ -468,11 +469,20 @@ export const RAIL_SOURCES = [
    advanceFrom と onTheDay を両方持つのは、この差そのものが
    ハブで最初に伝えたいことだから。ヨークの「£20台 → £100以上」を
    一目で見せるために、片方だけにしない。
+
+   earlyLabel は、Advance という券種が無い列車のためのもの。
+   ユーロスターは航空券と同じ変動制で「早く買うほど安い」は同じだが、
+   Advance と書くと National Rail の切符だと誤読される。
 ----------------------------------------------------- */
 
 export const BEYOND_FARE_BANDS: Record<
   string,
-  { advanceFrom: string; onTheDay: string }
+  {
+    advanceFrom: string;
+    onTheDay: string;
+    /** 早期購入側のラベル。省略すると「Advance」。 */
+    earlyLabel?: string;
+  }
 > = {
   windsor: { advanceFrom: "£10前後", onTheDay: "£10〜15" },
   oxford: { advanceFrom: "£10前後", onTheDay: "£30〜40" },
@@ -485,4 +495,9 @@ export const BEYOND_FARE_BANDS: Record<
   edinburgh: { advanceFrom: "£30台", onTheDay: "£150以上" },
   "lake-district": { advanceFrom: "£30台", onTheDay: "£120以上" },
   penzance: { advanceFrom: "£40台", onTheDay: "£100以上" },
+  paris: {
+    advanceFrom: `${gbp(EUROSTAR.standardFrom)}から`,
+    onTheDay: EUROSTAR.lastMinuteBand,
+    earlyLabel: "早期",
+  },
 };

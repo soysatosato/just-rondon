@@ -85,6 +85,12 @@ export type GettingThere = {
   bookingAdvice: string;
   /** Railcard が効く場合の補足。2人以上なら Two Together など。 */
   railcardNote?: string;
+  /**
+   * Oyster の警告の下に出す「切符の買い方」のリンク。
+   * 省略すると英国の鉄道切符のガイドへ送る。National Rail ではない
+   * 列車(ユーロスター)で行く行き先だけが、自分の記事の節を指す。
+   */
+  ticketGuideLink?: { href: string; label: string };
 };
 
 /**
@@ -216,6 +222,11 @@ export type DestinationArticle = {
   engTitle: string;
   /** 州・地方名。カードに出す(例: 「バークシャー州」)。 */
   county: string;
+  /**
+   * ISO 3166-1 の国コード。TouristDestination の addressCountry に出る。
+   * 省略すると GB。英国の外の行き先(パリ)だけが持つ。
+   */
+  country?: string;
   summary: string;
   description: string;
   keywords: string[];

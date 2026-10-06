@@ -714,6 +714,7 @@ export const etaRelatedLinks: GuideRelatedLink[] = [
   },
   { href: "/sightseeing/transport", label: "ロンドンの交通ガイド｜地下鉄・Oyster・空港アクセス" },
   { href: "/sightseeing/itinerary", label: "ロンドン モデルコース（1〜5日）" },
+  { href: "/beyond-london/paris", label: "ユーロスターで行くパリ｜英国に戻るときも同じETAで入る" },
   { href: "/visa/uk-visa-guide", label: "英国ビザの選び方｜6ヶ月を超えて滞在する場合" },
   { href: "/visa/after-arrival", label: "入国後の手続き｜eVisa・BRP・住所登録" },
 ];

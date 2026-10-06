@@ -8,6 +8,7 @@ import cotswolds from "./cotswolds";
 import edinburgh from "./edinburgh";
 import lakeDistrict from "./lake-district";
 import oxford from "./oxford";
+import paris from "./paris";
 import penzance from "./penzance";
 import windsor from "./windsor";
 import york from "./york";
@@ -32,6 +33,7 @@ export const beyondArticles: Record<string, BeyondArticle> = {
   edinburgh,
   "lake-district": lakeDistrict,
   penzance,
+  paris,
 };
 
 export {
@@ -47,4 +49,5 @@ export {
   edinburgh,
   lakeDistrict,
   penzance,
+  paris,
 };

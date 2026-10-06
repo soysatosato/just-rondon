@@ -67,7 +67,8 @@ export type BeyondTheme =
   | "seaside"
   | "countryside"
   | "walking"
-  | "scotland";
+  | "scotland"
+  | "abroad";
 
 export const BEYOND_THEME_LABELS: Record<BeyondTheme, string> = {
   castle: "城と宮殿",
@@ -78,6 +79,7 @@ export const BEYOND_THEME_LABELS: Record<BeyondTheme, string> = {
   countryside: "田園と村",
   walking: "自然を歩く",
   scotland: "別の国",
+  abroad: "海外",
 };
 
 /**
@@ -95,7 +97,7 @@ export const BEYOND_LOCAL_TRANSPORT_LABELS: Record<
   string
 > = {
   walk: "駅から徒歩圏",
-  local: "現地でバス・船",
+  local: "現地でバス・船など",
   tour: "ツアーか車が要る",
 };
 
@@ -146,6 +148,8 @@ export type BeyondMeta = {
  * 最初の2つが同じ東海岸本線上にあり、読者が「ヨークで1泊して
  * さらに北へ」と続けて読めるため。ペンザンスを最後に置くのは、
  * 唯一の寝台列車という別枠の提案だから。
+ * パリはさらにその後ろ。国境を越える唯一の行き先で、英国の鉄道切符の
+ * 話(ハブの前提2つ)が当てはまらない別枠だから。
  *
  * next-sitemap.config.js の staticPages と、
  * /beyond-london ハブのカード表示順をこのリストと一致させること。
@@ -330,6 +334,22 @@ export const beyondDestinations: BeyondMeta[] = [
     localTransport: "local",
     localTransportNote: "現地はバスと支線。寝台なら夜行で移動できる",
   },
+  {
+    slug: "paris",
+    category: "weekender",
+    eyebrow: "Paris by Eurostar",
+    label: "パリ（ユーロスター）",
+    county: "フランス",
+    journeyTime: "約2時間20分",
+    blurb:
+      "唯一、国境を越える行き先。日帰りは成立しますが、駅での手続きに往復2時間半かかり、2026年4月からはEUの新しい入国審査（EES）で初回に指紋を取られます。",
+    fromStation: "セント・パンクラス",
+    journeyMinutes: 136,
+    timeFit: ["fullDay", "overnight"],
+    themes: ["abroad"],
+    localTransport: "local",
+    localTransportNote: "北駅から中心部へはメトロ。ロンドンの Oyster は使えない",
+  },
 ];
 
 export function beyondPath(slug: string) {
@@ -400,6 +420,7 @@ export function beyondDestinationJsonLd(article: {
   engTitle: string;
   summary: string;
   county: string;
+  country?: string;
 }) {
   const url = `${SITE_URL}${beyondPath(article.slug)}`;
 
@@ -414,7 +435,7 @@ export function beyondDestinationJsonLd(article: {
     address: {
       "@type": "PostalAddress",
       addressRegion: article.county,
-      addressCountry: "GB",
+      addressCountry: article.country ?? "GB",
     },
   };
 }

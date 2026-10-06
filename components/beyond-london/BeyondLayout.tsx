@@ -68,6 +68,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
             engTitle: destination.engTitle,
             summary: destination.summary,
             county: destination.county,
+            country: destination.country,
           })}
         />
       )}
@@ -253,7 +254,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
                           )}
                           {fare && (
                             <span className="text-xs text-gray-400 dark:text-neutral-500">
-                              Advance {fare.advanceFrom}
+                              {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
                             </span>
                           )}
                         </Link>
