@@ -5,6 +5,7 @@ import type { Content, ContentSection } from "@prisma/client";
 import { CommentTargetType } from "@prisma/client";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import ImageCredit from "@/components/shared/ImageCredit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { tagLabel } from "@/lib/column-taxonomy";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
@@ -109,16 +110,24 @@ export default function ColumnDetail({
       </div>
 
       {content.image && (
-        <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
+        <figure className="space-y-1.5">
+          <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
+            <img
+              src={content.image}
+              alt={content.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
+          {/* Commons の CC 画像は作者名とライセンスの表示が利用の条件。 */}
+          <ImageCredit
+            source={content.imageSource}
+            credit={content.imageCredit}
+            link={content.imageLink}
           />
-        </div>
+        </figure>
       )}
 
       {content.mainText && (
@@ -159,9 +168,18 @@ export default function ColumnDetail({
                     fetchPriority="low"
                   />
                 </div>
-                {sec.imageSummary && (
-                  <figcaption className="text-xs leading-relaxed text-muted-foreground">
-                    {sec.imageSummary}
+                {(sec.imageSummary || sec.imageCredit) && (
+                  <figcaption className="space-y-0.5">
+                    {sec.imageSummary && (
+                      <p className="text-xs leading-relaxed text-muted-foreground">
+                        {sec.imageSummary}
+                      </p>
+                    )}
+                    <ImageCredit
+                      source={sec.imageSource}
+                      credit={sec.imageCredit}
+                      link={sec.imageLink}
+                    />
                   </figcaption>
                 )}
               </figure>

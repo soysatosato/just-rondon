@@ -40,7 +40,7 @@ export type ArticleImage = {
 };
 
 /** upload.wikimedia.org の URL から、どの wiki のどのファイルかを読む。 */
-function parseWikimediaUrl(
+export function parseWikimediaUrl(
   url: string,
 ): { wiki: string; fileName: string } | null {
   // /wikipedia/commons/thumb/a/ab/<name>/<n>px-<name>

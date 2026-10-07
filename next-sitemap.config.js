@@ -40,6 +40,9 @@ module.exports = {
     "/admin",
     "/admin/*",
     "/tweets",
+    // Instagram のプロフィールから来る人のための一覧(noindex)。検索から
+    // 入るページではない。
+    "/ig",
     // ★ next-sitemap は additionalPaths とは別に、generateStaticParams で
     //   ビルド時に生成したページを prerender-manifest から全部拾ってくる。
     //   この exclude が効くのはその自動収集分だけで、additionalPaths には効かない。

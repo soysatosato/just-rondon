@@ -17,6 +17,7 @@ import {
 } from "@/components/sightseeing/areas/areas";
 import type { AdjacentContent } from "@/utils/actions/contents";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import ImageCredit from "@/components/shared/ImageCredit";
 
 // 太字は数字と地名の強調に使うので、色は付けず字面の太さだけで効かせる。
 const proseClass =
@@ -166,16 +167,24 @@ export default function AreaDetail({
       )}
 
       {content.image && (
-        <div className="relative mt-8 h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
+        <figure className="mt-8 space-y-1.5">
+          <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
+            <img
+              src={content.image}
+              alt={content.title}
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
+          {/* Commons の CC 画像は作者名とライセンスの表示が利用の条件。 */}
+          <ImageCredit
+            source={content.imageSource}
+            credit={content.imageCredit}
+            link={content.imageLink}
           />
-        </div>
+        </figure>
       )}
 
       {content.mainText && (
@@ -239,9 +248,18 @@ export default function AreaDetail({
                     fetchPriority="low"
                   />
                 </div>
-                {sec.imageSummary && (
-                  <figcaption className="mt-2 text-xs text-muted-foreground">
-                    {sec.imageSummary}
+                {(sec.imageSummary || sec.imageCredit) && (
+                  <figcaption className="mt-2 space-y-0.5">
+                    {sec.imageSummary && (
+                      <p className="text-xs text-muted-foreground">
+                        {sec.imageSummary}
+                      </p>
+                    )}
+                    <ImageCredit
+                      source={sec.imageSource}
+                      credit={sec.imageCredit}
+                      link={sec.imageLink}
+                    />
                   </figcaption>
                 )}
               </figure>

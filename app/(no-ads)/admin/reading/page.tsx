@@ -167,12 +167,20 @@ export default async function ReadingAdminPage() {
     <div className="mx-auto w-full max-w-3xl px-4 py-10">
       <div className="flex items-baseline justify-between gap-4">
         <h1 className="text-2xl font-semibold">読み物の管理</h1>
-        <Link
-          href="/admin/comments"
-          className="text-sm text-muted-foreground underline underline-offset-2"
-        >
-          コメントの管理
-        </Link>
+        <div className="flex gap-4">
+          <Link
+            href="/admin/instagram"
+            className="text-sm text-muted-foreground underline underline-offset-2"
+          >
+            Instagramの管理
+          </Link>
+          <Link
+            href="/admin/comments"
+            className="text-sm text-muted-foreground underline underline-offset-2"
+          >
+            コメントの管理
+          </Link>
+        </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
         下書きをプレビューで読み、承認すると予約に入ります。文章の修正はチャットで

@@ -5,6 +5,7 @@ import db from "../utils/db";
 import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
 import { resolveAttractionSlugs } from "./lib/column-attractions";
 import { resolveArticleImage } from "./lib/article-image";
+import { creditColumns } from "./lib/commons";
 
 type ColumnSectionInput = {
   title: string;
@@ -156,6 +157,15 @@ async function main() {
     ? (await resolveArticleImage(payload.image)).url
     : undefined;
 
+  // 画像の作者とライセンスの表記。記事ページと Instagram の表紙に出す
+  // (Commons の CC 画像は表記が利用の条件)。
+  const imageCredit = await creditColumns(image);
+  const sortedSections = payload.sections
+    .slice()
+    .sort((a, b) => a.displayOrder - b.displayOrder);
+  const sectionCredits: Awaited<ReturnType<typeof creditColumns>>[] = [];
+  for (const s of sortedSections) sectionCredits.push(await creditColumns(s.image));
+
   const baseSlug = toSlugBase(payload.engTitle || payload.title);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -185,6 +195,7 @@ async function main() {
         summary: payload.summary,
         mainText: payload.mainText,
         image,
+        ...imageCredit,
         website: payload.website,
         category: "column",
         route: "/column",
@@ -195,17 +206,15 @@ async function main() {
         seriesName: payload.seriesName,
         seriesOrder: payload.seriesOrder,
         sections: {
-          create: payload.sections
-            .slice()
-            .sort((a, b) => a.displayOrder - b.displayOrder)
-            .map((s) => ({
-              title: s.title,
-              subtitle: s.subtitle,
-              description: s.description,
-              displayOrder: s.displayOrder,
-              image: s.image,
-              imageSummary: s.imageSummary,
-            })),
+          create: sortedSections.map((s, i) => ({
+            title: s.title,
+            subtitle: s.subtitle,
+            description: s.description,
+            displayOrder: s.displayOrder,
+            image: s.image,
+            ...sectionCredits[i],
+            imageSummary: s.imageSummary,
+          })),
         },
         attractionLinks: {
           create: attractionIds.map((attractionId, i) => ({

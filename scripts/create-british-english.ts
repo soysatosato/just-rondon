@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { resolveArticleImage } from "./lib/article-image";
+import { creditColumns } from "./lib/commons";
 
 type BritishEnglishSectionInput = {
   title: string;
@@ -86,6 +87,10 @@ async function main() {
     ? (await resolveArticleImage(payload.image)).url
     : undefined;
 
+  // 画像の作者とライセンスの表記。記事ページに出す(Commons の CC 画像は
+  // 表記が利用の条件)。
+  const imageCredit = await creditColumns(image);
+
   const baseSlug = toSlugBase(payload.engTitle);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -98,6 +103,7 @@ async function main() {
         summary: payload.summary,
         mainText: payload.mainText,
         image,
+        ...imageCredit,
         website: payload.website,
         category: "british-english",
         route: "/british-english",

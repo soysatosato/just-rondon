@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { AREA_TAGS, isKnownAreaTag } from "../lib/area-taxonomy";
+import { creditColumns } from "./lib/commons";
 
 /**
  * 「ロンドンの街」を1本、DBに追加する。
@@ -162,6 +163,15 @@ async function main() {
 
   const attractionIds = await resolveAttractionIds(payload.attractions ?? []);
 
+  // 画像の作者とライセンスの表記。記事ページに出す(Commons の CC 画像は
+  // 表記が利用の条件)。
+  const imageCredit = await creditColumns(payload.image);
+  const sortedSections = payload.sections
+    .slice()
+    .sort((a, b) => a.displayOrder - b.displayOrder);
+  const sectionCredits: Awaited<ReturnType<typeof creditColumns>>[] = [];
+  for (const s of sortedSections) sectionCredits.push(await creditColumns(s.image));
+
   const baseSlug = toSlugBase(payload.engTitle);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -174,6 +184,7 @@ async function main() {
         summary: payload.summary,
         mainText: payload.mainText,
         image: payload.image,
+        ...imageCredit,
         category: "area",
         // 既存の宿/観光ガイドと突き合わせる id。対応が無ければ空のまま。
         route: payload.areaId ?? "",
@@ -186,17 +197,15 @@ async function main() {
         description3: payload.access,
         tags: payload.tags,
         sections: {
-          create: payload.sections
-            .slice()
-            .sort((a, b) => a.displayOrder - b.displayOrder)
-            .map((s) => ({
-              title: s.title,
-              subtitle: s.subtitle,
-              description: s.description,
-              displayOrder: s.displayOrder,
-              image: s.image,
-              imageSummary: s.imageSummary,
-            })),
+          create: sortedSections.map((s, i) => ({
+            title: s.title,
+            subtitle: s.subtitle,
+            description: s.description,
+            displayOrder: s.displayOrder,
+            image: s.image,
+            ...sectionCredits[i],
+            imageSummary: s.imageSummary,
+          })),
         },
         ...(attractionIds.length > 0
           ? {

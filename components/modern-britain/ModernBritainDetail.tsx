@@ -5,6 +5,7 @@ import type { Content, ContentSection } from "@prisma/client";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
+import ImageCredit from "@/components/shared/ImageCredit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
@@ -116,16 +117,24 @@ export default function ModernBritainDetail({
       )}
 
       {content.image && (
-        <div className="relative mt-8 h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
+        <figure className="mt-8 space-y-1.5">
+          <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
+            <img
+              src={content.image}
+              alt={content.title}
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
+          {/* Commons の CC 画像は作者名とライセンスの表示が利用の条件。 */}
+          <ImageCredit
+            source={content.imageSource}
+            credit={content.imageCredit}
+            link={content.imageLink}
           />
-        </div>
+        </figure>
       )}
 
       {content.mainText && (

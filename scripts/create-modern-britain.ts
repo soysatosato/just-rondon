@@ -2,6 +2,7 @@ import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { Prisma } from "@prisma/client";
 import db from "../utils/db";
+import { creditColumns } from "./lib/commons";
 import {
   MODERN_BRITAIN_TAGS,
   isKnownModernBritainTag,
@@ -101,6 +102,10 @@ async function main() {
   const payload: ModernBritainPayload = JSON.parse(readFileSync(path, "utf-8"));
   validatePayload(payload);
 
+  // 画像の作者とライセンスの表記。記事ページに出す(Commons の CC 画像は
+  // 表記が利用の条件)。
+  const imageCredit = await creditColumns(payload.image);
+
   const baseSlug = toSlugBase(payload.engTitle || payload.title);
   const slug = await findUniqueSlug(baseSlug);
 
@@ -113,6 +118,7 @@ async function main() {
         summary: payload.summary,
         mainText: payload.mainText,
         image: payload.image,
+        ...imageCredit,
         website: payload.website,
         category: "modern-britain",
         route: "/modern-britain",
