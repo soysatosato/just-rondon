@@ -4,9 +4,14 @@
 // 引いた人が着地する場所なので、店名を見出しに立て、その店について
 // 分かっていることだけを上から順に置く。
 //
-// 中身の薄い店舗(回答1件・自由記述なし・金額なし)は noindex になる。
-// 判定は lib/jobs/store-slug.js の isIndexableStore が持ち、
-// sitemap 側も同じ関数を読んでいるので、申告と noindex が食い違うことはない。
+// 全店 noindex で、sitemap にも出さず、広告も載せない(lib/ad-placement.ts)。
+// 2026-10 の監査で、店舗ページの固有の本文は中央値154字しかなく、残りは
+// どの店でも同じ説明文だった。1年で検索の表示は2回。回答が数件しか無い店を
+// 1ページずつ検索に出しても読者の役に立たず、サイト全体の評価を薄める。
+// 店名で探す人は一覧(/jobs/service-charges/stores)で受ける。
+//
+// 以前は回答が2件以上ある店などに絞って検索に出していた(isIndexableStore)が、
+// 上の数字はその条件を満たした36店のものなので、絞り込みごとやめた。
 export const revalidate = 60 * 60;
 
 import Link from "next/link";
@@ -58,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: storeKeywords(store),
     type: "article",
     modifiedTime: store.latestAt.toISOString(),
-    noindex: !store.indexable,
+    noindex: true,
   });
 }
 

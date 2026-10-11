@@ -29,6 +29,15 @@ const AD_FREE_PREFIXES = [
 ] as const;
 
 /**
+ * 配下のページだけ広告を出さないパス。そのパス自体(一覧)には出す。
+ *
+ * 店舗別サービスチャージは、一覧(/jobs/service-charges/stores)が
+ * 検索から店名で来た人を受ける本文のあるページで、各店舗のページは
+ * 中身が薄いので全店 noindex にしてある。
+ */
+const AD_FREE_CHILDREN_OF = ["/jobs/service-charges/stores"] as const;
+
+/**
  * このパスに広告を出してよいか。
  *
  * pathname が null(初回レンダリング等)のときは false を返す。
@@ -37,7 +46,14 @@ const AD_FREE_PREFIXES = [
 export function allowsAds(pathname: string | null): boolean {
   if (!pathname) return false;
 
-  return !AD_FREE_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  if (
+    AD_FREE_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+    )
+  ) {
+    return false;
+  }
+  return !AD_FREE_CHILDREN_OF.some((parent) =>
+    pathname.startsWith(`${parent}/`)
   );
 }

@@ -334,6 +334,13 @@ function buildSurveyMailBody(charge: ServiceCharge): string {
     if (!body) continue;
     lines.push("", `${label}:`, "----", body, "----");
   }
+  if (comments.some(([, body]) => body)) {
+    lines.push(
+      "",
+      "自由記述は承認するまでサイトに出ません。",
+      `承認: ${siteUrl}/admin/service-charges#r-${charge.id}`
+    );
+  }
 
   if (!charge.isVerified) {
     lines.push(
@@ -356,7 +363,12 @@ function buildSurveyMailBody(charge: ServiceCharge): string {
  * 純関数に渡すほうが、店舗単位と回答単位の数字が食い違わない。
  * ========================================================== */
 
-/** 集計に使う列だけを選ぶ。自由記述は別途取るのでここには含めない。 */
+/**
+ * 集計と表示に使う列。
+ *
+ * commentsApprovedAt は自由記述を伏せるかの判定にだけ使い、
+ * withApprovedComments を通したあとの ChargeRecord には残らない。
+ */
 const RECORD_SELECT = {
   id: true,
   placeId: true,
@@ -382,7 +394,32 @@ const RECORD_SELECT = {
   serviceChargeComment: true,
   mealComment: true,
   generalComment: true,
+  commentsApprovedAt: true,
 } as const;
+
+type SelectedRecord = ChargeRecord & { commentsApprovedAt: Date | null };
+
+/**
+ * 運営者が承認していない回答の自由記述を伏せる。
+ *
+ * 自由記述は店名と並んで出る文章で、特定の人への非難や、確かめようのない
+ * 断定がそのまま載っていた。未承認の回答も選択式の答えは集計と店舗ページに
+ * 出し、文章だけを空にする。DB から読んだ回答は必ずここを通すので、
+ * 「現場の声 N件」の件数や声の一覧を含め、未承認の文章はどの画面にも届かない。
+ * 承認は /admin/service-charges。
+ */
+function withApprovedComments(rows: SelectedRecord[]): ChargeRecord[] {
+  return rows.map(({ commentsApprovedAt, ...record }) =>
+    commentsApprovedAt
+      ? record
+      : {
+          ...record,
+          serviceChargeComment: null,
+          mealComment: null,
+          generalComment: null,
+        },
+  );
+}
 
 export async function fetchServiceChargeOverview(): Promise<ServiceChargeOverview> {
   const records = await db.serviceCharge.findMany({
@@ -390,7 +427,7 @@ export async function fetchServiceChargeOverview(): Promise<ServiceChargeOvervie
     orderBy: { createdAt: "desc" },
     select: RECORD_SELECT,
   });
-  return buildOverview(records as ChargeRecord[]);
+  return buildOverview(withApprovedComments(records as SelectedRecord[]));
 }
 
 /**
@@ -406,7 +443,7 @@ export async function fetchServiceChargesByPlaceId(
     orderBy: { createdAt: "desc" },
     select: RECORD_SELECT,
   });
-  return records as ChargeRecord[];
+  return withApprovedComments(records as SelectedRecord[]);
 }
 
 /**
@@ -418,8 +455,8 @@ export async function fetchServiceChargesByPlaceId(
  * ここでも集計と同じ関数を通して突き合わせる。
  *
  * isVerified で絞らないのは fetchServiceChargesByPlaceId と同じ理由。
- * 手入力で登録された店舗もURLを知っていれば読めるが、indexable が false に
- * なるので検索結果にも sitemap にも出ない。
+ * 店舗ページはすべて noindex で sitemap にも出さないので、手入力で
+ * 登録された店舗も URL を知っている人にしか届かない。
  */
 export async function fetchStorePage(slug: string): Promise<{
   store: StoreAggregate;
@@ -427,10 +464,12 @@ export async function fetchStorePage(slug: string): Promise<{
   /** 同じポストコード地区の他店舗。回遊と内部リンクのため。 */
   nearby: StoreAggregate[];
 } | null> {
-  const all = (await db.serviceCharge.findMany({
-    orderBy: { createdAt: "desc" },
-    select: RECORD_SELECT,
-  })) as ChargeRecord[];
+  const all = withApprovedComments(
+    (await db.serviceCharge.findMany({
+      orderBy: { createdAt: "desc" },
+      select: RECORD_SELECT,
+    })) as SelectedRecord[],
+  );
 
   const byStore = new Map<string, ChargeRecord[]>();
   for (const r of all) {
@@ -466,14 +505,16 @@ export async function fetchStorePage(slug: string): Promise<{
 /**
  * 店舗ページの slug 一覧。generateStaticParams から呼ぶ。
  *
- * noindex の店舗も含めて全部返す。ビルド時に描いておけば、
- * 一覧から辿った人にも検索から来た人にも待ち時間が無い。
+ * 店舗ページは検索には出さないが、一覧から辿る人のためにビルド時に
+ * 全店ぶん描いておく。
  */
 export async function fetchStoreSlugs(): Promise<string[]> {
-  const records = (await db.serviceCharge.findMany({
-    orderBy: { createdAt: "desc" },
-    select: RECORD_SELECT,
-  })) as ChargeRecord[];
+  const records = withApprovedComments(
+    (await db.serviceCharge.findMany({
+      orderBy: { createdAt: "desc" },
+      select: RECORD_SELECT,
+    })) as SelectedRecord[],
+  );
 
   const byStore = new Map<string, ChargeRecord[]>();
   for (const r of records) {
@@ -501,6 +542,8 @@ function feedWhere(filter?: ResponseFeedFilter) {
     clauses.push({ distributionType: filter.dist });
   }
   if (filter?.withComment) {
+    // 伏せた文章しか無い回答を「自由記述あり」に数えない。
+    clauses.push({ commentsApprovedAt: { not: null } });
     clauses.push({
       OR: [
         { serviceChargeComment: { not: null } },
@@ -531,5 +574,5 @@ export async function fetchResponseFeed(
     take: itemsPerPage,
     select: RECORD_SELECT,
   });
-  return records as ChargeRecord[];
+  return withApprovedComments(records as SelectedRecord[]);
 }

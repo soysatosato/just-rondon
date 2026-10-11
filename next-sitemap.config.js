@@ -1,9 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-const {
-  isIndexableStore,
-  storePath,
-  storeSlug,
-} = require("./lib/jobs/store-slug");
 const { hasSongList } = require("./lib/musicals/song-pages");
 const prisma = new PrismaClient();
 
@@ -47,10 +42,8 @@ module.exports = {
     //   ビルド時に生成したページを prerender-manifest から全部拾ってくる。
     //   この exclude が効くのはその自動収集分だけで、additionalPaths には効かない。
     //
-    //   店舗ページは noindex の店も含めて全店を事前生成しているので、
-    //   ここで外さないと下の isIndexableStore の絞り込みが素通りになり、
-    //   noindex の店舗が sitemap に載る(実際に49店中14店が載っていた)。
-    //   載せる店舗は additionalPaths 側だけで決める。
+    //   店舗ページは全店 noindex だが、一覧から辿る人のために全店を
+    //   事前生成しているので、ここで外さないと sitemap に載る。
     "/jobs/service-charges/stores/*",
     // 曲詳細は本文が歌詞で、公開中も noindex。SONGS_PUBLISHED を true に
     // 戻すと108曲ぶん事前生成されるので、同じ理由でここで外す。
@@ -386,7 +379,7 @@ module.exports = {
       "/jobs/workplace-pension",
       "/jobs/service-charges",
       // 店舗別サービスチャージの一覧。各店舗ページ(/stores/<slug>)は
-      // DB 由来なので下の additionalPaths が出す。
+      // 全店 noindex なので出さない(上の exclude)。店名で探す人はここで受ける。
       "/jobs/service-charges/stores",
       "/jobs/service-charges/case-story",
       "/jobs/service-charges/case-story/background",
@@ -559,50 +552,6 @@ module.exports = {
       paths.push(
         await config.transform(config, `/events/archive/2025/${e.slug}`),
       );
-    }
-
-    // 店舗別サービスチャージのページ。回答が1件でも届いた店舗にURLは生えるが、
-    // sitemap に出すのは中身のあるものだけ。判定と slug の規則は
-    // lib/jobs/store-slug.js が持っていて、ページ側の noindex も同じ関数を
-    // 読んでいるので、「sitemap に出したのに noindex」は起きない。
-    const charges = await prisma.serviceCharge.findMany({
-      select: {
-        placeId: true,
-        storeName: true,
-        postcode: true,
-        isVerified: true,
-        serviceChargeCollected: true,
-        amountValue: true,
-        serviceChargeComment: true,
-        mealComment: true,
-        generalComment: true,
-      },
-      // 集計側(utils/service-charge.ts の aggregateStore)と同じ並びにする。
-      // slug は先頭の1件から作るので、並びが違うと別のURLになる。
-      orderBy: { createdAt: "desc" },
-    });
-
-    const chargesByStore = new Map();
-    for (const c of charges) {
-      const list = chargesByStore.get(c.placeId);
-      if (list) list.push(c);
-      else chargesByStore.set(c.placeId, [c]);
-    }
-
-    for (const rows of chargesByStore.values()) {
-      const indexable = isIndexableStore({
-        verifiedCount: rows.filter((r) => r.isVerified).length,
-        responseCount: rows.length,
-        commentCount: rows.filter(
-          (r) => r.serviceChargeComment || r.mealComment || r.generalComment,
-        ).length,
-        amountCount: rows.filter(
-          (r) => r.serviceChargeCollected && r.amountValue !== null,
-        ).length,
-      });
-      if (!indexable) continue;
-
-      paths.push(await config.transform(config, storePath(storeSlug(rows[0]))));
     }
 
     // 料理ページ。/restaurants ハブ自体は上の staticPages 側にある。

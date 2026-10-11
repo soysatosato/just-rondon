@@ -85,6 +85,7 @@ export default async function ThanksPage({ searchParams }: Props) {
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
           回答は匿名のまま店舗名とあわせて集計され、
           次にその店で働く人が読めるようになります。
+          自由記述は、運営が内容を確かめてから載せます。
         </p>
 
         {store && (

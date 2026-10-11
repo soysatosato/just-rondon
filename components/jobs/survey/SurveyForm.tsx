@@ -682,6 +682,9 @@ export default function SurveyForm({
               <li>
                 ・次にその店で働く人が、面接を受ける前に実態を知ることができます。
               </li>
+              <li>
+                ・自由記述は、運営が内容を確かめてから店舗ページに載せます。
+              </li>
             </ul>
           </div>
         </section>

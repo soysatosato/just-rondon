@@ -180,6 +180,12 @@ export default async function ReadingAdminPage() {
           >
             コメントの管理
           </Link>
+          <Link
+            href="/admin/service-charges"
+            className="text-sm text-muted-foreground underline underline-offset-2"
+          >
+            自由記述の管理
+          </Link>
         </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">

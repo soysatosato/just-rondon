@@ -2061,6 +2061,10 @@ model ServiceCharge {
   writtenPolicy     String?
   monthlyHours      Float?
 
+  // 自由記述3欄を運営者が確かめて載せた日時。null のあいだ文章は
+  // どの画面にも出さない(選択式の答えは出す)。/admin/service-charges で付け外しする。
+  commentsApprovedAt DateTime?
+
   @@index([placeId])
   @@index([serviceChargeCollected])
 }

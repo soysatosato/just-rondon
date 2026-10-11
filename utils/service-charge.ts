@@ -4,10 +4,7 @@
 // サーバー(ダッシュボード)とクライアント(アンケートの診断ステップ)の両方から
 // 同じ判定を使うため、"use server" も "use client" も付けない。
 
-import {
-  isIndexableStore,
-  storeSlug,
-} from "@/lib/jobs/store-slug";
+import { storeSlug } from "@/lib/jobs/store-slug";
 import {
   DISTRIBUTION_LABEL,
   type DistributionType,
@@ -91,8 +88,6 @@ export type StoreAggregate = {
   writtenPolicy: ObligationTally;
   onPayslip: ObligationTally;
   kitchenIncluded: ObligationTally;
-  /** 検索結果に出してよい中身があるか。判定は lib/jobs/store-slug.js。 */
-  indexable: boolean;
   latestAt: Date;
 };
 
@@ -272,12 +267,6 @@ export function aggregateStore(records: ChargeRecord[]): StoreAggregate {
     writtenPolicy: tally(collected.map((r) => r.writtenPolicy)),
     onPayslip: tally(collected.map((r) => r.onPayslip)),
     kitchenIncluded: tally(collected.map((r) => r.kitchenIncluded)),
-    indexable: isIndexableStore({
-      verifiedCount,
-      responseCount: records.length,
-      commentCount,
-      amountCount: monthlyValues.length,
-    }),
     latestAt: records.reduce<Date>(
       (max, r) => (r.createdAt > max ? r.createdAt : max),
       records[0].createdAt,
