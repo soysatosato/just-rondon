@@ -1,5 +1,4 @@
 import "./globals.css";
-import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Providers from "./providers";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -10,7 +9,6 @@ import MainNav from "@/components/navbar/MainNav";
 import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import PlanSync from "@/components/attractions/plan/PlanSync";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
-import { ADSENSE_CLIENT } from "@/lib/adsense";
 
 export const metadata = defaultMetadata;
 
@@ -56,16 +54,11 @@ export default function RootLayout({
             <PlanSync />
           </Providers>
 
-          {/* 開発環境で読み込むと無効トラフィック計上とコンソールノイズの原因になる */}
-          {isProduction && (
-            <Script
-              id="adsbygoogle-loader"
-              async
-              strategy="afterInteractive"
-              crossOrigin="anonymous"
-              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-            />
-          )}
+          {/*
+            AdSense 本体はここで読み込まない。ここに置くと /contact・/sign-in・
+            404 など本文の無い画面にも入り、自動広告がそこに出てポリシー違反に
+            なる。読み込みは components/ads/AdSenseLoader.tsx を参照。
+          */}
 
           {isProduction && GA_ID && <GoogleAnalytics gaId={GA_ID} />}
         </body>

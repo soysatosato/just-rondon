@@ -4,6 +4,7 @@ import Link from "next/link";
 import { TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import AdSenseLoader from "@/components/ads/AdSenseLoader";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import HeroIntro from "@/components/home/HeroIntro";
@@ -733,6 +734,9 @@ export default async function Page() {
           </div>
         </div>
       </section>
+
+      {/* トップは (with-ads) の外にあるので、AdSense の読み込みはここで行う。 */}
+      <AdSenseLoader />
     </div>
   );
 }

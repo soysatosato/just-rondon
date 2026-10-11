@@ -1,4 +1,5 @@
 import AdMaxSwitch from "@/components/ads/AdMaxSwitch";
+import AdSenseLoader from "@/components/ads/AdSenseLoader";
 import type { ReactNode } from "react";
 
 /**
@@ -9,11 +10,15 @@ import type { ReactNode } from "react";
  * このレイアウトはサーバーコンポーネントで pathname を読めないため、
  * 除外はクライアント側の広告コンポーネントが lib/ad-placement.ts の
  * allowsAds() で行う。ここに枠を置いても、対象パスでは枠ごと描画されない。
+ *
+ * AdSense 本体の読み込み(AdSenseLoader)もルートではなくここに置く。
+ * これも allowsAds() を見るので、フォーム等では読み込まれない。
  */
 export default function WithAdsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       {children}
+      <AdSenseLoader />
       <div className="mt-2 print:hidden">
         <AdMaxSwitch id="32ceb65479d99deacb56072aecc7aa0b" />
       </div>
