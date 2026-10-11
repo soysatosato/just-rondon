@@ -219,7 +219,7 @@ NHS は英国社会で特別な位置を占めています。**2012年ロンド�
       id: "consensus-end",
       figure: {
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/1/1b/James_Callaghan_1976.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/James_Callaghan_1976.jpg/960px-James_Callaghan_1976.jpg",
         alt: "1976年のジェームズ・キャラハン",
         caption:
           "この年に首相となり、1976年にIMFへ融資を要請し、「不満の冬」のあとの総選挙で敗れた。",

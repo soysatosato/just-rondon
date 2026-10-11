@@ -207,7 +207,7 @@ const civilWar: HistoryChapter = {
       id: "glorious-revolution",
       figure: {
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/c/c2/British_%28English%29_School_-_Landing_of_William_III_at_Torbay%2C_5_November_1688_-_BHC0326_-_Royal_Museums_Greenwich.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/British_%28English%29_School_-_Landing_of_William_III_at_Torbay%2C_5_November_1688_-_BHC0326_-_Royal_Museums_Greenwich.jpg/960px-British_%28English%29_School_-_Landing_of_William_III_at_Torbay%2C_5_November_1688_-_BHC0326_-_Royal_Museums_Greenwich.jpg",
         alt: "1688年、トーベイに上陸するウィリアム3世の艦隊",
         caption:
           "1万5千の兵とともに上陸。招請状を送ったのは、英国の政治指導者たち自身だった。",

@@ -11,6 +11,9 @@ export type StadiumTour = {
   summary: string | null;
   mainText: string | null;
   image: string | null;
+  /** Commons の作者とライセンス。カードの写真の下に出す。 */
+  imageCredit?: string | null;
+  imageLink?: string | null;
   website: string | null;
   sections: StadiumTourSection[];
 };
@@ -28,7 +31,9 @@ export const stadiumTours: StadiumTour[] = [
 モダンではなく **クラシックなフットボール文化**が味わえる場所！
       `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/1/17/Johnny_Haynes_Stand.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Johnny_Haynes_Stand.JPG/1280px-Johnny_Haynes_Stand.JPG",
+    imageCredit: "Sammy222fulham at English Wikipedia / Public domain, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Johnny_Haynes_Stand.JPG",
     website: "https://www.fulhamfc.com/tours",
     sections: [
       {
@@ -59,7 +64,9 @@ export const stadiumTours: StadiumTour[] = [
 陸上用トラックやロッカールームも見学でき、複合スタジアムならではの魅力を体験できます。
       `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/3/34/London_Olympic_Stadium_West_Ham.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/London_Olympic_Stadium_West_Ham.jpg/1280px-London_Olympic_Stadium_West_Ham.jpg",
+    imageCredit: "Arne Müseler / CC BY-SA 3.0 de, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:London_Olympic_Stadium_West_Ham.jpg",
     website: "https://www.london-stadium.com/tours",
     sections: [
       {
@@ -89,7 +96,9 @@ export const stadiumTours: StadiumTour[] = [
 NFLロンドンゲームの開催地として知られる、**可動式ピッチ**も注目！
       `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/b/be/London_Tottenham_Hotspur_Stadium.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/London_Tottenham_Hotspur_Stadium.jpg/1280px-London_Tottenham_Hotspur_Stadium.jpg",
+    imageCredit: "Arne Müseler / CC BY-SA 3.0 de, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:London_Tottenham_Hotspur_Stadium.jpg",
     website: "https://www.tottenhamhotspur.com/tours",
     sections: [
       {
@@ -120,7 +129,9 @@ NFLロンドンゲームの開催地として知られる、**可動式ピッチ
 ベンチ、トンネル、ロッカーなどはもちろん、**チェルシーFC博物館**への入場もセット。
       `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/8/8f/London_Stamford_Bridge.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/London_Stamford_Bridge.jpg/1280px-London_Stamford_Bridge.jpg",
+    imageCredit: "Arne Müseler / CC BY-SA 3.0 de, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:London_Stamford_Bridge.jpg",
     website: "https://www.chelseafc.com/en/stadium-tours-museum",
     sections: [
       {
@@ -151,7 +162,9 @@ NFLロンドンゲームの開催地として知られる、**可動式ピッチ
 象徴的なスタジアムの裏側を目の当たりにする迫力満点の体験です。
       `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d2/London_Wembley.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/London_Wembley.jpg/1280px-London_Wembley.jpg",
+    imageCredit: "Arne Müseler / CC BY-SA 3.0 de, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:London_Wembley.jpg",
     website: "https://www.wembleystadium.com/tours",
     sections: [
       {
@@ -184,7 +197,9 @@ NFLロンドンゲームの開催地として知られる、**可動式ピッチ
 ツアー料金には **アーセナル博物館**の入場も含まれています。
       `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/2/29/London_Emirates_Stadium_arsenal.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/London_Emirates_Stadium_arsenal.jpg/1280px-London_Emirates_Stadium_arsenal.jpg",
+    imageCredit: "Arne Müseler / CC BY-SA 3.0 de, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:London_Emirates_Stadium_arsenal.jpg",
     website: "https://www.arsenal.com/tours",
     sections: [
       {

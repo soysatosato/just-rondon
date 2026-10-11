@@ -44,6 +44,8 @@ const article: FeatureArticle = {
     summary: item.summary,
     mainText: item.mainText,
     image: item.image,
+    imageCredit: item.imageCredit,
+    imageLink: item.imageLink,
   })),
   related: [
     {

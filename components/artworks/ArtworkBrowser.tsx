@@ -231,13 +231,22 @@ function ArtworkGrid({
           >
             <div className="relative aspect-square bg-muted/60">
               {/* 絵画は縦横比がまちまちなので、切り抜かずに収める */}
-              <img
-                src={art.image || "/placeholder.jpg"}
-                alt={art.title}
-                className="absolute inset-0 h-full w-full object-contain p-2 transition duration-300 group-hover:scale-[1.03]"
-                loading={i < 4 ? "eager" : "lazy"}
-                decoding="async"
-              />
+              {art.image ? (
+                <img
+                  src={art.image}
+                  alt={art.title}
+                  className="absolute inset-0 h-full w-full object-contain p-2 transition duration-300 group-hover:scale-[1.03]"
+                  loading={i < 4 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              ) : (
+                // 著作権の残る近現代の作品は写真を載せていない
+                // (scripts/replace-spot-images-2026-10.ts)。
+                // 以前は /placeholder.jpg を指していたが、その画像は存在しない。
+                <span className="absolute inset-0 flex items-center justify-center p-4 text-center text-xs leading-relaxed text-muted-foreground">
+                  {art.engTitle || art.title}
+                </span>
+              )}
               {art.mustSee && (
                 <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white shadow">
                   <Flame className="h-3 w-3" />

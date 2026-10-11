@@ -59,6 +59,7 @@ import { GUARD_SLUG, fetchGuardSchedule } from "@/lib/guard/schedule";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
 import TimeRouteDigest from "@/components/time-routes/TimeRouteDigest";
 import { timeRouteForAttraction } from "@/lib/time-routes";
+import ImageCredit from "@/components/shared/ImageCredit";
 
 // ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
 // ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
@@ -386,6 +387,13 @@ export default async function AttractionDetail({
           />
         </DialogContent>
       </Dialog>
+      {/* Commons の CC BY / BY-SA は作者とライセンスの表示が利用の条件。 */}
+      <ImageCredit
+        source={attraction.imageSource}
+        credit={attraction.imageCredit}
+        link={attraction.imageLink}
+        className="mt-1.5 px-2 text-right"
+      />
 
       {/*
         ここから記事本体。以前は本文が地図・関連スポット・広告2つの後ろに

@@ -141,7 +141,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.bartshealth.nhs.uk/barts-hospital-museum",
         mapQuery: "St Bartholomew's Hospital London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/2/2e/Atrium_of_Barts%2C_St_Bartholomew%27s_Hospital%2C_City_of_London%2C_England.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Atrium_of_Barts%2C_St_Bartholomew%27s_Hospital%2C_City_of_London%2C_England.jpg/1280px-Atrium_of_Barts%2C_St_Bartholomew%27s_Hospital%2C_City_of_London%2C_England.jpg",
         imageSource: "commons",
         imageCredit: "Acabashi (CC BY-SA 4.0)",
         imageLink:
@@ -189,7 +189,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.langhamhotels.com/en/the-langham/london/",
         mapQuery: "The Langham London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/d/df/Langham_london.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Langham_london.jpg/1280px-Langham_london.jpg",
         imageSource: "commons",
         imageCredit: "The Langham, London (CC BY-SA 3.0)",
         imageLink: "https://commons.wikimedia.org/wiki/File:Langham_london.jpg",
@@ -210,7 +210,7 @@ export const filmWorks: FilmWork[] = [
         tips: "滑っている人の進路に立たないこと。撮影は歓迎されますが、レール沿いの動線は空けておくのがマナーです。",
         mapQuery: "Southbank Undercroft Skate Space London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/5a/South_Bank_Skate_Park_-_geograph.org.uk_-_3843135.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/South_Bank_Skate_Park_-_geograph.org.uk_-_3843135.jpg/1280px-South_Bank_Skate_Park_-_geograph.org.uk_-_3843135.jpg",
         imageSource: "commons",
         imageCredit: "Chris Whippet (CC BY-SA 2.0)",
         imageLink:
@@ -237,7 +237,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.sherlock-holmes.co.uk/",
         mapQuery: "Sherlock Holmes Museum Baker Street London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/3/33/221B_Baker_Street%2C_London_-_Sherlock_Holmes_Museum.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/221B_Baker_Street%2C_London_-_Sherlock_Holmes_Museum.jpg/960px-221B_Baker_Street%2C_London_-_Sherlock_Holmes_Museum.jpg",
         imageSource: "commons",
         imageCredit: "Jordan 1972 (Public Domain)",
         imageLink:
@@ -289,7 +289,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.english-heritage.org.uk/visit/places/rangers-house-the-wernher-collection/",
         mapQuery: "Ranger's House Greenwich London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/0/09/EH1218679_The_Ranger%27s_House.JPG",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/EH1218679_The_Ranger%27s_House.JPG/1280px-EH1218679_The_Ranger%27s_House.JPG",
         imageSource: "commons",
         imageCredit: "Katie Chan (CC BY-SA 3.0)",
         imageLink:
@@ -314,7 +314,7 @@ export const filmWorks: FilmWork[] = [
         tips: "隣はセント・ジェームズ宮殿、目の前はグリーン・パーク。王室関連の建物が集中する一角です。",
         mapQuery: "Lancaster House St James's London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/c/c3/Lancaster_House_London.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Lancaster_House_London.jpg/1280px-Lancaster_House_London.jpg",
         imageSource: "commons",
         imageCredit: "Ricardalovesmonuments (CC BY-SA 4.0)",
         imageLink:
@@ -339,7 +339,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.hrp.org.uk/hampton-court-palace/",
         mapQuery: "Hampton Court Palace",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/1/14/Hampton_Court_Palace_20120224.JPG",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Hampton_Court_Palace_20120224.JPG/1280px-Hampton_Court_Palace_20120224.JPG",
         imageSource: "commons",
         imageCredit: "James Park-Watt (CC BY-SA 3.0)",
         imageLink:
@@ -363,7 +363,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.syonpark.co.uk/",
         mapQuery: "Syon House Brentford London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/4/4a/Syon_House_-_the_Great_Conservatory.JPG",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Syon_House_-_the_Great_Conservatory.JPG/1280px-Syon_House_-_the_Great_Conservatory.JPG",
         imageSource: "commons",
         imageCredit: "John Chapman (CC BY-SA 3.0)",
         imageLink:
@@ -387,7 +387,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://ornc.org/",
         mapQuery: "Old Royal Naval College Greenwich",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/3/39/Painted_Hall_at_Royal_Naval_College_in_Greenwich%2C_London%2C_England%2C_UK.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Painted_Hall_at_Royal_Naval_College_in_Greenwich%2C_London%2C_England%2C_UK.jpg/1280px-Painted_Hall_at_Royal_Naval_College_in_Greenwich%2C_London%2C_England%2C_UK.jpg",
         imageSource: "commons",
         imageCredit: "Shawn M. Kent (CC BY-SA 4.0)",
         imageLink:
@@ -412,7 +412,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.rmg.co.uk/queens-house",
         mapQuery: "Queen's House Greenwich London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/0/0c/Greenwich_Queens_House_from_north.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Greenwich_Queens_House_from_north.jpg/1280px-Greenwich_Queens_House_from_north.jpg",
         imageSource: "commons",
         imageCredit: "Michael Coppins (CC BY-SA 4.0)",
         imageLink:
@@ -486,7 +486,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.highclerecastle.co.uk/",
         mapQuery: "Highclere Castle Newbury",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/55/Highclere_Castle_%28April_2011%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Highclere_Castle_%28April_2011%29.jpg/1280px-Highclere_Castle_%28April_2011%29.jpg",
         imageSource: "commons",
         imageCredit: "Richard Munckton (CC BY 2.0)",
         imageLink:
@@ -516,7 +516,7 @@ export const filmWorks: FilmWork[] = [
         tips: "同じコッツウォルズのバーフォードやバイブリーと組み合わせると、1日で回る価値のある行程になります。",
         mapQuery: "Bampton Oxfordshire",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/f/f2/Bampton_StMaryV_south2.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Bampton_StMaryV_south2.jpg/960px-Bampton_StMaryV_south2.jpg",
         imageSource: "commons",
         imageCredit: "Motacilla (CC BY-SA 4.0)",
         imageLink:
@@ -562,7 +562,7 @@ export const filmWorks: FilmWork[] = [
           "英国政府の迎賓施設のため通常は非公開。毎年9月のオープン・ハウス・フェスティバルなど、限られた機会にのみ公開されます。",
         mapQuery: "Lancaster House St James's London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/c/c3/Lancaster_House_London.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Lancaster_House_London.jpg/1280px-Lancaster_House_London.jpg",
         imageSource: "commons",
         imageCredit: "Ricardalovesmonuments (CC BY-SA 4.0)",
         imageLink:
@@ -585,7 +585,7 @@ export const filmWorks: FilmWork[] = [
         access: "個人所有の建物で内部見学は不可。公道から外観のみ見られます。",
         mapQuery: "Bridgewater House Cleveland Row London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/a/a8/Bridgewater_House_London_%281%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bridgewater_House_London_%281%29.jpg/1280px-Bridgewater_House_London_%281%29.jpg",
         imageSource: "commons",
         imageCredit: "Ricardalovesmonuments (CC BY-SA 4.0)",
         imageLink:
@@ -611,7 +611,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.middletemple.org.uk/",
         mapQuery: "Middle Temple Hall London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/3/35/Middle_Temple_Hall_Exterior%2C_London%2C_UK_-_Diliff.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Middle_Temple_Hall_Exterior%2C_London%2C_UK_-_Diliff.jpg/1280px-Middle_Temple_Hall_Exterior%2C_London%2C_UK_-_Diliff.jpg",
         imageSource: "commons",
         imageCredit: "David Iliff (CC BY-SA 3.0)",
         imageLink:
@@ -635,7 +635,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.theritzlondon.com/",
         mapQuery: "The Ritz London Piccadilly",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/f/fd/The_Ritz_London.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/The_Ritz_London.jpg/1280px-The_Ritz_London.jpg",
         imageSource: "commons",
         imageCredit: "Sheila1988 (CC BY-SA 4.0)",
         imageLink: "https://commons.wikimedia.org/wiki/File:The_Ritz_London.jpg",
@@ -685,7 +685,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.paddington.com/us/heritage/the-station/",
         mapQuery: "Marylebone Station London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/1/12/Marylebone_station_frontage_-_DSCF0473.JPG",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Marylebone_station_frontage_-_DSCF0473.JPG/1280px-Marylebone_station_frontage_-_DSCF0473.JPG",
         imageSource: "commons",
         imageCredit: "Rept0n1x (CC BY-SA)",
         imageLink:
@@ -708,7 +708,7 @@ export const filmWorks: FilmWork[] = [
         tips: "土曜のポートベロー・ロード・マーケット開催中に訪れると、通り全体の雰囲気も一緒に楽しめます。",
         mapQuery: "Alice's Antiques Portobello Road London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/a/a8/Alice%27s_Antique_Shop%2C_Portobello_Road%2C_Notting_Hill%2C_London_2022-08-18.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Alice%27s_Antique_Shop%2C_Portobello_Road%2C_Notting_Hill%2C_London_2022-08-18.jpg/1280px-Alice%27s_Antique_Shop%2C_Portobello_Road%2C_Notting_Hill%2C_London_2022-08-18.jpg",
         imageSource: "commons",
         imageCredit: "Brokentaco (CC BY 2.0)",
         imageLink:
@@ -754,7 +754,7 @@ export const filmWorks: FilmWork[] = [
         tips: "近くのプリムローズ・ヒルの丘に登ればロンドンのスカイラインが一望できます。合わせて訪ねるのがおすすめです。",
         mapQuery: "Chalcot Crescent Primrose Hill London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/f/f8/1-17_Chalcot_Crescent%2C_Primrose_Hill%2C_April_2026.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/1-17_Chalcot_Crescent%2C_Primrose_Hill%2C_April_2026.jpg/1280px-1-17_Chalcot_Crescent%2C_Primrose_Hill%2C_April_2026.jpg",
         imageSource: "commons",
         imageCredit: "No Swan So Fine (CC BY-SA 4.0)",
         imageLink:
@@ -826,7 +826,7 @@ export const filmWorks: FilmWork[] = [
         tips: "ビッグ・ベンと国会議事堂を画面に収めるなら夕暮れから夜がおすすめ。日中は観光客で混雑するため、早朝の方が撮影はしやすいです。",
         mapQuery: "Westminster Bridge London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/b/b2/Westminster_Bridge_with_shadows_and_Big_Ben.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Westminster_Bridge_with_shadows_and_Big_Ben.jpg/1280px-Westminster_Bridge_with_shadows_and_Big_Ben.jpg",
         imageSource: "commons",
         imageCredit: "Matt Brown (CC BY 2.0)",
         imageLink:
@@ -848,7 +848,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.dukeshotel.com/dukesbar.html",
         mapQuery: "DUKES Bar St James's London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/a/a3/Dukes_Hotel%2C_St_James%27s_Place%2C_June_2022_01.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Dukes_Hotel%2C_St_James%27s_Place%2C_June_2022_01.jpg/1280px-Dukes_Hotel%2C_St_James%27s_Place%2C_June_2022_01.jpg",
         imageSource: "commons",
         imageCredit: "No Swan So Fine (CC BY-SA 4.0)",
         imageLink:
@@ -872,7 +872,7 @@ export const filmWorks: FilmWork[] = [
         website: "https://www.reformclub.com",
         mapQuery: "Reform Club Pall Mall London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/c/c1/104_Pall_Mall%2C_London-15249008557.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/104_Pall_Mall%2C_London-15249008557.jpg/1280px-104_Pall_Mall%2C_London-15249008557.jpg",
         imageSource: "commons",
         imageCredit: "Phil Guest (CC BY-SA 2.0)",
         imageLink:

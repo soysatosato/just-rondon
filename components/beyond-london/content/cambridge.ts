@@ -56,7 +56,7 @@ const cambridge: DestinationArticle = {
       admission: "有料（カレッジ入場料に含まれる）。行事や礼拝で入れない時間帯があります",
       mapQuery: "King's College Chapel Cambridge",
       image:
-        "https://upload.wikimedia.org/wikipedia/commons/f/fd/KingsCollegeChapel.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/KingsCollegeChapel.jpg/960px-KingsCollegeChapel.jpg",
       imageSource: "commons",
       imageCredit: "Christian Richardt (CC BY-SA 3.0)",
       imageLink:

@@ -105,7 +105,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "同じ建物にジョージ・バーナード・ショーのプレートも掲げられています。あわせて見学できます。",
         mapQuery: "29 Fitzroy Square London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/7/78/Virginia_Stephen_%28VIRGINIA_WOOLF%29_-_29_Fitzroy_Square_Fitzrovia_London_W1T_5LP.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Virginia_Stephen_%28VIRGINIA_WOOLF%29_-_29_Fitzroy_Square_Fitzrovia_London_W1T_5LP.jpg/1280px-Virginia_Stephen_%28VIRGINIA_WOOLF%29_-_29_Fitzroy_Square_Fitzrovia_London_W1T_5LP.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -126,7 +126,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "ヴァージニア・ウルフのプレートと同じ建物にあります。ひとつの外観で二人分を見学できます。",
         mapQuery: "29 Fitzroy Square London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/d/dc/GEORGE_BERNARD_SHAW_-_29_Fitzroy_Square_Fitzrovia_London_W1T_6LQ.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/GEORGE_BERNARD_SHAW_-_29_Fitzroy_Square_Fitzrovia_London_W1T_6LQ.jpg/1280px-GEORGE_BERNARD_SHAW_-_29_Fitzroy_Square_Fitzrovia_London_W1T_6LQ.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -146,7 +146,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "現在は医療関係の事務所が入る建物です。外観の見学にとどめてください。",
         mapQuery: "50 Wimpole Street London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/8/82/Elizabeth_Barrett_Barrett_-_50_Wimpole_Street_Marylebone_W1G_8SQ.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Elizabeth_Barrett_Barrett_-_50_Wimpole_Street_Marylebone_W1G_8SQ.jpg/1280px-Elizabeth_Barrett_Barrett_-_50_Wimpole_Street_Marylebone_W1G_8SQ.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -166,7 +166,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "私有・商業用の建物です。外観の見学にとどめてください。",
         mapQuery: "63 Portland Place London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/1/10/FRANCES_HODGSON_BURNETT_-_63_Portland_Place_Marylebone_London_W1B_1QP.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/FRANCES_HODGSON_BURNETT_-_63_Portland_Place_Marylebone_London_W1B_1QP.jpg/1280px-FRANCES_HODGSON_BURNETT_-_63_Portland_Place_Marylebone_London_W1B_1QP.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -240,7 +240,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "現在は複数の住戸に分割された私有の建物です。外観の見学にとどめてください。",
         mapQuery: "34 Tite Street Chelsea London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/52/Oscar_Wilde_-_34_Tite_Street%2C_Chelsea%2C_SW3_4JA.JPG",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Oscar_Wilde_-_34_Tite_Street%2C_Chelsea%2C_SW3_4JA.JPG/1280px-Oscar_Wilde_-_34_Tite_Street%2C_Chelsea%2C_SW3_4JA.JPG",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -260,7 +260,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "私有の住宅です。外観の見学にとどめてください。",
         mapQuery: "42 Oakley Street Chelsea London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/6/6a/BOB_MARLEY_-_42_Oakley_Street_Chelsea_SW3_5HA_Royal_Borough_of_Kensington_and_Chelsea.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/BOB_MARLEY_-_42_Oakley_Street_Chelsea_SW3_5HA_Royal_Borough_of_Kensington_and_Chelsea.jpg/1280px-BOB_MARLEY_-_42_Oakley_Street_Chelsea_SW3_5HA_Royal_Borough_of_Kensington_and_Chelsea.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -280,7 +280,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "私有の住宅です。外観の見学にとどめてください。",
         mapQuery: "96 Cheyne Walk Chelsea London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/6/6c/JAMES_ABBOTT_MCNEILL_WHISTLER_-_96_Cheyne_Walk_Chelsea_London_SW10_0DQ.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/JAMES_ABBOTT_MCNEILL_WHISTLER_-_96_Cheyne_Walk_Chelsea_London_SW10_0DQ.jpg/1280px-JAMES_ABBOTT_MCNEILL_WHISTLER_-_96_Cheyne_Walk_Chelsea_London_SW10_0DQ.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -300,7 +300,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "私有の住宅です。外観の見学にとどめてください。",
         mapQuery: "16 Cheyne Walk Chelsea London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/9/93/DANTE_GABRIEL_ROSSETTI_AND_ALGERNON_CHARLES_SWINBURNE_-_16_Cheyne_Walk_Chelsea_London_SW3_5RA.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/DANTE_GABRIEL_ROSSETTI_AND_ALGERNON_CHARLES_SWINBURNE_-_16_Cheyne_Walk_Chelsea_London_SW3_5RA.jpg/1280px-DANTE_GABRIEL_ROSSETTI_AND_ALGERNON_CHARLES_SWINBURNE_-_16_Cheyne_Walk_Chelsea_London_SW3_5RA.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -378,7 +378,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "現在は私有のオフィスビルです。外観の見学にとどめてください。",
         mapQuery: "4 Carlton Gardens London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/2/2b/Lord_Palmerston_-_4_Carlton_Gardens_St._James%27s_London_SW1Y_5AA.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Lord_Palmerston_-_4_Carlton_Gardens_St._James%27s_London_SW1Y_5AA.jpg/1280px-Lord_Palmerston_-_4_Carlton_Gardens_St._James%27s_London_SW1Y_5AA.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -398,7 +398,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "現在は会員制クラブ(Naval and Military Club)です。外観の見学にとどめてください。",
         mapQuery: "4 St James's Square London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/8/8d/Nancy_Astor_-_4_St_James%27s_Square_St_James%27s_London_SW1Y_6JU.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Nancy_Astor_-_4_St_James%27s_Square_St_James%27s_London_SW1Y_6JU.jpg/1280px-Nancy_Astor_-_4_St_James%27s_Square_St_James%27s_London_SW1Y_6JU.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -420,7 +420,7 @@ export const plaqueAreas: PlaqueArea[] = [
         website: "https://www.chathamhouse.org/",
         mapQuery: "10 St James's Square London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/56/10StJamesPlaque1.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/10StJamesPlaque1.jpg/1280px-10StJamesPlaque1.jpg",
         imageSource: "commons",
         imageCredit: "Gareth E Kegg (CC BY-SA 4.0)",
         imageLink: "https://commons.wikimedia.org/wiki/File:10StJamesPlaque1.jpg",
@@ -440,7 +440,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "隣接する29番地には、ウィンストン・チャーチルの短期滞在を示す別のプレートがあります。あわせて見学できます。",
         mapQuery: "28 St James's Place London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/4/4d/William_Huskisson_%283984676257%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/William_Huskisson_%283984676257%29.jpg/1280px-William_Huskisson_%283984676257%29.jpg",
         imageSource: "commons",
         imageCredit: "Simon Harriyott (CC BY 2.0)",
         imageLink:
@@ -510,7 +510,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "スタジオの玄関から約120メートル、徒歩2分ほどです。次のアルマ＝タデマ(44番地)はさらに1分先で、この2件は実質的に隣り合っています。",
         mapQuery: "31 Grove End Road London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/5f/SIR_THOMAS_BEECHAM_C.H._1879_-_1961_Conductor_and_Impresario_lived_here.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/SIR_THOMAS_BEECHAM_C.H._1879_-_1961_Conductor_and_Impresario_lived_here.jpg/1280px-SIR_THOMAS_BEECHAM_C.H._1879_-_1961_Conductor_and_Impresario_lived_here.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -533,7 +533,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "玄関まわりの装飾に注目してください。ラテン語の「SALVE」の彫り込みが、外からでも見どころになります。",
         mapQuery: "44 Grove End Road London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/5/58/SIR_LAWRENCE_ALMA-TADEMA_O.M._1836-1912_Painter_lived_here_1886-1912.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/SIR_LAWRENCE_ALMA-TADEMA_O.M._1836-1912_Painter_lived_here_1886-1912.jpg/1280px-SIR_LAWRENCE_ALMA-TADEMA_O.M._1836-1912_Painter_lived_here_1886-1912.jpg",
         imageSource: "commons",
         imageCredit: "Spudgun67 (CC BY-SA 4.0)",
         imageLink:
@@ -556,7 +556,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "ウェリントン・ロードは交通量の多い幹線道路です。これまでの静かな裏通りとは雰囲気が変わります。写真を撮る際は歩道の内側から。",
         mapQuery: "24 Wellington Road London NW8",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/f/f2/Madame_Marie_Tussaud_%284644556910%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Madame_Marie_Tussaud_%284644556910%29.jpg/1280px-Madame_Marie_Tussaud_%284644556910%29.jpg",
         imageSource: "commons",
         imageCredit: "Simon Harriyott (CC BY 2.0)",
         imageLink:
@@ -579,7 +579,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "1910年設置という古さ自体が見どころです。近年のプレートと並べると、書体や質感の違いがはっきりわかります。",
         mapQuery: "38 Marlborough Place London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/8/84/Thomas_Henry_Huxley_%284643936205%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Thomas_Henry_Huxley_%284643936205%29.jpg/1280px-Thomas_Henry_Huxley_%284643936205%29.jpg",
         imageSource: "commons",
         imageCredit: "Simon Harriyott (CC BY 2.0)",
         imageLink:
@@ -601,7 +601,7 @@ export const plaqueAreas: PlaqueArea[] = [
         access: "私有の住宅です。外観の見学にとどめてください。",
         mapQuery: "31 Marlborough Hill London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/d/de/Sir_Bernard_Spilsbury_%284643931995%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Sir_Bernard_Spilsbury_%284643931995%29.jpg/1280px-Sir_Bernard_Spilsbury_%284643931995%29.jpg",
         imageSource: "commons",
         imageCredit: "Simon Harriyott (CC BY 2.0)",
         imageLink:
@@ -624,7 +624,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "クリフトン・ヒルは長い住宅街の通りです。この先(95a番地、114番地)にもプレートがありますが、往復で20分ほど余分にかかります。時間に余裕がなければ42番地で折り返すのがおすすめです。",
         mapQuery: "42 Clifton Hill London",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/7/74/Melanie_Klein_%284643933011%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Melanie_Klein_%284643933011%29.jpg/1280px-Melanie_Klein_%284643933011%29.jpg",
         imageSource: "commons",
         imageCredit: "Simon Harriyott (CC BY 2.0)",
         imageLink:
@@ -647,7 +647,7 @@ export const plaqueAreas: PlaqueArea[] = [
         tips: "St John's Wood 駅まで徒歩4分ほどです。ここを終点にすると、そのまま地下鉄で戻れます。",
         mapQuery: "28 Finchley Road London NW8",
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/0/06/Thomas_Hood_%284643930855%29.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Thomas_Hood_%284643930855%29.jpg/1280px-Thomas_Hood_%284643930855%29.jpg",
         imageSource: "commons",
         imageCredit: "Simon Harriyott (CC BY 2.0)",
         imageLink:

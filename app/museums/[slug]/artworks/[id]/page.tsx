@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ImageCredit from "@/components/shared/ImageCredit";
 import { Badge } from "@/components/ui/badge";
 import { Metadata } from "next";
 import {
@@ -131,16 +132,25 @@ export default async function ArtworkDetailPage({
       </section>
 
       {artwork?.image && (
-        <div className="relative mx-auto overflow-hidden rounded-lg shadow-sm transform hover:scale-[1.01] transition duration-200 w-full max-w-2xl aspect-[4/3]">
-          <img
-            src={artwork.image}
-            alt={artwork.title}
-            className="absolute inset-0 w-full h-full object-contain"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
+        <figure>
+          <div className="relative mx-auto overflow-hidden rounded-lg shadow-sm transform hover:scale-[1.01] transition duration-200 w-full max-w-2xl aspect-[4/3]">
+            <img
+              src={artwork.image}
+              alt={artwork.title}
+              className="absolute inset-0 w-full h-full object-contain"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
+          {/* 大半は運営者が館内で撮った写真で表記は不要。Commons の画像だけ出る。 */}
+          <ImageCredit
+            source={artwork.imageSource}
+            credit={artwork.imageCredit}
+            link={artwork.imageLink}
+            className="mt-1.5 text-center"
           />
-        </div>
+        </figure>
       )}
 
       <section className="rounded-xl border border-border bg-card p-5">

@@ -105,7 +105,41 @@ const TITLES_PER_REQUEST = 50;
 export async function resolveCommonsCredits(
   urls: string[],
 ): Promise<Map<string, CommonsCredit>> {
-  const result = new Map<string, CommonsCredit>();
+  const files = await lookupWikimediaFiles(urls);
+  return new Map(
+    [...files].map(([url, file]) => [url, { credit: file.credit, link: file.link }]),
+  );
+}
+
+export type WikimediaFile = CommonsCredit & {
+  /** "commons" か、ローカルファイルを持つ wiki の言語コード("en" など)。 */
+  wiki: string;
+  /** 原本の寸法。 */
+  width: number;
+  height: number;
+  /**
+   * servedWidth を渡したときだけ入る、その幅で配る URL。
+   *
+   * 原本がその幅より狭ければ原本の URL になる(Wikimedia は原本より大きい
+   * 縮小版を作らず 400 を返す)。SVG や TIFF の縮小版は .png / .jpg に
+   * 変わるので、自分で組まず API の thumburl を使う。API は
+   * thumb.wikimedia.org で返すが、既存のデータと lib/og.ts は
+   * upload.wikimedia.org/.../thumb/ の形を前提にしているので、そちらに揃える。
+   */
+  servedUrl?: string;
+};
+
+/**
+ * 画像URL(upload.wikimedia.org)ごとに、Commons(または各 wiki)のファイル
+ * 情報をまとめて引く。表記・原本の寸法と、servedWidth を渡せばその幅の URL。
+ *
+ * 引けなかった URL(Wikimedia 以外、削除済み)は Map に入らない。
+ */
+export async function lookupWikimediaFiles(
+  urls: string[],
+  servedWidth?: number,
+): Promise<Map<string, WikimediaFile>> {
+  const result = new Map<string, WikimediaFile>();
 
   // wiki ごとに「ファイル名 → そのファイルを指す URL たち」をまとめる。
   const byWiki = new Map<string, Map<string, string[]>>();
@@ -131,9 +165,10 @@ export async function resolveCommonsCredits(
         action: "query",
         format: "json",
         prop: "imageinfo",
-        iiprop: "url|extmetadata",
+        iiprop: "url|size|extmetadata",
         iiextmetadatafilter: "Artist|LicenseShortName",
         titles: chunk.map((name) => `File:${name}`).join("|"),
+        ...(servedWidth ? { iiurlwidth: String(servedWidth) } : {}),
       });
       const res = await fetch(`${api}?${query}`, {
         headers: { "User-Agent": UA },
@@ -155,11 +190,24 @@ export async function resolveCommonsCredits(
         const info = page?.imageinfo?.[0];
         const name = original.get(page?.title);
         if (!info || !name) continue;
-        const credit = {
+        const served: string | undefined = info.thumburl ?? info.url;
+        const file: WikimediaFile = {
+          wiki,
           credit: creditFromMetadata(info.extmetadata, via),
           link: String(info.descriptionurl),
+          width: Number(info.width),
+          height: Number(info.height),
+          servedUrl:
+            servedWidth && served
+              ? served
+                  .split("?")[0]
+                  .replace(
+                    /^https:\/\/thumb\.wikimedia\.org\//,
+                    "https://upload.wikimedia.org/",
+                  )
+              : undefined,
         };
-        for (const url of files.get(name) ?? []) result.set(url, credit);
+        for (const url of files.get(name) ?? []) result.set(url, file);
       }
     }
   }

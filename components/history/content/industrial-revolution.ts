@@ -101,7 +101,7 @@ const industrialRevolution: HistoryChapter = {
       id: "great-stink",
       figure: {
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/a/a2/The_silent_highwayman.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/The_silent_highwayman.jpg/960px-The_silent_highwayman.jpg",
         alt: "テムズ川を漕ぐ死神を描いた1858年の風刺画",
         caption:
           "『パンチ』誌の「沈黙の追い剥ぎ」。汚水を流し込む同じ川から、水道会社が飲料水を取っていた。",

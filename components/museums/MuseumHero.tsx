@@ -10,6 +10,7 @@ import { MapPin, Clock, Ticket, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import ImageCredit from "@/components/shared/ImageCredit";
 
 type OpeningHour = {
   dayOfWeek: string;
@@ -73,6 +74,14 @@ export default function MuseumHero({ museum }: { museum: any }) {
           </div>
         </div>
       </div>
+
+      {/* Commons の CC BY / BY-SA は作者とライセンスの表示が利用の条件。 */}
+      <ImageCredit
+        source={museum.imageSource}
+        credit={museum.imageCredit}
+        link={museum.imageLink}
+        className="mt-1.5 px-1 text-right"
+      />
 
       {/* 実務情報のバー */}
       <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">

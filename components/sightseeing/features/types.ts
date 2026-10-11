@@ -31,6 +31,13 @@ export type FeatureItem = {
   /** 本文(markdown)。詳細ページを持たない項目では、これが唯一の本文になる。 */
   mainText?: string | null;
   image?: string | null;
+  /**
+   * image の作者とライセンス(Commons の CC BY / BY-SA は表示が利用の条件)。
+   * 写真の下に ImageCredit で出す。DB のスポットの写真に落ちたときは
+   * そちらの詳細ページと /credits に表記があるので、ここは空でよい。
+   */
+  imageCredit?: string | null;
+  imageLink?: string | null;
   /** 公式サイト。外部リンクとして出す。 */
   website?: string | null;
 

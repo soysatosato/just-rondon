@@ -9,6 +9,7 @@ export default function MainFooter() {
           <Link href="/about">サイト概要</Link>
           <Link href="/terms">利用規約</Link>
           <Link href="/privacy">プライバシーポリシー</Link>
+          <Link href="/credits">画像クレジット</Link>
           <Link href="/">Top Pageへ</Link>
         </div>
 

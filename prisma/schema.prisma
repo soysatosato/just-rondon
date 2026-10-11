@@ -261,6 +261,12 @@ model Museum {
   lat            Float
   lng            Float
   image          String
+  /// 画像の出典。"commons" のとき imageCredit(作者 / ライセンス)と
+  /// imageLink(Commons のファイルページ)を ImageCredit で画像の下に出す。
+  /// CC BY / BY-SA は表記が利用の条件。scripts/fill-spot-image-credits.ts が埋める。
+  imageSource    String?
+  imageCredit    String?
+  imageLink      String?
   website        String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -311,6 +317,12 @@ model Artwork {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   image          String?
+  /// 画像の出典。"commons" のとき imageCredit(作者 / ライセンス)と
+  /// imageLink(Commons のファイルページ)を ImageCredit で画像の下に出す。
+  /// CC BY / BY-SA は表記が利用の条件。scripts/fill-spot-image-credits.ts が埋める。
+  imageSource    String?
+  imageCredit    String?
+  imageLink      String?
   room           String?
   mustSee        Boolean
   recommendLevel Int      @default(0)
@@ -759,6 +771,12 @@ model Attraction {
   lat            Float
   lng            Float
   image          String
+  /// 画像の出典。"commons" のとき imageCredit(作者 / ライセンス)と
+  /// imageLink(Commons のファイルページ)を ImageCredit で画像の下に出す。
+  /// CC BY / BY-SA は表記が利用の条件。scripts/fill-spot-image-credits.ts が埋める。
+  imageSource    String?
+  imageCredit    String?
+  imageLink      String?
   website        String?
   recommendLevel Int?     @default(0)
   createdAt      DateTime @default(now())

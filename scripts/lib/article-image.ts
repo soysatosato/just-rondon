@@ -134,7 +134,7 @@ export async function resolveArticleImage(url: string): Promise<ArticleImage> {
  * 検査すると数本目から 429 が返る。画像に問題があるわけではないので、
  * Retry-After(無ければ 2, 4, 8, 16 秒)だけ待って再試行する。
  */
-async function headWithRetry(url: string): Promise<Response> {
+export async function headWithRetry(url: string): Promise<Response> {
   for (let attempt = 0; ; attempt += 1) {
     const res = await fetch(url, { method: "HEAD", headers: { "User-Agent": UA } });
     if (res.status !== 429 || attempt >= 4) return res;

@@ -9,6 +9,9 @@ export type HPActivity = {
   summary: string | null;
   mainText: string | null;
   image: string | null;
+  /** Commons の作者とライセンス。カードの写真の下に出す。 */
+  imageCredit?: string | null;
+  imageLink?: string | null;
   website: string | null;
   sections: HPSection[];
 };
@@ -29,7 +32,9 @@ export const hpActivities: HPActivity[] = [
 また、季節限定の特別イベントも魅力です。ハロウィンには「Dark Arts」、春には「Magical Mischief」、冬には「Hogwarts in the Snow」が開催され、季節ごとに別の魔法体験が楽しめます。映画ファンでなくても十分に圧倒されるスケールで、ロンドン観光の目玉にふさわしいスポットです。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f7/Entrance_of_Warner_Bros._Studio_Tour_London_%282025%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Entrance_of_Warner_Bros._Studio_Tour_London_%282025%29.jpg/1280px-Entrance_of_Warner_Bros._Studio_Tour_London_%282025%29.jpg",
+    imageCredit: "S. Perquin / CC BY-SA 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Entrance_of_Warner_Bros._Studio_Tour_London_(2025).jpg",
     website: null,
     sections: [],
   },
@@ -49,8 +54,12 @@ export const hpActivities: HPActivity[] = [
 
 [ミュージカルの詳細はこちら](https://www.just-rondon.com/musicals/harry-potter-cursed-child)
 `,
+    // 以前は英語版 Wikipedia の公式ポスター(フェアユースの非フリー画像で、
+    // Wikipedia の外では使えない)だった。上演中のパレス劇場の外観にする。
     image:
-      "https://upload.wikimedia.org/wikipedia/en/8/87/Cursed_Child_new_poster.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Harry_Potter_and_the_Cursed_Child_sign_in_front_of_the_Palace_Theatre_-_August_2022.jpg/1280px-Harry_Potter_and_the_Cursed_Child_sign_in_front_of_the_Palace_Theatre_-_August_2022.jpg",
+    imageCredit: "Captain Galaxy / CC BY 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Harry_Potter_and_the_Cursed_Child_sign_in_front_of_the_Palace_Theatre_-_August_2022.jpg",
     website: null,
     sections: [],
   },
@@ -67,7 +76,9 @@ export const hpActivities: HPActivity[] = [
 ロンドン観光で必ず立ち寄りたい場所のひとつで、ショップの限定商品も多く、お土産選びに最適です。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/6a/Platform9.75_-_2012.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Platform9.75_-_2012.jpg/1280px-Platform9.75_-_2012.jpg",
+    imageCredit: "Colin / CC BY-SA 3.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Platform9.75_-_2012.jpg",
     website: null,
     sections: [],
   },
@@ -86,7 +97,9 @@ export const hpActivities: HPActivity[] = [
 飲食店やショップも多いため、ロケ地巡りの途中で休憩するのにも最適なスポットです。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/4/46/Leadenhall_Market_In_London_-_Feb_2006_rotated.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Leadenhall_Market_In_London_-_Feb_2006_rotated.jpg/1280px-Leadenhall_Market_In_London_-_Feb_2006_rotated.jpg",
+    imageCredit: "Diliff / CC BY 2.5, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Leadenhall_Market_In_London_-_Feb_2006_rotated.jpg",
     website: null,
     sections: [],
   },
@@ -103,7 +116,9 @@ export const hpActivities: HPActivity[] = [
 動物好きとハリポタ好きの双方に刺さる観光スポットで、ロンドン観光の定番ルートにも組み込みやすい場所にあります。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/91/Snowdon_Aviary_at_London_Zoo%2C_England-16Aug2009.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Snowdon_Aviary_at_London_Zoo%2C_England-16Aug2009.jpg/1280px-Snowdon_Aviary_at_London_Zoo%2C_England-16Aug2009.jpg",
+    imageCredit: "heena_mistry / CC BY 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Snowdon_Aviary_at_London_Zoo,_England-16Aug2009.jpg",
     website: null,
     sections: [],
   },
@@ -120,7 +135,9 @@ export const hpActivities: HPActivity[] = [
 昼間の景色はもちろん、夕暮れ時のタワーブリッジは息を呑む美しさです。映画のファンでなくても感動するロンドンの代表的ランドマークで、ハリポタ巡礼にも欠かせないスポットです。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/5/59/Tower_Bridge_at_Dawn.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tower_Bridge_at_Dawn.jpg/1280px-Tower_Bridge_at_Dawn.jpg",
+    imageCredit: "Fuzzypiggy / CC BY-SA 3.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Tower_Bridge_at_Dawn.jpg",
     website: null,
     sections: [],
   },
@@ -138,7 +155,9 @@ export const hpActivities: HPActivity[] = [
 周辺には劇場・ショップ・レストランも多く、ロンドンの中心地で魔法を感じるにはぴったりの場所です。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/0/04/Harry_Potter_sculpture_in_Leicester_Square_%2850725720988%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Harry_Potter_sculpture_in_Leicester_Square_%2850725720988%29.jpg/1280px-Harry_Potter_sculpture_in_Leicester_Square_%2850725720988%29.jpg",
+    imageCredit: "Matt Brown from London, England / CC BY 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Harry_Potter_sculpture_in_Leicester_Square_(50725720988).jpg",
     website: null,
     sections: [],
   },
@@ -155,7 +174,9 @@ export const hpActivities: HPActivity[] = [
 近隣には実際のキングス・クロス駅もあるため、ハリポタロケ地をまとめて巡るのに最適なエリアです。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/6/60/St_Pancras_Railway_Station_2012-06-23.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/St_Pancras_Railway_Station_2012-06-23.jpg/1280px-St_Pancras_Railway_Station_2012-06-23.jpg",
+    imageCredit: "Colin / CC BY-SA 3.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:St_Pancras_Railway_Station_2012-06-23.jpg",
     website: null,
     sections: [],
   },
@@ -172,7 +193,9 @@ export const hpActivities: HPActivity[] = [
 映画のワンシーンを思い出しながら歩くと、ロンドンの街がより“魔法的”に感じられる場所です。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f9/Open_Happiness_Piccadilly_Circus_Blue-Pink_Hour_120917-1126-jikatu.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Open_Happiness_Piccadilly_Circus_Blue-Pink_Hour_120917-1126-jikatu.jpg/1280px-Open_Happiness_Piccadilly_Circus_Blue-Pink_Hour_120917-1126-jikatu.jpg",
+    imageCredit: "Jimmy Baikovicius / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Open_Happiness_Piccadilly_Circus_Blue-Pink_Hour_120917-1126-jikatu.jpg",
     website: null,
     sections: [],
   },
@@ -189,7 +212,9 @@ export const hpActivities: HPActivity[] = [
 近代的で広々とした構造の駅内は、映画のワンカットを思い浮かべながら歩くだけでワクワクするスポットです。
 `,
     image:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d6/Westminster_station_entrance_Portcullis_House.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Westminster_station_entrance_Portcullis_House.JPG/1280px-Westminster_station_entrance_Portcullis_House.JPG",
+    imageCredit: "Sunil060902 / CC BY-SA 3.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Westminster_station_entrance_Portcullis_House.JPG",
     website: null,
     sections: [],
   },

@@ -7,6 +7,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ExpandableText from "@/components/card/ExpandableText";
+import ImageCredit from "@/components/shared/ImageCredit";
 import { getSpotsBySlugs } from "@/utils/areas";
 import {
   featureBreadcrumbJsonLd,
@@ -224,6 +225,9 @@ function FeatureItemBlock({
 }) {
   const facts = factLine(fact) ?? item.factsText ?? null;
   const image = item.image ?? fact?.image ?? null;
+  // 表記を持つのは特集データ側の写真だけ。DB のスポットの写真に落ちたときは
+  // 詳細ページと /credits に表記がある。
+  const credit = item.image ? item.imageCredit ?? null : null;
 
   // 詳細ページがある項目。要約と事実だけ出して送り出す。
   if (href) {
@@ -267,6 +271,13 @@ function FeatureItemBlock({
             <p className="mt-3 text-xs font-semibold text-blue-700 dark:text-blue-400">
               詳しく見る →
             </p>
+            {/* カード全体がリンクなので、表記はリンクにせず文字だけ出す。 */}
+            <ImageCredit
+              source={credit ? "commons" : null}
+              credit={credit}
+              link={null}
+              className="mt-2"
+            />
           </div>
         </Link>
       </article>
@@ -289,6 +300,12 @@ function FeatureItemBlock({
           fetchPriority="low"
         />
       )}
+      <ImageCredit
+        source={credit ? "commons" : null}
+        credit={credit}
+        link={item.imageLink ?? null}
+        className="px-4 pt-1.5 text-right sm:px-6"
+      />
       <div className="p-4 sm:p-6">
         {item.engTitle && (
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">

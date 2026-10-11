@@ -96,7 +96,7 @@ const angloSaxonsVikings: HistoryChapter = {
       id: "lundenwic",
       figure: {
         image:
-          "https://upload.wikimedia.org/wikipedia/commons/f/fa/Aldwych_street_sign.jpg",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Aldwych_street_sign.jpg/960px-Aldwych_street_sign.jpg",
         alt: "Aldwych の街路標識",
         caption:
           "ald（古い）+ wic。城壁の西にあったサクソンの交易集落の名が、通りの名として残っている。",
