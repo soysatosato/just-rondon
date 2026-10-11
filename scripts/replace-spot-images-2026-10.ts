@@ -24,6 +24,14 @@
  *    許している幅(lib/og.ts の WIKIMEDIA_THUMB_WIDTHS)に無く、400 が
  *    返って写真が出ていなかった(読み物 Content の主画像)。
  *
+ * 4. 体験型スポット28件とヴァギナ博物館の画像を Commons の写真に差し替える。
+ *    自前のストレージに置いていたが、中身は運営元のキービジュアル・宣伝用
+ *    写真・ロゴで、出どころの記録も無かった。体験そのものの写真は Commons に
+ *    ほとんど無いので、会場の建物や最寄りの通りの写真にする(シュレックと
+ *    同じ考え方)。他社のロゴが大きく写る観光バスの写真は避けた。
+ *    ミュージカル42作品のキービジュアルは運営者の判断で据え置き。
+ *    非公開の4件(各種パスとジュラシック・ワールド)は画面に出ないので触らない。
+ *
  * このあと scripts/fill-spot-image-credits.ts を流すと、差し替えた画像が
  * 1280px 版になり、作者とライセンスの表記が入る。何度流しても結果は同じ
  * (差し替え済みの行は飛ばす)。
@@ -46,6 +54,56 @@ const ATTRACTION_IMAGES: Record<string, string> = {
   "hyde-park-winter-wonderland":
     "Winter Wonderland, Hyde Park, London - geograph.org.uk - 4749324.jpg",
   "shreks-adventure-london": "County Hall London seen from Westminster Bridge.jpg",
+  // 以下、体験型スポットの宣伝用画像の差し替え(4.)
+  "cutty-sark-rig-climb-experience": "Cutty Sark rigging 2024-10-30.jpg",
+  "paddington-bear-experience":
+    "Main Block (side) of the County Hall from Belvedere Road 3.JPG",
+  "afternoon-tea-bus-london":
+    "Brigit's Bakery Afternoon Tea Sightseeing tour of London on an original Routemaster double decker London red bus in front of the London Eye. 06.jpg",
+  "taylor-swift-afternoon-tea-bus-tour":
+    "Afternoon Tea Bus - geograph.org.uk - 7768985.jpg",
+  "prehistoric-planet-london":
+    "Lewis Cubitt Square - geograph.org.uk - 7544458.jpg",
+  "the-moonwalkers-london":
+    "Lightroom and Lewis Cubitt Square - geograph.org.uk - 7544461.jpg",
+  "the-ghost-bus-tours": "Ghost bus tour, Whitehall 2025-01-08.jpg",
+  "frameless-london": "Marble Arch Place - geograph.org.uk - 7150498.jpg",
+  "moco-museum-london": "Moco Museum, London 1 Marble Arch 2024-08-14.jpg",
+  "ballie-ballerson-london": "View from Curtain Road, Shoreditch.jpg",
+  "chimney-lift-battersea-power-station":
+    "Ascent of the NW Chimney. Lift 109 Battersea Power Station - 53077581303.jpg",
+  "nye-london-eye-riverside-rooms": "London Eye - New Year 2020 Fireworks.jpg",
+  "paradox-museum-london":
+    "London , Knightsbridge - Brompton Road - geograph.org.uk - 2113186.jpg",
+  "the-charterhouse-london": "Cloisters of Charterhouse 2025-06-08.jpg",
+  "phantom-peak":
+    "Surrey Quays railway station - geograph.org.uk - 1886706.jpg",
+  "changing-the-guard-buckingham-palace":
+    "Band of the Welsh Guards, Buckingham Palace, London - Diliff.jpg",
+  "monopoly-lifesized-london":
+    "Tottenham Court Road, London (December 2023) 02.jpg",
+  "the-crystal-maze-live-experience-london":
+    "Shaftesbury Avenue, London (August 2023) 07.jpg",
+  "chelsea-winter-village": "Royal Hospital Chelsea south front.JPG",
+  "the-cauldron":
+    "Stoke Newington Road, Dalston - geograph.org.uk - 7013450.jpg",
+  "wee-toast-tours": "Regent Street, London (January 2024) 02.jpg",
+  "the-total-london-experience-tour":
+    "Palace of Westminster London 2023 01.jpg",
+  "bat-and-ball-stratford": "Westfield stratford city.jpg",
+  "gripped-london": "On Hounslow Heath - geograph.org.uk - 2798650.jpg",
+  "58th-street-london": "Rye Lane in Peckham. - geograph.org.uk - 8189377.jpg",
+  "alcotraz-immersive-prison-cocktail-experience":
+    "A1208, Hackney Road, London - geograph.org.uk - 3785788.jpg",
+  "f1-drive-london":
+    "Tottenham , Tottenham Hotspur Stadium - geograph.org.uk - 6231417.jpg",
+  "the-dare-skywalk-tottenham-hotspur-stadium":
+    "Spurs cockerel on the roof at Tottenham Hotspur Stadium 2020.jpg",
+};
+
+/** 美術館の slug → 差し替える Commons のファイル名。 */
+const MUSEUM_IMAGES: Record<string, string> = {
+  "vagina-museum": "The Vagina Museum.jpg",
 };
 
 /**
@@ -133,6 +191,24 @@ async function main() {
       // 残さないよう、ここで空にしておく。updatedAt は変えない。
       await db.$executeRaw`
         UPDATE "Attraction"
+        SET image = ${image}, "imageSource" = NULL, "imageCredit" = NULL, "imageLink" = NULL
+        WHERE id = ${row.id}`;
+    }
+  }
+
+  for (const [slug, fileName] of Object.entries(MUSEUM_IMAGES)) {
+    const row = await db.museum.findUnique({
+      where: { slug },
+      select: { id: true, image: true },
+    });
+    if (!row) throw new Error(`Museum not found: ${slug}`);
+    const current = parseWikimediaUrl(row.image)?.fileName.replace(/_/g, " ");
+    if (current === fileName) continue;
+    const image = await originalUrl(fileName);
+    console.log(`Museum/${slug}\n  ${row.image}\n  → ${image}`);
+    if (!DRY) {
+      await db.$executeRaw`
+        UPDATE "Museum"
         SET image = ${image}, "imageSource" = NULL, "imageCredit" = NULL, "imageLink" = NULL
         WHERE id = ${row.id}`;
     }

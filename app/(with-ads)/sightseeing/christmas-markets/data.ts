@@ -11,6 +11,9 @@ export type ChristmasMarket = {
   summary: string;
   mainText: string;
   image: string;
+  /** Commons の作者とライセンス。写真の下に出す。 */
+  imageCredit?: string | null;
+  imageLink?: string | null;
   website: string;
   sections: ChristmasMarketSection[];
   /**
@@ -31,8 +34,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "30万個のライトと巨大ツリー、人工雪の演出など、ロンドン随一のフォトスポットが集まる人気エリア。",
     mainText:
       "**コヴェントガーデン**は、ロンドンの中でも最も華やかで写真映えするクリスマススポット。300,000以上のライト、巨大な英国産ツリー、そして名物の巨大バウル（オーナメント）が見どころ。アップルマーケットやジュビリーマーケットはホリデー仕様になり、ホットチョコ、焼き菓子、アート作品、クラフトギフトなどが並ぶ。\n\nさらに日替わりのイベントとして、**人工雪のシャワー**、ライブパフォーマンス、カクテル実演、没入型体験などが開催され、観光客も地元民も長時間滞在したくなるエリア。クリスマス写真を撮りたいなら最優先で訪れたい場所。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/coventgarden.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Christmas_decorations_in_Covent_Garden_Market%2C_London.jpg/1280px-Christmas_decorations_in_Covent_Garden_Market%2C_London.jpg",
+    imageCredit: "The wub / CC BY-SA 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Christmas_decorations_in_Covent_Garden_Market,_London.jpg",
     website: "https://www.coventgarden.london/experience/christmas-in-covent-garden/",
     sections: [
       {
@@ -68,8 +74,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "テムズ川沿いのアルプス風シャレーとストリートフードが魅力。ロンドンで最も雰囲気の良い冬の散策スポット。",
     mainText:
       "サウスバンクは、川沿いのロケーションと温かな雰囲気で人気の高いクリスマスマーケット。アルプス風のシャレーが並び、ホットワイン、チュロス、チーズ料理、焼き菓子などが楽しめる。アート展示、ライトインスタレーション、野外イベント、パフォーマンスが同時に行われ、**食 × 芸術 × 川の景色**が混ざり合うロンドンらしいスポット。\n\n併設の**Winter Festival**では、無料ショー、ポップアップバー、屋台文化を満喫できる“Between the Bridges”なども魅力。ロンドンアイや国会議事堂にも近く、観光と合わせやすい。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/winter-cmarket.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Southbank_Christmas_market.jpg/1280px-Southbank_Christmas_market.jpg",
+    imageCredit: "Misaochan / CC BY 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Southbank_Christmas_market.jpg",
     website: "https://www.southbankcentre.co.uk/activity/winter-market/",
     sections: [
       {
@@ -105,8 +114,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "タワーブリッジの絶景を臨む、ロンドンでも最も景観の良いクリスマスマーケット。2階建てアプレスキーテラスが名物。",
     mainText:
       "**Winter by the River** は、ロンドンで最も景観が美しいと言われるクリスマスマーケット。タワーブリッジを背景に木製シャレーが並び、職人ギフト、ホリデードリンク、焼き菓子、ストリートフードが揃う。\n\n近年とくに話題なのが **The Glasshouse Terrace**。2階建てのアプレスキー風会場で、加熱された屋上テラスからは“タワーブリッジ × テムズ川 × クリスマスイルミ”という究極の景色を楽しめる。ライブ音楽、カーリングバー、Aperolバーなど大人が楽しめる要素も豊富。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/Winter-By-The-River_cm.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Hay%27s_Galleria_%28riverside%29.jpg/1280px-Hay%27s_Galleria_%28riverside%29.jpg",
+    imageCredit: "Graeme.duckworth / CC BY-SA 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Hay%27s_Galleria_(riverside).jpg",
     website:
       "https://www.londonbridgecity.co.uk/events/2025/november/winter-by-the-river-2025",
     sections: [
@@ -143,8 +155,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "約40のアルプス風シャレーが並ぶ、ロンドン中心の象徴的なクリスマスマーケット。ノルウェーから贈られる巨大ツリーとカロル歌唱が名物。",
     mainText:
       "**トラファルガー広場クリスマスマーケット**は、ロンドンの中心に位置し、ヨーロッパ的な雰囲気と賑わいを最も強く感じられる場所のひとつ。ナショナルギャラリーを背景に、約40の木製シャレーが並び、オーナメント、ノルウェー製ニット、クラシックなクリスマスギフトが揃う。フードも充実しており、ラクレット、ブラートヴルスト、ワッフル、ホットワインなど“ヨーロッパの冬の味”を楽しめる。\n\n12月9日〜23日の期間は**毎日カロルの合唱**が行われ、週末はブラスバンドも登場。フォトブースで“Elfie Selfie”が撮れるなど、大人も子どもも楽しめる仕掛けが満載。巨大ツリーは毎年ノルウェーの贈り物で、ロンドン冬の象徴となっている。混雑は避けられないが、その喧騒こそがこのマーケットの“醍醐味”。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/trafalgar-square-christmas.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Norwegian_Christmas_Tree_Trafalgar_Square_2025-12-11.jpg/1280px-Norwegian_Christmas_Tree_Trafalgar_Square_2025-12-11.jpg",
+    imageCredit: "Steve Knight / CC BY 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Norwegian_Christmas_Tree_Trafalgar_Square_2025-12-11.jpg",
     website:
       "https://www.london.gov.uk/who-we-are/city-halls-buildings-and-squares/trafalgar-square/christmas",
     sections: [
@@ -181,8 +196,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "買い物、ワークショップ、フード、ライブが融合するスタイリッシュな冬のマーケット。暖房付きキャノピーが便利。",
     mainText:
       "**キングスクロス**は複数のマーケットが集まる人気エリアで、Coal Drops Yard、Granary Square、West Handyside Canopy にそれぞれテーマ別のショップやポップアップが展開。デザイナー雑貨、アート作品、ナチュラル系ギフト、ストリートフードなど多彩な魅力が揃う。\n\n暖房完備のキャノピー内でゆっくり買い物でき、ライブ音楽、サンタ登場、クリスマスワークショップ、シネマナイトなど“イベント性”が強いのも魅力。47フィートのノルドマンモミのツリーは名物フォトスポット。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/kingscrosscm.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/At_London_2025_969.jpg/1280px-At_London_2025_969.jpg",
+    imageCredit: "Photograph by Mike Peel (www.mikepeel.net). / CC BY-SA 4.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:At_London_2025_969.jpg",
     website: "https://www.kingscross.co.uk/christmas",
     sections: [
       {
@@ -218,8 +236,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "リバーサイドの古い町並みに広がる、伝統的なヨーロッパ風マーケット。カーリングやライブ音楽も楽しめる。",
     mainText:
       "**キングストン**は、古いヨーロッパの村を思わせる雰囲気が魅力。歩行者専用の広場に木製シャレーが並び、ホットワイン、ローストホッグ、ブラートヴルスト、工芸品が揃う。ヴィンテージメリーゴーラウンドやカーリングレーンもあり、家族で楽しめる。\n\n地元のバンド、オープンマイク、キャロラーによるライブが賑やかな空気を演出し、“地域に根ざしたクリスマス感”が味わえる。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/kingston-christmas-market.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kingston-upon-Thames_-_Christmas_Market_-_geograph.org.uk_-_7671734.jpg/1280px-Kingston-upon-Thames_-_Christmas_Market_-_geograph.org.uk_-_7671734.jpg",
+    imageCredit: "Colin Smith / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Kingston-upon-Thames_-_Christmas_Market_-_geograph.org.uk_-_7671734.jpg",
     website: "https://www.kingstonchristmasmarket.co.uk/",
     sections: [
       {
@@ -257,8 +278,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "ロンドン最大のクリスマスイベント。巨大マーケット、アトラクション、アイスリンク、ショーが融合した一大テーマパーク。",
     mainText:
       "**Winter Wonderland** はクリスマスマーケットという枠を超えた巨大イベントで、ハイドパーク全体が“冬のテーマパーク”に変わる。スカンジナビア風の木製シャレーが並ぶマーケットエリアに加え、英国最大級の**屋外アイスリンク**、ジェットコースター、サンタグロット、アイスキングダムなどエンタメ要素が満載。\n\n特に人気なのは **Bavarian Village**。ライブ音楽を聴きながらブラートヴルストを食べ、ビールを飲むという“ドイツの冬祭り”が体験できる。家族連れにも夜遊びにも対応した、ロンドン冬最大の名物。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/wwl.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Hyde_Park_Winter_Wonderland_2011_-_37.jpg/1280px-Hyde_Park_Winter_Wonderland_2011_-_37.jpg",
+    imageCredit: "Garry Knight / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Hyde_Park_Winter_Wonderland_2011_-_37.jpg",
     website: "https://hydeparkwinterwonderland.com/",
     sections: [
       {
@@ -282,8 +306,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "独立系デザイナーや職人ブランドが揃う、ギフト探しに最適なマーケット。ワークショップやライブも開催。",
     mainText:
       "**スピタルフィールズ**は“ギフト品質”で選ぶならロンドン随一。独立系ショップ、デザイナーズブランド、クリエイターのクラフト作品が多く、他にはない一点物が見つかる。12月は“Shopping Lates”やライブ音楽、ワークショップなどイベントも多数。\n\n隣接する **Bishops Square** もホリデー仕様に変わり、新たなシャレーやライトインスタレーションが追加されて、エリア全体がきらめく冬のストリートに変身する。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/spitalfields-cmarket.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Old_Spitalfields_Market_%284%29_2024-12-21.jpg/1280px-Old_Spitalfields_Market_%284%29_2024-12-21.jpg",
+    imageCredit: "Andy Li / CC0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Old_Spitalfields_Market_(4)_2024-12-21.jpg",
     website:
       "https://www.spitalfields.co.uk/upcoming-events/christmas-spitalfields/",
     sections: [
@@ -320,8 +347,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "ウェストエンドの中心で楽しむにぎやかなクリスマスマーケット。スピーゲルテントと大人向けショー“LA CLIQUE”が名物。",
     mainText:
       "**レスター・スクエア**は、ロンドンの劇場街の中心に位置するクリスマスのホットスポット。木製シャレーには雑貨、ギフト、ホリデーフードが並び、夜の散策にぴったり。中心には1920年代スタイルの伝統的な**スピーゲルテント**が特設され、人気ショー *La Clique* による大人向けのキャバレー・サーカス・コメディが上演される。\n\n近年は**アイススケートリンクも設置**され、ひときわ華やかな雰囲気に。周囲の劇場と光に囲まれ、ロンドンらしい冬のナイトアウトを楽しむには最高のロケーション。混雑は避けられないが、それも含めて“ウェストエンドのクリスマスらしさ”を体験できる。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/leistersqcm.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Christmas_market_in_Leicester_Square_-_geograph.org.uk_-_7956286.jpg/960px-Christmas_market_in_Leicester_Square_-_geograph.org.uk_-_7956286.jpg",
+    imageCredit: "DS Pugh / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Christmas_market_in_Leicester_Square_-_geograph.org.uk_-_7956286.jpg",
     website:
       "https://leicestersquare.london/newsletters/christmas-in-leicester-square",
     sections: [
@@ -358,8 +388,11 @@ export const christmasMarkets: ChristmasMarket[] = [
       "ロンドン唯一のリバーサイド・アイスリンクと150以上のショップを備える巨大クリスマス会場。",
     mainText:
       "**バタシー・パワーステーション**は、テムズ川沿いに位置する再開発エリアで、冬はハイテク装飾とクリスマスイルミネーションで壮観な景色に変わる。ロンドン唯一の**リバーサイドアイスリンク**が登場し、ホリデーシーズンの人気スポットに。\n\n150以上の店舗が出店し、ハンドメイドギフト、パーソナライズド装飾、スイーツ、セラミック、ジュエリーなど幅広い。家族向けにヴィンテージ遊具、カロousel、クリスマスシネマもあり、展望アトラクション“Lift 109”から眺める冬のロンドンは圧巻。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/batterseapowerstation-christmas.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Battersea_Power_Station_Christmas_Tree_2024-12-23.jpg/1280px-Battersea_Power_Station_Christmas_Tree_2024-12-23.jpg",
+    imageCredit: "Matt Brown / CC BY 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Battersea_Power_Station_Christmas_Tree_2024-12-23.jpg",
     website: "https://batterseapowerstation.co.uk/christmas/",
     sections: [
       {

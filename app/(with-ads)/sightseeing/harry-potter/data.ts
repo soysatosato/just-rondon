@@ -232,8 +232,11 @@ export const hpActivities: HPActivity[] = [
 
 現在、この家は **Airbnb で宿泊可能** で、魔法世界の雰囲気を存分に味わえる特別な体験ができます。
 `,
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/deverehouse.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Lavenham_-_De_Vere_House.jpg/1280px-Lavenham_-_De_Vere_House.jpg",
+    imageCredit: "Martin Pettitt / CC BY 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Lavenham_-_De_Vere_House.jpg",
     website: null,
     sections: [],
   },
@@ -249,8 +252,11 @@ export const hpActivities: HPActivity[] = [
 
 大人向けの体験ではありますが、魔法の世界への没入感はハリーポッターファンにも圧倒的な人気。友達同士やカップルにもおすすめです。
 `,
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/claudron.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Stoke_Newington_Road%2C_Dalston_-_geograph.org.uk_-_7013450.jpg/1280px-Stoke_Newington_Road%2C_Dalston_-_geograph.org.uk_-_7013450.jpg",
+    imageCredit: "David Howard / CC BY-SA 2.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Stoke_Newington_Road,_Dalston_-_geograph.org.uk_-_7013450.jpg",
     website: null,
     sections: [],
   },

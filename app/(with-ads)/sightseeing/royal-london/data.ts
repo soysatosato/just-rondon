@@ -85,8 +85,11 @@ export const royalActivities: RoyalActivity[] = [
       "バッキンガム宮殿前で行われる王室警護の交代儀式。軍楽隊の生演奏とともに行進する、ロンドン観光のハイライト。",
     mainText:
       "**衛兵交代式**は、バッキンガム宮殿の前で行われる、王室警護の兵士たちの交代儀式です。現在の衛兵から新しい衛兵へと任務が引き継がれる様子が、**軍楽隊の生演奏**とともに行進形式で披露されます。\n\n観光客にとっては“無料で楽しめる王室ショー”とも言える存在で、ロンドン初訪問の人には特におすすめ。とても人気があるため、良い場所から見たい場合は早めに到着するのがポイントです。",
+    // 以前は出どころの記録が無い宣伝用の写真(消えた旧ストレージを指していて表示もされていなかった)。
     image:
-      "https://vuovopzkzwmgvlxjtykw.supabase.co/storage/v1/object/public/londonnn/Changing%20of%20the%20Guard.jpeg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Band_of_the_Welsh_Guards%2C_Buckingham_Palace%2C_London_-_Diliff.jpg/1280px-Band_of_the_Welsh_Guards%2C_Buckingham_Palace%2C_London_-_Diliff.jpg",
+    imageCredit: "Diliff / CC BY-SA 3.0, via Wikimedia Commons",
+    imageLink: "https://commons.wikimedia.org/wiki/File:Band_of_the_Welsh_Guards,_Buckingham_Palace,_London_-_Diliff.jpg",
   },
   {
     slug: "madame-tussauds-london",

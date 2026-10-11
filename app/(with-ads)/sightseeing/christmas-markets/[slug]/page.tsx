@@ -10,6 +10,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import ImageCredit from "@/components/shared/ImageCredit";
 import {
   christmasMarketBreadcrumbJsonLd,
   contentAttractionJsonLd,
@@ -121,16 +122,25 @@ export default function ChristmasMarketDetailPage({ params }: Props) {
 
       {/* ③ image */}
       {content.image && (
-        <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
-          <img
-            src={content.image}
-            alt={content.title}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            fetchPriority="low"
+        <figure>
+          <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
+            <img
+              src={content.image}
+              alt={content.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
+          </div>
+          {/* Commons の CC BY / BY-SA は作者とライセンスの表示が利用の条件。 */}
+          <ImageCredit
+            source={content.imageCredit ? "commons" : null}
+            credit={content.imageCredit ?? null}
+            link={content.imageLink ?? null}
+            className="mt-1.5 text-right"
           />
-        </div>
+        </figure>
       )}
 
       {/* ④ mainText */}

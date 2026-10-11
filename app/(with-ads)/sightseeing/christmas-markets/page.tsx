@@ -65,6 +65,8 @@ const article: FeatureArticle = {
     engTitle: item.engTitle,
     summary: item.summary,
     image: item.image,
+    imageCredit: item.imageCredit,
+    imageLink: item.imageLink,
     href: item.spotSlug
       ? `/sightseeing/${item.spotSlug}`
       : `/sightseeing/christmas-markets/${item.slug}`,

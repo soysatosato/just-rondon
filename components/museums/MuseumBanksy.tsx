@@ -258,16 +258,13 @@ export default function MuseumBanksy() {
                   <div className="grid gap-0 md:grid-cols-[minmax(0,320px)_1fr]">
                     {/* 写真 */}
                     <div className="border-b border-border bg-muted/40 p-4 md:border-b-0 md:border-r">
-                      {art.fromIG ? (
+                      {art.fromIG && art.url ? (
                         <InstagramEmbed url={art.url} reservedHeight={320} />
                       ) : (
-                        <img
-                          src={art.url}
-                          alt={`${art.name}(${art.engName})`}
-                          className="w-full rounded-lg object-cover"
-                          loading="lazy"
-                          decoding="async"
-                        />
+                        // 作品の写真はこちらで持たない(lib/banksy.ts の url)。
+                        <p className="flex min-h-[120px] items-center justify-center text-center text-xs text-muted-foreground">
+                          この作品の写真はまだありません
+                        </p>
                       )}
                     </div>
 
