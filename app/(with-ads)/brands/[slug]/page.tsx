@@ -29,6 +29,9 @@ import {
   type BrandCategory,
 } from "@/components/brands/meta";
 
+// 取得側の unstable_cache(utils/actions/brands.ts)と同じ1日。
+export const revalidate = 60 * 60 * 24;
+
 export async function generateStaticParams() {
   const slugs = await fetchBrandSlugs();
   return slugs.map((b) => ({ slug: b.slug }));

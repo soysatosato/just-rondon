@@ -14,6 +14,8 @@ import {
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+export const revalidate = 60 * 60 * 24;
+
 /**
  * 作品が1件以上ある館にだけ一覧を生やし、それ以外は 404 にする。
  *

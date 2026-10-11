@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   fetchChangeIssueBySlug,
   fetchChangeIssues,
+  fetchChangeIssueSlugs,
 } from "@/utils/actions/changes";
 import { buildPageMetadata } from "@/lib/seo";
 import { changesOgImage } from "@/lib/og";
@@ -22,6 +23,13 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { AD_SLOTS } from "@/lib/adsense";
 
 export const revalidate = 60 * 60;
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+// 下書きの号は公開後に初めて開かれたときに描く。
+export async function generateStaticParams() {
+  return fetchChangeIssueSlugs();
+}
 
 export async function generateMetadata({
   params,

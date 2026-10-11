@@ -17,6 +17,17 @@ function published() {
 
 const ITEMS = { items: { orderBy: { displayOrder: "asc" as const } } };
 
+/**
+ * 号の詳細ページの generateStaticParams 用。公開済みの号だけ。
+ * draftMode() はビルド時に呼べないので、下書きは事前に描かない。
+ */
+export const fetchChangeIssueSlugs = async () => {
+  return db.monthlyChangeIssue.findMany({
+    where: published(),
+    select: { slug: true },
+  });
+};
+
 export const fetchChangeIssueBySlug = async (slug: string) => {
   return db.monthlyChangeIssue.findFirst({
     where: { slug, ...(draftMode().isEnabled ? {} : published()) },

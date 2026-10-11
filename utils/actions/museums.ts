@@ -114,6 +114,11 @@ export const fetchKidsMuseums = async () => {
   return museums;
 };
 
+/** 館ページ(/museums/[slug])の generateStaticParams 用。 */
+export const fetchMuseumSlugs = async () => {
+  return db.museum.findMany({ select: { slug: true } });
+};
+
 export const fetchMuseumDetailsBySlug = (slug: string) => {
   return db.museum.findUnique({
     where: {

@@ -2,7 +2,10 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ShareButton from "@/components/museums/ShareButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { fetchMuseumDetailsBySlug } from "@/utils/actions/museums";
+import {
+  fetchMuseumDetailsBySlug,
+  fetchMuseumSlugs,
+} from "@/utils/actions/museums";
 import { fetchAttractionName } from "@/utils/actions/attractions";
 import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
@@ -44,6 +47,15 @@ const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   ssr: false,
   loading: () => <Skeleton className="h-[400px] w-full" />,
 });
+
+// 開館時間や展覧会は DB 側で直す。直したものが1時間以内に出るように。
+export const revalidate = 60 * 60;
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+export async function generateStaticParams() {
+  return fetchMuseumSlugs();
+}
 
 export async function generateMetadata({
   params,

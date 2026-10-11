@@ -11,6 +11,9 @@ import { areaGuideArticles } from "@/components/sightseeing/areas/content";
 import { getAreaSpots, getSpotsBySlugs } from "@/utils/areas";
 import { buildPageMetadata } from "@/lib/seo";
 
+// エリアのスポット一覧と歩く順のスポットを DB から読む。
+export const revalidate = 60 * 60 * 24;
+
 export function generateStaticParams() {
   return areaGuideSlugs.map((slug) => ({ slug }));
 }

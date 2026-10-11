@@ -8,6 +8,7 @@ import {
   fetchCurrentBriefs,
   fetchBackIssues,
   fetchEventsForWeek,
+  fetchBriefSlugs,
 } from "@/utils/actions/weekly";
 import { buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
@@ -37,6 +38,12 @@ export const revalidate = 60 * 60;
 async function isShownOnEventsPage(slug: string): Promise<boolean> {
   const { brief } = await fetchCurrentBriefs();
   return brief?.slug === slug;
+}
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+export async function generateStaticParams() {
+  return fetchBriefSlugs();
 }
 
 export async function generateMetadata({

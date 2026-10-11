@@ -10,6 +10,7 @@ import {
   fetchAttractionDetails,
   fetchNearbyAttractions,
   fetchRandomAttractionsByCategory,
+  fetchAttractionSlugs,
 } from "@/utils/actions/attractions";
 import { fetchMuseumIDandName } from "@/utils/actions/museums";
 import { museumSlugForAttraction } from "@/lib/museum-attraction-pairs";
@@ -58,6 +59,12 @@ import { GUARD_SLUG, fetchGuardSchedule } from "@/lib/guard/schedule";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
 import TimeRouteDigest from "@/components/time-routes/TimeRouteDigest";
 import { timeRouteForAttraction } from "@/lib/time-routes";
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+export async function generateStaticParams() {
+  return fetchAttractionSlugs();
+}
 
 export async function generateMetadata({
   params,

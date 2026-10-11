@@ -15,6 +15,8 @@ import remarkGfm from "remark-gfm";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import JsonLd from "@/components/seo/JsonLd";
 
+export const revalidate = 60 * 60 * 24;
+
 // 本文が歌詞の全文なので、SONGS_PUBLISHED が false の間は全曲 404。
 // notFound() ではなく dynamicParams で弾く理由は ../page.tsx を参照。
 export async function generateStaticParams() {

@@ -38,6 +38,14 @@ export const fetchCurrentBriefs = async () => {
   return { brief: latest, upcoming: null };
 };
 
+/** 号の詳細ページ(/events/week/[slug])の generateStaticParams 用。 */
+export const fetchBriefSlugs = async () => {
+  return db.weeklyBrief.findMany({
+    where: { published: true },
+    select: { slug: true },
+  });
+};
+
 export const fetchBriefBySlug = async (slug: string) => {
   return db.weeklyBrief.findFirst({
     where: { slug, published: true },

@@ -132,6 +132,11 @@ export const fetchMusicals = async ({
   return { musicals, total };
 };
 
+/** 作品ページ(/musicals/[slug])の generateStaticParams 用。 */
+export const fetchMusicalSlugs = async () => {
+  return db.musical.findMany({ select: { slug: true } });
+};
+
 export const fetchMusicalDetails = async (slug: string) => {
   const musical = await db.musical.findUnique({
     where: { slug },

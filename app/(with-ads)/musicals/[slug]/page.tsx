@@ -8,6 +8,7 @@ import {
   fetchMusicalDetails,
   fetchMusicalIdandName,
   fetchMusicalPerformances,
+  fetchMusicalSlugs,
 } from "@/utils/actions/musicals";
 import MusicalSchedule from "@/components/musicals/MusicalSchedule";
 import MusicalSceneDescription from "@/components/musicals/MusicalSceneDescription";
@@ -46,6 +47,15 @@ const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
 //   () => import("@/components/bookings/BookingWrapper"),
 //   { ssr: false, loading: () => <Skeleton className=" h-[200px] w-full" /> }
 // );
+
+// 公演日程は scripts/sync-musical-performances.ts が DB に書き足す。
+export const revalidate = 60 * 60;
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+export async function generateStaticParams() {
+  return fetchMusicalSlugs();
+}
 
 export async function generateMetadata({
   params,

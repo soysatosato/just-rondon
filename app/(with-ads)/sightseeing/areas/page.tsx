@@ -30,6 +30,9 @@ const TITLE = "ロンドンのエリアガイド｜街区ごとに半日で歩�
 const DESCRIPTION =
   "ロンドンをスポット単位ではなく街区単位で歩くためのガイド。ウェストミンスター、ソーホー、サウスバンク、シティ、ショーディッチ、グリニッジの6エリアについて、半日の回遊ルート、最寄駅、所要時間、曜日ごとの違いをまとめています。";
 
+// エリアごとのスポット数を DB から数える。
+export const revalidate = 60 * 60 * 24;
+
 export const metadata = buildPageMetadata({
   path: AREAS_BASE,
   title: TITLE,

@@ -18,6 +18,9 @@ import {
   dishPath,
 } from "@/components/restaurants/meta";
 
+// 取得側の unstable_cache(utils/actions/dishes.ts)と同じ1日。
+export const revalidate = 60 * 60 * 24;
+
 export async function generateStaticParams() {
   const slugs = await fetchDishSlugs();
   return slugs.map((d) => ({ slug: d.slug }));

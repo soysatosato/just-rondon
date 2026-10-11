@@ -5,6 +5,9 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
+// 2025年の記録で、もう書き足さない。
+export const revalidate = 60 * 60 * 24;
+
 export const metadata = buildPageMetadata({
   path: "/events/archive/2025",
   title: "ロンドンイベントカレンダー 2025年アーカイブ | 月別の祭り・マーケット・季節の行事",

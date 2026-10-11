@@ -28,6 +28,9 @@ import {
   type SouvenirCategory,
 } from "@/components/souvenirs/categories";
 
+// 取得側の unstable_cache(utils/actions/souvenirs.ts)と同じ1日。
+export const revalidate = 60 * 60 * 24;
+
 export async function generateStaticParams() {
   const slugs = await fetchSouvenirSlugs();
   return slugs.map((s) => ({ slug: s.slug }));

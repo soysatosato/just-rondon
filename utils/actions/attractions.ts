@@ -38,6 +38,14 @@ export const fetchAttractions = async ({
   return { attractions, total };
 };
 
+/** 詳細ページの generateStaticParams 用。条件は fetchAttractionDetails と揃える。 */
+export const fetchAttractionSlugs = async () => {
+  return db.attraction.findMany({
+    where: { isPublished: true },
+    select: { slug: true },
+  });
+};
+
 export const fetchAttractionDetails = async (slug: string) => {
   const attraction = await db.attraction.findFirst({
     // 非公開(終了した期間限定の催し等)は詳細ページも出さない。

@@ -24,6 +24,9 @@ const TITLE = "ロンドンのお土産｜本当に喜ばれる定番と、渡�
 const DESCRIPTION =
   "ロンドンで買えるお土産を、紅茶・お菓子・食品・コスメ・雑貨のカテゴリ別にまとめました。価格の目安と買える場所、渡す相手ごとの向き不向きまで具体的に紹介します。スーパーで数百円のばらまき用から、フォートナム&メイソンの缶のような特別な一品まで。";
 
+// 取得側の unstable_cache(utils/actions/souvenirs.ts)と同じ1日。
+export const revalidate = 60 * 60 * 24;
+
 export const metadata = buildPageMetadata({
   path: SOUVENIR_BASE,
   title: TITLE,

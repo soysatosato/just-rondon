@@ -13,6 +13,9 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+// 公演中の作品とランキングは DB 側で動く。
+export const revalidate = 60 * 60;
+
 export const metadata = buildPageMetadata({
   path: "/musicals",
   title: "ロンドン観光・ミュージカル・劇場・シアターガイド | ジャスト・ロンドン",

@@ -46,6 +46,21 @@ function visibleWhere() {
   return draftMode().isEnabled ? {} : publishedWhere();
 }
 
+/**
+ * 読み物の詳細ページの generateStaticParams 用。公開済みの slug だけを返す。
+ *
+ * visibleWhere() は使えない。draftMode() はリクエストの中でしか呼べず、
+ * ビルド時に走る generateStaticParams にはリクエストが無い。下書きと
+ * 予約中の記事はここで事前に描かず、公開後に初めて開かれたときに描いて
+ * キャッシュする(dynamicParams は既定の true のまま)。
+ */
+export const fetchPublishedReadingSlugs = async (category: ReadingCategory) => {
+  return db.content.findMany({
+    where: { category, ...publishedWhere() },
+    select: { slug: true },
+  });
+};
+
 export const fetchColumns = async () => {
   const contents = await db.content.findMany({
     where: { category: "column", ...publishedWhere() },

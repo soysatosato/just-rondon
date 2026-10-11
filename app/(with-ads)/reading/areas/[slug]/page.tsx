@@ -5,6 +5,7 @@ import {
   fetchAdjacentContents,
   fetchAreaBySlug,
   fetchContentAttractions,
+  fetchPublishedReadingSlugs,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
 import { areaOgImage } from "@/lib/og";
@@ -27,6 +28,13 @@ interface Props {
   URL とコードは生かしたままなので、再開するときはこの noindex を外し、
   上記5か所に導線を戻すだけでよい(記事は DB に残っている)。
 */
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+// 下書き・予約中の記事は公開後に初めて開かれたときに描く。
+export async function generateStaticParams() {
+  return fetchPublishedReadingSlugs("area");
+}
+
 export async function generateMetadata({ params }: Props) {
   const content = await fetchAreaBySlug(params.slug);
 

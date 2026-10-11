@@ -15,6 +15,8 @@ import Image from "next/image";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import JsonLd from "@/components/seo/JsonLd";
 
+export const revalidate = 60 * 60 * 24;
+
 /**
  * 一覧を生やす作品は lib/musicals/song-pages.js の hasSongList が決める。
  * 曲が無い作品と、SONGS_PUBLISHED が false の間は全作品が 404 になる。

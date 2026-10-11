@@ -39,6 +39,9 @@ const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
   loading: () => <Skeleton className="h-[400px] w-full" />,
 });
 
+// 公演日程は scripts/sync-musical-performances.ts が DB に書き足す。
+export const revalidate = 60 * 60;
+
 export async function generateStaticParams() {
   const theatres = await fetchTheatreSlugs();
   return theatres.map((t) => ({ slug: t.slug }));

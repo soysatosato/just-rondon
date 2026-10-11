@@ -44,6 +44,9 @@ const TITLE = "ロンドンのレストラン｜料理別に店を選ぶガイ�
 const DESCRIPTION =
   "アフタヌーンティー、フィッシュ&チップス、サンデーロースト、イングリッシュ・ブレックファスト、インドカレー、パイ&マッシュ、ラーメン、日本食、中華。料理ごとにまとめ、それぞれどの店で食べるべきかを紹介します。予約の要否、価格帯、最寄り駅つき。";
 
+// 取得側の unstable_cache(utils/actions/dishes.ts)と同じ1日。
+export const revalidate = 60 * 60 * 24;
+
 export const metadata = buildPageMetadata({
   path: RESTAURANT_BASE,
   title: TITLE,

@@ -6,7 +6,10 @@ import { Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { fetchMonthlyEvents2025 } from "@/utils/actions/contents";
+import {
+  fetchEvents2025,
+  fetchMonthlyEvents2025,
+} from "@/utils/actions/contents";
 import { buildPageMetadata } from "@/lib/seo";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -17,6 +20,16 @@ import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
+
+// 2025年の記録で、もう書き足さない。
+export const revalidate = 60 * 60 * 24;
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+export async function generateStaticParams() {
+  const contents = await fetchEvents2025();
+  return contents.map(({ slug }) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,

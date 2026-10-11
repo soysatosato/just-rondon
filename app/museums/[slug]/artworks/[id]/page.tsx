@@ -18,6 +18,16 @@ import {
 } from "@/components/museums/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
+export const revalidate = 60 * 60 * 24;
+
+// 作品は数百件あり、どれも noindex なのでビルド時には描かない。それでも
+// generateStaticParams は置く。Next 14 ではこれが無い動的ルートは ISR の
+// キャッシュに載らず毎回描画になるが、空配列を返すだけで、初めて開かれた
+// ときに描いて残す扱いになる。
+export function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({
   params,
 }: {

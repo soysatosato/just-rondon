@@ -9,6 +9,9 @@ import {
 } from "@/components/sightseeing/guides/itinerary-variants";
 import { buildPageMetadata } from "@/lib/seo";
 
+// スポットのカード(GuideAttractionCards)が料金・営業時間を DB から読む。
+export const revalidate = 60 * 60 * 24;
+
 export function generateStaticParams() {
   return itineraryVariantSlugs.map((slug) => ({ slug }));
 }

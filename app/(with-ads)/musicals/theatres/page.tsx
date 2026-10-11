@@ -15,6 +15,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 
+// 劇場ごとの上演作品は DB 側で動く。
+export const revalidate = 60 * 60;
+
 export const metadata: Metadata = buildPageMetadata({
   path: THEATRES_BASE,
   title: "ロンドン・ウエストエンドの劇場ガイド｜アクセス・座席・上演作品",

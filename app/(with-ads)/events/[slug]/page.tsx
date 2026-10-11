@@ -11,7 +11,12 @@ import {
 } from "@/utils/actions/months";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import { londonDate } from "@/lib/publish-schedule";
-import { eventMonthPath, getSeasonMeta, parseEventMonth } from "@/lib/events";
+import {
+  EVENT_MONTH_NAMES,
+  eventMonthPath,
+  getSeasonMeta,
+  parseEventMonth,
+} from "@/lib/events";
 import { getDisplayYear } from "@/lib/london-months/year";
 import {
   CLIMATE_SOURCES,
@@ -26,7 +31,12 @@ import {
 } from "@/lib/london-months/sun";
 import { BANK_HOLIDAY_SOURCE, getMonthDays } from "@/lib/london-months/holidays";
 import { getMonthGuide } from "@/lib/london-months/content";
-import { getEventGuide, guideForEventTitle, eventGuidePath } from "@/lib/annual-events";
+import {
+  allEventGuides,
+  getEventGuide,
+  guideForEventTitle,
+  eventGuidePath,
+} from "@/lib/annual-events";
 import { buildEventGuideMetadata } from "@/lib/annual-events/seo";
 import { months as travelTipsMonths } from "@/components/sightseeing/guides/travel-tips/content";
 import { SIGHTSEEING_PUBLISHER } from "@/components/sightseeing/jsonld";
@@ -123,6 +133,16 @@ function EventGrid({
 function generatedWeather(month: number): string {
   const climate = getLondonClimate(month);
   return `平年値は最高${Math.round(climate.maxTemp)}℃・最低${Math.round(climate.minTemp)}℃で、東京の${tokyoEquivalentMonth(month)}月ごろの気温です。1mm以上の雨が降るのは月${Math.round(climate.rainDays)}日ほど、日照は月${Math.round(climate.sunshineHours)}時間です。`;
+}
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+// 月名12本と年中行事ガイド。どちらもコードの中に一覧がある。
+export function generateStaticParams() {
+  return [
+    ...EVENT_MONTH_NAMES.map((slug) => ({ slug })),
+    ...allEventGuides().map(({ slug }) => ({ slug })),
+  ];
 }
 
 export async function generateMetadata({

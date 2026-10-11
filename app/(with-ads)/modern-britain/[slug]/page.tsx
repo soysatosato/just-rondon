@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   fetchAdjacentContents,
   fetchModernBritainBySlug,
+  fetchPublishedReadingSlugs,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
 import { modernBritainOgImage } from "@/lib/og";
@@ -22,6 +23,13 @@ interface Props {
   params: {
     slug: string;
   };
+}
+
+// ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
+// ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
+// 下書き・予約中の記事は公開後に初めて開かれたときに描く。
+export async function generateStaticParams() {
+  return fetchPublishedReadingSlugs("modern-britain");
 }
 
 export async function generateMetadata({ params }: Props) {

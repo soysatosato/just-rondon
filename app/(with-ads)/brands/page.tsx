@@ -22,6 +22,9 @@ const TITLE = "イギリスのブランド｜ロンドンで買う価値があ�
 const DESCRIPTION =
   "バーバリー、バブアー、ドクターマーチン、ウェッジウッドなど、イギリス発のブランドをカテゴリ別にまとめました。創業の経緯と定番品が生まれた背景、ロンドンのどこで買えるか、日本との価格差まで具体的に紹介します。";
 
+// 取得側の unstable_cache(utils/actions/brands.ts)と同じ1日。
+export const revalidate = 60 * 60 * 24;
+
 export const metadata = buildPageMetadata({
   path: BRAND_BASE,
   title: TITLE,

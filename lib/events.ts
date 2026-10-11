@@ -58,6 +58,9 @@ export function parseEventMonth(segment: string): number | null {
     : null;
 }
 
+/** 月別ページの URL に使う月名12個("january" … "december")。 */
+export const EVENT_MONTH_NAMES = Object.keys(MONTH_NAME_TO_NUMBER);
+
 export function getSeason(monthNumber: number): Season {
   if (monthNumber >= 3 && monthNumber <= 5) return "spring";
   if (monthNumber >= 6 && monthNumber <= 8) return "summer";
