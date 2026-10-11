@@ -13,9 +13,15 @@ import { auth } from "@clerk/nextjs/server";
  *
  * ページを開くときだけでなく、サーバーアクションの1回ごとにも呼ぶこと。
  * アクションは画面を通さず直接呼べる。
+ *
+ * ★ 必ず await すること。`if (!isAdminSession())` は Promise を否定するので
+ *   常に false になり、誰でも通る。しかも tsc はこの形をエラーにしない
+ *   (`if (p)` と `p && …` は TS2801 で弾くが、`!p` は素通りする)。
+ *   Clerk v6 で auth() が非同期になったとき、同期版の isAdmin から名前を
+ *   変えたのは、古い呼び出しを残らずコンパイルエラーにして洗い出すため。
  */
-export function isAdmin(): boolean {
-  const { userId } = auth();
+export async function isAdminSession(): Promise<boolean> {
+  const { userId } = await auth();
   if (!userId) return false;
   return isAdminId(userId);
 }
@@ -24,7 +30,7 @@ export function isAdmin(): boolean {
  * その Clerk ユーザー ID が運営者のものか。
  *
  * ログインしている本人ではなく、渡された ID を見る。権限の判定には
- * isAdmin を使うこと——こちらは「運営者自身の登録を通知しない」のように、
+ * isAdminSession を使うこと——こちらは「運営者自身の登録を通知しない」のように、
  * 処理の対象が誰かを見分けるためのもの。
  */
 export function isAdminId(clerkId: string): boolean {

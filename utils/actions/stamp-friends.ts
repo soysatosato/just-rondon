@@ -45,7 +45,7 @@ export type CreateInviteActionResult =
  * URL を配ってしまわないように)。
  */
 export async function createStampInviteAction(): Promise<CreateInviteActionResult> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
 
   try {
@@ -69,7 +69,7 @@ export type AcceptInviteActionResult =
 export async function acceptStampInviteAction(
   token: unknown,
 ): Promise<AcceptInviteActionResult> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
   if (typeof token !== "string") {
     return { ok: false, error: "この招待リンクは使えません" };
@@ -101,7 +101,7 @@ export async function acceptStampInviteAction(
 export async function unlinkStampFriendAction(
   friendId: unknown,
 ): Promise<{ ok: true } | Failure> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
   if (typeof friendId !== "string" || friendId.length === 0 || friendId.length > 64) {
     return { ok: false, error: "解除する相手が見つかりません" };

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import db from "../db";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import {
   SCHEDULE_RULES,
   formatJst,
@@ -35,7 +35,7 @@ export type AdminActionState = { ok: boolean; message: string } | null;
 const NOT_FOUND = { ok: false, message: "対象の記事が見つかりません。" };
 
 async function loadTarget(formData: FormData) {
-  if (!isAdmin()) return null;
+  if (!(await isAdminSession())) return null;
   const id = String(formData.get("id") ?? "");
   if (!id) return null;
   const row = await db.content.findUnique({
@@ -153,7 +153,7 @@ export async function publishChangeIssue(
   _prev: AdminActionState,
   formData: FormData,
 ): Promise<AdminActionState> {
-  if (!isAdmin()) return NOT_FOUND;
+  if (!(await isAdminSession())) return NOT_FOUND;
   const id = String(formData.get("id") ?? "");
   if (!id) return NOT_FOUND;
 

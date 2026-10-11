@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import type { CommentTargetType } from "@prisma/client";
 import db from "../db";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import {
   COMMENT_MAX_CONTENT,
   OFFICIAL_AUTHOR,
@@ -38,7 +38,7 @@ const TARGET_SELECT = {
  * アクションは画面を通さず直接呼べるので、操作のたびに確かめる。
  */
 async function loadTarget(formData: FormData) {
-  if (!isAdmin()) return null;
+  if (!(await isAdminSession())) return null;
   const id = String(formData.get("id") ?? "");
   if (!id) return null;
   return db.pageComment.findUnique({ where: { id }, select: TARGET_SELECT });

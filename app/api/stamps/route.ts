@@ -115,7 +115,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "対象が不正です" }, { status: 400 });
   }
 
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ signedIn: false, stamped: false });
   }
@@ -144,7 +144,7 @@ export async function GET(req: NextRequest) {
  * 赤いスタンプを現地で金に上げるため。金から赤へは下げない。
  */
 export async function POST(req: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return unauthorized();
 
   let body: unknown;
@@ -278,7 +278,7 @@ export async function POST(req: NextRequest) {
  * スタンプ帳が「行っていない場所」を含んだまま残り、記録として信用できなくなる。
  */
 export async function DELETE(req: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return unauthorized();
 
   const target = readTarget(

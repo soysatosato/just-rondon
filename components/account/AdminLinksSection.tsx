@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /**
- * /account の運営者欄。運営者(lib/admin.ts の isAdmin)のときだけ出す。
+ * /account の運営者欄。運営者(lib/admin.ts の isAdminSession)のときだけ出す。
  *
  * 管理ページはナビに載せていない。記事ページは全員に同じ HTML を返して
  * いるので、運営者かどうかを混ぜられないため。/account はログイン状態を

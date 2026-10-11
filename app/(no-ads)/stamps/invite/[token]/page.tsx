@@ -35,7 +35,7 @@ export default async function InvitePage({
 }: {
   params: { token: string };
 }) {
-  const { userId } = auth();
+  const { userId } = await auth();
   const invite = await findInvite(params.token);
 
   if (!invite) return <InviteGone />;

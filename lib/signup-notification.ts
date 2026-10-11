@@ -103,7 +103,7 @@ async function send(
   trigger: ProfileTrigger,
 ): Promise<void> {
   const [user, total, how] = await Promise.all([
-    clerkClient().users.getUser(clerkId),
+    clerkClient().then((client) => client.users.getUser(clerkId)),
     db.profile.count(),
     triggerLabel(trigger),
   ]);

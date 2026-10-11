@@ -20,7 +20,7 @@ export const metadata = noindexMetadata("スタンプ帳");
  * (と自動で付く名前)もここで作られることが多い(lib/profile.ts)。
  */
 export default async function StampsPage() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) return <StampBookIntro />;
 

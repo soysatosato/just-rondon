@@ -4,7 +4,7 @@ import AdminLinksSection from "@/components/account/AdminLinksSection";
 import DeleteAccountSection from "@/components/account/DeleteAccountSection";
 import LoginMethodsSection from "@/components/account/LoginMethodsSection";
 import UsernameSection from "@/components/account/UsernameSection";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import { toLoginMethods } from "@/lib/login-methods";
 import { ensureProfile } from "@/lib/profile";
 import { noindexMetadata } from "@/lib/seo";
@@ -25,15 +25,16 @@ export const metadata = noindexMetadata("アカウント設定");
  * モーダルはモバイルのメニュー(シート)の中では押せない(理由は AuthMenu)。
  */
 export default async function AccountPage() {
-  const { userId, redirectToSignIn } = auth();
+  const { userId, redirectToSignIn } = await auth();
 
   // リンクはログイン中の人にしか出さないので、未ログインで来るのは
   // ログアウト後に「戻る」を押したときくらい。ログインしたらここに戻す。
   if (!userId) return redirectToSignIn();
 
-  const [profile, user] = await Promise.all([
+  const [profile, user, admin] = await Promise.all([
     ensureProfile(userId, { kind: "account" }),
     currentUser(),
+    isAdminSession(),
   ]);
   if (!user) return redirectToSignIn();
 
@@ -41,7 +42,7 @@ export default async function AccountPage() {
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 py-10">
       <h1 className="text-2xl font-semibold">アカウント設定</h1>
 
-      {isAdmin() && <AdminLinksSection />}
+      {admin && <AdminLinksSection />}
 
       <UsernameSection initialUsername={profile.username} />
 

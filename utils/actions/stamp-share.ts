@@ -29,7 +29,7 @@ export type ShioriLinkActionResult = { ok: true; path: string } | Failure;
 
 /** しおりを公開する。もう公開していれば、同じリンクを返す。 */
 export async function publishShioriAction(): Promise<ShioriLinkActionResult> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
 
   try {
@@ -44,7 +44,7 @@ export async function publishShioriAction(): Promise<ShioriLinkActionResult> {
 
 /** リンクを作り直す。前のリンクは開けなくなる。 */
 export async function regenerateShioriAction(): Promise<ShioriLinkActionResult> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
 
   try {
@@ -59,7 +59,7 @@ export async function regenerateShioriAction(): Promise<ShioriLinkActionResult> 
 
 /** 公開をやめる。 */
 export async function unpublishShioriAction(): Promise<{ ok: true } | Failure> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
 
   try {

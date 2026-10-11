@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import db from "@/utils/db";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import { noindexMetadata } from "@/lib/seo";
 import {
   SCHEDULE_RULES,
@@ -107,7 +107,7 @@ function When({ at }: { at: Date }) {
  * 運営者以外には404を返す(ページがあることも知らせない)。
  */
 export default async function ReadingAdminPage() {
-  if (!isAdmin()) notFound();
+  if (!(await isAdminSession())) notFound();
 
   const now = new Date();
   const category = { in: SCHEDULED_CATEGORIES };

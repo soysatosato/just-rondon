@@ -77,7 +77,7 @@ async function create(
  * 普段は来ないが、ログアウトと行き違ったときにコンソールを汚さない。
  */
 export async function GET() {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ signedIn: false, plan: null });
 
   const plan = await db.tripPlan.findUnique({
@@ -95,7 +95,7 @@ export async function GET() {
  * 進んでいたら書かずに 409 といまの中身を返す。
  */
 export async function PUT(req: NextRequest) {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return unauthorized();
 
   let body: unknown;

@@ -41,7 +41,7 @@ export default async function TogetherPage({
 }: {
   searchParams: { with?: string | string[] };
 }) {
-  const { userId, redirectToSignIn } = auth();
+  const { userId, redirectToSignIn } = await auth();
   if (!userId) return redirectToSignIn();
 
   const [profile, friends] = await Promise.all([

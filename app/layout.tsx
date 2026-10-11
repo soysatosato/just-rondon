@@ -27,9 +27,16 @@ export default function RootLayout({
   return (
     /*
       ログイン状態はクライアント側で解決する。dynamic を渡していないので
-      ClerkProvider はページを動的描画に落とさず、記事ページは今までどおり
+      ClerkProvider はページを動的描画に落とさず、記事ページは
       ISR のキャッシュから返る。サーバー側でログイン状態を見るのは
       middleware.ts の matcher に挙げたページだけ。
+
+      これが成り立つのは @clerk/nextjs v6 以降。v5 の ClerkProvider は
+      dynamic の有無に関係なく毎回 headers() を読むので、ここに置くだけで
+      全ページが動的描画になる。2026-09-21 にここへ入れてから v6 に
+      上げるまでの間、全ページが cache-control: private, no-store で
+      返り、記事の本文は loading.tsx の骨組みの後ろ(<div hidden>)に
+      流し込まれていた。dynamic を渡す・v5 に戻す、はどちらも同じことになる。
 
       localization に jaJP を渡しているのは、サインイン画面の文言が
       英語のままだと、日本語で書かれたサイトの中で Clerk の画面だけが

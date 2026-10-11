@@ -30,7 +30,7 @@ function revalidateUsernamePages() {
 export async function updateUsernameAction(
   input: unknown,
 ): Promise<UsernameResult> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
   if (typeof input !== "string") {
     return { ok: false, error: "ユーザーネームを入力してください" };
@@ -47,7 +47,7 @@ export async function updateUsernameAction(
 }
 
 export async function rerollUsernameAction(): Promise<UsernameResult> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
 
   try {
@@ -74,12 +74,13 @@ export async function rerollUsernameAction(): Promise<UsernameResult> {
  * もう一度押せば消せる。
  */
 export async function deleteAccountAction(): Promise<{ ok: true } | Failure> {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) return SIGNED_OUT;
 
   try {
     await deleteProfile(userId);
-    await clerkClient().users.deleteUser(userId);
+    const client = await clerkClient();
+    await client.users.deleteUser(userId);
     return { ok: true };
   } catch (error) {
     console.error("deleteAccountAction", error);

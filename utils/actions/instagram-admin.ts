@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import db from "../db";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import { formatIgSlot, igSlotFor, nextIgSlot } from "@/lib/instagram/schedule";
 import type { AdminActionState } from "./reading-admin";
 
@@ -24,7 +24,7 @@ import type { AdminActionState } from "./reading-admin";
 const NOT_FOUND = { ok: false, message: "対象の投稿が見つかりません。" };
 
 async function loadPost(formData: FormData) {
-  if (!isAdmin()) return null;
+  if (!(await isAdminSession())) return null;
   const id = String(formData.get("id") ?? "");
   if (!id) return null;
   return db.instagramPost.findUnique({

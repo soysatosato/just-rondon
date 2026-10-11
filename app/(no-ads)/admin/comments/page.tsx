@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Prisma } from "@prisma/client";
 import db from "@/utils/db";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import { noindexMetadata } from "@/lib/seo";
 import { formatJst } from "@/lib/publish-schedule";
 import { TARGET_LABEL, resolvePaths } from "@/lib/comments";
@@ -55,7 +55,7 @@ export default async function CommentsAdminPage({
 }: {
   searchParams: { filter?: string };
 }) {
-  if (!isAdmin()) notFound();
+  if (!(await isAdminSession())) notFound();
 
   const filter: Filter = isFilter(searchParams.filter)
     ? searchParams.filter

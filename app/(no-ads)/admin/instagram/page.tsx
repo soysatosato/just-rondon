@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import db from "@/utils/db";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import { noindexMetadata } from "@/lib/seo";
 import { isIgCategory, type IgCategory } from "@/lib/instagram/limits";
 import {
@@ -260,7 +260,7 @@ function Section({
  * 運営者以外には404を返す。
  */
 export default async function InstagramAdminPage() {
-  if (!isAdmin()) notFound();
+  if (!(await isAdminSession())) notFound();
 
   const now = new Date();
   const ig = { content: { category: { in: ["column", "british-english"] } } };

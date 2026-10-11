@@ -23,8 +23,8 @@
     "fill-hotel-travel-times": "tsx scripts/fill-hotel-travel-times.ts"
   },
   "dependencies": {
-    "@clerk/localizations": "^4.17.1",
-    "@clerk/nextjs": "^5.0.1",
+    "@clerk/localizations": "^3.37.9",
+    "@clerk/nextjs": "^6.39.7",
     "@headlessui/react": "^2.2.7",
     "@next/third-parties": "^14.2.30",
     "@prisma/client": "^5.22.0",

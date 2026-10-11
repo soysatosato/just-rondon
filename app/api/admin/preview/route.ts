@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { draftMode } from "next/headers";
-import { isAdmin } from "@/lib/admin";
+import { isAdminSession } from "@/lib/admin";
 import { SCHEDULED_CATEGORIES } from "@/lib/publish-schedule";
 
 /**
@@ -17,8 +17,8 @@ const PREVIEW_PATH = new RegExp(
   `^/(${SCHEDULED_CATEGORIES.join("|")})/[a-z0-9-]+$|^/changes/\\d{4}-\\d{2}$`,
 );
 
-export function GET(req: NextRequest) {
-  if (!isAdmin()) return new NextResponse(null, { status: 404 });
+export async function GET(req: NextRequest) {
+  if (!(await isAdminSession())) return new NextResponse(null, { status: 404 });
 
   const path = req.nextUrl.searchParams.get("path") ?? "";
   if (!PREVIEW_PATH.test(path)) {
