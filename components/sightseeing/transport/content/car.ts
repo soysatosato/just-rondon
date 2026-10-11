@@ -165,7 +165,7 @@ const car: TransportGuideArticle = {
 
 ### ULEZ（超低排出ゾーン）
 
-**排ガス基準を満たさない車両**に課される料金です。Congestion Charge と違い、**ロンドン全域**（M25 の内側、M25 自体は含まない）で、**${DRIVING.ulezHours}**課金されます。
+**排ガス基準を満たさない車両**に課される料金です。Congestion Charge と違い、**ロンドン全域**（M25 の内側、M25 自体は含まない）で、**${DRIVING.ulezHours}** 課金されます。
 
 | 項目 | 内容 |
 |---|---|
@@ -385,7 +385,7 @@ const car: TransportGuideArticle = {
     },
     {
       question: "ULEZ は必ずかかりますか？",
-      answer: `**いいえ。排ガス基準を満たしていれば1ペンスもかかりません。**基準はガソリン車で${DRIVING.ulezPetrolStandard}、ディーゼル車で${DRIVING.ulezDieselStandard}、バイクで${DRIVING.ulezMotorcycleStandard}です。満たさない車両は**ロンドン全域で${DRIVING.ulezHours}、1日 ${gbp(DRIVING.ulezDaily)}** かかります。中古車を買う前に、TfL のサイトで登録番号を入力して必ず判定を確認してください。`,
+      answer: `**いいえ。排ガス基準を満たしていれば1ペンスもかかりません**。基準はガソリン車で${DRIVING.ulezPetrolStandard}、ディーゼル車で${DRIVING.ulezDieselStandard}、バイクで${DRIVING.ulezMotorcycleStandard}です。満たさない車両は**ロンドン全域で${DRIVING.ulezHours}、1日 ${gbp(DRIVING.ulezDaily)}** かかります。中古車を買う前に、TfL のサイトで登録番号を入力して必ず判定を確認してください。`,
     },
     {
       question: "ロンドンで車を持つと年間いくらかかりますか？",

@@ -117,9 +117,9 @@ const depositsAndFees: HousingGuideArticle = {
 
 月£${EXAMPLE_RENT.toLocaleString()}の部屋なら、週あたりは約${gbp(
           Math.round((EXAMPLE_RENT * 12) / 52)
-        )}。敷金の上限は${HOUSING_LIMITS.depositWeeksUnderThreshold}週間分なので**${gbp(
+        )}。敷金の上限は${HOUSING_LIMITS.depositWeeksUnderThreshold}週間分なので **${gbp(
           depositCapAmount(EXAMPLE_RENT)
-        )}**、holding deposit は**${gbp(holdingDepositCap(EXAMPLE_RENT))}**が上限です。
+        )}**、holding deposit は **${gbp(holdingDepositCap(EXAMPLE_RENT))}** が上限です。
 
 月額÷4で計算すると週あたりが過大になり、「5週間分」として${gbp(
           Math.round((EXAMPLE_RENT / 4) * 5)
@@ -230,9 +230,9 @@ const depositsAndFees: HousingGuideArticle = {
 - 契約に署名した後でも、請求できるのは**${
         HOUSING_LIMITS.rentInAdvanceMonths
       }ヶ月分まで**
-- 違反した大家・エージェントには最大**${gbp(
+- 違反した大家・エージェントには最大 **${gbp(
         HOUSING_PENALTIES.rentInAdvance
-      )}**の民事制裁金
+      )}** の民事制裁金
 
 ### なぜこれが日本人にとって重大なのか
 

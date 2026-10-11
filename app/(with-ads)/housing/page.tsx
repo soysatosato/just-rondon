@@ -152,7 +152,7 @@ const FAQ_ITEMS = [
   },
   {
     question: "契約書に「12ヶ月の固定期間」と書かれています。縛られますか？",
-    answer: `**縛られません。**${jpDate(
+    answer: `**縛られません**。${jpDate(
       HOUSING_KEY_DATES.phase1
     )}時点で、既存の契約も含めてすべてが periodic tenancy に転換されています。固定期間の条項は効力を失っており、${HOUSING_LIMITS.tenantNoticeMonths}ヶ月前に書面で通知すれば退去できます。`,
   },

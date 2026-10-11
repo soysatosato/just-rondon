@@ -372,7 +372,7 @@ CoS は、**実在する求人に対して、実際に雇用する企業が発�
       answer:
         "**新卒・就業初期（new entrant）や、職務に関連する博士号を持つ場合は " +
         gbp(VISA_THRESHOLDS.skilledWorker.discounted) +
-        " まで下がります。**ただし new entrant は最長4年間の適用です。また、職種別の going rate がこれを上回る場合は、going rate の方が優先されます。",
+        " まで下がります**。ただし new entrant は最長4年間の適用です。また、職種別の going rate がこれを上回る場合は、going rate の方が優先されます。",
     },
     {
       question: "ボーナスや残業代は年収に含められますか？",
