@@ -77,9 +77,16 @@ curl -sS "https://www.just-rondon.com/sitemap-0.xml" | grep -o '<loc>[^<]*</loc>
 以下は対象外(すでにインデックス済み、またはリクエストしても解決しない):
 
 - `Submitted and indexed` — 対応不要
-- `Duplicate without user-selected canonical` — 外部スパムサイトへの誤canonical
-  が原因のことが多く、`submit_url_for_indexing` は無意味ではないが優先度は低い。
-  他に候補があればそちらを優先する。
+- `Duplicate without user-selected canonical` — `googleCanonical` が 747live.bet や
+  access.ms.gov など無関係なサイトになっているもの。ミラーや改ざんではない。
+  2026-08 に Googlebot がページを Next.js 既定の「Application error」画面として
+  描画し、同じ画面になったほかの Next.js サイトと重複扱いされた(既定の画面は
+  <head> ごと差し替わるので userCanonical も無い)。2026-10-11 に app/error.tsx と
+  app/global-error.tsx を入れて再発は防いだが、すでに重複扱いのページは
+  再クロールされるまで戻らない。2026-09-13 に API で送った重複ページは28日後も
+  1本も再クロールされていなかったので、`submit_url_for_indexing` はほぼ効かない。
+  ログに残すだけにして、Search Console の画面の「インデックス登録をリクエスト」を
+  ユーザーに頼む(1日10本ほどが上限)。
 
 ## Step 5 — リクエストを送信する
 
