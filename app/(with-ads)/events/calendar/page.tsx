@@ -79,15 +79,6 @@ export default async function EventsCalendarPage() {
           />
         ))}
       </div>
-
-      <p className="mt-10 text-center text-sm text-muted-foreground dark:text-gray-400">
-        <Link
-          href="/events/archive/2025"
-          className="underline hover:text-primary"
-        >
-          2025年のカレンダーを見る
-        </Link>
-      </p>
     </main>
   );
 }

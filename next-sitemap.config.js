@@ -137,7 +137,6 @@ module.exports = {
       "/privacy",
       "/events",
       "/events/calendar",
-      "/events/archive/2025",
       // 年中行事ガイド。並びは lib/annual-events/index.ts の GUIDES と
       // 一致させること(このファイルは CJS なので TS を読めない)。
       "/events/guides",
@@ -541,17 +540,6 @@ module.exports = {
     );
     for (const month of monthNames) {
       paths.push(await config.transform(config, `/events/${month}`));
-    }
-
-    // 2025年版はアーカイブURLに移動。
-    const events2025 = await prisma.content.findMany({
-      where: { category: "london-events-2025" },
-      select: { slug: true },
-    });
-    for (const e of events2025) {
-      paths.push(
-        await config.transform(config, `/events/archive/2025/${e.slug}`),
-      );
     }
 
     // 料理ページ。/restaurants ハブ自体は上の staticPages 側にある。

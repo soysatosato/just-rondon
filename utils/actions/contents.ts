@@ -8,29 +8,6 @@ import {
   type ReadingCategory,
 } from "@/lib/publish-schedule";
 
-export const fetchEvents2025 = async () => {
-  const contents = await db.content.findMany({
-    where: {
-      category: "london-events-2025",
-    },
-    orderBy: { createdAt: "asc" },
-  });
-  return contents;
-};
-export const fetchMonthlyEvents2025 = async (slug: string) => {
-  const content = await db.content.findFirst({
-    // category を絞らないと、クリスマスマーケット等の別カテゴリの Content が
-    // /events/<slug> でも同じ内容で描画され、canonical違いの重複ページになる
-    where: { slug, category: "london-events-2025" },
-    include: {
-      sections: {
-        orderBy: { displayOrder: "asc" },
-      },
-    },
-  });
-  return content;
-};
-
 /**
  * 詳細ページ(slug で1件引く)の公開条件。
  *
