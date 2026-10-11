@@ -3,6 +3,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * 読み物ハブ4面(英国を読む・コラム・イギリス英語・いまのイギリス)の、
@@ -384,7 +385,7 @@ function RankedPanel({
             </h3>
             {lead.summary && (
               <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-white/80">
-                {lead.summary}
+                {stripInlineMarkdown(lead.summary)}
               </p>
             )}
           </div>
@@ -451,7 +452,7 @@ function RankedPanel({
                     </span>
                     {item.summary && (
                       <span className="mt-0.5 hidden truncate text-[11px] text-muted-foreground sm:block">
-                        {item.summary}
+                        {stripInlineMarkdown(item.summary)}
                       </span>
                     )}
                   </span>
@@ -535,7 +536,7 @@ function LatestPanel({
                   </h3>
                   {item.summary && (
                     <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-                      {item.summary}
+                      {stripInlineMarkdown(item.summary)}
                     </p>
                   )}
 

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { eventMonthPath, getMonthNumber, getSeasonMeta } from "@/lib/events";
 import SeasonBadge from "@/components/events/SeasonBadge";
 import { getLondonClimate } from "@/lib/london-months/climate";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * archiveBasePath を渡すと、その年のアーカイブ(年入りの URL)へリンクする。
@@ -64,7 +65,7 @@ export default function EventMonthCard({
             )}
             {content.summary && (
               <p className="mt-2 line-clamp-3 text-sm text-muted-foreground dark:text-gray-400">
-                {content.summary}
+                {stripInlineMarkdown(content.summary)}
               </p>
             )}
           </div>

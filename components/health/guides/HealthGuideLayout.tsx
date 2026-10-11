@@ -24,6 +24,7 @@ import {
   healthGuides,
 } from "./guides";
 import type { HealthGuideArticle } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export default function HealthGuideLayout({
   article,
@@ -67,7 +68,7 @@ export default function HealthGuideLayout({
           {article.audience}
         </p>
         <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          {article.summary}
+          {stripInlineMarkdown(article.summary)}
         </p>
       </header>
 

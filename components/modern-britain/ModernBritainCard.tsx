@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { modernBritainTagLabel } from "@/lib/modern-britain-taxonomy";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * 論考1本ぶんのカード。
@@ -84,7 +85,7 @@ export default function ModernBritainCard({ item }: { item: Content }) {
 
         {item.summary && (
           <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-            {item.summary}
+            {stripInlineMarkdown(item.summary)}
           </p>
         )}
 

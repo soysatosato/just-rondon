@@ -24,6 +24,7 @@ import { fetchCurrentBriefs } from "@/utils/actions/weekly";
 import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export const metadata = buildPageMetadata({
   path: "/",
@@ -498,7 +499,7 @@ export default async function Page() {
                   </h3>
                   {readingLead.item.summary && (
                     <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                      {readingLead.item.summary}
+                      {stripInlineMarkdown(readingLead.item.summary)}
                     </p>
                   )}
                 </article>

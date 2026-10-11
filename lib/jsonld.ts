@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 import {
   ancestorCrumbs,
   crumbFor,
@@ -18,23 +19,6 @@ export const SITE_PUBLISHER = {
   name: SITE_NAME,
   url: SITE_URL,
 };
-
-/**
- * JSON-LD に markdown の記法をそのまま入れないための整形。
- *
- * Google のリッチリザルトは answer をプレーンテキストとして扱うため、
- * `**強調**` や `[label](url)` が残っていると記号がそのまま表示される。
- */
-export function stripInlineMarkdown(md: string): string {
-  return md
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1") // [label](url) → label
-    .replace(/\*\*([^*]+)\*\*/g, "$1") // **bold** → bold
-    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "$1") // *italic* → italic
-    .replace(/`([^`]+)`/g, "$1") // `code` → code
-    .replace(/^[\s・\-*]+/, "") // 行頭の箇条書き記号
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 export function faqPageJsonLd(
   items: { question: string; answer: string | string[] }[],

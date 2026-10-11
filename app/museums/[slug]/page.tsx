@@ -32,6 +32,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import { buildPageMetadata, fitTitle, truncateDescription } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 import { museumJsonLd, museumPath } from "@/components/museums/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
@@ -66,11 +67,11 @@ export async function generateMetadata({
   const timeRoute = timeRouteForMuseum(params.slug);
   // description は本文用のマークダウンで、太字の ** を含む館がある。
   // スニペットには記号のまま出てしまうので外す。
-  const body = (
+  const body = stripInlineMarkdown(
     museum?.description ??
-    museum?.tagline ??
-    "ロンドンの美術館の見どころ、アクセス、注目作品、開催中の企画展を紹介します。"
-  ).replace(/\*\*/g, "");
+      museum?.tagline ??
+      "ロンドンの美術館の見どころ、アクセス、注目作品、開催中の企画展を紹介します。",
+  );
 
   return buildPageMetadata({
     path: museumPath(params.slug),
@@ -193,9 +194,17 @@ export default async function MuseumDetailsPage({
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
 
+      {/* カードに出すのは3行で切れる抜粋だけ。description は作品ページ用の
+          マークダウン本文で、そのまま渡すと ** が記号のまま見えるうえ、
+          全文が HTML と RSC payload の両方に載る。 */}
       <MuseumHighlightedArtworks
         slug={museum.slug}
-        artworks={museum.artworks}
+        artworks={museum.artworks.map((artwork) => ({
+          ...artwork,
+          description:
+            artwork.description &&
+            truncateDescription(stripInlineMarkdown(artwork.description), 200),
+        }))}
       />
 
       <MuseumInfo museumInfo={museum.museumInfo} />

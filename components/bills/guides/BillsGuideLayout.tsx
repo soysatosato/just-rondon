@@ -23,6 +23,7 @@ import {
   billsGuides,
 } from "./guides";
 import type { BillsGuideArticle } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * 光熱費ガイドの記事レイアウト。医療ガイドの骨格を踏襲する。
@@ -72,7 +73,7 @@ export default function BillsGuideLayout({
           {article.audience}
         </p>
         <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          {article.summary}
+          {stripInlineMarkdown(article.summary)}
         </p>
       </header>
 

@@ -13,6 +13,7 @@ import {
 } from "@/components/jobs/survey/SurveyAsk";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export const metadata = buildPageMetadata({
   path: "/jobs/service-charges",
@@ -141,7 +142,7 @@ export default function ServiceChargeGuidePage() {
 
         {content.summary && (
           <p className="text-base leading-[1.9] text-muted-foreground md:text-lg">
-            {content.summary}
+            {stripInlineMarkdown(content.summary)}
           </p>
         )}
 

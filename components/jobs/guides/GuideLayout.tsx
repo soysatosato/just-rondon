@@ -16,6 +16,7 @@ import {
   guides,
 } from "./guides";
 import type { JobGuideArticle } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * どの労働ガイドからも辿れるべき /jobs 配下の子ページ。
@@ -61,7 +62,7 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
         </p>
         {article.summary && (
           <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-            {article.summary}
+            {stripInlineMarkdown(article.summary)}
           </p>
         )}
         <GuideFreshness

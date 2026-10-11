@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * このスポットが出てくるコラム。スポット詳細からコラムへの導線。
@@ -73,7 +74,7 @@ export default function AttractionColumnLinks({
                 </p>
                 {column.summary && (
                   <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                    {column.summary}
+                    {stripInlineMarkdown(column.summary)}
                   </p>
                 )}
               </div>

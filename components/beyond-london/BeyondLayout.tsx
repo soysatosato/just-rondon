@@ -31,6 +31,7 @@ import BeyondHighlights from "./BeyondHighlights";
 import BeyondStayAndNight from "./BeyondStayAndNight";
 import BeyondVerdict from "./BeyondVerdict";
 import { isDestination, type BeyondArticle } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * 行き先記事とレール実務記事の共通レイアウト。
@@ -95,7 +96,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
           />
         </div>
         <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          {article.summary}
+          {stripInlineMarkdown(article.summary)}
         </p>
       </header>
 
@@ -129,7 +130,9 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
                 <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="text-sm leading-relaxed">
+                  {stripInlineMarkdown(fact.value)}
+                </dd>
               </div>
             ))}
           </dl>

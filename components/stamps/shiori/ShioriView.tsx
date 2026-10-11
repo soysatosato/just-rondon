@@ -24,6 +24,7 @@ import type {
   ShioriPlace,
 } from "@/lib/stamp-share";
 import { STAMP_BOOK_HREF, STAMP_META, STAMP_TYPES } from "@/lib/stamps";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * 旅のしおり(/stamps/shiori/…)の表示。読むのは、しおりを受け取った友人。
@@ -530,7 +531,7 @@ function ColumnSection({
                 </p>
                 {column.summary && (
                   <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                    {column.summary}
+                    {stripInlineMarkdown(column.summary)}
                   </p>
                 )}
               </div>

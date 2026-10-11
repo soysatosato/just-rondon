@@ -27,6 +27,7 @@ import {
 } from "./areas";
 import type { AreaGuideArticle } from "./types";
 import type { AreaSpot } from "@/utils/areas";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export default function AreaGuideLayout({
   article,
@@ -63,7 +64,7 @@ export default function AreaGuideLayout({
           {article.engTitle}
         </p>
         <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          {article.summary}
+          {stripInlineMarkdown(article.summary)}
         </p>
         <GuideFreshness
           dataAsOf={article.dataAsOf}
@@ -91,7 +92,9 @@ export default function AreaGuideLayout({
                 <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="text-sm leading-relaxed">
+                  {stripInlineMarkdown(fact.value)}
+                </dd>
               </div>
             ))}
           </dl>

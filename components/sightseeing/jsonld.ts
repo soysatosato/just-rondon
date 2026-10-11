@@ -122,10 +122,11 @@ export function sightseeingBreadcrumbJsonLd(
 }
 
 /**
- * FAQ の構造化データと markdown 除去は /visa でも同じものを使うので
+ * FAQ の構造化データは /visa でも同じものを使うので
  * lib/jsonld.ts に移した。ここは既存の import を壊さないための再輸出。
+ * markdown 除去は lib/plain-text.ts にある。
  */
-export { faqPageJsonLd, stripInlineMarkdown } from "@/lib/jsonld";
+export { faqPageJsonLd } from "@/lib/jsonld";
 
 /** /sightseeing ハブが持つガイド記事の一覧を CollectionPage として出す。 */
 export function sightseeingHubCollectionJsonLd(

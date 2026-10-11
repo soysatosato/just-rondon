@@ -2,6 +2,7 @@ import ArtworkBrowser, {
   type BrowsableArtwork,
 } from "@/components/artworks/ArtworkBrowser";
 import { buildPageMetadata } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 import ArtworksIntro from "@/components/artworks/ArtworksIntro";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
@@ -58,13 +59,6 @@ const compareArtworks = (a: ArtworkRow, b: ArtworkRow) =>
   b.recommendLevel - a.recommendLevel ||
   a.title.localeCompare(b.title, "ja");
 
-// カードでは1行のリード文として出すだけなので、マークダウン記法は落とす。
-const toPlainText = (text: string) =>
-  text
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/[*_`]/g, "")
-    .trim();
-
 export async function generateMetadata({
   params,
 }: {
@@ -106,7 +100,10 @@ export default async function ArtworksPage({
     image: art.image,
     mustSee: art.mustSee,
     recommendLevel: art.recommendLevel,
-    highlight: art.highlights[0] ? toPlainText(art.highlights[0]) : null,
+    // カードでは1行のリード文として出すだけなので、マークダウン記法は落とす。
+    highlight: art.highlights[0]
+      ? stripInlineMarkdown(art.highlights[0])
+      : null,
   }));
 
   const rooms = Array.from(new Set(items.map((a) => a.room)));

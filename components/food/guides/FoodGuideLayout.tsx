@@ -28,6 +28,7 @@ import {
   getFoodGuideMeta,
 } from "./guides";
 import type { FoodGuideArticle } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export default function FoodGuideLayout({
   article,
@@ -77,7 +78,7 @@ export default function FoodGuideLayout({
           {article.audience}
         </p>
         <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          {article.summary}
+          {stripInlineMarkdown(article.summary)}
         </p>
       </header>
 

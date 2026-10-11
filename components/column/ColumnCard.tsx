@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { tagLabel } from "@/lib/column-taxonomy";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -72,7 +73,7 @@ export default function ColumnCard({
 
         {item.summary && (
           <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-            {item.summary}
+            {stripInlineMarkdown(item.summary)}
           </p>
         )}
 

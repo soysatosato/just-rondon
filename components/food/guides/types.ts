@@ -72,8 +72,9 @@ export type FoodGuideArticle = {
   /**
    * 記事冒頭の導入。markdown。
    *
-   * summary は素の文字列として描画されるので、`**` を書かないこと
-   * (そのまま画面に出る)。強調したい主張はここに書く。
+   * summary はプレーンテキストとして描画され、`**` などの記号は
+   * stripInlineMarkdown で落とされる(強調にはならない)。
+   * 強調したい主張はここに書く。
    */
   mainText: string;
   /** 冒頭の要点。3〜6行。 */

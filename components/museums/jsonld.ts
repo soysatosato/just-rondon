@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export function museumPath(slug: string) {
   return `/museums/${slug}`;
@@ -196,7 +197,9 @@ export function artworkJsonLd(
       ? { creator: { "@type": "Person", name: artwork.artist } }
       : {}),
     ...(artwork.year ? { dateCreated: artwork.year } : {}),
-    ...(artwork.description ? { description: artwork.description } : {}),
+    ...(artwork.description
+      ? { description: stripInlineMarkdown(artwork.description) }
+      : {}),
     ...(artwork.image ? { image: artwork.image } : {}),
     // 所蔵館
     holdingArchive: {

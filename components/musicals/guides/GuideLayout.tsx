@@ -26,6 +26,7 @@ import {
 } from "./guides";
 import type { MusicalGuideArticle } from "./types";
 import { fetchTopMusicals } from "@/utils/actions/musicals";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export default async function GuideLayout({
   article,
@@ -59,7 +60,7 @@ export default async function GuideLayout({
         </p>
         {article.summary && (
           <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-            {article.summary}
+            {stripInlineMarkdown(article.summary)}
           </p>
         )}
         <GuideFreshness
@@ -84,7 +85,9 @@ export default async function GuideLayout({
                 <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="text-sm leading-relaxed">
+                  {stripInlineMarkdown(fact.value)}
+                </dd>
               </div>
             ))}
           </dl>

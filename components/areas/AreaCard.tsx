@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { areaFacts, areaTagLabel } from "@/lib/area-taxonomy";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 /**
  * 街1本ぶんのカード。
@@ -88,7 +89,7 @@ export default function AreaCard({ item }: { item: Content }) {
 
         {item.summary && (
           <p className="mt-2.5 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-            {item.summary}
+            {stripInlineMarkdown(item.summary)}
           </p>
         )}
 

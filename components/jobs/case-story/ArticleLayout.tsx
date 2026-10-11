@@ -21,6 +21,7 @@ import {
 } from "./chapters";
 import { t } from "./ui";
 import type { CaseStoryArticle, Locale } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export default function ArticleLayout({
   article,
@@ -66,7 +67,7 @@ export default function ArticleLayout({
         </p>
         {article.summary && (
           <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-            {article.summary}
+            {stripInlineMarkdown(article.summary)}
           </p>
         )}
 

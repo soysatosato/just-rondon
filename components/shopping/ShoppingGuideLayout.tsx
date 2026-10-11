@@ -26,6 +26,7 @@ import {
   shoppingGuidesByCategory,
 } from "./guides";
 import type { ShoppingGuideArticle } from "./types";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export default function ShoppingGuideLayout({
   article,
@@ -53,7 +54,7 @@ export default function ShoppingGuideLayout({
           {article.engTitle}
         </p>
         <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          {article.summary}
+          {stripInlineMarkdown(article.summary)}
         </p>
         <GuideFreshness
           dataAsOf={article.dataAsOf}
@@ -88,7 +89,9 @@ export default function ShoppingGuideLayout({
                 <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
                   {fact.label}
                 </dt>
-                <dd className="text-sm leading-relaxed">{fact.value}</dd>
+                <dd className="text-sm leading-relaxed">
+                  {stripInlineMarkdown(fact.value)}
+                </dd>
               </div>
             ))}
           </dl>

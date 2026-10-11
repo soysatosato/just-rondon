@@ -2,6 +2,7 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import type { MusicalGuideArticle } from "./types";
 
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
 export { SITE_URL };
 export const MUSICALS_BASE = "/musicals";
 export const MUSICAL_GUIDES_SECTION_NAME = "観劇ガイド";
@@ -203,12 +204,3 @@ export function faqPageJsonLd(
   };
 }
 
-/** JSON-LD に出す前に markdown の装飾を落とす。 */
-export function stripInlineMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, "$1")
-    .replace(/\[(.+?)\]\((.+?)\)/g, "$1")
-    .replace(/[*_`]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
