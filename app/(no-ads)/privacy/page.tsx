@@ -10,7 +10,7 @@ export const metadata = buildPageMetadata({
   path: "/privacy",
   title: "プライバシーポリシー",
   description:
-    "ジャスト・ロンドンにおける個人情報の取り扱い(お問い合わせ、スタンプ帳のアカウント)、広告配信(Google AdSense)およびアクセス解析(Google アナリティクス)での Cookie の利用と、その無効化方法について説明します。",
+    "ジャスト・ロンドンにおける個人情報の取り扱い(お問い合わせ、スタンプ帳のアカウント)、広告配信(Google AdSense)およびアクセス解析(Google アナリティクス)での Cookie の利用と、その無効化方法、英国・EEA・スイスからのアクセスでの同意の確認について説明します。",
 });
 
 const sections: SiteSection[] = [
@@ -76,6 +76,14 @@ const sections: SiteSection[] = [
         label: "Google のプライバシーポリシー",
         href: "https://policies.google.com/privacy",
       },
+    ],
+  },
+  {
+    title: "英国・EEA・スイスからアクセスする方へ",
+    content: [
+      "英国・欧州経済領域（EEA）・スイスからアクセスした方には、広告とアクセス解析に Cookie や個人データを使ってよいかを、Google の同意管理ツール（Google 認定の CMP）でお尋ねします。確認の画面は、広告を載せているページを初めて開いたときに表示されます。",
+      "同意をいただくまでは、広告は閲覧履歴に基づかないものだけになり、Google アナリティクスは Cookie を使わない計測だけを行います。同意しなくても、当サイトはそのまま利用できます。",
+      "選んだ内容はいつでも変えられます。広告を載せているページの最下部に表示される「プライバシーと Cookie の設定」から選び直してください。",
     ],
   },
 

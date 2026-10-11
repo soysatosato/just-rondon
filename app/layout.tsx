@@ -9,6 +9,7 @@ import MainNav from "@/components/navbar/MainNav";
 import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import PlanSync from "@/components/attractions/plan/PlanSync";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
+import ConsentDefaults from "@/components/consent/ConsentDefaults";
 
 export const metadata = defaultMetadata;
 
@@ -42,6 +43,10 @@ export default function RootLayout({
     */
     <ClerkProvider localization={jaJP}>
       <html lang="ja" suppressHydrationWarning>
+        <head>
+          {/* 英国・EEA・スイスの同意の初期値。GA の config より先に置く。 */}
+          {isProduction && GA_ID && <ConsentDefaults />}
+        </head>
         <body className="bg-background text-foreground transition-colors duration-300">
           <SiteJsonLd />
           <Providers>
