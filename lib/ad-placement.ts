@@ -28,6 +28,16 @@ const AD_FREE_PREFIXES = [
   "/jobs/service-charges/dashboard",
 ] as const;
 
+import { unwrittenMonthPaths } from "@/lib/london-months/written-months";
+
+/**
+ * そのパスちょうどにだけ広告を出さないページ。
+ *
+ * 「◯月のロンドン」のうち本文をまだ書いていない月(noindex)。
+ * どの月が該当するかは lib/london-months/written-months.js が決める。
+ */
+const AD_FREE_PATHS: readonly string[] = unwrittenMonthPaths();
+
 /**
  * 配下のページだけ広告を出さないパス。そのパス自体(一覧)には出す。
  *
@@ -53,6 +63,7 @@ export function allowsAds(pathname: string | null): boolean {
   ) {
     return false;
   }
+  if (AD_FREE_PATHS.includes(pathname)) return false;
   return !AD_FREE_CHILDREN_OF.some((parent) =>
     pathname.startsWith(`${parent}/`)
   );

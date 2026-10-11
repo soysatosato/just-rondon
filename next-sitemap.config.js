@@ -1,5 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
 const { hasSongList } = require("./lib/musicals/song-pages");
+const {
+  unwrittenMonthPaths,
+  writtenMonthPaths,
+} = require("./lib/london-months/written-months");
 const prisma = new PrismaClient();
 
 /** @type {import('next-sitemap').IConfig} */
@@ -48,6 +52,9 @@ module.exports = {
     // 曲詳細は本文が歌詞で、公開中も noindex。SONGS_PUBLISHED を true に
     // 戻すと108曲ぶん事前生成されるので、同じ理由でここで外す。
     "/musicals/*/songs/*",
+    // 「◯月のロンドン」のうち本文をまだ書いていない月。ページは noindex。
+    // 12か月とも事前生成しているので、ここで外さないと自動収集で載る。
+    ...unwrittenMonthPaths(),
   ],
   robotsTxtOptions: {
     policies: [
@@ -521,25 +528,10 @@ module.exports = {
       paths.push(await config.transform(config, `/changes/${issue.slug}`));
     }
 
-    // 月別ページ「◯月のロンドン」。URL は年の無い月名だけ(/events/december)で、
-    // DB の行は年ごとにあるので、月名で重複を落とす。どの年を出すかは
-    // ページ側(lib/london-months/year.ts)が決める。
-    const eventMonths = await prisma.content.findMany({
-      where: { category: { startsWith: "london-events-" } },
-      select: { slug: true },
-    });
-    const monthNames = new Set(
-      eventMonths
-        .map((e) =>
-          e.slug.match(
-            /-(january|february|march|april|may|june|july|august|september|october|november|december)$/,
-          ),
-        )
-        .filter(Boolean)
-        .map((m) => m[1]),
-    );
-    for (const month of monthNames) {
-      paths.push(await config.transform(config, `/events/${month}`));
+    // 月別ページ「◯月のロンドン」。URL は年の無い月名だけ(/events/december)。
+    // 載せるのは本文を書き終えた月だけ(lib/london-months/written-months.js)。
+    for (const p of writtenMonthPaths()) {
+      paths.push(await config.transform(config, p));
     }
 
     // 料理ページ。/restaurants ハブ自体は上の staticPages 側にある。

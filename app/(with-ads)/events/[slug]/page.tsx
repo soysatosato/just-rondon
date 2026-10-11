@@ -31,6 +31,7 @@ import {
 } from "@/lib/london-months/sun";
 import { BANK_HOLIDAY_SOURCE, getMonthDays } from "@/lib/london-months/holidays";
 import { getMonthGuide } from "@/lib/london-months/content";
+import { isWrittenMonth } from "@/lib/london-months/written-months";
 import {
   allEventGuides,
   getEventGuide,
@@ -175,6 +176,9 @@ export async function generateMetadata({
       `ロンドン ${month}月 イベント`,
     ],
     type: "article",
+    // 本文を書くまでは平年値と去年の催しの表しか無いので、検索に出さない。
+    // 理由と、sitemap・広告との連動は lib/london-months/written-months.js。
+    noindex: !isWrittenMonth(month),
   });
 }
 
