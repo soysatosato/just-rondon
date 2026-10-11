@@ -1,96 +1,130 @@
 export const revalidate = 60 * 60 * 24;
 
+import type { Metadata } from "next";
 import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
 import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
-import { christmasMarkets } from "./data";
-
-export const metadata = buildPageMetadata({
-  path: "/sightseeing/christmas-markets",
-  title:
-    "ロンドンのクリスマスマーケット特集 | おすすめスポット・開催情報まとめ | ジャスト・ロンドン",
-  titleSuffix: false,
-  description:
-    "ロンドンのクリスマスマーケットを厳選紹介。サウスバンク、ウィンターワンダーランド、ロンドンブリッジなど、各マーケットの開催期間、見どころ、アクセス、おすすめポイントをわかりやすく紹介します。",
-  keywords: [
-    "ロンドン",
-    "クリスマスマーケット",
-    "London Christmas Market",
-    "ロンドン クリスマス",
-    "クリスマスイベント",
-    "ヨーロッパ クリスマス",
-    "ロンドン旅行",
-  ],
-});
-
-/**
- * カードに出す1行(会期・住所)。
- *
- * 会期はデータ側では末尾に「（正確な日程は公式サイトで確認）」が付いている。
- * 10枚のカードすべてに同じ注記が並ぶと肝心の日付が埋もれるので、
- * カードでは日付だけを出し、注記は導入で1度だけ言う。
- *
- * 住所は [表記](地図URL) の markdown で入っている。カード全体が詳細ページへの
- * リンクなので、ここに地図リンクを出すと <a> の入れ子になる。表記だけを
- * 取り出して素のテキストにし、地図へは詳細ページから飛ばす。
- */
-function factsOf(sections: { title: string; description: string }[]) {
-  const find = (keyword: string) =>
-    sections.find((s) => s.title.includes(keyword))?.description ?? null;
-
-  const period = find("期間")?.split("（")[0].trim() ?? null;
-  const place = find("場所")?.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").trim() ?? null;
-
-  return [period, place].filter(Boolean).join("・") || null;
-}
+import { londonDate } from "@/lib/publish-schedule";
+import MarketTable from "./MarketTable";
+import {
+  christmasMarkets,
+  seasonDescription,
+  seasonYear,
+  tableRange,
+} from "./data";
 
 /*
- * 見出しに年号を入れない。毎年書き換える運用が続かず、2026年になっても
- * 「2025」と出ていた。会期は各マーケットの「期間」節が例年の時期＋
- * 公式確認の形で持つ。
+ * 見出しと本文には年号を入れない。年が出るのは、data.ts の editions から
+ * 組み立てる会期の欄と比較表だけ。どの年のシーズンを出すかは今日の日付で
+ * 決まる(1月は前の年のシーズン)ので、年が替わっても書き換えは要らない。
  */
-const article: FeatureArticle = {
-  slug: "christmas-markets",
-  title: "ロンドンのクリスマスマーケット",
-  engTitle: "Christmas Markets in London",
-  // 各マーケットは専用の詳細ページを持つので、DB のスポットは見ない。
-  lookupFacts: false,
-  intro: [
-    "ロンドンのクリスマスマーケットは、11月上旬から中旬に始まり、1月上旬まで続くものが多数です。ただし12月25日で終わるものもあり、閉幕日は場所によってばらつきます。以下の会期は例年の目安なので、出かける前に公式サイトで今年の日程を確認してください。",
-    "性格も一様ではありません。ハイド・パークのウィンター・ワンダーランドは入場券制の大規模イベントで、遊具もアイススケートもあります。一方サウスバンクやレスター・スクエアは通りに屋台が並ぶ形式で、入場は無料です。どちらを指して「クリスマスマーケット」と言うかで、予算も所要時間も変わります。",
-  ],
-  items: christmasMarkets.map((item) => ({
-    slug: item.slug,
-    title: item.title,
-    engTitle: item.engTitle,
-    summary: item.summary,
-    image: item.image,
-    imageCredit: item.imageCredit,
-    imageLink: item.imageLink,
-    href: item.spotSlug
-      ? `/sightseeing/${item.spotSlug}`
-      : `/sightseeing/christmas-markets/${item.slug}`,
-    factsText: factsOf(item.sections),
-  })),
-  related: [
-    {
-      href: "/events/calendar",
-      label: "ロンドンの年間イベントカレンダー",
-      note: "冬以外の催しも月ごとに。",
-    },
-    {
-      href: "/sightseeing/free",
-      label: "ロンドンの無料観光スポット一覧",
-      note: "入場無料で回れる場所。",
-    },
-    {
-      href: "/shopping",
-      label: "ロンドンの買い物ガイド",
-      note: "日曜取引法と、市が立つ曜日の話。",
-    },
-  ],
-};
+
+export async function generateMetadata(): Promise<Metadata> {
+  const year = seasonYear(londonDate(new Date()));
+  return buildPageMetadata({
+    path: "/sightseeing/christmas-markets",
+    title: `ロンドンのクリスマスマーケット${christmasMarkets.length}か所を比較｜${year}年の会期・12月25日の営業・行き方`,
+    description: `ロンドンのクリスマスマーケット${christmasMarkets.length}か所を1ページで比較。${year}年の会期(公式発表を確かめたもの)、12月25日の営業、入場料、最寄り駅と、屋台村・スケートリンク・屋根付きの市場といったそれぞれの性格をまとめました。`,
+    keywords: [
+      "ロンドン クリスマスマーケット",
+      `ロンドン クリスマスマーケット ${year}`,
+      "ロンドン クリスマスマーケット 期間",
+      "ロンドン クリスマス 12月25日",
+      "サウスバンク クリスマスマーケット",
+      "コヴェントガーデン クリスマス",
+      "London Christmas Market",
+    ],
+  });
+}
 
 export default function ChristmasMarketsPage() {
-  return <FeatureLayout article={article} />;
+  const year = seasonYear(londonDate(new Date()));
+
+  const article: FeatureArticle = {
+    slug: "christmas-markets",
+    title: "ロンドンのクリスマスマーケット",
+    engTitle: "Christmas Markets in London",
+    // 各マーケットの本文はこのページにある。DB のスポットは見ない。
+    lookupFacts: false,
+    intro: [
+      "ロンドンのクリスマスマーケットは、11月上旬から中旬に始まり、1月上旬まで続くものが多い。ただし12月下旬で終わるものもあり、閉幕日は場所によってばらつく。12月25日は休む所が多い。",
+      "性格も一様ではない。ハイド・パークのウィンター・ワンダーランドは入場予約制の大規模イベントで、遊具もアイスリンクもある。サウスバンクやキングストンは木の小屋の屋台が並ぶ昔ながらの形で、入場は無料。コヴェント・ガーデンのように屋台を出さず、街の飾り付けそのものが見どころの場所もある。どれを指して「クリスマスマーケット」と言うかで、予算も所要時間も変わる。",
+    ],
+    notes: [
+      {
+        title: "12月25日の移動",
+        description:
+          "クリスマス当日は、ロンドンの地下鉄・鉄道・バスが基本的に運休し、マーケットの多くも休む。24日は早じまいの所が多い。",
+      },
+      {
+        title: "1晩で回るなら",
+        description:
+          "コヴェント・ガーデン、レスター・スクエア、トラファルガー広場は互いに歩いて10分ほどで、1晩で回れる。サウスバンクはトラファルガー広場から歩行者橋を渡って15分ほど。ウィンター・バイ・ザ・リバー、バタシー、キングストンは離れているので、別の日にするとよい。",
+      },
+      {
+        title: "雨の日",
+        description:
+          "屋根の下で回れるのは、市場ホールの中にあるスピタルフィールズと、ショッピングモールのあるバタシー発電所。",
+      },
+    ],
+    items: christmasMarkets.map((m) => {
+      const facts = [tableRange(m, year), m.station].join("・");
+
+      // 本体が観光スポットのページにあるもの。カードにしてそちらへ送る。
+      if (m.spotSlug) {
+        return {
+          slug: m.slug,
+          title: m.title,
+          engTitle: m.engTitle,
+          summary: m.summary,
+          href: `/sightseeing/${m.spotSlug}`,
+          factsText: facts,
+        };
+      }
+
+      return {
+        slug: m.slug,
+        title: m.title,
+        engTitle: m.engTitle,
+        summary: m.summary,
+        mainText: m.body.join("\n\n"),
+        website: m.website,
+        factsText: facts,
+        sections: [
+          { title: `${year}年の会期`, description: seasonDescription(m, year) },
+          { title: "場所と行き方", description: m.access },
+          { title: "訪問のコツ", description: m.tip },
+          ...(m.nearby ? [{ title: "近くで", description: m.nearby }] : []),
+        ],
+      };
+    }),
+    related: [
+      {
+        href: "/events/november",
+        label: "11月のロンドン",
+        note: "天気・服装と、マーケットが始まる月の催し。",
+      },
+      {
+        href: "/events/december",
+        label: "12月のロンドン",
+        note: "日の短さ、祝日の交通、年末の催し。",
+      },
+      {
+        href: "/sightseeing/free",
+        label: "ロンドンの無料観光スポット一覧",
+        note: "入場無料で回れる場所。",
+      },
+      {
+        href: "/shopping",
+        label: "ロンドンの買い物ガイド",
+        note: "日曜取引法と、市が立つ曜日の話。",
+      },
+    ],
+  };
+
+  return (
+    <FeatureLayout article={article}>
+      <MarketTable markets={christmasMarkets} year={year} />
+    </FeatureLayout>
+  );
 }

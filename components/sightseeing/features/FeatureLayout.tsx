@@ -38,8 +38,14 @@ import type { FeatureArticle, FeatureItem } from "./types";
  */
 export default async function FeatureLayout({
   article,
+  children,
 }: {
   article: FeatureArticle;
+  /**
+   * 補足と目次のあいだに置く、特集ごとの部品。クリスマスマーケットの
+   * 比較表のように、項目を横に並べて見せたいときに使う。
+   */
+  children?: React.ReactNode;
 }) {
   const meta = getFeatureMeta(article.slug);
 
@@ -109,6 +115,8 @@ export default async function FeatureLayout({
           ))}
         </section>
       )}
+
+      {children}
 
       {/* 目次。項目名が長いのでチップ状には並べず、2段の番号付きリストにする。 */}
       <nav aria-label="目次" className="mt-8">
@@ -315,6 +323,11 @@ function FeatureItemBlock({
         <h2 className="mt-1 text-base font-bold leading-snug sm:text-lg">
           {item.title}
         </h2>
+        {facts && (
+          <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+            {facts}
+          </p>
+        )}
         {item.summary && (
           <p className="mt-2 text-sm font-medium leading-relaxed text-gray-700 dark:text-gray-300">
             {item.summary}

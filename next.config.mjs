@@ -124,6 +124,27 @@ const nextConfig = {
         permanent: true,
       },
 
+      // 残りのマーケットの詳細ページ9本は、一覧の各節にまとめた(2026-10)。
+      // どれも同じ型の約500字で、会期は「例年◯月」しか書けていなかった。
+      // 比べて選ぶための情報は一覧に並べないと出てこない。理由の詳細は
+      // app/(with-ads)/sightseeing/christmas-markets/data.ts の冒頭。
+      // 節のアンカーは旧 slug と同じにしてあるので、そのまま #slug へ送る。
+      ...[
+        "covent-garden-christmas-market",
+        "southbank-centre-winter-market",
+        "winter-by-the-river",
+        "trafalgar-square-christmas-market",
+        "leicester-square-christmas-market",
+        "battersea-power-christmas-market",
+        "kings-cross-christmas-market",
+        "spitalfields-christmas-market",
+        "kingston-christmas-market",
+      ].map((slug) => ({
+        source: `/sightseeing/christmas-markets/${slug}`,
+        destination: `/sightseeing/christmas-markets#${slug}`,
+        permanent: true,
+      })),
+
       // 月別イベントカレンダーの URL から年号を外した。年が替わるたびに
       // URL が一から出直すのをやめ、同じ月の検索を毎年同じ URL で受ける。
       // どの年の分を出すかは /events/[slug] が決める(fetchMonthlyEvents)。

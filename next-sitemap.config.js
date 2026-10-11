@@ -488,24 +488,6 @@ module.exports = {
       paths.push(await config.transform(config, `/sightseeing/${a.slug}`));
     }
 
-    // winter-wonderland はスポット版(/sightseeing/hyde-park-winter-wonderland)に
-    // まとめ、マーケット側の URL はそこへ転送している(next.config.mjs)。
-    const christmasMarkets = await prisma.content.findMany({
-      where: {
-        category: "christmas-market",
-        slug: { not: "winter-wonderland" },
-      },
-      include: { sections: true },
-    });
-    for (const cm of christmasMarkets) {
-      paths.push(
-        await config.transform(
-          config,
-          `/sightseeing/christmas-markets/${cm.slug}`,
-        ),
-      );
-    }
-
     // 週次ダイジェスト「今週のロンドン」のバックナンバー。
     // 最新号は /events と同内容で、そちらを canonical にしているため出さない。
     const briefs = await prisma.weeklyBrief.findMany({
