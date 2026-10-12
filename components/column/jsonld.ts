@@ -1,6 +1,13 @@
-import { SITE_NAME, SITE_URL, absoluteImage } from "@/lib/seo";
+import {
+  EDITORIAL_NAME,
+  EDITORIAL_PATH,
+  SITE_NAME,
+  SITE_URL,
+  absoluteImage,
+} from "@/lib/seo";
 import { columnOgImage } from "@/lib/og";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { parseSources } from "@/lib/reading-sources";
 
 export const COLUMN_BASE = "/column";
 
@@ -8,6 +15,13 @@ export const COLUMN_PUBLISHER = {
   "@type": "Organization",
   name: SITE_NAME,
   url: SITE_URL,
+};
+
+/** 記事ページの署名と同じ名義。発行者はサイト、書き手は編集部。 */
+export const COLUMN_AUTHOR = {
+  "@type": "Organization",
+  name: EDITORIAL_NAME,
+  url: `${SITE_URL}${EDITORIAL_PATH}`,
 };
 
 export function columnPath(slug: string) {
@@ -22,8 +36,10 @@ export function columnArticleJsonLd(content: {
   createdAt: Date;
   updatedAt: Date;
   image: string | null;
+  sources?: unknown;
 }) {
   const url = `${SITE_URL}${columnPath(content.slug)}`;
+  const sources = parseSources(content.sources);
 
   return {
     "@context": "https://schema.org",
@@ -42,8 +58,23 @@ export function columnArticleJsonLd(content: {
       ...(content.image ? [absoluteImage(content.image)] : []),
       absoluteImage(columnOgImage(content).url),
     ],
-    author: COLUMN_PUBLISHER,
+    author: COLUMN_AUTHOR,
     publisher: COLUMN_PUBLISHER,
+    // 記事末尾の参考資料欄と同じもの。欄の無い記事には付けない。
+    ...(sources.length > 0
+      ? {
+          citation: sources.map((s) => ({
+            "@type": "CreativeWork",
+            name: s.title,
+            ...(s.url ? { url: s.url } : {}),
+            // 「1855(第2版)」のような表記は日付として渡さない。
+            ...(s.year && /^\d{4}$/.test(s.year)
+              ? { datePublished: s.year }
+              : {}),
+            publisher: { "@type": "Organization", name: s.publisher },
+          })),
+        }
+      : {}),
   };
 }
 

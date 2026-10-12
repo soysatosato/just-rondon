@@ -14,6 +14,13 @@ export const SITE_NAME = "ジャスト・ロンドン";
 export const TWITTER_HANDLE = "@just_rondon";
 
 /**
+ * 読み物の署名。誰がどう作っているかは /about の「編集方針」に書く。
+ * 実在しない筆者や経歴を立てない(AdSense 監査で創作の体験談が問題になった)。
+ */
+export const EDITORIAL_NAME = "ジャスト・ロンドン編集部";
+export const EDITORIAL_PATH = "/about#editorial";
+
+/**
  * OG画像のデフォルト。自前の画像を持たないページすべてがこれを指す。
  *
  * 以前は /logo.png(810x630ではなく810x665)だった。1.91:1 でないので

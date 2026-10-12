@@ -1554,16 +1554,16 @@ model AttractionSection {
 }
 
 model Content {
-  id              String              @id @default(cuid())
-  title           String
-  engTitle        String?
-  slug            String
-  summary         String?
-  mainText        String?
-  description     String?
-  description2    String?
-  description3    String?
-  image           String?
+  id               String              @id @default(cuid())
+  title            String
+  engTitle         String?
+  slug             String
+  summary          String?
+  mainText         String?
+  description      String?
+  description2     String?
+  description3     String?
+  image            String?
   /// 主画像の出どころ。"commons" のとき imageCredit の表示が必須
   /// (components/shared/ImageCredit.tsx)。Souvenir / BrandImage と同じ扱い。
   ///
@@ -1571,28 +1571,35 @@ model Content {
   /// 読み物の画像はすべて Wikimedia Commons で、74枚中43枚が CC BY / BY-SA の
   /// 作者表記を要するのに、記事ページにも出していなかった。作成スクリプトが
   /// Commons から取って入れる(scripts/lib/commons.ts の resolveCommonsCredit)。
-  imageSource     String?
+  imageSource      String?
   /// 「作者 / ライセンス, via Wikimedia Commons」。Instagram の表紙とキャプションにも出す。
-  imageCredit     String?
+  imageCredit      String?
   /// Commons のファイルページ。
-  imageLink       String?
+  imageLink        String?
   /// 旧い列。どこにも表示しない。説明文は ContentSection.imageSummary の側にある。
-  imageCaption    String?
-  website         String?
-  category        String              @default("")
-  route           String              @default("")
+  imageCaption     String?
+  website          String?
+  category         String              @default("")
+  route            String              @default("")
   // コラムのテーマ分類。/column のフィルタに使う（例: ["history", "person"]）
-  tags            String[]            @default([])
+  tags             String[]            @default([])
   // 連載コラムのみ設定。同じ seriesName を持つ Content が1つの連載を構成する
-  seriesName      String?
-  seriesOrder     Int?
-  sections        ContentSection[]
+  seriesName       String?
+  seriesOrder      Int?
+  sections         ContentSection[]
   /// 本文に登場する観光スポット。ContentAttraction を参照。
-  attractionLinks ContentAttraction[]
+  attractionLinks  ContentAttraction[]
   /// この記事から作った Instagram のカルーセル。
-  instagramPosts  InstagramPost[]
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @default(now()) @updatedAt
+  instagramPosts   InstagramPost[]
+  /// 参考資料。lib/reading-sources.ts の ReadingSource[]。記事末尾の
+  /// 「参考資料」欄と、Article の JSON-LD の citation に出る。
+  /// 記事の日付・数字・引用を実際に資料で確かめたものだけを入れる。
+  /// null(または空配列)の記事には欄ごと出さない。
+  sources          Json?
+  /// sources の資料と本文を最後に照らし合わせた日時。欄の末尾に出す。
+  sourcesCheckedAt DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @default(now()) @updatedAt
 
   /// -------------------------------------------------------------------
   /// 公開日時。読み物(column / british-english / modern-britain)の予約公開に使う。

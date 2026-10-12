@@ -36,6 +36,8 @@ export type SiteSection = {
   title: string;
   content: string[];
   links?: { label: string; href: string }[];
+  /** ページ内リンクの飛び先。記事の署名が /about#editorial を指している。 */
+  id?: string;
 };
 
 /**
@@ -89,21 +91,26 @@ function SectionBody({ section }: { section: SiteSection }) {
 
       {section.links && (
         <ul className="space-y-2 pt-1">
-          {section.links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-gray-900 underline decoration-gray-300 underline-offset-4 transition-colors hover:decoration-current dark:text-gray-100 dark:decoration-neutral-600"
-              >
-                {link.label}
-                <span aria-hidden className="text-xs text-gray-400">
-                  ↗
-                </span>
-              </a>
-            </li>
-          ))}
+          {section.links.map((link) => {
+            // サイト内のページ(お問い合わせ等)は同じタブで開く。
+            const external = /^https?:\/\//.test(link.href);
+            return (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  {...(external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="inline-flex items-center gap-1.5 text-sm text-gray-900 underline decoration-gray-300 underline-offset-4 transition-colors hover:decoration-current dark:text-gray-100 dark:decoration-neutral-600"
+                >
+                  {link.label}
+                  <span aria-hidden className="text-xs text-gray-400">
+                    {external ? "↗" : "→"}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
@@ -117,7 +124,8 @@ export function SiteSections({ sections }: { sections: SiteSection[] }) {
       {sections.map((section, index) => (
         <section
           key={section.title}
-          className="grid gap-3 py-8 first:pt-0 sm:grid-cols-[3rem_1fr] sm:gap-6"
+          id={section.id}
+          className="grid scroll-mt-24 gap-3 py-8 first:pt-0 sm:grid-cols-[3rem_1fr] sm:gap-6"
         >
           <p
             aria-hidden

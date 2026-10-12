@@ -6,6 +6,7 @@ import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
 import { resolveAttractionSlugs } from "./lib/column-attractions";
 import { resolveArticleImage } from "./lib/article-image";
 import { creditColumns } from "./lib/commons";
+import { validateSources, type ReadingSource } from "../lib/reading-sources";
 
 type ColumnSectionInput = {
   title: string;
@@ -33,6 +34,9 @@ type ColumnPayload = {
   // 両方にリンクが出る。主題に近い順に並べる。候補は
   // scripts/link-column-attractions.ts suggest --file <この JSON> で出せる。
   attractions?: string[];
+  // 参考資料。本文の日付・数字・引用を実際に開いて確かめた資料だけを入れる
+  // (lib/reading-sources.ts)。裏の取れる資料が無いテーマなら省略してよい。
+  sources?: ReadingSource[];
 };
 
 function toSlugBase(title: string): string {
@@ -146,6 +150,8 @@ async function main() {
 
   const payload: ColumnPayload = JSON.parse(readFileSync(path, "utf-8"));
   validatePayload(payload);
+  const sources =
+    payload.sources === undefined ? [] : validateSources(payload.sources);
 
   // 存在しない・非公開の slug は、コラムを作る前に弾く。
   // 作ってから失敗すると、リンクの無いコラムだけが公開されてしまう。
@@ -205,6 +211,9 @@ async function main() {
         tags: payload.tags,
         seriesName: payload.seriesName,
         seriesOrder: payload.seriesOrder,
+        ...(sources.length > 0
+          ? { sources, sourcesCheckedAt: new Date() }
+          : {}),
         sections: {
           create: sortedSections.map((s, i) => ({
             title: s.title,
@@ -230,6 +239,11 @@ async function main() {
     if (attractionIds.length > 0) {
       console.log(`Linked attractions: ${payload.attractions!.join(", ")}`);
     }
+    console.log(
+      sources.length > 0
+        ? `Sources: ${sources.length}`
+        : "Sources: none (no 参考資料 box on the page)",
+    );
   } catch (e) {
     if (
       e instanceof Prisma.PrismaClientKnownRequestError &&

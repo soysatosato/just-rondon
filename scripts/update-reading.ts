@@ -11,6 +11,9 @@
  *   投入に使ったJSONが手元に無いとき(別の作業の日に修正を頼まれた等)は、
  *   export でDBの今の中身を同じ形で書き出し、それを直して流す。
  *
+ * 参考資料(sources)は、JSONに書いたときだけ置き換える。キーが無ければ
+ * DBの値を残し、空配列なら欄を外す。置き換えたときは照合日も今日にする。
+ *
  * 節は displayOrder で突き合わせる。JSON側に無い節は削除する。
  * slug と公開日時(publishedAt)には触らない。予約中の記事を直しても
  * 予約はそのまま残る。
@@ -20,6 +23,7 @@
 
 import "dotenv/config";
 import { readFileSync, writeFileSync } from "node:fs";
+import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { COLUMN_TAGS, isKnownTag } from "../lib/column-taxonomy";
 import {
@@ -27,6 +31,11 @@ import {
   isKnownModernBritainTag,
 } from "../lib/modern-britain-taxonomy";
 import { formatJst, isScheduledCategory } from "../lib/publish-schedule";
+import {
+  parseSources,
+  validateSources,
+  type ReadingSource,
+} from "../lib/reading-sources";
 
 type SectionInput = {
   title: string;
@@ -50,6 +59,7 @@ type Payload = {
   seriesName?: string;
   seriesOrder?: number;
   sections: SectionInput[];
+  sources?: ReadingSource[];
 };
 
 /** タグの正典はセクションごとに違う。イギリス英語はタグを持たない。 */
@@ -86,6 +96,7 @@ async function exportPayload(category: string, slug: string, out: string) {
   if (!row) throw new Error(`Not found: /${category}/${slug}`);
 
   const opt = <T,>(v: T | null) => v ?? undefined;
+  const sources = parseSources(row.sources);
   const payload: Payload = {
     title: row.title,
     engTitle: opt(row.engTitle),
@@ -105,6 +116,7 @@ async function exportPayload(category: string, slug: string, out: string) {
       image: opt(sec.image),
       imageSummary: opt(sec.imageSummary),
     })),
+    ...(sources.length > 0 ? { sources } : {}),
   };
   writeFileSync(out, JSON.stringify(payload, null, 2) + "\n");
   console.log(`Exported /${category}/${slug} (${statusOf(row.publishedAt)}) -> ${out}`);
@@ -136,6 +148,8 @@ async function main() {
     throw new Error("sections must be a non-empty array");
   }
   validateTags(category, payload.tags);
+  const sources =
+    payload.sources === undefined ? undefined : validateSources(payload.sources);
 
   const existing = await db.content.findFirst({
     where: { category, slug },
@@ -147,6 +161,9 @@ async function main() {
   const extras = existing.sections.filter(
     (s) => !payload.sections.some((p) => p.displayOrder === s.displayOrder),
   );
+  const sourcesChanged =
+    sources !== undefined &&
+    JSON.stringify(sources) !== JSON.stringify(parseSources(existing.sources));
 
   if (dry) {
     console.log(
@@ -167,6 +184,12 @@ async function main() {
       );
     }
     for (const s of extras) console.log(`  [${s.displayOrder}] delete ${s.title}`);
+    if (sourcesChanged) {
+      console.log(`  sources: ${sources!.length} entries`);
+      for (const src of sources!) {
+        console.log(`    - [${src.kind}] ${src.title} (${src.publisher}) ${src.url ?? ""}`);
+      }
+    }
     return;
   }
 
@@ -184,6 +207,12 @@ async function main() {
         ...(category !== "british-english" ? { tags: payload.tags } : {}),
         ...(category === "column"
           ? { seriesName: payload.seriesName, seriesOrder: payload.seriesOrder }
+          : {}),
+        // 空配列は欄を外す。Prisma の Json? 列に null を入れるには DbNull を使う。
+        ...(sourcesChanged
+          ? sources!.length > 0
+            ? { sources, sourcesCheckedAt: new Date() }
+            : { sources: Prisma.DbNull, sourcesCheckedAt: null }
           : {}),
       },
     });
@@ -216,6 +245,7 @@ async function main() {
   console.log(
     `Updated /${category}/${slug} (${payload.sections.length} sections, ${statusOf(existing.publishedAt)})`,
   );
+  if (sourcesChanged) console.log(`Sources: ${sources!.length}`);
 }
 
 main()

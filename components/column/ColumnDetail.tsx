@@ -17,6 +17,9 @@ import AttractionSpotRail, {
   type RailSpot,
 } from "@/components/sightseeing/AttractionSpotRail";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { parseSources } from "@/lib/reading-sources";
+import { EDITORIAL_NAME, EDITORIAL_PATH } from "@/lib/seo";
+import ReadingSources from "@/components/reading/ReadingSources";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -57,6 +60,7 @@ export default function ColumnDetail({
   const sections = content.sections.slice().sort(
     (a, b) => a.displayOrder - b.displayOrder,
   );
+  const sources = parseSources(content.sources);
 
   // 連載が2本以上あるときだけ回送ナビを出す（1本しか無い連載は実質単発）
   const hasSeries = Boolean(content.seriesName) && series.length > 1;
@@ -75,8 +79,35 @@ export default function ColumnDetail({
 
       <div>
         <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <p className="text-sm text-muted-foreground">
-            {formatDate(publishedDateOf(content))}
+          {/* 署名。誰がどう作っているかは /about の編集方針に書いてある。
+              資料で裏を取った記事は、末尾の参考資料欄へ飛べるようにする。 */}
+          <p className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+            <span>{formatDate(publishedDateOf(content))}</span>
+            <span aria-hidden className="text-muted-foreground/40">
+              /
+            </span>
+            <span>
+              <span className="mr-1 text-xs">文</span>
+              <Link
+                href={EDITORIAL_PATH}
+                className="text-foreground/80 underline decoration-muted-foreground/30 underline-offset-4 transition-colors hover:text-foreground hover:decoration-current"
+              >
+                {EDITORIAL_NAME}
+              </Link>
+            </span>
+            {sources.length > 0 && (
+              <>
+                <span aria-hidden className="text-muted-foreground/40">
+                  /
+                </span>
+                <a
+                  href="#sources"
+                  className="underline decoration-muted-foreground/30 underline-offset-4 transition-colors hover:text-foreground hover:decoration-current"
+                >
+                  参考資料 {sources.length}件
+                </a>
+              </>
+            )}
           </p>
           {content.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
@@ -194,6 +225,10 @@ export default function ColumnDetail({
           </section>
         ))}
       </div>
+
+      {/* 本文の裏付け。本文の直後、ほかの記事やスポットへの導線より前に置く。
+          資料で確かめていない記事には欄ごと出さない。 */}
+      <ReadingSources sources={sources} checkedAt={content.sourcesCheckedAt} />
 
       {/* 本文に出てきた場所へ。読み終えた直後に置く。本文の途中に
           リンクを埋めると、読んでいる最中に記事の外へ連れ出すことになる。 */}
