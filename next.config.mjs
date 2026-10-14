@@ -6,32 +6,10 @@ const { RENAMED_ATTRACTION_SLUGS } = renamedSlugs;
 const nextConfig = {
   async redirects() {
     return [
-      {
-        source: "/lyrixplorer",
-        has: [{ type: "host", value: "just-rondon.com" }],
-        destination: "https://just-lyrics.com",
-        permanent: true,
-      },
-      {
-        source: "/lyrixplorer/:path*",
-        has: [{ type: "host", value: "just-rondon.com" }],
-        destination: "https://just-lyrics.com/:path*",
-        permanent: true,
-      },
-
-      // www domain
-      {
-        source: "/lyrixplorer",
-        has: [{ type: "host", value: "www.just-rondon.com" }],
-        destination: "https://just-lyrics.com",
-        permanent: true,
-      },
-      {
-        source: "/lyrixplorer/:path*",
-        has: [{ type: "host", value: "www.just-rondon.com" }],
-        destination: "https://just-lyrics.com/:path*",
-        permanent: true,
-      },
+      // /lyrixplorer は just-lyrics.com へ転送していたが、2026-10 にやめて
+      // app/lyrixplorer/[[...rest]]/route.ts で 410 を返すようにした。
+      // 歌詞全文を載せるサイトとの結びつきを AdSense の審査対象から外すため。
+      // ここに転送を戻さないこと。
 
       // 旧ビザ記事。/visa をハブ化した際に slug を整理した。
       // uk-visa-guide-2025 は URL に年が入っており、毎年 slug を作り直すか
