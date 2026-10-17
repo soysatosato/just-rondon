@@ -9,7 +9,6 @@ import {
   fetchMusicalsForBrowse,
 } from "@/utils/actions/musicals";
 import { collectionPageJsonLd } from "@/components/musicals/jsonld";
-import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 

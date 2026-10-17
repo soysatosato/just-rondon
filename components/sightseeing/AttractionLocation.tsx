@@ -1,4 +1,3 @@
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ExternalLink, MapPin } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";

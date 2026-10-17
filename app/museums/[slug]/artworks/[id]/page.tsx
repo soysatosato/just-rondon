@@ -1,4 +1,3 @@
-import Image from "next/image";
 import ImageCredit from "@/components/shared/ImageCredit";
 import { Badge } from "@/components/ui/badge";
 import { Metadata } from "next";

@@ -8,7 +8,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import GuideCallout from "@/components/guides/GuideCallout";
 import GuideFaq from "@/components/guides/GuideFaq";
 import GuideFreshness from "@/components/guides/GuideFreshness";
-import GuideNotes from "@/components/guides/GuideNotes";
 import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import GuideSources from "@/components/guides/GuideSources";
 import { SITE_URL } from "@/lib/seo";

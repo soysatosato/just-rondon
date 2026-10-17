@@ -12,7 +12,7 @@ import {
 } from "@/utils/actions/weekly";
 import { buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
-import { formatWeekRange, getISOWeekStart, getIssueFreshness } from "@/lib/weekly";
+import { getISOWeekStart, getIssueFreshness } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
@@ -61,11 +61,6 @@ export async function generateMetadata({
       noindex: true,
     });
   }
-
-  const range = formatWeekRange(brief.weekStart, brief.weekEnd).replace(
-    /\([日月火水木金土]\)/g,
-    ""
-  );
 
   return buildPageMetadata({
     // 最新号のあいだは /events を正とする。翌週になれば自分のURLが正になる。

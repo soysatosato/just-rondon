@@ -11,7 +11,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Metadata } from "next";
-import Image from "next/image";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import JsonLd from "@/components/seo/JsonLd";
 

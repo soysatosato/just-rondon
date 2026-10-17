@@ -1,5 +1,5 @@
 import type { FoodGuideArticle } from "../types";
-import { FOOD_AS_OF, FOOD_UPDATED_AT, gbp } from "@/lib/food/prices";
+import { FOOD_AS_OF, FOOD_UPDATED_AT } from "@/lib/food/prices";
 
 const whereToBuy: FoodGuideArticle = {
   slug: "where-to-buy",
