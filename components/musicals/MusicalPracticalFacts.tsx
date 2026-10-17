@@ -36,7 +36,10 @@ export default function MusicalPracticalFacts({
   const form = isEnglishForm(facts.englishForm) ? facts.englishForm : null;
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+    <section
+      id="before-you-go"
+      className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 sm:p-8"
+    >
       <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-foreground mb-2">
         観に行く前に
       </h2>

@@ -27,7 +27,10 @@ export default function MusicalSchedule({
   const visible = performances.slice(0, VISIBLE_COUNT);
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
+    <section
+      id="musical-schedule"
+      className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 sm:p-8"
+    >
       <h2 className="text-xl md:text-2xl font-semibold tracking-wide text-foreground mb-2">
         直近の公演スケジュール
       </h2>

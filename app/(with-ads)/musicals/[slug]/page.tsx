@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/card";
 import MusicalInfo from "@/components/musicals/MusicalInfo";
 import MusicalPracticalFacts from "@/components/musicals/MusicalPracticalFacts";
+import MusicalFactBar from "@/components/musicals/MusicalFactBar";
 import MusicalHero from "@/components/musicals/MusicalHero";
 import { theatrePath } from "@/components/musicals/theatres/theatres";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
@@ -125,6 +126,24 @@ export default async function musicalDetailsPage({
         />
 
         {/*
+          冒頭の要約。どこで・何時間・何歳から・英語・直近の公演を1行ずつ。
+          説明と全日程は下の節に置いたままにする(MusicalFactBar.tsx 参照)。
+        */}
+        <MusicalFactBar
+          theatreName={musical.theatre?.name ?? musical.theatreName}
+          nearestStation={musical.theatre?.nearestStation ?? null}
+          facts={{
+            runtimeMinutes: musical.runtimeMinutes,
+            intervalMinutes: musical.intervalMinutes,
+            minAgeGuidance: musical.minAgeGuidance,
+            englishForm: musical.englishForm,
+            englishNote: musical.englishNote,
+          }}
+          nextPerformance={performances[0] ?? null}
+          hasSchedule={performances.length > 0}
+        />
+
+        {/*
           観た作品を記録する。あらすじより前に置いているのは、観た人にとって
           このページが「結末の確認」ではなく「観た記録」を残す場所になるため。
           あらすじの後ろに置くと、結末のネタバレを越えないと押せない。
@@ -179,7 +198,7 @@ export default async function musicalDetailsPage({
           fetchedAt={performances[0]?.updatedAt ?? null}
         />
 
-        <div id="theatre-info" className="space-y-2">
+        <div id="theatre-info" className="scroll-mt-24 space-y-2">
           <h2 className="text-xl md:text-2xl font-semibold text-foreground">
             劇場情報
           </h2>
