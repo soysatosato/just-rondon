@@ -94,10 +94,9 @@ export default async function EventsPage() {
 
   const [staples, backIssues, forecast, changeIssue] = await Promise.all([
     fetchEventsForWeek(brief.weekStart, brief.weekEnd),
-    // 来週号は先頭で案内するので、過去号一覧からは外す。
-    fetchBackIssues(6, brief.slug).then((issues) =>
-      upcoming ? issues.filter((i) => i.slug !== upcoming.slug) : issues
-    ),
+    // この号より前に始まった号だけ。来週号は先頭で案内し、その先の号は
+    // 翌週以降に来週号として出てくるので、ここには並べない。
+    fetchBackIssues({ limit: 6, startsBefore: brief.weekStart }),
     // ここに出るのは常に最新号なので、過去号扱いにはならない。
     fetchForecastForWeek(brief.weekStart, brief.weekEnd, false),
     fetchLatestChangeIssue(),

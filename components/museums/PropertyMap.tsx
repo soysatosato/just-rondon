@@ -20,10 +20,13 @@ export default function PropertyMap({ lat, lng }: props) {
   const location = [lat, lng] as [number, number];
   return (
     <div className="bg-background-light dark:bg-background px-4 py-3 rounded-md">
+      {/* zoomControl={false} は既定の左上のズームを消すため。右下の
+          <ZoomControl> と合わせて2組出ていた。 */}
       <MapContainer
         center={location || defaultLocation}
         zoom={14}
         scrollWheelZoom={false}
+        zoomControl={false}
         className="h-[50vh] rounded-md"
       >
         <TileLayer

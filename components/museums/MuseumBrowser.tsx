@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Clock, MapPin, Search, Star, TrainFront, X } from "lucide-react";
@@ -24,6 +24,7 @@ import {
   type DurationSlug,
   type GenreSlug,
 } from "@/components/museums/taxonomy";
+import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
 
 const MuseumsMapComponent = dynamic(
   () => import("@/components/museums/MuseumsMapComponent"),
@@ -76,18 +77,58 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "price", label: "料金が安い順" },
 ];
 
+type Filters = {
+  search: string;
+  genre: GenreSlug | "all";
+  duration: DurationSlug | "all";
+  area: AreaSlug | "all";
+  freeOnly: boolean;
+  kidsOnly: boolean;
+  sort: SortKey;
+};
+
+const DEFAULT_FILTERS: Filters = {
+  search: "",
+  genre: "all",
+  duration: "all",
+  area: "all",
+  freeOnly: false,
+  kidsOnly: false,
+  sort: "recommended",
+};
+
+/** 絞り込みの URL 表現。詳細から戻ったときに条件を残すため(観光スポット一覧と同じ)。 */
+const FILTERS_IN_URL: UrlStateCodec<Filters> = {
+  keys: ["q", "genre", "duration", "area", "free", "kids", "sort"],
+  parse: (p) => ({
+    search: p.get("q") ?? "",
+    genre: pickOne(p.get("genre"), GENRES.map((g) => g.slug)) ?? "all",
+    duration: pickOne(p.get("duration"), DURATIONS.map((d) => d.slug)) ?? "all",
+    area: pickOne(p.get("area"), AREAS.map((a) => a.slug)) ?? "all",
+    freeOnly: p.get("free") === "1",
+    kidsOnly: p.get("kids") === "1",
+    sort: pickOne(p.get("sort"), SORTS.map((s) => s.key)) ?? "recommended",
+  }),
+  serialize: (f) => ({
+    q: f.search.trim() ? f.search : null,
+    genre: f.genre === "all" ? null : f.genre,
+    duration: f.duration === "all" ? null : f.duration,
+    area: f.area === "all" ? null : f.area,
+    free: f.freeOnly ? "1" : null,
+    kids: f.kidsOnly ? "1" : null,
+    sort: f.sort === "recommended" ? null : f.sort,
+  }),
+};
+
 export default function MuseumBrowser({
   museums,
 }: {
   museums: BrowsableMuseum[];
 }) {
-  const [search, setSearch] = useState("");
-  const [genre, setGenre] = useState<GenreSlug | "all">("all");
-  const [duration, setDuration] = useState<DurationSlug | "all">("all");
-  const [area, setArea] = useState<AreaSlug | "all">("all");
-  const [freeOnly, setFreeOnly] = useState(false);
-  const [kidsOnly, setKidsOnly] = useState(false);
-  const [sort, setSort] = useState<SortKey>("recommended");
+  const [filters, setFilters] = useUrlState(FILTERS_IN_URL);
+  const { search, genre, duration, area, freeOnly, kidsOnly, sort } = filters;
+  const update = (patch: Partial<Filters>) =>
+    setFilters((current) => ({ ...current, ...patch }));
 
   const decorated = useMemo<DecoratedMuseum[]>(
     () =>
@@ -194,13 +235,7 @@ export default function MuseumBrowser({
   );
 
   function reset() {
-    setSearch("");
-    setGenre("all");
-    setDuration("all");
-    setArea("all");
-    setFreeOnly(false);
-    setKidsOnly(false);
-    setSort("recommended");
+    setFilters(DEFAULT_FILTERS);
   }
 
   return (
@@ -239,7 +274,7 @@ export default function MuseumBrowser({
           <Input
             placeholder="館名・展示内容・エリアで検索（例: 恐竜、ゴッホ、South Kensington）"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => update({ search: e.target.value })}
             className="pl-9"
           />
         </div>
@@ -252,7 +287,7 @@ export default function MuseumBrowser({
           <div className="flex flex-wrap gap-1.5">
             <FilterChip
               on={genre === "all"}
-              onClick={() => setGenre("all")}
+              onClick={() => update({ genre: "all" })}
               label="すべて"
             />
             {GENRES.map((g) => {
@@ -261,7 +296,7 @@ export default function MuseumBrowser({
                 <FilterChip
                   key={g.slug}
                   on={genre === g.slug}
-                  onClick={() => setGenre(genre === g.slug ? "all" : g.slug)}
+                  onClick={() => update({ genre: genre === g.slug ? "all" : g.slug })}
                   label={`${g.chip} ${count}`}
                 />
               );
@@ -274,7 +309,7 @@ export default function MuseumBrowser({
             id="museum-duration"
             label="滞在時間"
             value={duration}
-            onChange={(v) => setDuration(v as DurationSlug | "all")}
+            onChange={(v) => update({ duration: v as DurationSlug | "all" })}
             options={[
               { value: "all", label: "指定なし" },
               ...DURATIONS.map((d) => ({ value: d.slug, label: d.label })),
@@ -284,7 +319,7 @@ export default function MuseumBrowser({
             id="museum-area"
             label="エリア"
             value={area}
-            onChange={(v) => setArea(v as AreaSlug | "all")}
+            onChange={(v) => update({ area: v as AreaSlug | "all" })}
             options={[
               { value: "all", label: "ロンドン全域" },
               ...AREAS.map((a) => ({
@@ -298,12 +333,12 @@ export default function MuseumBrowser({
           <div className="flex items-center gap-1.5 pb-0.5">
             <FilterChip
               on={freeOnly}
-              onClick={() => setFreeOnly((v) => !v)}
+              onClick={() => update({ freeOnly: !freeOnly })}
               label="無料のみ"
             />
             <FilterChip
               on={kidsOnly}
-              onClick={() => setKidsOnly((v) => !v)}
+              onClick={() => update({ kidsOnly: !kidsOnly })}
               label="子ども向き"
             />
           </div>
@@ -312,7 +347,7 @@ export default function MuseumBrowser({
               id="museum-sort"
               label="並び順"
               value={sort}
-              onChange={(v) => setSort(v as SortKey)}
+              onChange={(v) => update({ sort: v as SortKey })}
               options={sortOptions.map((s) => ({
                 value: s.key,
                 label: s.label,

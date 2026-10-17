@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import {
   Clock,
@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   CATEGORY_SECTIONS,
+  categoryChipMap,
   categoryLabel,
 } from "@/components/sightseeing/categories";
 import AddToPlanButton from "@/components/attractions/plan/AddToPlanButton";
@@ -30,6 +31,7 @@ import {
   type DurationSlug,
   type PriceSlug,
 } from "@/components/attractions/facts";
+import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
 
 export type BrowsableAttraction = {
   id: string;
@@ -88,21 +90,87 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "name", label: "名前順" },
 ];
 
+type Filters = {
+  search: string;
+  category: string | "all";
+  duration: DurationSlug | "all";
+  price: PriceSlug | "all";
+  area: string | "all";
+  kidsOnly: boolean;
+  mustSeeOnly: boolean;
+  topOnly: boolean;
+  passOnly: boolean;
+  sort: SortKey;
+};
+
+const DEFAULT_FILTERS: Filters = {
+  search: "",
+  category: "all",
+  duration: "all",
+  price: "all",
+  area: "all",
+  kidsOnly: false,
+  mustSeeOnly: false,
+  topOnly: false,
+  passOnly: false,
+  sort: "recommended",
+};
+
+/**
+ * 絞り込みの URL 表現。?category= はスポット詳細のカテゴリタグと
+ * トップの「ツアーを見る」が使っているので、名前を変えないこと。
+ */
+const FILTERS_IN_URL: UrlStateCodec<Filters> = {
+  keys: ["q", "category", "price", "duration", "area", "top", "mustsee", "kids", "pass", "sort"],
+  parse: (p) => ({
+    search: p.get("q") ?? "",
+    category: pickOne(p.get("category"), Object.keys(categoryChipMap)) ?? "all",
+    price: pickOne(p.get("price"), PRICE_FILTERS.map((f) => f.slug)) ?? "all",
+    duration:
+      pickOne(p.get("duration"), DURATION_FILTERS.map((f) => f.slug)) ?? "all",
+    area: pickOne(p.get("area"), Object.keys(AREA_LABELS)) ?? "all",
+    topOnly: p.get("top") === "1",
+    mustSeeOnly: p.get("mustsee") === "1",
+    kidsOnly: p.get("kids") === "1",
+    passOnly: p.get("pass") === "1",
+    sort: pickOne(p.get("sort"), SORTS.map((s) => s.key)) ?? "recommended",
+  }),
+  serialize: (f) => ({
+    q: f.search.trim() ? f.search : null,
+    category: f.category === "all" ? null : f.category,
+    price: f.price === "all" ? null : f.price,
+    duration: f.duration === "all" ? null : f.duration,
+    area: f.area === "all" ? null : f.area,
+    top: f.topOnly ? "1" : null,
+    mustsee: f.mustSeeOnly ? "1" : null,
+    kids: f.kidsOnly ? "1" : null,
+    pass: f.passOnly ? "1" : null,
+    sort: f.sort === "recommended" ? null : f.sort,
+  }),
+};
+
 export default function AttractionBrowser({
   attractions,
 }: {
   attractions: BrowsableAttraction[];
 }) {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string | "all">("all");
-  const [duration, setDuration] = useState<DurationSlug | "all">("all");
-  const [price, setPrice] = useState<PriceSlug | "all">("all");
-  const [area, setArea] = useState<string | "all">("all");
-  const [kidsOnly, setKidsOnly] = useState(false);
-  const [mustSeeOnly, setMustSeeOnly] = useState(false);
-  const [topOnly, setTopOnly] = useState(false);
-  const [passOnly, setPassOnly] = useState(false);
-  const [sort, setSort] = useState<SortKey>("recommended");
+  // 絞り込みは URL に持たせる。詳細から戻っても条件が残り、
+  // ?category= 付きのリンクで開けばその区分から始まる。
+  const [filters, setFilters] = useUrlState(FILTERS_IN_URL);
+  const {
+    search,
+    category,
+    duration,
+    price,
+    area,
+    kidsOnly,
+    mustSeeOnly,
+    topOnly,
+    passOnly,
+    sort,
+  } = filters;
+  const update = (patch: Partial<Filters>) =>
+    setFilters((current) => ({ ...current, ...patch }));
 
   const decorated = useMemo<Decorated[]>(
     () =>
@@ -241,16 +309,7 @@ export default function AttractionBrowser({
   }, [decorated]);
 
   function reset() {
-    setSearch("");
-    setCategory("all");
-    setDuration("all");
-    setPrice("all");
-    setArea("all");
-    setKidsOnly(false);
-    setMustSeeOnly(false);
-    setTopOnly(false);
-    setPassOnly(false);
-    setSort("recommended");
+    setFilters(DEFAULT_FILTERS);
   }
 
   return (
@@ -261,7 +320,7 @@ export default function AttractionBrowser({
           <Input
             placeholder="名前・内容・最寄駅で検索（例: 展望、テムズ、Tower Hill）"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => update({ search: e.target.value })}
             className="pl-9"
           />
         </div>
@@ -273,7 +332,7 @@ export default function AttractionBrowser({
           <div className="flex flex-wrap gap-1.5">
             <Chip
               on={category === "all"}
-              onClick={() => setCategory("all")}
+              onClick={() => update({ category: "all" })}
               label="すべて"
             />
             {CATEGORY_SECTIONS.map((c) => {
@@ -284,7 +343,7 @@ export default function AttractionBrowser({
                   key={c.slug}
                   on={category === c.slug}
                   onClick={() =>
-                    setCategory(category === c.slug ? "all" : c.slug)
+                    update({ category: category === c.slug ? "all" : c.slug })
                   }
                   label={`${c.label} ${n}`}
                 />
@@ -298,7 +357,7 @@ export default function AttractionBrowser({
             id="attraction-price"
             label="料金"
             value={price}
-            onChange={(v) => setPrice(v as PriceSlug | "all")}
+            onChange={(v) => update({ price: v as PriceSlug | "all" })}
             options={[
               { value: "all", label: "指定なし" },
               ...PRICE_FILTERS.map((p) => ({ value: p.slug, label: p.label })),
@@ -308,7 +367,7 @@ export default function AttractionBrowser({
             id="attraction-duration"
             label="滞在時間"
             value={duration}
-            onChange={(v) => setDuration(v as DurationSlug | "all")}
+            onChange={(v) => update({ duration: v as DurationSlug | "all" })}
             options={[
               { value: "all", label: "指定なし" },
               ...DURATION_FILTERS.map((d) => ({
@@ -321,7 +380,7 @@ export default function AttractionBrowser({
             id="attraction-area"
             label="エリア"
             value={area}
-            onChange={setArea}
+            onChange={(v) => update({ area: v })}
             options={[
               { value: "all", label: "指定なし" },
               ...Object.entries(AREA_LABELS)
@@ -335,22 +394,22 @@ export default function AttractionBrowser({
           <div className="flex flex-wrap items-center gap-1.5 pb-0.5">
             <Chip
               on={topOnly}
-              onClick={() => setTopOnly((v) => !v)}
+              onClick={() => update({ topOnly: !topOnly })}
               label="おすすめ度が高い"
             />
             <Chip
               on={mustSeeOnly}
-              onClick={() => setMustSeeOnly((v) => !v)}
+              onClick={() => update({ mustSeeOnly: !mustSeeOnly })}
               label="定番"
             />
             <Chip
               on={kidsOnly}
-              onClick={() => setKidsOnly((v) => !v)}
+              onClick={() => update({ kidsOnly: !kidsOnly })}
               label="子ども向き"
             />
             <Chip
               on={passOnly}
-              onClick={() => setPassOnly((v) => !v)}
+              onClick={() => update({ passOnly: !passOnly })}
               label="ロンドンパス対象"
             />
           </div>
@@ -359,7 +418,7 @@ export default function AttractionBrowser({
               id="attraction-sort"
               label="並び順"
               value={sort}
-              onChange={(v) => setSort(v as SortKey)}
+              onChange={(v) => update({ sort: v as SortKey })}
               options={sortOptions.map((s) => ({
                 value: s.key,
                 label: s.label,

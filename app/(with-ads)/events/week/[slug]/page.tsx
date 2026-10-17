@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { format } from "date-fns";
+import { addWeeks, format } from "date-fns";
 import type { Metadata } from "next";
 
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/utils/actions/weekly";
 import { buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
-import { formatWeekRange, getIssueFreshness } from "@/lib/weekly";
+import { formatWeekRange, getISOWeekStart, getIssueFreshness } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import { fetchForecastForWeek } from "@/lib/weather/forecast";
 import WeeklyBriefView from "@/components/events/WeeklyBriefView";
@@ -91,7 +91,12 @@ export default async function WeeklyBriefPage({
 
   const [staples, backIssues, forecast] = await Promise.all([
     fetchEventsForWeek(brief.weekStart, brief.weekEnd),
-    fetchBackIssues(6, brief.slug),
+    // 先の週の号は既刊ではないので外す(今週号までを並べる)。
+    fetchBackIssues({
+      limit: 6,
+      excludeSlug: brief.slug,
+      startsBefore: getISOWeekStart(addWeeks(new Date(), 1)),
+    }),
     // 過去号では取りに行かない。終わった週の予報は出しても意味がない。
     fetchForecastForWeek(brief.weekStart, brief.weekEnd, freshness.isPast),
   ]);

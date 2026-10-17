@@ -67,7 +67,11 @@ export default function MusicalHero({
           </span>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8">
+        {/*
+          下の余白は、下のカードが重なる分(-mt-8 / sm:-mt-10)を足してある。
+          p-5 のままだとカードが劇場名の行の下半分を覆っていた。
+        */}
+        <div className="absolute inset-x-0 bottom-0 p-5 pb-12 sm:p-8 sm:pb-[4.5rem]">
           <motion.span
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}

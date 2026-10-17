@@ -27,7 +27,7 @@ import {
 import { useState } from "react";
 import { MdMail } from "react-icons/md";
 
-import { NAV_SECTIONS, GROUP_COLS, MENU_WIDTH } from "./menu";
+import { NAV_SECTIONS, groupColsFor, menuWidthFor } from "./menu";
 import Wordmark from "./Wordmark";
 import AuthMenu from "./AuthMenu";
 
@@ -42,8 +42,15 @@ export default function Navbar() {
 
   return (
     <nav className="w-full print:hidden">
-      {/* モバイル */}
-      <div className="md:hidden">
+      {/*
+        モバイル。タブレット(768〜1279px)もこちらを使う。
+
+        デスクトップの横並びは中身が約1,200pxあり、以前は md(768px)から
+        切り替えていたため、iPad の幅ではナビが画面からはみ出してページ全体が
+        横スクロールになり、「観光」の頭と右端のスタンプ帳・ログインに
+        届かなかった。全項目が1行に収まる xl(1280px)まではメニューに畳む。
+      */}
+      <div className="xl:hidden">
         <div className="flex justify-between px-6 py-2">
           <Link href="/">
             <div className="flex flex-col">
@@ -157,8 +164,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* デスクトップ */}
-      <div className="hidden md:flex flex-col border-b">
+      {/* デスクトップ(1280px以上) */}
+      <div className="hidden xl:flex flex-col border-b">
         <div className="flex flex-col items-center justify-center py-2">
           <Link href="/">
             <div className="flex flex-col items-center">
@@ -169,9 +176,15 @@ export default function Navbar() {
             </div>
           </Link>
         </div>
-        <div className="flex items-center justify-center px-6 py-3 max-w-7xl mx-auto">
+        {/*
+          項目の間隔と左右の余白は詰めてある。1280px の画面で入れ物の内側は
+          1,232px しかなく、以前の間隔(gap-x-2 + 各 px-4)では右端のログインが
+          常に14px切れていた。万一はみ出しても先頭の「観光」が欠けないよう、
+          中央寄せは safe center にしている(はみ出した分は右へ逃がす)。
+        */}
+        <div className="flex items-center justify-center [justify-content:safe_center] px-6 py-3 max-w-7xl mx-auto">
           <NavigationMenu className="max-w-none shrink-0">
-            <NavigationMenuList className="flex-nowrap gap-x-2 overflow-x-auto">
+            <NavigationMenuList className="flex-nowrap overflow-x-auto">
               {NAV_SECTIONS.map((section) => {
                 if (section.kind === "link") {
                   return (
@@ -179,7 +192,7 @@ export default function Navbar() {
                       <NavigationMenuLink asChild>
                         <Link
                           href={section.href}
-                          className="inline-flex h-9 items-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                          className="inline-flex h-9 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
                         >
                           {section.label}
                         </Link>
@@ -190,11 +203,11 @@ export default function Navbar() {
 
                 return (
                   <NavigationMenuItem key={section.label} className="shrink-0">
-                    <NavigationMenuTrigger className="whitespace-nowrap">
+                    <NavigationMenuTrigger className="whitespace-nowrap px-3">
                       {section.label}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent
-                      className={`p-6 ${MENU_WIDTH[section.groups.length] ?? MENU_WIDTH[1]}`}
+                      className={`p-6 ${menuWidthFor(section.groups.length)}`}
                     >
                       <div className="flex gap-8">
                         <div className="w-52 shrink-0 space-y-2">
@@ -218,9 +231,9 @@ export default function Navbar() {
                         </div>
 
                         <div
-                          className={`grid flex-1 gap-x-6 gap-y-4 ${
-                            GROUP_COLS[section.groups.length] ?? GROUP_COLS[1]
-                          }`}
+                          className={`grid flex-1 gap-x-6 gap-y-4 ${groupColsFor(
+                            section.groups.length,
+                          )}`}
                         >
                           {section.groups.map((group, index) => (
                             <div key={group.heading ?? index}>

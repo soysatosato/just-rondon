@@ -53,10 +53,27 @@ export const fetchBriefBySlug = async (slug: string) => {
   });
 };
 
-export const fetchBackIssues = async (limit = 12, excludeSlug?: string) => {
+/**
+ * バックナンバー(既刊)の一覧。
+ *
+ * 号は2週ほど先まで公開しているので、startsBefore で先の週の号を外す。
+ * 以前は除外が「今週号と来週号」だけで、再来週の号がバックナンバーの
+ * 先頭に並んでいた。
+ */
+export const fetchBackIssues = async ({
+  limit = 12,
+  excludeSlug,
+  startsBefore,
+}: {
+  limit?: number;
+  excludeSlug?: string;
+  /** この日より前に始まる号だけを返す。 */
+  startsBefore: Date;
+}) => {
   return db.weeklyBrief.findMany({
     where: {
       published: true,
+      weekStart: { lt: startsBefore },
       ...(excludeSlug ? { slug: { not: excludeSlug } } : {}),
     },
     orderBy: { weekStart: "desc" },

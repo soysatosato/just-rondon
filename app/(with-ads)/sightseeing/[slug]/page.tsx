@@ -15,7 +15,7 @@ import {
 import { fetchMuseumIDandName } from "@/utils/actions/museums";
 import { museumSlugForAttraction } from "@/lib/museum-attraction-pairs";
 import CrossSectionLink from "@/components/shared/CrossSectionLink";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -290,7 +290,10 @@ export default async function AttractionDetail({
   params: { slug: string };
 }) {
   const attraction = await fetchAttractionDetails(params.slug);
-  if (!attraction) redirect("/");
+  // 存在しない slug は 404 を返す。以前は redirect("/") でトップへ飛ばして
+  // いたが、古いリンクから来た人は理由も分からずトップに着き、Google には
+  // soft 404 と扱われる。美術館の詳細(app/museums/[slug])と同じ直し方。
+  if (!attraction) notFound();
 
   // 近隣スポットは徒歩導線、同カテゴリーは興味の近さ。役割が違うので両方出す。
   // コラムは ContentAttraction に登録されたものだけ。無ければ枠ごと出ない。

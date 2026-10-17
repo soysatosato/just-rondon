@@ -29,6 +29,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
 import {
   MapPin,
   Search,
@@ -45,6 +46,33 @@ import ViewRanking, { type RankedItem } from "@/components/rankings/ViewRanking"
 
 type SortOption = "recommend" | "name";
 type ViewMode = "grid" | "list";
+
+type Filters = {
+  search: string;
+  mustSeeOnly: boolean;
+  onShowOnly: boolean;
+  sortBy: SortOption;
+};
+
+/**
+ * 絞り込みの URL 表現。詳細から戻ったときに条件を残すため(観光スポット一覧と同じ)。
+ * 表示の切り替え(グリッド/リスト)は絞り込みではないので持たせない。
+ */
+const FILTERS_IN_URL: UrlStateCodec<Filters> = {
+  keys: ["q", "mustsee", "onshow", "sort"],
+  parse: (p) => ({
+    search: p.get("q") ?? "",
+    mustSeeOnly: p.get("mustsee") === "1",
+    onShowOnly: p.get("onshow") === "1",
+    sortBy: pickOne(p.get("sort"), ["recommend", "name"] as const) ?? "recommend",
+  }),
+  serialize: (f) => ({
+    q: f.search.trim() ? f.search : null,
+    mustsee: f.mustSeeOnly ? "1" : null,
+    onshow: f.onShowOnly ? "1" : null,
+    sort: f.sortBy === "recommend" ? null : f.sortBy,
+  }),
+};
 
 function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
   return (
@@ -103,12 +131,12 @@ export default function MusicalHomePage({
    */
   ranking: { weekly: RankedItem[]; allTime: RankedItem[] };
 }) {
-  const [search, setSearch] = useState("");
-  const [mustSeeOnly, setMustSeeOnly] = useState(false);
-  // 現状は全31作品が isOnShow: true のため、このトグルは今のところ
+  // 現状は全31作品が isOnShow: true のため、onShowOnly は今のところ
   // 見た目上の絞り込み効果を持たない。上映終了作品が出た際に機能する。
-  const [onShowOnly, setOnShowOnly] = useState(false);
-  const [sortBy, setSortBy] = useState<SortOption>("recommend");
+  const [filters, setFilters] = useUrlState(FILTERS_IN_URL);
+  const { search, mustSeeOnly, onShowOnly, sortBy } = filters;
+  const update = (patch: Partial<Filters>) =>
+    setFilters((current) => ({ ...current, ...patch }));
   const [view, setView] = useState<ViewMode>("grid");
 
   const spotlightMusicals = useMemo(
@@ -212,7 +240,7 @@ export default function MusicalHomePage({
               <Input
                 placeholder="作品名・キーワードで検索（例: 家族向け、ディズニー）"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => update({ search: e.target.value })}
                 className="pl-9"
               />
             </div>
@@ -220,7 +248,7 @@ export default function MusicalHomePage({
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={() => setMustSeeOnly((v) => !v)}
+                onClick={() => update({ mustSeeOnly: !mustSeeOnly })}
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
                   mustSeeOnly
@@ -232,7 +260,7 @@ export default function MusicalHomePage({
               </button>
               <button
                 type="button"
-                onClick={() => setOnShowOnly((v) => !v)}
+                onClick={() => update({ onShowOnly: !onShowOnly })}
                 className={cn(
                   "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
                   onShowOnly
@@ -244,7 +272,7 @@ export default function MusicalHomePage({
               </button>
               <Select
                 value={sortBy}
-                onValueChange={(v) => setSortBy(v as SortOption)}
+                onValueChange={(v) => update({ sortBy: v as SortOption })}
               >
                 <SelectTrigger className="w-36">
                   <SelectValue placeholder="並び替え" />

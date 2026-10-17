@@ -367,9 +367,12 @@ export const NAV_SECTIONS: NavSection[] = [
  *
  * 4以上は3列に丸める。「住む・働く」のように束が増えた区分で1列に落ちると、
  * ドロップダウンが縦に伸びて画面に収まらなくなるため。
- * 参照側の `?? GROUP_COLS[1]` は 0 件のときだけ効くフォールバックとして残す。
+ *
+ * 表を直接引かず、下の groupColsFor / menuWidthFor を通すこと。以前は
+ * `GROUP_COLS[n] ?? GROUP_COLS[1]` と引いていたため、「住む・働く」が
+ * 9束に増えた時点で表の外に出て1列に落ち、ドロップダウンが画面の下へ突き抜けた。
  */
-export const GROUP_COLS: Record<number, string> = {
+const GROUP_COLS: Record<number, string> = {
   1: "grid-cols-1",
   2: "grid-cols-2",
   3: "grid-cols-3",
@@ -381,7 +384,7 @@ export const GROUP_COLS: Record<number, string> = {
 };
 
 // NavigationMenuContent は md 以上で md:w-auto が効くため、w-* ではなく min-w-* で指定する。
-export const MENU_WIDTH: Record<number, string> = {
+const MENU_WIDTH: Record<number, string> = {
   1: "min-w-[520px]",
   2: "min-w-[680px]",
   3: "min-w-[900px]",
@@ -391,3 +394,16 @@ export const MENU_WIDTH: Record<number, string> = {
   7: "min-w-[900px]",
   8: "min-w-[900px]",
 };
+
+/** 表の範囲(1〜8)に収める。8を超えた束の数は8と同じ3列で組む。 */
+function clampGroups(count: number): number {
+  return Math.min(Math.max(count, 1), 8);
+}
+
+export function groupColsFor(groupCount: number): string {
+  return GROUP_COLS[clampGroups(groupCount)];
+}
+
+export function menuWidthFor(groupCount: number): string {
+  return MENU_WIDTH[clampGroups(groupCount)];
+}
