@@ -328,11 +328,13 @@ function PickerRow({
           href={`/sightseeing/${spot.slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex min-w-0 items-center gap-1 text-sm font-semibold underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"
+          className="group flex min-w-0 items-start gap-1 text-sm font-semibold leading-snug underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"
         >
-          <span className="truncate">{spot.name}</span>
+          {/* 1行で切ると、スマホの狭い列では「ウェストミン…」のように
+              6〜7字しか残らず、どのスポットか判別できなかった。2行まで出す。 */}
+          <span className="line-clamp-2 break-words">{spot.name}</span>
           <ArrowUpRight
-            className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
             aria-label="新しいタブで開く"
           />
         </Link>
