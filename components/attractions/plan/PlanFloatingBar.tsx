@@ -35,22 +35,30 @@ export default function PlanFloatingBar() {
   if (HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 print:hidden">
-      <Link
-        href="/plan"
-        className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700"
-      >
-        <CalendarRange className="h-4 w-4" aria-hidden />
-        旅行プランを見る
-        <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs tabular-nums">
-          {count}
-        </span>
-        {needsChoice && (
-          <span className="rounded-full bg-amber-400 px-2 py-0.5 text-xs font-bold text-amber-950">
-            要確認
+    <>
+      {/*
+        バーの高さぶんの余白をページの最後に足す。バーは画面の下に
+        固定されているので、これが無いとページを最後まで送っても
+        フッターの最後の行がバーの下に隠れたままになる。
+      */}
+      <div aria-hidden className="h-20 print:hidden" />
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 print:hidden">
+        <Link
+          href="/plan"
+          className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700"
+        >
+          <CalendarRange className="h-4 w-4" aria-hidden />
+          旅行プランを見る
+          <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs tabular-nums">
+            {count}
           </span>
-        )}
-      </Link>
-    </div>
+          {needsChoice && (
+            <span className="rounded-full bg-amber-400 px-2 py-0.5 text-xs font-bold text-amber-950">
+              要確認
+            </span>
+          )}
+        </Link>
+      </div>
+    </>
   );
 }
