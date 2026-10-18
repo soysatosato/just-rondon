@@ -174,9 +174,10 @@ export default function AreaDetail({
               {...responsiveImage(content.image, IMAGE_SIZES.article)}
               alt={content.title}
               className="absolute inset-0 h-full w-full object-cover"
-              loading="lazy"
+              // 冒頭の写真は PC では最初の画面に入る(LCP の候補)。遅延読み込みと
+              // 低い優先度を付けると、ページで最後に読み込まれていた。
+              loading="eager"
               decoding="async"
-              fetchPriority="low"
             />
           </div>
           {/* Commons の CC 画像は作者名とライセンスの表示が利用の条件。 */}

@@ -1,7 +1,3 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-
 import Link from "next/link";
 import HeroSearch from "@/components/home/HeroSearch";
 
@@ -29,44 +25,41 @@ const SHORTCUTS = [
   { href: "/prices", label: "物価" },
 ];
 
+/*
+  浮き上がりは CSS のアニメーション(tailwindcss-animate)で付ける。
+  以前は JS のアニメーションの初期値として opacity:0 をサーバーの HTML に
+  書いていたため、JS の読み込みと実行が終わるまで h1 と説明文が見えなかった
+  (Slow 4G 相当で最初の描画から 0.7 秒遅れ)。CSS なら描画と同時に動き出す。
+  動きを減らす設定では付けない。
+*/
+const RISE =
+  "animate-in fade-in-0 slide-in-from-bottom-4 fill-mode-both duration-700 ease-out motion-reduce:animate-none";
+
 export default function HeroIntro() {
-  const reduceMotion = useReducedMotion();
-
-  const rise = (delay: number) =>
-    reduceMotion
-      ? {}
-      : {
-          initial: { opacity: 0, y: 18 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
-        };
-
   return (
     <div className="max-w-xl">
       {/* ページ唯一の h1。 */}
-      <motion.h1
-        {...rise(0)}
-        className="text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem]"
+      <h1
+        className={`text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem] ${RISE}`}
       >
         ロンドン観光・旅行・
         <br className="hidden sm:block" />
         現地暮らしのガイド
-      </motion.h1>
+      </h1>
 
       {/*
         「日本語のロンドン情報サイト」だけでは他と区別がつかないので、
         扱っている幅(3日の旅行から数年の生活まで)を最初の1文に入れる。
       */}
-      <motion.p
-        {...rise(0.08)}
-        className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base"
+      <p
+        className={`mt-5 text-sm leading-relaxed text-muted-foreground delay-75 sm:text-base ${RISE}`}
       >
         定番の観光スポットと無料で入れる美術館、ウエストエンドのミュージカル。
         毎週更新する現地の最新情報と、ビザ・住まい・仕事の実務まで。
         3日間の旅行から数年の生活まで、日本語でまとめています。
-      </motion.p>
+      </p>
 
-      <motion.div {...rise(0.16)} className="mt-8">
+      <div className={`mt-8 delay-150 ${RISE}`}>
         <HeroSearch />
 
         {/*
@@ -87,7 +80,7 @@ export default function HeroIntro() {
             ))}
           </ul>
         </nav>
-      </motion.div>
+      </div>
     </div>
   );
 }
