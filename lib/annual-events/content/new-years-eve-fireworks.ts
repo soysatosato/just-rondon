@@ -59,15 +59,21 @@ export const newYearsEveFireworks: EventGuide = {
       year: 2026,
       dates: [{ date: "2026-12-31", time: "20:00〜22:30に入場、24:00から花火" }],
       notes: [
-        "開催は決まっているが、チケットの発売日と値段はまだ発表されていない。",
-        "前回(2025年)は10月中旬に第1弾、11月下旬に最終弾を売り出した。",
+        "チケットの第1弾は2026年10月23日(金)の正午にTicketmasterで売り出される。年内にもう1回、少ない枚数の最終弾が出る(日付は未発表)。",
+        "値段は前回から据え置きで、ブルー・ピンク・ホワイトが£55(ロンドン在住者は£35)、レッド・グリーン・オレンジが£40(同£20)。別に手数料がかかる。",
       ],
       glance: [
-        { label: "値段", value: "未発表", sub: "前回は£20〜£55" },
-        { label: "発売", value: "未発表", sub: "前回は10月と11月の2回" },
+        { label: "値段", value: "£20〜£55", sub: "ロンドン在住者は割引" },
+        { label: "発売", value: "10月23日(金)正午", sub: "最終弾は年内に別に" },
       ],
-      sources: [MAYOR_NYE, TICKETMASTER_NYE],
-      checkedAt: "2026-10-05",
+      sources: [
+        {
+          label: "Mayor of London – 第1弾の発売(2026年10月16日)",
+          url: "https://www.london.gov.uk/media-centre/mayors-press-release/Mayor-announces-tickets-for-London%E2%80%99s-world-famous-New-Year%E2%80%99s-Eve-fireworks-go-on-sale-next-week",
+        },
+        TICKETMASTER_NYE,
+      ],
+      checkedAt: "2026-10-18",
     },
   ],
   tickets: {
