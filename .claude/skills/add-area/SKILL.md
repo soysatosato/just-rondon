@@ -328,7 +328,9 @@ git の操作(commit, push, branch作成など)は一切行わない。
 ## Step 10 — ツイート案を出す
 
 完了報告に続けて、公式X用のツイート案を**4〜5案**書き出す。頼まれなくても
-毎回出す。DBには登録しない(下書き登録が要るときだけ `/add-tweets` を使う)。
+毎回出す。**1案目は王道の要約**(記事の結論をひと言で)にし、それだけを
+`/tweets` に下書き登録する(この Step の最後)。残りの案はチャットに出すだけで、
+DBには入れない。投稿は人が `/tweets` からコピペで行う。
 
 - **140字以内**。URLを含めた実文字数で数え、各案に字数を添える
 - 1行目は見出し **【ロンドンの街】**
@@ -345,3 +347,18 @@ python3 -c 'import sys; t=sys.stdin.read().rstrip("\n"); print(len(t), "OK" if l
 https://www.just-rondon.com/reading/areas/<slug>
 TWEET
 ```
+
+### 王道の要約を `/tweets` に登録する
+
+1案目だけをスクラッチパッドの JSON に書き出して登録する。`category` は
+セクション名(`area`)にする。本文の改行は `\n` で書く。
+
+```bash
+npx tsx scripts/create-tweets.ts <JSONのパス>
+```
+
+```json
+[{ "body": "【ロンドンの街】\n…本文…\nhttps://www.just-rondon.com/reading/areas/<slug>", "category": "area" }]
+```
+
+記事は登録した時点で公開されているので、`/tweets` ではそのまま投稿できる欄に並ぶ。

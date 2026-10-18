@@ -11,9 +11,11 @@ type Props = {
   body: string;
   category: string;
   createdAt: string;
+  /** 貼ってある記事がまだ公開されていないときの注意。 */
+  notice?: string;
 };
 
-export default function TweetDraftCard({ id, body, category, createdAt }: Props) {
+export default function TweetDraftCard({ id, body, category, createdAt, notice }: Props) {
   const [copied, setCopied] = useState(false);
   const [confirmingReject, setConfirmingReject] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -43,6 +45,11 @@ export default function TweetDraftCard({ id, body, category, createdAt }: Props)
         <span className="text-xs text-muted-foreground">{createdAt}</span>
       </CardHeader>
       <CardContent>
+        {notice && (
+          <p className="mb-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+            {notice}
+          </p>
+        )}
         <p className="whitespace-pre-wrap text-sm leading-relaxed">{body}</p>
         <p className="mt-2 text-right text-xs text-muted-foreground">
           {body.length} / 140

@@ -279,6 +279,8 @@ npx tsx scripts/backup-db.ts
 
 公式X用のツイート案を2〜3案添える。**公開後に投稿する**(承認前は号の URL が404)。
 140字以内、1行目は **【今月変わったロンドン】**、末尾に号の URL。字数は実測する。
+**1案目は王道の要約**(その月のいちばん大きな改定をひと言で)にし、それだけを
+`/tweets` に下書き登録する。残りの案はチャットに出すだけで、DBには入れない。
 
 ```bash
 python3 -c 'import sys; t=sys.stdin.read().rstrip("\n"); print(len(t), "OK" if len(t)<=140 else "NG")' <<'TWEET'
@@ -287,3 +289,16 @@ python3 -c 'import sys; t=sys.stdin.read().rstrip("\n"); print(len(t), "OK" if l
 https://www.just-rondon.com/changes/<slug>
 TWEET
 ```
+
+1案目の登録は、スクラッチパッドの JSON に書き出して次で行う。`category` は
+`changes`。本文の改行は `\n` で書く。
+
+```bash
+npx tsx scripts/create-tweets.ts <JSONのパス>
+```
+
+```json
+[{ "body": "【今月変わったロンドン】\n…本文…\nhttps://www.just-rondon.com/changes/<slug>", "category": "changes" }]
+```
+
+号が下書きのあいだ、`/tweets` はこのツイートを「記事の公開待ち」に分けて出す。

@@ -17,7 +17,9 @@ import {
 } from "@/lib/publish-schedule";
 import {
   ApproveForm,
+  DiscardForm,
   PublishIssueForm,
+  PublishNowForm,
   RescheduleForm,
   UnscheduleForm,
 } from "@/components/admin/ScheduleForms";
@@ -189,8 +191,8 @@ export default async function ReadingAdminPage() {
         </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        下書きをプレビューで読み、承認すると予約に入ります。文章の修正はチャットで
-        Claude に伝えてください。
+        下書きをプレビューで読み、承認すると予約に入ります。急ぐ記事は「いま公開」、
+        出さない記事は「ボツ」で削除できます。文章の修正はチャットで Claude に伝えてください。
       </p>
 
       {/* 公開ルール。日本時間は夏冬で変わるので、直近の枠で出す。 */}
@@ -265,6 +267,10 @@ export default async function ReadingAdminPage() {
                     defaultDate={nearestSlotDate(c, now)}
                     minDate={today}
                   />
+                  <PublishNowForm id={row.id} />
+                  <div className="ml-auto">
+                    <DiscardForm id={row.id} title={row.title} />
+                  </div>
                 </div>
               </li>
             );

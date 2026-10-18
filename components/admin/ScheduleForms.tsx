@@ -4,7 +4,9 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
   approveContent,
+  discardContent,
   publishChangeIssue,
+  publishContentNow,
   rescheduleContent,
   unscheduleContent,
   type AdminActionState,
@@ -23,7 +25,7 @@ export function Submit({
   variant = "default",
 }: {
   children: React.ReactNode;
-  variant?: "default" | "outline";
+  variant?: "default" | "outline" | "destructive";
 }) {
   const { pending } = useFormStatus();
   return (
@@ -93,6 +95,40 @@ export function ApproveForm({
           </>
         )}
       </div>
+      <Result state={state} />
+    </form>
+  );
+}
+
+/** 下書きを枠を待たずにいま公開する。 */
+export function PublishNowForm({ id }: { id: string }) {
+  const [state, action] = useFormState(publishContentNow, null);
+  return (
+    <form
+      action={action}
+      onSubmit={(e) => {
+        if (!confirm("この記事をいま公開しますか？公開後は下書きに戻せません。")) e.preventDefault();
+      }}
+    >
+      <input type="hidden" name="id" value={id} />
+      <Submit variant="outline">いま公開</Submit>
+      <Result state={state} />
+    </form>
+  );
+}
+
+/** 下書きをボツにする(削除)。この記事を貼ったツイートの下書きも不採用になる。 */
+export function DiscardForm({ id, title }: { id: string; title: string }) {
+  const [state, action] = useFormState(discardContent, null);
+  return (
+    <form
+      action={action}
+      onSubmit={(e) => {
+        if (!confirm(`「${title}」をボツにして削除しますか？元には戻せません。`)) e.preventDefault();
+      }}
+    >
+      <input type="hidden" name="id" value={id} />
+      <Submit variant="destructive">ボツ</Submit>
       <Result state={state} />
     </form>
   );
