@@ -113,8 +113,9 @@ export default function PlaqueAreaPage({ params }: Props) {
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
           {area.title}のブループラーク巡り
         </h1>
-        <p className="text-sm text-muted-foreground italic mb-4">
-          {area.engTitle} — {area.routeHint}
+        <p className="text-sm text-muted-foreground mb-4">
+          {/* 斜体は欧文の題だけ。和文に掛けると機械的に傾いた字になる。 */}
+          <span className="italic">{area.engTitle}</span> — {area.routeHint}
         </p>
         <div className="space-y-3 text-gray-700 dark:text-gray-300 leading-relaxed">
           {area.lead.map((paragraph, i) => (

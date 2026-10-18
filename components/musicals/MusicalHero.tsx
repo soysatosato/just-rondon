@@ -125,7 +125,7 @@ export default function MusicalHero({
           )}
 
           {blurb && (
-            <p className="text-sm text-muted-foreground italic">{blurb}</p>
+            <p className="text-sm text-muted-foreground">{blurb}</p>
           )}
 
           <div className="flex flex-wrap gap-2">

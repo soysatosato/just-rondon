@@ -145,7 +145,7 @@ export default async function MuseumDetailsPage({
           館名の h1 と二重になっていた。リード文として置く。 */}
       {museum.blurb && (
         <div className="mt-6 flex items-start justify-between gap-4">
-          <p className="border-l-2 border-indigo-500 pl-4 text-sm italic leading-relaxed text-muted-foreground">
+          <p className="border-l-2 border-indigo-500 pl-4 text-sm leading-relaxed text-muted-foreground">
             {museum.blurb}
           </p>
           <div className="shrink-0">

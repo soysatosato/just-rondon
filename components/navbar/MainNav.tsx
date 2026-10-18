@@ -67,7 +67,7 @@ export default function Navbar() {
           <Link href="/" className="min-w-0">
             <div className="flex flex-col">
               <Wordmark className="h-[30px]" />
-              <span className="mt-1 whitespace-nowrap text-xs text-muted-foreground font-normal italic opacity-70">
+              <span className="mt-1 whitespace-nowrap text-xs text-muted-foreground font-normal">
                 ロンドン観光・旅行・現地ガイド
               </span>
             </div>
@@ -132,7 +132,7 @@ export default function Navbar() {
                                 className="flex flex-col space-y-2"
                               >
                                 {group.heading && (
-                                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                  <p className="text-xs font-semibold text-muted-foreground">
                                     {group.heading}
                                   </p>
                                 )}
@@ -190,7 +190,7 @@ export default function Navbar() {
           <Link href="/">
             <div className="flex flex-col items-center">
               <Wordmark className="h-10" />
-              <span className="mt-1 text-xs text-gray-600 dark:text-gray-400 font-normal italic opacity-70">
+              <span className="mt-1 text-xs text-muted-foreground font-normal">
                 ロンドン観光・旅行・現地ガイド
               </span>
             </div>
@@ -264,7 +264,7 @@ export default function Navbar() {
                           {section.groups.map((group, index) => (
                             <div key={group.heading ?? index}>
                               {group.heading && (
-                                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                <p className="mb-2 text-xs font-semibold text-muted-foreground">
                                   {group.heading}
                                 </p>
                               )}

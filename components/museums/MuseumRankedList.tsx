@@ -92,7 +92,7 @@ export default function MuseumRankedList({
               </div>
 
               {m.blurb && (
-                <p className="border-l-2 border-indigo-500 pl-3 text-sm italic leading-relaxed text-muted-foreground">
+                <p className="border-l-2 border-indigo-500 pl-3 text-sm leading-relaxed text-muted-foreground">
                   {m.blurb}
                 </p>
               )}

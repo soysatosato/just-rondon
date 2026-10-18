@@ -133,7 +133,7 @@ export default function ColumnDetail({
           {content.title}
         </h1>
         {content.summary && (
-          <div className={`text-muted-foreground italic ${proseClass}`}>
+          <div className={`text-muted-foreground ${proseClass}`}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {content.summary}
             </ReactMarkdown>

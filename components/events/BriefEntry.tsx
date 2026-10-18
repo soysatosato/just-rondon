@@ -146,8 +146,8 @@ export default function BriefEntry({
             </span>
 
             {featured && (
-              <span className="font-serif text-xs font-bold uppercase tracking-[0.2em] text-foreground/70 dark:text-gray-300">
-                Lead ・ 今週の一本
+              <span className="font-serif text-xs font-bold text-foreground/70 dark:text-gray-300">
+                <span className="uppercase tracking-[0.2em]">Lead</span> ・ 今週の一本
               </span>
             )}
 

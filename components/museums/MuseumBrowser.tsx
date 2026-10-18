@@ -282,7 +282,7 @@ export default function MuseumBrowser({
 
         {/* ジャンル。この一覧でいちばん最初に効く軸なので、選択肢を畳まず全部見せる。 */}
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">
             何が置いてあるか
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -610,7 +610,7 @@ function SelectField({
     <div className="space-y-1">
       <label
         htmlFor={id}
-        className="block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+        className="block text-xs font-semibold text-muted-foreground"
       >
         {label}
       </label>

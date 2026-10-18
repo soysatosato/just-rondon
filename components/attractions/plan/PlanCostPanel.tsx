@@ -126,7 +126,7 @@ export default function PlanCostPanel({
       <div className="overflow-x-auto border-b border-border">
         <table className="w-full text-xs tabular-nums">
           <thead>
-            <tr className="border-b border-border text-left text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <tr className="border-b border-border text-left text-xs text-muted-foreground">
               <th className="px-4 py-2 font-semibold">日</th>
               <th className="px-2 py-2 text-right font-semibold">入場料</th>
               <th className="px-4 py-2 text-right font-semibold">交通費（目安）</th>
@@ -251,7 +251,7 @@ function BlockHeading({
   children: React.ReactNode;
 }) {
   return (
-    <h3 className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+    <h3 className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
       <Icon className="h-3.5 w-3.5" aria-hidden />
       {children}
     </h3>

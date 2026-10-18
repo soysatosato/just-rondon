@@ -176,8 +176,9 @@ export default async function RestaurantsPage() {
         足せばここにも自動で並ぶ。並び順もあちらに従う。
       */}
       <section className="mt-10">
-        <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-          Before You Order ・ 店に入る前に
+        <h2 className="text-xs font-bold text-muted-foreground">
+          <span className="uppercase tracking-[0.22em]">Before You Order</span>{" "}
+          ・ 店に入る前に
         </h2>
         <ul className="mt-3 grid gap-3 sm:grid-cols-2">
           {restaurantGuides.map((g) => (
@@ -205,8 +206,8 @@ export default async function RestaurantsPage() {
       <AdSenseUnit slot={AD_SLOTS.listing} className="mt-10" />
 
       <section className="mt-12">
-        <h2 className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
-          By Dish ・ 料理から選ぶ
+        <h2 className="text-xs font-bold text-muted-foreground">
+          <span className="uppercase tracking-[0.22em]">By Dish</span> ・ 料理から選ぶ
         </h2>
         <div className="mt-6 grid gap-x-8 gap-y-10 md:grid-cols-2">
           {dishes.map((dish) => (

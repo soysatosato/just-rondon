@@ -99,7 +99,7 @@ export default async function SongDetailsPage({
           <p className="text-base sm:text-xl  mb-1">
             <span className="font-semibold">Artist:</span> {song.artist}
           </p>
-          <p className="text-sm text-muted-foreground italic pt-3">
+          <p className="text-sm text-muted-foreground pt-3">
             {song.scene}
           </p>
         </div>

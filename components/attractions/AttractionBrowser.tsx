@@ -369,7 +369,7 @@ export default function AttractionBrowser({
         )}
 
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">
             種類
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -885,7 +885,7 @@ function Select({
     <div className="space-y-1">
       <label
         htmlFor={id}
-        className="block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+        className="block text-xs font-semibold text-muted-foreground"
       >
         {label}
       </label>
