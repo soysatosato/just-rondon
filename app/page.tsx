@@ -23,7 +23,9 @@ import { fetchHomeRails } from "@/utils/actions/home";
 import { fetchCurrentBriefs } from "@/utils/actions/weekly";
 import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { londonDate, publishedDateOf } from "@/lib/publish-schedule";
+import { eventMonthPath } from "@/lib/events";
+import { getMonthGuide } from "@/lib/london-months/content";
 import { stripInlineMarkdown } from "@/lib/plain-text";
 import { responsiveImage } from "@/lib/wikimedia-image";
 import {
@@ -169,6 +171,19 @@ const SITE_INDEX = [
   },
 ];
 
+/**
+ * 「今月」の帯に添える行事。月(ロンドン時間、1〜12)で出し分ける。
+ * 会期・発売日は各ページが出典つきで持つので、ここはリンクだけ。
+ * 行事のページを足したら、ここにも出す月を足す。
+ */
+const SEASONAL_LINKS: { months: number[]; href: string; label: string }[] = [
+  { months: [10, 11], href: "/events/bonfire-night", label: "ボンファイア・ナイトの花火" },
+  { months: [10, 11, 12], href: "/sightseeing/christmas-markets", label: "クリスマスマーケット" },
+  { months: [11, 12], href: "/sightseeing/hyde-park-winter-wonderland", label: "ウィンター・ワンダーランド" },
+  { months: [11, 12], href: "/events/new-years-eve-fireworks", label: "年越し花火" },
+  { months: [12, 1], href: "/events/new-years-day-parade", label: "元日のパレード" },
+];
+
 export default async function Page() {
   const now = new Date();
   const [
@@ -199,6 +214,20 @@ export default async function Page() {
     image: slide.image,
     blurb: slide.tagline,
   }));
+
+  // 今月の帯。本文を書いた月(lib/london-months)か、行事のある時期にだけ出す。
+  const month = Number(londonDate(now).slice(5, 7));
+  const monthGuide = getMonthGuide(month);
+  const seasonal = SEASONAL_LINKS.filter((link) => link.months.includes(month));
+  const thisMonth =
+    monthGuide || seasonal.length > 0
+      ? {
+          month,
+          guide: monthGuide,
+          guideHref: eventMonthPath(month),
+          links: seasonal,
+        }
+      : null;
 
   // 読み物は各カテゴリの新しい方から2本ずつ拾い、全体を新着順に並べ替える。
   // 1カテゴリが連投してもトップが偏らないよう、取り込みは2本までに絞る。
@@ -267,7 +296,9 @@ export default async function Page() {
           <div className="lg:col-span-5">
             <HeroIntro />
           </div>
-          <div className="h-[300px] sm:h-[420px] lg:col-span-7 lg:h-[500px]">
+          {/* スマホでは写真を低めにして、検索と近道の下に続く
+              「今日」の帯(天気・運行・為替)を1画面目に近づける。 */}
+          <div className="h-[220px] sm:h-[420px] lg:col-span-7 lg:h-[500px]">
             <HeroMosaic items={heroTiles} />
           </div>
         </div>
@@ -364,6 +395,57 @@ export default async function Page() {
               </div>
             )}
           </Reveal>
+
+          {/*
+            今月。「◯月のロンドン」(天気・服装・祝日・催し)と、その時期の
+            行事への入口。今週号は来週には古くなるが、旅の計画は数週間先の
+            ことが多いので、月の単位でも案内する。本文のある月と行事のある
+            時期にだけ出る(thisMonth を参照)。
+          */}
+          {thisMonth && (
+            <Reveal className="mt-6">
+              <div className="flex flex-col gap-4 rounded-2xl border bg-card p-5 shadow-sm sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                    今月のロンドン
+                  </p>
+                  {thisMonth.guide ? (
+                    <>
+                      <h2 className="mt-1 text-xl font-bold tracking-tight">
+                        <Link
+                          href={thisMonth.guideHref}
+                          className="underline-offset-4 hover:underline"
+                        >
+                          {thisMonth.month}月のロンドン
+                        </Link>
+                      </h2>
+                      <p className="mt-1.5 line-clamp-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                        {thisMonth.guide.lead}
+                      </p>
+                    </>
+                  ) : (
+                    <h2 className="mt-1 text-xl font-bold tracking-tight">
+                      {thisMonth.month}月の行事
+                    </h2>
+                  )}
+                </div>
+                {thisMonth.links.length > 0 && (
+                  <ul className="flex shrink-0 flex-wrap gap-2 lg:max-w-md lg:justify-end">
+                    {thisMonth.links.map((link) => (
+                      <li key={link.href}>
+                        <Link
+                          href={link.href}
+                          className="inline-block rounded-full border border-border px-3 py-1.5 text-sm transition hover:border-foreground/40"
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </Reveal>
+          )}
         </div>
       </section>
 

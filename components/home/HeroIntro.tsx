@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
+import Link from "next/link";
 import HeroSearch from "@/components/home/HeroSearch";
 
 /**
@@ -18,6 +19,16 @@ import HeroSearch from "@/components/home/HeroSearch";
  * サイト名はここには出さない。すぐ上のヘッダーにワードマークがあるので、
  * 画面の同じ高さに同じ名前が二度並ぶだけだった。
  */
+/** ヒーローの近道。旅の準備で最初に開かれるページから並べる。 */
+const SHORTCUTS = [
+  { href: "/sightseeing/itinerary", label: "モデルコース" },
+  { href: "/sightseeing/eta-uk-visa-guide", label: "ETA" },
+  { href: "/sightseeing/transport", label: "交通" },
+  { href: "/travel", label: "旅の準備" },
+  { href: "/events", label: "今週のロンドン" },
+  { href: "/prices", label: "物価" },
+];
+
 export default function HeroIntro() {
   const reduceMotion = useReducedMotion();
 
@@ -57,6 +68,25 @@ export default function HeroIntro() {
 
       <motion.div {...rise(0.16)} className="mt-8">
         <HeroSearch />
+
+        {/*
+          よく使うページへの近道。トップに来る人の多くは旅の準備の途中で、
+          検索語を考えるより押したほうが早い行き先がある。
+        */}
+        <nav aria-label="よく使うページ" className="mt-5">
+          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium">
+            {SHORTCUTS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="inline-block py-1.5 underline decoration-border underline-offset-4 transition hover:decoration-current"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </motion.div>
     </div>
   );
