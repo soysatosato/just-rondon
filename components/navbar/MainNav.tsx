@@ -31,6 +31,7 @@ import { NAV_SECTIONS, groupColsFor, menuWidthFor } from "./menu";
 import Wordmark from "./Wordmark";
 import AuthMenu from "./AuthMenu";
 import { useAutoHideHeader } from "./useAutoHideHeader";
+import SearchTrigger from "@/components/search/SearchTrigger";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -59,16 +60,21 @@ export default function Navbar() {
         届かなかった。全項目が1行に収まる xl(1280px)まではメニューに畳む。
       */}
       <div ref={header.ref} className="border-b border-border/60 xl:hidden">
-        <div className="flex justify-between px-6 py-2">
-          <Link href="/">
+        {/* 右に検索とメニューの2つ(各44px)を置くので、ロゴの下の一文は
+            ロゴと重なる「JUST RONDON -」を省いて1行に収める。2行に折れると
+            追従するヘッダーが高くなる。 */}
+        <div className="flex items-center justify-between gap-3 px-4 py-2 sm:px-6">
+          <Link href="/" className="min-w-0">
             <div className="flex flex-col">
               <Wordmark className="h-[30px]" />
-              <span className="mt-1 text-xs text-muted-foreground font-normal italic opacity-70">
-                JUST RONDON - ロンドン観光・旅行・現地ガイド
+              <span className="mt-1 whitespace-nowrap text-xs text-muted-foreground font-normal italic opacity-70">
+                ロンドン観光・旅行・現地ガイド
               </span>
             </div>
           </Link>
           <div className="flex items-center gap-2">
+            {/* サイト内検索。メニューの隣に常に出す(SearchDialog)。 */}
+            <SearchTrigger variant="icon" />
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 {/* 44px 四方にしてあるのは、追従するヘッダーで最もよく押す
@@ -180,7 +186,7 @@ export default function Navbar() {
 
       {/* デスクトップ(1280px以上) */}
       <div className="hidden xl:flex flex-col border-b">
-        <div className="flex flex-col items-center justify-center py-2">
+        <div className="relative flex flex-col items-center justify-center py-2">
           <Link href="/">
             <div className="flex flex-col items-center">
               <Wordmark className="h-10" />
@@ -189,6 +195,12 @@ export default function Navbar() {
               </span>
             </div>
           </Link>
+          {/* サイト内検索。入力欄の形で右上に置く(利用者が探す位置)。
+              下の行(区分のナビ)には幅の余りが無いので、ロゴの行に置いている。 */}
+          <SearchTrigger
+            variant="field"
+            className="absolute right-6 top-1/2 h-9 w-64 -translate-y-1/2 text-sm"
+          />
         </div>
         {/*
           項目の間隔と左右の余白は詰めてある。1280px の画面で入れ物の内側は

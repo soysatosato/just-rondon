@@ -6,6 +6,7 @@ import RainOnGlass from "@/components/home/RainOnGlass";
 import { ancestorCrumbs } from "@/components/navigation/tree";
 import { NAV_SECTIONS } from "@/components/navbar/menu";
 import { SONGS_PUBLISHED } from "@/lib/musicals/song-pages";
+import SearchTrigger from "@/components/search/SearchTrigger";
 
 /**
  * 404。
@@ -113,8 +114,16 @@ export default function NotFoundPage() {
           </Link>
         </div>
 
+        {/* 探していたものの名前は分かっている人が多い。URL が変わっても
+            名前で引き直せるよう、検索を置く。 */}
+        <SearchTrigger
+          variant="field"
+          placeholder="ページの名前で探す"
+          className="mt-8 h-11 max-w-sm text-sm"
+        />
+
         {/* 区分の入口。並びと名前はグローバルナビ(menu.ts)と同じにする。 */}
-        <nav aria-label="おもな区分" className="mt-10">
+        <nav aria-label="おもな区分" className="mt-8">
           <ul className="flex flex-wrap justify-center gap-2">
             {NAV_SECTIONS.map((section) => (
               <li key={section.href}>

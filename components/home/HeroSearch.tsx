@@ -1,166 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import {
-  MapPin,
-  Ticket,
-  Landmark,
-  Drama,
-  Stamp,
-  KeyRound,
-  BriefcaseBusiness,
-  Newspaper,
-  History,
-  Building2,
-  MessageSquareText,
-  Search,
-} from "lucide-react";
+import SearchTrigger from "@/components/search/SearchTrigger";
+import { useSearchStore } from "@/components/search/search-store";
 
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectLabel,
-  SelectItem,
-  SelectSeparator,
-} from "@/components/ui/select";
+/**
+ * トップのヒーローの検索欄。押すとサイト内検索(SearchDialog)が開く。
+ *
+ * 以前ここにあったのは、虫眼鏡と「探す…」の文言を付けたセレクトで、
+ * 12の行き先から選んで「Go」を押すものだった。検索窓に見えるのに文字を
+ * 打てず、「大英博物館」と打とうとした人がここでつまずいていた。
+ *
+ * 下の「例:」は、何を打てば引けるのか(固有名詞も「所要時間」のような
+ * 用件も通る)を見せるためのもの。押すとその語で検索が開く。
+ */
+const EXAMPLES = ["大英博物館", "所要時間", "ETA", "ミュージカル"];
 
 export default function HeroSearch() {
-  const [value, setValue] = useState("");
+  const openSearch = useSearchStore((state) => state.openSearch);
 
   return (
-    <div className="mx-auto flex max-w-xl items-center gap-1.5 rounded-full border bg-white/95 dark:bg-slate-900/90 p-1.5 shadow-lg shadow-slate-900/10 dark:shadow-black/40 backdrop-blur">
-      <Search className="ml-3 h-4 w-4 shrink-0 text-muted-foreground" />
-
-      <Select value={value} onValueChange={setValue}>
-        <SelectTrigger className="h-9 border-none bg-transparent text-sm text-slate-900 dark:text-slate-100 focus-visible:ring-0 w-full px-2 py-1 [&>svg]:hidden">
-          <SelectValue placeholder="行き先やジャンルを選んで探す…" />
-        </SelectTrigger>
-
-        <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
-          <SelectGroup>
-            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              観光を探す
-            </SelectLabel>
-            <SelectItem value="sightseeing">
-              <span className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-red-600" />
-                観光スポットを探す
-              </span>
-            </SelectItem>
-            <SelectItem value="sightseeing/all?category=tour">
-              <span className="flex items-center gap-2">
-                <Ticket className="h-3.5 w-3.5 text-red-600" />
-                ツアーを見る
-              </span>
-            </SelectItem>
-            <SelectItem value="museums">
-              <span className="flex items-center gap-2">
-                <Landmark className="h-3.5 w-3.5 text-red-600" />
-                美術館を探す
-              </span>
-            </SelectItem>
-            <SelectItem value="musicals">
-              <span className="flex items-center gap-2">
-                <Drama className="h-3.5 w-3.5 text-red-600" />
-                ミュージカルを探す
-              </span>
-            </SelectItem>
-          </SelectGroup>
-
-          <SelectSeparator />
-
-          <SelectGroup>
-            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              旅の準備
-            </SelectLabel>
-            <SelectItem value="sightseeing/eta-uk-visa-guide">
-              <span className="flex items-center gap-2">
-                <Stamp className="h-3.5 w-3.5 text-sky-600" />
-                ETA（電子渡航認証）
-              </span>
-            </SelectItem>
-          </SelectGroup>
-
-          <SelectSeparator />
-
-          <SelectGroup>
-            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              住む・働く
-            </SelectLabel>
-            <SelectItem value="visa">
-              <span className="flex items-center gap-2">
-                <Stamp className="h-3.5 w-3.5 text-emerald-600" />
-                ビザガイド トップ
-              </span>
-            </SelectItem>
-            <SelectItem value="housing">
-              <span className="flex items-center gap-2">
-                <KeyRound className="h-3.5 w-3.5 text-emerald-600" />
-                住まい探しガイド トップ
-              </span>
-            </SelectItem>
-            <SelectItem value="jobs">
-              <span className="flex items-center gap-2">
-                <BriefcaseBusiness className="h-3.5 w-3.5 text-emerald-600" />
-                労働問題ガイド トップ
-              </span>
-            </SelectItem>
-          </SelectGroup>
-
-          <SelectSeparator />
-
-          <SelectGroup>
-            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              英国を読む
-            </SelectLabel>
-            <SelectItem value="column">
-              <span className="flex items-center gap-2">
-                <Newspaper className="h-3.5 w-3.5 text-violet-600" />
-                コラム
-              </span>
-            </SelectItem>
-            <SelectItem value="modern-britain">
-              <span className="flex items-center gap-2">
-                <Building2 className="h-3.5 w-3.5 text-violet-600" />
-                英国のいまを論じる
-              </span>
-            </SelectItem>
-            <SelectItem value="history">
-              <span className="flex items-center gap-2">
-                <History className="h-3.5 w-3.5 text-violet-600" />
-                イギリスの歴史
-              </span>
-            </SelectItem>
-            <SelectItem value="british-english">
-              <span className="flex items-center gap-2">
-                <MessageSquareText className="h-3.5 w-3.5 text-violet-600" />
-                イギリス英語
-              </span>
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      {value ? (
-        <Button
-          asChild
-          className="mr-0.5 rounded-full px-5 text-xs font-semibold"
-        >
-          <Link href={`/${value}`}>Go</Link>
-        </Button>
-      ) : (
-        <Button
-          disabled
-          className="mr-0.5 rounded-full px-5 text-xs font-semibold opacity-40 dark:opacity-30"
-        >
-          Go
-        </Button>
-      )}
+    <div className="max-w-xl">
+      <SearchTrigger
+        variant="field"
+        placeholder="スポット・美術館・ミュージカル・手続きを検索"
+        className="h-12 text-sm shadow-lg shadow-slate-900/10 dark:shadow-black/40"
+      />
+      <p className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <span>例:</span>
+        {EXAMPLES.map((example) => (
+          <button
+            key={example}
+            type="button"
+            onClick={() => openSearch(example)}
+            className="rounded-full border border-border px-3 py-1.5 transition hover:border-foreground/40 hover:text-foreground"
+          >
+            {example}
+          </button>
+        ))}
+      </p>
     </div>
   );
 }

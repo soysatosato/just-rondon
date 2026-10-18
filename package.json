@@ -7,7 +7,7 @@
     "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap",
+    "postbuild": "next-sitemap && node scripts/build-search-index.mjs",
     "assign-attraction-areas": "tsx scripts/assign-attraction-areas.ts",
     "create-column": "tsx scripts/create-column.ts",
     "create-tweets": "tsx scripts/create-tweets.ts",

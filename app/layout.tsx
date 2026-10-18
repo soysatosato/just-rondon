@@ -9,6 +9,7 @@ import MainNav from "@/components/navbar/MainNav";
 import PlanFloatingBar from "@/components/attractions/plan/PlanFloatingBar";
 import PlanSync from "@/components/attractions/plan/PlanSync";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
+import SearchDialog from "@/components/search/SearchDialog";
 import ConsentDefaults from "@/components/consent/ConsentDefaults";
 
 export const metadata = defaultMetadata;
@@ -51,6 +52,8 @@ export default function RootLayout({
           <SiteJsonLd />
           <Providers>
             <MainNav />
+            {/* サイト内検索の画面。どこから開いても同じ1つを使う。 */}
+            <SearchDialog />
             <main className="container py-4">{children}</main>
             <MainFooter />
             {/* 組みかけの旅程はどのページからでも開ける。空なら何も出ない。 */}

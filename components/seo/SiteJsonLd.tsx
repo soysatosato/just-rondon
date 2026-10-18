@@ -4,9 +4,9 @@ import JsonLd from "./JsonLd";
 /**
  * サイト全体の Organization / WebSite スキーマ。ルートレイアウトで1回だけ描画する。
  *
- * potentialAction: SearchAction は入れていない。サイト内検索は /museums?search= の
- * 美術館限定しか無く、存在しないサイト全体検索をGoogleに申告することになるため。
- * 本物の /search を作ったら追加する。
+ * potentialAction: SearchAction は入れていない。サイト全体の検索(/search)は
+ * 2026-10 に作ったが、Google はこのマークアップで出していたサイトリンク検索
+ * ボックスを 2024年11月に廃止しており、書いても検索結果には何も出ない。
  */
 export default function SiteJsonLd() {
   const organization = {
