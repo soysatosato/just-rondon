@@ -111,7 +111,7 @@ export default function BritishEnglishTraits() {
                   <Icon className="h-5 w-5" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     {trait.label}
                   </p>
                   <h3 className="text-base font-bold leading-snug sm:text-lg">

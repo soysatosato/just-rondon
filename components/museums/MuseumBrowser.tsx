@@ -282,7 +282,7 @@ export default function MuseumBrowser({
 
         {/* ジャンル。この一覧でいちばん最初に効く軸なので、選択肢を畳まず全部見せる。 */}
         <div>
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             何が置いてあるか
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -498,7 +498,7 @@ function MuseumResultCard({
             </Badge>
           </div>
           {showGenre && (
-            <span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+            <span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm">
               {GENRE_BY_SLUG[m.genre].label}
             </span>
           )}
@@ -511,7 +511,7 @@ function MuseumResultCard({
                 {m.name}
               </h3>
               {m.engName && (
-                <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">
                   {m.engName}
                 </p>
               )}
@@ -533,7 +533,7 @@ function MuseumResultCard({
               {m.highlights.slice(0, 3).map((h) => (
                 <li
                   key={h}
-                  className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                  className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
                 >
                   {h}
                 </li>
@@ -610,7 +610,7 @@ function SelectField({
     <div className="space-y-1">
       <label
         htmlFor={id}
-        className="block text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+        className="block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
       >
         {label}
       </label>

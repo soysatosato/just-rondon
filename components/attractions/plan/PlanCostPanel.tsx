@@ -70,7 +70,7 @@ export default function PlanCostPanel({
             <Receipt className="h-4 w-4 text-indigo-600 dark:text-indigo-400" aria-hidden />
             費用の目安
           </h2>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
+          <p className="mt-0.5 text-xs text-muted-foreground">
             大人1名の入場料と市内の交通費。宿・食事・空港との往復は入っていません。
           </p>
         </div>
@@ -110,7 +110,7 @@ export default function PlanCostPanel({
           </p>
         )}
         {(unknownPriceCount > 0 || transport.outsideLegs > 0) && (
-          <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
             {[
               unknownPriceCount > 0 ? `料金の分からない${unknownPriceCount}ヶ所の入場料` : null,
               transport.outsideLegs > 0 ? "ロンドン市外への鉄道運賃" : null,
@@ -151,7 +151,7 @@ export default function PlanCostPanel({
                     <span className="font-semibold">
                       {t.rides > 0 ? `約${formatGbp(t.gbp)}` : "—"}
                     </span>
-                    <span className="block text-[10px] text-muted-foreground">
+                    <span className="block text-xs text-muted-foreground">
                       {[
                         t.rides > 0
                           ? `${zoneRangeLabel(t.reach)}・${t.rides}回${t.capped ? "・上限" : ""}`
@@ -173,7 +173,7 @@ export default function PlanCostPanel({
               <td className="px-4 py-2 text-right">
                 約{formatGbp(transport.payg)}
                 {transport.weeklyCapSaving > 0 && (
-                  <span className="block text-[10px] font-normal text-muted-foreground">
+                  <span className="block text-xs font-normal text-muted-foreground">
                     週の上限額で −{formatGbp(transport.weeklyCapSaving)}
                   </span>
                 )}
@@ -188,7 +188,7 @@ export default function PlanCostPanel({
         <PaymentBlock transport={transport} dayCount={days.length} />
       </div>
 
-      <div className="space-y-1.5 border-t border-border bg-muted/20 px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
+      <div className="space-y-1.5 border-t border-border bg-muted/20 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
         <p>
           交通費は経路を引いていない概算です。宿との往復と、徒歩圏でない区間を
           1回ずつ地下鉄で移動するとして、Zone 1 を通る片道運賃を足し、1日の
@@ -322,7 +322,7 @@ function PassBlock({ pass }: { pass: PassVerdict }) {
               <li key={item.slug} className="flex items-baseline justify-between gap-3">
                 <span className="min-w-0 truncate">
                   {item.name}
-                  <span className="ml-1.5 text-[10px] text-muted-foreground">
+                  <span className="ml-1.5 text-xs text-muted-foreground">
                     {item.day}日目
                   </span>
                 </span>
@@ -334,23 +334,23 @@ function PassBlock({ pass }: { pass: PassVerdict }) {
       )}
 
       {outsideWindow.length > 0 && (
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           パスの期間外: {outsideWindow.map((item) => `${item.name}(${item.day}日目)`).join("、")}
         </p>
       )}
       {pass.conditional.length > 0 && (
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           条件付きの対象のため計算に入れていない:{" "}
           {pass.conditional.map((item) => item.name).join("、")}
         </p>
       )}
       {pass.busWouldFlip && (
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           パスに含まれる乗り降り自由バス(単体で{formatGbp(BUS_CREDIT)}〜)にも乗るつもりなら、
           損得は逆転します。
         </p>
       )}
-      <p className="text-[11px] leading-relaxed text-muted-foreground">
+      <p className="text-xs leading-relaxed text-muted-foreground">
         入場料は各スポットの掲載値(多くはオンライン事前購入の最安値)で比べています。
         <Link
           href="/sightseeing/passes"
@@ -441,13 +441,13 @@ function PaymentBlock({
               <span className="font-semibold">{row.label}</span>
               <span className="shrink-0 font-bold tabular-nums">約{formatGbp(row.gbp)}</span>
             </div>
-            <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
+            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
               {row.note}
             </p>
           </li>
         ))}
       </ul>
-      <p className="text-[11px] leading-relaxed text-muted-foreground">
+      <p className="text-xs leading-relaxed text-muted-foreground">
         {travelcardWins
           ? "週の上限額は月曜〜日曜で区切られ、7日Travelcardは何曜日からでも始められます。この旅程は月曜をまたぐので、上限額が2週に割れて効ききりません。"
           : "週の上限額は7日Travelcardと同じ値段なので、乗った分だけ払うタッチ決済が損になることはふつうありません。"}
@@ -455,7 +455,7 @@ function PaymentBlock({
           dayCount >= 5 &&
           "いまは1日目を月曜とみなしています。出発日を入れると、月曜で区切った正確な額になります。"}
       </p>
-      <p className="flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground">
+      <p className="flex items-start gap-1.5 text-xs leading-relaxed text-muted-foreground">
         <TrainFront className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
         JCBのタッチ決済は改札で使えません。Visa・Mastercard・Amexが無ければ、Oysterの2行を比べてください。
       </p>

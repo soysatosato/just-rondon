@@ -65,7 +65,7 @@ export default function BriefMasthead({
           This Week in London
         </p>
         {designation && (
-          <p className="shrink-0 font-serif text-[11px] font-semibold tabular-nums tracking-[0.14em] text-muted-foreground">
+          <p className="shrink-0 font-serif text-xs font-semibold tabular-nums tracking-[0.14em] text-muted-foreground">
             {designation}
           </p>
         )}
@@ -124,7 +124,7 @@ export default function BriefMasthead({
        * あわせて更新の頻度も出す。次にいつ来ればいいかが分からないと、
        * 読み終えた読者はそのまま離れてしまう。
        */}
-      <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-[11px] tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+      <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-xs tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
         <span>{format(researchedAt, "yyyy年M月d日")} 調査</span>
         <span aria-hidden className="opacity-40">
           ／

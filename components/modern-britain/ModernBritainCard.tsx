@@ -76,7 +76,7 @@ export default function ModernBritainCard({ item }: { item: Content }) {
       <div className="flex min-w-0 flex-1 flex-col px-5 pb-5 pt-4">
         {/* 並びは公開日時の降順なので、通し番号を振ると記事を足すたびに
             全カードの番号がずれる。日付だけを出す。 */}
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {formatDate(publishedDateOf(item))}
         </p>
 
@@ -95,7 +95,7 @@ export default function ModernBritainCard({ item }: { item: Content }) {
             {item.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
               >
                 {modernBritainTagLabel(tag)}
               </span>

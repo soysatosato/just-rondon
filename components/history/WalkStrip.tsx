@@ -86,7 +86,7 @@ export default function WalkStrip() {
                       <Link
                         key={n}
                         href={chapterPath(chapter.slug)}
-                        className="rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-[10px] font-bold text-amber-200 transition hover:border-amber-400/70 hover:bg-amber-400/20"
+                        className="rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-200 transition hover:border-amber-400/70 hover:bg-amber-400/20"
                       >
                         第{n}章
                       </Link>
@@ -95,7 +95,7 @@ export default function WalkStrip() {
                 </div>
 
                 {/* Commons の CC 画像なので、作者とライセンスは省けない。 */}
-                <p className="mt-3 text-[10px] leading-snug text-white/30">
+                <p className="mt-3 text-xs leading-snug text-white/30">
                   画像:{" "}
                   <a
                     href={stop.imageLink}

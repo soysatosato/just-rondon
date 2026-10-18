@@ -52,7 +52,7 @@ export default function AreaSpotList({
             <div className="min-w-0 flex-1">
               <div className="flex items-start gap-1.5">
                 {spot.mustSee && (
-                  <span className="mt-0.5 shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+                  <span className="mt-0.5 shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-bold text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
                     必見
                   </span>
                 )}
@@ -71,7 +71,7 @@ export default function AreaSpotList({
                 料金と所要時間。null は行ごと出さない。
                 「情報なし」と書くより、その行が無いほうが読みやすい。
               */}
-              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-500 dark:text-gray-400">
+              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-500 dark:text-gray-400">
                 {spot.isFree ? (
                   <span className="font-semibold text-emerald-700 dark:text-emerald-400">
                     無料

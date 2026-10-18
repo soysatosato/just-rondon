@@ -181,14 +181,14 @@ export default function PlanDay({
               {transport.rides > 0 && (
                 <>
                   約{formatGbp(transport.gbp)}
-                  <span className="text-[10px]">
+                  <span className="text-xs">
                     ({zoneRangeLabel(transport.reach)}
                     {transport.capped ? "・上限" : ""})
                   </span>
                 </>
               )}
               {transport.outsideLegs > 0 && (
-                <span className="text-[10px]">
+                <span className="text-xs">
                   {transport.rides > 0 ? "＋" : ""}市外の鉄道は別途
                 </span>
               )}
@@ -225,7 +225,7 @@ export default function PlanDay({
       </header>
 
       {(plan.unknownDurationCount > 0 || plan.unknownPriceCount > 0) && (
-        <p className="border-b border-border bg-muted/20 px-4 py-2 text-[11px] text-muted-foreground">
+        <p className="border-b border-border bg-muted/20 px-4 py-2 text-xs text-muted-foreground">
           {[
             plan.unknownDurationCount > 0
               ? `所要時間の目安がない${plan.unknownDurationCount}ヶ所`

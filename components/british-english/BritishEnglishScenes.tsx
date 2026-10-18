@@ -203,7 +203,7 @@ export default function BritishEnglishScenes() {
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   {scene.label}
                 </p>
                 <h2 className="text-lg font-bold leading-snug sm:text-xl">

@@ -369,7 +369,7 @@ export default function AttractionBrowser({
         )}
 
         <div>
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             種類
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -542,7 +542,7 @@ export default function AttractionBrowser({
                 <SlidersHorizontal className="h-4 w-4" aria-hidden />
                 絞り込み
                 {activeFilterCount > 0 && (
-                  <span className="rounded-full bg-indigo-600 px-1.5 text-[11px] font-bold leading-5 text-white">
+                  <span className="rounded-full bg-indigo-600 px-1.5 text-xs font-bold leading-5 text-white">
                     {activeFilterCount}
                   </span>
                 )}
@@ -753,12 +753,12 @@ function SpotCard({
           )}
         </div>
         {showCategory && (
-          <span className="absolute bottom-2 left-2 hidden rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm sm:inline">
+          <span className="absolute bottom-2 left-2 hidden rounded-full bg-black/70 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm sm:inline">
             {categoryLabel(a.category)}
           </span>
         )}
         {a.mustSee && (
-          <span className="absolute bottom-1.5 right-1.5 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white sm:bottom-2 sm:right-2">
+          <span className="absolute bottom-1.5 right-1.5 rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white sm:bottom-2 sm:right-2">
             定番
           </span>
         )}
@@ -772,7 +772,7 @@ function SpotCard({
                 {a.name}
               </h3>
               {a.engName && (
-                <p className="mt-0.5 hidden truncate text-[11px] text-muted-foreground sm:block">
+                <p className="mt-0.5 hidden truncate text-xs text-muted-foreground sm:block">
                   {a.engName}
                 </p>
               )}
@@ -885,7 +885,7 @@ function Select({
     <div className="space-y-1">
       <label
         htmlFor={id}
-        className="block text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+        className="block text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
       >
         {label}
       </label>

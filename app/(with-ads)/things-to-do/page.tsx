@@ -195,7 +195,7 @@ export default async function ThingsToDoPage() {
           <ol className="mt-7 space-y-4 border-l-2 border-amber-500/40 pl-4">
             {PLAN.map((step) => (
               <li key={step.what}>
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-500">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-500">
                   {step.when}
                 </p>
                 <p className="mt-0.5 text-sm font-bold">{step.what}</p>

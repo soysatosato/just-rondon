@@ -343,7 +343,7 @@ function PickerRow({
           <LondonPassBadge note={spot.londonPassNote} className="mt-1" />
         )}
         {facts.length > 0 && (
-          <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
+          <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
             {spot.durationText && (
               <span className="inline-flex items-center gap-1">
                 <Clock className="h-3 w-3 shrink-0" aria-hidden />

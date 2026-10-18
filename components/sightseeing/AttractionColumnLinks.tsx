@@ -66,7 +66,7 @@ export default function AttractionColumnLinks({
                 {/* 回数は見出しの末尾に「第N回」として入っているので、
                     ここでは連載名だけを出す。 */}
                 {column.seriesName && (
-                  <p className="truncate text-[11px] font-semibold text-amber-700 dark:text-amber-400">
+                  <p className="truncate text-xs font-semibold text-amber-700 dark:text-amber-400">
                     連載「{column.seriesName}」
                   </p>
                 )}

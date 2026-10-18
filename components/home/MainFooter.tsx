@@ -53,7 +53,7 @@ export default function MainFooter() {
           </Link>
         </div>
 
-        <p className="max-w-md text-[11px] leading-relaxed">
+        <p className="max-w-md text-xs leading-relaxed">
           ジャスト・ロンドンは、ロンドンの深層に迫る力量も器量もない中途半端な存在ですが、旅の判断をほんの少し整える一文が紛れていれば、それだけで存在理由になります。
         </p>
       </div>

@@ -685,7 +685,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                       focusDay={focusDay}
                       className="h-[300px] w-full lg:h-[calc(100vh-16rem)] lg:min-h-[360px]"
                     />
-                    <p className="border-t border-border bg-muted/30 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
+                    <p className="border-t border-border bg-muted/30 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
                       {focusDay
                         ? `${focusDay}日目だけを濃く出しています。上の日程から「全日程」を選ぶと戻ります。`
                         : "色は日の色と同じです。線は直線で結んだもので、実際に歩く道のりではありません。"}

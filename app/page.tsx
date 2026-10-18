@@ -314,7 +314,7 @@ export default async function Page() {
                 <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
                   {formatWeekRange(latestBrief.weekStart, latestBrief.weekEnd)}
                   {freshness && !isThisWeek && (
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold">
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold">
                       {freshness.label}の号
                     </span>
                   )}
@@ -335,7 +335,7 @@ export default async function Page() {
                       <TriangleAlert className="h-4 w-4 text-red-600" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-red-700 dark:text-red-400">
+                      <span className="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-400">
                         {freshness?.label}の注意
                       </span>
                       <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
@@ -416,7 +416,7 @@ export default async function Page() {
                   )}
                   <p className="mt-4 flex items-center gap-2">
                     <span
-                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white ${readingLead.badge}`}
+                      className={`rounded-full px-2.5 py-0.5 text-xs font-bold text-white ${readingLead.badge}`}
                     >
                       {readingLead.label}
                     </span>
@@ -459,7 +459,7 @@ export default async function Page() {
                         />
                       )}
                       <span className="min-w-0 flex-1">
-                        <span className={`text-[10px] font-bold ${entry.text}`}>
+                        <span className={`text-xs font-bold ${entry.text}`}>
                           {entry.label}
                         </span>
                         <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug decoration-1 underline-offset-2 group-hover:underline">

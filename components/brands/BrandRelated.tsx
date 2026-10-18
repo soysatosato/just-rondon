@@ -72,7 +72,7 @@ export default function BrandRelated({
                   />
                 ) : (
                   /* 灰色の空箱を置くと壊れて見えるので、ワードマークで面を埋める。 */
-                  <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-2 text-center text-[11px] font-semibold leading-tight text-slate-600 dark:from-slate-800 dark:to-slate-900 dark:text-slate-300">
+                  <span className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-2 text-center text-xs font-semibold leading-tight text-slate-600 dark:from-slate-800 dark:to-slate-900 dark:text-slate-300">
                     {b.engName}
                   </span>
                 )}
@@ -83,11 +83,11 @@ export default function BrandRelated({
                   <h3 className="text-sm font-bold leading-snug group-hover:underline">
                     {b.name}
                   </h3>
-                  <span className="text-[11px] italic text-muted-foreground">
+                  <span className="text-xs italic text-muted-foreground">
                     {b.engName}
                   </span>
                 </div>
-                <p className="mt-0.5 text-[11px] text-muted-foreground">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   {BRAND_CATEGORY_LABELS[b.category as BrandCategory] ?? "ブランド"}
                   {b.founded ? ` · ${b.founded}年創業` : ""}
                 </p>

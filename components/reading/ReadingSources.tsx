@@ -55,7 +55,7 @@ function SourceRow({ source, index }: { source: ReadingSource; index: number }) 
         </span>
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
           <span
-            className={`rounded px-1.5 py-px text-[10px] font-semibold tracking-wider ring-1 ring-inset ${KIND_STYLES[source.kind]}`}
+            className={`rounded px-1.5 py-px text-xs font-semibold tracking-wider ring-1 ring-inset ${KIND_STYLES[source.kind]}`}
           >
             {sourceKindLabel(source.kind)}
           </span>
@@ -71,7 +71,7 @@ function SourceRow({ source, index }: { source: ReadingSource; index: number }) 
             )}
           </span>
           {host && (
-            <span className="font-mono text-[11px] text-muted-foreground/70">
+            <span className="font-mono text-xs text-muted-foreground/70">
               {host}
             </span>
           )}

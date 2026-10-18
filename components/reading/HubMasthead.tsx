@@ -116,7 +116,7 @@ export default function HubMasthead({
           <dl className="mt-9 flex flex-wrap items-end gap-x-10 gap-y-4 border-t border-white/15 pt-5">
             {stats.map((s) => (
               <div key={s.label}>
-                <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">
+                <dt className="text-xs font-bold uppercase tracking-[0.2em] text-white/45">
                   {s.label}
                 </dt>
                 <dd className="mt-1 text-2xl font-black leading-none tracking-tight">

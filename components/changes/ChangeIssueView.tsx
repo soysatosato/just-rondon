@@ -90,7 +90,7 @@ export default function ChangeIssueView({
          * いつ時点の調査かを出す。予告の項目は発表後に覆ることがあり、
          * 日付の無い「これから変わる」は誤情報になりうる。
          */}
-        <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-[11px] tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+        <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-xs tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
           <span>{format(issue.researchedAt, "yyyy年M月d日")} 調査</span>
           <span aria-hidden className="opacity-40">
             ／

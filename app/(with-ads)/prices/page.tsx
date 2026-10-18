@@ -156,7 +156,7 @@ export default async function PricesPage() {
           <p className="text-2xl font-bold tabular-nums tracking-tight dark:text-white">
             £1 = {fx.jpyPerGbp.toFixed(2)}
             <span className="ml-1 text-base font-semibold">円</span>
-            <span className="ml-3 align-middle text-[11px] font-semibold text-muted-foreground dark:text-gray-400">
+            <span className="ml-3 align-middle text-xs font-semibold text-muted-foreground dark:text-gray-400">
               ECB・{dayJa(fx.rateDate)}
             </span>
           </p>

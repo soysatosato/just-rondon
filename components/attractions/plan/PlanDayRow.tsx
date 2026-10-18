@@ -122,7 +122,7 @@ export default function PlanDayRow({
       {row.legFromPrevious && LegIcon && (
         // 左の余白は時刻の列ぶん。番号のレールの延長線上に置くと、
         // 移動が「前の番号と次の番号のあいだ」のものだと形で分かる。
-        <p className="flex items-center gap-2 border-b border-dashed border-border bg-muted/20 py-1.5 pl-[4.5rem] pr-4 text-[11px] text-muted-foreground">
+        <p className="flex items-center gap-2 border-b border-dashed border-border bg-muted/20 py-1.5 pl-[4.5rem] pr-4 text-xs text-muted-foreground">
           <LegIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
           {legLabel(row.legFromPrevious)}
         </p>
@@ -142,7 +142,7 @@ export default function PlanDayRow({
             {formatClock(row.arriveMinutes)}
           </p>
           {row.stayMinutes !== null && (
-            <p className="text-[10px] tabular-nums leading-tight text-muted-foreground">
+            <p className="text-xs tabular-nums leading-tight text-muted-foreground">
               {formatClock(row.leaveMinutes)}
             </p>
           )}
@@ -198,7 +198,7 @@ export default function PlanDayRow({
               閉まっている日に行くのは旅程が崩れる話で、直すのに
               要る手数も締切も違う。 */}
           {row.closedOn && (
-            <p className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-800 dark:bg-red-950/50 dark:text-red-200">
+            <p className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-950/50 dark:text-red-200">
               <DoorClosed className="h-3 w-3 shrink-0" aria-hidden />
               この日は休み（{row.closedOn}休）
             </p>
@@ -210,14 +210,14 @@ export default function PlanDayRow({
               {/* 条件はバッジに収まらないので下に出す。これが無いと、
                   会社の限られる対象を無条件だと受け取られる。 */}
               {row.spot.londonPassNote && (
-                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                <p className="text-xs leading-relaxed text-muted-foreground">
                   {row.spot.londonPassNote}
                 </p>
               )}
             </div>
           )}
 
-          <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+          <dl className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             {/*
               掲載値の無いスポットでも出す。42件が滞在時間を持っておらず、
               そこが合計から落ちたままなのがこの道具のいちばん大きな穴だった。
@@ -253,7 +253,7 @@ export default function PlanDayRow({
             タップすれば詳細ページに全部載っている。
           */}
           {row.spot.address && row.spot.address !== "-" && (
-            <p className="hidden items-start gap-1 text-[11px] text-muted-foreground print:flex">
+            <p className="hidden items-start gap-1 text-xs text-muted-foreground print:flex">
               <MapPin className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
               {row.spot.address}
             </p>
@@ -295,7 +295,7 @@ export default function PlanDayRow({
               id={`day-${row.spot.slug}`}
               value={day}
               onChange={(e) => moveToDay(row.spot.slug, Number(e.target.value))}
-              className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px]"
+              className="rounded-full border border-border bg-background px-2.5 py-1 text-xs"
             >
               {Array.from({ length: dayCount }, (_, i) => i + 1).map((n) => (
                 <option key={n} value={n}>
@@ -310,7 +310,7 @@ export default function PlanDayRow({
             <button
               type="button"
               onClick={() => removeFromPlan(row.spot.slug)}
-              className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+              className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
             >
               <X className="h-3 w-3" aria-hidden />
               外す

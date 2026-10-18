@@ -85,7 +85,7 @@ export default function AreaCard({ item }: { item: Content }) {
         </h3>
 
         {meta && (
-          <p className="mt-2 text-[11px] text-muted-foreground">{meta}</p>
+          <p className="mt-2 text-xs text-muted-foreground">{meta}</p>
         )}
 
         {item.summary && (
@@ -99,7 +99,7 @@ export default function AreaCard({ item }: { item: Content }) {
             {item.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
               >
                 {areaTagLabel(tag)}
               </span>

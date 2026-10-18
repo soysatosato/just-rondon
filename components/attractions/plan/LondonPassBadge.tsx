@@ -27,7 +27,7 @@ export default function LondonPassBadge({
   return (
     <Link
       href="/sightseeing/passes"
-      className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 transition hover:border-emerald-500 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 ${className}`}
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-800 transition hover:border-emerald-500 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 ${className}`}
     >
       <TicketCheck className="h-3 w-3 shrink-0" aria-hidden />
       ロンドンパス対象

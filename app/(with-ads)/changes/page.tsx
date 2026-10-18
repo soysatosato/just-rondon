@@ -113,7 +113,7 @@ export default async function ChangesHubPage() {
                   <p className="text-sm font-bold tabular-nums dark:text-white">
                     {formatScheduledDate(change)}
                     {change.recurring && (
-                      <span className="ml-2 rounded-sm border border-foreground/25 px-1 py-0.5 align-middle text-[10px] font-bold text-foreground/70 dark:text-gray-300">
+                      <span className="ml-2 rounded-sm border border-foreground/25 px-1 py-0.5 align-middle text-xs font-bold text-foreground/70 dark:text-gray-300">
                         例年
                       </span>
                     )}
@@ -121,7 +121,7 @@ export default async function ChangesHubPage() {
                   <div className="mt-1 min-w-0 sm:mt-0">
                     <p
                       className={cn(
-                        "inline-flex items-baseline gap-1.5 text-[11px] font-bold leading-none",
+                        "inline-flex items-baseline gap-1.5 text-xs font-bold leading-none",
                         kind.textClass,
                       )}
                     >

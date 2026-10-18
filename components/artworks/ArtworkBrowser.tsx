@@ -248,7 +248,7 @@ function ArtworkGrid({
                 </span>
               )}
               {art.mustSee && (
-                <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white shadow">
+                <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white shadow">
                   <Flame className="h-3 w-3" />
                   必見
                 </span>
@@ -260,7 +260,7 @@ function ArtworkGrid({
                 {art.title}
               </h3>
               {art.engTitle && (
-                <p className="line-clamp-1 text-[11px] italic text-muted-foreground">
+                <p className="line-clamp-1 text-xs italic text-muted-foreground">
                   {art.engTitle}
                 </p>
               )}
@@ -270,13 +270,13 @@ function ArtworkGrid({
               </p>
               {art.highlight && (
                 <div className="mt-1 hidden sm:block">
-                  <p className="line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
+                  <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {art.highlight}
                   </p>
                 </div>
               )}
               {showRoom && (
-                <span className="mt-auto pt-2 text-[11px] font-medium text-muted-foreground">
+                <span className="mt-auto pt-2 text-xs font-medium text-muted-foreground">
                   {art.room}
                 </span>
               )}

@@ -72,12 +72,12 @@ function Chip({ leg }: { leg: TravelLeg }) {
       {!leg.walkOnly &&
         leg.walkMinutes !== undefined &&
         leg.walkMinutes <= WALKABLE_MAX_MINUTES && (
-          <p className="mt-0.5 text-[11px] text-emerald-700 dark:text-emerald-400">
+          <p className="mt-0.5 text-xs text-emerald-700 dark:text-emerald-400">
             歩けば{leg.walkMinutes}分
           </p>
         )}
       {dest.note && (
-        <p className="mt-0.5 text-[11px] leading-snug text-gray-400 dark:text-gray-500">
+        <p className="mt-0.5 text-xs leading-snug text-gray-400 dark:text-gray-500">
           {dest.note}
         </p>
       )}

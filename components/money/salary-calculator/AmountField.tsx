@@ -80,7 +80,7 @@ export default function AmountField({
         <label htmlFor={inputId} className="text-sm font-semibold text-foreground">
           給与の額面
         </label>
-        <span className="text-[11px] text-muted-foreground">税・控除を引く前</span>
+        <span className="text-xs text-muted-foreground">税・控除を引く前</span>
       </div>
 
       <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-stretch">

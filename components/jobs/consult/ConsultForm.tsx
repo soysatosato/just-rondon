@@ -53,7 +53,7 @@ function Field({
       <label htmlFor={htmlFor} className="flex items-center gap-2 text-sm font-semibold">
         {label}
         {required && (
-          <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+          <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
             必須
           </span>
         )}

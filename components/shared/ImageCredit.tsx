@@ -21,7 +21,7 @@ export default function ImageCredit({
 
   return (
     <p
-      className={`text-[11px] leading-snug text-muted-foreground ${className}`}
+      className={`text-xs leading-snug text-muted-foreground ${className}`}
     >
       画像:{" "}
       {link ? (

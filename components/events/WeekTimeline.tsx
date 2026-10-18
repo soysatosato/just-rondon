@@ -86,7 +86,7 @@ export default function WeekTimeline({
               >
                 <span
                   className={cn(
-                    "text-[11px] font-bold leading-none",
+                    "text-xs font-bold leading-none",
                     day?.isToday
                       ? "text-sky-700 dark:text-sky-400"
                       : slot.isWeekend
@@ -97,7 +97,7 @@ export default function WeekTimeline({
                   {slot.weekday}
                 </span>
 
-                <span className="text-[10px] leading-none tabular-nums text-muted-foreground dark:text-gray-500">
+                <span className="text-xs leading-none tabular-nums text-muted-foreground dark:text-gray-500">
                   {slot.label}
                 </span>
 
@@ -109,7 +109,7 @@ export default function WeekTimeline({
                     <span className="sr-only">
                       {day.weather}、最高{day.tempMax}度、最低{day.tempMin}度
                     </span>
-                    <span className="text-[11px] leading-none tabular-nums text-foreground/70 dark:text-gray-300">
+                    <span className="text-xs leading-none tabular-nums text-foreground/70 dark:text-gray-300">
                       {day.tempMax}°
                     </span>
                   </>
@@ -118,7 +118,7 @@ export default function WeekTimeline({
                 {day?.precipitation != null && (
                   <span
                     className={cn(
-                      "flex items-center gap-0.5 text-[10px] leading-none tabular-nums",
+                      "flex items-center gap-0.5 text-xs leading-none tabular-nums",
                       rainy
                         ? "font-semibold text-sky-700 dark:text-sky-400"
                         : "text-muted-foreground/70 dark:text-gray-500"
@@ -152,7 +152,7 @@ export default function WeekTimeline({
         })}
       </ul>
 
-      <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground dark:text-gray-500">
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
         下段の数字は、その日に始まる・終わるものの件数。
         {hasForecast && "気温は最高気温、％は降水確率(出典 Open-Meteo)。"}
         {isPartial && "予報は7日先までのため、会期の後半は出していない。"}

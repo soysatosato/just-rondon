@@ -145,7 +145,7 @@ export default function AdvancedOptions({
           </ToggleChip>
         </div>
         {state.studentLoans.length > 0 && (
-          <ul className="mt-2 space-y-1 text-[11px] leading-relaxed text-muted-foreground">
+          <ul className="mt-2 space-y-1 text-xs leading-relaxed text-muted-foreground">
             {STUDENT_LOAN_PLANS.filter((p) => state.studentLoans.includes(p.id)).map((p) => (
               <li key={p.id}>
                 <span className="font-medium text-foreground/80">{p.label}</span>：{p.who}
@@ -199,7 +199,7 @@ export default function AdvancedOptions({
               type="button"
               onClick={() => onChange({ taxCode: code === example ? "" : example })}
               className={cn(
-                "rounded-md border px-2 py-1 font-mono text-[11px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "rounded-md border px-2 py-1 font-mono text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 code === example
                   ? "border-foreground bg-foreground text-background"
                   : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",

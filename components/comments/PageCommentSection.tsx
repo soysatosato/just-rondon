@@ -81,7 +81,7 @@ function OfficialReply({
             <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
               {SITE_NAME}
             </span>
-            <span className="rounded bg-rose-600 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white">
+            <span className="rounded bg-rose-600 px-1.5 py-0.5 text-xs font-bold leading-none text-white">
               運営
             </span>
           </p>

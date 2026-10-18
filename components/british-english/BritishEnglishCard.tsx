@@ -72,7 +72,7 @@ export default function BritishEnglishCard({ item }: { item: Content }) {
       <div className={`h-1.5 w-full shrink-0 ${accent.stripe}`} />
 
       <div className="flex min-w-0 flex-1 flex-col px-5 pb-5 pt-4">
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-xs text-muted-foreground">
           {formatDate(publishedDateOf(item))}
         </p>
 

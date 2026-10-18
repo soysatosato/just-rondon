@@ -39,7 +39,7 @@ export default function QuestionCards({
                   ?
                 </span>
                 {meta && (
-                  <span className="mt-1 shrink-0 text-[10px] font-bold tracking-wide text-slate-400 dark:text-slate-500">
+                  <span className="mt-1 shrink-0 text-xs font-bold tracking-wide text-slate-400 dark:text-slate-500">
                     第{meta.number}章
                   </span>
                 )}

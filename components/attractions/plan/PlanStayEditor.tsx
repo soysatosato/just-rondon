@@ -71,7 +71,7 @@ export default function PlanStayEditor({ row }: { row: PlanRow }) {
         onChange={(e) =>
           setSpotMinutes(spot.slug, e.target.value ? Number(e.target.value) : null)
         }
-        className={`rounded border bg-background px-1.5 py-0.5 text-[11px] print:hidden ${
+        className={`rounded border bg-background px-1.5 py-0.5 text-xs print:hidden ${
           overridden
             ? "border-indigo-400 font-semibold text-indigo-700 dark:text-indigo-300"
             : "border-border text-muted-foreground"
@@ -95,7 +95,7 @@ export default function PlanStayEditor({ row }: { row: PlanRow }) {
         原文は選択肢の「掲載どおり（…）」に出ているので、ここでは繰り返さない。
       */}
       {overridden && (
-        <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 print:hidden">
+        <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 print:hidden">
           変更
         </span>
       )}

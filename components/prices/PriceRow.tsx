@@ -85,7 +85,7 @@ export default function PriceRow({
             item.label
           )}
         </p>
-        <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground dark:text-gray-400">
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
           <a
             href={`#basis-${basis.id}`}
             className="underline decoration-dotted decoration-foreground/30 underline-offset-[3px] hover:decoration-foreground/60"
@@ -114,12 +114,12 @@ export default function PriceRow({
           )}
         </p>
         {changed && previous !== undefined && (
-          <p className="mt-1 text-[11px] font-bold tabular-nums text-emerald-800 dark:text-emerald-300">
+          <p className="mt-1 text-xs font-bold tabular-nums text-emerald-800 dark:text-emerald-300">
             前回の確認では {formatGbp(previous, item.from)}
           </p>
         )}
         {upcoming && (
-          <p className="mt-1 text-[11px] font-bold tabular-nums text-amber-800 dark:text-amber-300">
+          <p className="mt-1 text-xs font-bold tabular-nums text-amber-800 dark:text-amber-300">
             {dayJa(upcoming.date)}から {formatGbp(upcoming.price)}
           </p>
         )}
@@ -129,7 +129,7 @@ export default function PriceRow({
         <p className="whitespace-nowrap text-[15px] font-bold tabular-nums dark:text-white">
           {formatGbp(price, item.from)}
           {per && price !== 0 && (
-            <span className="ml-0.5 text-[11px] font-semibold text-muted-foreground">{per}</span>
+            <span className="ml-0.5 text-xs font-semibold text-muted-foreground">{per}</span>
           )}
         </p>
         {jpy && (

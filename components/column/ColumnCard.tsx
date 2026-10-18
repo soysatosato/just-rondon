@@ -46,7 +46,7 @@ export default function ColumnCard({
             fetchPriority="low"
           />
           {seriesBadge && (
-            <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-amber-600/95 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur">
+            <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-amber-600/95 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
               {seriesBadge}
             </span>
           )}
@@ -54,7 +54,7 @@ export default function ColumnCard({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col gap-2 p-4">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
           <time className="font-medium text-muted-foreground">
             {formatDate(publishedDateOf(item))}
           </time>
@@ -78,7 +78,7 @@ export default function ColumnCard({
           </p>
         )}
 
-        <span className="mt-auto pt-1 text-[11px] font-bold text-amber-700 opacity-0 transition-opacity group-hover:opacity-100 dark:text-amber-400">
+        <span className="mt-auto pt-1 text-xs font-bold text-amber-700 opacity-0 transition-opacity group-hover:opacity-100 dark:text-amber-400">
           続きを読む →
         </span>
       </div>

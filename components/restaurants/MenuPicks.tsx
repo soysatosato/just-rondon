@@ -62,7 +62,7 @@ export default function MenuPicks({ picks }: { picks: MenuPick[] }) {
                     {pick.name}
                   </span>
                   <span
-                    className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                    className={`rounded px-1.5 py-0.5 text-xs font-medium ${
                       ROLE_STYLES[pick.role] ?? ROLE_STYLES.signature
                     }`}
                   >

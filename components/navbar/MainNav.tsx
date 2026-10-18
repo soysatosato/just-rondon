@@ -132,7 +132,7 @@ export default function Navbar() {
                                 className="flex flex-col space-y-2"
                               >
                                 {group.heading && (
-                                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                     {group.heading}
                                   </p>
                                 )}
@@ -264,7 +264,7 @@ export default function Navbar() {
                           {section.groups.map((group, index) => (
                             <div key={group.heading ?? index}>
                               {group.heading && (
-                                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                                   {group.heading}
                                 </p>
                               )}

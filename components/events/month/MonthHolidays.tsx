@@ -57,7 +57,7 @@ export default function MonthHolidays({
                   {d.title}
                 </span>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
                     d.kind === "bank"
                       ? "bg-red-600/10 text-red-700 dark:text-red-400"
                       : "bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-gray-400"

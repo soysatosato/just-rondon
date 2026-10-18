@@ -251,7 +251,7 @@ export default function HistoryHubPage() {
         ]}
       >
         <EraRail />
-        <p className="mt-6 text-[10px] leading-snug text-white/30">
+        <p className="mt-6 text-xs leading-snug text-white/30">
           題字の背景: {MASTHEAD.caption}（
           <a
             href={MASTHEAD.link}
@@ -325,7 +325,7 @@ export default function HistoryHubPage() {
             return (
               <div key={era} id={eraAnchor(era)} className="scroll-mt-24">
                 <div className="mb-4 border-l-2 border-amber-400 pl-3.5">
-                  <p className="font-serif text-[11px] font-semibold tabular-nums text-amber-700 dark:text-amber-500">
+                  <p className="font-serif text-xs font-semibold tabular-nums text-amber-700 dark:text-amber-500">
                     {eraRange(era)}・{eraChapterRange(era)}
                   </p>
                   <h3 className="mt-0.5 text-lg font-bold tracking-tight">

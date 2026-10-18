@@ -362,7 +362,7 @@ function RankedPanel({
               {lead.badge && (
                 <span
                   className={clsx(
-                    "rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
+                    "rounded-full px-2 py-0.5 text-xs font-semibold text-white",
                     // 連載名は写真に馴染ませる。セクション名(混成の一覧)は
                     // 見分けが仕事なので、色を塗って前に出す。
                     lead.tone ? leadTheme.rail : "bg-white/20 backdrop-blur",
@@ -371,7 +371,7 @@ function RankedPanel({
                   {lead.badge}
                 </span>
               )}
-              <span className="text-[11px] font-medium text-white/75">
+              <span className="text-xs font-medium text-white/75">
                 {lead.date}
               </span>
             </div>
@@ -431,7 +431,7 @@ function RankedPanel({
                     {item.tone && item.badge && (
                       <span
                         className={clsx(
-                          "mb-0.5 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-bold",
+                          "mb-0.5 inline-block rounded-full px-1.5 py-0.5 text-xs font-bold",
                           t.chip,
                         )}
                       >
@@ -452,7 +452,7 @@ function RankedPanel({
                       {item.title}
                     </span>
                     {item.summary && (
-                      <span className="mt-0.5 hidden truncate text-[11px] text-muted-foreground sm:block">
+                      <span className="mt-0.5 hidden truncate text-xs text-muted-foreground sm:block">
                         {stripInlineMarkdown(item.summary)}
                       </span>
                     )}
@@ -513,11 +513,11 @@ function LatestPanel({
                       </span>
                     )}
                     {item.tone && item.badge && (
-                      <span className={clsx("text-[10px] font-bold", t.text)}>
+                      <span className={clsx("text-xs font-bold", t.text)}>
                         {item.badge}
                       </span>
                     )}
-                    <span className="text-[11px] text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       {item.date}
                     </span>
                   </div>

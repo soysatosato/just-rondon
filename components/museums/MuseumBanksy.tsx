@@ -238,7 +238,7 @@ export default function MuseumBanksy() {
         return (
           <section key={area.key} className="space-y-5">
             <div>
-              <span className="inline-block rounded-full bg-emerald-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+              <span className="inline-block rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 {area.name}
               </span>
               <h2 className="mt-3 text-2xl font-bold tracking-tight">

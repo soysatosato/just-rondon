@@ -48,7 +48,7 @@ export default function MealDealPrices({
                   {deal.label}
                 </span>
                 {isCheapest && (
-                  <span className="shrink-0 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white">
+                  <span className="shrink-0 rounded-full bg-emerald-600 px-2 py-0.5 text-xs font-bold text-white">
                     最安
                   </span>
                 )}

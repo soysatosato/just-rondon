@@ -42,7 +42,7 @@ export default function ChapterList({
 
             <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-amber-300 group-hover:shadow-lg group-hover:shadow-amber-900/5 dark:border-slate-800 dark:bg-slate-900/70 dark:group-hover:border-amber-800 sm:p-5">
               <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                <span className="rounded-full bg-amber-50 px-2.5 py-0.5 font-serif text-[11px] font-semibold tabular-nums text-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
+                <span className="rounded-full bg-amber-50 px-2.5 py-0.5 font-serif text-xs font-semibold tabular-nums text-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
                   {c.period}
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">

@@ -128,7 +128,7 @@ export default function BriefEntry({
 
             <span
               className={cn(
-                "inline-flex items-baseline gap-1.5 text-[11px] font-bold leading-none",
+                "inline-flex items-baseline gap-1.5 text-xs font-bold leading-none",
                 kind.textClass
               )}
             >
@@ -146,7 +146,7 @@ export default function BriefEntry({
             </span>
 
             {featured && (
-              <span className="font-serif text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/70 dark:text-gray-300">
+              <span className="font-serif text-xs font-bold uppercase tracking-[0.2em] text-foreground/70 dark:text-gray-300">
                 Lead ・ 今週の一本
               </span>
             )}
@@ -154,7 +154,7 @@ export default function BriefEntry({
             {severity && (
               <span
                 className={cn(
-                  "inline-flex items-center gap-1 text-[11px] font-bold leading-none",
+                  "inline-flex items-center gap-1 text-xs font-bold leading-none",
                   item.severity === "high"
                     ? "text-red-700 dark:text-red-400"
                     : item.severity === "medium"
@@ -169,13 +169,13 @@ export default function BriefEntry({
 
             {/* 「今週」は既定なので出さない。「予告」だけを目立たせる。 */}
             {item.timing === "announced" && timingLabel && (
-              <span className="rounded-sm border border-foreground/25 px-1.5 py-0.5 text-[10px] font-bold leading-none text-foreground/70 dark:text-gray-300">
+              <span className="rounded-sm border border-foreground/25 px-1.5 py-0.5 text-xs font-bold leading-none text-foreground/70 dark:text-gray-300">
                 {timingLabel}
               </span>
             )}
 
             {item.isFree && (
-              <span className="text-[11px] font-bold leading-none text-emerald-700 dark:text-emerald-400">
+              <span className="text-xs font-bold leading-none text-emerald-700 dark:text-emerald-400">
                 無料
               </span>
             )}
@@ -185,7 +185,7 @@ export default function BriefEntry({
              * ここだけ塗りにして一覧の中で拾えるようにする。
              */}
             {endingThisWeek && (
-              <span className="inline-flex items-center gap-1 rounded-sm bg-rose-600 px-1.5 py-1 text-[10px] font-bold leading-none text-white">
+              <span className="inline-flex items-center gap-1 rounded-sm bg-rose-600 px-1.5 py-1 text-xs font-bold leading-none text-white">
                 <CalendarX className="h-3 w-3" />
                 今週で見納め
               </span>
@@ -290,7 +290,7 @@ export default function BriefEntry({
             <div className="mt-4">{body}</div>
           )}
 
-          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px]">
+          <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs">
             {item.website && (
               <a
                 href={item.website}

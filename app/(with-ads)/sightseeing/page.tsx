@@ -356,7 +356,7 @@ export default async function Page() {
                     />
                   )}
                   {summary?.count ? (
-                    <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white">
+                    <span className="absolute right-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-bold text-white">
                       {summary.count}スポット
                     </span>
                   ) : null}
@@ -372,7 +372,7 @@ export default async function Page() {
                   <p className="mt-2 line-clamp-3 flex-1 text-xs leading-relaxed text-muted-foreground">
                     {area.blurb}
                   </p>
-                  <p className="mt-3 border-t pt-2.5 text-[11px] leading-relaxed text-muted-foreground">
+                  <p className="mt-3 border-t pt-2.5 text-xs leading-relaxed text-muted-foreground">
                     <span className="font-semibold text-foreground">
                       歩く目安 {area.walkTime}
                     </span>

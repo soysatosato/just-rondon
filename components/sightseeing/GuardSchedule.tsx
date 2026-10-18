@@ -200,7 +200,7 @@ export default function GuardSchedule({
               >
                 {day.label}
                 {day.isToday && (
-                  <span className="ml-1.5 rounded-full bg-foreground px-1.5 py-0.5 text-[10px] font-semibold text-background">
+                  <span className="ml-1.5 rounded-full bg-foreground px-1.5 py-0.5 text-xs font-semibold text-background">
                     今日
                   </span>
                 )}

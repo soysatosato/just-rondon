@@ -165,7 +165,7 @@ function SeriesCard({ series }: { series: ColumnSeries }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10" />
         <div className="absolute inset-x-0 bottom-0 p-3">
-          <span className="inline-block rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
+          <span className="inline-block rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
             全 {series.entries.length} 回
           </span>
           <h3 className="mt-1.5 line-clamp-2 text-sm font-bold leading-snug text-white">
@@ -181,7 +181,7 @@ function SeriesCard({ series }: { series: ColumnSeries }) {
               href={`/column/${entry.slug}`}
               className="group flex items-center gap-2 rounded-lg px-2 py-1.5 transition hover:bg-amber-50 dark:hover:bg-amber-950/30"
             >
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-[10px] font-black tabular-nums text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-black tabular-nums text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
                 {entry.seriesOrder ?? "–"}
               </span>
               <span className="min-w-0 flex-1 truncate text-xs font-medium leading-relaxed group-hover:text-amber-700 dark:group-hover:text-amber-400">
@@ -191,7 +191,7 @@ function SeriesCard({ series }: { series: ColumnSeries }) {
           </li>
         ))}
         {rest > 0 && (
-          <li className="px-2 pt-1 text-[11px] text-muted-foreground">
+          <li className="px-2 pt-1 text-xs text-muted-foreground">
             ほか {rest} 回
           </li>
         )}

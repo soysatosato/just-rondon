@@ -114,7 +114,7 @@ export default function PlanSummaryBar({
           type="button"
           onClick={() => onSelectDay(null)}
           aria-pressed={focusDay === null}
-          className={`shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-bold transition ${
+          className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-bold transition ${
             focusDay === null
               ? "border-foreground bg-foreground text-background"
               : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
@@ -149,7 +149,7 @@ function Figure({
 }) {
   return (
     <div className="flex items-baseline gap-1.5">
-      <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </dt>
       <dd className="text-base font-bold tabular-nums leading-none">
@@ -164,7 +164,7 @@ function Figure({
           value
         )}
         {note && (
-          <span className="ml-1 text-[10px] font-normal text-muted-foreground">
+          <span className="ml-1 text-xs font-normal text-muted-foreground">
             ({note})
           </span>
         )}
@@ -236,7 +236,7 @@ function DayChip({
           : "border-border hover:border-foreground/40 hover:bg-muted/50"
       }`}
     >
-      <span className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-bold leading-none">
+      <span className="flex items-center gap-1.5 whitespace-nowrap text-xs font-bold leading-none">
         <span
           className="h-2 w-2 shrink-0 rounded-full"
           style={{ backgroundColor: color }}

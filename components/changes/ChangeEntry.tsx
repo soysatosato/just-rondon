@@ -80,7 +80,7 @@ export default function ChangeEntry({
 
             <span
               className={cn(
-                "inline-flex items-baseline gap-1.5 text-[11px] font-bold leading-none",
+                "inline-flex items-baseline gap-1.5 text-xs font-bold leading-none",
                 kind.textClass,
               )}
             >
@@ -98,7 +98,7 @@ export default function ChangeEntry({
             </span>
 
             {audience && (
-              <span className="rounded-sm border border-foreground/20 px-1.5 py-0.5 text-[10px] font-bold leading-none text-foreground/70 dark:text-gray-300">
+              <span className="rounded-sm border border-foreground/20 px-1.5 py-0.5 text-xs font-bold leading-none text-foreground/70 dark:text-gray-300">
                 {audience}
               </span>
             )}

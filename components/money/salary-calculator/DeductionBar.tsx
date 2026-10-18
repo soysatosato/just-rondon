@@ -92,7 +92,7 @@ export default function DeductionBar({
                 >
                   {s.label}
                 </span>
-                <span className="block truncate text-[11px] text-muted-foreground">
+                <span className="block truncate text-xs text-muted-foreground">
                   {s.english}
                 </span>
               </span>
@@ -106,7 +106,7 @@ export default function DeductionBar({
                   {s.key === "takeHome" ? "" : "−"}
                   {formatGbp(value / divisor)}
                 </span>
-                <span className="block text-[11px] tabular-nums text-muted-foreground">
+                <span className="block text-xs tabular-nums text-muted-foreground">
                   {formatPercent(gross > 0 ? value / gross : 0)}
                   {deltas && Math.abs(delta) >= 0.5 && (
                     <span

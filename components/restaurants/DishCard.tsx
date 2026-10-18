@@ -49,7 +49,7 @@ export default function DishCard({ dish }: { dish: DishWithRestaurants }) {
 
           {booking && (
             <span
-              className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-bold backdrop-blur-sm ${
+              className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-xs font-bold backdrop-blur-sm ${
                 booking.strong
                   ? "bg-amber-500/95 text-amber-950"
                   : "bg-black/55 text-white"

@@ -59,7 +59,7 @@ export default function QuickTables() {
                       {formatGbp(row.gross, { pence: !Number.isInteger(row.gross) })}
                     </ApplyConditionLink>
                     {row.label && (
-                      <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-900 dark:bg-amber-900/40 dark:text-amber-200">
+                      <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-900/40 dark:text-amber-200">
                         {row.label}
                       </span>
                     )}
@@ -103,7 +103,7 @@ export default function QuickTables() {
                   <th scope="row" className="whitespace-nowrap px-4 py-2.5 text-left font-medium tabular-nums">
                     {hourlyGbp(row.hourly)}
                     {row.isMinimumWage && (
-                      <span className="ml-2 text-[11px] font-normal text-muted-foreground">最低賃金</span>
+                      <span className="ml-2 text-xs font-normal text-muted-foreground">最低賃金</span>
                     )}
                   </th>
                   {row.cells.map((cell) => (

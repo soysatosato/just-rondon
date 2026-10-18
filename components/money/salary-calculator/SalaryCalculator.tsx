@@ -495,7 +495,7 @@ export default function SalaryCalculator() {
                     <span className="flex items-center gap-2 text-sm font-semibold">
                       詳しい条件
                       {advancedCount > 0 && (
-                        <span className="rounded-full bg-foreground px-1.5 text-[11px] font-semibold tabular-nums text-background">
+                        <span className="rounded-full bg-foreground px-1.5 text-xs font-semibold tabular-nums text-background">
                           {advancedCount}
                         </span>
                       )}
@@ -539,7 +539,7 @@ export default function SalaryCalculator() {
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold">
                       手取り
-                      <span className="ml-2 rounded-full border bg-background px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                      <span className="ml-2 rounded-full border bg-background px-2 py-0.5 text-xs font-medium text-muted-foreground">
                         {year.label}年度
                       </span>
                     </p>
@@ -626,7 +626,7 @@ export default function SalaryCalculator() {
 
                 <dl className="mt-5 grid grid-cols-3 gap-2">
                   <div className="rounded-xl border bg-background/70 p-3">
-                    <dt className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <dt className="flex items-center gap-1 text-xs text-muted-foreground">
                       限界税率
                       <InfoTip label="限界税率">
                         額面が£1増えたとき、そのうち所得税・National Insurance・学生ローンに回る割合です。昇給したときに手元に残る額は、この率で決まります。
@@ -635,7 +635,7 @@ export default function SalaryCalculator() {
                     <dd className="mt-0.5 text-lg font-bold">{formatPercent(rates.government, 0)}</dd>
                   </div>
                   <div className="rounded-xl border bg-background/70 p-3">
-                    <dt className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <dt className="flex items-center gap-1 text-xs text-muted-foreground">
                       実効負担率
                       <InfoTip label="実効負担率">
                         額面全体に対して、所得税・National Insurance・学生ローンが占める割合です。年金は自分の資産なので含めていません。
@@ -646,7 +646,7 @@ export default function SalaryCalculator() {
                     </dd>
                   </div>
                   <div className="rounded-xl border bg-background/70 p-3">
-                    <dt className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <dt className="flex items-center gap-1 text-xs text-muted-foreground">
                       手取りの時給
                       <InfoTip label="手取りの時給">
                         手取りを、週{state.hoursPerWeek}時間×52週で割った額です。週の時間は「詳しい条件」で変えられます。
@@ -711,7 +711,7 @@ export default function SalaryCalculator() {
                   <ShareActions query={query} shareText={shareText} />
                 </div>
                 {!pinned && (
-                  <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                     保存すると、条件を変えたときに差額が出ます。転職のオファー比較や、年金をやめた場合の確認に。
                   </p>
                 )}

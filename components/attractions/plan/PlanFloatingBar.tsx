@@ -46,7 +46,7 @@ export default function PlanFloatingBar() {
           {count}
         </span>
         {needsChoice && (
-          <span className="rounded-full bg-amber-400 px-2 py-0.5 text-[11px] font-bold text-amber-950">
+          <span className="rounded-full bg-amber-400 px-2 py-0.5 text-xs font-bold text-amber-950">
             要確認
           </span>
         )}

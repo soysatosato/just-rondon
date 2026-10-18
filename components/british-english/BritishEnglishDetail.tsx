@@ -153,7 +153,7 @@ export default function BritishEnglishDetail({
                 />
                 <div className="min-w-0">
                   <span
-                    className={`mb-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums ${accent.badge}`}
+                    className={`mb-1.5 inline-block rounded-full px-2 py-0.5 text-xs font-bold tabular-nums ${accent.badge}`}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>

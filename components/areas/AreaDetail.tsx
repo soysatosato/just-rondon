@@ -145,7 +145,7 @@ export default function AreaDetail({
               {content.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-white/70 px-2.5 py-1 text-[11px] font-medium text-indigo-700 dark:bg-slate-900/60 dark:text-indigo-300"
+                  className="rounded-full bg-white/70 px-2.5 py-1 text-xs font-medium text-indigo-700 dark:bg-slate-900/60 dark:text-indigo-300"
                 >
                   {areaTagLabel(tag)}
                 </span>

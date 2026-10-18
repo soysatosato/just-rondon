@@ -38,13 +38,13 @@ export default function EraRail() {
             className="block h-1 w-full rounded-full bg-amber-400"
             style={{ opacity: 1 - i * 0.18 }}
           />
-          <span className="mt-3 block font-serif text-[11px] tabular-nums text-white/45">
+          <span className="mt-3 block font-serif text-xs tabular-nums text-white/45">
             {eraRange(era)}
           </span>
           <span className="mt-1 block text-[13px] font-bold leading-snug text-white">
             {HISTORY_ERA_LABELS[era]}
           </span>
-          <span className="mt-1.5 block text-[10px] font-bold tracking-wide text-amber-300/85">
+          <span className="mt-1.5 block text-xs font-bold tracking-wide text-amber-300/85">
             {eraChapterRange(era)}
           </span>
         </Link>

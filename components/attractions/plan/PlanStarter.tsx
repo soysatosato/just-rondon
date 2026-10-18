@@ -79,7 +79,7 @@ export default function PlanStarter({ spots }: { spots: PlanSpot[] }) {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">
+                  <p className="text-xs font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">
                     {template.span}
                   </p>
                   <p className="mt-1 text-base font-bold leading-snug">
@@ -96,7 +96,7 @@ export default function PlanStarter({ spots }: { spots: PlanSpot[] }) {
                 {template.blurb}
               </p>
 
-              <dl className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border pt-3 text-[11px]">
+              <dl className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border pt-3 text-xs">
                 <div className="flex items-center gap-1.5">
                   <CalendarRange
                     className="h-3.5 w-3.5 text-muted-foreground"

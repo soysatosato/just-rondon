@@ -53,7 +53,7 @@ function Line({
         >
           {english}
         </p>
-        <p className="text-[11px] leading-snug text-muted-foreground">{japanese}</p>
+        <p className="text-xs leading-snug text-muted-foreground">{japanese}</p>
       </div>
       <span
         aria-hidden
@@ -101,7 +101,7 @@ export default function PayslipCard({
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h3 className="text-base font-bold tracking-tight">{VIEW_TITLE[view]}</h3>
-        <p className="font-mono text-[11px] text-muted-foreground">
+        <p className="font-mono text-xs text-muted-foreground">
           Tax code {result.taxCodeUsed} · NI letter {overStatePensionAge ? "C" : "A"}
         </p>
       </div>

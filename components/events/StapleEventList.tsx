@@ -35,7 +35,7 @@ export default function StapleEventList({ events }: { events: Event[] }) {
               <p className="text-sm font-medium leading-snug dark:text-white">
                 {event.title}
                 {event.isFree && (
-                  <span className="ml-2 align-middle text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+                  <span className="ml-2 align-middle text-xs font-bold text-emerald-700 dark:text-emerald-400">
                     無料
                   </span>
                 )}

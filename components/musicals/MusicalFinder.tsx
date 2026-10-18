@@ -264,19 +264,19 @@ function MatchCard({ musical }: { musical: BrowseMusical }) {
 
       <div className="mt-3 flex flex-wrap gap-1.5">
         {runtime && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
             <Clock className="h-3 w-3" />
             {runtime}
           </span>
         )}
         {musical.minAgeGuidance !== null && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
             <Users className="h-3 w-3" />
             {musical.minAgeGuidance}歳〜
           </span>
         )}
         {form && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
             <Languages className="h-3 w-3" />
             {ENGLISH_FORM_LABELS[form]}
           </span>

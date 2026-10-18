@@ -40,7 +40,7 @@ export default function ChapterProgress({ current }: { current: number }) {
           );
         })}
       </div>
-      <p className="mt-1.5 font-serif text-[11px] tabular-nums text-white/45">
+      <p className="mt-1.5 font-serif text-xs tabular-nums text-white/45">
         第{current}章 / 全{historyChapters.length}章
       </p>
     </nav>

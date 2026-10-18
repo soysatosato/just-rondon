@@ -104,7 +104,7 @@ export default function ViewRanking({
                         {item.title}
                       </span>
                       {item.subtitle && (
-                        <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
+                        <span className="mt-0.5 block truncate text-xs text-muted-foreground">
                           {item.subtitle}
                         </span>
                       )}
@@ -142,7 +142,7 @@ export default function ViewRanking({
                         {item.title}
                       </span>
                       {item.subtitle && (
-                        <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
+                        <span className="mt-0.5 block truncate text-xs text-muted-foreground">
                           {item.subtitle}
                         </span>
                       )}

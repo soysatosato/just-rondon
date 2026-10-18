@@ -82,7 +82,7 @@ export default function PlanDateBar({ dayCount }: { dayCount: number }) {
             <button
               type="button"
               onClick={() => setStartDate(null)}
-              className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-1 text-[11px] text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+              className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-1 text-xs text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
             >
               <X className="h-3 w-3" aria-hidden />
               外す

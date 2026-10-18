@@ -332,7 +332,7 @@ export default async function ReadingHubPage() {
                         />
                       )}
                       <span className="min-w-0">
-                        <span className="text-[10px] font-semibold text-muted-foreground">
+                        <span className="text-xs font-semibold text-muted-foreground">
                           最新
                         </span>
                         <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
@@ -386,11 +386,11 @@ export default async function ReadingHubPage() {
                         className="group flex h-full w-40 flex-col rounded-lg border border-slate-200 p-3 transition hover:border-amber-400 hover:bg-amber-50/50 dark:border-slate-800 dark:hover:border-amber-700 dark:hover:bg-amber-950/20"
                       >
                         <span
-                          className={`text-[10px] font-bold ${HISTORY_STYLE.text}`}
+                          className={`text-xs font-bold ${HISTORY_STYLE.text}`}
                         >
                           第{ch.number}章
                         </span>
-                        <span className="mt-0.5 text-[10px] text-muted-foreground">
+                        <span className="mt-0.5 text-xs text-muted-foreground">
                           {ch.period}
                         </span>
                         <span className="mt-1.5 line-clamp-3 text-xs font-semibold leading-snug">
