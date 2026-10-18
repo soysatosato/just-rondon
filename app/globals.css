@@ -76,6 +76,25 @@
     */
     overflow-x: clip;
   }
+
+  /*
+    見出しの折り返し。和文は文字の間どこでも折れるので、「〜ません」の
+    「ん」や「した」の「た」だけが次の行に落ちていた。balance で行の長さを
+    揃え、auto-phrase(Chrome/Edge 119+、和文のみ)で文節の切れ目で折る。
+    対応しないブラウザでは従来どおりの改行になるだけ。1つの文節が欄より
+    長いときは、はみ出さずにその中で折る(break-word)。
+  */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  :lang(ja) :is(h1, h2, h3, h4) {
+    word-break: auto-phrase;
+  }
 }
 
 @layer components {
