@@ -49,7 +49,7 @@ export default function PlanPromo() {
       <div className="mt-6 flex flex-wrap items-center gap-3 pt-2 sm:mt-auto">
         <Link
           href="/plan"
-          className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+          className="inline-flex h-11 items-center gap-2 rounded-full bg-indigo-600 px-6 text-sm font-semibold text-white transition hover:bg-indigo-700"
         >
           {count > 0 ? `${count}ヶ所でプランを作る` : "旅行プランを作る"}
           <ArrowRight className="h-4 w-4" aria-hidden />

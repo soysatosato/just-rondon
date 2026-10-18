@@ -23,7 +23,9 @@ const buttonVariants = cva(
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
+        // 主要な行き先・送信(CTA)の大きさ。高さ44px の丸型で揃える。
+        // 以前は 40px の角丸で、トップでは隣の丸型のボタンと形が違っていた。
+        lg: "h-11 rounded-full px-6",
         icon: "h-9 w-9",
       },
     },
