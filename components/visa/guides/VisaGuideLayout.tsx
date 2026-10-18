@@ -99,7 +99,7 @@ export default function VisaGuideLayout({
                   {fact.label}
                 </dt>
                 <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
-                  <MarkdownBody>{fact.value}</MarkdownBody>
+                  <MarkdownBody size="compact">{fact.value}</MarkdownBody>
                 </dd>
               </div>
             ))}

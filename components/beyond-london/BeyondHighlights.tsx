@@ -69,7 +69,7 @@ export default function BeyondHighlights({
                   入場料
                 </dt>
                 <dd className="leading-relaxed">
-                  <MarkdownBody>{spot.admission}</MarkdownBody>
+                  <MarkdownBody size="compact">{spot.admission}</MarkdownBody>
                 </dd>
               </dl>
 

@@ -47,7 +47,7 @@ export default function GuideCallout({
         {title}
       </p>
       <div className="text-sm text-gray-700 dark:text-gray-300">
-        <MarkdownBody>{body}</MarkdownBody>
+        <MarkdownBody size="compact">{body}</MarkdownBody>
       </div>
     </div>
   );

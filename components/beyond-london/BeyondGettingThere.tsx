@@ -86,7 +86,7 @@ export default function BeyondGettingThere({
         <div
           className={`mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
         >
-          <MarkdownBody>{gettingThere.oysterNote}</MarkdownBody>
+          <MarkdownBody size="compact">{gettingThere.oysterNote}</MarkdownBody>
         </div>
         {!gettingThere.oysterValid && (
           <Link
@@ -161,7 +161,7 @@ export default function BeyondGettingThere({
               <dd
                 className={`mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
               >
-                <MarkdownBody>{n.value}</MarkdownBody>
+                <MarkdownBody size="compact">{n.value}</MarkdownBody>
               </dd>
             </div>
           ))}
@@ -174,7 +174,7 @@ export default function BeyondGettingThere({
         <div
           className={`mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
         >
-          <MarkdownBody>{onArrival.fromStationToCentre}</MarkdownBody>
+          <MarkdownBody size="compact">{onArrival.fromStationToCentre}</MarkdownBody>
         </div>
 
         {/*
@@ -190,7 +190,7 @@ export default function BeyondGettingThere({
             <div
               className={`mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
             >
-              <MarkdownBody>{onArrival.halfDay}</MarkdownBody>
+              <MarkdownBody size="compact">{onArrival.halfDay}</MarkdownBody>
             </div>
           </div>
           {onArrival.fullDay && (
@@ -201,7 +201,7 @@ export default function BeyondGettingThere({
               <div
                 className={`mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
               >
-                <MarkdownBody>{onArrival.fullDay}</MarkdownBody>
+                <MarkdownBody size="compact">{onArrival.fullDay}</MarkdownBody>
               </div>
             </div>
           )}

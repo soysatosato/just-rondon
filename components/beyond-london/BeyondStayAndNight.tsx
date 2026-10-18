@@ -34,7 +34,7 @@ export default function BeyondStayAndNight({ data }: { data: StayAndNight }) {
               {row.label}
             </dt>
             <dd className="mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-              <MarkdownBody>{row.value}</MarkdownBody>
+              <MarkdownBody size="compact">{row.value}</MarkdownBody>
             </dd>
           </div>
         ))}
@@ -46,7 +46,7 @@ export default function BeyondStayAndNight({ data }: { data: StayAndNight }) {
             宿泊税
           </p>
           <div className="mt-1 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
-            <MarkdownBody>{data.levyNote}</MarkdownBody>
+            <MarkdownBody size="compact">{data.levyNote}</MarkdownBody>
           </div>
         </div>
       )}

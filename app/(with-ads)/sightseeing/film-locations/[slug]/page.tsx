@@ -120,7 +120,7 @@ export default function FilmWorkPage({ params }: Props) {
           {work.lead.map((paragraph, i) => (
             <div
               key={i}
-              className="prose dark:prose-invert max-w-full prose-sm sm:prose-base"
+              className="prose dark:prose-invert max-w-full prose-base"
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {paragraph}
@@ -183,7 +183,7 @@ export default function FilmWorkPage({ params }: Props) {
 
           <SpotMedia spot={spot} />
 
-          <div className="prose dark:prose-invert max-w-full prose-sm sm:prose-base">
+          <div className="prose dark:prose-invert max-w-full prose-base">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {spot.body}
             </ReactMarkdown>

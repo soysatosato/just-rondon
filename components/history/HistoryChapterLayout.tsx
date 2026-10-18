@@ -140,7 +140,7 @@ export default function HistoryChapterLayout({
                 {legacy.question}
               </p>
               <div className="px-4 py-3.5 text-sm leading-relaxed text-slate-700 dark:text-slate-300 sm:px-5">
-                <MarkdownBody>{legacy.answer}</MarkdownBody>
+                <MarkdownBody size="compact">{legacy.answer}</MarkdownBody>
               </div>
             </div>
           ))}
@@ -293,7 +293,7 @@ export default function HistoryChapterLayout({
                   マークダウンとして描くが、段落の既定の余白はここでは効かせない。
                 */}
                 <div className="mt-3 text-slate-700 dark:text-slate-300">
-                  <MarkdownBody className="[&>p:first-child]:mt-0">
+                  <MarkdownBody size="compact" className="[&>p:first-child]:mt-0">
                     {place.whatYouSee}
                   </MarkdownBody>
                 </div>
@@ -312,7 +312,7 @@ export default function HistoryChapterLayout({
                       見学
                     </dt>
                     <dd className="min-w-0 text-slate-600 dark:text-slate-400">
-                      <MarkdownBody className="text-xs [&_p]:my-0">
+                      <MarkdownBody size="compact" className="text-xs [&_p]:my-0">
                         {place.access}
                       </MarkdownBody>
                     </dd>
@@ -351,7 +351,7 @@ export default function HistoryChapterLayout({
             同じころ、日本では
           </h2>
           <div className="mt-2 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-            <MarkdownBody>{chapter.japanLink}</MarkdownBody>
+            <MarkdownBody size="compact">{chapter.japanLink}</MarkdownBody>
           </div>
         </section>
       )}

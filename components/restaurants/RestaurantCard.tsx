@@ -112,7 +112,7 @@ export default function RestaurantCard({
 
         {restaurant.body && (
           <div className="border-t border-slate-200 pt-3 dark:border-slate-700">
-            <MarkdownBody>{restaurant.body}</MarkdownBody>
+            <MarkdownBody size="compact">{restaurant.body}</MarkdownBody>
           </div>
         )}
 

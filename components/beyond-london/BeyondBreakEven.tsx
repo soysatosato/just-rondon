@@ -18,12 +18,12 @@ export default function BeyondBreakEven({ data }: { data: BreakEven }) {
           <div>
             <h2 className="text-lg font-semibold">結論：元が取れる条件</h2>
             <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              <MarkdownBody>{data.premise}</MarkdownBody>
+              <MarkdownBody size="compact">{data.premise}</MarkdownBody>
             </div>
           </div>
 
           <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-4 dark:border-emerald-800 dark:bg-emerald-950/30">
-            <MarkdownBody>{data.verdict}</MarkdownBody>
+            <MarkdownBody size="compact">{data.verdict}</MarkdownBody>
           </div>
 
           <div>

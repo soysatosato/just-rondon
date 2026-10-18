@@ -120,7 +120,7 @@ export default function PlaqueAreaPage({ params }: Props) {
           {area.lead.map((paragraph, i) => (
             <div
               key={i}
-              className="prose dark:prose-invert max-w-full prose-sm sm:prose-base"
+              className="prose dark:prose-invert max-w-full prose-base"
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {paragraph}
@@ -183,7 +183,7 @@ export default function PlaqueAreaPage({ params }: Props) {
 
           <PlaqueMedia plaque={plaque} />
 
-          <div className="prose dark:prose-invert max-w-full prose-sm sm:prose-base">
+          <div className="prose dark:prose-invert max-w-full prose-base">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {plaque.body}
             </ReactMarkdown>

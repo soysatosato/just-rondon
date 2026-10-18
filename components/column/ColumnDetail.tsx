@@ -23,7 +23,7 @@ import ReadingSources from "@/components/reading/ReadingSources";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const proseClass =
-  "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
+  "prose dark:prose-invert prose-base max-w-full";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {

@@ -15,7 +15,7 @@ import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 // 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
 // 全部インディゴにすると、1段落に何度も出てくる強調が蛍光ペンだらけに見える。
 const proseClass =
-  "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-foreground prose-li:marker:text-indigo-400";
+  "prose prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-foreground prose-li:marker:text-indigo-400";
 
 // 本文はMarkdownで管理しているので、記法側では target を指定できない。
 // 出典は外部の報道記事なので、読者を記事から連れ去らないよう別タブで開く。

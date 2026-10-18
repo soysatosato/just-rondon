@@ -22,7 +22,7 @@ import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 太字は数字と地名の強調に使うので、色は付けず字面の太さだけで効かせる。
 const proseClass =
-  "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-foreground prose-li:marker:text-indigo-400 prose-table:text-sm";
+  "prose prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-indigo-600 dark:prose-a:text-indigo-400 prose-strong:text-foreground prose-li:marker:text-indigo-400 prose-table:text-sm";
 
 // 本文はMarkdownで管理しているので、記法側では target を指定できない。
 // 出典は警察・土地登記・国家統計局など外部なので、別タブで開く。

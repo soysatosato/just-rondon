@@ -85,7 +85,7 @@ export default function MenuPicks({ picks }: { picks: MenuPick[] }) {
                   reason は markdown。太字で「これを頼まないと意味がない」
                   といった判断部分を立てているので、素のテキストで出さない。
                 */}
-                <MarkdownBody className="mt-1 text-sm">
+                <MarkdownBody size="compact" className="mt-1">
                   {pick.reason}
                 </MarkdownBody>
               </div>

@@ -12,7 +12,7 @@ import { publishedDateOf } from "@/lib/publish-schedule";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const proseClass =
-  "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-rose-600 dark:prose-a:text-rose-400 prose-strong:text-rose-600 dark:prose-strong:text-rose-400 prose-li:marker:text-rose-400";
+  "prose prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-rose-600 dark:prose-a:text-rose-400 prose-strong:text-rose-600 dark:prose-strong:text-rose-400 prose-li:marker:text-rose-400";
 
 const SECTION_ACCENTS = [
   {
