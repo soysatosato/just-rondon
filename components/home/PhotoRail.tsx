@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import RailScroller from "@/components/home/RailScroller";
+
 import type { RailItem } from "@/utils/actions/home";
 import { responsiveImage } from "@/lib/wikimedia-image";
 
@@ -63,12 +65,7 @@ export default function PhotoRail({
         </Link>
       </div>
 
-      {/*
-        コンテナの左右パディングぶん外に出してから同じだけ内側に戻す。
-        こうしないと、横スクロールの右端が本文の右端で切れて、
-        「まだ続きがある」ことが見えなくなる。
-      */}
-      <div className="-mx-4 mt-5 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <RailScroller label={title}>
         <ul className="flex snap-x snap-mandatory gap-3 sm:gap-4">
           {items.map((item) => (
             <li key={item.href} className="snap-start">
@@ -89,7 +86,7 @@ export default function PhotoRail({
             </Link>
           </li>
         </ul>
-      </div>
+      </RailScroller>
     </div>
   );
 }
