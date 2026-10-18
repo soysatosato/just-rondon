@@ -57,7 +57,7 @@ export default async function ArtworkDetailPage({
   if (!museum) return;
   const artwork = await fetchArtworkDetails(params.id);
   return (
-    <div data-page-main className="max-w-3xl mx-auto px-4 space-y-4">
+    <div data-page-main className="max-w-3xl mx-auto sm:px-4 space-y-4">
       {artwork && (
         <>
           <JsonLd

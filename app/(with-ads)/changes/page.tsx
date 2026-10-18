@@ -46,7 +46,7 @@ export default async function ChangesHubPage() {
   const upcoming = scheduledChangesBetween(today, horizon, now);
 
   return (
-    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl sm:px-4 py-8 sm:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/changes" })} />
       <Breadcrumbs path="/changes" className="mb-5" />
 

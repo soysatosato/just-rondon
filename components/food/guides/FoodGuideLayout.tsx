@@ -4,7 +4,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import { Card, CardContent } from "@/components/ui/card";
+import GuideSectionCard from "@/components/guides/GuideSectionCard";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import { SITE_URL } from "@/lib/seo";
 import { faqPageJsonLd } from "@/lib/jsonld";
@@ -48,7 +48,7 @@ export default function FoodGuideLayout({
   }));
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={foodGuideBreadcrumbJsonLd(article)} />
       <JsonLd data={foodGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
@@ -126,35 +126,29 @@ export default function FoodGuideLayout({
 
       <div className="space-y-8">
         {article.sections.map((section, i) => (
-          <Card
-            key={section.id}
-            id={section.id}
-            className="scroll-mt-24 bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm"
-          >
-            <CardContent className="space-y-2 p-4 sm:p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {i + 1}. {section.title}
-              </h2>
-              {section.subtitle && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {section.subtitle}
-                </p>
-              )}
+          <GuideSectionCard key={section.id} id={section.id}>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {i + 1}. {section.title}
+            </h2>
+            {section.subtitle && (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {section.subtitle}
+              </p>
+            )}
 
-              {/* 定型パネルは本文より前。数字を見てから解説を読む順序にする。 */}
-              {section.panel === "meal-deal-prices" && (
-                <MealDealPrices asOf={article.dataAsOf} />
-              )}
+            {/* 定型パネルは本文より前。数字を見てから解説を読む順序にする。 */}
+            {section.panel === "meal-deal-prices" && (
+              <MealDealPrices asOf={article.dataAsOf} />
+            )}
 
-              <MarkdownBody>{section.body}</MarkdownBody>
+            <MarkdownBody>{section.body}</MarkdownBody>
 
-              {section.tips && section.tips.length > 0 && (
-                <GuideNotes items={section.tips} />
-              )}
+            {section.tips && section.tips.length > 0 && (
+              <GuideNotes items={section.tips} />
+            )}
 
-              {section.callout && <GuideCallout {...section.callout} />}
-            </CardContent>
-          </Card>
+            {section.callout && <GuideCallout {...section.callout} />}
+          </GuideSectionCard>
         ))}
       </div>
 

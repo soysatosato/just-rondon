@@ -131,7 +131,7 @@ export default function ServiceChargeGuidePage() {
   const content = serviceChargeGuide;
 
   return (
-    <div data-page-main className="mx-auto max-w-6xl px-4 py-10 md:py-14">
+    <div data-page-main className="mx-auto max-w-6xl sm:px-4 py-10 md:py-14">
       <JsonLd data={breadcrumbListJsonLd({ path: "/jobs/service-charges" })} />
 
       <Breadcrumbs path="/jobs/service-charges" className="mb-6" />

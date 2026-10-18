@@ -2,7 +2,7 @@ import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { Card, CardContent } from "@/components/ui/card";
+import GuideSectionCard from "@/components/guides/GuideSectionCard";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
 import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
@@ -95,22 +95,17 @@ export default function ArticleLayout({
 
       <div className="space-y-8">
         {article.sections.map((section, i) => (
-          <Card
-            key={section.title}
-            className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm"
-          >
-            <CardContent className="space-y-2 p-4 sm:p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {i + 1}. {section.title}
-              </h2>
-              {section.subtitle && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {section.subtitle}
-                </p>
-              )}
-              <MarkdownBody>{section.body}</MarkdownBody>
-            </CardContent>
-          </Card>
+          <GuideSectionCard key={section.title}>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {i + 1}. {section.title}
+            </h2>
+            {section.subtitle && (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {section.subtitle}
+              </p>
+            )}
+            <MarkdownBody>{section.body}</MarkdownBody>
+          </GuideSectionCard>
         ))}
       </div>
 

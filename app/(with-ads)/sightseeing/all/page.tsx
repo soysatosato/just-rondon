@@ -41,7 +41,7 @@ export default async function AllAttractionsPage() {
   const kidsCount = attractions.filter((a) => a.isForKids).length;
 
   return (
-    <div data-page-main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl sm:px-4 py-8 md:py-10">
       <div className="mb-6">
         <Breadcrumbs path="/sightseeing/all" />
       </div>

@@ -90,7 +90,7 @@ export default function EventGuideView({
   };
 
   return (
-    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl sm:px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/events/guides",

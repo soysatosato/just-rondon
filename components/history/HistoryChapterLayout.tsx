@@ -3,7 +3,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import { Card, CardContent } from "@/components/ui/card";
+import GuideSectionCard from "@/components/guides/GuideSectionCard";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import { SITE_URL } from "@/lib/seo";
 import { faqPageJsonLd } from "@/lib/jsonld";
@@ -50,7 +50,7 @@ export default function HistoryChapterLayout({
   const hasJapanColumn = chapter.timeline.some((t) => t.japan);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-4 py-8 text-gray-900 dark:text-gray-100 md:py-10">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 py-8 text-gray-900 dark:text-gray-100 md:py-10">
       <JsonLd data={chapterBreadcrumbJsonLd(chapter)} />
       <JsonLd data={chapterArticleJsonLd(chapter)} />
       {chapter.faq && chapter.faq.length > 0 && (
@@ -159,50 +159,44 @@ export default function HistoryChapterLayout({
 
       <div className="mt-8 space-y-8">
         {chapter.sections.map((section, i) => (
-          <Card
-            key={section.id}
-            id={section.id}
-            className="scroll-mt-24 border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
-          >
-            <CardContent className="space-y-2 p-4 sm:p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {i + 1}. {section.title}
-              </h2>
-              {section.subtitle && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {section.subtitle}
+          <GuideSectionCard key={section.id} id={section.id}>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {i + 1}. {section.title}
+            </h2>
+            {section.subtitle && (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {section.subtitle}
+              </p>
+            )}
+            <MarkdownBody>{section.body}</MarkdownBody>
+
+            {/*
+              写真は本文の後。通史の節は「その像は今もウェストミンスター橋の
+              たもとに立っています」のように、最後の一文が物に着地する形で
+              書いてある。先に絵を出すと、その着地が予告済みの答え合わせに
+              なる(components/shopping/ShoppingGuideLayout.tsx と同じ判断)。
+            */}
+            {section.figure && (
+              <HistoryFigure figure={section.figure} className="mt-5" />
+            )}
+
+            {section.tips && section.tips.length > 0 && (
+              <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
+                <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+                  覚えておくと効くこと
                 </p>
-              )}
-              <MarkdownBody>{section.body}</MarkdownBody>
+                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+                  {section.tips.map((tip) => (
+                    <li key={tip} className="leading-relaxed">
+                      {tip}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-              {/*
-                写真は本文の後。通史の節は「その像は今もウェストミンスター橋の
-                たもとに立っています」のように、最後の一文が物に着地する形で
-                書いてある。先に絵を出すと、その着地が予告済みの答え合わせに
-                なる(components/shopping/ShoppingGuideLayout.tsx と同じ判断)。
-              */}
-              {section.figure && (
-                <HistoryFigure figure={section.figure} className="mt-5" />
-              )}
-
-              {section.tips && section.tips.length > 0 && (
-                <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-                  <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
-                    覚えておくと効くこと
-                  </p>
-                  <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
-                    {section.tips.map((tip) => (
-                      <li key={tip} className="leading-relaxed">
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {section.callout && <GuideCallout {...section.callout} />}
-            </CardContent>
-          </Card>
+            {section.callout && <GuideCallout {...section.callout} />}
+          </GuideSectionCard>
         ))}
       </div>
 

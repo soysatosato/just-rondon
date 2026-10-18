@@ -4,6 +4,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
+import GuideSectionCard from "@/components/guides/GuideSectionCard";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import { SITE_URL } from "@/lib/seo";
@@ -104,40 +105,34 @@ export default function TransportGuideLayout({
 
       <div className="mt-8 space-y-8">
         {article.sections.map((section, i) => (
-          <Card
-            key={section.id}
-            id={section.id}
-            className="scroll-mt-24 border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
-          >
-            <CardContent className="space-y-2 p-4 sm:p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {i + 1}. {section.title}
-              </h2>
-              {section.subtitle && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {section.subtitle}
+          <GuideSectionCard key={section.id} id={section.id}>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {i + 1}. {section.title}
+            </h2>
+            {section.subtitle && (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {section.subtitle}
+              </p>
+            )}
+            <MarkdownBody>{section.body}</MarkdownBody>
+
+            {section.tips && section.tips.length > 0 && (
+              <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
+                <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+                  実務メモ
                 </p>
-              )}
-              <MarkdownBody>{section.body}</MarkdownBody>
+                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+                  {section.tips.map((tip) => (
+                    <li key={tip} className="leading-relaxed">
+                      {tip}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-              {section.tips && section.tips.length > 0 && (
-                <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-                  <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
-                    実務メモ
-                  </p>
-                  <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
-                    {section.tips.map((tip) => (
-                      <li key={tip} className="leading-relaxed">
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {section.callout && <GuideCallout {...section.callout} />}
-            </CardContent>
-          </Card>
+            {section.callout && <GuideCallout {...section.callout} />}
+          </GuideSectionCard>
         ))}
       </div>
 

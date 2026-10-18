@@ -68,7 +68,7 @@ export default function MuseumBanksy() {
   const protectedCount = BANKSY_ARTWORKS.filter((a) => a.protected).length;
 
   return (
-    <div data-page-main className="mx-auto max-w-6xl px-4 py-8 space-y-14 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl sm:px-4 py-8 space-y-14 md:py-10">
       {/* Hero */}
       <section className="space-y-5">
         <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">

@@ -37,7 +37,7 @@ export const metadata = buildPageMetadata({
 
 export default function FilmLocationsHubPage() {
   return (
-    <div data-page-main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
+    <div data-page-main className="max-w-5xl mx-auto py-8 sm:px-4 md:py-10">
       <JsonLd data={filmLocationsHubJsonLd(filmWorks)} />
       <JsonLd
         data={sightseeingBreadcrumbJsonLd([

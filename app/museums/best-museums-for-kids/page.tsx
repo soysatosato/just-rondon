@@ -37,7 +37,7 @@ export default async function KidsMuseumsPage() {
   const museums = await fetchKidsMuseums();
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 py-8 md:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/museums",

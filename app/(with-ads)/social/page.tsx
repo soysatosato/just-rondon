@@ -135,7 +135,7 @@ export default function SocialHubPage() {
   const pageUrl = `${SITE_URL}${SOCIAL_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: SOCIAL_SECTION_NAME,
