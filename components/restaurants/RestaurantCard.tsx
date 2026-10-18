@@ -6,6 +6,7 @@ import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import MenuPicks from "@/components/restaurants/MenuPicks";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 写真の無い店の代替。
@@ -46,7 +47,7 @@ export default function RestaurantCard({
       <div className="relative aspect-[16/9] w-full">
         {restaurant.image ? (
           <img
-            src={restaurant.image}
+            {...responsiveImage(restaurant.image, IMAGE_SIZES.grid2)}
             alt={restaurant.name}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

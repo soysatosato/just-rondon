@@ -27,6 +27,7 @@ import {
   souvenirPath,
   type SouvenirCategory,
 } from "@/components/souvenirs/categories";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 取得側の unstable_cache(utils/actions/souvenirs.ts)と同じ1日。
 export const revalidate = 60 * 60 * 24;
@@ -141,7 +142,7 @@ export default async function SouvenirPage({
         <figure className="mt-6">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
             <img
-              src={souvenir.image}
+              {...responsiveImage(souvenir.image, IMAGE_SIZES.article)}
               alt={souvenir.name}
               className="absolute inset-0 h-full w-full object-cover"
               decoding="async"

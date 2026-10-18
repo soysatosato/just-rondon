@@ -28,6 +28,7 @@ import {
   getStoreKindMeta,
   type BrandCategory,
 } from "@/components/brands/meta";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 取得側の unstable_cache(utils/actions/brands.ts)と同じ1日。
 export const revalidate = 60 * 60 * 24;
@@ -187,7 +188,7 @@ export default async function BrandPage({
         <figure className="mt-6">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
             <img
-              src={brand.image}
+              {...responsiveImage(brand.image, IMAGE_SIZES.article)}
               alt={brand.name}
               className="absolute inset-0 h-full w-full object-cover"
               decoding="async"
@@ -330,7 +331,7 @@ export default async function BrandPage({
                 {item.image && (
                   <div className="relative aspect-[4/3] w-full bg-slate-100 dark:bg-slate-800">
                     <img
-                      src={item.image}
+                      {...responsiveImage(item.image, "(min-width: 800px) 380px, (min-width: 640px) 50vw, 100vw")}
                       alt={item.name}
                       className="absolute inset-0 h-full w-full object-cover"
                       loading="lazy"

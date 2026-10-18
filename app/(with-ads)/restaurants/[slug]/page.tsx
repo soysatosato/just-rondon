@@ -17,6 +17,7 @@ import {
   dishJsonLd,
   dishPath,
 } from "@/components/restaurants/meta";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 取得側の unstable_cache(utils/actions/dishes.ts)と同じ1日。
 export const revalidate = 60 * 60 * 24;
@@ -91,7 +92,7 @@ export default async function DishPage({
         <figure className="mt-6">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
             <img
-              src={dish.image}
+              {...responsiveImage(dish.image, IMAGE_SIZES.article)}
               alt={dish.name}
               className="absolute inset-0 h-full w-full object-cover"
               decoding="async"

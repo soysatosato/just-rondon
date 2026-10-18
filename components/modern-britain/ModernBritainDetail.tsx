@@ -10,6 +10,7 @@ import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
 // 全部インディゴにすると、1段落に何度も出てくる強調が蛍光ペンだらけに見える。
@@ -120,7 +121,7 @@ export default function ModernBritainDetail({
         <figure className="mt-8 space-y-1.5">
           <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
             <img
-              src={content.image}
+              {...responsiveImage(content.image, IMAGE_SIZES.article)}
               alt={content.title}
               className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"

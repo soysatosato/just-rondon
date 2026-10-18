@@ -25,6 +25,7 @@ import {
   type GenreSlug,
 } from "@/components/museums/taxonomy";
 import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const MuseumsMapComponent = dynamic(
   () => import("@/components/museums/MuseumsMapComponent"),
@@ -474,7 +475,7 @@ function MuseumResultCard({
       <Card className="flex h-full flex-col overflow-hidden border border-border transition hover:border-indigo-400 hover:shadow-lg">
         <div className="relative h-40 w-full overflow-hidden bg-muted">
           <img
-            src={m.image}
+            {...responsiveImage(m.image, IMAGE_SIZES.grid3)}
             alt={m.name}
             className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
             loading="lazy"

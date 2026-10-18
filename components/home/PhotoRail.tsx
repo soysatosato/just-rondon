@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { RailItem } from "@/utils/actions/home";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 写真を横一列に並べる棚。トップの「見る・する」はこれの繰り返しで作る。
@@ -98,7 +99,7 @@ function RailCard({ item }: { item: RailItem }) {
     <Link href={item.href} className="group block w-[178px] sm:w-[212px]">
       <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-muted">
         <img
-          src={item.image}
+          {...responsiveImage(item.image, "(min-width: 640px) 212px, 178px")}
           alt={item.name}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"

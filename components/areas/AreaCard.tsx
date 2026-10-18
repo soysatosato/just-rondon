@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Content } from "@prisma/client";
 import { areaFacts, areaTagLabel } from "@/lib/area-taxonomy";
 import { stripInlineMarkdown } from "@/lib/plain-text";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 街1本ぶんのカード。
@@ -62,7 +63,7 @@ export default function AreaCard({ item }: { item: Content }) {
       {item.image && (
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
           <img
-            src={item.image}
+            {...responsiveImage(item.image, IMAGE_SIZES.grid3)}
             alt=""
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
             loading="lazy"

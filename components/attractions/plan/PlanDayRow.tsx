@@ -28,6 +28,7 @@ import LondonPassBadge from "./LondonPassBadge";
 import PlanStayEditor from "./PlanStayEditor";
 import { moveToDay, moveWithinDay, removeFromPlan } from "./plan-store";
 import type { DragState } from "./drag";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 const LEG_ICONS: Record<LegKind, typeof Footprints> = {
   walk: Footprints,
@@ -165,7 +166,7 @@ export default function PlanDayRow({
         </div>
 
         <img
-          src={row.spot.image}
+          {...responsiveImage(row.spot.image, "64px")}
           alt=""
           className="hidden h-16 w-16 shrink-0 rounded-lg object-cover sm:block print:hidden"
           loading="lazy"

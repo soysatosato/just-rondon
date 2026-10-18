@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Ticket } from "lucide-react";
@@ -46,6 +47,7 @@ export default function MusicalHero({
       <div className="relative min-h-[320px] sm:min-h-[420px] rounded-2xl overflow-hidden shadow-lg">
         <Image
           src={image}
+          unoptimized={!isResizableImage(image)}
           alt={name}
           fill
           priority

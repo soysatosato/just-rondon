@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import type { RailItem } from "@/utils/actions/home";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * ヒーロー右半分の写真モザイク。
@@ -14,10 +15,16 @@ import type { RailItem } from "@/utils/actions/home";
  * 並べる。1枚目だけ 2x2 で大きく取るのは、同じ大きさの箱が9個並ぶと
  * 「サムネイル一覧」に見えて、トップの主役として弱くなるため。
  *
- * next/image は通していない。next.config.mjs で unoptimized: true に
- * している間は最適化が効かず、挟んでも遠回りになるだけ。代わりに
- * 1枚目だけ eager + fetchPriority で先に取りに行かせる。
+ * 画像は responsiveImage で幅つきの候補を渡す(Wikimedia のサムネイル)。
+ * 1枚目はトップの最大要素なので eager + fetchPriority で先に取りに行かせる。
+ * 以前は全タイルに1280px画像(1枚200〜620KB)を配っていて、低速回線では
+ * この1枚目の表示に14秒かかっていた。
  */
+
+/** 主役タイルの表示幅。モバイルは全幅、sm 以上は格子3列のうち2列。 */
+const LEAD_SIZES = "(min-width: 1024px) 440px, (min-width: 640px) 66vw, 100vw";
+/** 小さいタイル。モバイルは2列、sm 以上は3列。 */
+const TILE_SIZES = "(min-width: 1024px) 220px, (min-width: 640px) 33vw, 50vw";
 export default function HeroMosaic({ items }: { items: RailItem[] }) {
   if (items.length === 0) return null;
 
@@ -76,7 +83,7 @@ function Tile({
       className={`group relative min-h-0 overflow-hidden rounded-lg bg-slate-800 ${className}`}
     >
       <img
-        src={item.image}
+        {...responsiveImage(item.image, isLead ? LEAD_SIZES : TILE_SIZES)}
         alt={item.name}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}

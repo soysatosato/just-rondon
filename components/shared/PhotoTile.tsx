@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * タイルに出す1枚ぶん。utils/actions/home.ts の RailItem がそのまま通る形に
@@ -22,21 +22,34 @@ export type PhotoTileItem = {
  * 場所ではない。文字を下に出すと1〜2行で行の高さが揃わず、写真を敷き詰めた
  * 面という意匠がそこで崩れる。
  *
- * next/image は通していない。next.config.mjs で unoptimized: true にして
- * いる間は最適化が効かず、挟んでも遠回りになるだけ。ヒーローの主役だけ
- * eager + fetchPriority で先に取りに行かせる。
+ * 画像は responsiveImage で幅つきの候補を渡す(Wikimedia のサムネイル)。
+ * ヒーローの主役だけ eager + fetchPriority で先に取りに行かせる。
  */
+
+/**
+ * 表示幅の既定。lg はヒーローの主役(格子の2/3)、md と sm は2〜4列の格子。
+ * 組み方が違う場所では sizes を渡して上書きする。
+ */
+const DEFAULT_SIZES = {
+  lg: "(min-width: 1024px) 480px, 66vw",
+  md: "(min-width: 1024px) 300px, (min-width: 640px) 33vw, 50vw",
+  sm: "(min-width: 1024px) 300px, (min-width: 640px) 33vw, 50vw",
+} as const;
+
 export default function PhotoTile({
   item,
   size = "sm",
   className = "",
   priority = false,
+  sizes,
 }: {
   item: PhotoTileItem;
   /** lg はヒーローの主役、md は帯の中、sm は棚と格子。 */
   size?: "lg" | "md" | "sm";
   className?: string;
   priority?: boolean;
+  /** 画面上の表示幅(<img sizes>)。省略時は size から決める。 */
+  sizes?: string;
 }) {
   const isLg = size === "lg";
 
@@ -46,7 +59,7 @@ export default function PhotoTile({
       className={`group relative block min-h-0 overflow-hidden rounded-lg bg-slate-800 ${className}`}
     >
       <img
-        src={item.image}
+        {...responsiveImage(item.image, sizes ?? DEFAULT_SIZES[size])}
         alt={item.name}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}

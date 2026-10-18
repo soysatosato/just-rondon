@@ -5,6 +5,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 type Props = {
   images: string[];
@@ -21,7 +22,7 @@ export default function ImageCarousel({ images, name }: Props) {
             className="relative h-[180px] sm:h-[240px] lg:h-[300px]"
           >
             <img
-              src={img}
+              {...responsiveImage(img, "(min-width: 540px) 512px, 100vw")}
               alt={`${name} image ${index + 1}`}
               className="absolute inset-0 w-full h-full rounded-md object-cover"
               loading="lazy"

@@ -1,6 +1,7 @@
 import type { SouvenirPick } from "@prisma/client";
 import ImageCredit from "@/components/shared/ImageCredit";
 import { Badge } from "@/components/ui/badge";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 品目ごとの「イチオシ商品」を並べる。
@@ -56,7 +57,7 @@ export default function SouvenirPicks({ picks }: { picks: SouvenirPick[] }) {
               <div className="sm:w-44 sm:flex-none">
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                   <img
-                    src={pick.image}
+                    {...responsiveImage(pick.image, "(min-width: 640px) 176px, 100vw")}
                     alt={pick.nameJa ?? pick.name}
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"

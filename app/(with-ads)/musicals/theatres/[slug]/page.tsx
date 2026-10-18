@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -169,6 +170,7 @@ export default async function TheatreDetailPage({
                     <div className="relative h-28 w-20 shrink-0 overflow-hidden rounded-lg">
                       <Image
                         src={m.image}
+                        unoptimized={!isResizableImage(m.image)}
                         alt={m.name}
                         fill
                         sizes="80px"

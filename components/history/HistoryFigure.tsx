@@ -1,5 +1,6 @@
 import ImageCredit from "@/components/shared/ImageCredit";
 import type { HistoryFigure as Figure } from "./types";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 章の節に添える写真。
@@ -28,7 +29,7 @@ export default function HistoryFigure({
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={figure.image}
+          {...responsiveImage(figure.image, IMAGE_SIZES.article)}
           alt={figure.alt}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ objectPosition: figure.focus ?? "center" }}

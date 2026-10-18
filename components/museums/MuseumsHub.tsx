@@ -24,6 +24,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { museumsFaqItems } from "@/components/museums/faq";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 type HubMuseum = {
   id: string;
@@ -236,7 +237,7 @@ export default function MuseumsHub({
                 <Card className="h-full overflow-hidden border border-border transition hover:shadow-lg">
                   <div className="relative h-44 w-full overflow-hidden bg-muted">
                     <img
-                      src={m.image}
+                      {...responsiveImage(m.image, IMAGE_SIZES.grid3)}
                       alt={m.name}
                       className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       loading="lazy"

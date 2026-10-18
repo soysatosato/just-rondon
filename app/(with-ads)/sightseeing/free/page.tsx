@@ -14,6 +14,7 @@ import {
   featureBreadcrumbJsonLd,
   getFeatureMeta,
 } from "@/components/sightseeing/features/features";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/free",
@@ -139,7 +140,7 @@ export default async function FreeAttractionsPage() {
                   className="group flex gap-3 rounded-lg border border-gray-200 p-3 transition hover:bg-gray-50 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
                 >
                   <img
-                    src={spot.image}
+                    {...responsiveImage(spot.image, "80px")}
                     alt={`${spot.name}｜ロンドンの無料観光スポット`}
                     className="h-20 w-20 flex-none rounded object-cover"
                     loading="lazy"

@@ -1,5 +1,6 @@
 import type { BrandImage } from "@prisma/client";
 import ImageCredit from "@/components/shared/ImageCredit";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 本文の途中に挟む図版。
@@ -17,7 +18,7 @@ export default function BrandFigure({ image }: { image: BrandImage }) {
         className={`relative ${aspectClass} w-full overflow-hidden rounded-xl`}
       >
         <img
-          src={image.url}
+          {...responsiveImage(image.url, IMAGE_SIZES.article)}
           alt={image.caption}
           className="absolute inset-0 h-full w-full object-cover"
           loading="lazy"

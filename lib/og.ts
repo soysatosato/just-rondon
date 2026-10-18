@@ -1,3 +1,5 @@
+import { wikimediaThumbUrl } from "./wikimedia-image";
+
 /**
  * SNS共有カード(OG画像)を動的に作るための共通部品。
  *
@@ -136,45 +138,9 @@ export function ogPlainText(markdown: string, maxLength: number): string {
  */
 export const OG_CARD_VERSION = 1;
 
-/**
- * Wikimedia が配るサムネイルの許可幅。
- *
- * 2025年に任意幅の生成が止められ、リストに無い幅を要求すると
- * HTTP 400「Use thumbnail sizes listed on https://w.wiki/GHai」が返る。
- * 800 も 1024 も 1200 も通らないので、ここから選ぶこと。
- */
-const WIKIMEDIA_THUMB_WIDTHS = [250, 330, 500, 960, 1280, 1920] as const;
-
-/**
- * upload.wikimedia.org の画像URLを、指定幅のサムネイルURLに書き換える。
- *
- * 原本をそのまま読むと 8133x5422 / 6.8MB といった写真が混ざり、カードを
- * 描くだけで数秒かかる。幅を決めて取れば数十KBで済む。
- *
- * 既に /thumb/ 形式のURL(幅つき)で入っている記事もあるので、その場合は
- * 末尾の幅だけを差し替える。Wikimedia 以外のURLはそのまま返す。
- */
-export function wikimediaThumbUrl(url: string, width: number): string {
-  if (!/^https:\/\/upload\.wikimedia\.org\//.test(url)) return url;
-
-  const target =
-    WIKIMEDIA_THUMB_WIDTHS.find((w) => w >= width) ??
-    WIKIMEDIA_THUMB_WIDTHS[WIKIMEDIA_THUMB_WIDTHS.length - 1];
-
-  // 既に /thumb/.../<n>px-<name> の形。幅の数字だけ差し替える。
-  const thumb = url.match(/^(.*\/thumb\/.*\/)(\d+)px-([^/]+)$/);
-  if (thumb) return `${thumb[1]}${target}px-${thumb[3]}`;
-
-  // 原本 /commons/a/ab/<name>。/thumb/ を挟んで幅つきの子を足す。
-  const original = url.match(
-    /^(https:\/\/upload\.wikimedia\.org\/wikipedia\/[^/]+\/)([0-9a-f]\/[0-9a-f]{2}\/)([^/]+)$/,
-  );
-  if (original) {
-    return `${original[1]}thumb/${original[2]}${original[3]}/${target}px-${original[3]}`;
-  }
-
-  return url;
-}
+// サムネイルURLの組み立ては <img> の srcset と共通にしたので lib/wikimedia-image.ts に移した。
+// /ig など既存の呼び出し側のために、ここからも引けるようにしておく。
+export { wikimediaThumbUrl };
 
 /**
  * カードに貼る写真を、こちらのサーバーから取ってきて data URI にする。

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { shoppingGuideHero } from "./content";
 import { shoppingGuidePath } from "./guides";
 import type { ShoppingGuideMeta } from "./guides";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 記事へのカード。ハブと記事下部の「ほかの買い物ガイド」で共用する。
@@ -29,7 +30,7 @@ export default function ShoppingGuideCard({
             <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-gray-100 dark:bg-neutral-800 sm:aspect-auto sm:h-auto sm:w-48">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={hero.image}
+                {...responsiveImage(hero.image, "(min-width: 640px) 192px, 100vw")}
                 alt={hero.alt}
                 className="absolute inset-0 h-full w-full object-cover"
                 loading="lazy"

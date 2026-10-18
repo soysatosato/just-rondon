@@ -1,5 +1,6 @@
 import ImageCredit from "@/components/shared/ImageCredit";
 import type { ShoppingGuideFigure } from "./types";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 買い物ガイドの写真。
@@ -27,7 +28,7 @@ export default function ShoppingFigure({
       <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-neutral-800">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={figure.image}
+          {...responsiveImage(figure.image, IMAGE_SIZES.article)}
           alt={figure.alt}
           className="absolute inset-0 h-full w-full object-cover"
           loading={priority ? "eager" : "lazy"}

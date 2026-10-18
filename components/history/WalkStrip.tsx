@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { chapterPath } from "./chapters";
 import { HISTORY_WALK, chapterByNumber } from "./walk";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 「1日で2000年を歩く」順路。
@@ -45,7 +46,7 @@ export default function WalkStrip() {
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-white/5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={stop.image}
+                  {...responsiveImage(stop.image, "(min-width: 1024px) 280px, (min-width: 640px) 50vw, 100vw")}
                   alt={stop.imageAlt}
                   className="absolute inset-0 h-full w-full object-cover"
                   loading="lazy"

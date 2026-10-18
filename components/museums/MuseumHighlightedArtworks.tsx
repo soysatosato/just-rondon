@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 type Artwork = {
   id: string;
@@ -58,7 +59,7 @@ export default function HighlightedArtworks({
               <div className="relative h-56 w-full overflow-hidden bg-muted">
                 {artwork.image && (
                   <img
-                    src={artwork.image}
+                    {...responsiveImage(artwork.image, "(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw")}
                     alt={artwork.title}
                     className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
                     loading="lazy"

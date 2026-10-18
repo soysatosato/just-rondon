@@ -25,6 +25,7 @@ import type {
 } from "@/lib/stamp-share";
 import { STAMP_BOOK_HREF, STAMP_META, STAMP_TYPES } from "@/lib/stamps";
 import { stripInlineMarkdown } from "@/lib/plain-text";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 旅のしおり(/stamps/shiori/…)の表示。読むのは、しおりを受け取った友人。
@@ -322,7 +323,7 @@ function PlaceCard({ place }: { place: ShioriPlace }) {
       className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-2.5 pr-3 transition hover:border-rose-300 hover:shadow-sm dark:hover:border-rose-800"
     >
       <img
-        src={place.image}
+        {...responsiveImage(place.image, "72px")}
         alt=""
         loading="lazy"
         decoding="async"
@@ -505,7 +506,7 @@ function ColumnSection({
               {column.image && (
                 <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-muted sm:h-24 sm:w-36">
                   <img
-                    src={column.image}
+                    {...responsiveImage(column.image, "(min-width: 640px) 144px, 112px")}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     loading="lazy"

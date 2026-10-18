@@ -3,6 +3,7 @@ import { Baby, ExternalLink, MapPin, Ticket } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 export type RankedMuseum = {
   id: string;
@@ -43,7 +44,7 @@ export default function MuseumRankedList({
               className="group relative block h-52 overflow-hidden bg-muted md:h-full"
             >
               <img
-                src={m.image}
+                {...responsiveImage(m.image, "(min-width: 768px) 320px, 100vw")}
                 alt={m.name}
                 className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 loading={i < 2 ? "eager" : "lazy"}

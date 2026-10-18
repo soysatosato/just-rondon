@@ -2,6 +2,7 @@ export const revalidate = 60 * 60;
 
 import type { Metadata } from "next";
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
 import { CommentTargetType } from "@prisma/client";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -369,6 +370,7 @@ export default async function AttractionDetail({
             {/* このページのLCP要素。priority を付けないと最後に読み込まれる */}
             <Image
               src={attraction.image}
+              unoptimized={!isResizableImage(attraction.image)}
               alt={`${attraction.name}｜ロンドン観光スポット`}
               fill
               sizes="(max-width: 1024px) 100vw, 1024px"
@@ -544,6 +546,7 @@ export default async function AttractionDetail({
                 <figure className="mt-4">
                   <Image
                     src={story.imageUrl}
+                    unoptimized={!isResizableImage(story.imageUrl)}
                     alt={story.imageCaption ?? heading}
                     width={1200}
                     height={800}

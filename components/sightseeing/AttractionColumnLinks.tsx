@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { stripInlineMarkdown } from "@/lib/plain-text";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * このスポットが出てくるコラム。スポット詳細からコラムへの導線。
@@ -52,7 +53,7 @@ export default function AttractionColumnLinks({
               {column.image && (
                 <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-muted sm:h-24 sm:w-36">
                   <img
-                    src={column.image}
+                    {...responsiveImage(column.image, "(min-width: 640px) 144px, 112px")}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     loading="lazy"

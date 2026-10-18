@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -202,6 +203,7 @@ export default async function GuideLayout({
                   <div className="relative h-28 w-full">
                     <Image
                       src={m.image}
+                      unoptimized={!isResizableImage(m.image)}
                       alt={m.name}
                       fill
                       sizes="(min-width: 640px) 220px, 100vw"

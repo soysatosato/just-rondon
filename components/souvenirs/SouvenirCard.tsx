@@ -8,6 +8,7 @@ import {
   souvenirPath,
   type SouvenirCategory,
 } from "./categories";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 画像が無いときの代替。
@@ -39,7 +40,7 @@ export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
       <div className="relative aspect-[16/10] w-full">
         {souvenir.image ? (
           <img
-            src={souvenir.image}
+            {...responsiveImage(souvenir.image, IMAGE_SIZES.grid2)}
             alt={souvenir.name}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

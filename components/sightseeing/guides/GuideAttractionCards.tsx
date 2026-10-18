@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { fetchAttractionsBySlugs } from "@/utils/actions/attractions";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * ガイド記事の末尾に出す「この記事で紹介したスポット」。
@@ -35,7 +36,7 @@ export default async function GuideAttractionCards({
           >
             <div className="overflow-hidden rounded-lg shadow transition hover:shadow-md">
               <img
-                src={spot.image}
+                {...responsiveImage(spot.image, "(min-width: 768px) 200px, 50vw")}
                 alt={`${spot.name}｜ロンドン観光スポット`}
                 className="h-32 w-full object-cover transition-transform group-hover:scale-105"
                 loading="lazy"

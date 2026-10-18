@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 
 /**
  * 関連スポットの横並びカード。
@@ -48,6 +49,7 @@ export default function AttractionSpotRail({
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border">
               <Image
                 src={spot.image}
+                unoptimized={!isResizableImage(spot.image)}
                 alt={`${spot.name}｜ロンドン観光スポット`}
                 fill
                 sizes="(max-width: 768px) 45vw, 240px"

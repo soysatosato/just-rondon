@@ -19,6 +19,7 @@ import { CATEGORY_ORDER, categoryLabel } from "@/components/sightseeing/categori
 import { areaGuides, getAreaMeta } from "@/components/sightseeing/areas/areas";
 import { MAX_DAYS, MAX_SPOTS, type PlanSpot } from "@/lib/plan";
 import { addToPlan, removeFromPlan, usePlanCount, usePlanDay } from "./plan-store";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * プランにスポットを足す欄。
@@ -309,7 +310,7 @@ function PickerRow({
   return (
     <li className="flex items-center gap-3 bg-background p-3">
       <img
-        src={spot.image}
+        {...responsiveImage(spot.image, "48px")}
         alt=""
         className="h-12 w-12 shrink-0 rounded-lg object-cover"
         loading="lazy"

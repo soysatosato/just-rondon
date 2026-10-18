@@ -15,6 +15,7 @@ import {
   type TogetherPlace,
 } from "@/lib/stamp-together";
 import { STAMP_META, type StampType } from "@/lib/stamps";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 旅仲間とスタンプ帳を重ねた画面(/stamps/together)の中身。
@@ -249,7 +250,7 @@ function Picks({ places }: { places: TogetherPlace[] }) {
           className="group flex items-center gap-3 rounded-xl border border-border p-2.5 transition hover:border-rose-400 sm:flex-col sm:items-stretch sm:p-0"
         >
           <img
-            src={place.image}
+            {...responsiveImage(place.image, "(min-width: 640px) 240px, 64px")}
             alt=""
             loading="lazy"
             className="h-16 w-16 shrink-0 rounded-lg object-cover sm:h-28 sm:w-full sm:rounded-b-none sm:rounded-t-xl"

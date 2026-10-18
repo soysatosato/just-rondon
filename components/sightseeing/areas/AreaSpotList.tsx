@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import type { AreaSpot } from "@/utils/areas";
 
 /**
@@ -40,6 +41,7 @@ export default function AreaSpotList({
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md">
               <Image
                 src={spot.image}
+                unoptimized={!isResizableImage(spot.image)}
                 alt={spot.name}
                 fill
                 sizes="80px"

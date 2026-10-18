@@ -38,6 +38,7 @@ import {
   type StampTitle,
   type StampType,
 } from "@/lib/stamps";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * スタンプ帳。/stamps だけが使う表示。
@@ -525,7 +526,7 @@ function GoalCard({ goal }: { goal: RallyProgress }) {
               className="group flex items-center gap-2.5 rounded-xl p-1 pr-1.5 transition hover:bg-background/80"
             >
               <img
-                src={slot.place.image}
+                {...responsiveImage(slot.place.image, "36px")}
                 alt=""
                 loading="lazy"
                 className="h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-background"

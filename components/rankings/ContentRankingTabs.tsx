@@ -4,6 +4,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { stripInlineMarkdown } from "@/lib/plain-text";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 読み物ハブ4面(英国を読む・コラム・イギリス英語・いまのイギリス)の、
@@ -325,7 +326,7 @@ function RankedPanel({
           {lead.image ? (
             <>
               <img
-                src={lead.image}
+                {...responsiveImage(lead.image, "(min-width: 1024px) 460px, 100vw")}
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                 loading="lazy"
@@ -416,7 +417,7 @@ function RankedPanel({
 
                   {item.image && (
                     <img
-                      src={item.image}
+                      {...responsiveImage(item.image, "56px")}
                       alt=""
                       className="hidden h-14 w-14 shrink-0 rounded-lg object-cover sm:block"
                       loading="lazy"

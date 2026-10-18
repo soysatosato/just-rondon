@@ -24,6 +24,7 @@ import ImageCredit from "@/components/shared/ImageCredit";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { filmWorks, getFilmWork, type FilmSpot } from "../data";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 interface Props {
   params: { slug: string };
@@ -73,7 +74,7 @@ function SpotMedia({ spot }: { spot: FilmSpot }) {
       <div className="space-y-1.5">
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl">
           <img
-            src={spot.image}
+            {...responsiveImage(spot.image, IMAGE_SIZES.article)}
             alt={spot.name}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

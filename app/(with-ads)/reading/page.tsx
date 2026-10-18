@@ -22,6 +22,7 @@ import HubMasthead from "@/components/reading/HubMasthead";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toReadingRankingEntries } from "@/lib/reading-ranking";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 const PAGE_PATH = "/reading";
 const PAGE_NAME = "英国を読む";
@@ -323,7 +324,7 @@ export default async function ReadingHubPage() {
                     >
                       {newest.item.image && (
                         <img
-                          src={newest.item.image}
+                          {...responsiveImage(newest.item.image, "56px")}
                           alt=""
                           className="h-14 w-14 shrink-0 rounded-md object-cover"
                           loading="lazy"

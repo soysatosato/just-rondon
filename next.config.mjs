@@ -185,10 +185,15 @@ const nextConfig = {
 
   images: {
     // 2026-08: Vercel Image Optimization の枠を使い切り、最適化エンドポイントが
-    // 402 (OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED) を返すため一時的に無効化。
-    // 課金期間のリセットを確認したら unoptimized を外すこと。
-    unoptimized: true,
-    formats: ["image/avif", "image/webp"],
+    // 402 (OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED) を返したので unoptimized に
+    // していた。その間、80px の枠にも Wikimedia の1280px画像や原本がそのまま
+    // 配られていた。
+    //
+    // いまは自前のローダーで、Wikimedia 自身が配る幅つきサムネイルに差し替える
+    // (lib/image-loader.ts)。Vercel の最適化は通らないので課金は発生しない。
+    // 幅を変えられない画像(Supabase など)は呼び出し側で unoptimized にする。
+    loader: "custom",
+    loaderFile: "./lib/image-loader.ts",
     remotePatterns: [
       {
         protocol: "https",

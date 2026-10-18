@@ -14,6 +14,7 @@ import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { AD_SLOTS } from "@/lib/adsense";
 import { filmWorks } from "./data";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 export const metadata = buildPageMetadata({
   path: FILM_LOCATIONS_BASE,
@@ -75,7 +76,7 @@ export default function FilmLocationsHubPage() {
               {coverSpot?.image && (
                 <div className="relative aspect-[16/9] w-full">
                   <img
-                    src={coverSpot.image}
+                    {...responsiveImage(coverSpot.image, IMAGE_SIZES.grid2)}
                     alt={work.title}
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"

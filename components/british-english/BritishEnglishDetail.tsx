@@ -9,6 +9,7 @@ import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
 import { publishedDateOf } from "@/lib/publish-schedule";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const proseClass =
   "prose prose-sm sm:prose-base max-w-full dark:prose-invert prose-headings:font-bold prose-a:text-rose-600 dark:prose-a:text-rose-400 prose-strong:text-rose-600 dark:prose-strong:text-rose-400 prose-li:marker:text-rose-400";
@@ -108,7 +109,7 @@ export default function BritishEnglishDetail({
         <figure className="mt-8 space-y-1.5">
           <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
             <img
-              src={content.image}
+              {...responsiveImage(content.image, IMAGE_SIZES.article)}
               alt={content.title}
               className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"

@@ -5,6 +5,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import type { ColumnSeries } from "@/lib/column-grouping";
 import { ArchiveHeading } from "@/components/reading/archive-ui";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 連載の入口。
@@ -155,7 +156,7 @@ function SeriesCard({ series }: { series: ColumnSeries }) {
       <div className="relative h-28 w-full overflow-hidden bg-amber-100 dark:bg-amber-950/40">
         {cover && (
           <img
-            src={cover}
+            {...responsiveImage(cover, "(min-width: 640px) 300px, 272px")}
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

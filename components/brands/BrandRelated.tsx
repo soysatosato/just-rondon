@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Brand } from "@prisma/client";
 import { ArrowRight } from "lucide-react";
 import { BRAND_BASE, BRAND_CATEGORY_LABELS, brandPath, type BrandCategory } from "./meta";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /** 出す件数。2列×3行で収まる数にして、記事の末尾がリンクの壁にならないようにする。 */
 const MAX_RELATED = 6;
@@ -62,7 +63,7 @@ export default function BrandRelated({
               <div className="relative w-24 flex-none self-stretch bg-slate-100 dark:bg-slate-800">
                 {b.image ? (
                   <img
-                    src={b.image}
+                    {...responsiveImage(b.image, "96px")}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"

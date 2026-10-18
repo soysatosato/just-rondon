@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FaMapMarkerAlt, FaMoneyBillWave } from "react-icons/fa";
 import Link from "next/link";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /** 地図が実際に使う分だけ。呼び出し側が select で絞った型でも渡せるようにしている。 */
 export type MappableMuseum = {
@@ -64,7 +65,7 @@ export default function MuseumsMapComponent({ museums }: Props) {
               {museum.image && (
                 <div className="relative w-full h-24 rounded-t-lg overflow-hidden">
                   <img
-                    src={museum.image}
+                    {...responsiveImage(museum.image, "320px")}
                     alt={museum.name}
                     className="absolute inset-0 w-full h-full object-cover"
                     loading="lazy"

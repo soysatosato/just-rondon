@@ -1,6 +1,7 @@
 import type { MenuPick } from "@prisma/client";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 店で頼むべき一皿を並べる。SouvenirPicks の restaurants 版。
@@ -97,7 +98,7 @@ export default function MenuPicks({ picks }: { picks: MenuPick[] }) {
                 <div className="w-20 flex-none sm:w-24">
                   <div className="relative aspect-square w-full overflow-hidden rounded-md bg-slate-100 dark:bg-slate-800">
                     <img
-                      src={pick.image}
+                      {...responsiveImage(pick.image, "(min-width: 640px) 96px, 80px")}
                       alt={pick.nameJa ?? pick.name}
                       className="absolute inset-0 h-full w-full object-cover"
                       loading="lazy"

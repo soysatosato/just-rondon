@@ -32,6 +32,7 @@ import {
   type PriceSlug,
 } from "@/components/attractions/facts";
 import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 export type BrowsableAttraction = {
   id: string;
@@ -573,7 +574,7 @@ function SpotCard({
       />
       <div className="relative h-40 w-full overflow-hidden bg-muted">
         <img
-          src={a.image}
+          {...responsiveImage(a.image, IMAGE_SIZES.grid3)}
           alt={a.name}
           className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
           loading="lazy"

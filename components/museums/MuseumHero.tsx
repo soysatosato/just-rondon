@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import ImageCredit from "@/components/shared/ImageCredit";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 type OpeningHour = {
   dayOfWeek: string;
@@ -36,7 +37,7 @@ export default function MuseumHero({ museum }: { museum: any }) {
       {/* 画像 */}
       <div className="relative h-[240px] w-full overflow-hidden rounded-2xl md:h-[380px]">
         <img
-          src={museum.image}
+          {...responsiveImage(museum.image, IMAGE_SIZES.wide)}
           alt={museum.name}
           className="absolute inset-0 h-full w-full object-cover"
           fetchPriority="high"

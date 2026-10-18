@@ -15,6 +15,7 @@ import {
   getFeatureMeta,
 } from "./features";
 import type { FeatureArticle, FeatureItem } from "./types";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 特集ページの共通レイアウト。types.ts の経緯を参照。
@@ -248,7 +249,7 @@ function FeatureItemBlock({
           {image && (
             <div className="relative aspect-[16/9] w-full shrink-0 bg-muted sm:aspect-auto sm:w-56">
               <img
-                src={image}
+                {...responsiveImage(image, "(min-width: 640px) 224px, 100vw")}
                 alt={item.title}
                 className="absolute inset-0 h-full w-full object-cover"
                 loading="lazy"
@@ -300,7 +301,7 @@ function FeatureItemBlock({
     >
       {image && (
         <img
-          src={image}
+          {...responsiveImage(image, IMAGE_SIZES.article)}
           alt={item.title}
           className="aspect-[16/9] w-full object-cover"
           loading="lazy"

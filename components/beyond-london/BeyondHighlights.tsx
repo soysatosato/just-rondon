@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import ImageCredit from "@/components/shared/ImageCredit";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import type { BeyondHighlight } from "./types";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 現地の見どころ。
@@ -38,7 +39,7 @@ export default function BeyondHighlights({
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={spot.image}
+                      {...responsiveImage(spot.image, IMAGE_SIZES.article)}
                       alt={spot.name}
                       className="absolute inset-0 h-full w-full object-cover"
                       loading="lazy"

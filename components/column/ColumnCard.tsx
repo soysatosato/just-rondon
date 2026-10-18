@@ -3,6 +3,7 @@ import type { Content } from "@prisma/client";
 import { tagLabel } from "@/lib/column-taxonomy";
 import { publishedDateOf } from "@/lib/publish-schedule";
 import { stripInlineMarkdown } from "@/lib/plain-text";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat("ja-JP", {
@@ -37,7 +38,7 @@ export default function ColumnCard({
       {item.image && (
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
           <img
-            src={item.image}
+            {...responsiveImage(item.image, IMAGE_SIZES.grid3)}
             alt=""
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
             loading="lazy"

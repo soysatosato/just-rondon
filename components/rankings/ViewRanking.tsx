@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 「よく見られている」を2軸で見せる棚。
@@ -91,7 +92,7 @@ export default function ViewRanking({
                     </span>
                     {item.image && (
                       <img
-                        src={item.image}
+                        {...responsiveImage(item.image, "48px")}
                         alt=""
                         className="h-12 w-12 shrink-0 rounded-md object-cover"
                         loading="lazy"

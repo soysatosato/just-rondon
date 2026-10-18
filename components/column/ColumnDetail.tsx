@@ -20,6 +20,7 @@ import { publishedDateOf } from "@/lib/publish-schedule";
 import { parseSources } from "@/lib/reading-sources";
 import { EDITORIAL_NAME, EDITORIAL_PATH } from "@/lib/seo";
 import ReadingSources from "@/components/reading/ReadingSources";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const proseClass =
   "prose dark:prose-invert prose-sm sm:prose-base max-w-full";
@@ -144,7 +145,7 @@ export default function ColumnDetail({
         <figure className="space-y-1.5">
           <div className="relative w-full h-56 sm:h-72 md:h-80 rounded-xl overflow-hidden">
             <img
-              src={content.image}
+              {...responsiveImage(content.image, IMAGE_SIZES.article)}
               alt={content.title}
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
@@ -191,7 +192,7 @@ export default function ColumnDetail({
               <figure className="space-y-2">
                 <div className="relative h-52 w-full overflow-hidden rounded-xl sm:h-64 md:h-72">
                   <img
-                    src={sec.image}
+                    {...responsiveImage(sec.image, IMAGE_SIZES.article)}
                     alt={sec.imageSummary || sec.title}
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"

@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 import ImageCredit from "@/components/shared/ImageCredit";
 import { dishPath, type DishWithRestaurants } from "@/components/restaurants/meta";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * ハブ(/restaurants)の料理カード。
@@ -37,7 +38,7 @@ export default function DishCard({ dish }: { dish: DishWithRestaurants }) {
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-muted">
           {dish.image && (
             <img
-              src={dish.image}
+              {...responsiveImage(dish.image, IMAGE_SIZES.grid2)}
               alt={dish.name}
               className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
               loading="lazy"

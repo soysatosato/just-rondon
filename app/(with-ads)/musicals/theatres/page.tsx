@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
 import { MapPin, Theater, ArrowRight } from "lucide-react";
 
@@ -74,6 +75,7 @@ export default async function TheatresHubPage() {
                   <div className="relative aspect-[16/9] w-full overflow-hidden">
                     <Image
                       src={showing.image}
+                      unoptimized={!isResizableImage(showing.image)}
                       alt=""
                       fill
                       sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"

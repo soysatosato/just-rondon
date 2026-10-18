@@ -18,6 +18,7 @@ import {
 import type { AdjacentContent } from "@/utils/actions/contents";
 import { publishedDateOf } from "@/lib/publish-schedule";
 import ImageCredit from "@/components/shared/ImageCredit";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 太字は数字と地名の強調に使うので、色は付けず字面の太さだけで効かせる。
 const proseClass =
@@ -170,7 +171,7 @@ export default function AreaDetail({
         <figure className="mt-8 space-y-1.5">
           <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72 md:h-80">
             <img
-              src={content.image}
+              {...responsiveImage(content.image, IMAGE_SIZES.article)}
               alt={content.title}
               className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"
@@ -240,7 +241,7 @@ export default function AreaDetail({
               <figure className="mt-5">
                 <div className="relative h-52 w-full overflow-hidden rounded-xl sm:h-64">
                   <img
-                    src={sec.image}
+                    {...responsiveImage(sec.image, IMAGE_SIZES.article)}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"

@@ -27,6 +27,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
@@ -83,6 +84,7 @@ function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
       <div className="relative aspect-[3/4] w-full overflow-hidden">
         <Image
           src={musical.image}
+          unoptimized={!isResizableImage(musical.image)}
           alt={musical.name}
           fill
           sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw"
@@ -186,6 +188,7 @@ export default function MusicalHomePage({
             <div key={m.id} className="relative h-full w-full">
               <Image
                 src={m.image}
+                unoptimized={!isResizableImage(m.image)}
                 alt=""
                 fill
                 priority={i === 0}
@@ -443,6 +446,7 @@ export default function MusicalHomePage({
                       <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-md">
                         <Image
                           src={musical.image}
+                          unoptimized={!isResizableImage(musical.image)}
                           alt={musical.name}
                           fill
                           sizes="36px"

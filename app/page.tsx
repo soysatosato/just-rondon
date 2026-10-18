@@ -25,6 +25,7 @@ import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 import { publishedDateOf } from "@/lib/publish-schedule";
 import { stripInlineMarkdown } from "@/lib/plain-text";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 export const metadata = buildPageMetadata({
   path: "/",
@@ -479,7 +480,7 @@ export default async function Page() {
                   {readingLead.item.image && (
                     <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-muted">
                       <img
-                        src={readingLead.item.image}
+                        {...responsiveImage(readingLead.item.image, "(min-width: 1024px) 640px, 100vw")}
                         alt={readingLead.item.title}
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                         loading="lazy"
@@ -518,7 +519,7 @@ export default async function Page() {
                       {entry.item.image ? (
                         <span className="relative h-16 w-20 shrink-0 overflow-hidden rounded-md bg-muted">
                           <img
-                            src={entry.item.image}
+                            {...responsiveImage(entry.item.image, "80px")}
                             alt=""
                             aria-hidden
                             className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"

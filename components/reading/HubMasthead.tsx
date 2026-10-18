@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { READING_ACCENT, type ReadingAccentName } from "@/lib/reading-accent";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 /**
  * 読み物ハブ4面に共通の題字。
@@ -56,7 +57,7 @@ export default function HubMasthead({
     <header className="relative mb-12 overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 text-white sm:px-12 sm:py-16">
       {image && (
         <img
-          src={image}
+          {...responsiveImage(image, IMAGE_SIZES.wide)}
           alt=""
           aria-hidden
           className="absolute inset-0 h-full w-full object-cover opacity-40"

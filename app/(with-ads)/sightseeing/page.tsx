@@ -34,6 +34,7 @@ import {
   areaGuides,
 } from "@/components/sightseeing/areas/areas";
 import { fetchSightseeingHub } from "@/utils/sightseeing";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const PAGE_TITLE =
   "ロンドン観光ガイド | 定番スポット・宿泊・移動手段・モデルコース";
@@ -346,7 +347,7 @@ export default async function Page() {
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   {summary?.image && (
                     <img
-                      src={summary.image}
+                      {...responsiveImage(summary.image, IMAGE_SIZES.grid3)}
                       alt=""
                       aria-hidden
                       loading="lazy"
