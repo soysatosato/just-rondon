@@ -1,11 +1,11 @@
 import Link from "next/link";
 import {
-  formatFullDate,
   LAST_CHECKED,
   tableChristmasDay,
   tableRange,
   type ChristmasMarket,
-} from "./data";
+} from "@/lib/christmas/markets";
+import { formatFullDate } from "@/lib/christmas/season";
 
 /**
  * クリスマスマーケットの比較表。会期・12月25日・入場・最寄り駅を横に並べる。

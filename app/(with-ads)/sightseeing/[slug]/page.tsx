@@ -69,6 +69,7 @@ import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
 import TimeRouteDigest from "@/components/time-routes/TimeRouteDigest";
 import { timeRouteForAttraction } from "@/lib/time-routes";
 import ImageCredit from "@/components/shared/ImageCredit";
+import SeasonBand from "@/components/christmas/SeasonBand";
 
 // ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
 // ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
@@ -515,6 +516,14 @@ export default async function AttractionDetail({
             category={attraction.category || null}
           />
         </div>
+
+        {/*
+          この場所のクリスマス。冬だけのリンクや催し、年末年始の休館を、
+          行くかどうかを決める位置(ファクトバーの下)で知らせる。会期は
+          クリスマス特集と同じデータ(lib/christmas)から出し、10月から
+          シーズンの終わりまでだけ出る。該当の無い場所では何も描かない。
+        */}
+        <SeasonBand spot={attraction.slug} />
 
         {/* summary は導入文として本文の書体で出す。以前は丸いアイコン付きの
             白い箱に入れていたが、/overview.png が135ページすべてで同じ位置に

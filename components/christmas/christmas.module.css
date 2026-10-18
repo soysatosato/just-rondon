@@ -1,0 +1,86 @@
+/*
+ * クリスマス特集の装飾。色と余白は Tailwind で書き、ここには Tailwind で
+ * 書きにくいもの(夜空の重ね塗り、雪の点、電球のまたたき、斜線の模様)だけを置く。
+ *
+ * またたきは prefers-reduced-motion で止める。動きは装飾で、情報は持たない。
+ */
+
+/* 冬の夜空。上から金色の淡い光、下へ紺から常緑の緑へ。 */
+.night {
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(253, 230, 138, 0.16) 0%, rgba(253, 230, 138, 0) 60%),
+    radial-gradient(60% 50% at 100% 100%, rgba(185, 28, 28, 0.22) 0%, rgba(185, 28, 28, 0) 70%),
+    linear-gradient(165deg, #0b1d33 0%, #0c2a2b 52%, #0f2b1d 100%);
+}
+
+/* 雪。大小2つの点の格子をずらして重ね、規則的に見えないようにする。 */
+.snow {
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1.6px),
+    radial-gradient(rgba(255, 255, 255, 0.32) 1px, transparent 1.4px),
+    radial-gradient(rgba(255, 255, 255, 0.22) 1.5px, transparent 2px);
+  background-size: 140px 140px, 90px 90px, 210px 210px;
+  background-position: 0 0, 45px 60px, 120px 20px;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.42;
+  }
+}
+
+.bulb {
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bulb {
+    animation: none;
+  }
+}
+
+/* 荷札の穴。カードの左の帯(リボン)の上に白い穴をあける。 */
+.tagHole {
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.18);
+}
+
+:global(.dark) .tagHole {
+  background: #0a0a0a;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.22);
+}
+
+/* 暦で、12月25日に休む日の欠け。赤い斜線。 */
+.hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(185, 28, 28, 0.55) 0 2px,
+    transparent 2px 5px
+  );
+}
+
+/* 暦で、終わりの日が未発表の帯の先。だんだん薄くする。 */
+.fade {
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 55%, transparent 100%);
+}
+
+/* 12月25日の日めくりの札。キャンディケインの縞。 */
+.candy {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #b91c1c 0 12px,
+    #991b1b 12px 24px
+  );
+}

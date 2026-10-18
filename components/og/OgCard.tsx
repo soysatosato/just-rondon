@@ -106,6 +106,16 @@ export const OG_THEMES = {
     panelGradient: "linear-gradient(160deg, #022c22 0%, #047857 58%, #0ea5e9 100%)",
     pageGradient: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 52%, #f0f9ff 100%)",
   },
+  /*
+    クリスマス特集。ページの見出しの帯と同じ、冬の夜空の紺から常緑の緑、
+    ヒイラギの実の赤へ。金は電球の色。
+  */
+  christmas: {
+    badgeBg: "#b91c1c",
+    accent: "#f59e0b",
+    panelGradient: "linear-gradient(160deg, #0b1d33 0%, #0f3b2e 55%, #b91c1c 100%)",
+    pageGradient: "linear-gradient(135deg, #fef2f2 0%, #ffffff 52%, #ecfdf5 100%)",
+  },
 } satisfies Record<string, OgCardTheme>;
 
 export type OgThemeName = keyof typeof OG_THEMES;

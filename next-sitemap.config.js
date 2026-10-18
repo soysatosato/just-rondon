@@ -148,6 +148,8 @@ module.exports = {
       "/privacy",
       "/events",
       "/events/calendar",
+      // クリスマス特集のハブ。子ページのイルミネーションは観光の並びにある。
+      "/events/christmas",
       // 年中行事ガイド。並びは lib/annual-events/index.ts の GUIDES と
       // 一致させること(このファイルは CJS なので TS を読めない)。
       "/events/guides",
@@ -276,6 +278,7 @@ module.exports = {
       "/sightseeing/must-see",
       "/sightseeing/royal-london",
       "/sightseeing/christmas-markets",
+      "/sightseeing/christmas-lights",
       "/sightseeing/stadium-tours",
       "/sightseeing/football",
       // プレミアリーグ観戦ガイド。/sightseeing/football をハブとする12本。

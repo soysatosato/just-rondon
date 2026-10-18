@@ -95,7 +95,7 @@ const nextConfig = {
       // 2ページが同じ催しを別々に書いていた。検索の実績(過去1年でクリック
       // 55対0)も、旅行プラン・スタンプ・回り方もスポット版にあるので、
       // そちらへ1本にまとめる。マーケット一覧のカードは残し、リンク先だけ
-      // スポット版にしてある(christmas-markets/data.ts の spotSlug)。
+      // スポット版にしてある(lib/christmas/markets.ts の spotSlug)。
       {
         source: "/sightseeing/christmas-markets/winter-wonderland",
         destination: "/sightseeing/hyde-park-winter-wonderland",
@@ -105,7 +105,7 @@ const nextConfig = {
       // 残りのマーケットの詳細ページ9本は、一覧の各節にまとめた(2026-10)。
       // どれも同じ型の約500字で、会期は「例年◯月」しか書けていなかった。
       // 比べて選ぶための情報は一覧に並べないと出てこない。理由の詳細は
-      // app/(with-ads)/sightseeing/christmas-markets/data.ts の冒頭。
+      // lib/christmas/markets.ts の冒頭。
       // 節のアンカーは旧 slug と同じにしてあるので、そのまま #slug へ送る。
       ...[
         "covent-garden-christmas-market",

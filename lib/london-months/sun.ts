@@ -28,8 +28,11 @@ function fromJulian(julian: number): number {
 /**
  * その日の日の出・日の入りの時刻(UTC のミリ秒)。
  * 白夜・極夜になる緯度ではないので、ロンドンでは常に両方が求まる。
+ *
+ * altitude は太陽の中心の高度(度)。既定の -0.833° が日の出・日の入りで、
+ * -6° にすると市民薄明の始まりと終わり(空が暗くなる時刻)になる。
  */
-function sunEvents(year: number, month: number, day: number) {
+function sunEvents(year: number, month: number, day: number, altitude = -0.833) {
   const noonUtc = Date.UTC(year, month - 1, day, 12);
   const n = Math.round(toJulian(noonUtc) - 2451545.0 + 0.0008);
   const meanSolarNoon = n - LONDON.longitude / 360;
@@ -51,7 +54,7 @@ function sunEvents(year: number, month: number, day: number) {
   );
   const latitude = LONDON.latitude * RAD;
   const hourAngle = Math.acos(
-    (Math.sin(-0.833 * RAD) - Math.sin(latitude) * Math.sin(declination)) /
+    (Math.sin(altitude * RAD) - Math.sin(latitude) * Math.sin(declination)) /
       (Math.cos(latitude) * Math.cos(declination))
   );
   const offset = hourAngle / (2 * Math.PI);
@@ -86,6 +89,29 @@ export function getSunDay(year: number, month: number, day: number): SunDay {
     sunrise: LONDON_TIME.format(sunrise),
     sunset: LONDON_TIME.format(sunset),
     daylightMinutes: Math.round((sunset - sunrise) / 60000),
+  };
+}
+
+export type Dusk = {
+  /** ロンドン時間の "15:53"。 */
+  sunset: string;
+  /** 市民薄明の終わり(太陽が地平線の6°下)。空がほぼ暗くなる時刻。 */
+  civilDusk: string;
+};
+
+/**
+ * 日の入りと、空が暗くなる時刻。
+ *
+ * クリスマスの特集(/events/christmas)が「灯りが映える時間」に使う。
+ * 日の入りから市民薄明の終わりまでは空にまだ青さが残り、街の灯りと
+ * 一緒に写る。ロンドンの12月で約40分。
+ */
+export function getDusk(year: number, month: number, day: number): Dusk {
+  const { sunset } = sunEvents(year, month, day);
+  const { sunset: dusk } = sunEvents(year, month, day, -6);
+  return {
+    sunset: LONDON_TIME.format(sunset),
+    civilDusk: LONDON_TIME.format(dusk),
   };
 }
 

@@ -17,33 +17,34 @@
  * 毎年秋にやること: 各マーケットの公式サイトで新しい年の発表を確かめ、
  * editions に1件足して、LAST_CHECKED を確かめた日に直す。
  *
+ * このデータはマーケット比較のページだけでなく、クリスマス特集のハブ
+ * (/events/christmas)と、観光スポットの季節の帯も読む(lib/christmas/index.ts)。
+ * 以前は app/(with-ads)/sightseeing/christmas-markets/data.ts にあった。
+ *
  * マークダウンの太字は使わない。CommonMark の規則で ** が生のまま出る
  * 問題(CLAUDE.md)を避けるため。sections の住所と出典のリンクだけは
  * markdown で書く(FeatureLayout が描画する)。
  */
 
-export type MarketSource = { label: string; url: string };
+import {
+  editionFor,
+  formatFullDate,
+  formatRange,
+  previousEdition,
+  sourceLine,
+} from "./season";
+import type {
+  SeasonEdition,
+  SeasonItem,
+  SeasonKind,
+  SeasonPlace,
+  SeasonSource,
+} from "./types";
 
-/** 1シーズン分の開催。公式発表で確かめたものだけ。 */
-export type MarketEdition = {
-  /** 開幕する年。年をまたぐ会期も開幕側の年で持つ。 */
-  year: number;
-  /** "YYYY-MM-DD"(ロンドンの日付)。 */
-  start: string;
-  /** 終わりの日が発表されていなければ省く。 */
-  end?: string;
-  /** 会期の前に付ける語。「点灯は」「スケートリンクは」など。 */
-  label?: string;
-  /** 営業時間。1行で。 */
-  hours?: string;
-  /** 12月25日。公式に書かれていなければ省く。 */
-  christmasDay?: "closed" | "open";
-  /** その年に限った事実。1要素1文。 */
-  notes?: string[];
-  sources: MarketSource[];
-  /** 最後に確かめた日("YYYY-MM-DD")。 */
-  checkedAt: string;
-};
+export type MarketSource = SeasonSource;
+
+/** 1シーズン分の開催。マーケットは開幕日が分かったものだけを持つ。 */
+export type MarketEdition = SeasonEdition & { start: string };
 
 export type ChristmasMarket = {
   /** ページ内アンカー。旧詳細ページの slug と同じにしてある(転送先になる)。 */
@@ -73,13 +74,21 @@ export type ChristmasMarket = {
    * 一覧ではカードにしてそちらへ送り、ここには本文を持たない。
    */
   spotSlug?: string;
+  /**
+   * 特集のハブの暦で、どの段に置くか。屋台を出さないコヴェント・ガーデンと
+   * トラファルガー広場は「灯り」、リンクが主役のバタシーは「リンク」、
+   * テーマパークに近いウィンター・ワンダーランドは「催し」に置く。
+   */
+  hubKind: SeasonKind;
+  /** 季節の帯を出す観光スポット。 */
+  places?: SeasonPlace[];
 };
 
 /**
  * 発表の無いマーケットを「未発表」と書くときの、確かめた日。
  * 全マーケットの公式サイトを見直したら、ここを直す。
  */
-export const LAST_CHECKED = "2026-10-11";
+export const LAST_CHECKED = "2026-10-18";
 
 /** 地図リンク。住所の表記をそのまま検索語にする。 */
 function map(label: string): string {
@@ -106,6 +115,8 @@ export const christmasMarkets: ChristmasMarket[] = [
     nearby:
       "レスター・スクエアとトラファルガー広場まで、どちらも歩いて10分ほど。3か所は1晩でまとめて回れる。",
     website: "https://www.coventgarden.london/",
+    hubKind: "lights",
+    places: [{ spot: "covent-garden", relation: "here" }],
     editions: [
       {
         year: 2026,
@@ -142,6 +153,8 @@ export const christmasMarkets: ChristmasMarket[] = [
     tip: "週末の夜は川沿いの道が人で詰まる。食べ歩きが目的なら、屋台の行列が短い平日の夕方が狙い目。",
     nearby: "トラファルガー広場へは歩行者橋を渡って15分ほど。",
     website: "https://www.southbankcentre.co.uk/activity/winter-market/",
+    hubKind: "market",
+    places: [{ spot: "london-eye", relation: "nearby" }],
     editions: [
       {
         year: 2026,
@@ -167,16 +180,21 @@ export const christmasMarkets: ChristmasMarket[] = [
       "タワーブリッジを正面に見る川沿いの遊歩道のマーケット。夜景を見ながら飲むのに向いている。",
     body: [
       "ロンドン・ブリッジ駅の北、テムズ川南岸のクイーンズ・ウォーク沿いに屋台が並ぶ。屋根付きの商業施設ヘイズ・ギャレリアの前から東へ、タワーブリッジに向かって続き、どこにいても橋が視界に入る。",
-      "屋台には工芸品のギフトと、飲み物や軽食が並ぶ。ここ数年は、川を見渡せる2階建ての屋内会場(グラスハウス)と、カーリングを体験できるレーンも出ている。",
+      "屋台には工芸品のギフトと、飲み物や軽食が並ぶ。ここ数年は、川を見渡せる2階建てのポップアップのバーと、カーリングを体験できるレーンも出ている。",
     ],
     entry: "無料",
     station: "ロンドン・ブリッジ駅",
     usualTiming: "例年11月中旬〜1月上旬",
     access: `${map("Queen's Walk, London SE1 2DB")}。ロンドン・ブリッジ駅から徒歩5分。タワーブリッジを渡れば、北岸のロンドン塔まで15分ほど。`,
-    tip: "タワーブリッジのライトアップが見える日没後がいちばん映える。屋内会場は混む夜に入れないことがあるので、目当てなら早めの時間に。",
+    tip: "タワーブリッジのライトアップが見える日没後がいちばん映える。川沿いのバーは混む夜に入れないことがあるので、目当てなら早めの時間に。",
     nearby:
       "南隣のバラ・マーケット(食品市場)と組み合わせやすい。バラ・マーケットは夕方に閉まる店が多いので、先にそちらへ。",
     website: "https://www.londonbridgecity.co.uk/",
+    hubKind: "market",
+    places: [
+      { spot: "london-tower-bridge", relation: "nearby" },
+      { spot: "borough-market", relation: "nearby" },
+    ],
     editions: [
       {
         year: 2025,
@@ -191,6 +209,23 @@ export const christmasMarkets: ChristmasMarket[] = [
           },
         ],
         checkedAt: "2026-10-11",
+      },
+      {
+        year: 2026,
+        start: "2026-11-10",
+        end: "2027-01-03",
+        hours: "11:00〜22:00(12月24日は17:00まで、12月31日は21:00まで)",
+        christmasDay: "closed",
+        notes: [
+          "2階建てのバー「クラブハウス」と、ロンドン・ブリッジ・シティの桟橋にカーリングのレーン(6本)が出る。",
+        ],
+        sources: [
+          {
+            label: "London Bridge City – Winter by the River 2026",
+            url: "https://www.londonbridgecity.co.uk/events/2026/november/winter-by-the-river-2026",
+          },
+        ],
+        checkedAt: "2026-10-18",
       },
     ],
   },
@@ -214,6 +249,13 @@ export const christmasMarkets: ChristmasMarket[] = [
       "ナショナル・ギャラリーは目の前で、常設展は入館無料。コヴェント・ガーデンとレスター・スクエアへは歩いて10分ほど。",
     website:
       "https://www.london.gov.uk/who-we-are/city-halls-buildings-and-squares/trafalgar-square/christmas",
+    hubKind: "lights",
+    places: [
+      { spot: "trafalgar-square", relation: "here" },
+      { spot: "the-fourth-plinth-trafalgar-square", relation: "here" },
+      { spot: "national-gallery-london", relation: "nearby" },
+      { museum: "national-gallery", relation: "nearby" },
+    ],
     editions: [],
   },
   {
@@ -235,6 +277,8 @@ export const christmasMarkets: ChristmasMarket[] = [
     nearby:
       "中華街(チャイナタウン)はすぐ北。コヴェント・ガーデンとトラファルガー広場まで、どちらも歩いて10分ほど。",
     website: "https://www.skateleicestersquare.co.uk/",
+    hubKind: "rink",
+    places: [{ spot: "movie-statue-street-leicester-square", relation: "here" }],
     editions: [
       {
         year: 2026,
@@ -268,19 +312,26 @@ export const christmasMarkets: ChristmasMarket[] = [
     access: "",
     tip: "",
     website: "https://hydeparkwinterwonderland.com/",
+    hubKind: "event",
+    places: [{ spot: "kensington-gardens", relation: "nearby" }],
     editions: [
       {
         year: 2026,
         start: "2026-11-19",
         end: "2027-01-03",
+        hours: "10:00〜22:00(遅く開く日あり)",
         christmasDay: "closed",
+        booking: {
+          status: "入場は日時指定の予約制(時間帯で料金が変わる)",
+          url: "https://hydeparkwinterwonderland.com/tickets-guide/",
+        },
         sources: [
           {
             label: "Hyde Park Winter Wonderland – Tickets guide",
             url: "https://hydeparkwinterwonderland.com/tickets-guide/",
           },
         ],
-        checkedAt: "2026-10-11",
+        checkedAt: "2026-10-18",
       },
     ],
   },
@@ -301,6 +352,12 @@ export const christmasMarkets: ChristmasMarket[] = [
     access: `${map("Battersea Power Station, London SW11 8DD")}。地下鉄ノーザン線のバタシー・パワー・ステーション駅から徒歩2分。テムズ川の船(ウーバー・ボート)の桟橋もある。`,
     tip: "煙突の上まで上がる展望エレベーター「リフト109」からは、冬の夕暮れのロンドンを見下ろせる(料金は別)。",
     website: "https://batterseapowerstation.co.uk/",
+    hubKind: "rink",
+    places: [
+      { spot: "battersea-power-station", relation: "here" },
+      { spot: "chimney-lift-battersea-power-station", relation: "here" },
+      { spot: "battersea-park", relation: "nearby" },
+    ],
     editions: [
       {
         year: 2025,
@@ -355,6 +412,11 @@ export const christmasMarkets: ChristmasMarket[] = [
     nearby:
       "セント・パンクラス駅の構内にも毎年大きなツリーが飾られる。運河沿いを西へ歩けば、カムデンまで30〜40分。",
     website: "https://www.kingscross.co.uk/",
+    hubKind: "market",
+    places: [
+      { spot: "st-pancras-international", relation: "nearby" },
+      { spot: "harry-potter-shop-platform-934", relation: "nearby" },
+    ],
     editions: [],
   },
   {
@@ -375,8 +437,27 @@ export const christmasMarkets: ChristmasMarket[] = [
     tip: "屋台は曜日で顔ぶれが変わる。週末は店が増えるぶん混む。",
     nearby:
       "東へ歩けばブリック・レーン、北へ歩けばショーディッチ。ストリートアートを見て回れる。",
-    website: "https://www.oldspitalfieldsmarket.com/",
-    editions: [],
+    // www. 付きは証明書が合わず、ブラウザが警告を出す(2026-10-18 確認)。
+    website: "https://oldspitalfieldsmarket.com/",
+    hubKind: "market",
+    places: [{ spot: "old-spitalfields-market", relation: "here" }],
+    editions: [
+      {
+        year: 2026,
+        start: "2026-11-11",
+        label: "点灯は",
+        notes: [
+          "点灯の催しは16:30〜19:30。クリスマスの市の日程は発表されていない。",
+        ],
+        sources: [
+          {
+            label: "Old Spitalfields Market – Christmas 2026 Light Switch On Party",
+            url: "https://oldspitalfieldsmarket.com/",
+          },
+        ],
+        checkedAt: "2026-10-18",
+      },
+    ],
   },
   {
     slug: "kingston-christmas-market",
@@ -397,6 +478,7 @@ export const christmasMarkets: ChristmasMarket[] = [
     nearby:
       "テムズ川を上ったハンプトン・コート宮殿までバスで20分ほど。冬は宮殿の前庭に屋外スケートリンクが出る年もある。",
     website: "https://www.kingstonchristmasmarket.co.uk/",
+    hubKind: "market",
     editions: [
       {
         year: 2026,
@@ -419,70 +501,10 @@ export const christmasMarkets: ChristmasMarket[] = [
 ];
 
 /* ============================================================
- * 会期の読み出し
- * ========================================================== */
-
-/**
- * いま案内すべきシーズンの年。1月はまだ前の年のシーズンの中にいる。
+ * 会期の読み出し(マーケット比較のページ用)
  *
- * @param today ロンドンの日付 "YYYY-MM-DD"
- */
-export function seasonYear(today: string): number {
-  const [year, month] = today.split("-").map(Number);
-  return month === 1 ? year - 1 : year;
-}
-
-/** そのシーズンの開催。発表が無ければ null。 */
-export function editionFor(
-  market: ChristmasMarket,
-  year: number,
-): MarketEdition | null {
-  return market.editions.find((e) => e.year === year) ?? null;
-}
-
-/** その年より前で、いちばん新しい開催。 */
-export function previousEdition(
-  market: ChristmasMarket,
-  year: number,
-): MarketEdition | null {
-  const older = market.editions.filter((e) => e.year < year);
-  return older.length > 0 ? older[older.length - 1] : null;
-}
-
-const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
-
-/** "2026-11-02" → "11月2日(月)"。 */
-export function formatDay(date: string): string {
-  const [y, m, d] = date.split("-").map(Number);
-  const weekday = WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
-  return `${m}月${d}日(${weekday})`;
-}
-
-/** "2026-10-11" → "2026年10月11日"。 */
-export function formatFullDate(date: string): string {
-  const [y, m, d] = date.split("-").map(Number);
-  return `${y}年${m}月${d}日`;
-}
-
-/** 会期を1行で。「11月2日(月)〜1月3日(日)」「点灯は11月12日(木)」。 */
-export function formatRange(edition: MarketEdition): string {
-  const label = edition.label ?? "";
-  if (edition.end) {
-    return `${label}${formatDay(edition.start)}〜${formatDay(edition.end)}`;
-  }
-  // 終わりの日が未発表。「点灯は◯日」のように語があればそれだけで足りる。
-  return label
-    ? `${label}${formatDay(edition.start)}`
-    : `${formatDay(edition.start)}から`;
-}
-
-/** 出典の markdown。「出典: [名前](URL)(◯年◯月◯日確認)」。 */
-function sourceLine(edition: MarketEdition): string {
-  const links = edition.sources
-    .map((s) => `[${s.label}](${s.url})`)
-    .join("、");
-  return `出典: ${links}(${formatFullDate(edition.checkedAt)}確認)`;
-}
+ * 日付の書式と版の引き方は lib/christmas/season.ts にある。
+ * ========================================================== */
 
 /**
  * 各マーケットの「◯年の会期」欄の本文(markdown)。
@@ -494,7 +516,7 @@ export function seasonDescription(
   market: ChristmasMarket,
   year: number,
 ): string {
-  const edition = editionFor(market, year);
+  const edition = editionFor(market.editions, year);
 
   if (edition) {
     const lines = [
@@ -507,10 +529,10 @@ export function seasonDescription(
           : null,
       ...(edition.notes ?? []),
     ].filter(Boolean);
-    return `${lines.join("")}\n\n${sourceLine(edition)}`;
+    return `${lines.join("")}\n\n${sourceLine(edition.sources, edition.checkedAt)}`;
   }
 
-  const previous = previousEdition(market, year);
+  const previous = previousEdition(market.editions, year);
   const head = `${formatFullDate(LAST_CHECKED)}の時点で未発表。${market.usualTiming}。`;
   if (!previous) return head;
 
@@ -519,12 +541,12 @@ export function seasonDescription(
     previous.christmasDay === "closed" ? "で、12月25日は休みだった。" : "だった。",
     ...(previous.notes ?? []),
   ];
-  return `${head}${prevLines.join("")}\n\n${sourceLine(previous)}`;
+  return `${head}${prevLines.join("")}\n\n${sourceLine(previous.sources, previous.checkedAt)}`;
 }
 
 /** 比較表の「会期」。 */
 export function tableRange(market: ChristmasMarket, year: number): string {
-  const edition = editionFor(market, year);
+  const edition = editionFor(market.editions, year);
   return edition ? formatRange(edition) : "未発表";
 }
 
@@ -533,8 +555,32 @@ export function tableChristmasDay(
   market: ChristmasMarket,
   year: number,
 ): string {
-  const edition = editionFor(market, year);
+  const edition = editionFor(market.editions, year);
   if (edition?.christmasDay === "closed") return "休み";
   if (edition?.christmasDay === "open") return "営業";
   return "—";
+}
+
+/**
+ * 特集のハブに載せる形。本文(body・access など)は持たず、会期と行き先だけ。
+ * 詳しい案内はマーケット比較のページの節(本体がスポットのページなら、そちら)。
+ */
+export function marketSeasonItems(): SeasonItem[] {
+  return christmasMarkets.map((m) => ({
+    slug: m.slug,
+    kind: m.hubKind,
+    title: m.title,
+    shortTitle: m.shortTitle,
+    engTitle: m.engTitle,
+    summary: m.summary,
+    station: m.station,
+    href: m.spotSlug
+      ? `/sightseeing/${m.spotSlug}`
+      : `/sightseeing/christmas-markets#${m.slug}`,
+    free: m.entry.startsWith("無料") || m.entry.startsWith("広場は無料"),
+    entry: m.entry,
+    usualTiming: m.usualTiming,
+    editions: m.editions,
+    places: m.places,
+  }));
 }

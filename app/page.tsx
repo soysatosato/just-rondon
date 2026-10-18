@@ -185,7 +185,9 @@ const SITE_INDEX = [
  */
 const SEASONAL_LINKS: { months: number[]; href: string; label: string }[] = [
   { months: [10, 11], href: "/events/bonfire-night", label: "ボンファイア・ナイトの花火" },
+  { months: [10, 11, 12, 1], href: "/events/christmas", label: "ロンドンのクリスマス特集" },
   { months: [10, 11, 12], href: "/sightseeing/christmas-markets", label: "クリスマスマーケット" },
+  { months: [11, 12], href: "/sightseeing/christmas-lights", label: "イルミネーション" },
   { months: [11, 12], href: "/sightseeing/hyde-park-winter-wonderland", label: "ウィンター・ワンダーランド" },
   { months: [11, 12], href: "/events/new-years-eve-fireworks", label: "年越し花火" },
   { months: [12, 1], href: "/events/new-years-day-parade", label: "元日のパレード" },

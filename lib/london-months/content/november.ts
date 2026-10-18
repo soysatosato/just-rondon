@@ -60,6 +60,7 @@ export const november: MonthGuide = {
     },
   ],
   links: [
+    { href: "/events/christmas", label: "ロンドンのクリスマス特集(点灯日・会期・25日の過ごし方)" },
     { href: "/events/bonfire-night", label: "ボンファイア・ナイトの花火大会" },
     { href: "/sightseeing/christmas-markets", label: "ロンドンのクリスマスマーケット" },
     { href: "/musicals", label: "ロンドンのミュージカル" },

@@ -6,15 +6,16 @@ import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
 import { londonDate } from "@/lib/publish-schedule";
 import MarketTable from "./MarketTable";
+import ChristmasSeriesNav from "@/components/christmas/ChristmasSeriesNav";
 import {
   christmasMarkets,
   seasonDescription,
-  seasonYear,
   tableRange,
-} from "./data";
+} from "@/lib/christmas/markets";
+import { seasonYear } from "@/lib/christmas/season";
 
 /*
- * 見出しと本文には年号を入れない。年が出るのは、data.ts の editions から
+ * 見出しと本文には年号を入れない。年が出るのは、lib/christmas/markets.ts の editions から
  * 組み立てる会期の欄と比較表だけ。どの年のシーズンを出すかは今日の日付で
  * 決まる(1月は前の年のシーズン)ので、年が替わっても書き換えは要らない。
  */
@@ -100,6 +101,16 @@ export default function ChristmasMarketsPage() {
     }),
     related: [
       {
+        href: "/events/christmas",
+        label: "ロンドンのクリスマス特集",
+        note: "滞在日を入れると、その日程で開いているマーケットと灯りが分かる。",
+      },
+      {
+        href: "/sightseeing/christmas-lights",
+        label: "ロンドンのイルミネーション",
+        note: "通りごとの点灯日と、日の入りから歩く順路。",
+      },
+      {
         href: "/events/november",
         label: "11月のロンドン",
         note: "天気・服装と、マーケットが始まる月の催し。",
@@ -124,6 +135,7 @@ export default function ChristmasMarketsPage() {
 
   return (
     <FeatureLayout article={article}>
+      <ChristmasSeriesNav current="markets" className="mt-8" />
       <MarketTable markets={christmasMarkets} year={year} />
     </FeatureLayout>
   );

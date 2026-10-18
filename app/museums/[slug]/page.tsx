@@ -37,6 +37,7 @@ import { museumJsonLd, museumPath } from "@/components/museums/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
 import { timeRouteForMuseum } from "@/lib/time-routes";
+import SeasonBand from "@/components/christmas/SeasonBand";
 
 const TITLE_SUFFIXES = [
   "の見どころ・所要時間・アクセス｜ロンドン美術館ガイド",
@@ -169,6 +170,13 @@ export default async function MuseumDetailsPage({
           engName={museum.engName ?? museum.name}
         />
       </div>
+
+      {/*
+        この館のクリスマス(年末年始の休館と、近くの冬の催し)。会期は
+        クリスマス特集と同じデータ(lib/christmas)から出し、10月から
+        シーズンの終わりまでだけ出る。該当の無い館では何も描かない。
+      */}
+      <SeasonBand museum={museum.slug} className="mt-6" />
 
       <MuseumAbout description={museum.description} />
 

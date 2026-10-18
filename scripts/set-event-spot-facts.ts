@@ -48,7 +48,7 @@ const UPDATES: { slug: string; facts: Facts; source: string }[] = [
       "https://www.rhs.org.uk/shows-events/rhs-chelsea-flower-show(2026-10-18 確認)",
   },
   {
-    // 会期はクリスマスマーケットのハブ(christmas-markets/data.ts)と同じ出典。
+    // 会期はクリスマスマーケットのハブ(lib/christmas/markets.ts)と同じ出典。
     // 1日の時間は既存の値をそのまま残し、会期を前に足す。
     slug: "hyde-park-winter-wonderland",
     facts: {

@@ -61,6 +61,24 @@ export const OG_HUBS = {
     文面に年度が入るため、hubOgImage には年度を revision として渡す
     (年度を更新したとき、SNS に残った去年のカードを外すため)。
   */
+  /*
+    クリスマス特集(/events/christmas)と、イルミネーションのページ。
+    文面に年を入れないので、毎年そのまま使える。
+  */
+  christmas: {
+    badge: "CHRISTMAS IN LONDON",
+    head: "ロンドンのクリスマス",
+    tail: "灯りの点灯日、マーケットの会期、12月25日の過ごし方。日程を入れると、開いている所が分かります。",
+    glyph: "聖",
+    theme: "christmas",
+  },
+  "christmas-lights": {
+    badge: "CHRISTMAS LIGHTS",
+    head: "ロンドンのイルミネーション",
+    tail: "通りごとの点灯日と、日の入りから歩く2つの順路。",
+    glyph: "灯",
+    theme: "christmas",
+  },
   "salary-calculator": {
     badge: "TAKE-HOME PAY",
     head: "イギリスの手取り計算機",

@@ -65,6 +65,10 @@ const TREE = {
     label: "クリスマスマーケット",
     parent: "/sightseeing",
   },
+  "/sightseeing/christmas-lights": {
+    label: "クリスマスのイルミネーション",
+    parent: "/sightseeing",
+  },
 
   // ---- 体験する ------------------------------------------------------
   "/musicals": { label: "ミュージカル", parent: "/things-to-do" },
@@ -101,6 +105,8 @@ const TREE = {
   "/events/calendar": { label: "年間イベントカレンダー", parent: "/events" },
   // 年中行事の「参加・観戦の実務ガイド」。各ガイドは /events/<slug>。
   "/events/guides": { label: "年中行事ガイド", parent: "/events" },
+  // クリスマス特集のハブ。イルミネーションとマーケット比較は URL どおり「観光」の下。
+  "/events/christmas": { label: "ロンドンのクリスマス", parent: "/events" },
 
   // ---- 英国を読む ----------------------------------------------------
   "/column": { label: "コラム", parent: "/reading" },

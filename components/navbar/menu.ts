@@ -148,6 +148,11 @@ export const NAV_SECTIONS: NavSection[] = [
             href: "/sightseeing/kids-free-activities",
             label: "子どもと無料で楽しむ",
           },
+          { href: "/events/christmas", label: "ロンドンのクリスマス" },
+          {
+            href: "/sightseeing/christmas-lights",
+            label: "クリスマスのイルミネーション",
+          },
           {
             href: "/sightseeing/christmas-markets",
             label: "クリスマスマーケット",
