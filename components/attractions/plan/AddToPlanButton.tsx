@@ -25,7 +25,11 @@ export default function AddToPlanButton({
 }: {
   slug: string;
   name: string;
-  /** card: 一覧のカード内。detail: スポット詳細ページの本文幅。 */
+  /**
+   * card: 一覧のカード内。スマホでは1行の横長カードの右下に置くので
+   * 「＋追加」「✓2日目」の短い形、sm 以上はカード幅いっぱいの長い形。
+   * detail: スポット詳細ページの本文幅。
+   */
   variant?: "card" | "detail";
   className?: string;
 }) {
@@ -49,7 +53,7 @@ export default function AddToPlanButton({
         className={cn(
           "inline-flex items-center justify-center gap-1.5 rounded-full border font-semibold transition",
           variant === "card"
-            ? "w-full px-3 py-1.5 text-xs"
+            ? "px-3 py-1.5 text-xs sm:w-full"
             : "px-5 py-2.5 text-sm",
           added
             ? "border-indigo-600 bg-indigo-600 text-white hover:bg-indigo-700"
@@ -61,7 +65,14 @@ export default function AddToPlanButton({
         ) : (
           <Plus className="h-4 w-4 shrink-0" aria-hidden />
         )}
-        <span className="truncate">{label}</span>
+        {variant === "card" ? (
+          <>
+            <span className="sm:hidden">{added ? `${day}日目` : "追加"}</span>
+            <span className="hidden truncate sm:inline">{label}</span>
+          </>
+        ) : (
+          <span className="truncate">{label}</span>
+        )}
       </button>
 
       {variant === "detail" && added && (

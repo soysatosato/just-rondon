@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Clock,
   Search,
+  SlidersHorizontal,
   Star,
   TicketCheck,
   TrainFront,
@@ -16,6 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   CATEGORY_SECTIONS,
   categoryChipMap,
@@ -32,7 +40,7 @@ import {
   type PriceSlug,
 } from "@/components/attractions/facts";
 import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
-import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
+import { responsiveImage } from "@/lib/wikimedia-image";
 
 export type BrowsableAttraction = {
   id: string;
@@ -90,6 +98,13 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "price", label: "料金が安い順" },
   { key: "name", label: "名前順" },
 ];
+
+/** 区分ごとにカードで出す件数。残りは名前のリンクで並べる。lg の3列で2段。 */
+const CARDS_PER_SECTION = 6;
+
+/** カードの写真の表示幅。スマホは左の96px、sm 以上は2〜3列のカード幅。 */
+const CARD_IMAGE_SIZES =
+  "(min-width: 1024px) 380px, (min-width: 640px) 50vw, 96px";
 
 type Filters = {
   search: string;
@@ -313,18 +328,45 @@ export default function AttractionBrowser({
     setFilters(DEFAULT_FILTERS);
   }
 
-  return (
-    <div className="space-y-8">
-      <div className="space-y-4 rounded-xl border border-border bg-card p-4">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="名前・内容・最寄駅で検索（例: 展望、テムズ、Tower Hill）"
-            value={search}
-            onChange={(e) => update({ search: e.target.value })}
-            className="pl-9"
-          />
-        </div>
+  // 絞り込みを変えた後に結果の頭へ移る。スマホのボトムシートを閉じたときと、
+  // 区分の「すべて見る」を押したときに使う。
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  function showResults() {
+    setSheetOpen(false);
+    // シートが閉じてスクロールのロックが外れてから動かす。
+    requestAnimationFrame(() =>
+      resultsRef.current?.scrollIntoView({ block: "start" }),
+    );
+  }
+
+  // スマホの「絞り込み」ボタンに出す件数。検索語は横の入力欄に見えているので数えない。
+  const activeFilterCount =
+    (category !== "all" ? 1 : 0) +
+    (area !== "all" ? 1 : 0) +
+    (duration !== "all" ? 1 : 0) +
+    (price !== "all" ? 1 : 0) +
+    [kidsOnly, mustSeeOnly, topOnly, passOnly].filter(Boolean).length +
+    (sort !== "recommended" ? 1 : 0);
+
+  /**
+   * 絞り込みの部品。sm 以上はページに並べ、スマホはボトムシートの中に出す。
+   * 同じ部品を2か所に置くので、label と select を結ぶ id には接頭辞を付ける。
+   */
+  function renderControls(idPrefix: string, { withSearch }: { withSearch: boolean }) {
+    return (
+      <div className="space-y-4">
+        {withSearch && (
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="名前・内容・最寄駅で検索（例: 展望、テムズ、Tower Hill）"
+              value={search}
+              onChange={(e) => update({ search: e.target.value })}
+              className="pl-9"
+            />
+          </div>
+        )}
 
         <div>
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -355,7 +397,7 @@ export default function AttractionBrowser({
 
         <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
           <Select
-            id="attraction-price"
+            id={`${idPrefix}-price`}
             label="料金"
             value={price}
             onChange={(v) => update({ price: v as PriceSlug | "all" })}
@@ -365,7 +407,7 @@ export default function AttractionBrowser({
             ]}
           />
           <Select
-            id="attraction-duration"
+            id={`${idPrefix}-duration`}
             label="滞在時間"
             value={duration}
             onChange={(v) => update({ duration: v as DurationSlug | "all" })}
@@ -378,7 +420,7 @@ export default function AttractionBrowser({
             ]}
           />
           <Select
-            id="attraction-area"
+            id={`${idPrefix}-area`}
             label="エリア"
             value={area}
             onChange={(v) => update({ area: v })}
@@ -414,9 +456,9 @@ export default function AttractionBrowser({
               label="ロンドンパス対象"
             />
           </div>
-          <div className="ml-auto">
+          <div className="sm:ml-auto">
             <Select
-              id="attraction-sort"
+              id={`${idPrefix}-sort`}
               label="並び順"
               value={sort}
               onChange={(v) => update({ sort: v as SortKey })}
@@ -427,94 +469,208 @@ export default function AttractionBrowser({
             />
           </div>
         </div>
+      </div>
+    );
+  }
 
-        <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
-          <p className="text-xs text-muted-foreground">
-            <span className="font-bold text-foreground">{visible.length}</span>{" "}
-            件を表示中（全 {attractions.length} 件）
-          </p>
-          {(duration !== "all" || price !== "all") && (
-            <p className="text-xs text-muted-foreground">
-              — 料金や所要時間が未確認のスポットは、この条件では表示されません
+  // 件数と、条件に付く但し書き。ページ上の絞り込み欄とシートの両方に出す。
+  const summary = (
+    <div className="flex flex-wrap items-center gap-2">
+      <p className="text-xs text-muted-foreground">
+        <span className="font-bold text-foreground">{visible.length}</span>{" "}
+        件を表示中（全 {attractions.length} 件）
+      </p>
+      {(duration !== "all" || price !== "all") && (
+        <p className="text-xs text-muted-foreground">
+          — 料金や所要時間が未確認のスポットは、この条件では表示されません
+        </p>
+      )}
+      {/*
+        「対象」の意味をここで言い切っておく。パスが付けるのが音声ガイドや
+        土産のガイドブックだけの無料館は対象に数えていないので、
+        断りなく件数だけ出すと、対象一覧より少ないことが誤りに見える。
+        出口も損益分岐のページにする——対象だと分かった読者が次に要るのは
+        買う理由ではなく、何館回れば元が取れるかのほう。
+      */}
+      {passOnly && (
+        <p className="text-xs text-muted-foreground">
+          — 入場料をパスが肩代わりするスポットだけです（元から無料の館は含みません）。
+          <Link
+            href="/sightseeing/passes"
+            className="ml-1 font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+          >
+            元が取れるか見る
+          </Link>
+        </p>
+      )}
+      {(isFiltering || sort !== "recommended") && (
+        <button
+          type="button"
+          onClick={reset}
+          className="ml-auto inline-flex items-center gap-1 py-1 text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+        >
+          <X className="h-3 w-3" />
+          条件をリセット
+        </button>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="space-y-8">
+      {/*
+        スマホ: 検索と「絞り込み」だけの1行を画面上端に貼り付け、細かい条件は
+        ボトムシートで選ぶ。以前は絞り込み欄(約600px)を常に開いて並べており、
+        一覧の最初のカードが2画面目まで下がっていた。
+      */}
+      <div className="sticky top-[var(--sticky-top,0px)] z-20 -mx-4 border-b border-border bg-background/95 px-4 py-2 backdrop-blur transition-[top] duration-300 motion-reduce:transition-none supports-[backdrop-filter]:bg-background/80 sm:hidden">
+        <div className="flex items-center gap-2">
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              aria-label="スポットを検索"
+              placeholder="名前・駅で検索"
+              value={search}
+              onChange={(e) => update({ search: e.target.value })}
+              className="h-10 pl-9"
+            />
+          </div>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="h-10 shrink-0 gap-1.5 px-3">
+                <SlidersHorizontal className="h-4 w-4" aria-hidden />
+                絞り込み
+                {activeFilterCount > 0 && (
+                  <span className="rounded-full bg-indigo-600 px-1.5 text-[11px] font-bold leading-5 text-white">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="bottom"
+              className="max-h-[85vh] overflow-y-auto rounded-t-2xl pb-0"
+            >
+              <SheetHeader className="text-left">
+                <SheetTitle>絞り込みと並び順</SheetTitle>
+              </SheetHeader>
+              <div className="mt-4">
+                {renderControls("attraction-sheet", { withSearch: false })}
+              </div>
+              <div className="sticky bottom-0 -mx-6 mt-6 flex items-center gap-3 border-t border-border bg-background px-6 py-3">
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="px-1 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  リセット
+                </button>
+                <Button className="flex-1" onClick={showResults}>
+                  {visible.length}件を表示
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="mt-1.5">{summary}</div>
+      </div>
+
+      <div className="hidden space-y-4 rounded-xl border border-border bg-card p-4 sm:block">
+        {renderControls("attraction", { withSearch: true })}
+        <div className="border-t border-border pt-3">{summary}</div>
+      </div>
+
+      <div ref={resultsRef} className="scroll-mt-32">
+        {visible.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border py-16 text-center">
+            <p className="text-sm text-muted-foreground">
+              条件に合うスポットが見つかりませんでした。
             </p>
-          )}
-          {/*
-            「対象」の意味をここで言い切っておく。パスが付けるのが音声ガイドや
-            土産のガイドブックだけの無料館は対象に数えていないので、
-            断りなく件数だけ出すと、対象一覧より少ないことが誤りに見える。
-            出口も損益分岐のページにする——対象だと分かった読者が次に要るのは
-            買う理由ではなく、何館回れば元が取れるかのほう。
-          */}
-          {passOnly && (
-            <p className="text-xs text-muted-foreground">
-              — 入場料をパスが肩代わりするスポットだけです（元から無料の館は含みません）。
-              <Link
-                href="/sightseeing/passes"
-                className="ml-1 font-medium text-indigo-600 hover:underline dark:text-indigo-400"
-              >
-                元が取れるか見る
-              </Link>
-            </p>
-          )}
-          {(isFiltering || sort !== "recommended") && (
             <button
               type="button"
               onClick={reset}
-              className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              className="mt-2 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
             >
-              <X className="h-3 w-3" />
-              条件をリセット
+              条件をリセットする
             </button>
-          )}
-        </div>
+          </div>
+        ) : mode === "sections" ? (
+          <div className="space-y-12">
+            {sections.map(({ meta, items }) => {
+              // 区分ごとに、おすすめ度の高い順に先頭の数件だけをカードにする。
+              // 残りは名前のリンクで並べる——184件をすべてカードにすると
+              // スマホで約100画面になっていた。名前は残すので、どのスポットにも
+              // この一覧から1手で行ける(検索エンジンにとっても同じ)。
+              const cards = items.slice(0, CARDS_PER_SECTION);
+              const rest = items.slice(CARDS_PER_SECTION);
+              const filterable = meta.slug in categoryChipMap;
+              return (
+                <section key={meta.slug} className="space-y-4">
+                  <div className="border-l-4 border-indigo-500 pl-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
+                      {meta.eyebrow}
+                    </p>
+                    <h2 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">
+                      {meta.label}
+                      <span className="ml-2 text-sm font-medium text-muted-foreground">
+                        {items.length}件
+                      </span>
+                    </h2>
+                    <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                      {meta.blurb}
+                    </p>
+                    {meta.slug === "museum" && (
+                      <Link
+                        href="/museums/all-museums"
+                        className="mt-2 inline-block text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+                      >
+                        美術館・博物館の全一覧へ →
+                      </Link>
+                    )}
+                  </div>
+                  <Grid items={cards} showCategory={false} />
+                  {rest.length > 0 && (
+                    <div className="rounded-xl border border-dashed border-border p-4">
+                      <p className="text-xs font-semibold text-muted-foreground">
+                        {meta.label}のほかの{rest.length}件
+                      </p>
+                      <ul className="mt-2 flex flex-wrap gap-1.5">
+                        {rest.map((a) => (
+                          <li key={a.id}>
+                            <Link
+                              href={`/sightseeing/${a.slug}`}
+                              className="inline-block rounded-full border border-border bg-background px-3 py-1.5 text-xs transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                            >
+                              {a.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      {/* 区分で絞り込んだ状態にする。条件は URL に残るので、
+                          詳細を開いて戻ってもこの一覧のまま。 */}
+                      {filterable && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            update({ category: meta.slug });
+                            showResults();
+                          }}
+                          className="mt-3 inline-flex items-center py-1 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+                        >
+                          {meta.label}の{items.length}件を写真つきで見る →
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </section>
+              );
+            })}
+          </div>
+        ) : (
+          <Grid items={visible} showCategory />
+        )}
       </div>
-
-      {visible.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            条件に合うスポットが見つかりませんでした。
-          </p>
-          <button
-            type="button"
-            onClick={reset}
-            className="mt-2 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
-          >
-            条件をリセットする
-          </button>
-        </div>
-      ) : mode === "sections" ? (
-        <div className="space-y-12">
-          {sections.map(({ meta, items }) => (
-            <section key={meta.slug} className="space-y-4">
-              <div className="border-l-4 border-indigo-500 pl-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
-                  {meta.eyebrow}
-                </p>
-                <h2 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">
-                  {meta.label}
-                  <span className="ml-2 text-sm font-medium text-muted-foreground">
-                    {items.length}件
-                  </span>
-                </h2>
-                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                  {meta.blurb}
-                </p>
-                {meta.slug === "museum" && (
-                  <Link
-                    href="/museums/all-museums"
-                    className="mt-2 inline-block text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
-                  >
-                    美術館・博物館の全一覧へ →
-                  </Link>
-                )}
-              </div>
-              <Grid items={items} showCategory={false} />
-            </section>
-          ))}
-        </div>
-      ) : (
-        <Grid items={visible} showCategory />
-      )}
 
       <div className="flex flex-wrap justify-center gap-3 pt-2">
         <Button asChild>
@@ -542,7 +698,7 @@ function Grid({
   showCategory: boolean;
 }) {
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
       {items.map((a) => (
         <SpotCard key={a.id} spot={a} showCategory={showCategory} />
       ))}
@@ -564,23 +720,27 @@ function SpotCard({
    * <a> の中に <button> が入り、押しても詳細ページへ遷移してしまう
    * (入れ子の対話要素はHTMLとして不正でもある)。リンクを絶対配置の
    * 覆いにして、ボタンだけを z-10 で前に出す。
+   *
+   * スマホでは写真を左に置いた横長の1行(約110px)にする。縦のカード
+   * (約430px)のままだと、184件の一覧が約100画面になっていた。
+   * 一言の説明と英名は sm 以上でだけ出す。
    */
   return (
-    <Card className="group relative flex h-full flex-col overflow-hidden border border-border transition hover:border-indigo-400 hover:shadow-lg">
+    <Card className="group relative flex h-full overflow-hidden border border-border transition hover:border-indigo-400 hover:shadow-lg sm:flex-col">
       <Link
         href={`/sightseeing/${a.slug}`}
         className="absolute inset-0 z-0"
         aria-label={`${a.name}の詳細を見る`}
       />
-      <div className="relative h-40 w-full overflow-hidden bg-muted">
+      <div className="relative w-24 shrink-0 self-stretch overflow-hidden bg-muted sm:h-40 sm:w-full sm:self-auto">
         <img
-          {...responsiveImage(a.image, IMAGE_SIZES.grid3)}
+          {...responsiveImage(a.image, CARD_IMAGE_SIZES)}
           alt={a.name}
           className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute right-2 top-2 flex flex-wrap justify-end gap-1">
+        <div className="absolute right-2 top-2 hidden flex-wrap justify-end gap-1 sm:flex">
           {a.isForKids && (
             <Badge className="bg-sky-600 text-white hover:bg-sky-600">
               キッズ
@@ -593,88 +753,91 @@ function SpotCard({
           )}
         </div>
         {showCategory && (
-          <span className="absolute bottom-2 left-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+          <span className="absolute bottom-2 left-2 hidden rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm sm:inline">
             {categoryLabel(a.category)}
           </span>
         )}
         {a.mustSee && (
-          <span className="absolute bottom-2 right-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
+          <span className="absolute bottom-1.5 right-1.5 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white sm:bottom-2 sm:right-2">
             定番
           </span>
         )}
       </div>
 
-      <CardContent className="flex flex-1 flex-col gap-2 p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h3 className="font-bold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-              {a.name}
-            </h3>
-            {a.engName && (
-              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                {a.engName}
-              </p>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <CardContent className="flex flex-1 flex-col gap-1.5 p-3 sm:gap-2 sm:p-4">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="line-clamp-2 text-[15px] font-bold leading-snug tracking-tight transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400 sm:text-base">
+                {a.name}
+              </h3>
+              {a.engName && (
+                <p className="mt-0.5 hidden truncate text-[11px] text-muted-foreground sm:block">
+                  {a.engName}
+                </p>
+              )}
+            </div>
+            {(a.recommendLevel ?? 0) >= 5 && (
+              <Star className="mt-0.5 h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
             )}
           </div>
-          {(a.recommendLevel ?? 0) >= 5 && (
-            <Star className="mt-0.5 h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
+
+          {a.tagline && (
+            <p className="hidden text-sm leading-relaxed text-muted-foreground sm:line-clamp-2">
+              {a.tagline}
+            </p>
           )}
+
+          {/* 料金・所要時間・最寄駅。null は行ごと出さない(推測で埋めない方針)。
+              スマホでは料金と所要時間を1行に並べる。 */}
+          <dl className="mt-auto grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-muted-foreground sm:block sm:space-y-1 sm:border-t sm:border-border sm:pt-2">
+            {a.priceAdult && (
+              <div className="flex min-w-0 items-center gap-1.5">
+                <Wallet className="h-3.5 w-3.5 shrink-0" />
+                <dt className="sr-only">大人料金</dt>
+                <dd className="truncate">{a.priceAdult}</dd>
+              </div>
+            )}
+            {a.durationText && (
+              <div className="flex min-w-0 items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 shrink-0" />
+                <dt className="sr-only">滞在時間の目安</dt>
+                <dd className="truncate">{a.durationText}</dd>
+              </div>
+            )}
+            {a.nearestStation && (
+              <div className="col-span-2 flex min-w-0 items-center gap-1.5">
+                <TrainFront className="h-3.5 w-3.5 shrink-0" />
+                <dt className="sr-only">最寄り駅</dt>
+                <dd className="truncate">{a.nearestStation}</dd>
+              </div>
+            )}
+            {/*
+              ロンドンパス。LondonPassBadge を使わないのは、あれが判定ページへの
+              <Link> で、カード全面の覆いリンクと重なる対話要素になるため。
+              ここは印だけ出して、行き先は詳細ページに任せる。
+              条件付き(note あり)を無条件と同じ顔にはしない——会社や商品が
+              限られるものを当てにしてパスを買われるのがいちばん困る。
+            */}
+            {a.londonPass && (
+              <div className="col-span-2 hidden items-center gap-1.5 text-emerald-700 dark:text-emerald-400 sm:flex">
+                <TicketCheck className="h-3.5 w-3.5 shrink-0" />
+                <dt className="sr-only">ロンドンパス</dt>
+                <dd className="truncate font-medium">
+                  ロンドンパス対象
+                  {a.londonPassNote && (
+                    <span className="font-normal">（条件あり）</span>
+                  )}
+                </dd>
+              </div>
+            )}
+          </dl>
+        </CardContent>
+
+        {/* プランに追加。リンクの覆いより前に出すため z-10 を付ける。 */}
+        <div className="relative z-10 flex justify-end px-3 pb-3 sm:block sm:border-t sm:border-border sm:p-3">
+          <AddToPlanButton slug={a.slug} name={a.name} />
         </div>
-
-        {a.tagline && (
-          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-            {a.tagline}
-          </p>
-        )}
-
-        {/* 料金・所要時間・最寄駅。null は行ごと出さない(推測で埋めない方針)。 */}
-        <dl className="mt-auto space-y-1 border-t border-border pt-2 text-xs text-muted-foreground">
-          {a.priceAdult && (
-            <div className="flex items-center gap-1.5">
-              <Wallet className="h-3.5 w-3.5 shrink-0" />
-              <dt className="sr-only">大人料金</dt>
-              <dd className="truncate">{a.priceAdult}</dd>
-            </div>
-          )}
-          {a.durationText && (
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5 shrink-0" />
-              <dt className="sr-only">滞在時間の目安</dt>
-              <dd className="truncate">{a.durationText}</dd>
-            </div>
-          )}
-          {a.nearestStation && (
-            <div className="flex items-center gap-1.5">
-              <TrainFront className="h-3.5 w-3.5 shrink-0" />
-              <dt className="sr-only">最寄り駅</dt>
-              <dd className="truncate">{a.nearestStation}</dd>
-            </div>
-          )}
-          {/*
-            ロンドンパス。LondonPassBadge を使わないのは、あれが判定ページへの
-            <Link> で、カード全面の覆いリンクと重なる対話要素になるため。
-            ここは印だけ出して、行き先は詳細ページに任せる。
-            条件付き(note あり)を無条件と同じ顔にはしない——会社や商品が
-            限られるものを当てにしてパスを買われるのがいちばん困る。
-          */}
-          {a.londonPass && (
-            <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
-              <TicketCheck className="h-3.5 w-3.5 shrink-0" />
-              <dt className="sr-only">ロンドンパス</dt>
-              <dd className="truncate font-medium">
-                ロンドンパス対象
-                {a.londonPassNote && (
-                  <span className="font-normal">（条件あり）</span>
-                )}
-              </dd>
-            </div>
-          )}
-        </dl>
-      </CardContent>
-
-      {/* プランに追加。リンクの覆いより前に出すため z-10 を付ける。 */}
-      <div className="relative z-10 border-t border-border p-3">
-        <AddToPlanButton slug={a.slug} name={a.name} />
       </div>
     </Card>
   );
