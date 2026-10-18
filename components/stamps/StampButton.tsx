@@ -135,7 +135,15 @@ export default function StampButton({
   name,
   engName,
   category = null,
+  variant = "card",
 }: {
+  /**
+   * card: 判の枠つきの箱(約190px)。
+   * inline: ボタンを1行に並べるだけの形。詳細ページで「旅行プランに追加」の
+   * 横に置く。箱のままだと、検索から初めて来た人に本文より先に
+   * スタンプ帳の説明を読ませることになっていた。押した後は小さな判を出す。
+   */
+  variant?: "card" | "inline";
   type: StampType;
   /** 対象の id(uuid)。slug ではないので、URLを変えてもスタンプは外れない。 */
   id: string;
@@ -348,6 +356,95 @@ export default function StampButton({
   const stamped = state?.stamped ?? false;
   const onSite = state?.onSite ?? false;
   const disabled = loading || busy !== null;
+
+  if (variant === "inline") {
+    return (
+      <>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            {stamped && state && (
+              <div className="h-11 w-11 shrink-0">
+                <StampImpression
+                  key={`${state.stampId}-${onSite}`}
+                  art={artFor(state)}
+                  pressing={pressedHere}
+                  label={`${name}のスタンプ`}
+                />
+              </div>
+            )}
+            {!stamped && (
+              <button
+                type="button"
+                onClick={() => handlePress(false)}
+                disabled={disabled}
+                aria-label={`${name}に${meta.actionLabel}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-rose-300 bg-background px-4 py-2.5 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 active:scale-95 disabled:opacity-60 disabled:active:scale-100 dark:border-rose-800 dark:text-rose-300 dark:hover:bg-rose-950/30"
+              >
+                {busy === "tap" ? (
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                ) : (
+                  <Stamp className="h-4 w-4 shrink-0" aria-hidden />
+                )}
+                {meta.actionLabel}
+              </button>
+            )}
+            {!onSite && (
+              <button
+                type="button"
+                onClick={() => handlePress(true)}
+                disabled={disabled}
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-amber-500/70 bg-background px-4 py-2.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-50 active:scale-95 disabled:opacity-60 disabled:active:scale-100 dark:text-amber-400 dark:hover:bg-amber-500/10"
+              >
+                {busy === "onsite" ? (
+                  <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+                ) : (
+                  <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                )}
+                {stamped ? "現地で押して金にする" : "現地で押す"}
+              </button>
+            )}
+            {stamped && (
+              <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="text-sm font-semibold">
+                  {onSite ? meta.onSiteLabel : meta.doneLabel}
+                  {state?.stampedAt ? `・${formatStampDate(state.stampedAt)}` : ""}
+                </span>
+                <Link
+                  href={STAMP_BOOK_HREF}
+                  className="inline-block py-1 text-xs font-semibold text-rose-600 underline-offset-2 hover:underline dark:text-rose-400"
+                >
+                  スタンプ帳を見る
+                </Link>
+                <button
+                  type="button"
+                  onClick={remove}
+                  disabled={busy !== null}
+                  className="py-1 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground disabled:opacity-60"
+                >
+                  取り消す
+                </button>
+              </span>
+            )}
+          </div>
+          {!stamped && (
+            <p className="mt-1.5 min-h-[1.25rem] text-xs leading-relaxed text-muted-foreground">
+              {!isLoaded
+                ? ""
+                : isSignedIn
+                  ? "スタンプ帳に記録します。現地で押すと金のスタンプになります"
+                  : "ログインするとスタンプ帳に記録できます"}
+            </p>
+          )}
+        </div>
+
+        <StampCelebration
+          data={celebration}
+          open={celebrating}
+          onOpenChange={setCelebrating}
+        />
+      </>
+    );
+  }
 
   return (
     <>

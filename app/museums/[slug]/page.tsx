@@ -124,7 +124,8 @@ export default async function MuseumDetailsPage({
   );
 
   return (
-    <div className="mx-auto max-w-5xl px-4 pb-12">
+    // 左右の余白は sm 以上だけ。外側の container が既に 16px を持っている。
+    <div className="mx-auto max-w-5xl pb-12 sm:px-4">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/museums",
@@ -157,9 +158,11 @@ export default async function MuseumDetailsPage({
         入った館を記録する。本文を読み始める前の位置に置いているのは、
         既に行った人がこのページを開く動機の多くが「記録すること」だから。
         館内の見どころを読み終えた最下部まで下がらせる理由が無い。
+        箱ではなくボタンだけの inline にして、本文の前で場所を取らない。
       */}
       <div className="mt-6">
         <StampButton
+          variant="inline"
           type="museum"
           id={museum.id}
           name={museum.name}
@@ -214,7 +217,7 @@ export default async function MuseumDetailsPage({
       <MuseumTrivia trivia={museum.trivia} />
 
       {/* 地図 */}
-      <section className="px-4 py-10">
+      <section className="py-10 sm:px-4">
         <div className="mb-6">
           <span className="inline-block rounded-full bg-sky-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
             Access

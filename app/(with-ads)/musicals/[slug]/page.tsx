@@ -109,7 +109,8 @@ export default async function musicalDetailsPage({
       />
       <JsonLd data={theaterEventJsonLd(musical, performances)} />
       <Breadcrumbs path="/musicals" current={musical.name} />
-      <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 space-y-10">
+      {/* 左右の余白は sm 以上だけ。外側の container が既に 16px を持っている。 */}
+      <div className="max-w-5xl mx-auto py-8 sm:px-4 sm:py-12 space-y-10">
         <MusicalHero
           name={musical.name}
           engName={musical.engName}
@@ -147,8 +148,10 @@ export default async function musicalDetailsPage({
           観た作品を記録する。あらすじより前に置いているのは、観た人にとって
           このページが「結末の確認」ではなく「観た記録」を残す場所になるため。
           あらすじの後ろに置くと、結末のネタバレを越えないと押せない。
+          箱ではなくボタンだけの inline にして、あらすじの前で場所を取らない。
         */}
         <StampButton
+          variant="inline"
           type="musical"
           id={musical.id}
           name={musical.name}

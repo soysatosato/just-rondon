@@ -22,6 +22,22 @@ export function categoryLabel(category: string): string {
 }
 
 /**
+ * 会期のある催しか。ファクトバーで時間の欄を「開催日時」と呼ぶのに使う。
+ *
+ * 季節限定(seasonal)のほか、チェルシー・フラワー・ショー。こちらは年1回の
+ * 催しだが、庭園の区分のまま観光スポットとして置く方針
+ * (年中行事ガイドに移さない)なので、カテゴリでは見分けられない。
+ */
+const EVENT_SPOT_SLUGS = new Set(["rhs-chelsea-flower-show"]);
+
+export function isTimeLimitedEvent(spot: {
+  category: string;
+  slug: string;
+}): boolean {
+  return spot.category === "seasonal" || EVENT_SPOT_SLUGS.has(spot.slug);
+}
+
+/**
  * 一覧(/sightseeing/all)の章立て。
  *
  * categoryChipMap がラベルの対応表なのに対し、こちらは「どの順に読ませるか」と

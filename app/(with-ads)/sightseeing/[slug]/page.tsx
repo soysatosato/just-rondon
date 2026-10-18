@@ -53,7 +53,10 @@ import {
   storyAnchor,
   type StoryLike,
 } from "@/components/sightseeing/stories";
-import { categoryChipMap } from "@/components/sightseeing/categories";
+import {
+  categoryChipMap,
+  isTimeLimitedEvent,
+} from "@/components/sightseeing/categories";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import GuardSchedule from "@/components/sightseeing/GuardSchedule";
 import { GUARD_SLUG, fetchGuardSchedule } from "@/lib/guard/schedule";
@@ -405,7 +408,10 @@ export default async function AttractionDetail({
         あり、読者がこのページに来た理由(見どころ)が最下部に埋まっていた。
         読み物を先に出し、地図と回遊リンクは読み終えた後に置く。
       */}
-      <article className="mx-auto max-w-3xl space-y-10 px-6 py-8">
+      {/* 左右の余白はスマホでは付けない。外側の container が既に 16px を
+          持っていて、ここで px-6 を足すと左右40pxずつになり、本文の幅が
+          310px まで細っていた。 */}
+      <article className="mx-auto max-w-3xl space-y-10 py-8 sm:px-6">
         <header className="space-y-4">
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             {attraction.name}
@@ -457,33 +463,39 @@ export default async function AttractionDetail({
           nearestStation={attraction.nearestStation}
           openingHours={attraction.openingHours}
           closedWeekdays={attraction.closedWeekdays}
+          closedDaysCheckedAt={attraction.closedDaysCheckedAt}
           closedNote={attraction.closedNote}
           website={attraction.website}
+          isEvent={isTimeLimitedEvent(attraction)}
         />
 
         {/*
-          行くと決めた人の次の一手。ファクトバー(料金・所要時間)のすぐ下に
-          置いているのは、行くかどうかがここで決まるため。本文を読み終えた
-          最下部に置くと、決めた瞬間から押せる場所までの距離が遠すぎる。
-        */}
-        <AddToPlanButton
-          slug={attraction.slug}
-          name={attraction.name}
-          variant="detail"
-        />
+          行くと決めた人の次の一手(旅行プランに追加)と、もう行った人の一手
+          (スタンプ)を1つの行に並べる。
 
-        {/*
-          もう行った人の一手。プランに追加(これから行く)の隣に置いている。
-          読者は同じ場所に「行く予定」と「行った」の両方を探しに来るので、
-          片方を本文の最下部に離すと、探して見つからないほうが必ず出る。
+          ファクトバー(料金・所要時間)のすぐ下に置いているのは、行くかどうかが
+          ここで決まるため。2つを隣に置くのは、読者は同じ場所に「行く予定」と
+          「行った」の両方を探しに来るので、片方を離すと探して見つからないほうが
+          必ず出るため。機能はそれぞれ独立していて、並べているだけ。
+
+          スタンプは以前、判の枠つきの箱(約190px)で出していた。本文より先に
+          スタンプ帳の説明が来るので、ボタンだけの inline にした。
         */}
-        <StampButton
-          type="attraction"
-          id={attraction.id}
-          name={attraction.name}
-          engName={attraction.engName ?? attraction.name}
-          category={attraction.category || null}
-        />
+        <div className="flex flex-wrap items-start gap-x-4 gap-y-3">
+          <AddToPlanButton
+            slug={attraction.slug}
+            name={attraction.name}
+            variant="detail"
+          />
+          <StampButton
+            variant="inline"
+            type="attraction"
+            id={attraction.id}
+            name={attraction.name}
+            engName={attraction.engName ?? attraction.name}
+            category={attraction.category || null}
+          />
+        </div>
 
         {/* summary は導入文として本文の書体で出す。以前は丸いアイコン付きの
             白い箱に入れていたが、/overview.png が135ページすべてで同じ位置に
@@ -622,7 +634,7 @@ export default async function AttractionDetail({
       </article>
 
       {/* 回遊リンクは本文より広く使う。記事を読み終えた読者の次の一手。 */}
-      <div className="mx-auto max-w-5xl space-y-12 px-6 pb-12">
+      <div className="mx-auto max-w-5xl space-y-12 pb-12 sm:px-6">
         <AttractionSpotRail
           heading={`${attraction.name}の近くで一緒に回れるスポット`}
           description="徒歩圏内にある観光スポットです。同じ日にまとめて回ると効率よく歩けます。"

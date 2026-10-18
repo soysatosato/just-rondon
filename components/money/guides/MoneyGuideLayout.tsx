@@ -105,7 +105,7 @@ export default function MoneyGuideLayout({
             id={section.id}
             className="scroll-mt-24 bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm"
           >
-            <CardContent className="p-6 space-y-2">
+            <CardContent className="space-y-2 p-4 sm:p-6">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {i + 1}. {section.title}
               </h2>

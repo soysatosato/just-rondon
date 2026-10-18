@@ -27,17 +27,19 @@ export default function TimeRouteDigest({
   return (
     <section
       id={TIME_ROUTE_ANCHOR}
-      className="scroll-mt-24 space-y-4 rounded-2xl border border-border bg-muted/40 p-5"
+      className="scroll-mt-24 space-y-4 rounded-2xl border border-border bg-muted/40 p-4 sm:p-5"
     >
       <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
         {placeName}の所要時間
       </h2>
       <p className="leading-relaxed">{guide.answer}</p>
 
+      {/* スマホでは「1時間」などの見出しを上に置いて説明を全幅で読ませる。
+          横に並べたままだと説明の列が1行8〜9字まで細くなっていた。 */}
       <dl className="space-y-3">
         {guide.routes.map((route) => (
-          <div key={route.label} className="flex gap-3">
-            <dt className="w-[5.5rem] shrink-0 text-sm font-semibold">
+          <div key={route.label} className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+            <dt className="shrink-0 text-sm font-semibold sm:w-[5.5rem]">
               {route.label}
             </dt>
             <dd className="text-sm leading-relaxed text-muted-foreground">

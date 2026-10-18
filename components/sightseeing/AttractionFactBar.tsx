@@ -30,8 +30,10 @@ export default function AttractionFactBar({
   nearestStation,
   openingHours,
   closedWeekdays,
+  closedDaysCheckedAt,
   closedNote,
   website,
+  isEvent = false,
 }: {
   priceAdult: string | null;
   priceChild: string | null;
@@ -41,16 +43,28 @@ export default function AttractionFactBar({
   /**
    * 休みの曜日。0=月 〜 6=日。
    *
-   * 空配列のときは何も出さない。空は「調べたうえで曜日休館は無い」と
-   * 「まだ調べていない」の両方でありうるので(区別は closedDaysCheckedAt)、
-   * ここで「無休」と書くと、調べていない施設まで毎日開いていることに
-   * なってしまう。出すのは休みが分かっている行だけにする。
+   * 空配列は「調べたうえで曜日休館は無い」と「まだ調べていない」の両方で
+   * ありうる。closedDaysCheckedAt があるときだけ「曜日の休館なし」と書き、
+   * 無いときは何も出さない。調べていない施設まで毎日開いていることに
+   * してしまわないため。
    */
   closedWeekdays?: number[] | null;
+  /**
+   * 休館曜日を最後に確かめた日。null は未調査。
+   *
+   * これがあるときだけ、空の closedWeekdays を「曜日の休館なし」と書ける。
+   * 確かめた月を「◯年◯月時点」として値の下に出す。
+   */
+  closedDaysCheckedAt?: Date | null;
   /** 曜日では表せない休み。休館日の下に小さく添える。 */
   closedNote?: string | null;
   /** 公式サイト。下の注意書きから直接飛ばすために受け取る。 */
   website?: string | null;
+  /**
+   * 会期のある催し(季節限定のスポット、チェルシー・フラワー・ショー)。
+   * 時間の欄を「開催日時」と呼び、注意書きを会期向けにする。
+   */
+  isEvent?: boolean;
 }) {
   // 大人と子どもが同額(どちらも「無料」など)なら1行にまとめる。
   // 同じ値を2行並べても情報が増えない。
@@ -64,10 +78,19 @@ export default function AttractionFactBar({
    * 意味を持たないうえ、これは現地では取り返せない——旅程を組み直せる
    * のは出発前だけなので、読者が読み飛ばしにくい位置に置く。
    */
+  const checkedLabel = closedDaysCheckedAt
+    ? `${closedDaysCheckedAt.getFullYear()}年${closedDaysCheckedAt.getMonth() + 1}月時点`
+    : null;
   const closedValue =
     closedWeekdays && closedWeekdays.length > 0
       ? closedWeekdays.map((d) => WEEKDAY_LABELS[d]).join("・")
-      : null;
+      : // 空でも、確かめた記録があれば「休館なし」と言い切れる。
+        // 記録が無い空は未調査かもしれないので、何も書かない。
+        checkedLabel
+        ? "曜日の休館なし"
+        : null;
+  const closedRowNote =
+    [closedNote, checkedLabel].filter(Boolean).join("　") || null;
 
   const facts: Fact[] = [
     ...(priceValue
@@ -80,10 +103,18 @@ export default function AttractionFactBar({
       ? [{ icon: Train, label: "最寄駅", value: nearestStation }]
       : []),
     ...(closedValue
-      ? [{ icon: CalendarOff, label: "休館日", value: closedValue, note: closedNote }]
-      : []),
+      ? [{ icon: CalendarOff, label: "休館日", value: closedValue, note: closedRowNote }]
+      : closedNote
+        ? [{ icon: CalendarOff, label: "休館日", value: closedNote }]
+        : []),
     ...(openingHours
-      ? [{ icon: CalendarClock, label: "開館時間", value: openingHours }]
+      ? [
+          {
+            icon: CalendarClock,
+            label: isEvent ? "開催日時" : "開館時間",
+            value: openingHours,
+          },
+        ]
       : []),
   ];
 
@@ -119,7 +150,9 @@ export default function AttractionFactBar({
       {/* 料金と開館時間は改定される。ここの値がいつでも正しいと約束はできない
           ので、必ず公式サイトを見に行ける状態にしておく。 */}
       <p className="mt-4 border-t border-border/60 pt-3 text-xs text-muted-foreground">
-        料金・開館時間は変更されることがあります。訪問前に
+        {isEvent
+          ? "会期・料金は回ごとに変わります。出かける前に"
+          : "料金・開館時間は変更されることがあります。訪問前に"}
         {website ? (
           <>
             {" "}
