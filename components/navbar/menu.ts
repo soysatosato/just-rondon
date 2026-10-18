@@ -216,8 +216,8 @@ export const NAV_SECTIONS: NavSection[] = [
     kind: "menu",
     label: "旅の準備",
     eyebrow: "Traveller Info",
-    href: "/sightseeing/travel-tips",
-    hubLabel: "旅の実用情報",
+    href: "/travel",
+    hubLabel: "旅の準備 トップ",
     description:
       "出発前に済ませる手続きから、現地での移動と滞在まで。何日で何を回り、どこに泊まり、どう動くかを決めるための実務情報。",
     accent: NAV_ACCENTS.sky,

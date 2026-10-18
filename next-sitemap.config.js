@@ -118,6 +118,8 @@ module.exports = {
       // 区分の一覧より先に出す。共有リンク(?spots=)はクライアントでしか
       // 読まないので、生えるURLはこの1本だけ。
       "/plan",
+      // 旅の準備の索引(ETA・宿・交通・予算・トラブル)。
+      "/travel",
       "/museums",
       "/museums/banksy-artworks",
       "/museums/all-museums",

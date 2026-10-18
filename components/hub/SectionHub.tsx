@@ -5,7 +5,7 @@ import { breadcrumbListJsonLd, type BreadcrumbPath } from "@/components/navigati
 import { absoluteUrl } from "@/lib/seo";
 
 /**
- * ナビの大区分そのもののハブページ。現在の利用は /living のみ。
+ * ナビの大区分そのもののハブページ。/living と /travel(旅の準備)で使う。
  *
  * パンくずを「Home > 大区分 > セクション」に揃えたことで、大区分は
  * 全ページの親としてリンクされるようになった。リンク先が無い区分が
@@ -31,6 +31,12 @@ export type HubSection = {
   blurb: string;
   /** よく読まれる下層ページへの近道。多くても4本まで。 */
   links?: { href: string; label: string }[];
+  /**
+   * 束の名前(日本語)。付けると、同じ名前が続く範囲をその見出しの下に
+   * まとめる。旅の準備のように「出発前/現地で/困ったら」と段階で
+   * 読ませたいハブで使う。番号は束をまたいで通しで振る。
+   */
+  group?: string;
 };
 
 export default function SectionHub({
@@ -49,8 +55,22 @@ export default function SectionHub({
   /** 区分をまたぐ関連リンク。無ければ省く。 */
   aside?: { heading: string; note: string; links: { href: string; label: string }[] };
 }) {
+  // 連続する同じ group を1つの束にまとめる。group を持たないハブは束1つ。
+  const groups: {
+    name?: string;
+    items: { section: HubSection; number: number }[];
+  }[] = [];
+  sections.forEach((section, i) => {
+    const last = groups[groups.length - 1];
+    if (last && last.name === section.group) {
+      last.items.push({ section, number: i + 1 });
+    } else {
+      groups.push({ name: section.group, items: [{ section, number: i + 1 }] });
+    }
+  });
+
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
+    <main className="mx-auto max-w-5xl py-8 sm:px-4 md:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path })} />
       <JsonLd
         data={{
@@ -92,51 +112,65 @@ export default function SectionHub({
         カードを並べず、罫線で区切った索引にする。区分ハブに来る読者は
         「どれを読むか」をまだ決めていないので、写真より一覧性を優先する。
       */}
-      <ol className="mt-2 divide-y divide-border">
-        {sections.map((section, i) => (
-          <li key={section.href} className="py-6">
-            <div className="flex gap-4 sm:gap-6">
-              <span className="mt-1 w-6 shrink-0 text-sm font-bold tabular-nums text-muted-foreground/60">
-                {String(i + 1).padStart(2, "0")}
-              </span>
+      {groups.map((group) => (
+        <section key={group.name ?? "all"} className={group.name ? "mt-8" : ""}>
+          {/* 束の見出し(旅の準備の「出発前」など)。束を持たないハブでは出さない。 */}
+          {group.name && (
+            <h2 className="border-b border-border pb-2 text-base font-bold">
+              {group.name}
+            </h2>
+          )}
+          <ol className="mt-2 divide-y divide-border">
+            {group.items.map(({ section, number }) => {
+              // 束の見出しを h2 にしたときは、各ページの見出しを1段下げる。
+              const Heading = group.name ? "h3" : "h2";
+              return (
+                <li key={section.href} className="py-6">
+                  <div className="flex gap-4 sm:gap-6">
+                    <span className="mt-1 w-6 shrink-0 text-sm font-bold tabular-nums text-muted-foreground/60">
+                      {String(number).padStart(2, "0")}
+                    </span>
 
-              <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-                  {section.eyebrow}
-                </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                        {section.eyebrow}
+                      </p>
 
-                <h2 className="mt-1 text-xl font-bold tracking-tight md:text-2xl">
-                  <Link
-                    href={section.href}
-                    className="underline-offset-4 hover:underline"
-                  >
-                    {section.label}
-                  </Link>
-                </h2>
-
-                <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  {section.blurb}
-                </p>
-
-                {section.links && section.links.length > 0 && (
-                  <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-2">
-                    {section.links.map((link) => (
-                      <li key={link.href}>
+                      <Heading className="mt-1 text-xl font-bold tracking-tight md:text-2xl">
                         <Link
-                          href={link.href}
-                          className="inline-block rounded-full border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground"
+                          href={section.href}
+                          className="underline-offset-4 hover:underline"
                         >
-                          {link.label}
+                          {section.label}
                         </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </li>
-        ))}
-      </ol>
+                      </Heading>
+
+                      <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                        {section.blurb}
+                      </p>
+
+                      {section.links && section.links.length > 0 && (
+                        <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-2">
+                          {section.links.map((link) => (
+                            <li key={link.href}>
+                              <Link
+                                href={link.href}
+                                className="inline-block rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground"
+                              >
+                                {link.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
 
       {aside && (
         <section className="mt-8 rounded-lg border border-border bg-muted/40 p-5">
