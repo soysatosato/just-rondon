@@ -70,7 +70,7 @@ export default function SectionHub({
   });
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl py-8 sm:px-4 md:py-10">
+    <div data-page-main className="mx-auto max-w-5xl pt-4 pb-8 sm:px-4 md:pb-10">
       <JsonLd data={breadcrumbListJsonLd({ path })} />
       <JsonLd
         data={{

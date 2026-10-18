@@ -36,7 +36,7 @@ export default function SocialGuideLayout({
   const pageUrl = `${SITE_URL}${socialGuidePath(article.slug)}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl sm:px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={socialGuideBreadcrumbJsonLd(article)} />
       <JsonLd data={socialGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (

@@ -58,7 +58,7 @@ export default function BritishEnglishDetail({
     .sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
+    <div className="mx-auto max-w-4xl pt-4 pb-8 sm:px-4 md:pb-10">
       <Breadcrumbs path="/british-english" current={content.title} />
 
       <header className="relative mt-6 overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 via-background to-amber-50 px-6 py-9 dark:border-rose-900/50 dark:from-rose-950/25 dark:via-background dark:to-amber-950/15 sm:px-10 sm:py-11">

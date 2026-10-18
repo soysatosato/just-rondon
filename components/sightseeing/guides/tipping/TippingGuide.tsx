@@ -66,7 +66,7 @@ export default function TippingGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== tippingMeta.slug);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(tippingMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(tippingMeta)} />
       <JsonLd data={faqPageJsonLd(tippingFaq, pageUrl)} />

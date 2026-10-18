@@ -120,7 +120,7 @@ export default function MuseumsHub({
   kidsCount,
 }: MuseumsHubProps) {
   return (
-    <div data-page-main className="mx-auto max-w-6xl sm:px-4 py-8 space-y-14 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl sm:px-4 pt-4 pb-8 space-y-14 md:pb-10">
       {/* Hero */}
       <section className="space-y-5">
         <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">

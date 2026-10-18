@@ -67,7 +67,7 @@ export default function ModernBritainDetail({
     .sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
+    <div className="mx-auto max-w-4xl pt-4 pb-8 sm:px-4 md:pb-10">
       <Breadcrumbs path="/modern-britain" current={content.title} />
 
       <header className="relative mt-6 overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-background to-cyan-50 px-6 py-9 dark:border-indigo-900/50 dark:from-indigo-950/25 dark:via-background dark:to-cyan-950/15 sm:px-10 sm:py-11">

@@ -103,7 +103,7 @@ export default async function WeeklyBriefPage({
     : buildBriefJsonLd(brief);
 
   return (
-    <div data-page-main className="mx-auto max-w-3xl sm:px-4 py-8 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 sm:pb-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -63,7 +63,7 @@ export default async function BritishEnglishHubPage() {
   const cover = entries.find((e) => e.image)?.image ?? null;
 
   return (
-    <div data-page-main className="mx-auto max-w-6xl sm:px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl sm:px-4 pt-4 pb-8 md:pb-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/british-english" })} />
       <JsonLd data={britishEnglishHubCollectionJsonLd(entries)} />
 

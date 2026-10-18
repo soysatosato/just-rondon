@@ -359,7 +359,7 @@ export default async function AttractionDetail({
       <JsonLd data={attractionBreadcrumbJsonLd(attraction)} />
       <JsonLd data={attractionJsonLd(attraction)} />
 
-      <div className="mb-4">
+      <div className="mb-4 pt-4">
         <Breadcrumbs path="/sightseeing" current={attraction.name} />
       </div>
 

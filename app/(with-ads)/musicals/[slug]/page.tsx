@@ -108,7 +108,7 @@ export default async function musicalDetailsPage({
         })}
       />
       <JsonLd data={theaterEventJsonLd(musical, performances)} />
-      <Breadcrumbs path="/musicals" current={musical.name} />
+      <Breadcrumbs path="/musicals" current={musical.name} className="pt-4" />
       {/* 左右の余白は sm 以上だけ。外側の container が既に 16px を持っている。 */}
       <div className="max-w-5xl mx-auto py-8 sm:px-4 sm:py-12 space-y-10">
         <MusicalHero

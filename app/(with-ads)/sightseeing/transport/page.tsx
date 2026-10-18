@@ -182,7 +182,7 @@ export default function TransportHubPage() {
   const pageUrl = `${SITE_URL}${TRANSPORT_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
       <JsonLd
         data={sightseeingBreadcrumbJsonLd([
           { name: TRANSPORT_SECTION_NAME, path: TRANSPORT_BASE },

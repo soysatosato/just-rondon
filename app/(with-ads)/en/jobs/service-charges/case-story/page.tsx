@@ -118,7 +118,7 @@ export default function CaseStoryIndexPageEn() {
   const toolChapters = chapters.filter((c) => c.kind === "tool");
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-gray-900 dark:text-gray-100">
       <HtmlLang lang="en" />
       <script
         type="application/ld+json"

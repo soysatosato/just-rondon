@@ -75,7 +75,7 @@ export default function ColumnDetail({
       : null;
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 md:py-10 space-y-10">
+    <div className="max-w-4xl mx-auto pt-4 pb-8 sm:px-4 md:pb-10 space-y-10">
       <Breadcrumbs path="/column" current={content.title} />
 
       <div>

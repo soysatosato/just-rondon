@@ -35,7 +35,7 @@ export default function ArticleLayout({
   const path = chapterPath(article.slug, locale);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-gray-900 dark:text-gray-100">
       {locale === "en" && <HtmlLang lang="en" />}
       <JsonLd data={breadcrumbJsonLd(article, locale)} />
       <JsonLd data={articleJsonLd(article, locale)} />

@@ -88,7 +88,7 @@ export default function ItineraryGuide() {
   };
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(itineraryMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(itineraryMeta)} />
       <JsonLd data={faqPageJsonLd(itineraryFaq, pageUrl)} />

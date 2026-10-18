@@ -36,7 +36,7 @@ export default function FootballGuideLayout({
   const pageUrl = `${SITE_URL}${footballGuidePath(article.slug)}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={footballGuideBreadcrumbJsonLd(article)} />
       <JsonLd data={footballGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
