@@ -74,7 +74,7 @@ export default function Pagination({
           className={`px-3 py-1 border rounded transition
             ${
               page === currentPage
-                ? "bg-blue-500 text-white border-blue-500 dark:bg-blue-600 dark:border-blue-600"
+                ? "bg-blue-600 text-white border-blue-600"
                 : "border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
         >

@@ -97,7 +97,7 @@ export default function NotFoundPage() {
           {suggestion && (
             <Link
               href={suggestion.href}
-              className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-500"
+              className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-700"
             >
               {suggestion.label}
             </Link>
@@ -107,7 +107,7 @@ export default function NotFoundPage() {
             className={
               suggestion
                 ? "rounded-lg border border-slate-600 px-6 py-3 font-semibold text-slate-200 transition hover:border-slate-400 hover:text-white"
-                : "rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-500"
+                : "rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-900/40 transition hover:bg-blue-700"
             }
           >
             ホームに戻る

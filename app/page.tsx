@@ -23,6 +23,7 @@ import { fetchHomeRails } from "@/utils/actions/home";
 import { fetchCurrentBriefs } from "@/utils/actions/weekly";
 import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
+import { READING_ACCENT } from "@/lib/reading-accent";
 import { londonDate, publishedDateOf } from "@/lib/publish-schedule";
 import { eventMonthPath } from "@/lib/events";
 import { getMonthGuide } from "@/lib/london-months/content";
@@ -79,28 +80,34 @@ export const metadata = buildPageMetadata({
  * 色を分けても差として効いていなかった。
  */
 
-/** 読み物カテゴリごとの表示定義。索引・ナビ・詳細ページと同じ色を使う。 */
+/**
+ * 読み物カテゴリごとの表示定義。色は lib/reading-accent.ts から取る。
+ *
+ * 以前はここに色を直書きしていて、コラムを菫色で塗っていた。ハブ・詳細
+ * ページ・OG カードのコラムは琥珀(菫は「英国を読む」全体の色)なので、
+ * 同じコラムがトップでだけ別の色に見えていた。
+ */
 const READING_CATEGORY = {
   column: {
     base: "/column",
     label: "コラム",
-    stripe: "bg-violet-500",
-    badge: "bg-violet-600",
-    text: "text-violet-600 dark:text-violet-400",
+    stripe: READING_ACCENT.column.bar,
+    badge: READING_ACCENT.column.on,
+    text: READING_ACCENT.column.text,
   },
   "modern-britain": {
     base: "/modern-britain",
     label: "英国のいま",
-    stripe: "bg-indigo-500",
-    badge: "bg-indigo-600",
-    text: "text-indigo-600 dark:text-indigo-400",
+    stripe: READING_ACCENT["modern-britain"].bar,
+    badge: READING_ACCENT["modern-britain"].on,
+    text: READING_ACCENT["modern-britain"].text,
   },
   "british-english": {
     base: "/british-english",
     label: "イギリス英語",
-    stripe: "bg-rose-500",
-    badge: "bg-rose-600",
-    text: "text-rose-600 dark:text-rose-400",
+    stripe: READING_ACCENT["british-english"].bar,
+    badge: READING_ACCENT["british-english"].on,
+    text: READING_ACCENT["british-english"].text,
   },
 } as const;
 
@@ -112,29 +119,29 @@ const READING_SECTIONS = [
     href: "/column",
     eyebrow: "Column",
     label: "コラム",
-    stripe: "bg-violet-500",
-    text: "text-violet-600 dark:text-violet-400",
+    stripe: READING_ACCENT.column.bar,
+    text: READING_ACCENT.column.text,
   },
   {
     href: "/modern-britain",
     eyebrow: "Britain, Argued",
     label: "英国のいまを論じる",
-    stripe: "bg-indigo-500",
-    text: "text-indigo-600 dark:text-indigo-400",
+    stripe: READING_ACCENT["modern-britain"].bar,
+    text: READING_ACCENT["modern-britain"].text,
   },
   {
     href: "/history",
     eyebrow: "A History of Britain",
     label: "イギリスの歴史 全10章",
-    stripe: "bg-amber-500",
-    text: "text-amber-700 dark:text-amber-500",
+    stripe: READING_ACCENT.history.bar,
+    text: READING_ACCENT.history.text,
   },
   {
     href: "/british-english",
     eyebrow: "British English",
     label: "イギリス英語",
-    stripe: "bg-rose-500",
-    text: "text-rose-600 dark:text-rose-400",
+    stripe: READING_ACCENT["british-english"].bar,
+    text: READING_ACCENT["british-english"].text,
   },
 ] as const;
 
@@ -498,7 +505,7 @@ export default async function Page() {
                   )}
                   <p className="mt-4 flex items-center gap-2">
                     <span
-                      className={`rounded-full px-2.5 py-0.5 text-xs font-bold text-white ${readingLead.badge}`}
+                      className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${readingLead.badge}`}
                     >
                       {readingLead.label}
                     </span>
@@ -604,7 +611,7 @@ export default async function Page() {
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <div className="max-w-2xl border-b border-foreground/15 pb-5">
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
               See &amp; Do
             </p>
             <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">

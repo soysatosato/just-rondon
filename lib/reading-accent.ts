@@ -48,7 +48,7 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     titleOnDark: "text-violet-400",
     glow: "bg-violet-500/25",
     text: "text-violet-700 dark:text-violet-400",
-    on: "bg-violet-500 text-white",
+    on: "bg-violet-600 text-white",
     idle:
       "hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-700 dark:hover:text-violet-400",
     soft: "hover:bg-violet-50 hover:text-violet-700 dark:hover:bg-violet-950/40 dark:hover:text-violet-400",
@@ -74,7 +74,7 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     titleOnDark: "text-rose-400",
     glow: "bg-rose-500/25",
     text: "text-rose-700 dark:text-rose-400",
-    on: "bg-rose-500 text-white",
+    on: "bg-rose-600 text-white",
     idle:
       "hover:border-rose-300 hover:text-rose-700 dark:hover:border-rose-700 dark:hover:text-rose-400",
     soft: "hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/40 dark:hover:text-rose-400",
@@ -114,7 +114,7 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     titleOnDark: "text-indigo-400",
     glow: "bg-indigo-500/25",
     text: "text-indigo-700 dark:text-indigo-400",
-    on: "bg-indigo-500 text-white",
+    on: "bg-indigo-600 text-white",
     idle:
       "hover:border-indigo-300 hover:text-indigo-700 dark:hover:border-indigo-700 dark:hover:text-indigo-400",
     soft: "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-400",
@@ -127,7 +127,7 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     titleOnDark: "text-indigo-400",
     glow: "bg-indigo-500/25",
     text: "text-indigo-700 dark:text-indigo-400",
-    on: "bg-indigo-500 text-white",
+    on: "bg-indigo-600 text-white",
     idle:
       "hover:border-indigo-300 hover:text-indigo-700 dark:hover:border-indigo-700 dark:hover:text-indigo-400",
     soft: "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-400",
