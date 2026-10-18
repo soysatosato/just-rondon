@@ -76,7 +76,7 @@ export default function PlanDateBar({ dayCount }: { dayCount: number }) {
             type="date"
             value={startDate ?? ""}
             onChange={(e) => setStartDate(e.target.value || null)}
-            className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs"
+            className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-base sm:text-xs"
           />
           {start && (
             <button
@@ -105,7 +105,7 @@ export default function PlanDateBar({ dayCount }: { dayCount: number }) {
             id="plan-start-time"
             value={startMinutes}
             onChange={(e) => setStartMinutes(Number(e.target.value))}
-            className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs tabular-nums"
+            className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-base sm:text-xs tabular-nums"
           >
             {START_OPTIONS.map((minutes) => (
               <option key={minutes} value={minutes}>

@@ -629,7 +629,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                 value={shareUrl}
                 onFocus={(e) => e.currentTarget.select()}
                 aria-label="共有リンク"
-                className="w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs"
+                className="w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-base sm:text-xs"
               />
             </div>
           )}

@@ -893,7 +893,7 @@ function Select({
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-md border border-border bg-background px-2 py-1.5 text-xs"
+        className="rounded-md border border-border bg-background px-2 py-1.5 text-base sm:text-xs"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>

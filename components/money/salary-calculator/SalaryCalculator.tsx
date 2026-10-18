@@ -416,7 +416,7 @@ export default function SalaryCalculator() {
                             update({ hoursPerWeek: Math.min(100, next) });
                           }
                         }}
-                        className="w-12 bg-transparent text-right text-sm font-semibold tabular-nums outline-none"
+                        className="w-12 bg-transparent text-right text-base sm:text-sm font-semibold tabular-nums outline-none"
                       />
                       <span className="text-sm text-muted-foreground">時間</span>
                     </label>

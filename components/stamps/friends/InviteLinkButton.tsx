@@ -94,7 +94,7 @@ export default function InviteLinkButton({
             value={invite.url}
             aria-label="招待リンク"
             onFocus={(event) => event.currentTarget.select()}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs"
+            className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-base sm:text-xs"
           />
           <div className="flex flex-wrap gap-2">
             <Button type="button" size="sm" onClick={() => void copy()}>

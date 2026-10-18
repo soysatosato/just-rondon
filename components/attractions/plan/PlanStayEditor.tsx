@@ -71,7 +71,7 @@ export default function PlanStayEditor({ row }: { row: PlanRow }) {
         onChange={(e) =>
           setSpotMinutes(spot.slug, e.target.value ? Number(e.target.value) : null)
         }
-        className={`rounded border bg-background px-1.5 py-0.5 text-xs print:hidden ${
+        className={`rounded border bg-background px-1.5 py-0.5 text-base sm:text-xs print:hidden ${
           overridden
             ? "border-indigo-400 font-semibold text-indigo-700 dark:text-indigo-300"
             : "border-border text-muted-foreground"

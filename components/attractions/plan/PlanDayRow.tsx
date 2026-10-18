@@ -295,7 +295,7 @@ export default function PlanDayRow({
               id={`day-${row.spot.slug}`}
               value={day}
               onChange={(e) => moveToDay(row.spot.slug, Number(e.target.value))}
-              className="rounded-full border border-border bg-background px-2.5 py-1 text-xs"
+              className="rounded-full border border-border bg-background px-2.5 py-1 text-base sm:text-xs"
             >
               {Array.from({ length: dayCount }, (_, i) => i + 1).map((n) => (
                 <option key={n} value={n}>

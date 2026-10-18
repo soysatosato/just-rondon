@@ -138,7 +138,7 @@ export default function ArtworkBrowser({
                 id="artwork-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="rounded-md border border-border bg-background px-2 py-1.5 text-xs"
+                className="rounded-md border border-border bg-background px-2 py-1.5 text-base sm:text-xs"
               >
                 {SORTS.map((s) => (
                   <option key={s.key} value={s.key}>

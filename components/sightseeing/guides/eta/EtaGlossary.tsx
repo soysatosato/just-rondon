@@ -51,7 +51,7 @@ export default function EtaGlossary() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="画面に出ている英語を入力（例: chip）"
           aria-label="英語画面の文言を検索"
-          className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-gray-100"
+          className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-9 pr-3 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-gray-100"
         />
       </div>
 

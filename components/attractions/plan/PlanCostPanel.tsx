@@ -79,7 +79,7 @@ export default function PlanCostPanel({
           <select
             value={homeZone}
             onChange={(e) => setHomeZone(Number(e.target.value) as HomeZone)}
-            className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs font-semibold"
+            className="rounded-lg border border-border bg-background px-2 py-1.5 text-base sm:text-xs font-semibold"
           >
             {HOME_ZONES.map((zone) => (
               <option key={zone} value={zone}>
