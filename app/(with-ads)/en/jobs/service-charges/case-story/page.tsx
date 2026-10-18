@@ -118,7 +118,7 @@ export default function CaseStoryIndexPageEn() {
   const toolChapters = chapters.filter((c) => c.kind === "tool");
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <HtmlLang lang="en" />
       <script
         type="application/ld+json"
@@ -130,7 +130,7 @@ export default function CaseStoryIndexPageEn() {
       />
 
       <div className="mb-6 flex items-center justify-between gap-4">
-        <nav className="text-xs text-gray-500 dark:text-gray-400">
+        <nav className="text-xs text-neutral-500 dark:text-neutral-400">
           <Link href={SERVICE_CHARGES_PATH} className="hover:underline">
             Service charges
           </Link>
@@ -142,13 +142,13 @@ export default function CaseStoryIndexPageEn() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {TITLE}
         </h1>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           This is a record of the service charge I was never paid while working
           at Tenshi, a London restaurant operated by Tenshi61 LTD. It runs in
           order from first contacting Acas, through the Employment Tribunal
           judgment, to actually recovering the money.
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           The aim was not to write a story, but to put it in a form that lets{" "}
           <strong className="font-semibold">
             someone in the same position produce their own numbers
@@ -161,38 +161,38 @@ export default function CaseStoryIndexPageEn() {
       <Separator className="my-6" />
 
       {/* 結論を先に */}
-      <section className="rounded-lg border border-gray-300 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6">
+      <section className="rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6">
         <h2 className="text-lg font-semibold">The outcome, up front</h2>
         <dl className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">
+            <dt className="text-xs text-neutral-500 dark:text-neutral-400">
               Awarded
             </dt>
             <dd className="mt-1 text-2xl font-bold">£4,007.55</dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">
+            <dd className="text-xs text-neutral-500 dark:text-neutral-400">
               Gross, as unpaid wages
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">
+            <dt className="text-xs text-neutral-500 dark:text-neutral-400">
               My own outlay
             </dt>
             <dd className="mt-1 text-2xl font-bold">£80</dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">
+            <dd className="text-xs text-neutral-500 dark:text-neutral-400">
               Advancing the writ fee. No solicitor
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">
+            <dt className="text-xs text-neutral-500 dark:text-neutral-400">
               Respondent
             </dt>
             <dd className="mt-1 text-2xl font-bold">No response</dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">
+            <dd className="text-xs text-neutral-500 dark:text-neutral-400">
               Judgment under Rule 22
             </dd>
           </div>
         </dl>
-        <p className="mt-5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           Acas and the tribunal were both free, and I was not charged for the
           interpreter. I did not instruct a solicitor and attended the hearing in
           person. The financial barrier was close to nil. What it cost was time
@@ -210,15 +210,15 @@ export default function CaseStoryIndexPageEn() {
       {/* 経過 */}
       <section className="mt-10">
         <h2 className="text-lg font-semibold">How it unfolded</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           Written to convey the order of events and the gaps between them.
         </p>
-        <ol className="mt-5 space-y-4 border-l-2 border-gray-200 dark:border-neutral-700 pl-5">
+        <ol className="mt-5 space-y-4 border-l-2 border-neutral-200 dark:border-neutral-700 pl-5">
           {timeline.map((t) => (
             <li key={t.phase} className="relative">
               <span className="absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full bg-blue-600 dark:bg-blue-400" />
               <h3 className="text-sm font-semibold">{t.phase}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {t.text}
               </p>
             </li>
@@ -236,7 +236,7 @@ export default function CaseStoryIndexPageEn() {
               href={chapterPath(c.slug, "en")}
               className="block"
             >
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
+              <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="flex gap-4 p-5">
                   <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-link">
                     {String(chapters.indexOf(c) + 1).padStart(2, "0")}
@@ -245,7 +245,7 @@ export default function CaseStoryIndexPageEn() {
                     <span className="block text-base font-semibold">
                       {c.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {c.blurb}
                     </span>
                   </span>
@@ -259,7 +259,7 @@ export default function CaseStoryIndexPageEn() {
       {/* 実用の章 */}
       <section className="mt-10">
         <h2 className="text-lg font-semibold">Use it on your own case</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           You can start here without reading the account first.
         </p>
         <div className="mt-4 space-y-3">
@@ -278,7 +278,7 @@ export default function CaseStoryIndexPageEn() {
                     <span className="block text-base font-semibold">
                       {c.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {c.blurb}
                     </span>
                   </span>
@@ -290,11 +290,11 @@ export default function CaseStoryIndexPageEn() {
       </section>
 
       {/* 関連 */}
-      <div className="mt-12 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-3">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-12 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6 space-y-3">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           Related pages
         </h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
           These are currently available in Japanese only.
         </p>
         <ul className="space-y-2 text-sm">

@@ -116,7 +116,7 @@ export default function CaseStoryIndexPage() {
   const toolChapters = chapters.filter((c) => c.kind === "tool");
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
@@ -127,7 +127,7 @@ export default function CaseStoryIndexPage() {
       />
 
       <div className="mb-6 flex items-center justify-between gap-4">
-        <nav className="text-xs text-gray-500 dark:text-gray-400">
+        <nav className="text-xs text-neutral-500 dark:text-neutral-400">
           <Link href="/jobs/service-charges" className="hover:underline">
             サービスチャージ
           </Link>
@@ -139,13 +139,13 @@ export default function CaseStoryIndexPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {TITLE}
         </h1>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           ロンドンのレストラン Tenshi（運営会社 Tenshi61
           LTD）で働いていたときの、
           未払いサービスチャージについての記録です。Acasへの相談から、Employment
           Tribunalの判決、そして実際にお金を回収するまでを、順を追って書いています。
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           読み物としてではなく、
           <strong className="font-semibold">
             同じ状況にいる人が自分の数字を出せる形
@@ -161,38 +161,38 @@ export default function CaseStoryIndexPage() {
       <Separator className="my-6" />
 
       {/* 結論を先に */}
-      <section className="rounded-lg border border-gray-300 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6">
+      <section className="rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6">
         <h2 className="text-lg font-semibold">結論から</h2>
         <dl className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">
+            <dt className="text-xs text-neutral-500 dark:text-neutral-400">
               認容された未払い額
             </dt>
             <dd className="mt-1 text-2xl font-bold">£4,007.55</dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">
+            <dd className="text-xs text-neutral-500 dark:text-neutral-400">
               gross・未払い賃金として
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">
+            <dt className="text-xs text-neutral-500 dark:text-neutral-400">
               自己負担した費用
             </dt>
             <dd className="mt-1 text-2xl font-bold">£80</dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">
+            <dd className="text-xs text-neutral-500 dark:text-neutral-400">
               執行申立ての立替のみ。弁護士なし
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-500 dark:text-gray-400">
+            <dt className="text-xs text-neutral-500 dark:text-neutral-400">
               相手方の対応
             </dt>
             <dd className="mt-1 text-2xl font-bold">答弁なし</dd>
-            <dd className="text-xs text-gray-500 dark:text-gray-400">
+            <dd className="text-xs text-neutral-500 dark:text-neutral-400">
               Rule 22により判決
             </dd>
           </div>
         </dl>
-        <p className="mt-5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           Acasも審判所も無料で、通訳費用の負担もありませんでした。弁護士は立てず、
           審理には本人で出席しています。金銭的なハードルはほとんどなく、かかったのは時間と労力でした。
         </p>
@@ -207,15 +207,15 @@ export default function CaseStoryIndexPage() {
       {/* 経過 */}
       <section className="mt-10">
         <h2 className="text-lg font-semibold">経過</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           順序と、間隔の感覚が伝わるように書きました。
         </p>
-        <ol className="mt-5 space-y-4 border-l-2 border-gray-200 dark:border-neutral-700 pl-5">
+        <ol className="mt-5 space-y-4 border-l-2 border-neutral-200 dark:border-neutral-700 pl-5">
           {timeline.map((t) => (
             <li key={t.phase} className="relative">
               <span className="absolute -left-[26px] top-1.5 h-2.5 w-2.5 rounded-full bg-blue-600 dark:bg-blue-400" />
               <h3 className="text-sm font-semibold">{t.phase}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {t.text}
               </p>
             </li>
@@ -229,7 +229,7 @@ export default function CaseStoryIndexPage() {
         <div className="mt-4 space-y-3">
           {storyChapters.map((c) => (
             <Link key={c.slug} href={chapterPath(c.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
+              <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="flex gap-4 p-5">
                   <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-link">
                     {String(chapters.indexOf(c) + 1).padStart(2, "0")}
@@ -238,7 +238,7 @@ export default function CaseStoryIndexPage() {
                     <span className="block text-base font-semibold">
                       {c.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {c.blurb}
                     </span>
                   </span>
@@ -252,7 +252,7 @@ export default function CaseStoryIndexPage() {
       {/* 実用の章 */}
       <section className="mt-10">
         <h2 className="text-lg font-semibold">自分のケースに使う</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           経過を読まなくても、ここから始められます。
         </p>
         <div className="mt-4 space-y-3">
@@ -267,7 +267,7 @@ export default function CaseStoryIndexPage() {
                     <span className="block text-base font-semibold">
                       {c.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {c.blurb}
                     </span>
                   </span>
@@ -281,8 +281,8 @@ export default function CaseStoryIndexPage() {
       <ConsultAsk className="mt-10" />
 
       {/* 関連 */}
-      <div className="mt-12 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-3">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-12 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6 space-y-3">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

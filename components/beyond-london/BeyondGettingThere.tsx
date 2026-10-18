@@ -79,12 +79,12 @@ export default function BeyondGettingThere({
             : "border-red-500 bg-red-50 dark:bg-red-950/25"
         }`}
       >
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           Oyster・タッチ決済は
           {gettingThere.oysterValid ? "使えます" : "使えません"}
         </p>
         <div
-          className={`mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
+          className={`mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${TIGHT}`}
         >
           <MarkdownBody size="compact">{gettingThere.oysterNote}</MarkdownBody>
         </div>
@@ -98,31 +98,31 @@ export default function BeyondGettingThere({
         )}
       </div>
 
-      <div className="rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+      <div className="rounded-xl border border-neutral-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
         <h2 className="text-base font-bold">行き方</h2>
 
         {/* 駅 → 所要 → 運賃。読者が順に決めることの順に並べる。 */}
         <div className="mt-4 space-y-4">
           <div>
-            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
               ロンドン側の駅
             </p>
-            <p className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+            <p className="mt-0.5 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
               {gettingThere.fromStation}
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-500 dark:text-gray-400">
+            <p className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
               所要（片道）
             </p>
-            <p className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+            <p className="mt-0.5 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
               {gettingThere.journeyTime}
             </p>
             {barWidth > 0 && (
               <span
                 aria-hidden
-                className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-neutral-800"
+                className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800"
               >
                 <span
                   className="block h-full rounded-full bg-teal-500/70"
@@ -134,14 +134,14 @@ export default function BeyondGettingThere({
 
           {fare && (
             <div>
-              <p className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              <p className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                 片道の運賃帯
               </p>
               <p className="mt-1 flex flex-wrap items-baseline gap-x-2 text-sm">
                 <span className="font-semibold text-emerald-700 dark:text-emerald-400">
                   {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
                 </span>
-                <span aria-hidden className="text-gray-400">
+                <span aria-hidden className="text-neutral-400">
                   →
                 </span>
                 <span className="font-semibold text-red-700 dark:text-red-400">
@@ -152,14 +152,14 @@ export default function BeyondGettingThere({
           )}
         </div>
 
-        <dl className="mt-5 space-y-3 border-t border-gray-200 pt-4 dark:border-neutral-700">
+        <dl className="mt-5 space-y-3 border-t border-neutral-200 pt-4 dark:border-neutral-700">
           {notes.map((n) => (
             <div key={n.label}>
-              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                 {n.label}
               </dt>
               <dd
-                className={`mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
+                className={`mt-0.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${TIGHT}`}
               >
                 <MarkdownBody size="compact">{n.value}</MarkdownBody>
               </dd>
@@ -168,11 +168,11 @@ export default function BeyondGettingThere({
         </dl>
       </div>
 
-      <div className="rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+      <div className="rounded-xl border border-neutral-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
         <h2 className="text-base font-bold">着いてから</h2>
 
         <div
-          className={`mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
+          className={`mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${TIGHT}`}
         >
           <MarkdownBody size="compact">{onArrival.fromStationToCentre}</MarkdownBody>
         </div>
@@ -183,23 +183,23 @@ export default function BeyondGettingThere({
           拾えない。
         */}
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-lg bg-gray-50 p-3 dark:bg-neutral-800/60">
+          <div className="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800/60">
             <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
               半日なら
             </p>
             <div
-              className={`mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
+              className={`mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${TIGHT}`}
             >
               <MarkdownBody size="compact">{onArrival.halfDay}</MarkdownBody>
             </div>
           </div>
           {onArrival.fullDay && (
-            <div className="rounded-lg bg-gray-50 p-3 dark:bg-neutral-800/60">
+            <div className="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800/60">
               <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
                 1日使うなら
               </p>
               <div
-                className={`mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300 ${TIGHT}`}
+                className={`mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 ${TIGHT}`}
               >
                 <MarkdownBody size="compact">{onArrival.fullDay}</MarkdownBody>
               </div>

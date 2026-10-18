@@ -250,7 +250,7 @@ export default async function MonthPage({
   };
 
   return (
-    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 text-gray-900 dark:text-gray-100 sm:pb-10">
+    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 text-neutral-900 dark:text-neutral-100 sm:pb-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/events/calendar",
@@ -276,7 +276,7 @@ export default async function MonthPage({
             <h1 className="text-2xl font-bold leading-tight md:text-4xl">
               {title}
             </h1>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
               天気・服装・日の出入り・祝日・イベント
             </p>
           </div>
@@ -287,12 +287,12 @@ export default async function MonthPage({
         </p>
 
         {guide ? (
-          <p className="mt-5 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-5 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
             {guide.lead}
           </p>
         ) : (
           fallbackIntro && (
-            <MarkdownBody className="mt-2 !text-base text-gray-700 dark:text-gray-300">
+            <MarkdownBody className="mt-2 !text-base text-neutral-700 dark:text-neutral-300">
               {fallbackIntro}
             </MarkdownBody>
           )
@@ -322,7 +322,7 @@ export default async function MonthPage({
             tokyoMonth={tokyoMonth}
             tokyoEquivalent={getTokyoClimate(tokyoMonth)}
           />
-          <div className="mt-5 space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <div className="mt-5 space-y-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {(guide?.weather ?? [generatedWeather(month)]).map((p) => (
               <p key={p}>{p}</p>
             ))}
@@ -332,29 +332,29 @@ export default async function MonthPage({
         <MonthSection n={n("wear")} id="wear" title="服装">
           {guide ? (
             <>
-              <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-gray-900 dark:bg-emerald-950/30 dark:text-gray-100">
+              <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-neutral-900 dark:bg-emerald-950/30 dark:text-neutral-100">
                 {guide.wear.summary}
               </p>
               <dl className="mt-4 space-y-3">
                 {guide.wear.items.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                    className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
                   >
-                    <dt className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                    <dt className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                       {item.label}
                     </dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    <dd className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                       {item.body}
                     </dd>
                   </div>
                 ))}
               </dl>
-              <div className="mt-4 rounded-lg bg-gray-50 p-4 dark:bg-neutral-800/60">
-                <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+              <div className="mt-4 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800/60">
+                <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
                   日本から持っていくもの
                 </p>
-                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
                   {guide.wear.pack.map((p) => (
                     <li key={p}>{p}</li>
                   ))}
@@ -363,12 +363,12 @@ export default async function MonthPage({
             </>
           ) : (
             travelTips && (
-              <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-gray-900 dark:bg-emerald-950/30 dark:text-gray-100">
+              <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-neutral-900 dark:bg-emerald-950/30 dark:text-neutral-100">
                 {travelTips.wear}
               </p>
             )
           )}
-          <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+          <p className="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
             ほかの月との比べ方や、季節を問わない服装の基本は
             <Link
               href="/sightseeing/travel-tips#weather"
@@ -401,12 +401,12 @@ export default async function MonthPage({
               {guide.tips.map((tip) => (
                 <li
                   key={tip.title}
-                  className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+                  className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700"
                 >
-                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                     {tip.title}
                   </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {tip.body}
                   </p>
                 </li>
@@ -419,7 +419,7 @@ export default async function MonthPage({
           {events.length > 0 && (
             <>
               {fallback && (
-                <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">
+                <p className="mb-4 text-sm text-neutral-700 dark:text-neutral-300">
                   前の月から{year}年{month}月に続いているもの:
                 </p>
               )}
@@ -428,7 +428,7 @@ export default async function MonthPage({
           )}
           {fallback && (
             <div className={events.length > 0 ? "mt-8" : undefined}>
-              <p className="mb-4 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mb-4 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {year}年{month}月に始まる行事の日程は、まだ登録していません。下は
                 {fallback.year}
                 年の日程です。定番の行事は毎年ほぼ同じ時期に開かれますが、日付は公式サイトで確かめてください。
@@ -440,7 +440,7 @@ export default async function MonthPage({
             </div>
           )}
           {events.length === 0 && !fallback && (
-            <p className="text-sm text-gray-700 dark:text-gray-300">
+            <p className="text-sm text-neutral-700 dark:text-neutral-300">
               この月のイベントはまだ登録していません。
             </p>
           )}
@@ -459,7 +459,7 @@ export default async function MonthPage({
       </div>
 
       <section className="mt-12">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           あわせて読む
         </h2>
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -471,7 +471,7 @@ export default async function MonthPage({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="block rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-900 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-100"
+                className="block rounded-lg border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-900 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-neutral-100"
               >
                 {link.label}
               </Link>
@@ -482,8 +482,8 @@ export default async function MonthPage({
 
       <MonthNav month={month} />
 
-      <section className="mt-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <section className="mt-12 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           参考・公式情報
         </h2>
         <ul className="mt-3 space-y-2 text-sm">
@@ -500,7 +500,7 @@ export default async function MonthPage({
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           気温・雨・日照は1991〜2020年の平年値で、その年の天気ではありません。日の出・日の入りは天文計算による目安です。イベントの日程や施設の営業は変わることがあるため、出かける前に各公式サイトで確かめてください。
         </p>
       </section>

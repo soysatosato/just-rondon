@@ -26,7 +26,7 @@ function BlockView({ block }: { block: Block }) {
           {block.items.map((v) => (
             <li
               key={v.label}
-              className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+              className="flex items-start gap-3 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
             >
               <span
                 className={`mt-0.5 shrink-0 rounded px-2 py-0.5 text-xs font-bold ${
@@ -34,17 +34,17 @@ function BlockView({ block }: { block: Block }) {
                     ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                     : v.tone === "bad"
                       ? "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
-                      : "bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-gray-400"
+                      : "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
                 }`}
               >
                 {v.verdict}
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {v.label}
                 </span>
                 {v.detail && (
-                  <span className="mt-0.5 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-0.5 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {v.detail}
                   </span>
                 )}
@@ -67,17 +67,17 @@ function BlockView({ block }: { block: Block }) {
               className={`rounded-lg border p-4 ${
                 c.best
                   ? "border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30"
-                  : "border-gray-200 dark:border-neutral-700"
+                  : "border-neutral-200 dark:border-neutral-700"
               }`}
             >
-              <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 {c.head}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {c.body}
               </p>
               {c.note && (
-                <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
                   {c.note}
                 </p>
               )}
@@ -91,12 +91,12 @@ function BlockView({ block }: { block: Block }) {
         <div
           className={
             block.title
-              ? "rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+              ? "rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               : ""
           }
         >
           {block.title && (
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {block.title}
             </p>
           )}
@@ -104,7 +104,7 @@ function BlockView({ block }: { block: Block }) {
             {block.items.map((i) => (
               <li
                 key={i}
-                className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
               >
                 <span
                   aria-hidden
@@ -113,7 +113,7 @@ function BlockView({ block }: { block: Block }) {
                       ? "text-emerald-700 dark:text-emerald-400"
                       : block.tone === "dont"
                         ? "text-red-500"
-                        : "text-gray-400"
+                        : "text-neutral-400"
                   }
                 >
                   {block.tone === "do" ? "✓" : block.tone === "dont" ? "✕" : "・"}
@@ -127,11 +127,11 @@ function BlockView({ block }: { block: Block }) {
 
     case "rows":
       return (
-        <ul className="divide-y divide-gray-200 rounded-lg border border-gray-200 dark:divide-neutral-800 dark:border-neutral-700">
+        <ul className="divide-y divide-neutral-200 rounded-lg border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-700">
           {block.items.map((r) => (
             <li key={r.name} className="px-4 py-3">
               <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {r.name}
                 </span>
                 {r.free && (
@@ -142,14 +142,14 @@ function BlockView({ block }: { block: Block }) {
                 {r.meta?.map((m) => (
                   <span
                     key={m.label}
-                    className="font-mono text-xs text-gray-500 dark:text-gray-400"
+                    className="font-mono text-xs text-neutral-500 dark:text-neutral-400"
                   >
                     {m.label} {m.value}
                   </span>
                 ))}
               </p>
               {r.note && (
-                <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {r.note}
                 </p>
               )}
@@ -167,7 +167,7 @@ function BlockView({ block }: { block: Block }) {
           {block.items.map((s, i) => (
             <li
               key={s}
-              className="flex gap-3 rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+              className="flex gap-3 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
             >
               <span
                 aria-hidden
@@ -175,7 +175,7 @@ function BlockView({ block }: { block: Block }) {
               >
                 {i + 1}
               </span>
-              <span className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <span className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {s}
               </span>
             </li>

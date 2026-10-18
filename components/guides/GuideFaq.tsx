@@ -21,12 +21,12 @@ export default function GuideFaq({ items }: { items: GuideFaqItem[] }) {
             value={`faq-${idx}`}
             className="border-none"
           >
-            <Card className="border-gray-300 dark:border-neutral-700 shadow-sm">
+            <Card className="border-neutral-300 dark:border-neutral-700 shadow-sm">
               <AccordionTrigger className="px-5 py-4 text-left">
                 <span className="text-base font-semibold">{item.question}</span>
               </AccordionTrigger>
               <AccordionContent className="px-5 pb-4">
-                <div className="text-gray-700 dark:text-gray-300">
+                <div className="text-neutral-700 dark:text-neutral-300">
                   <MarkdownBody>{item.answer}</MarkdownBody>
                 </div>
               </AccordionContent>

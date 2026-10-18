@@ -19,7 +19,7 @@ export default function DayTimeline({ day }: { day: Day }) {
   return (
     <div>
       {day.intro && (
-        <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {day.intro}
         </p>
       )}
@@ -33,11 +33,11 @@ export default function DayTimeline({ day }: { day: Day }) {
       </ol>
 
       {day.tips && day.tips.length > 0 && (
-        <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-          <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+        <div className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
+          <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
             実務メモ
           </p>
-          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
             {day.tips.map((t) => (
               <li key={t} className="leading-relaxed">
                 {t}
@@ -62,7 +62,7 @@ function PartBlock({ part }: { part: DayPart }) {
         </span>
         <span
           aria-hidden
-          className="mt-1 w-px flex-1 bg-gray-200 dark:bg-neutral-700"
+          className="mt-1 w-px flex-1 bg-neutral-200 dark:bg-neutral-700"
         />
       </div>
 
@@ -76,7 +76,7 @@ function PartBlock({ part }: { part: DayPart }) {
             {part.choice.map((c) => (
               <div
                 key={c.label}
-                className="rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
               >
                 <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
                   {c.label}
@@ -103,11 +103,11 @@ function StopCard({ stop, compact }: { stop: Stop; compact?: boolean }) {
       className={
         compact
           ? ""
-          : "rounded-lg border border-gray-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900"
+          : "rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-700 dark:bg-neutral-900"
       }
     >
       <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           {stop.name}
         </span>
         {stop.free && (
@@ -116,18 +116,18 @@ function StopCard({ stop, compact }: { stop: Stop; compact?: boolean }) {
           </span>
         )}
         {stop.duration && (
-          <span className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-gray-600 dark:bg-neutral-800 dark:text-gray-400">
+          <span className="rounded bg-neutral-100 px-1.5 py-0.5 font-mono text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
             {stop.duration}
           </span>
         )}
         {stop.at && (
-          <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
+          <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
             {stop.at}
           </span>
         )}
       </p>
       {stop.note && (
-        <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {stop.note}
         </p>
       )}

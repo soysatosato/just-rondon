@@ -32,8 +32,8 @@ const LEVEL_STYLE: Record<SeverityLevel, { dot: string; text: string }> = {
     text: "text-red-700 dark:text-red-300",
   },
   closed: {
-    dot: "bg-gray-400",
-    text: "text-gray-500 dark:text-gray-400",
+    dot: "bg-neutral-400",
+    text: "text-neutral-500 dark:text-neutral-400",
   },
 };
 
@@ -57,7 +57,7 @@ function StatusRow({ line }: { line: LineStatus }) {
             aria-hidden="true"
             className={`size-2.5 shrink-0 rounded-full ${style.dot}`}
           />
-          <span className="min-w-0 break-words font-medium text-gray-900 dark:text-gray-100">
+          <span className="min-w-0 break-words font-medium text-neutral-900 dark:text-neutral-100">
             {line.name}
           </span>
         </div>
@@ -68,7 +68,7 @@ function StatusRow({ line }: { line: LineStatus }) {
         </span>
       </div>
       {line.reason && (
-        <p className="pl-[1.25rem] text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="pl-[1.25rem] text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
           {line.reason}
         </p>
       )}
@@ -108,14 +108,14 @@ export default function TflStatusWidget() {
 
   if (!data) {
     return (
-      <Card className="border-gray-200 dark:border-gray-800">
+      <Card className="border-neutral-200 dark:border-neutral-800">
         <CardContent className="p-5">
-          <div className="h-5 w-40 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
+          <div className="h-5 w-40 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
           <div className="mt-4 space-y-3">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="h-4 w-full animate-pulse rounded bg-gray-100 dark:bg-gray-900"
+                className="h-4 w-full animate-pulse rounded bg-neutral-100 dark:bg-neutral-900"
               />
             ))}
           </div>
@@ -136,10 +136,10 @@ export default function TflStatusWidget() {
   const collapsed = normal.length + closed.length;
 
   return (
-    <Card className="border-gray-200 dark:border-gray-800">
+    <Card className="border-neutral-200 dark:border-neutral-800">
       <CardContent className="p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
             現在の運行状況
           </h2>
           <LiveBadge fetchedAt={data.fetchedAt} />
@@ -149,10 +149,10 @@ export default function TflStatusWidget() {
           // 深夜は「平常運転」と言い切れない(動いていないので)。
           // 運行時間外の路線が多数派のときは、そう書く。
           closed.length > normal.length ? (
-            <p className="mt-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-3 flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
               <span
                 aria-hidden="true"
-                className="size-2.5 shrink-0 rounded-full bg-gray-400"
+                className="size-2.5 shrink-0 rounded-full bg-neutral-400"
               />
               いまは運行時間外です。乱れは出ていません。
             </p>
@@ -166,13 +166,13 @@ export default function TflStatusWidget() {
             </p>
           )
         ) : (
-          <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
             {disrupted.length}路線に乱れが出ています。
           </p>
         )}
 
         {visible.length > 0 && (
-          <ul className="mt-2 divide-y divide-gray-100 dark:divide-gray-800">
+          <ul className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
             {visible.map((line) => (
               <StatusRow key={line.id} line={line} />
             ))}
@@ -193,7 +193,7 @@ export default function TflStatusWidget() {
           </button>
         )}
 
-        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           出典:{" "}
           <a
             href="https://tfl.gov.uk/tube-dlr-overground/status/"

@@ -42,7 +42,7 @@ export default function MonthPicker() {
               className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
                 active
                   ? "bg-emerald-700 text-white"
-                  : "border border-gray-300 text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-300"
+                  : "border border-neutral-300 text-neutral-700 hover:border-emerald-400 dark:border-neutral-700 dark:text-neutral-300"
               }`}
             >
               {m.month}月
@@ -52,18 +52,18 @@ export default function MonthPicker() {
       </div>
 
       {current ? (
-        <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900">
           <div className="flex flex-wrap items-baseline gap-3">
-            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               {current.month}月
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
               最高{" "}
-              <strong className="text-base font-bold text-gray-900 dark:text-gray-100">
+              <strong className="text-base font-bold text-neutral-900 dark:text-neutral-100">
                 {current.high}℃
               </strong>
               {" / "}最低{" "}
-              <strong className="text-base font-bold text-gray-900 dark:text-gray-100">
+              <strong className="text-base font-bold text-neutral-900 dark:text-neutral-100">
                 {current.low}℃
               </strong>
             </p>
@@ -76,25 +76,25 @@ export default function MonthPicker() {
 
           <dl className="mt-4 space-y-2.5 text-sm">
             <div className="flex gap-3">
-              <dt className="w-14 shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+              <dt className="w-14 shrink-0 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                 服装
               </dt>
-              <dd className="font-medium text-gray-900 dark:text-gray-100">
+              <dd className="font-medium text-neutral-900 dark:text-neutral-100">
                 {current.wear}
               </dd>
             </div>
             <div className="flex gap-3">
-              <dt className="w-14 shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+              <dt className="w-14 shrink-0 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                 特徴
               </dt>
-              <dd className="text-gray-700 dark:text-gray-300">{current.note}</dd>
+              <dd className="text-neutral-700 dark:text-neutral-300">{current.note}</dd>
             </div>
             {current.daylight && (
               <div className="flex gap-3">
-                <dt className="w-14 shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                <dt className="w-14 shrink-0 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                   日照
                 </dt>
-                <dd className="text-gray-700 dark:text-gray-300">
+                <dd className="text-neutral-700 dark:text-neutral-300">
                   {current.daylight}
                 </dd>
               </div>
@@ -115,17 +115,17 @@ export default function MonthPicker() {
             <li key={m.month}>
               <Link
                 href={eventMonthPath(m.month)}
-                className="block h-full rounded-lg border border-gray-200 p-3 transition hover:border-emerald-400 dark:border-neutral-700"
+                className="block h-full rounded-lg border border-neutral-200 p-3 transition hover:border-emerald-400 dark:border-neutral-700"
               >
                 <p className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+                  <span className="text-base font-bold text-neutral-900 dark:text-neutral-100">
                     {m.month}月
                   </span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-neutral-600 dark:text-neutral-400">
                     {m.high}℃ / {m.low}℃
                   </span>
                 </p>
-                <p className="mt-1 text-xs leading-snug text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-xs leading-snug text-neutral-600 dark:text-neutral-400">
                   {m.wear}
                 </p>
               </Link>
@@ -134,7 +134,7 @@ export default function MonthPicker() {
         </ul>
       )}
 
-      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
         1991〜2020年の平年値（Met Office の Heathrow 観測所）を丸めた値です。その年の天気は Met Office（英国気象庁）の予報でご確認ください。
       </p>
     </div>

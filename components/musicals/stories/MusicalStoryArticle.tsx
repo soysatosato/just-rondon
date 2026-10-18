@@ -140,7 +140,7 @@ export default function MusicalStoryArticle({
             {story.background.map((item) => (
               <Card
                 key={item.title}
-                className="border-gray-200 p-5 shadow-none dark:border-neutral-700"
+                className="border-neutral-200 p-5 shadow-none dark:border-neutral-700"
               >
                 <h3 className="text-sm font-bold text-foreground">
                   {item.title}
@@ -393,12 +393,12 @@ function StoryToc({ story }: { story: MusicalStory }) {
   return (
     <nav
       aria-label="目次"
-      className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-5 dark:border-neutral-700 dark:bg-neutral-900"
+      className="mt-8 rounded-lg border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-900"
     >
-      <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
         目次
       </h2>
-      <ul className="mt-3 list-none space-y-2 border-l border-gray-300 pl-4 dark:border-neutral-700">
+      <ul className="mt-3 list-none space-y-2 border-l border-neutral-300 pl-4 dark:border-neutral-700">
         {items.map((item, i) => (
           <li key={item.id}>
             <a

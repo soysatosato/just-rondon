@@ -72,7 +72,7 @@ async function CalendarFallback() {
       <h1 className="mb-6 text-center text-3xl font-bold dark:text-white">
         ロンドンイベントカレンダー 2026
       </h1>
-      <p className="mb-10 text-center text-muted-foreground dark:text-gray-400">
+      <p className="mb-10 text-center text-muted-foreground dark:text-neutral-400">
         四季を巡る、ロンドンの一年。気になる月を選んでください。
       </p>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -132,7 +132,7 @@ export default async function EventsPage() {
           <span className="shrink-0 font-serif text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
             Next Issue
           </span>
-          <span className="min-w-0 flex-1 text-xs font-bold leading-snug tabular-nums dark:text-gray-200">
+          <span className="min-w-0 flex-1 text-xs font-bold leading-snug tabular-nums dark:text-neutral-200">
             {formatWeekRange(upcoming.weekStart, upcoming.weekEnd).replace(
               /\([日月火水木金土]\)/g,
               ""
@@ -160,7 +160,7 @@ export default async function EventsPage() {
             <h2 className="text-lg font-bold tracking-tight group-hover:underline sm:text-xl dark:text-white">
               {formatMonthJa(changeIssue.monthStart)}に変わったロンドン
             </h2>
-            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground dark:text-neutral-400">
               {changeIssue.headline}
             </p>
             <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold dark:text-white">
@@ -185,7 +185,7 @@ export default async function EventsPage() {
               <CalendarRange className="h-4 w-4 shrink-0 opacity-60" />
               年間のイベントを探す
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground dark:text-neutral-400">
               チェルシー・フラワーショーやクリスマスマーケットなど、1年前から日程が決まっている
               恒例行事は月別のページにまとめています。月ごとの天気・服装・祝日もそこにあります。
               旅行の時期を決めるときはこちらへ。
@@ -208,7 +208,7 @@ export default async function EventsPage() {
       </section>
 
       {/* 奥付。 */}
-      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-neutral-500">
         この号は{format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。
         運行情報や開催情報は変わることがあるため、出発前に各公式サイトで最新の状況を確認してください。
       </p>

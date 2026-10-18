@@ -51,7 +51,7 @@ export default function EtaChecklist() {
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <div
-          className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-200 dark:bg-neutral-800"
+          className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800"
           role="progressbar"
           aria-valuenow={done}
           aria-valuemin={0}
@@ -65,7 +65,7 @@ export default function EtaChecklist() {
             style={{ width: loaded ? `${(done / all.length) * 100}%` : "0%" }}
           />
         </div>
-        <span className="shrink-0 text-xs font-semibold tabular-nums text-gray-500 dark:text-gray-400">
+        <span className="shrink-0 text-xs font-semibold tabular-nums text-neutral-500 dark:text-neutral-400">
           {loaded ? `${done} / ${all.length}` : `0 / ${all.length}`}
         </span>
       </div>
@@ -79,7 +79,7 @@ export default function EtaChecklist() {
       <div className="space-y-5">
         {etaChecklist.map((group) => (
           <div key={group.id}>
-            <p className="text-xs font-bold tracking-wide text-gray-500 dark:text-gray-400">
+            <p className="text-xs font-bold tracking-wide text-neutral-500 dark:text-neutral-400">
               {group.label}
             </p>
             <ul className="mt-2 space-y-1">
@@ -91,14 +91,14 @@ export default function EtaChecklist() {
                       type="button"
                       onClick={() => toggle(item.id)}
                       aria-pressed={on}
-                      className="flex w-full items-start gap-3 rounded-lg px-2 py-2 text-left transition hover:bg-gray-50 dark:hover:bg-neutral-800/60"
+                      className="flex w-full items-start gap-3 rounded-lg px-2 py-2 text-left transition hover:bg-neutral-50 dark:hover:bg-neutral-800/60"
                     >
                       <span
                         aria-hidden
                         className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition ${
                           on
                             ? "border-emerald-500 bg-emerald-700 text-white"
-                            : "border-gray-300 dark:border-neutral-600"
+                            : "border-neutral-300 dark:border-neutral-600"
                         }`}
                       >
                         {on && (
@@ -117,14 +117,14 @@ export default function EtaChecklist() {
                         <span
                           className={`block text-sm leading-snug transition ${
                             on
-                              ? "text-gray-400 line-through dark:text-gray-500"
-                              : "font-medium text-gray-900 dark:text-gray-100"
+                              ? "text-neutral-400 line-through dark:text-neutral-500"
+                              : "font-medium text-neutral-900 dark:text-neutral-100"
                           }`}
                         >
                           {item.label}
                         </span>
                         {item.hint && (
-                          <span className="mt-0.5 block text-xs leading-snug text-gray-500 dark:text-gray-400">
+                          <span className="mt-0.5 block text-xs leading-snug text-neutral-500 dark:text-neutral-400">
                             {item.hint}
                           </span>
                         )}

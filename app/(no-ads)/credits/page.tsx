@@ -147,7 +147,7 @@ export default async function CreditsPage() {
         lede="当サイトの写真の多くは Wikimedia Commons から、それぞれのライセンスに従って借りています。各ページのメイン写真の作者とライセンスを、掲載ページごとにまとめました。"
       />
 
-      <p className="mt-6 text-sm leading-7 text-gray-600 dark:text-gray-400">
+      <p className="mt-6 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
         作者名のリンクから Commons のファイルページに移動できます。CC BY-SA
         の写真は、利用する人が同じライセンスで公開することを条件に、誰でも再利用できます。
         掲載に問題がある場合は
@@ -157,12 +157,12 @@ export default async function CreditsPage() {
         からご連絡ください。
       </p>
 
-      <div className="mt-12 divide-y divide-gray-200 dark:divide-neutral-800">
+      <div className="mt-12 divide-y divide-neutral-200 dark:divide-neutral-800">
         {groups.map((group) => (
           <section key={group.title} className="py-8 first:pt-0">
             <h2 className="text-lg font-bold tracking-tight md:text-xl">
               {group.title}
-              <span className="ml-2 text-sm font-normal tabular-nums text-gray-500 dark:text-gray-400">
+              <span className="ml-2 text-sm font-normal tabular-nums text-neutral-500 dark:text-neutral-400">
                 {group.rows.length}件
               </span>
             </h2>
@@ -175,7 +175,7 @@ export default async function CreditsPage() {
                   >
                     {row.name}
                   </Link>
-                  <span className="block text-xs text-gray-500 dark:text-gray-400">
+                  <span className="block text-xs text-neutral-500 dark:text-neutral-400">
                     {row.link ? (
                       <a
                         href={row.link}

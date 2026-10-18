@@ -206,19 +206,19 @@ export default async function Page() {
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
           ロンドン観光ガイド
         </h1>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           ロンドン観光でつまずくのは「何を見るか」ではありません。
           <strong className="font-semibold">1日に何箇所入るか</strong>
           です。ロンドン塔は所要3時間〜、ウェストミンスター寺院は2〜3時間。
           この2つを同じ日に入れた時点で、その日はもう終わりです。
         </p>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           そこでこのガイドは、名所を並べるだけで終わらせません。各スポットのページに
           <strong className="font-semibold">料金・所要時間・最寄駅</strong>
           と、着いてからどの順に見るかを書いています。
           何を削るかを決められる材料を先に渡すのが目的です。
         </p>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           掲載は{totalSpots}件。宿・地下鉄・予算といった出発前の実務は、
           ページ下の「旅の準備」に分けてあります。
           <strong className="font-semibold">

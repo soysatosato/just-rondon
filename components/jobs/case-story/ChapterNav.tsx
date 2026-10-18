@@ -19,12 +19,12 @@ export default function ChapterNav({
         {prev ? (
           <Link
             href={chapterPath(prev.slug, locale)}
-            className="rounded-lg border border-gray-200 dark:border-neutral-700 p-4 hover:bg-gray-50 dark:hover:bg-neutral-900"
+            className="rounded-lg border border-neutral-200 dark:border-neutral-700 p-4 hover:bg-neutral-50 dark:hover:bg-neutral-900"
           >
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
               {strings.prevChapter}
             </span>
-            <span className="mt-1 block text-sm font-medium text-gray-900 dark:text-gray-100">
+            <span className="mt-1 block text-sm font-medium text-neutral-900 dark:text-neutral-100">
               {prev.label}
             </span>
           </Link>
@@ -35,12 +35,12 @@ export default function ChapterNav({
         {next && (
           <Link
             href={chapterPath(next.slug, locale)}
-            className="rounded-lg border border-gray-200 dark:border-neutral-700 p-4 text-right hover:bg-gray-50 dark:hover:bg-neutral-900 sm:col-start-2"
+            className="rounded-lg border border-neutral-200 dark:border-neutral-700 p-4 text-right hover:bg-neutral-50 dark:hover:bg-neutral-900 sm:col-start-2"
           >
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
               {strings.nextChapter}
             </span>
-            <span className="mt-1 block text-sm font-medium text-gray-900 dark:text-gray-100">
+            <span className="mt-1 block text-sm font-medium text-neutral-900 dark:text-neutral-100">
               {next.label}
             </span>
           </Link>

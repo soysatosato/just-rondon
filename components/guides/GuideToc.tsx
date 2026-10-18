@@ -14,12 +14,12 @@ export default function GuideToc({
   return (
     <nav
       aria-label="目次"
-      className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-5"
+      className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-5"
     >
-      <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
         目次
       </h2>
-      <ul className="mt-3 list-none space-y-2 border-l border-gray-300 dark:border-neutral-700 pl-4">
+      <ul className="mt-3 list-none space-y-2 border-l border-neutral-300 dark:border-neutral-700 pl-4">
         {sections.map((section, i) => (
           <li key={section.id}>
             <a

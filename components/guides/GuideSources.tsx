@@ -14,8 +14,8 @@ export default function GuideSources({
   dataAsOf: string;
 }) {
   return (
-    <section className="mt-12 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6">
-      <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+    <section className="mt-12 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6">
+      <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
         参考・公式情報
       </h2>
       <ul className="mt-3 space-y-2 text-sm">
@@ -32,7 +32,7 @@ export default function GuideSources({
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
         料金・時刻・制度は変更されます。本記事は{dataAsOf}
         時点の情報です。渡航前に各公式サイトで最新情報をご確認ください。
       </p>

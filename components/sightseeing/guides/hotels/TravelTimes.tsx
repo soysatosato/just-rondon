@@ -47,12 +47,12 @@ function Chip({ leg }: { leg: TravelLeg }) {
   if (!dest) return null;
 
   return (
-    <li className="rounded-lg bg-gray-50 px-2.5 py-2 dark:bg-neutral-800/60">
-      <p className="truncate text-xs text-gray-500 dark:text-gray-400" title={dest.label}>
+    <li className="rounded-lg bg-neutral-50 px-2.5 py-2 dark:bg-neutral-800/60">
+      <p className="truncate text-xs text-neutral-500 dark:text-neutral-400" title={dest.label}>
         {dest.label}
       </p>
       <p className="mt-0.5 flex items-baseline gap-1.5">
-        <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           {leg.minutes}分
         </span>
         {leg.walkOnly ? (
@@ -64,7 +64,7 @@ function Chip({ leg }: { leg: TravelLeg }) {
             直通
           </span>
         ) : (
-          <span className="text-xs text-gray-500 dark:text-gray-400">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
             乗換{leg.changes}回
           </span>
         )}
@@ -77,7 +77,7 @@ function Chip({ leg }: { leg: TravelLeg }) {
           </p>
         )}
       {dest.note && (
-        <p className="mt-0.5 text-xs leading-snug text-gray-500 dark:text-gray-400">
+        <p className="mt-0.5 text-xs leading-snug text-neutral-500 dark:text-neutral-400">
           {dest.note}
         </p>
       )}
@@ -98,8 +98,8 @@ export default function TravelTimes({ areaId }: { areaId: string }) {
   );
 
   return (
-    <div className="mt-4 border-t border-gray-200 pt-3 dark:border-neutral-700">
-      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+    <div className="mt-4 border-t border-neutral-200 pt-3 dark:border-neutral-700">
+      <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
         ここからの所要時間
         {origin && (
           <span className="ml-1 font-normal">（{origin.station} 起点）</span>
@@ -116,7 +116,7 @@ export default function TravelTimes({ areaId }: { areaId: string }) {
 
       {airports.length > 0 && (
         <>
-          <p className="mt-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
+          <p className="mt-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
             空港へ
           </p>
           <ul className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-3">
@@ -133,7 +133,7 @@ export default function TravelTimes({ areaId }: { areaId: string }) {
 /** 数字の出どころ。セクションの末尾に一度だけ出す。 */
 export function TravelTimesNote() {
   return (
-    <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+    <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
       所要時間は TfL（ロンドン交通局）の経路検索を{data.departure.label}
       で引いた実測値です。時間帯・運行状況で変わるため目安として扱ってください。
       各エリアの代表駅からの値で、宿の位置によって数分前後します。

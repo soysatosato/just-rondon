@@ -116,7 +116,7 @@ export default async function ChangeIssuePage({
         <ChangeIssueList issues={backIssues} />
 
         <footer className="mt-12 border-t-2 border-foreground pt-4">
-          <p className="text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
+          <p className="text-xs leading-relaxed text-muted-foreground dark:text-neutral-500">
             {freshness.isPast
               ? `この号は${format(issue.researchedAt, "yyyy年M月d日")}時点の調査です。現在の金額や制度とは異なる場合があります。`
               : `この号は${format(issue.researchedAt, "yyyy年M月d日")}時点の調査です。支払いや申請の前に、各項目の出典で最新の情報を確認してください。`}

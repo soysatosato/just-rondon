@@ -190,7 +190,7 @@ export default function HousingHubPage() {
   const pageUrl = `${SITE_URL}${HOUSING_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: HOUSING_SECTION_NAME,
@@ -211,10 +211,10 @@ export default function HousingHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           ロンドンの住まい探しガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Renting in London: From Search to Deposit Return
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           家探しは、<strong>今どの段階にいるか</strong>
           で必要な情報がまったく違います。下から自分の状況に近いものを選んでください。
           制度の話は、必要になった段階で読めば足ります。
@@ -232,10 +232,10 @@ export default function HousingHubPage() {
         違法な前払いの要求への服従）が出るため。
       */}
       <div className="mt-8 rounded-lg border border-sky-300 bg-sky-50/70 p-5 dark:border-sky-900/60 dark:bg-sky-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           {jpDate(HOUSING_KEY_DATES.phase1)}、英国の賃貸制度は根本から変わりました
         </p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             ・<strong>AST（定期借家）が廃止</strong>
             。既存の契約も含め、すべてが期間の定めのない assured periodic tenancy
@@ -259,7 +259,7 @@ export default function HousingHubPage() {
             ・<strong>募集価格を超える提示の受け入れ（入札）が禁止</strong>
           </li>
         </ul>
-        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           日本語で流通している家探し情報の大半は、まだ改正前を前提にしています。
           <Link
             href="/housing/tenancy-types"
@@ -278,7 +278,7 @@ export default function HousingHubPage() {
           <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
             自分の状況を選んでください
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             一番近いものが1つ見つかれば、それがあなたの読むべきページです。
           </p>
         </div>
@@ -286,15 +286,15 @@ export default function HousingHubPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
             <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+              <Card className="h-full border-neutral-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                 <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
                     {s.situation}
                   </p>
                   <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
                     → {s.answer}
                   </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {s.detail}
                   </p>
                   <span className="mt-4 text-sm font-medium text-link">
@@ -313,7 +313,7 @@ export default function HousingHubPage() {
         <h2 id="cost-overview" className="text-xl font-bold md:text-2xl">
           相場と、払ってよい金額の上限
         </h2>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           提示された金額が妥当かどうかを判断する基準線です。
           <strong>上限を超える請求はすべて違法</strong>
           で、払ってしまっても返還を請求できます。
@@ -347,7 +347,7 @@ export default function HousingHubPage() {
           <h2 id="all-guides" className="text-xl font-bold md:text-2xl">
             住まい探しガイド一覧
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             全{housingGuides.length}
             本。探し始めから退去後の敷金回収まで、順を追って読めるように並べています。
           </p>
@@ -359,7 +359,7 @@ export default function HousingHubPage() {
 
           return (
             <div key={category} className="space-y-3">
-              <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+              <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200">
                 {HOUSING_CATEGORY_LABELS[category]}
               </h3>
               <div className="space-y-3">
@@ -369,7 +369,7 @@ export default function HousingHubPage() {
                     href={housingGuidePath(g.slug)}
                     className="block"
                   >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+                    <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                       <CardContent className="p-5">
                         <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">
                           {g.eyebrow}
@@ -377,7 +377,7 @@ export default function HousingHubPage() {
                         <span className="mt-1 block text-base font-semibold">
                           {g.label}
                         </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                        <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                           {g.blurb}
                         </span>
                       </CardContent>
@@ -392,11 +392,11 @@ export default function HousingHubPage() {
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           住まいが決まる前後に必要になること
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           英国では、住所がないと銀行口座が作れず、口座がないと住所を証明できないという循環に
           多くの人が引っかかります。渡英後の手続きと、働き始めてからの労働条件については
           それぞれ専用のガイドがあります。
@@ -429,7 +429,7 @@ export default function HousingHubPage() {
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの情報は{HOUSING_AS_OF}
         時点のもので、法的助言ではありません。ここで扱う制度はイングランドのものです
         （スコットランド・ウェールズ・北アイルランドには別の法律が適用されます）。

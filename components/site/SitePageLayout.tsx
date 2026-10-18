@@ -19,13 +19,13 @@ export function SitePageHeader({
 }) {
   return (
     <header>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
         {kicker}
       </p>
       <h1 className="mt-3 text-3xl font-bold leading-tight tracking-tight md:text-5xl">
         {title}
       </h1>
-      <p className="mt-4 max-w-xl text-sm leading-7 text-gray-600 dark:text-gray-400 md:text-base">
+      <p className="mt-4 max-w-xl text-sm leading-7 text-neutral-600 dark:text-neutral-400 md:text-base">
         {lede}
       </p>
     </header>
@@ -67,7 +67,7 @@ function SectionBody({ section }: { section: SiteSection }) {
         block.kind === "p" ? (
           <p
             key={index}
-            className="text-sm leading-8 text-gray-700 dark:text-gray-300 md:text-base"
+            className="text-sm leading-8 text-neutral-700 dark:text-neutral-300 md:text-base"
           >
             {block.text}
           </p>
@@ -76,11 +76,11 @@ function SectionBody({ section }: { section: SiteSection }) {
             {block.items.map((item) => (
               <li
                 key={item}
-                className="flex gap-3 text-sm leading-7 text-gray-700 dark:text-gray-300 md:text-base"
+                className="flex gap-3 text-sm leading-7 text-neutral-700 dark:text-neutral-300 md:text-base"
               >
                 <span
                   aria-hidden
-                  className="mt-[0.7em] h-px w-3 shrink-0 bg-gray-400 dark:bg-neutral-600"
+                  className="mt-[0.7em] h-px w-3 shrink-0 bg-neutral-400 dark:bg-neutral-600"
                 />
                 <span>{item}</span>
               </li>
@@ -101,10 +101,10 @@ function SectionBody({ section }: { section: SiteSection }) {
                   {...(external
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
-                  className="inline-flex items-center gap-1.5 text-sm text-gray-900 underline decoration-gray-300 underline-offset-4 transition-colors hover:decoration-current dark:text-gray-100 dark:decoration-neutral-600"
+                  className="inline-flex items-center gap-1.5 text-sm text-neutral-900 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-current dark:text-neutral-100 dark:decoration-neutral-600"
                 >
                   {link.label}
-                  <span aria-hidden className="text-xs text-gray-400">
+                  <span aria-hidden className="text-xs text-neutral-400">
                     {external ? "↗" : "→"}
                   </span>
                 </a>
@@ -120,7 +120,7 @@ function SectionBody({ section }: { section: SiteSection }) {
 /** 番号付きの章の連なり。番号は広い画面でのみ本文の左外に出す。 */
 export function SiteSections({ sections }: { sections: SiteSection[] }) {
   return (
-    <div className="mt-12 divide-y divide-gray-200 dark:divide-neutral-800">
+    <div className="mt-12 divide-y divide-neutral-200 dark:divide-neutral-800">
       {sections.map((section, index) => (
         <section
           key={section.title}
@@ -129,7 +129,7 @@ export function SiteSections({ sections }: { sections: SiteSection[] }) {
         >
           <p
             aria-hidden
-            className="text-sm font-semibold tabular-nums text-gray-300 dark:text-neutral-700 sm:pt-1"
+            className="text-sm font-semibold tabular-nums text-neutral-300 dark:text-neutral-700 sm:pt-1"
           >
             {String(index + 1).padStart(2, "0")}
           </p>
@@ -148,7 +148,7 @@ export function SiteSections({ sections }: { sections: SiteSection[] }) {
 
 export function SitePageShell({ children }: { children: React.ReactNode }) {
   return (
-    <div data-page-main className="mx-auto max-w-3xl px-1 pt-4 pb-12 text-gray-900 dark:text-gray-100 sm:px-4 md:pb-16">
+    <div data-page-main className="mx-auto max-w-3xl px-1 pt-4 pb-12 text-neutral-900 dark:text-neutral-100 sm:px-4 md:pb-16">
       {children}
     </div>
   );

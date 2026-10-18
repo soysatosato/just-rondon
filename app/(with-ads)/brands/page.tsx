@@ -109,12 +109,12 @@ export default async function BrandsPage() {
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
           イギリスのブランド
         </h1>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           イギリスのブランドは、そのほとんどが「必要だったから作られた」ものです。
           雨が降り続く国だからレインコートが生まれ、炭鉱と工場があったから頑丈な靴が生まれた。
           今は高級品として売られていても、出発点は実用品でした。
         </p>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           ここでは
           <strong className="font-semibold">
             イギリス発のブランドを{brands.length}社

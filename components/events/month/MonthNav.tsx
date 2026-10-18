@@ -16,19 +16,19 @@ export default function MonthNav({ month }: { month: number }) {
       <div className="grid grid-cols-2 gap-3">
         <Link
           href={eventMonthPath(prev)}
-          className="rounded-xl border border-gray-200 p-4 transition hover:border-emerald-400 dark:border-neutral-700"
+          className="rounded-xl border border-neutral-200 p-4 transition hover:border-emerald-400 dark:border-neutral-700"
         >
-          <span className="text-xs text-gray-500 dark:text-gray-400">← 前の月</span>
-          <span className="mt-0.5 block font-bold text-gray-900 dark:text-gray-100">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">← 前の月</span>
+          <span className="mt-0.5 block font-bold text-neutral-900 dark:text-neutral-100">
             {prev}月のロンドン
           </span>
         </Link>
         <Link
           href={eventMonthPath(next)}
-          className="rounded-xl border border-gray-200 p-4 text-right transition hover:border-emerald-400 dark:border-neutral-700"
+          className="rounded-xl border border-neutral-200 p-4 text-right transition hover:border-emerald-400 dark:border-neutral-700"
         >
-          <span className="text-xs text-gray-500 dark:text-gray-400">次の月 →</span>
-          <span className="mt-0.5 block font-bold text-gray-900 dark:text-gray-100">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">次の月 →</span>
+          <span className="mt-0.5 block font-bold text-neutral-900 dark:text-neutral-100">
             {next}月のロンドン
           </span>
         </Link>
@@ -47,7 +47,7 @@ export default function MonthNav({ month }: { month: number }) {
             ) : (
               <Link
                 href={eventMonthPath(m)}
-                className="block rounded-lg border border-gray-200 py-1.5 text-center text-sm text-gray-700 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-300"
+                className="block rounded-lg border border-neutral-200 py-1.5 text-center text-sm text-neutral-700 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-neutral-300"
               >
                 {m}月
               </Link>

@@ -23,7 +23,7 @@ export default function LocaleSwitch({
       href={target}
       hrefLang={locale === "en" ? "ja" : "en"}
       aria-label={strings.switchAria}
-      className="rounded-full border border-gray-300 dark:border-neutral-600 px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 transition hover:border-blue-400 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400"
+      className="rounded-full border border-neutral-300 dark:border-neutral-600 px-3 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-300 transition hover:border-blue-400 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400"
     >
       {strings.switchLabel}
     </Link>

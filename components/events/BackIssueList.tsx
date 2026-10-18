@@ -44,15 +44,15 @@ export default function BackIssueList({
                 className="group flex items-baseline gap-4 py-4 transition-colors hover:bg-muted/40 dark:hover:bg-neutral-900"
               >
                 {designation && (
-                  <span className="hidden shrink-0 font-serif text-xs tabular-nums tracking-[0.1em] text-muted-foreground sm:block dark:text-gray-500">
+                  <span className="hidden shrink-0 font-serif text-xs tabular-nums tracking-[0.1em] text-muted-foreground sm:block dark:text-neutral-500">
                     {designation}
                   </span>
                 )}
                 <span className="min-w-0 flex-1">
-                  <span className="block text-xs font-bold tabular-nums text-foreground/70 dark:text-gray-300">
+                  <span className="block text-xs font-bold tabular-nums text-foreground/70 dark:text-neutral-300">
                     {formatWeekRange(issue.weekStart, issue.weekEnd)}
                   </span>
-                  <span className="mt-1 block line-clamp-2 text-sm leading-relaxed text-muted-foreground dark:text-gray-400">
+                  <span className="mt-1 block line-clamp-2 text-sm leading-relaxed text-muted-foreground dark:text-neutral-400">
                     {issue.headline}
                   </span>
                 </span>

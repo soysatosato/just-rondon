@@ -95,23 +95,23 @@ export default async function SongsPage({
           <span className="block text-4xl font-extrabold text-indigo-700 dark:text-indigo-400">
             {musical.name}
           </span>
-          <span className="block text-xl font-normal text-gray-500 dark:text-gray-300 mt-1">
+          <span className="block text-xl font-normal text-neutral-500 dark:text-neutral-300 mt-1">
             {musical.engName} - 曲一覧
           </span>
         </h1>
-        <p className="text-center text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
+        <p className="text-center text-neutral-600 dark:text-neutral-300 mt-4 max-w-2xl mx-auto">
           {musical.name} ({musical.engName}) で歌われる曲を上演順に並べました。
           どの場面で何が歌われるかを、観劇前に把握しておけます。
         </p>
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700 rounded-2xl shadow-md overflow-hidden">
+        <ul className="divide-y divide-neutral-200 dark:divide-neutral-700 rounded-2xl shadow-md overflow-hidden">
           {songs.map((song: any) => (
             <li key={song.id}>
               <Link
                 href={`/musicals/${params.slug}/songs/${song.id}`}
-                className="flex w-full items-center px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition rounded-lg"
+                className="flex w-full items-center px-4 py-4 hover:bg-neutral-50 dark:hover:bg-neutral-800 active:bg-neutral-100 dark:active:bg-neutral-700 transition rounded-lg"
               >
                 <div className="flex items-center space-x-4 min-w-0 w-full">
-                  <span className="text-gray-500 dark:text-gray-400 font-semibold w-6 text-center shrink-0">
+                  <span className="text-neutral-500 dark:text-neutral-400 font-semibold w-6 text-center shrink-0">
                     {song.index}
                   </span>
 
@@ -129,14 +129,14 @@ export default async function SongsPage({
                   )}
 
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                    <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate">
                       {song.name}
                     </p>
-                    <p className="text-gray-700 dark:text-gray-300 text-xs truncate">
+                    <p className="text-neutral-700 dark:text-neutral-300 text-xs truncate">
                       <span className="font-semibold">Artist:</span>{" "}
                       {song.artist}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       この曲について
                     </p>
                   </div>
@@ -145,7 +145,7 @@ export default async function SongsPage({
             </li>
           ))}
         </ul>
-        <p className=" text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
+        <p className=" text-neutral-600 dark:text-neutral-300 mt-4 max-w-2xl mx-auto">
           曲順を先に押さえておくと、どの場面で物語が動くのかが掴めます。英語で観ても
           筋を見失いにくくなるので、観劇前にひと通り眺めておくのがおすすめです。チケットの買い方やお得な観劇方法は
           <Link

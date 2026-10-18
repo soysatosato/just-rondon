@@ -62,12 +62,12 @@ export default function EventDetailCard({
               </Badge>
             )}
             {event.bookingRequired && (
-              <Badge variant="outline" className="dark:border-neutral-600 dark:text-gray-300">
+              <Badge variant="outline" className="dark:border-neutral-600 dark:text-neutral-300">
                 要予約
               </Badge>
             )}
             {event.category && (
-              <Badge variant="outline" className="dark:border-neutral-600 dark:text-gray-300">
+              <Badge variant="outline" className="dark:border-neutral-600 dark:text-neutral-300">
                 {event.category}
               </Badge>
             )}
@@ -75,7 +75,7 @@ export default function EventDetailCard({
 
           <dl className="mt-3 space-y-1.5">
             {facts.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex gap-2 text-xs text-muted-foreground dark:text-gray-400">
+              <div key={label} className="flex gap-2 text-xs text-muted-foreground dark:text-neutral-400">
                 <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span className="min-w-0">{label}</span>
               </div>
@@ -83,7 +83,7 @@ export default function EventDetailCard({
           </dl>
 
           {event.description && (
-            <div className="prose prose-sm mt-3 max-w-none text-muted-foreground dark:prose-invert dark:text-gray-300">
+            <div className="prose prose-sm mt-3 max-w-none text-muted-foreground dark:prose-invert dark:text-neutral-300">
               <ReactMarkdown>{event.description}</ReactMarkdown>
             </div>
           )}
@@ -93,7 +93,7 @@ export default function EventDetailCard({
               <p className="mb-2 text-xs font-semibold dark:text-white">おすすめポイント</p>
               <ul className="space-y-1.5">
                 {event.highlights.map((highlight) => (
-                  <li key={highlight} className="flex gap-2 text-xs text-muted-foreground dark:text-gray-300">
+                  <li key={highlight} className="flex gap-2 text-xs text-muted-foreground dark:text-neutral-300">
                     <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                     <span className="prose prose-xs max-w-none dark:prose-invert [&_p]:m-0">
                       <ReactMarkdown>{highlight}</ReactMarkdown>
@@ -109,7 +109,7 @@ export default function EventDetailCard({
               <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-700 dark:text-amber-400" />
               <div>
                 <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">訪問のヒント</p>
-                <p className="mt-1 text-xs text-muted-foreground dark:text-gray-300">{event.tips}</p>
+                <p className="mt-1 text-xs text-muted-foreground dark:text-neutral-300">{event.tips}</p>
               </div>
             </div>
           )}

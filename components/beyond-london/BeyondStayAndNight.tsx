@@ -24,16 +24,16 @@ export default function BeyondStayAndNight({ data }: { data: StayAndNight }) {
   ];
 
   return (
-    <section className="mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <section className="mb-8 rounded-xl border border-neutral-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
       <h2 className="text-base font-bold">宿と夜</h2>
 
       <dl className="mt-4 grid gap-4 sm:grid-cols-2">
         {rows.map((row) => (
           <div key={row.label}>
-            <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+            <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
               {row.label}
             </dt>
-            <dd className="mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <dd className="mt-0.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               <MarkdownBody size="compact">{row.value}</MarkdownBody>
             </dd>
           </div>
@@ -42,10 +42,10 @@ export default function BeyondStayAndNight({ data }: { data: StayAndNight }) {
 
       {data.levyNote && (
         <div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 dark:bg-amber-950/25">
-          <p className="text-xs font-bold text-gray-600 dark:text-gray-400">
+          <p className="text-xs font-bold text-neutral-600 dark:text-neutral-400">
             宿泊税
           </p>
-          <div className="mt-1 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+          <div className="mt-1 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
             <MarkdownBody size="compact">{data.levyNote}</MarkdownBody>
           </div>
         </div>

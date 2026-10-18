@@ -27,7 +27,7 @@ export default function StapleEventList({ events }: { events: Event[] }) {
             key={event.id}
             className="flex flex-col gap-1 py-3 transition-colors hover:bg-muted/40 sm:flex-row sm:items-baseline sm:gap-5 dark:hover:bg-neutral-900"
           >
-            <span className="shrink-0 font-serif text-xs tabular-nums text-muted-foreground sm:w-24 dark:text-gray-500">
+            <span className="shrink-0 font-serif text-xs tabular-nums text-muted-foreground sm:w-24 dark:text-neutral-500">
               {periodLabel(event.startDate, event.endDate)}
             </span>
 
@@ -41,14 +41,14 @@ export default function StapleEventList({ events }: { events: Event[] }) {
                 )}
               </p>
               {event.venue && (
-                <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground dark:text-gray-400">
+                <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground dark:text-neutral-400">
                   {event.venue}
                 </p>
               )}
               {guide && (
                 <Link
                   href={eventGuidePath(guide)}
-                  className="mt-1 inline-block text-xs font-semibold underline underline-offset-2 hover:text-primary dark:text-gray-300"
+                  className="mt-1 inline-block text-xs font-semibold underline underline-offset-2 hover:text-primary dark:text-neutral-300"
                 >
                   チケット・見る場所・交通のガイド →
                 </Link>

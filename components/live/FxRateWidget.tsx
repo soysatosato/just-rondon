@@ -45,23 +45,23 @@ export default function FxRateWidget() {
 
   if (!data) {
     return (
-      <Card className="border-gray-200 dark:border-gray-800">
+      <Card className="border-neutral-200 dark:border-neutral-800">
         <CardContent className="p-5">
-          <div className="h-5 w-36 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
-          <div className="mt-4 h-16 w-full animate-pulse rounded bg-gray-100 dark:bg-gray-900" />
+          <div className="h-5 w-36 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+          <div className="mt-4 h-16 w-full animate-pulse rounded bg-neutral-100 dark:bg-neutral-900" />
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="border-gray-200 dark:border-gray-800">
+    <Card className="border-neutral-200 dark:border-neutral-800">
       <CardContent className="p-5">
-        <h2 className="text-base font-bold text-gray-900 dark:text-gray-100">
+        <h2 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
           ポンド円の参考レート
         </h2>
 
-        <p className="mt-3 text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <p className="mt-3 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
           £1 ={" "}
           <span className="tabular-nums">
             {data.jpyPerGbp.toFixed(2)}
@@ -73,19 +73,19 @@ export default function FxRateWidget() {
           {QUICK_AMOUNTS.map((amount) => (
             <li
               key={amount}
-              className="rounded-lg border border-gray-100 px-2 py-2 text-center dark:border-gray-800"
+              className="rounded-lg border border-neutral-100 px-2 py-2 text-center dark:border-neutral-800"
             >
-              <span className="block text-xs text-gray-500 dark:text-gray-400">
+              <span className="block text-xs text-neutral-500 dark:text-neutral-400">
                 £{amount}
               </span>
-              <span className="block text-sm font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+              <span className="block text-sm font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
                 {toJpy(amount, data.jpyPerGbp).toLocaleString("ja-JP")}円
               </span>
             </li>
           ))}
         </ul>
 
-        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           {data.rateDate} 時点の ECB(欧州中央銀行)公表レート。出典:{" "}
           <a
             href="https://frankfurter.dev/"

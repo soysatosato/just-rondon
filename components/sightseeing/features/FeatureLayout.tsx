@@ -93,7 +93,7 @@ export default async function FeatureLayout({
             {article.engTitle}
           </p>
         )}
-        <div className="mt-4 space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="mt-4 space-y-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {article.intro.map((paragraph, i) => (
             <p key={i}>{paragraph}</p>
           ))}
@@ -105,11 +105,11 @@ export default async function FeatureLayout({
       </div>
 
       {article.notes && article.notes.length > 0 && (
-        <section className="space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-5 dark:border-neutral-700 dark:bg-neutral-800/60">
+        <section className="space-y-3 rounded-lg border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-800/60">
           {article.notes.map((note) => (
             <div key={note.title}>
               <h2 className="text-sm font-bold">{note.title}</h2>
-              <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {note.description}
               </p>
             </div>
@@ -121,13 +121,13 @@ export default async function FeatureLayout({
 
       {/* 目次。項目名が長いのでチップ状には並べず、2段の番号付きリストにする。 */}
       <nav aria-label="目次" className="mt-8">
-        <h2 className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+        <h2 className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
           この特集で紹介する{article.items.length}件
         </h2>
         <ol className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
           {article.items.map((item, idx) => (
             <li key={item.slug} className="flex gap-2 text-sm">
-              <span className="shrink-0 tabular-nums text-gray-500 dark:text-gray-400">
+              <span className="shrink-0 tabular-nums text-neutral-500 dark:text-neutral-400">
                 {String(idx + 1).padStart(2, "0")}
               </span>
               <a
@@ -153,7 +153,7 @@ export default async function FeatureLayout({
       </div>
 
       {article.related && article.related.length > 0 && (
-        <section className="mt-14 rounded-lg border border-gray-200 p-5 dark:border-neutral-700">
+        <section className="mt-14 rounded-lg border border-neutral-200 p-5 dark:border-neutral-700">
           <h2 className="text-lg font-semibold">あわせて読みたい</h2>
           <ul className="mt-3 space-y-2 text-sm">
             {article.related.map((rel) => (
@@ -165,7 +165,7 @@ export default async function FeatureLayout({
                   {rel.label}
                 </Link>
                 {rel.note && (
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-neutral-600 dark:text-neutral-400">
                     {" "}
                     — {rel.note}
                   </span>
@@ -244,7 +244,7 @@ function FeatureItemBlock({
       <article id={item.slug} className="scroll-mt-24">
         <Link
           href={href}
-          className="group flex flex-col overflow-hidden rounded-lg border border-gray-200 transition hover:shadow-md dark:border-neutral-700 sm:flex-row"
+          className="group flex flex-col overflow-hidden rounded-lg border border-neutral-200 transition hover:shadow-md dark:border-neutral-700 sm:flex-row"
         >
           {image && (
             <div className="relative aspect-[16/9] w-full shrink-0 bg-muted sm:aspect-auto sm:w-56">
@@ -268,12 +268,12 @@ function FeatureItemBlock({
               {item.title}
             </h2>
             {facts && (
-              <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
                 {facts}
               </p>
             )}
             {item.summary && (
-              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {item.summary}
               </p>
             )}
@@ -297,7 +297,7 @@ function FeatureItemBlock({
   return (
     <article
       id={item.slug}
-      className="scroll-mt-24 overflow-hidden rounded-lg border border-gray-200 dark:border-neutral-700"
+      className="scroll-mt-24 overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-700"
     >
       {image && (
         <img
@@ -325,12 +325,12 @@ function FeatureItemBlock({
           {item.title}
         </h2>
         {facts && (
-          <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
             {facts}
           </p>
         )}
         {item.summary && (
-          <p className="mt-2 text-sm font-medium leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-2 text-sm font-medium leading-relaxed text-neutral-700 dark:text-neutral-300">
             {item.summary}
           </p>
         )}
@@ -343,11 +343,11 @@ function FeatureItemBlock({
             {item.sections.map((section) => (
               <div
                 key={section.title}
-                className="border-l-2 border-gray-300 pl-4 dark:border-neutral-600"
+                className="border-l-2 border-neutral-300 pl-4 dark:border-neutral-600"
               >
                 <h3 className="text-sm font-semibold">{section.title}</h3>
                 {section.description && (
-                  <div className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <div className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={SECTION_MARKDOWN}

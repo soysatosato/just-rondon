@@ -66,7 +66,7 @@ export default function TippingGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== tippingMeta.slug);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(tippingMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(tippingMeta)} />
       <JsonLd data={faqPageJsonLd(tippingFaq, pageUrl)} />
@@ -81,7 +81,7 @@ export default function TippingGuide() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {tippingMeta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {tippingMeta.engTitle}
         </p>
         <div className="mt-3">
@@ -91,7 +91,7 @@ export default function TippingGuide() {
           />
         </div>
 
-        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {tippingLead}
         </p>
 
@@ -102,17 +102,17 @@ export default function TippingGuide() {
               key={h.head}
               className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 dark:bg-emerald-950/30"
             >
-              <p className="text-sm font-bold leading-snug text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-bold leading-snug text-neutral-900 dark:text-neutral-100">
                 {h.head}
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {h.body}
               </p>
             </li>
           ))}
         </ul>
 
-        <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {payerScope.body}{" "}
           <Link
             href={payerScope.href}
@@ -130,7 +130,7 @@ export default function TippingGuide() {
       <div className="space-y-12">
         {/* --------------------------------------------- 1. チップ */}
         <Section n={1} id="tipping">
-          <p className="rounded-lg bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-900 dark:bg-neutral-800 dark:text-gray-100">
+          <p className="rounded-lg bg-neutral-100 px-4 py-3 text-sm font-semibold leading-relaxed text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100">
             {tippingRule}
           </p>
 
@@ -138,7 +138,7 @@ export default function TippingGuide() {
             {tipCases.map((c) => (
               <li
                 key={c.where}
-                className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+                className="flex items-start gap-3 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
               >
                 <span
                   className={`mt-0.5 shrink-0 rounded px-2 py-0.5 text-xs font-bold ${
@@ -146,16 +146,16 @@ export default function TippingGuide() {
                       ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
                       : c.verdict === "加算済み"
                         ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                        : "bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-gray-400"
+                        : "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
                   }`}
                 >
                   {c.verdict}
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {c.where}
                   </span>
-                  <span className="mt-0.5 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-0.5 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {c.detail}
                   </span>
                   {c.href && (
@@ -171,11 +171,11 @@ export default function TippingGuide() {
             ))}
           </ul>
 
-          <div className="mt-5 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {tippingVsJapan.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {tippingVsJapan.body}
             </p>
           </div>
@@ -185,7 +185,7 @@ export default function TippingGuide() {
 
         {/* --------------------------------------------- 2. 外す */}
         <Section n={2} id="service-charge">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             伝票の service charge は、法的な支払い義務ではありません。
           </p>
 
@@ -197,35 +197,35 @@ export default function TippingGuide() {
             <p className="text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-300">
               こう言えば外してもらえます
             </p>
-            <p className="mt-2 text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 sm:text-xl">
+            <p className="mt-2 text-lg font-bold leading-snug text-neutral-900 dark:text-neutral-100 sm:text-xl">
               “{removePhrase.en}”
             </p>
-            <p className="mt-1.5 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400">
               {removePhrase.ja}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {removePhrase.note}
             </p>
           </div>
 
-          <div className="mt-5 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {removeWhen.title}
             </p>
             <ul className="mt-2 space-y-1.5">
               {removeWhen.items.map((i) => (
                 <li
                   key={i}
-                  className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                  className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
                 >
-                  <span aria-hidden className="text-gray-400">
+                  <span aria-hidden className="text-neutral-400">
                     ・
                   </span>
                   {i}
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {removeWhen.reverse}
             </p>
           </div>
@@ -234,12 +234,12 @@ export default function TippingGuide() {
             {[terminalTip, doubleTip].map((t) => (
               <div
                 key={t.title}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {t.title}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {t.body}
                 </p>
               </div>
@@ -253,7 +253,7 @@ export default function TippingGuide() {
 
         {/* --------------------------------------------- 3. カード */}
         <Section n={3} id="cards">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {cashless.intro}
           </p>
 
@@ -267,7 +267,7 @@ export default function TippingGuide() {
                   className={`flex items-start gap-3 rounded-lg border-2 p-4 ${
                     bad
                       ? "border-red-400 bg-red-50 dark:border-red-800 dark:bg-red-950/30"
-                      : "border-gray-200 dark:border-neutral-700"
+                      : "border-neutral-200 dark:border-neutral-700"
                   }`}
                 >
                   <span
@@ -277,16 +277,16 @@ export default function TippingGuide() {
                         ? "text-red-600 dark:text-red-400"
                         : ok
                           ? "text-emerald-700 dark:text-emerald-400"
-                          : "text-gray-400"
+                          : "text-neutral-400"
                     }`}
                   >
                     {b.verdict}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-bold text-gray-900 dark:text-gray-100">
+                    <span className="block text-sm font-bold text-neutral-900 dark:text-neutral-100">
                       {b.brand}
                     </span>
-                    <span className="mt-0.5 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-0.5 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {b.detail}
                     </span>
                   </span>
@@ -303,12 +303,12 @@ export default function TippingGuide() {
             {[cashless.contactless, cashless.phone].map((t) => (
               <div
                 key={t.title}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {t.title}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {t.body}
                 </p>
               </div>
@@ -320,10 +320,10 @@ export default function TippingGuide() {
 
         {/* --------------------------------------------- 4. DCC */}
         <Section n={4} id="dcc">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
             決済端末やATMで、こう聞かれることがあります。
           </p>
-          <p className="mt-2 rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-base font-semibold text-gray-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-100">
+          <p className="mt-2 rounded-lg border border-neutral-300 bg-neutral-50 px-4 py-3 text-base font-semibold text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100">
             「{dcc.asked}」
           </p>
 
@@ -331,21 +331,21 @@ export default function TippingGuide() {
             <p className="text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-300">
               答えは常に同じ
             </p>
-            <p className="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100 sm:text-2xl">
+            <p className="mt-1 text-xl font-bold text-neutral-900 dark:text-neutral-100 sm:text-2xl">
               {dcc.rule}
             </p>
 
             {/* 端末に実際に出る文字列。これを探せば済む。 */}
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-lg bg-white p-4 dark:bg-neutral-900">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                   決済端末で押すもの
                 </p>
                 <ul className="mt-1.5 space-y-1">
                   {dcc.buttons.terminal.map((b) => (
                     <li
                       key={b}
-                      className="font-mono text-sm font-bold text-gray-900 dark:text-gray-100"
+                      className="font-mono text-sm font-bold text-neutral-900 dark:text-neutral-100"
                     >
                       {b}
                     </li>
@@ -353,14 +353,14 @@ export default function TippingGuide() {
                 </ul>
               </div>
               <div className="rounded-lg bg-white p-4 dark:bg-neutral-900">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                   ATM で押すもの
                 </p>
                 <ul className="mt-1.5 space-y-1">
                   {dcc.buttons.atm.map((b) => (
                     <li
                       key={b}
-                      className="font-mono text-sm font-bold text-gray-900 dark:text-gray-100"
+                      className="font-mono text-sm font-bold text-neutral-900 dark:text-neutral-100"
                     >
                       {b}
                     </li>
@@ -368,16 +368,16 @@ export default function TippingGuide() {
                 </ul>
               </div>
             </div>
-            <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+            <p className="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
               {dcc.noExplanation}
             </p>
           </div>
 
-          <div className="mt-5 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               なぜ損なのか
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {dcc.why}
             </p>
           </div>
@@ -387,25 +387,25 @@ export default function TippingGuide() {
 
         {/* --------------------------------------------- 5. 現金 */}
         <Section n={5} id="cash">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {cash.currency}
           </p>
 
-          <div className="mt-4 rounded-xl border border-gray-200 p-5 dark:border-neutral-700">
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          <div className="mt-4 rounded-xl border border-neutral-200 p-5 dark:border-neutral-700">
+            <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
               持っていく現金
             </p>
-            <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <p className="mt-1 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               {cash.amount}
             </p>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
               {cash.amountBody}
             </p>
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {cash.uses.map((u) => (
                 <li
                   key={u}
-                  className="rounded bg-gray-100 px-2.5 py-1 text-xs text-gray-700 dark:bg-neutral-800 dark:text-gray-300"
+                  className="rounded bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                 >
                   {u}
                 </li>
@@ -424,7 +424,7 @@ export default function TippingGuide() {
               return (
                 <li
                   key={e.how}
-                  className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+                  className="flex items-start gap-3 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
                 >
                   <span
                     className={`mt-0.5 shrink-0 rounded px-2 py-0.5 text-xs font-bold ${
@@ -436,10 +436,10 @@ export default function TippingGuide() {
                     {e.rank}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                       {e.how}
                     </span>
-                    <span className="mt-0.5 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-0.5 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {e.detail}
                     </span>
                   </span>
@@ -449,26 +449,26 @@ export default function TippingGuide() {
           </ul>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {cash.notes_banknotes.title}
               </p>
               <ul className="mt-2 space-y-1.5">
                 {cash.notes_banknotes.items.map((i) => (
                   <li
                     key={i}
-                    className="text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                    className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
                   >
                     {i}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {cash.noRate.title}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {cash.noRate.body}
               </p>
             </div>
@@ -484,58 +484,58 @@ export default function TippingGuide() {
               <span className="rounded bg-red-600 px-2.5 py-1 text-sm font-bold text-white">
                 {vat.verdict}
               </span>
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-sm text-neutral-600 dark:text-neutral-400">
                 {vat.when}
               </span>
             </p>
-            <p className="mt-2 text-base font-bold leading-snug text-gray-900 dark:text-gray-100 sm:text-lg">
+            <p className="mt-2 text-base font-bold leading-snug text-neutral-900 dark:text-neutral-100 sm:text-lg">
               {vat.headline}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {vat.body}
             </p>
-            <p className="mt-3 rounded-lg bg-white p-3 text-sm font-semibold leading-relaxed text-gray-900 dark:bg-neutral-900 dark:text-gray-100">
+            <p className="mt-3 rounded-lg bg-white p-3 text-sm font-semibold leading-relaxed text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100">
               {vat.warning}
             </p>
           </div>
 
-          <p className="mt-4 rounded-lg border border-gray-200 p-4 text-sm leading-relaxed text-gray-700 dark:border-neutral-700 dark:text-gray-300">
+          <p className="mt-4 rounded-lg border border-neutral-200 p-4 text-sm leading-relaxed text-neutral-700 dark:border-neutral-700 dark:text-neutral-300">
             {vat.eu}
           </p>
         </Section>
 
         {/* --------------------------------------------- 7. 表示価格 */}
         <Section n={7} id="prices">
-          <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {prices.vatIncluded.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {prices.vatIncluded.body}
             </p>
           </div>
 
-          <p className="mt-5 text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <p className="mt-5 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             あとから乗るもの
           </p>
-          <ul className="mt-2 divide-y divide-gray-200 rounded-lg border border-gray-200 dark:divide-neutral-800 dark:border-neutral-700">
+          <ul className="mt-2 divide-y divide-neutral-200 rounded-lg border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-700">
             {pricesData.addOns.map((a) => (
               <li key={a.what} className="px-4 py-2.5">
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {a.what}
                 </p>
-                <p className="mt-0.5 text-sm text-gray-600 dark:text-gray-400">
+                <p className="mt-0.5 text-sm text-neutral-600 dark:text-neutral-400">
                   {a.detail}
                 </p>
               </li>
             ))}
           </ul>
 
-          <div className="mt-4 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {prices.sunday.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {prices.sunday.body}
             </p>
           </div>
@@ -550,7 +550,7 @@ export default function TippingGuide() {
         <div className="mt-4 space-y-3">
           {relatedGuides.map((g) => (
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
-              <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
                   <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
@@ -558,7 +558,7 @@ export default function TippingGuide() {
                   <span className="mt-1 block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -568,8 +568,8 @@ export default function TippingGuide() {
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
@@ -605,7 +605,7 @@ function Section({
 
   return (
     <section id={id} className="scroll-mt-20">
-      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>

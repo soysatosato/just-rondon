@@ -26,7 +26,7 @@ export default function AreaSpotList({
     <section id="spots" className="mt-12 scroll-mt-24">
       <h2 className="text-lg font-semibold">
         {areaLabel}のスポット一覧
-        <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+        <span className="ml-2 text-sm font-normal text-neutral-500 dark:text-neutral-400">
           {spots.length}件
         </span>
       </h2>
@@ -36,7 +36,7 @@ export default function AreaSpotList({
           <Link
             key={spot.slug}
             href={`/sightseeing/${spot.slug}`}
-            className="group flex gap-3 rounded-lg border border-gray-300 bg-white p-3 transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500"
+            className="group flex gap-3 rounded-lg border border-neutral-300 bg-white p-3 transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500"
           >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md">
               <Image
@@ -56,13 +56,13 @@ export default function AreaSpotList({
                     必見
                   </span>
                 )}
-                <h3 className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                <h3 className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
                   {spot.name}
                 </h3>
               </div>
 
               {spot.tagline && (
-                <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {spot.tagline}
                 </p>
               )}
@@ -71,7 +71,7 @@ export default function AreaSpotList({
                 料金と所要時間。null は行ごと出さない。
                 「情報なし」と書くより、その行が無いほうが読みやすい。
               */}
-              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-500 dark:text-gray-400">
+              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                 {spot.isFree ? (
                   <span className="font-semibold text-emerald-700 dark:text-emerald-400">
                     無料

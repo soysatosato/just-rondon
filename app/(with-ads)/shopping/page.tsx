@@ -104,14 +104,14 @@ export default function ShoppingHubPage() {
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
           ロンドンの買い物
         </h1>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           ロンドンの買い物でつまずくのは、たいてい「何を買うか」ではなく
           <strong className="font-semibold">「いつ行くか」</strong>
           です。日曜の午前しか立たない花市場があり、
           土曜だけアンティークが並ぶ通りがあり、
           そして日曜に6時間しか開けられないデパートがあります。
         </p>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           ここでは
           <strong className="font-semibold">どこで、いつ買うか</strong>
           を扱います。品目そのものは、お土産とブランドのページに分けています。
@@ -158,12 +158,12 @@ export default function ShoppingHubPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {WHAT_TO_BUY.map((item) => (
               <Link key={item.href} href={item.href} className="block">
-                <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+                <Card className="h-full border-neutral-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                   <CardContent className="p-5">
                     <span className="block text-base font-semibold">
                       {item.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                    <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                       {item.blurb}
                     </span>
                   </CardContent>

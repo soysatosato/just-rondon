@@ -161,8 +161,8 @@ function ScenarioCard({
 
   return (
     <Link href={visaGuidePath(slug)} className="block">
-      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
-        <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+      <article className="flex h-full flex-col rounded-xl border border-neutral-300 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+        <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
           {audience}
         </p>
         <p className="mt-3 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400">
@@ -170,37 +170,37 @@ function ScenarioCard({
         </p>
 
         {facts && (
-          <dl className="mt-3 space-y-1.5 border-y border-gray-200 py-3 text-xs dark:border-neutral-700">
+          <dl className="mt-3 space-y-1.5 border-y border-neutral-200 py-3 text-xs dark:border-neutral-700">
             <div className="flex gap-2">
-              <dt className="w-24 shrink-0 font-bold text-gray-500 dark:text-gray-400">
+              <dt className="w-24 shrink-0 font-bold text-neutral-500 dark:text-neutral-400">
                 スポンサー
               </dt>
               <dd
                 className={
                   facts.sponsor === "none"
                     ? "font-semibold text-emerald-700 dark:text-emerald-400"
-                    : "text-gray-700 dark:text-gray-300"
+                    : "text-neutral-700 dark:text-neutral-300"
                 }
               >
                 {VISA_SPONSOR_LABELS[facts.sponsor]}
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="w-24 shrink-0 font-bold text-gray-500 dark:text-gray-400">
+              <dt className="w-24 shrink-0 font-bold text-neutral-500 dark:text-neutral-400">
                 申請時に払う額
               </dt>
-              <dd className="text-gray-700 dark:text-gray-300">
+              <dd className="text-neutral-700 dark:text-neutral-300">
                 {facts.upfrontCost}
               </dd>
             </div>
             <div className="flex gap-2">
-              <dt className="w-24 shrink-0 font-bold text-gray-500 dark:text-gray-400">
+              <dt className="w-24 shrink-0 font-bold text-neutral-500 dark:text-neutral-400">
                 永住カウント
               </dt>
               <dd
                 className={
                   facts.countsTowardsIlr
-                    ? "text-gray-700 dark:text-gray-300"
+                    ? "text-neutral-700 dark:text-neutral-300"
                     : "font-semibold text-red-700 dark:text-red-400"
                 }
               >
@@ -210,7 +210,7 @@ function ScenarioCard({
           </dl>
         )}
 
-        <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-3 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {why}
         </p>
         <span className="mt-4 text-sm font-medium text-link">
@@ -225,7 +225,7 @@ export default function VisaHubPage() {
   const pageUrl = `${SITE_URL}${VISA_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({ name: VISA_SECTION_NAME, path: VISA_BASE })}
       />
@@ -243,13 +243,13 @@ export default function VisaHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           英国ビザガイド
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           UK Visas: Find the Route That Applies to You
         </p>
         <div className="mt-3">
           <GuideFreshness dataAsOf={RATES_AS_OF} updatedAt={RATES_UPDATED_AT} />
         </div>
-        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           英国のビザは、種類の多さと名前の分かりにくさが最大の壁です。このページは、
           <strong>まず自分がどれに該当するかを確定させる</strong>
           ことだけを目的にしています。
@@ -262,10 +262,10 @@ export default function VisaHubPage() {
         表の8行が伝えていたことの中心はこの一文だった。
       */}
       <div className="mt-6 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 dark:bg-amber-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           金額の大部分は申請料ではなく IHS（医療サーチャージ）です
         </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           年{gbp(IHS_PER_YEAR.standard)}（学生・YMS は
           {gbp(IHS_PER_YEAR.discounted)}）を、滞在年数分まとめて申請時に前払いします。
           5年なら{gbp(IHS_PER_YEAR.standard * 5)}。下のカードの「申請時に払う額」は、
@@ -280,7 +280,7 @@ export default function VisaHubPage() {
         <h2 id="find-your-route" className="text-xl font-bold md:text-2xl">
           自分の状況を選んでください
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           一番近いものが1つ見つかれば、それがあなたの読むべきページです。
           複数に当てはまる場合は、<strong>滞在が長くなる方</strong>
           を選んでください。ルートのカードは同じ位置に同じ3項目を出しているので、
@@ -294,10 +294,10 @@ export default function VisaHubPage() {
         </div>
 
         <div className="mt-5 rounded-lg border border-blue-200 bg-blue-50/70 p-4 text-sm leading-relaxed dark:border-blue-900/60 dark:bg-blue-950/25">
-          <p className="font-semibold text-gray-900 dark:text-gray-100">
+          <p className="font-semibold text-neutral-900 dark:text-neutral-100">
             どれにも当てはまらない、迷っている
           </p>
-          <p className="mt-1 text-gray-700 dark:text-gray-300">
+          <p className="mt-1 text-neutral-700 dark:text-neutral-300">
             <Link
               href="/visa/uk-visa-guide"
               className="text-link underline underline-offset-2 dark:text-blue-400"
@@ -320,7 +320,7 @@ export default function VisaHubPage() {
         <h2 id="thresholds" className="text-xl font-bold md:text-2xl">
           用意しておく資金
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           申請料とは別に、「これだけ持っている」ことの証明を求められます。却下理由として最も多いのがここです。
         </p>
         <dl className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -347,14 +347,14 @@ export default function VisaHubPage() {
           ].map((row) => (
             <div
               key={row.label}
-              className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+              className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
             >
-              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                 {row.label}
               </dt>
-              <dd className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+              <dd className="mt-1 text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {row.value}
-                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-gray-500 dark:text-gray-400">
+                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {row.note}
                 </span>
               </dd>
@@ -365,11 +365,11 @@ export default function VisaHubPage() {
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           働き始めてからのこと
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           ビザが下りて英国で働き始めると、今度は労働条件の問題が出てきます。当サイトでは、
           英国の労働法と、実際にサービスチャージの未払いで雇用審判所に申し立てた記録も公開しています。
         </p>
@@ -393,7 +393,7 @@ export default function VisaHubPage() {
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの情報は{RATES_AS_OF}
         時点のもので、法的助言ではありません。英国移民法は頻繁に改正され、個別の事情によって
         適用される規則が変わります。申請にあたっては必ず GOV.UK

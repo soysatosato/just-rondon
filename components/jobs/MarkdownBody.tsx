@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils";
 
 /** 見出しの見た目。マークダウンの段(## / ### / ####)で決める。 */
 const HEADING_STYLES = [
-  "mt-8 mb-3 text-[1.25em] font-semibold leading-snug text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-neutral-700 pb-1",
-  "mt-6 mb-2 text-[1.125em] font-semibold leading-snug text-gray-800 dark:text-gray-200",
-  "mt-4 mb-1 text-[1em] font-semibold leading-snug text-gray-700 dark:text-gray-300",
+  "mt-8 mb-3 text-[1.25em] font-semibold leading-snug text-neutral-900 dark:text-neutral-100 border-b border-neutral-200 dark:border-neutral-700 pb-1",
+  "mt-6 mb-2 text-[1.125em] font-semibold leading-snug text-neutral-800 dark:text-neutral-200",
+  "mt-4 mb-1 text-[1em] font-semibold leading-snug text-neutral-700 dark:text-neutral-300",
 ] as const;
 
 /** 本文の中でいちばん大きい見出しの段(# の数)。見出しが無ければ 2。 */
@@ -67,12 +67,12 @@ const components = {
     <p className="mt-3 mb-1">{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
-    <ul className="list-disc ml-6 mt-3 space-y-2 marker:text-gray-600 dark:marker:text-gray-300">
+    <ul className="list-disc ml-6 mt-3 space-y-2 marker:text-neutral-600 dark:marker:text-neutral-300">
       {children}
     </ul>
   ),
   ol: ({ children }: { children?: React.ReactNode }) => (
-    <ol className="list-decimal ml-6 mt-3 space-y-2 marker:text-gray-600 dark:marker:text-gray-300">
+    <ol className="list-decimal ml-6 mt-3 space-y-2 marker:text-neutral-600 dark:marker:text-neutral-300">
       {children}
     </ol>
   ),
@@ -80,12 +80,12 @@ const components = {
     <li className="pl-1">{children}</li>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
-    <strong className="font-semibold text-gray-900 dark:text-gray-100">
+    <strong className="font-semibold text-neutral-900 dark:text-neutral-100">
       {children}
     </strong>
   ),
   blockquote: ({ children }: { children?: React.ReactNode }) => (
-    <blockquote className="my-4 border-l-4 border-gray-300 dark:border-neutral-600 bg-gray-50 dark:bg-neutral-800/60 py-2 pl-4 pr-3 text-gray-700 dark:text-gray-300">
+    <blockquote className="my-4 border-l-4 border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-800/60 py-2 pl-4 pr-3 text-neutral-700 dark:text-neutral-300">
       {children}
     </blockquote>
   ),
@@ -105,12 +105,12 @@ const components = {
     );
   },
   code: ({ children }: { children?: React.ReactNode }) => (
-    <code className="rounded bg-gray-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[0.85em] font-mono">
+    <code className="rounded bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[0.85em] font-mono">
       {children}
     </code>
   ),
   hr: () => (
-    <hr className="my-6 border-gray-200 dark:border-neutral-700" />
+    <hr className="my-6 border-neutral-200 dark:border-neutral-700" />
   ),
   // 表は幅が出やすいので、必ず自分の中で横スクロールさせる。
   // ページ本体が横スクロールしないようにするため。
@@ -123,18 +123,18 @@ const components = {
       role="region"
       aria-label="表(横にスクロールできます)"
     >
-      <table className="w-full min-w-[32rem] border-collapse border border-gray-300 dark:border-neutral-600 text-sm">
+      <table className="w-full min-w-[32rem] border-collapse border border-neutral-300 dark:border-neutral-600 text-sm">
         {children}
       </table>
     </div>
   ),
   th: ({ children }: { children?: React.ReactNode }) => (
-    <th className="border border-gray-300 dark:border-neutral-600 bg-gray-100 dark:bg-neutral-800 px-2 py-1 text-left font-semibold">
+    <th className="border border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 text-left font-semibold">
       {children}
     </th>
   ),
   td: ({ children }: { children?: React.ReactNode }) => (
-    <td className="border border-gray-300 dark:border-neutral-600 px-2 py-1 align-top">
+    <td className="border border-neutral-300 dark:border-neutral-600 px-2 py-1 align-top">
       {children}
     </td>
   ),

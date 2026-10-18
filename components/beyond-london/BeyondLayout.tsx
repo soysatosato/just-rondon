@@ -58,7 +58,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
   }));
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={beyondBreadcrumbJsonLd(article)} />
       <JsonLd data={beyondArticleJsonLd(article)} />
       {destination && (
@@ -86,7 +86,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {article.engTitle}
         </p>
         <div className="mt-3">
@@ -95,7 +95,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
             updatedAt={article.updatedAt}
           />
         </div>
-        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {stripInlineMarkdown(article.summary)}
         </p>
       </header>
@@ -117,17 +117,17 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
 
       {/* レール実務記事の要点表。こちらは行き方の表と重複しない。 */}
       {article.kind === "railHowTo" && article.atAGlance && (
-        <section className="mt-8 mb-8 overflow-hidden rounded-lg border border-gray-300 dark:border-neutral-700">
-          <h2 className="border-b border-gray-300 bg-gray-100 px-4 py-2 text-sm font-semibold dark:border-neutral-700 dark:bg-neutral-800">
+        <section className="mt-8 mb-8 overflow-hidden rounded-lg border border-neutral-300 dark:border-neutral-700">
+          <h2 className="border-b border-neutral-300 bg-neutral-100 px-4 py-2 text-sm font-semibold dark:border-neutral-700 dark:bg-neutral-800">
             要点
           </h2>
-          <dl className="divide-y divide-gray-200 dark:divide-neutral-700">
+          <dl className="divide-y divide-neutral-200 dark:divide-neutral-700">
             {article.atAGlance.map((fact) => (
               <div
                 key={fact.label}
                 className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4"
               >
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
+                <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 sm:text-sm">
                   {fact.label}
                 </dt>
                 <dd className="text-sm leading-relaxed">
@@ -180,11 +180,11 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
       <div className="space-y-8">
         {article.sections.map((section, i) => (
           <GuideSectionCard key={section.id} id={section.id}>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
             </h2>
             {section.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 {section.subtitle}
               </p>
             )}
@@ -224,10 +224,10 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
 
             return (
               <div key={category}>
-                <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                <h3 className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                   {BEYOND_CATEGORY_LABELS[category]}
                 </h3>
-                <ul className="mt-2 divide-y divide-gray-200 dark:divide-neutral-800">
+                <ul className="mt-2 divide-y divide-neutral-200 dark:divide-neutral-800">
                   {items.map((d) => {
                     const fare = BEYOND_FARE_BANDS[d.slug];
                     return (
@@ -240,17 +240,17 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
                             {d.label}
                           </span>
                           {d.fromStation && (
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                            <span className="text-xs text-neutral-500 dark:text-neutral-400">
                               {d.fromStation}
                             </span>
                           )}
                           {d.journeyTime && (
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                            <span className="text-xs text-neutral-500 dark:text-neutral-400">
                               {d.journeyTime}
                             </span>
                           )}
                           {fare && (
-                            <span className="text-xs text-gray-500 dark:text-neutral-400">
+                            <span className="text-xs text-neutral-500 dark:text-neutral-400">
                               {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
                             </span>
                           )}
@@ -265,8 +265,8 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
         </div>
       </section>
 
-      <div className="mt-8 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-8 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

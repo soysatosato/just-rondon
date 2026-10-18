@@ -62,7 +62,7 @@ export default function BudgetGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== budgetMeta.slug);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(budgetMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(budgetMeta)} />
       <JsonLd data={faqPageJsonLd(budgetFaq, pageUrl)} />
@@ -77,7 +77,7 @@ export default function BudgetGuide() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {budgetMeta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {budgetMeta.engTitle}
         </p>
         <div className="mt-3">
@@ -87,7 +87,7 @@ export default function BudgetGuide() {
           />
         </div>
 
-        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           「1日いくら」を宿・食・交通・入場の4つに割って積み上げるのが、いちばん外しません。
           合計だけ眺めても、どこを削れば効くのかが見えないからです。
         </p>
@@ -97,24 +97,24 @@ export default function BudgetGuide() {
           {tiers.map((t) => (
             <li
               key={t.id}
-              className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+              className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700"
             >
               <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
                 {t.label}
               </p>
-              <p className="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">
+              <p className="mt-1 text-xl font-bold text-neutral-900 dark:text-neutral-100">
                 {t.total}
               </p>
-              <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                 1日あたり約 {t.perDay}
               </p>
-              <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-1.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {t.blurb}
               </p>
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           1人あたり・{TRIP_NIGHTS}泊ぶんの現地費用。いずれも各項目の下限を積んだ最低ラインです。
         </p>
 
@@ -122,12 +122,12 @@ export default function BudgetGuide() {
           {excluded.map((e) => (
             <li
               key={e.what}
-              className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900"
+              className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900"
             >
-              <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 {e.what}は含めていません
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {e.why}
               </p>
             </li>
@@ -142,7 +142,7 @@ export default function BudgetGuide() {
       <div className="space-y-12">
         {/* --------------------------------------------- 1. 構造 */}
         <Section n={1} id="structure">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             ロンドンの旅行費用は、項目ごとに「動かせる幅」がまるで違います。
           </p>
 
@@ -154,21 +154,21 @@ export default function BudgetGuide() {
             {costShares.map((c) => (
               <li
                 key={c.id}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <a
                     href={c.href}
-                    className="text-sm font-bold text-gray-900 hover:underline dark:text-gray-100"
+                    className="text-sm font-bold text-neutral-900 hover:underline dark:text-neutral-100"
                   >
                     {c.label}
                   </a>
-                  <span className="font-mono text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="font-mono text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                     {c.min}〜{c.max}%
                   </span>
                 </div>
                 <div
-                  className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100 dark:bg-neutral-800"
+                  className="mt-2 h-2 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800"
                   role="img"
                   aria-label={`総額に占める割合 ${c.min}〜${c.max}パーセント`}
                 >
@@ -178,16 +178,16 @@ export default function BudgetGuide() {
                         ? "bg-emerald-500"
                         : c.flex === "大きい"
                           ? "bg-emerald-400"
-                          : "bg-gray-400 dark:bg-neutral-600"
+                          : "bg-neutral-400 dark:bg-neutral-600"
                     }`}
                     style={{ width: `${c.max}%` }}
                   />
                 </div>
                 <p className="mt-2 flex flex-wrap items-baseline gap-x-2 text-xs">
-                  <span className="font-semibold text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold text-neutral-500 dark:text-neutral-400">
                     動かせる幅：{c.flex}
                   </span>
-                  <span className="text-gray-600 dark:text-gray-400">
+                  <span className="text-neutral-600 dark:text-neutral-400">
                     {c.note}
                   </span>
                 </p>
@@ -199,7 +199,7 @@ export default function BudgetGuide() {
             <p className="text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-300">
               手を付ける順番
             </p>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-lg font-bold text-gray-900 dark:text-gray-100">
+            <p className="mt-1 flex flex-wrap items-center gap-2 text-lg font-bold text-neutral-900 dark:text-neutral-100">
               {structureConclusion.order.map((o, i) => (
                 <span key={o} className="flex items-center gap-2">
                   {i > 0 && (
@@ -211,7 +211,7 @@ export default function BudgetGuide() {
                 </span>
               ))}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {structureConclusion.body}
             </p>
           </div>
@@ -221,7 +221,7 @@ export default function BudgetGuide() {
 
         {/* --------------------------------------------- 2. 宿 */}
         <Section n={2} id="lodging">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {lodging.intro}
           </p>
 
@@ -229,32 +229,32 @@ export default function BudgetGuide() {
             {lodging.rows.map((r) => (
               <li
                 key={r.label}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {r.label}
                 </p>
                 <p className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1 font-mono text-sm">
-                  <span className="text-gray-700 dark:text-gray-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     1泊 {r.perNight}
                   </span>
-                  <span className="font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                     {TRIP_NIGHTS}泊 {r.total}
                   </span>
                 </p>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   {r.note}
                 </p>
               </li>
             ))}
           </ul>
 
-          <p className="mt-4 rounded-lg bg-gray-100 px-4 py-3 text-sm leading-relaxed text-gray-900 dark:bg-neutral-800 dark:text-gray-100">
+          <p className="mt-4 rounded-lg bg-neutral-100 px-4 py-3 text-sm leading-relaxed text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100">
             {lodging.perRoom}
           </p>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
               <p className="text-sm font-semibold text-red-700 dark:text-red-400">
                 高くなる時期
               </p>
@@ -262,14 +262,14 @@ export default function BudgetGuide() {
                 {lodging.seasons.high.map((s) => (
                   <li
                     key={s}
-                    className="text-sm leading-snug text-gray-700 dark:text-gray-300"
+                    className="text-sm leading-snug text-neutral-700 dark:text-neutral-300"
                   >
                     {s}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
               <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
                 安くなる時期
               </p>
@@ -277,7 +277,7 @@ export default function BudgetGuide() {
                 {lodging.seasons.low.map((s) => (
                   <li
                     key={s}
-                    className="text-sm leading-snug text-gray-700 dark:text-gray-300"
+                    className="text-sm leading-snug text-neutral-700 dark:text-neutral-300"
                   >
                     {s}
                   </li>
@@ -286,11 +286,11 @@ export default function BudgetGuide() {
             </div>
           </div>
 
-          <div className="mt-4 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {lodging.zone.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {lodging.zone.body}
             </p>
           </div>
@@ -301,7 +301,7 @@ export default function BudgetGuide() {
 
         {/* --------------------------------------------- 3. 食 */}
         <Section n={3} id="food">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {food.intro}
           </p>
 
@@ -309,45 +309,45 @@ export default function BudgetGuide() {
             {food.bands.map((b) => (
               <li
                 key={b.label}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                <p className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                   {b.label}
                 </p>
-                <p className="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">
+                <p className="mt-1 text-xl font-bold text-neutral-900 dark:text-neutral-100">
                   {b.perDay}
-                  <span className="text-xs font-normal text-gray-500">
+                  <span className="text-xs font-normal text-neutral-500">
                     {" "}
                     / 日
                   </span>
                 </p>
-                <p className="mt-0.5 font-mono text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-0.5 font-mono text-xs text-neutral-500 dark:text-neutral-400">
                   {TRIP_NIGHTS}日 {b.total}
                 </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="mt-1.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {b.note}
                 </p>
               </li>
             ))}
           </ul>
 
-          <div className="mt-5 rounded-xl border border-gray-200 p-5 dark:border-neutral-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-xl border border-neutral-200 p-5 dark:border-neutral-700">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
               {food.mealDeal.title}
             </h3>
-            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
               {food.mealDeal.body}
             </p>
-            <ul className="mt-3 divide-y divide-gray-200 dark:divide-neutral-800">
+            <ul className="mt-3 divide-y divide-neutral-200 dark:divide-neutral-800">
               {food.mealDeal.rows.map((r) => (
                 <li
                   key={r.shop}
                   className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2 text-sm"
                 >
-                  <span className="text-gray-700 dark:text-gray-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     {r.shop}
                   </span>
-                  <span className="font-mono text-gray-900 dark:text-gray-100">
+                  <span className="font-mono text-neutral-900 dark:text-neutral-100">
                     {r.standard}
                     {r.member && (
                       <span className="ml-2 text-emerald-700 dark:text-emerald-400">
@@ -364,31 +364,31 @@ export default function BudgetGuide() {
           </div>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 外食の単価感
               </p>
-              <ul className="mt-2 divide-y divide-gray-200 dark:divide-neutral-800">
+              <ul className="mt-2 divide-y divide-neutral-200 dark:divide-neutral-800">
                 {food.eatingOut.map((e) => (
                   <li
                     key={e.what}
                     className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 py-1.5 text-sm"
                   >
-                    <span className="text-gray-700 dark:text-gray-300">
+                    <span className="text-neutral-700 dark:text-neutral-300">
                       {e.what}
                     </span>
-                    <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                       {e.price}
                     </span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {food.water.title}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {food.water.body}
               </p>
             </div>
@@ -403,10 +403,10 @@ export default function BudgetGuide() {
         {/* --------------------------------------------- 4. 交通 */}
         <Section n={4} id="transport">
           <div className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-5 dark:bg-emerald-950/30">
-            <p className="text-base font-bold leading-snug text-gray-900 dark:text-gray-100">
+            <p className="text-base font-bold leading-snug text-neutral-900 dark:text-neutral-100">
               {transport.headline}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {transport.intro}
             </p>
             <ul className="mt-4 space-y-2">
@@ -422,21 +422,21 @@ export default function BudgetGuide() {
                   <span
                     className={`text-sm ${
                       c.main
-                        ? "font-bold text-gray-900 dark:text-gray-100"
-                        : "text-gray-600 dark:text-gray-400"
+                        ? "font-bold text-neutral-900 dark:text-neutral-100"
+                        : "text-neutral-600 dark:text-neutral-400"
                     }`}
                   >
                     {c.zone}
                   </span>
                   <span className="font-mono text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">
+                    <span className="text-neutral-600 dark:text-neutral-400">
                       1日 {c.daily}
                     </span>
                     <span
                       className={`ml-3 font-bold ${
                         c.main
                           ? "text-emerald-700 dark:text-emerald-400"
-                          : "text-gray-700 dark:text-gray-300"
+                          : "text-neutral-700 dark:text-neutral-300"
                       }`}
                     >
                       週 {c.weekly}
@@ -445,16 +445,16 @@ export default function BudgetGuide() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm font-semibold leading-relaxed text-gray-900 dark:text-gray-100">
+            <p className="mt-3 text-sm font-semibold leading-relaxed text-neutral-900 dark:text-neutral-100">
               {transport.capConclusion}
             </p>
           </div>
 
-          <div className="mt-5 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {transport.noTickets.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {transport.noTickets.body}
             </p>
             <p className="mt-2 rounded bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 dark:bg-red-950/40 dark:text-red-300">
@@ -462,14 +462,14 @@ export default function BudgetGuide() {
             </p>
           </div>
 
-          <div className="mt-4 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {transport.airport.title}
             </p>
-            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
               {transport.airport.body}
             </p>
-            <ul className="mt-3 divide-y divide-gray-200 dark:divide-neutral-800">
+            <ul className="mt-3 divide-y divide-neutral-200 dark:divide-neutral-800">
               {transport.airport.rows.map((r) => (
                 <li
                   key={r.how}
@@ -479,30 +479,30 @@ export default function BudgetGuide() {
                     className={
                       r.cheap
                         ? "font-semibold text-emerald-700 dark:text-emerald-400"
-                        : "text-gray-700 dark:text-gray-300"
+                        : "text-neutral-700 dark:text-neutral-300"
                     }
                   >
                     {r.how}
                   </span>
-                  <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                     {r.price}
                   </span>
                 </li>
               ))}
             </ul>
-            <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {transport.airport.conclusion}
             </p>
           </div>
 
-          <div className="mt-4 rounded-xl border border-gray-200 p-5 dark:border-neutral-700">
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          <div className="mt-4 rounded-xl border border-neutral-200 p-5 dark:border-neutral-700">
+            <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
               {transport.total.label}
             </p>
-            <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <p className="mt-1 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               約 {transport.total.value}
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            <p className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
               {transport.total.body}
             </p>
           </div>
@@ -513,20 +513,20 @@ export default function BudgetGuide() {
         {/* --------------------------------------------- 5. 入場料 */}
         <Section n={5} id="admissions">
           <div className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-5 dark:bg-emerald-950/30">
-            <p className="text-base font-bold leading-snug text-gray-900 dark:text-gray-100">
+            <p className="text-base font-bold leading-snug text-neutral-900 dark:text-neutral-100">
               {admissions.headline}
             </p>
             <ul className="mt-3 flex flex-wrap gap-2">
               {admissions.free.map((f) => (
                 <li
                   key={f}
-                  className="rounded bg-white px-2.5 py-1 text-sm font-medium text-gray-900 dark:bg-neutral-900 dark:text-gray-100"
+                  className="rounded bg-white px-2.5 py-1 text-sm font-medium text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100"
                 >
                   {f}
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+            <p className="mt-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
               {admissions.freeNote}
             </p>
             <p className="mt-3 text-sm font-bold text-emerald-800 dark:text-emerald-300">
@@ -534,31 +534,31 @@ export default function BudgetGuide() {
             </p>
           </div>
 
-          <div className="mt-5 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               有料の主要施設（大人1名）
             </p>
-            <ul className="mt-2 divide-y divide-gray-200 dark:divide-neutral-800">
+            <ul className="mt-2 divide-y divide-neutral-200 dark:divide-neutral-800">
               {admissions.paid.map((p) => (
                 <li
                   key={p.name}
                   className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2 text-sm"
                 >
-                  <span className="text-gray-700 dark:text-gray-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     {p.name}
                   </span>
-                  <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                     {p.price}
                   </span>
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {admissions.paidNote}
             </p>
           </div>
 
-          <p className="mt-4 rounded-lg bg-gray-100 px-4 py-3 text-sm leading-relaxed text-gray-900 dark:bg-neutral-800 dark:text-gray-100">
+          <p className="mt-4 rounded-lg bg-neutral-100 px-4 py-3 text-sm leading-relaxed text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100">
             {admissions.planning}
           </p>
 
@@ -567,20 +567,20 @@ export default function BudgetGuide() {
 
         {/* --------------------------------------------- 6. その他 */}
         <Section n={6} id="extras">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {extras.intro}
           </p>
 
-          <ul className="mt-4 divide-y divide-gray-200 rounded-lg border border-gray-200 dark:divide-neutral-800 dark:border-neutral-700">
+          <ul className="mt-4 divide-y divide-neutral-200 rounded-lg border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-700">
             {extras.rows.map((r) => (
               <li
                 key={r.what}
                 className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 px-4 py-2.5 text-sm"
               >
-                <span className="text-gray-700 dark:text-gray-300">
+                <span className="text-neutral-700 dark:text-neutral-300">
                   {r.what}
                 </span>
-                <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                   {r.price}
                 </span>
               </li>
@@ -588,28 +588,28 @@ export default function BudgetGuide() {
           </ul>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 忘れやすいもの
               </p>
               <ul className="mt-2 space-y-2">
                 {extras.forgotten.map((f) => (
                   <li key={f.what} className="text-sm leading-snug">
-                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                    <span className="font-medium text-neutral-900 dark:text-neutral-100">
                       {f.what}
                     </span>
-                    <span className="mt-0.5 block text-xs text-gray-600 dark:text-gray-400">
+                    <span className="mt-0.5 block text-xs text-neutral-600 dark:text-neutral-400">
                       {f.detail}
                     </span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {extras.noVat.title}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {extras.noVat.body}
               </p>
             </div>
@@ -620,13 +620,13 @@ export default function BudgetGuide() {
 
         {/* --------------------------------------------- 7. 積算 */}
         <Section n={7} id="models">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             ここまでの数字を実際に足してみます。すべて1人あたり・{TRIP_NIGHTS}泊・航空券を除く現地費用です。
           </p>
           <div className="mt-4">
             <BudgetModels />
           </div>
-          <p className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm leading-relaxed text-gray-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-gray-300">
+          <p className="mt-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
             {tierCaveat}
           </p>
           <GuideNotes items={budgetNotes} />
@@ -634,7 +634,7 @@ export default function BudgetGuide() {
 
         {/* --------------------------------------------- 8. 削る */}
         <Section n={8} id="cutting">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             効く順に並べます。数字は{TRIP_NIGHTS}泊ぶんの目安です。
           </p>
 
@@ -642,7 +642,7 @@ export default function BudgetGuide() {
             {cuts.map((c, i) => (
               <li
                 key={c.what}
-                className="flex gap-3 rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="flex gap-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
                 <span
                   aria-hidden
@@ -652,14 +652,14 @@ export default function BudgetGuide() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
-                    <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                    <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                       {c.what}
                     </span>
                     <span className="shrink-0 font-mono text-sm font-bold text-emerald-700 dark:text-emerald-400">
                       −{c.saves}
                     </span>
                   </span>
-                  <span className="mt-0.5 block text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-0.5 block text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {c.why}
                   </span>
                 </span>
@@ -677,10 +677,10 @@ export default function BudgetGuide() {
                   key={d.what}
                   className="rounded-lg bg-white p-3 text-sm dark:bg-neutral-900"
                 >
-                  <span className="font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                     {d.what}
                   </span>
-                  <span className="mt-0.5 block text-xs text-gray-600 dark:text-gray-400">
+                  <span className="mt-0.5 block text-xs text-neutral-600 dark:text-neutral-400">
                     {d.why}
                   </span>
                 </li>
@@ -698,7 +698,7 @@ export default function BudgetGuide() {
         <div className="mt-4 space-y-3">
           {relatedGuides.map((g) => (
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
-              <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
                   <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
@@ -706,7 +706,7 @@ export default function BudgetGuide() {
                   <span className="mt-1 block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -716,8 +716,8 @@ export default function BudgetGuide() {
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
@@ -752,12 +752,12 @@ function CrossLink({
   return (
     <Link
       href={href}
-      className="mt-4 block rounded-lg border border-gray-300 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+      className="mt-4 block rounded-lg border border-neutral-300 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
     >
-      <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+      <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
         {label}
       </span>
-      <span className="mt-0.5 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+      <span className="mt-0.5 block text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
         {blurb}
       </span>
     </Link>
@@ -778,7 +778,7 @@ function Section({
 
   return (
     <section id={id} className="scroll-mt-20">
-      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>

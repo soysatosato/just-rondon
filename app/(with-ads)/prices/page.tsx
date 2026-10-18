@@ -136,13 +136,13 @@ export default async function PricesPage() {
         <h1 className="pt-6 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl dark:text-white">
           ロンドンの物価
         </h1>
-        <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-gray-400">
+        <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-neutral-400">
           地下鉄の運賃からパブの1パイント、家賃まで{PRICE_ITEMS.length}品目。
           ポンドの値段を毎月確かめて、円はその日のレートで換算しています。
           物価の数字は、何を数えたかで簡単に倍違います。どの行にも、何の数字かを添えました。
         </p>
         {checked && (
-          <p className="mt-4 text-xs font-bold tabular-nums text-foreground/80 dark:text-gray-300">
+          <p className="mt-4 text-xs font-bold tabular-nums text-foreground/80 dark:text-neutral-300">
             {checked.y}年{checked.m}月{checked.d}日に全品目を確認
           </p>
         )}
@@ -156,17 +156,17 @@ export default async function PricesPage() {
           <p className="text-2xl font-bold tabular-nums tracking-tight dark:text-white">
             £1 = {fx.jpyPerGbp.toFixed(2)}
             <span className="ml-1 text-base font-semibold">円</span>
-            <span className="ml-3 align-middle text-xs font-semibold text-muted-foreground dark:text-gray-400">
+            <span className="ml-3 align-middle text-xs font-semibold text-muted-foreground dark:text-neutral-400">
               ECB・{dayJa(fx.rateDate)}
             </span>
           </p>
           {fxYearAgo && (
-            <p className="mt-2 text-sm leading-relaxed text-foreground/80 dark:text-gray-300">
+            <p className="mt-2 text-sm leading-relaxed text-foreground/80 dark:text-neutral-300">
               1年前({dayJa(fxYearAgo.rateDate)})は{fxYearAgo.jpyPerGbp.toFixed(2)}円。{yearAgoText}
             </p>
           )}
           {previous && (
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
               前回の確認({parts(previous.checkedAt).m}月)からは、ポンドの値段が変わった品目が
               {changedCount}つ、為替は{signedPercent(previous.jpyPerGbp, fx.jpyPerGbp)}。
             </p>
@@ -182,11 +182,11 @@ export default async function PricesPage() {
           <h2 className="mt-1.5 text-lg font-bold tracking-tight dark:text-white">
             {checked?.m}月の物価メモ
           </h2>
-          <p className="mt-2 text-sm leading-[1.9] dark:text-gray-200">{latest.memo}</p>
+          <p className="mt-2 text-sm leading-[1.9] dark:text-neutral-200">{latest.memo}</p>
           {latest.issue && (
             <Link
               href={`/changes/${latest.issue}`}
-              className="mt-2 inline-flex items-center gap-1 text-xs font-bold underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground dark:text-gray-200"
+              className="mt-2 inline-flex items-center gap-1 text-xs font-bold underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground dark:text-neutral-200"
             >
               今月変わったロンドンを読む
               <ArrowRight className="h-3 w-3" />
@@ -211,7 +211,7 @@ export default async function PricesPage() {
                 {group.label}
               </h2>
               {group.lead && (
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
                   {group.lead}
                 </p>
               )}
@@ -244,9 +244,9 @@ export default async function PricesPage() {
               return (
                 <div key={id} id={`basis-${id}`} className="scroll-mt-20 py-3">
                   <dt className="font-bold dark:text-white">{basis.name}</dt>
-                  <dd className="mt-0.5 text-foreground/80 dark:text-gray-300">
+                  <dd className="mt-0.5 text-foreground/80 dark:text-neutral-300">
                     {basis.what}
-                    <span className="text-muted-foreground dark:text-gray-400">{basis.why}</span>
+                    <span className="text-muted-foreground dark:text-neutral-400">{basis.why}</span>
                     {basis.url && (
                       <a
                         href={basis.url}
@@ -264,7 +264,7 @@ export default async function PricesPage() {
           )}
           <div className="py-3">
             <dt className="font-bold dark:text-white">円の換算</dt>
-            <dd className="mt-0.5 text-foreground/80 dark:text-gray-300">
+            <dd className="mt-0.5 text-foreground/80 dark:text-neutral-300">
               ECB(欧州中央銀行)の参考レートを
               <a
                 href="https://frankfurter.dev/"
@@ -275,7 +275,7 @@ export default async function PricesPage() {
                 Frankfurter
               </a>
               経由で6時間ごとに取得しています。
-              <span className="text-muted-foreground dark:text-gray-400">
+              <span className="text-muted-foreground dark:text-neutral-400">
                 ECB の公表は平日1日1回です。カード払いや両替では、手数料のぶん数%不利になります。
               </span>
             </dd>
@@ -283,7 +283,7 @@ export default async function PricesPage() {
         </dl>
       </section>
 
-      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-neutral-500">
         ここの値段は、交通・光熱費・住まい・予算の各ガイドが使っている数字と同じものです。
         改定があればガイドとこのボードが同時に変わり、その月の変化は
         <Link href="/changes" className="mx-0.5 underline underline-offset-2 hover:text-foreground">

@@ -70,7 +70,7 @@ export default function HotelsGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== hotelsMeta.slug);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(hotelsMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(hotelsMeta)} />
       <JsonLd data={faqPageJsonLd(hotelsFaq, pageUrl)} />
@@ -85,7 +85,7 @@ export default function HotelsGuide() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {hotelsMeta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {hotelsMeta.engTitle}
         </p>
         <div className="mt-3">
@@ -113,7 +113,7 @@ export default function HotelsGuide() {
       <div className="space-y-12">
         {/* --------------------------------------------- 1. 3原則 */}
         <Section n={1} id="principles">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             細かいエリア論に入る前に、これだけ守れば大きく外しません。
           </p>
 
@@ -121,7 +121,7 @@ export default function HotelsGuide() {
             {principles.map((p) => (
               <li
                 key={p.n}
-                className="flex gap-4 rounded-xl border border-gray-200 p-4 dark:border-neutral-700 sm:p-5"
+                className="flex gap-4 rounded-xl border border-neutral-200 p-4 dark:border-neutral-700 sm:p-5"
               >
                 <span
                   aria-hidden
@@ -130,10 +130,10 @@ export default function HotelsGuide() {
                   {p.n}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+                  <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
                     {p.title}
                   </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {p.body}
                   </p>
                   {p.link && (
@@ -151,15 +151,15 @@ export default function HotelsGuide() {
                       {airportAreas.map((a) => (
                         <li
                           key={a.airport}
-                          className="rounded-lg bg-gray-50 p-3 dark:bg-neutral-800/60"
+                          className="rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800/60"
                         >
-                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                          <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                             {a.airport}
                           </p>
-                          <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                             {a.line}
                           </p>
-                          <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                          <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
                             {a.areas}
                           </p>
                         </li>
@@ -191,18 +191,18 @@ export default function HotelsGuide() {
 
           <TravelTimesNote />
 
-          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
             {areaNote}
           </p>
 
           <Link
             href={areaGuideLink.href}
-            className="mt-4 block rounded-lg border border-gray-300 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+            className="mt-4 block rounded-lg border border-neutral-300 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
           >
-            <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {areaGuideLink.label}
             </span>
-            <span className="mt-0.5 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+            <span className="mt-0.5 block text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
               {areaGuideLink.blurb}
             </span>
           </Link>
@@ -219,34 +219,34 @@ export default function HotelsGuide() {
                 className={`rounded-lg border p-4 ${
                   t.recommended
                     ? "border-emerald-400 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/30"
-                    : "border-gray-200 dark:border-neutral-700"
+                    : "border-neutral-200 dark:border-neutral-700"
                 }`}
               >
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {t.type}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                   {t.examples}
                 </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {t.who}
                 </p>
               </li>
             ))}
           </ul>
 
-          <div className="mt-5 rounded-xl border border-gray-200 p-5 dark:border-neutral-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-xl border border-neutral-200 p-5 dark:border-neutral-700">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
               {hubPremierInn.title}
             </h3>
             <MarkdownBody>{hubPremierInn.body}</MarkdownBody>
           </div>
 
-          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {longStay.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {longStay.body}
             </p>
             <ul className="mt-3 space-y-1.5 text-sm">
@@ -276,7 +276,7 @@ export default function HotelsGuide() {
             <p className="text-xs font-bold tracking-wide text-red-700 dark:text-red-300">
               まずここ
             </p>
-            <p className="mt-1 text-base font-bold text-gray-900 dark:text-gray-100">
+            <p className="mt-1 text-base font-bold text-neutral-900 dark:text-neutral-100">
               「double」はベッド1台です
             </p>
             <ul className="mt-3 space-y-2">
@@ -285,14 +285,14 @@ export default function HotelsGuide() {
                   key={r.en}
                   className="rounded-lg bg-white p-3 dark:bg-neutral-900"
                 >
-                  <p className="font-mono text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <p className="font-mono text-sm font-bold text-neutral-900 dark:text-neutral-100">
                     {r.en}
                   </p>
                   <p
                     className={`mt-0.5 text-sm ${
                       r.warn
                         ? "font-semibold text-red-700 dark:text-red-300"
-                        : "text-gray-700 dark:text-gray-300"
+                        : "text-neutral-700 dark:text-neutral-300"
                     }`}
                   >
                     {r.ja}
@@ -300,7 +300,7 @@ export default function HotelsGuide() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               友人同士や親子で「ベッドは別々がいい」という場合、twin は意識して探さないと見つかりません。
             </p>
           </div>
@@ -309,12 +309,12 @@ export default function HotelsGuide() {
             {gotchas.map((g) => (
               <li
                 key={g.head}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {g.head}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {g.body}
                 </p>
                 {g.link && (
@@ -337,10 +337,10 @@ export default function HotelsGuide() {
             渡せば Booking.com 以外の予約サイトでも使える。
           */}
           <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 dark:border-emerald-900 dark:bg-emerald-950/20 sm:p-5">
-            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
               予約サイトでチェックする英語
             </h3>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               上の落とし穴は、検索画面の絞り込みでほぼ回避できます。日本語表示に切り替えても
               設備名は英語のまま出ることが多いので、この語で探してください。
             </p>
@@ -351,14 +351,14 @@ export default function HotelsGuide() {
                   className="rounded-lg bg-white p-3 dark:bg-neutral-900"
                 >
                   <p className="flex flex-wrap items-baseline gap-x-2">
-                    <span className="font-mono text-sm font-bold text-gray-900 dark:text-gray-100">
+                    <span className="font-mono text-sm font-bold text-neutral-900 dark:text-neutral-100">
                       {f.en}
                     </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">
                       {f.ja}
                     </span>
                   </p>
-                  <p className="mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-0.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {f.why}
                   </p>
                 </li>
@@ -371,14 +371,14 @@ export default function HotelsGuide() {
 
         {/* --------------------------------------------- 5. 予約 */}
         <Section n={5} id="booking">
-          <div className="rounded-xl border border-gray-200 p-5 dark:border-neutral-700">
-            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="rounded-xl border border-neutral-200 p-5 dark:border-neutral-700">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
               {booking.timing.title}
             </h3>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {booking.timing.body}
             </p>
-            <p className="mt-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <p className="mt-3 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               高騰するので避けたい時期
             </p>
             <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -397,12 +397,12 @@ export default function HotelsGuide() {
             {booking.items.map((i) => (
               <div
                 key={i.title}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {i.title}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {i.body}
                 </p>
               </div>
@@ -412,14 +412,14 @@ export default function HotelsGuide() {
 
         {/* --------------------------------------------- 6. 避ける */}
         <Section n={6} id="avoid">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             実際に後悔しやすいパターンです。
           </p>
           <ul className="mt-4 space-y-2">
             {avoid.map((a) => (
               <li
                 key={a.head}
-                className="flex gap-3 rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="flex gap-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
                 <span
                   aria-hidden
@@ -428,10 +428,10 @@ export default function HotelsGuide() {
                   ✕
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <span className="block text-sm font-bold text-neutral-900 dark:text-neutral-100">
                     {a.head}
                   </span>
-                  <span className="mt-0.5 block text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <span className="mt-0.5 block text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {a.body}
                   </span>
                 </span>
@@ -449,7 +449,7 @@ export default function HotelsGuide() {
         <div className="mt-4 space-y-3">
           {relatedGuides.map((g) => (
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
-              <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
                   <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
@@ -457,7 +457,7 @@ export default function HotelsGuide() {
                   <span className="mt-1 block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -467,8 +467,8 @@ export default function HotelsGuide() {
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
@@ -504,7 +504,7 @@ function Section({
 
   return (
     <section id={id} className="scroll-mt-20">
-      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
@@ -528,19 +528,19 @@ function AreaCard({ area }: { area: Area }) {
   return (
     <div
       id={area.id}
-      className="scroll-mt-20 rounded-xl border border-gray-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
+      className="scroll-mt-20 rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
     >
       <div className="p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
             {area.name}
           </h3>
-          <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-600 dark:bg-neutral-800 dark:text-gray-400">
+          <span className="rounded bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
             {area.price}
             {area.priceNote && `・${area.priceNote}`}
           </span>
           {area.tier === "other" && (
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
               候補として
             </span>
           )}
@@ -564,22 +564,22 @@ function AreaCard({ area }: { area: Area }) {
 
         <dl className="mt-3 space-y-1.5 text-sm">
           <div className="flex gap-3">
-            <dt className="w-16 shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+            <dt className="w-16 shrink-0 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
               最寄駅
             </dt>
-            <dd className="text-gray-700 dark:text-gray-300">{area.stations}</dd>
+            <dd className="text-neutral-700 dark:text-neutral-300">{area.stations}</dd>
           </div>
           <div className="flex gap-3">
-            <dt className="w-16 shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+            <dt className="w-16 shrink-0 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
               向く人
             </dt>
-            <dd className="text-gray-700 dark:text-gray-300">{area.goodFor}</dd>
+            <dd className="text-neutral-700 dark:text-neutral-300">{area.goodFor}</dd>
           </div>
           <div className="flex gap-3">
-            <dt className="w-16 shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+            <dt className="w-16 shrink-0 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
               注意点
             </dt>
-            <dd className="text-gray-700 dark:text-gray-300">{area.caution}</dd>
+            <dd className="text-neutral-700 dark:text-neutral-300">{area.caution}</dd>
           </div>
         </dl>
 
@@ -605,7 +605,7 @@ function AreaCard({ area }: { area: Area }) {
       </div>
 
       {area.body && (
-        <details className="group border-t border-gray-200 dark:border-neutral-700">
+        <details className="group border-t border-neutral-200 dark:border-neutral-700">
           <summary className="flex cursor-pointer list-none items-center gap-1 px-4 py-3 text-sm font-medium text-link sm:px-5 [&::-webkit-details-marker]:hidden">
             <span className="underline underline-offset-2 group-open:no-underline">
               詳しく読む
@@ -617,7 +617,7 @@ function AreaCard({ area }: { area: Area }) {
           <div className="px-4 pb-4 sm:px-5">
             <MarkdownBody>{area.body}</MarkdownBody>
             {area.tips && area.tips.length > 0 && (
-              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+              <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
                 {area.tips.map((t) => (
                   <li key={t} className="leading-relaxed">
                     {t}

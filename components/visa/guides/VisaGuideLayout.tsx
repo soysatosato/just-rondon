@@ -42,7 +42,7 @@ export default function VisaGuideLayout({
   }));
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd data={visaGuideBreadcrumbJsonLd(article)} />
       <JsonLd data={visaGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
@@ -55,7 +55,7 @@ export default function VisaGuideLayout({
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {article.engTitle}
         </p>
         <div className="mt-3">
@@ -67,7 +67,7 @@ export default function VisaGuideLayout({
         <p className="mt-4 text-sm font-semibold text-emerald-700 dark:text-emerald-400">
           {article.audience}
         </p>
-        <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-4 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {stripInlineMarkdown(article.summary)}
         </p>
       </header>
@@ -88,17 +88,17 @@ export default function VisaGuideLayout({
         6本の記事の ** が生のまま読者に出ていたため。
       */}
       {article.atAGlance && article.atAGlance.length > 0 && (
-        <section className="mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+        <section className="mb-8 rounded-xl border border-neutral-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
           <h2 className="text-base font-bold">
             {meta?.routeFacts ? "このルート固有の条件" : "このガイドの要点"}
           </h2>
           <dl className="mt-4 grid gap-4 sm:grid-cols-2">
             {article.atAGlance.map((fact) => (
               <div key={fact.label}>
-                <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                   {fact.label}
                 </dt>
-                <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
+                <dd className="mt-0.5 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">
                   <MarkdownBody size="compact">{fact.value}</MarkdownBody>
                 </dd>
               </div>
@@ -125,11 +125,11 @@ export default function VisaGuideLayout({
       <div className="space-y-8">
         {article.sections.map((section, i) => (
           <GuideSectionCard key={section.id} id={section.id}>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
             </h2>
             {section.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 {section.subtitle}
               </p>
             )}
@@ -156,7 +156,7 @@ export default function VisaGuideLayout({
         免責。ビザは判断を誤ると入国拒否・将来の申請不利につながるため、
         旅行ガイドの「料金は変わります」より一段強い文言を出す。
       */}
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本記事は情報提供を目的としたもので、法的助言ではありません。英国移民法は
         頻繁に改正され、個別の事情によって適用される規則が変わります。実際の申請にあたっては
         必ず GOV.UK の最新情報を確認し、複雑な事案（過去の却下歴・オーバーステイ・
@@ -171,7 +171,7 @@ export default function VisaGuideLayout({
       */}
       <section className="mt-12">
         <h2 className="text-lg font-semibold">ほかのビザガイド</h2>
-        <ul className="mt-4 divide-y divide-gray-200 dark:divide-neutral-800">
+        <ul className="mt-4 divide-y divide-neutral-200 dark:divide-neutral-800">
           {relatedGuides.map((g) => (
             <li key={g.slug}>
               <Link
@@ -179,17 +179,17 @@ export default function VisaGuideLayout({
                 className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2.5 transition hover:text-emerald-700 dark:hover:text-emerald-400"
               >
                 <span className="text-sm font-semibold">{g.label}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-neutral-500 dark:text-neutral-400">
                   {VISA_CATEGORY_LABELS[g.category]}
                 </span>
                 {g.routeFacts && (
                   <>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">
                       {g.routeFacts.sponsor === "none"
                         ? "スポンサー不要"
                         : "スポンサー要"}
                     </span>
-                    <span className="text-xs text-gray-500 dark:text-neutral-400">
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400">
                       {g.routeFacts.upfrontCost}
                     </span>
                   </>
@@ -200,8 +200,8 @@ export default function VisaGuideLayout({
         </ul>
       </section>
 
-      <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6 space-y-2">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

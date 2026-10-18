@@ -62,7 +62,7 @@ export default function ExperienceBlock({
         </Link>
       </h2>
 
-      <p className="mt-2.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+      <p className="mt-2.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
         {blurb}
       </p>
 

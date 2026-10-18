@@ -88,7 +88,7 @@ export default function ItineraryGuide() {
   };
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(itineraryMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(itineraryMeta)} />
       <JsonLd data={faqPageJsonLd(itineraryFaq, pageUrl)} />
@@ -105,7 +105,7 @@ export default function ItineraryGuide() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {itineraryMeta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {itineraryMeta.engTitle}
         </p>
         <div className="mt-3">
@@ -115,21 +115,21 @@ export default function ItineraryGuide() {
           />
         </div>
 
-        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {itineraryMeta.summary}
         </p>
 
-        <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
-          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <div className="mt-6 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
+          <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
             このコースの前提
           </p>
           <ul className="mt-2 space-y-1.5">
             {assumptions.map((a) => (
               <li
                 key={a.text}
-                className="flex flex-wrap gap-x-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                className="flex flex-wrap gap-x-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
               >
-                <span aria-hidden className="text-gray-400">
+                <span aria-hidden className="text-neutral-400">
                   ・
                 </span>
                 <span>
@@ -149,7 +149,7 @@ export default function ItineraryGuide() {
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
             {disclaimer}
           </p>
         </div>
@@ -196,7 +196,7 @@ export default function ItineraryGuide() {
 
         {/* --------------------------------------------- 2. 予約 */}
         <Section n={2} id="booking-first">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             ロンドンの主要施設は日時指定の事前予約制が主流です。当日券がない、あるいは大幅に割高になるものが多いので、日程が決まったらまずここから押さえてください。
           </p>
 
@@ -210,7 +210,7 @@ export default function ItineraryGuide() {
                   className={`flex items-start gap-3 rounded-lg border p-3 ${
                     b.highlight
                       ? "border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30"
-                      : "border-gray-200 dark:border-neutral-700"
+                      : "border-neutral-200 dark:border-neutral-700"
                   }`}
                 >
                   <span
@@ -218,17 +218,17 @@ export default function ItineraryGuide() {
                       must
                         ? "bg-red-600 text-white"
                         : none
-                          ? "bg-gray-100 text-gray-500 dark:bg-neutral-800 dark:text-gray-400"
+                          ? "bg-neutral-100 text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400"
                           : "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
                     }`}
                   >
                     {b.level}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                       {b.what}
                     </span>
-                    <span className="mt-0.5 block text-sm text-gray-600 dark:text-gray-400">
+                    <span className="mt-0.5 block text-sm text-neutral-600 dark:text-neutral-400">
                       {b.when}
                     </span>
                   </span>
@@ -237,7 +237,7 @@ export default function ItineraryGuide() {
             })}
           </ul>
 
-          <p className="mt-4 rounded-lg bg-gray-100 px-4 py-3 text-sm leading-relaxed text-gray-900 dark:bg-neutral-800 dark:text-gray-100">
+          <p className="mt-4 rounded-lg bg-neutral-100 px-4 py-3 text-sm leading-relaxed text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100">
             {skyGardenNote}
           </p>
 
@@ -255,7 +255,7 @@ export default function ItineraryGuide() {
 
         {/* --------------------------------------------- Day 4（4択） */}
         <Section n={6} id="day-4">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {dayFour.intro}
           </p>
 
@@ -266,7 +266,7 @@ export default function ItineraryGuide() {
                 className={`rounded-xl border-2 p-4 sm:p-5 ${
                   o.best
                     ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30"
-                    : "border-gray-200 dark:border-neutral-700"
+                    : "border-neutral-200 dark:border-neutral-700"
                 }`}
               >
                 {o.best && (
@@ -274,31 +274,31 @@ export default function ItineraryGuide() {
                     コストパフォーマンスが最も高い
                   </p>
                 )}
-                <h3 className="mt-0.5 text-base font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="mt-0.5 text-base font-bold text-neutral-900 dark:text-neutral-100">
                   {o.name}
                 </h3>
                 <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                   <div className="flex gap-1.5">
-                    <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                    <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                       所要
                     </dt>
-                    <dd className="font-semibold text-gray-900 dark:text-gray-100">
+                    <dd className="font-semibold text-neutral-900 dark:text-neutral-100">
                       {o.duration}
                     </dd>
                   </div>
                   <div className="flex gap-1.5">
-                    <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                    <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                       予約
                     </dt>
-                    <dd className="font-semibold text-gray-900 dark:text-gray-100">
+                    <dd className="font-semibold text-neutral-900 dark:text-neutral-100">
                       {o.booking}
                     </dd>
                   </div>
                 </dl>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   {o.access}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {o.body}
                 </p>
               </li>
@@ -317,7 +317,7 @@ export default function ItineraryGuide() {
 
         {/* --------------------------------------------- 分岐版 */}
         <Section n={8} id="variants">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             雨が降った、子どもがいる、乗り継ぎで数時間しかない——このモデルコースをそのまま実行できない事情には、それぞれ別ページを用意しています。
           </p>
 
@@ -326,15 +326,15 @@ export default function ItineraryGuide() {
               <Link
                 key={v.slug}
                 href={itineraryVariantPath(v.slug)}
-                className="block rounded-xl border border-gray-300 p-5 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+                className="block rounded-xl border border-neutral-300 p-5 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
               >
                 <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                   {v.eyebrow}
                 </span>
-                <span className="mt-1 block text-base font-bold text-gray-900 dark:text-gray-100">
+                <span className="mt-1 block text-base font-bold text-neutral-900 dark:text-neutral-100">
                   {v.label}
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {v.blurb}
                 </span>
               </Link>
@@ -345,12 +345,12 @@ export default function ItineraryGuide() {
             {otherPlans.map((p) => (
               <div
                 key={p.title}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {p.title}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {p.body}
                 </p>
               </div>
@@ -364,18 +364,18 @@ export default function ItineraryGuide() {
             {[tips.time, tips.weekday].map((t) => (
               <div
                 key={t.title}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {t.title}
                 </p>
                 <ul className="mt-2 space-y-1.5">
                   {t.items.map((i) => (
                     <li
                       key={i}
-                      className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                      className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
                     >
-                      <span aria-hidden className="text-gray-400">
+                      <span aria-hidden className="text-neutral-400">
                         ・
                       </span>
                       {i}
@@ -386,11 +386,11 @@ export default function ItineraryGuide() {
             ))}
           </div>
 
-          <div className="mt-4 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {tips.walking.title}
             </p>
-            <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {tips.walking.body}
             </p>
           </div>
@@ -412,7 +412,7 @@ export default function ItineraryGuide() {
         <div className="mt-4 space-y-3">
           {relatedGuides.map((g) => (
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
-              <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
                   <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
@@ -420,7 +420,7 @@ export default function ItineraryGuide() {
                   <span className="mt-1 block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -430,8 +430,8 @@ export default function ItineraryGuide() {
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
@@ -463,13 +463,13 @@ function DaySection({
 }) {
   return (
     <section id={`day-${day.n}`} className="scroll-mt-20">
-      <h2 className="mb-1 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-1 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
         Day {day.n}｜{day.title}
       </h2>
-      <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mb-4 text-sm text-neutral-500 dark:text-neutral-400">
         {day.subtitle}
       </p>
       <DayTimeline day={day} />
@@ -491,7 +491,7 @@ function Section({
 
   return (
     <section id={id} className="scroll-mt-20">
-      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>

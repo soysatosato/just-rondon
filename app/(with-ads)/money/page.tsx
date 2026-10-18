@@ -147,7 +147,7 @@ export default function MoneyHubPage() {
   const pageUrl = `${SITE_URL}${MONEY_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: MONEY_SECTION_NAME,
@@ -168,10 +168,10 @@ export default function MoneyHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           イギリスの銀行口座と送金ガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Banking, Transfers and National Insurance in the UK
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           渡英直後に口座開設が詰まる原因は、ほぼ一つです。
           <strong>住所証明</strong>
           。信用スコアではありません。だから対策も単純で、順番を間違えなければ詰まりません。
@@ -185,10 +185,10 @@ export default function MoneyHubPage() {
         順序の提示だから。逆順で動くと卵と鶏の循環に入って動けなくなる。
       */}
       <div className="mt-8 rounded-lg border border-sky-300 bg-sky-50/70 p-5 dark:border-sky-900/60 dark:bg-sky-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           順番を間違えなければ、卵と鶏の循環には入りません
         </p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             ・<strong>1. 英国の SIM を買う</strong>
             ｜電話番号がないと口座開設が始まりません
@@ -206,7 +206,7 @@ export default function MoneyHubPage() {
             ｜住宅ローンや事業口座の段階で構いません
           </li>
         </ul>
-        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           「ちゃんとした銀行を先に作ろう」と考えると、高街銀行の住所証明で詰まります。
           <Link
             href="/money/opening-an-account"
@@ -235,10 +235,10 @@ export default function MoneyHubPage() {
               <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
                 Take-Home Pay Calculator
               </span>
-              <span className="mt-2 text-base font-bold text-gray-900 dark:text-gray-100">
+              <span className="mt-2 text-base font-bold text-neutral-900 dark:text-neutral-100">
                 イギリスの手取り計算機
               </span>
-              <span className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <span className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                 年収・時給を入れると、所得税・National Insurance・職場年金・学生ローンを引いた手取りがすぐに出ます。給与明細の読み方と、税コード（1257L・BR・0T）の確認にも。
               </span>
               <span className="mt-4 text-sm font-medium text-emerald-700 dark:text-emerald-400">
@@ -256,7 +256,7 @@ export default function MoneyHubPage() {
           <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
             自分の状況を選んでください
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             一番近いものが1つ見つかれば、それがあなたの読むべきページです。
           </p>
         </div>
@@ -264,15 +264,15 @@ export default function MoneyHubPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
             <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+              <Card className="h-full border-neutral-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                 <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
                     {s.situation}
                   </p>
                   <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
                     → {s.answer}
                   </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {s.detail}
                   </p>
                   <span className="mt-4 text-sm font-medium text-link">
@@ -291,7 +291,7 @@ export default function MoneyHubPage() {
         <h2 id="at-a-glance" className="text-xl font-bold md:text-2xl">
           銀行と送金の早見表
         </h2>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           渡英直後の通りやすさ順に並べています。
           <strong>1本目はアプリ銀行</strong>
           、というのがこの表の結論です。
@@ -329,7 +329,7 @@ ${TRANSFER_SERVICES.map(
           <h2 id="all-guides" className="text-xl font-bold md:text-2xl">
             お金・銀行ガイド一覧
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             全{moneyGuides.length}
             本。口座を開くところから、日本からの送金、働いて受け取るところまで、
             渡英直後に金が動く順に並べています。
@@ -342,7 +342,7 @@ ${TRANSFER_SERVICES.map(
 
           return (
             <div key={category} className="space-y-3">
-              <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+              <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200">
                 {MONEY_CATEGORY_LABELS[category]}
               </h3>
               <div className="space-y-3">
@@ -352,7 +352,7 @@ ${TRANSFER_SERVICES.map(
                     href={moneyGuidePath(g.slug)}
                     className="block"
                   >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+                    <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                       <CardContent className="p-5">
                         <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">
                           {g.eyebrow}
@@ -360,7 +360,7 @@ ${TRANSFER_SERVICES.map(
                         <span className="mt-1 block text-base font-semibold">
                           {g.label}
                         </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                        <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                           {g.blurb}
                         </span>
                       </CardContent>
@@ -375,11 +375,11 @@ ${TRANSFER_SERVICES.map(
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           渡英直後に、あわせて片づけること
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           口座・住まい・GP 登録は互いに絡み合っています。GP
           の登録は無料かつ書類不要ででき、その完了通知が住所証明として使えることもあるため、
           先に済ませておくと口座開設や賃貸の手続きが楽になります。
@@ -428,7 +428,7 @@ ${TRANSFER_SERVICES.map(
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの情報は{MONEY_AS_OF}
         時点のもので、金融商品の推奨や投資助言ではありません。手数料・為替の上乗せ・
         口座開設の条件は各社が予告なく変更します。実際に送金・申込みをする前に、

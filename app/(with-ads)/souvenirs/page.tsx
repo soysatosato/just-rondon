@@ -136,7 +136,7 @@ export default async function SouvenirsPage() {
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
           ロンドンのお土産
         </h1>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           ロンドンの土産は、選択肢が多すぎて逆に決まらなくなります。空港の売店で
           時間切れになって適当に掴む、という帰り方をしないために、
           <strong className="font-semibold">
@@ -144,7 +144,7 @@ export default async function SouvenirsPage() {
           </strong>
           に絞ってまとめました。
         </p>
-        <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           それぞれ価格の目安と買える場所を載せています。多くはスーパーで手に入るので、
           観光の合間に済ませられるものがほとんどです。
         </p>

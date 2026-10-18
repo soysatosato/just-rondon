@@ -182,7 +182,7 @@ export default function TransportHubPage() {
   const pageUrl = `${SITE_URL}${TRANSPORT_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={sightseeingBreadcrumbJsonLd([
           { name: TRANSPORT_SECTION_NAME, path: TRANSPORT_BASE },
@@ -202,10 +202,10 @@ export default function TransportHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           ロンドンの交通ガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Getting Around London
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           ロンドンの移動で必要な情報は、<strong>数日いるのか、数年いるのか</strong>
           でまったく違います。旅行者は上の2段だけで足ります。定期券の損得や自転車・車の買い方は、
           住み始めてから読んでください。
@@ -223,10 +223,10 @@ export default function TransportHubPage() {
         読者が空港や駅で券売機の列に並ぶという実害が出ているため。
       */}
       <div className="mt-8 rounded-lg border border-emerald-300 bg-emerald-50/70 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           先に結論：ロンドンで切符は買いません
         </p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             ・
             <strong>
@@ -252,7 +252,7 @@ export default function TransportHubPage() {
             が必要です（バスは不要）。忘れると最大運賃を引かれます
           </li>
         </ul>
-        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           仕組みの詳細は
           <Link
             href="/sightseeing/transport/fares"
@@ -283,7 +283,7 @@ export default function TransportHubPage() {
           <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
             自分の状況を選んでください
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             一番近いものが1つ見つかれば、それがあなたの読むべきページです。
           </p>
         </div>
@@ -291,15 +291,15 @@ export default function TransportHubPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
             <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="h-full border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
                     {s.situation}
                   </p>
                   <p className="mt-3 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400">
                     → {s.answer}
                   </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {s.detail}
                   </p>
                   <span className="mt-4 text-sm font-medium text-link">
@@ -318,7 +318,7 @@ export default function TransportHubPage() {
         <h2 id="cost-overview" className="text-xl font-bold md:text-2xl">
           料金の早見表
         </h2>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           予算を立てるための基準線です。上限額と定期券の価格は
           <strong>{TRANSPORT_KEY_DATES.capsFrozenUntil}まで据え置き</strong>
           が公式にアナウンスされています。
@@ -357,12 +357,12 @@ export default function TransportHubPage() {
         */}
         <Link
           href="/plan"
-          className="block rounded-lg border border-gray-300 p-4 transition hover:border-blue-400 dark:border-neutral-700 dark:hover:border-blue-500"
+          className="block rounded-lg border border-neutral-300 p-4 transition hover:border-blue-400 dark:border-neutral-700 dark:hover:border-blue-500"
         >
-          <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             自分の旅程で交通費を計算する
           </span>
-          <span className="mt-0.5 block text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+          <span className="mt-0.5 block text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
             行きたいスポットを日別に並べると、日ごとの交通費の目安と、タッチ決済と7日Travelcardのどちらが安いかを出します。ロンドンパスの損得も一緒に判定します。
           </span>
         </Link>
@@ -375,7 +375,7 @@ export default function TransportHubPage() {
           <h2 id="all-guides" className="text-xl font-bold md:text-2xl">
             交通ガイド一覧
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             全{transportGuides.length}本。旅行者は上の2段、ロンドンに住む人は
             3段目まで読んでください。
           </p>
@@ -388,10 +388,10 @@ export default function TransportHubPage() {
           return (
             <div key={category} className="space-y-3">
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+                <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200">
                   {TRANSPORT_CATEGORY_LABELS[category]}
                 </h3>
-                <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {TRANSPORT_CATEGORY_BLURBS[category]}
                 </p>
               </div>
@@ -402,7 +402,7 @@ export default function TransportHubPage() {
                     href={transportGuidePath(g.slug)}
                     className="block"
                   >
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+                    <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                       <CardContent className="p-5">
                         <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                           {g.eyebrow}
@@ -410,7 +410,7 @@ export default function TransportHubPage() {
                         <span className="mt-1 block text-base font-semibold">
                           {g.label}
                         </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                        <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                           {g.blurb}
                         </span>
                       </CardContent>
@@ -425,11 +425,11 @@ export default function TransportHubPage() {
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           移動と一緒に決まること
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           どこに泊まるか、どこに住むかは、そのまま毎日の移動時間と交通費になります。
           宿とエリアの選び方は、交通の話と一緒に読んでください。
         </p>
@@ -477,7 +477,7 @@ export default function TransportHubPage() {
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの料金・制度は{TRANSPORT_AS_OF}時点で TfL・GOV.UK
         の公式情報を確認したものです。地下鉄・鉄道の運賃は毎年3月に、バス・トラムの運賃は
         {jpDate(TRANSPORT_KEY_DATES.busFareRise)}に改定されます。Congestion Charge

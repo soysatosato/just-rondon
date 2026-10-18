@@ -149,7 +149,7 @@ export default async function AreasHubPage() {
   const spotCounts = await getAreaSpotCounts();
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={sightseeingBreadcrumbJsonLd([
           { name: AREAS_SECTION_NAME, path: AREAS_BASE },
@@ -169,10 +169,10 @@ export default async function AreasHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           ロンドンのエリアガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           London by Neighbourhood
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           観光スポットを1つずつ調べていくと、
           <strong>「結局その日どう歩くのか」が最後まで分かりません</strong>。
           このガイドは、ロンドンを街区の単位で区切って、
@@ -188,10 +188,10 @@ export default async function AreasHubPage() {
         だから各記事に入る前のこの位置で警告する。
       */}
       <div className="mt-8 rounded-lg border border-emerald-300 bg-emerald-50/70 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           先に確認：エリアは「何曜日に行くか」で価値が変わります
         </p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             ・<strong>ショーディッチは日曜。</strong>マーケットが3つ同時に立つのは
             この日だけで、平日はただの住宅街です
@@ -217,7 +217,7 @@ export default async function AreasHubPage() {
           <h2 id="find-your-area" className="text-xl font-bold md:text-2xl">
             どこを歩くか決まっていない場合
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             一番近いものが1つ見つかれば、それがその日に歩くエリアです。
           </p>
         </div>
@@ -225,15 +225,15 @@ export default async function AreasHubPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {SCENARIOS.map((s) => (
             <Link key={s.href} href={s.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="h-full border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="flex h-full flex-col p-5">
-                  <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
                     {s.situation}
                   </p>
                   <p className="mt-3 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400">
                     → {s.answer}
                   </p>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {s.detail}
                   </p>
                   <span className="mt-4 text-sm font-medium text-link">
@@ -253,7 +253,7 @@ export default async function AreasHubPage() {
           <h2 id="all-areas" className="text-xl font-bold md:text-2xl">
             エリア一覧
           </h2>
-          <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             全{areaGuides.length}エリア。中心部の4つは徒歩で繋がるので、
             隣接するエリア同士を1日で組み合わせられます。
           </p>
@@ -266,17 +266,17 @@ export default async function AreasHubPage() {
           return (
             <div key={category} className="space-y-3">
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+                <h3 className="text-base font-semibold text-neutral-800 dark:text-neutral-200">
                   {AREA_CATEGORY_LABELS[category]}
                 </h3>
-                <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {AREA_CATEGORY_BLURBS[category]}
                 </p>
               </div>
               <div className="space-y-3">
                 {areas.map((a) => (
                   <Link key={a.slug} href={areaGuidePath(a.slug)} className="block">
-                    <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+                    <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                       <CardContent className="p-5">
                         <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                           {a.eyebrow}
@@ -284,10 +284,10 @@ export default async function AreasHubPage() {
                         <span className="mt-1 block text-base font-semibold">
                           {a.label}
                         </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                        <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                           {a.blurb}
                         </span>
-                        <span className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                        <span className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
                           <span>最寄駅：{a.station}</span>
                           <span>歩く時間：{a.walkTime}</span>
                           {spotCounts[a.slug] > 0 && (
@@ -306,11 +306,11 @@ export default async function AreasHubPage() {
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           エリアと一緒に決まること
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           どのエリアを歩くかは、どこに泊まるか、何日いるかと不可分です。
           あわせて読んでください。
         </p>

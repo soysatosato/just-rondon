@@ -77,7 +77,7 @@ export default function GuideSectionNav({
   return (
     <nav
       aria-label="このページの目次"
-      className="sticky top-[var(--sticky-top,0px)] z-30 transition-[top] duration-300 motion-reduce:transition-none -mx-1 mb-8 border-b border-gray-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90 sm:-mx-4"
+      className="sticky top-[var(--sticky-top,0px)] z-30 transition-[top] duration-300 motion-reduce:transition-none -mx-1 mb-8 border-b border-neutral-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90 sm:-mx-4"
     >
       <ul
         ref={listRef}
@@ -94,14 +94,14 @@ export default function GuideSectionNav({
                 className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                   active
                     ? "bg-emerald-700 text-white"
-                    : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800"
+                    : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
                 }`}
               >
                 <span
                   className={
                     active
                       ? "text-emerald-100"
-                      : "text-gray-500 dark:text-neutral-400"
+                      : "text-neutral-500 dark:text-neutral-400"
                   }
                 >
                   {i + 1}

@@ -84,7 +84,7 @@ export default async function FreeAttractionsPage() {
         ロンドンの無料観光スポット{total}選
       </h1>
 
-      <div className="mt-4 space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+      <div className="mt-4 space-y-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
         <p>
           ロンドンが旅行先として優秀なのは、
           <strong>国立の博物館・美術館の常設展がすべて無料</strong>
@@ -103,8 +103,8 @@ export default async function FreeAttractionsPage() {
       </div>
 
       {/* 目次。カテゴリー数が7前後あるので、上から順に読ませない。 */}
-      <nav className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-        <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+      <nav className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
+        <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
           ジャンル
         </p>
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
@@ -137,7 +137,7 @@ export default async function FreeAttractionsPage() {
                 <Link
                   key={spot.slug}
                   href={`/sightseeing/${spot.slug}`}
-                  className="group flex gap-3 rounded-lg border border-gray-200 p-3 transition hover:bg-gray-50 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
+                  className="group flex gap-3 rounded-lg border border-neutral-200 p-3 transition hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
                 >
                   <img
                     {...responsiveImage(spot.image, "80px")}
@@ -151,7 +151,7 @@ export default async function FreeAttractionsPage() {
                     <p className="text-sm font-medium group-hover:underline">
                       {spot.name}
                     </p>
-                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                       {[
                         spot.durationText ? `所要 ${spot.durationText}` : null,
                         spot.nearestStation,
@@ -160,7 +160,7 @@ export default async function FreeAttractionsPage() {
                         .join("・")}
                     </p>
                     {(spot.tagline || spot.summary) && (
-                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                      <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                         {spot.tagline || spot.summary}
                       </p>
                     )}
@@ -172,7 +172,7 @@ export default async function FreeAttractionsPage() {
         ))}
       </div>
 
-      <section className="mt-14 rounded-lg border border-gray-200 p-5 dark:border-neutral-700">
+      <section className="mt-14 rounded-lg border border-neutral-200 p-5 dark:border-neutral-700">
         <h2 className="text-lg font-semibold">あわせて読みたい</h2>
         <ul className="mt-3 space-y-2 text-sm">
           <li>
@@ -182,7 +182,7 @@ export default async function FreeAttractionsPage() {
             >
               ロンドン旅行の予算とお金の話
             </Link>
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-neutral-600 dark:text-neutral-400">
             {" "}
               — 宿代・交通費・食費の相場から1日の出費を積算しています。
             </span>
@@ -194,7 +194,7 @@ export default async function FreeAttractionsPage() {
             >
               子どもと楽しむ無料スポットBEST10
             </Link>
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-neutral-600 dark:text-neutral-400">
             {" "}
               — 子連れ向けに絞った無料の遊び場はこちら。
             </span>
@@ -206,7 +206,7 @@ export default async function FreeAttractionsPage() {
             >
               ロンドン モデルコース（1〜5日）
             </Link>
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-neutral-600 dark:text-neutral-400">
             {" "}
               — 無料スポットを組み込んだ王道ルート。
             </span>

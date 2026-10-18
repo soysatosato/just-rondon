@@ -127,7 +127,7 @@ export default function ContactForm() {
         ボタンを押しても手元では何も起きないように見えるので、
         押す前にその段取りを書いておく。
       */}
-      <p className="text-sm leading-7 text-gray-600 dark:text-gray-400">
+      <p className="text-sm leading-7 text-neutral-600 dark:text-neutral-400">
         送信すると確認メールが届きます。メール内のリンクを開いていただいた時点で、お問い合わせが完了します。
       </p>
 

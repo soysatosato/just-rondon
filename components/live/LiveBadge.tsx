@@ -22,7 +22,7 @@ export default function LiveBadge({
   });
 
   return (
-    <span className="text-xs text-gray-500 dark:text-gray-400">
+    <span className="text-xs text-neutral-500 dark:text-neutral-400">
       {label} {time} 時点
     </span>
   );

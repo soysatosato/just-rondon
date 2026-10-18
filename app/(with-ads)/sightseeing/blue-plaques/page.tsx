@@ -100,18 +100,18 @@ export default function BluePlaquesHubPage() {
                 </CardHeader>
 
                 <CardContent className="space-y-3 text-sm leading-relaxed px-4 pb-4">
-                  <p className="text-gray-700 dark:text-gray-200">{area.summary}</p>
+                  <p className="text-neutral-700 dark:text-neutral-200">{area.summary}</p>
 
                   <div className="flex items-start gap-2">
                     <Route className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <p className="text-xs text-gray-700 dark:text-gray-200">
+                    <p className="text-xs text-neutral-700 dark:text-neutral-200">
                       {area.routeHint}
                     </p>
                   </div>
 
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
-                    <p className="text-xs text-gray-700 dark:text-gray-200">
+                    <p className="text-xs text-neutral-700 dark:text-neutral-200">
                       掲載プラーク {area.plaques.length} 件
                     </p>
                   </div>
@@ -131,7 +131,7 @@ export default function BluePlaquesHubPage() {
           <Landmark className="h-5 w-5 text-sky-500" />
           プラークを巡る前に
         </h2>
-        <ul className="space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="space-y-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             <strong>ほとんどが私有の住宅です。</strong>
             公開されている博物館やホテルは一部にとどまり、大半は現在も人が暮らす建物です。プレートの見学・撮影にとどめ、敷地への立ち入りは控えてください。

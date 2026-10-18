@@ -140,7 +140,7 @@ export default async function WeeklyBriefPage({
        * 中央揃えのボタンをやめたのは、本文が左揃えで通っているため。
        */}
       <footer className="mt-12 border-t-2 border-foreground pt-4">
-        <p className="text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
+        <p className="text-xs leading-relaxed text-muted-foreground dark:text-neutral-500">
           {freshness.isPast
             ? `この号は${format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。現在の状況とは異なります。`
             : `この号は${format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。出発前に各公式サイトで最新の状況を確認してください。`}

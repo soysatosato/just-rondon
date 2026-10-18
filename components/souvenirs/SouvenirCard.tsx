@@ -76,7 +76,7 @@ export default function SouvenirCard({ souvenir }: { souvenir: Souvenir }) {
             )}
           </div>
 
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {souvenir.blurb}
           </p>
         </div>

@@ -82,7 +82,7 @@ export default function BriefEntry({
   const body = (
     <div
       className={cn(
-        "prose prose-sm max-w-none leading-[1.95] text-muted-foreground marker:text-muted-foreground dark:prose-invert dark:text-gray-300 prose-headings:text-foreground prose-strong:text-foreground dark:prose-strong:text-white",
+        "prose prose-sm max-w-none leading-[1.95] text-muted-foreground marker:text-muted-foreground dark:prose-invert dark:text-neutral-300 prose-headings:text-foreground prose-strong:text-foreground dark:prose-strong:text-white",
         featured && "sm:prose-base"
       )}
     >
@@ -146,7 +146,7 @@ export default function BriefEntry({
             </span>
 
             {featured && (
-              <span className="font-serif text-xs font-bold text-foreground/70 dark:text-gray-300">
+              <span className="font-serif text-xs font-bold text-foreground/70 dark:text-neutral-300">
                 <span className="uppercase tracking-[0.2em]">Lead</span> ・ 今週の一本
               </span>
             )}
@@ -169,7 +169,7 @@ export default function BriefEntry({
 
             {/* 「今週」は既定なので出さない。「予告」だけを目立たせる。 */}
             {item.timing === "announced" && timingLabel && (
-              <span className="rounded-sm border border-foreground/25 px-1.5 py-0.5 text-xs font-bold leading-none text-foreground/70 dark:text-gray-300">
+              <span className="rounded-sm border border-foreground/25 px-1.5 py-0.5 text-xs font-bold leading-none text-foreground/70 dark:text-neutral-300">
                 {timingLabel}
               </span>
             )}
@@ -204,13 +204,13 @@ export default function BriefEntry({
           </h3>
 
           {severity && (
-            <p className="mt-1.5 text-xs text-muted-foreground dark:text-gray-400">
+            <p className="mt-1.5 text-xs text-muted-foreground dark:text-neutral-400">
               {severity.action}
             </p>
           )}
 
           {where.length > 0 && (
-            <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
               {where.map((part, i) => (
                 <span key={`${i}-${part}`}>
                   {i > 0 && (
@@ -226,7 +226,7 @@ export default function BriefEntry({
 
           {/* 料金は長い文字列になりがちなので、場所の行から分けて置く。 */}
           {item.priceInfo && (
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
               {item.priceInfo}
             </p>
           )}
@@ -279,7 +279,7 @@ export default function BriefEntry({
                 <div className="max-h-[5.1rem] overflow-hidden [mask-image:linear-gradient(to_bottom,#000_2.8rem,transparent)] [&_>div>*:first-child]:mt-0 group-open/body:max-h-none group-open/body:overflow-visible group-open/body:[mask-image:none]">
                   {body}
                 </div>
-                <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-foreground/80 underline-offset-4 hover:underline dark:text-gray-200">
+                <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-foreground/80 underline-offset-4 hover:underline dark:text-neutral-200">
                   <ChevronDown className="h-3.5 w-3.5 shrink-0 transition-transform group-open/body:rotate-180" />
                   <span className="group-open/body:hidden">続きを読む</span>
                   <span className="hidden group-open/body:inline">閉じる</span>
@@ -296,7 +296,7 @@ export default function BriefEntry({
                 href={item.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-bold text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground dark:text-gray-100"
+                className="inline-flex items-center gap-1 font-bold text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground dark:text-neutral-100"
               >
                 公式サイト
                 <ExternalLink className="h-3 w-3" />
@@ -305,7 +305,7 @@ export default function BriefEntry({
             {/* 出典は必ず出す。ストライキや休館の情報は検証できて初めて価値がある。 */}
             {item.source === item.website ? (
               item.sourceName && (
-                <span className="text-muted-foreground dark:text-gray-500">
+                <span className="text-muted-foreground dark:text-neutral-500">
                   出典: {item.sourceName}
                 </span>
               )
@@ -314,7 +314,7 @@ export default function BriefEntry({
                 href={item.source}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-muted-foreground underline-offset-4 hover:underline dark:text-gray-500"
+                className="inline-flex items-center gap-1 text-muted-foreground underline-offset-4 hover:underline dark:text-neutral-500"
               >
                 出典{item.sourceName ? `: ${item.sourceName}` : ""}
                 <ExternalLink className="h-3 w-3" />

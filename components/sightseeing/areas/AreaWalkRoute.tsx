@@ -25,7 +25,7 @@ export default function AreaWalkRoute({
     <section id="walk-route" className="mb-10 scroll-mt-24">
       <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-4 dark:border-emerald-900 dark:bg-emerald-950/30 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
             {walk.title}
           </h2>
           <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-semibold text-white">
@@ -33,7 +33,7 @@ export default function AreaWalkRoute({
           </span>
         </div>
 
-        <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {walk.intro}
         </p>
 
@@ -68,18 +68,18 @@ export default function AreaWalkRoute({
                       {step.title}
                     </Link>
                   ) : (
-                    <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
                       {step.title}
                     </span>
                   )}
 
                   {spot?.durationText && (
-                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                    <span className="ml-2 text-xs text-neutral-500 dark:text-neutral-400">
                       滞在 {spot.durationText}
                     </span>
                   )}
 
-                  <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {step.body}
                   </p>
 

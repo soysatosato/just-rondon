@@ -78,7 +78,7 @@ export default async function PassesGuide() {
     }));
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(passesMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(passesMeta)} />
       <JsonLd data={faqPageJsonLd(passesFaq, pageUrl)} />
@@ -93,7 +93,7 @@ export default async function PassesGuide() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {passesMeta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {passesMeta.engTitle}
         </p>
         <div className="mt-3">
@@ -108,10 +108,10 @@ export default async function PassesGuide() {
           <p className="text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-300">
             結論
           </p>
-          <p className="mt-1.5 text-lg font-bold leading-snug text-gray-900 dark:text-gray-100">
+          <p className="mt-1.5 text-lg font-bold leading-snug text-neutral-900 dark:text-neutral-100">
             {verdictHeadline}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {verdictBody}
           </p>
         </div>
@@ -120,29 +120,29 @@ export default async function PassesGuide() {
           {conditions.map((c, i) => (
             <li
               key={c.id}
-              className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+              className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700"
             >
               <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
                 条件 {i + 1}
               </p>
-              <p className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100">
+              <p className="mt-1 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 {c.label}
               </p>
-              <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-1.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {c.body}
               </p>
             </li>
           ))}
         </ul>
 
-        <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
-          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <div className="mt-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
+          <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
             こういう旅程なら買わないでください
           </p>
-          <ul className="mt-2 grid gap-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-400 sm:grid-cols-2">
+          <ul className="mt-2 grid gap-1.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 sm:grid-cols-2">
             {skipIf.map((s) => (
               <li key={s} className="flex gap-2">
-                <span aria-hidden className="text-gray-400">
+                <span aria-hidden className="text-neutral-400">
                   ×
                 </span>
                 {s}
@@ -159,7 +159,7 @@ export default async function PassesGuide() {
       <div className="space-y-12">
         {/* --------------------------------------------- 1. 無料の館 */}
         <Section n={1} id="free">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {freeSection.intro}
           </p>
 
@@ -174,14 +174,14 @@ export default async function PassesGuide() {
             ))}
           </ul>
 
-          <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
             {freeSection.note}
           </p>
 
-          <p className="mt-4 text-base font-bold text-gray-900 dark:text-gray-100">
+          <p className="mt-4 text-base font-bold text-neutral-900 dark:text-neutral-100">
             {freeSection.effect}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {freeSection.conclusion}
           </p>
 
@@ -194,7 +194,7 @@ export default async function PassesGuide() {
 
         {/* --------------------------------------------- 2. 損益分岐 */}
         <Section n={2} id="break-even">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {breakEven.intro}
           </p>
 
@@ -211,34 +211,34 @@ export default async function PassesGuide() {
                   className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-lg border p-3 ${
                     cleared
                       ? "border-emerald-400 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/30"
-                      : "border-gray-200 dark:border-neutral-700"
+                      : "border-neutral-200 dark:border-neutral-700"
                   }`}
                 >
-                  <span className="w-5 shrink-0 font-mono text-xs text-gray-500 dark:text-gray-400">
+                  <span className="w-5 shrink-0 font-mono text-xs text-neutral-500 dark:text-neutral-400">
                     {r.nth}
                   </span>
-                  <span className="flex-1 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  <span className="flex-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     {r.name}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">
                     {r.where}
                   </span>
-                  <span className="font-mono text-xs text-gray-500 dark:text-gray-400">
+                  <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">
                     {gbp(r.price)}
                   </span>
-                  <span className="w-20 shrink-0 text-right font-mono text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <span className="w-20 shrink-0 text-right font-mono text-sm font-bold text-neutral-900 dark:text-neutral-100">
                     {gbp(r.cumulative)}
                   </span>
                 </li>
               );
             })}
           </ol>
-          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
             右端が累計。緑は1日券 {gbp(oneDayPrice)} を超えた行です。
           </p>
 
           <div className="mt-5 rounded-xl border-2 border-emerald-500 bg-emerald-50 p-5 dark:bg-emerald-950/30">
-            <p className="text-sm font-bold leading-relaxed text-gray-900 dark:text-gray-100">
+            <p className="text-sm font-bold leading-relaxed text-neutral-900 dark:text-neutral-100">
               {breakEven.killer}
             </p>
           </div>
@@ -247,30 +247,30 @@ export default async function PassesGuide() {
             {breakEven.verdicts.map((v) => (
               <li
                 key={v.days}
-                className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                <p className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                   {v.days}日券 {gbp(v.price)}
                 </p>
-                <p className="mt-1 text-xl font-bold text-gray-900 dark:text-gray-100">
+                <p className="mt-1 text-xl font-bold text-neutral-900 dark:text-neutral-100">
                   有料 {v.nth}か所目
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                   累計 {v.total !== null ? gbp(v.total) : "—"} でようやく超過
                 </p>
               </li>
             ))}
           </ul>
 
-          <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
             {breakEven.priceNote}
           </p>
 
-          <div className="mt-4 rounded-lg border border-gray-300 p-4 dark:border-neutral-700">
-            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-300 p-4 dark:border-neutral-700">
+            <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
               パス側に有利な補正
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {breakEven.busCredit}
             </p>
           </div>
@@ -294,20 +294,20 @@ export default async function PassesGuide() {
 
         {/* --------------------------------------------- 3. 対象一覧 */}
         <Section n={3} id="covered">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {covered.intro}
           </p>
 
-          <p className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs leading-relaxed text-gray-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-gray-400">
+          <p className="mt-3 rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-xs leading-relaxed text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400">
             {covered.caveat}
           </p>
 
           <div className="mt-5 space-y-5">
             {grouped.map((g) => (
               <div key={g.category}>
-                <h3 className="flex items-baseline gap-2 text-sm font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="flex items-baseline gap-2 text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {g.label}
-                  <span className="font-mono text-xs font-normal text-gray-500 dark:text-gray-400">
+                  <span className="font-mono text-xs font-normal text-neutral-500 dark:text-neutral-400">
                     {g.spots.length}
                   </span>
                 </h3>
@@ -316,13 +316,13 @@ export default async function PassesGuide() {
                     <li key={spot.slug}>
                       <Link
                         href={`/sightseeing/${spot.slug}`}
-                        className="block rounded-lg border border-gray-200 p-3 text-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+                        className="block rounded-lg border border-neutral-200 p-3 text-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
                       >
-                        <span className="font-semibold text-gray-900 dark:text-gray-100">
+                        <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                           {spot.name}
                         </span>
                         {spot.londonPassNote && (
-                          <span className="mt-1 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                          <span className="mt-1 block text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                             {spot.londonPassNote}
                           </span>
                         )}
@@ -335,23 +335,23 @@ export default async function PassesGuide() {
           </div>
 
           {/* 読者は必ず「大英博物館は？」と探す。無いことの説明を置く。 */}
-          <div className="mt-5 rounded-lg border border-gray-300 p-4 dark:border-neutral-700">
-            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-300 p-4 dark:border-neutral-700">
+            <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
               無料の館をここに入れていない理由
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {covered.freeMuseumNote}
             </p>
           </div>
 
-          <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
             {covered.updatedNote}
           </p>
         </Section>
 
         {/* --------------------------------------------- 4. 対象外 */}
         <Section n={4} id="not-included">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {notIncluded.intro}
           </p>
 
@@ -359,19 +359,19 @@ export default async function PassesGuide() {
             {notIncluded.rows.map((r) => (
               <li
                 key={r.name}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {r.name}
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {r.note}
                 </p>
               </li>
             ))}
           </ul>
 
-          <p className="mt-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-4 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {notIncluded.conclusion}
           </p>
         </Section>
@@ -385,22 +385,22 @@ export default async function PassesGuide() {
                 className={`rounded-xl border p-5 ${
                   p.recommended
                     ? "border-emerald-400 dark:border-emerald-700"
-                    : "border-gray-200 dark:border-neutral-700"
+                    : "border-neutral-200 dark:border-neutral-700"
                 }`}
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                     {p.name}
                   </p>
-                  <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-600 dark:bg-neutral-800 dark:text-gray-400">
+                  <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
                     {p.axis}
                   </span>
                 </div>
 
-                <p className="mt-2 font-mono text-sm font-semibold text-gray-800 dark:text-gray-200">
+                <p className="mt-2 font-mono text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                   {p.priceLine}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                   {p.childLine}
                 </p>
 
@@ -409,15 +409,15 @@ export default async function PassesGuide() {
                     <dt className="shrink-0 font-semibold text-emerald-700 dark:text-emerald-400">
                       向く人
                     </dt>
-                    <dd className="text-gray-700 dark:text-gray-300">
+                    <dd className="text-neutral-700 dark:text-neutral-300">
                       {p.fitsWho}
                     </dd>
                   </div>
                   <div className="flex gap-2">
-                    <dt className="shrink-0 font-semibold text-gray-500 dark:text-gray-400">
+                    <dt className="shrink-0 font-semibold text-neutral-500 dark:text-neutral-400">
                       注意
                     </dt>
-                    <dd className="text-gray-600 dark:text-gray-400">
+                    <dd className="text-neutral-600 dark:text-neutral-400">
                       {p.caution}
                     </dd>
                   </div>
@@ -426,11 +426,11 @@ export default async function PassesGuide() {
             ))}
           </ul>
 
-          <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
-            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
+            <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
               {goldenPassNote.name}
             </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+            <p className="mt-1.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
               {goldenPassNote.body}
             </p>
           </div>
@@ -442,12 +442,12 @@ export default async function PassesGuide() {
             {traps.map((t) => (
               <li
                 key={t.id}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
-                <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {t.title}
                 </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {t.body}
                 </p>
               </li>
@@ -474,8 +474,8 @@ export default async function PassesGuide() {
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
@@ -510,12 +510,12 @@ function CrossLink({
   return (
     <Link
       href={href}
-      className="mt-4 block rounded-lg border border-gray-300 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+      className="mt-4 block rounded-lg border border-neutral-300 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
     >
-      <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+      <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
         {label}
       </span>
-      <span className="mt-0.5 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+      <span className="mt-0.5 block text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
         {blurb}
       </span>
     </Link>
@@ -536,7 +536,7 @@ function Section({
 
   return (
     <section id={id} className="scroll-mt-20">
-      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>

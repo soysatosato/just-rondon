@@ -79,7 +79,7 @@ export default function DishCard({ dish }: { dish: DishWithRestaurants }) {
           {dish.tagline}
         </p>
 
-        <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {dish.summary}
         </p>
 

@@ -73,7 +73,7 @@ export default function EventGuidesPage() {
   );
 
   return (
-    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 text-gray-900 dark:text-gray-100 sm:pb-10">
+    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 text-neutral-900 dark:text-neutral-100 sm:pb-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/events/guides" })} />
 
       <Breadcrumbs path="/events/guides" className="mb-6" />
@@ -82,7 +82,7 @@ export default function EventGuidesPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           ロンドンの年中行事ガイド
         </h1>
-        <p className="mt-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-4 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           毎年決まった時期に開かれる大きな行事に、行くための実務だけをまとめています。チケットは要るか、どこで見るか、何時に着けばいいか、どの駅が閉まるか、何を着ていくか。近い行事から順に並べています。
         </p>
       </header>
@@ -92,7 +92,7 @@ export default function EventGuidesPage() {
           <li key={entry.key}>
             <Link
               href={entry.href}
-              className="group block rounded-xl border border-gray-200 p-5 transition hover:border-emerald-400 dark:border-neutral-700"
+              className="group block rounded-xl border border-neutral-200 p-5 transition hover:border-emerald-400 dark:border-neutral-700"
             >
               <p className="text-xs font-semibold tabular-nums text-emerald-700 dark:text-emerald-400">
                 {entry.timing}
@@ -101,7 +101,7 @@ export default function EventGuidesPage() {
                 {entry.title}
                 <ArrowRight className="h-4 w-4 shrink-0 opacity-50 transition-transform group-hover:translate-x-0.5" />
               </h2>
-              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {entry.summary}
               </p>
             </Link>
@@ -109,7 +109,7 @@ export default function EventGuidesPage() {
         ))}
       </ul>
 
-      <p className="mt-10 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+      <p className="mt-10 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
         ほかの行事の日程は
         <Link
           href="/events/calendar"

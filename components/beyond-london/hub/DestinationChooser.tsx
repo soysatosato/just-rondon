@@ -76,8 +76,8 @@ export default function DestinationChooser({
 
   return (
     <div>
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 dark:border-neutral-700 dark:bg-neutral-900">
-        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-900">
+        <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           どれだけ時間がありますか
         </p>
         <ul className="mt-3 flex flex-wrap gap-2">
@@ -92,13 +92,13 @@ export default function DestinationChooser({
                   className={`rounded-lg px-4 py-2 text-left text-sm font-semibold transition ${
                     on
                       ? "bg-emerald-700 text-white"
-                      : "border border-gray-300 bg-white text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-300"
+                      : "border border-neutral-300 bg-white text-neutral-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                   }`}
                 >
                   {b.label}
                   <span
                     className={`ml-2 text-xs font-normal ${
-                      on ? "text-emerald-100" : "text-gray-500 dark:text-gray-400"
+                      on ? "text-emerald-100" : "text-neutral-500 dark:text-neutral-400"
                     }`}
                   >
                     {b.hours}
@@ -109,7 +109,7 @@ export default function DestinationChooser({
           })}
         </ul>
 
-        <p className="mt-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <p className="mt-4 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           何を見たいですか（複数選べます）
         </p>
         <ul className="mt-3 flex flex-wrap gap-2">
@@ -124,7 +124,7 @@ export default function DestinationChooser({
                   className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
                     on
                       ? "bg-emerald-700 text-white"
-                      : "border border-gray-300 bg-white text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-300"
+                      : "border border-neutral-300 bg-white text-neutral-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                   }`}
                 >
                   {BEYOND_THEME_LABELS[t]}
@@ -135,7 +135,7 @@ export default function DestinationChooser({
         </ul>
 
         {filtered && (
-          <p className="mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-4 flex flex-wrap items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
             <span>{ranked.length}か所が該当</span>
             <button
               type="button"
@@ -152,7 +152,7 @@ export default function DestinationChooser({
       </div>
 
       {bucket && (
-        <p className="mt-4 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-emerald-950/30 dark:text-gray-300">
+        <p className="mt-4 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3 text-sm leading-relaxed text-neutral-700 dark:bg-emerald-950/30 dark:text-neutral-300">
           {bucket.note}
         </p>
       )}
@@ -164,7 +164,7 @@ export default function DestinationChooser({
       </ul>
 
       {ranked.length === 0 && (
-        <p className="mt-5 rounded-lg border border-gray-200 p-5 text-sm leading-relaxed text-gray-600 dark:border-neutral-700 dark:text-gray-400">
+        <p className="mt-5 rounded-lg border border-neutral-200 p-5 text-sm leading-relaxed text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
           その組み合わせに当てはまる行き先はありません。条件を減らしてみてください。
         </p>
       )}

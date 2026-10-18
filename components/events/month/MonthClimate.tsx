@@ -45,25 +45,25 @@ export default function MonthClimate({
         {stats.map((s) => (
           <li
             key={s.label}
-            className="rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+            className="rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
           >
-            <p className="text-xs text-gray-500 dark:text-gray-400">{s.label}</p>
-            <p className="mt-0.5 text-lg font-bold tabular-nums text-gray-900 dark:text-gray-100">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">{s.label}</p>
+            <p className="mt-0.5 text-lg font-bold tabular-nums text-neutral-900 dark:text-neutral-100">
               {s.value}
             </p>
           </li>
         ))}
       </ul>
 
-      <div className="mt-3 rounded-lg bg-gray-50 p-3 text-sm dark:bg-neutral-800/60">
-        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+      <div className="mt-3 rounded-lg bg-neutral-50 p-3 text-sm dark:bg-neutral-800/60">
+        <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
           東京と比べると
         </p>
         <ul className="mt-1.5 space-y-1">
           {tokyoRows.map((row) => (
             <li
               key={row.label}
-              className="flex flex-wrap gap-x-3 text-gray-700 dark:text-gray-300"
+              className="flex flex-wrap gap-x-3 text-neutral-700 dark:text-neutral-300"
             >
               <span className="font-medium">{row.label}</span>
               <span className="tabular-nums">
@@ -77,7 +77,7 @@ export default function MonthClimate({
         </ul>
       </div>
 
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
         1991〜2020年の平年値(ロンドンは Met Office の Heathrow 観測所、東京は気象庁)。
         その年の実際の天気は、出発の1週間前から予報で確かめてください。
       </p>

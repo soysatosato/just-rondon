@@ -87,7 +87,7 @@ export default async function SongDetailsPage({
       />
       <div className="max-w-3xl mx-auto p-8 bg-background rounded-2xl shadow-lg">
         <div className="mb-6 sm:mb-8 text-center">
-          <p className="text-left mb-4 text-xs sm:text-base text-gray-600 dark:text-gray-300 mt-2">
+          <p className="text-left mb-4 text-xs sm:text-base text-neutral-600 dark:text-neutral-300 mt-2">
             このページでは、ミュージカル「{song.musical.name} (
             {song.musical.engName})」の{song.name}{" "}
             の歌詞と和訳、背景解説を掲載しています。

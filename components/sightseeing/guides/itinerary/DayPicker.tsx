@@ -31,7 +31,7 @@ export default function DayPicker() {
               className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
                 on
                   ? "bg-emerald-700 text-white"
-                  : "border border-gray-300 text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-300"
+                  : "border border-neutral-300 text-neutral-700 hover:border-emerald-400 dark:border-neutral-700 dark:text-neutral-300"
               }`}
             >
               {p.label}
@@ -44,9 +44,9 @@ export default function DayPicker() {
         <div
           key={p.nights}
           hidden={p.nights !== nights}
-          className="mt-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900"
+          className="mt-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900"
         >
-          <p className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <p className="text-base font-bold text-neutral-900 dark:text-neutral-100">
             {p.headline}
           </p>
 
@@ -63,19 +63,19 @@ export default function DayPicker() {
             ))}
           </ul>
 
-          <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {p.body}
           </p>
 
           {p.nights === 1 && (
-            <ol className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-1.5 rounded-lg bg-gray-50 p-3 dark:bg-neutral-800/60">
+            <ol className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-1.5 rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800/60">
               {oneDayRoute.map((r, i) => (
                 <li
                   key={r}
-                  className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300"
+                  className="flex items-center gap-1 text-sm text-neutral-700 dark:text-neutral-300"
                 >
                   {i > 0 && (
-                    <span aria-hidden className="text-gray-400">
+                    <span aria-hidden className="text-neutral-400">
                       →
                     </span>
                   )}

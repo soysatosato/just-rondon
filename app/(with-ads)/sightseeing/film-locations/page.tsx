@@ -101,18 +101,18 @@ export default function FilmLocationsHubPage() {
               </CardHeader>
 
               <CardContent className="space-y-3 text-sm leading-relaxed px-4 pb-4">
-                <p className="text-gray-700 dark:text-gray-200">{work.summary}</p>
+                <p className="text-neutral-700 dark:text-neutral-200">{work.summary}</p>
 
                 <div className="flex items-start gap-2">
                   <Route className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <p className="text-xs text-gray-700 dark:text-gray-200">
+                  <p className="text-xs text-neutral-700 dark:text-neutral-200">
                     {work.routeHint}
                   </p>
                 </div>
 
                 <div className="flex items-start gap-2">
                   <MapPin className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
-                  <p className="text-xs text-gray-700 dark:text-gray-200">
+                  <p className="text-xs text-neutral-700 dark:text-neutral-200">
                     掲載スポット {work.spots.length} か所
                   </p>
                 </div>
@@ -144,7 +144,7 @@ export default function FilmLocationsHubPage() {
               </Badge>
             </CardHeader>
             <CardContent className="space-y-3 text-sm leading-relaxed px-4 pb-4">
-              <p className="text-gray-700 dark:text-gray-200">
+              <p className="text-neutral-700 dark:text-neutral-200">
                 9¾番線、レドンホール・マーケット、ミレニアム橋、スタジオツアーまで。こちらは専用の特集ページにまとめています。
               </p>
               <p className="text-right text-xs text-purple-600 dark:text-purple-300 font-medium">
@@ -160,7 +160,7 @@ export default function FilmLocationsHubPage() {
           <Clapperboard className="h-5 w-5 text-sky-500" />
           ロケ地を訪ねる前に
         </h2>
-        <ul className="space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="space-y-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             <strong>「外観だけ」のロケ地が多い。</strong>
             屋敷の内部はスタジオセットで撮られていることがほとんどです。現地で室内を探しても見つからない、というのは巡礼で最もよくある落胆なので、各ページの「見学の可否」を先に確認してください。

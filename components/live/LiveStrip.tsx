@@ -40,7 +40,7 @@ const DOT_COLOR: Record<SeverityLevel, string> = {
   good: "bg-emerald-500",
   minor: "bg-amber-500",
   severe: "bg-red-500",
-  closed: "bg-gray-400",
+  closed: "bg-neutral-400",
 };
 
 /** 失敗を null に倒す。1本落ちても残り2本は出したいので個別に握りつぶす。 */

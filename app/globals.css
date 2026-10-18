@@ -130,11 +130,11 @@
 }
 
 .prose blockquote {
-  @apply text-xs text-gray-500 mt-1 mb-3;
+  @apply text-xs text-neutral-500 mt-1 mb-3;
 }
 
 .dark .prose blockquote {
-  @apply text-gray-400; /* ダークモードでは少し明るめのグレー */
+  @apply text-neutral-400; /* ダークモードでは少し明るめのグレー */
 }
 
 /*

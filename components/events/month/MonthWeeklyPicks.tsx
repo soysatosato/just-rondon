@@ -31,7 +31,7 @@ function PickRow({ pick }: { pick: Pick }) {
   return (
     <li className="py-3">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-        <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+        <span className="font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
           {formatPeriod(pick.startDate, pick.endDate)}
         </span>
         <span className={meta.textClass}>{meta.label}</span>
@@ -43,12 +43,12 @@ function PickRow({ pick }: { pick: Pick }) {
       </div>
       <Link
         href={`/events/week/${pick.brief.slug}`}
-        className="mt-1 block text-sm font-medium leading-snug text-gray-900 underline-offset-2 hover:underline dark:text-gray-100"
+        className="mt-1 block text-sm font-medium leading-snug text-neutral-900 underline-offset-2 hover:underline dark:text-neutral-100"
       >
         {pick.title}
       </Link>
       {pick.venue && (
-        <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
           {pick.venue}
         </p>
       )}
@@ -63,13 +63,13 @@ function PickList({ title, picks }: { title: string; picks: Pick[] }) {
 
   return (
     <div className="mt-6 first:mt-0">
-      <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
+      <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
         {title}
-        <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+        <span className="ml-2 text-xs font-normal text-neutral-500 dark:text-neutral-400">
           {picks.length}件
         </span>
       </h3>
-      <ul className="mt-1 divide-y divide-gray-200 dark:divide-neutral-700">
+      <ul className="mt-1 divide-y divide-neutral-200 dark:divide-neutral-700">
         {head.map((p) => (
           <PickRow key={p.id} pick={p} />
         ))}
@@ -79,7 +79,7 @@ function PickList({ title, picks }: { title: string; picks: Pick[] }) {
           <summary className="cursor-pointer py-2 text-sm font-semibold text-emerald-700 dark:text-emerald-400">
             残り{rest.length}件を見る
           </summary>
-          <ul className="divide-y divide-gray-200 dark:divide-neutral-700">
+          <ul className="divide-y divide-neutral-200 dark:divide-neutral-700">
             {rest.map((p) => (
               <PickRow key={p.id} pick={p} />
             ))}
@@ -111,7 +111,7 @@ export default function MonthWeeklyPicks({
     <div>
       {exhibitions.length + events.length > 0 && (
         <>
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             週次ダイジェスト「今週のロンドン」で紹介したもののうち、{month}
             月に開催中のものです。終わったものは外しています。会期は号を書いた時点の情報なので、出かける前に公式サイトで確かめてください。
           </p>
@@ -123,8 +123,8 @@ export default function MonthWeeklyPicks({
       )}
 
       {briefs.length > 0 && (
-        <div className="mt-6 rounded-lg bg-gray-50 p-4 dark:bg-neutral-800/60">
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+        <div className="mt-6 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800/60">
+          <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
             {month}月の「今週のロンドン」
           </p>
           <ul className="mt-2 space-y-1.5 text-sm">

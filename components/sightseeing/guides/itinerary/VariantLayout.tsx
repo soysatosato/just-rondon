@@ -71,7 +71,7 @@ export default function VariantLayout({
   const siblings = itineraryVariants.filter((v) => v !== variant);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(meta, PARENT)} />
       <JsonLd data={travelGuideArticleJsonLd(meta)} />
       <JsonLd data={faqPageJsonLd(faq, pageUrl)} />
@@ -86,7 +86,7 @@ export default function VariantLayout({
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {meta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {meta.engTitle}
         </p>
         <div className="mt-3">
@@ -111,14 +111,14 @@ export default function VariantLayout({
       <div className="space-y-12">
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="scroll-mt-20">
-            <h2 className="mb-1 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+            <h2 className="mb-1 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
               <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
                 {i + 1}
               </span>
               {s.label}
             </h2>
             {s.subtitle && (
-              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mb-4 text-sm text-neutral-500 dark:text-neutral-400">
                 {s.subtitle}
               </p>
             )}
@@ -143,15 +143,15 @@ export default function VariantLayout({
             <Link
               key={v.slug}
               href={itineraryVariantPath(v.slug)}
-              className="block rounded-xl border border-gray-300 p-5 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+              className="block rounded-xl border border-neutral-300 p-5 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
             >
               <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                 {v.eyebrow}
               </span>
-              <span className="mt-1 block text-base font-bold text-gray-900 dark:text-gray-100">
+              <span className="mt-1 block text-base font-bold text-neutral-900 dark:text-neutral-100">
                 {v.label}
               </span>
-              <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {v.blurb}
               </span>
             </Link>
@@ -159,8 +159,8 @@ export default function VariantLayout({
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

@@ -18,9 +18,9 @@ export default function MonthSun({
 }) {
   return (
     <div>
-      <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-neutral-700">
+      <div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-500 dark:bg-neutral-800/60 dark:text-gray-400">
+          <thead className="bg-neutral-50 text-xs text-neutral-500 dark:bg-neutral-800/60 dark:text-neutral-400">
             <tr>
               <th className="px-3 py-2 text-left font-semibold">日付</th>
               <th className="px-3 py-2 text-left font-semibold">日の出</th>
@@ -28,19 +28,19 @@ export default function MonthSun({
               <th className="px-3 py-2 text-left font-semibold">昼の長さ</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
+          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
             {sunDays.map((d) => (
               <tr key={d.day} className="tabular-nums">
-                <td className="px-3 py-2 text-gray-500 dark:text-gray-400">
+                <td className="px-3 py-2 text-neutral-500 dark:text-neutral-400">
                   {month}月{d.day}日
                 </td>
-                <td className="px-3 py-2 font-medium text-gray-900 dark:text-gray-100">
+                <td className="px-3 py-2 font-medium text-neutral-900 dark:text-neutral-100">
                   {d.sunrise}
                 </td>
-                <td className="px-3 py-2 font-bold text-gray-900 dark:text-gray-100">
+                <td className="px-3 py-2 font-bold text-neutral-900 dark:text-neutral-100">
                   {d.sunset}
                 </td>
-                <td className="px-3 py-2 text-gray-700 dark:text-gray-300">
+                <td className="px-3 py-2 text-neutral-700 dark:text-neutral-300">
                   {formatDuration(d.daylightMinutes)}
                 </td>
               </tr>
@@ -50,7 +50,7 @@ export default function MonthSun({
       </div>
 
       {clockChange && (
-        <div className="mt-3 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="mt-3 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <p className="font-semibold text-amber-700 dark:text-amber-400">
             {month}月{clockChange.day}日(日)に時計が変わります
           </p>
@@ -62,7 +62,7 @@ export default function MonthSun({
         </div>
       )}
 
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
         {year}年のロンドン中心部の時刻(現地時間)。天文計算による目安で、1〜2分の誤差があります。
       </p>
     </div>

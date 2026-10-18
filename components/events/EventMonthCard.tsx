@@ -57,14 +57,14 @@ export default function EventMonthCard({
               {content.title}
             </h3>
             {climate && (
-              <p className="mt-1 text-xs tabular-nums text-muted-foreground dark:text-gray-400">
+              <p className="mt-1 text-xs tabular-nums text-muted-foreground dark:text-neutral-400">
                 平年 最高{Math.round(climate.maxTemp)}℃ / 最低
                 {Math.round(climate.minTemp)}℃・雨の日 月
                 {Math.round(climate.rainDays)}日
               </p>
             )}
             {content.summary && (
-              <p className="mt-2 line-clamp-3 text-sm text-muted-foreground dark:text-gray-400">
+              <p className="mt-2 line-clamp-3 text-sm text-muted-foreground dark:text-neutral-400">
                 {stripInlineMarkdown(content.summary)}
               </p>
             )}

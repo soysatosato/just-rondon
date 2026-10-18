@@ -43,10 +43,10 @@ export default function GuideCallout({
       <p className={`text-xs font-bold tracking-wide ${style.label}`}>
         {style.text}
       </p>
-      <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">
+      <p className="mt-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
         {title}
       </p>
-      <div className="text-sm text-gray-700 dark:text-gray-300">
+      <div className="text-sm text-neutral-700 dark:text-neutral-300">
         <MarkdownBody size="compact">{body}</MarkdownBody>
       </div>
     </div>

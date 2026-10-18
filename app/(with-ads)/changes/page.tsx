@@ -58,7 +58,7 @@ export default async function ChangesHubPage() {
         <h1 className="pt-6 text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl dark:text-white">
           今月変わったロンドン
         </h1>
-        <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-gray-400">
+        <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-neutral-400">
           地下鉄やバスの運賃、観光地の入場料、ガス・電気の料金上限、最低賃金、ビザの制度。
           ロンドンの数字は思っているより頻繁に変わります。その月に変わったことを毎月1本にまとめ、
           これから変わることが決まっているものは下の予定表に並べています。どの項目にも出典を付けています。
@@ -80,7 +80,7 @@ export default async function ChangesHubPage() {
             <span className="mt-2 block text-xl font-bold leading-snug tracking-tight dark:text-white">
               {latest.title}
             </span>
-            <span className="mt-3 block text-sm leading-relaxed text-muted-foreground dark:text-gray-300">
+            <span className="mt-3 block text-sm leading-relaxed text-muted-foreground dark:text-neutral-300">
               {latest.headline}
             </span>
             <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold dark:text-white">
@@ -100,7 +100,7 @@ export default async function ChangesHubPage() {
             <h2 className="mt-1.5 text-lg font-bold tracking-tight sm:text-xl dark:text-white">
               これから変わること
             </h2>
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
               今後{SCHEDULE_MONTHS}か月のうちに変わることが分かっているもの。「例年」は毎年この時期に改定される決まりのもので、金額はまだ発表されていません。
             </p>
           </div>
@@ -113,7 +113,7 @@ export default async function ChangesHubPage() {
                   <p className="text-sm font-bold tabular-nums dark:text-white">
                     {formatScheduledDate(change)}
                     {change.recurring && (
-                      <span className="ml-2 rounded-sm border border-foreground/25 px-1 py-0.5 align-middle text-xs font-bold text-foreground/70 dark:text-gray-300">
+                      <span className="ml-2 rounded-sm border border-foreground/25 px-1 py-0.5 align-middle text-xs font-bold text-foreground/70 dark:text-neutral-300">
                         例年
                       </span>
                     )}
@@ -134,19 +134,19 @@ export default async function ChangesHubPage() {
                     <p className="mt-1.5 font-bold leading-snug dark:text-white">
                       {change.title}
                       {change.before && change.after && (
-                        <span className="ml-2 whitespace-nowrap text-sm font-semibold tabular-nums text-muted-foreground dark:text-gray-400">
+                        <span className="ml-2 whitespace-nowrap text-sm font-semibold tabular-nums text-muted-foreground dark:text-neutral-400">
                           {change.before} → {change.after}
                         </span>
                       )}
                     </p>
                     {change.note && (
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
                         {change.note}
                       </p>
                     )}
                     <Link
                       href={change.sitePath}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-bold underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground dark:text-gray-200"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-bold underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground dark:text-neutral-200"
                     >
                       詳しく
                       <ArrowRight className="h-3 w-3" />
@@ -161,7 +161,7 @@ export default async function ChangesHubPage() {
 
       <ChangeIssueList issues={older} />
 
-      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+      <p className="mt-10 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground dark:border-neutral-800 dark:text-neutral-500">
         予定表の日付と金額は、交通・光熱費・ビザ・仕事の各ガイドが参照している数字と同じものです。
         ガイドの数字を改定に合わせて直すと、この予定表も同時に進みます。
         いまの値段の一覧は

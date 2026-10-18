@@ -106,7 +106,7 @@ export default function SalaryCalculatorPage() {
   const pageUrl = `${SITE_URL}${SALARY_CALCULATOR_PATH}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-6xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-6xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({ name: MONEY_SECTION_NAME, path: MONEY_BASE }, [
           { name: PAGE_NAME, path: SALARY_CALCULATOR_PATH },
@@ -124,7 +124,7 @@ export default function SalaryCalculatorPage() {
         <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl">
           イギリスの手取り計算機
         </h1>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           年収・月給・時給を入れると、{year.label}
           年度の所得税・National Insurance・職場年金・学生ローンを引いた手取りがすぐに出ます。
           英語の給与明細と1行ずつ照らし合わせられる形で、日本円の目安も添えています。
@@ -171,7 +171,7 @@ export default function SalaryCalculatorPage() {
             <Card
               key={section.id}
               id={section.id}
-              className="scroll-mt-6 border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="scroll-mt-6 border-neutral-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
             >
               <CardContent className="space-y-2 p-6">
                 <h2 className="text-lg font-semibold md:text-xl">{section.title}</h2>
@@ -184,8 +184,8 @@ export default function SalaryCalculatorPage() {
 
       <GuideFaq items={SALARY_FAQ} />
 
-      <section className="mt-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <section className="mt-12 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           税率と閾値の出典
         </h2>
         <ul className="mt-3 space-y-2 text-sm">
@@ -202,13 +202,13 @@ export default function SalaryCalculatorPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           税率・閾値は毎年4月6日に改定されます。この計算機は{TAKE_HOME_AS_OF}
           時点で GOV.UK が公表している{year.label}年度の数字で計算しています。
         </p>
       </section>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         この計算機は、公表されている税率と閾値から手取りの目安を出すもので、税務上の助言ではありません。
         実際の控除額は、ほかの所得、税コードの調整、給与の支払い方、年金の制度によって変わります。
         正確な額は給与明細と HMRC の個人アカウントで確認してください。
@@ -219,11 +219,11 @@ export default function SalaryCalculatorPage() {
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {RELATED.map((item) => (
             <Link key={item.href} href={item.href} className="block">
-              <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+              <Card className="h-full border-neutral-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                 <CardContent className="p-5">
                   <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">{item.eyebrow}</span>
                   <span className="mt-1 block text-base font-semibold">{item.label}</span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {item.blurb}
                   </span>
                 </CardContent>

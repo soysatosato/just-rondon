@@ -42,8 +42,8 @@ export default function AreaChooser({ cards }: { cards: AreaCard[] }) {
 
   return (
     <div>
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-5 dark:border-neutral-700 dark:bg-neutral-900">
-        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-5 dark:border-neutral-700 dark:bg-neutral-900">
+        <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           何を優先しますか（複数選べます）
         </p>
         <ul className="mt-3 flex flex-wrap gap-2">
@@ -58,7 +58,7 @@ export default function AreaChooser({ cards }: { cards: AreaCard[] }) {
                   className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
                     active
                       ? "bg-emerald-700 text-white"
-                      : "border border-gray-300 bg-white text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-300"
+                      : "border border-neutral-300 bg-white text-neutral-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                   }`}
                 >
                   {n.label}
@@ -68,7 +68,7 @@ export default function AreaChooser({ cards }: { cards: AreaCard[] }) {
           })}
         </ul>
         {selected.length > 0 && (
-          <p className="mt-3 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-3 flex flex-wrap items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
             <span>{ranked.length}エリアが該当</span>
             <button
               type="button"
@@ -88,7 +88,7 @@ export default function AreaChooser({ cards }: { cards: AreaCard[] }) {
       </ul>
 
       {ranked.length === 0 && (
-        <p className="mt-5 rounded-lg border border-gray-200 p-5 text-sm text-gray-600 dark:border-neutral-700 dark:text-gray-400">
+        <p className="mt-5 rounded-lg border border-neutral-200 p-5 text-sm text-neutral-600 dark:border-neutral-700 dark:text-neutral-400">
           その組み合わせに当てはまるエリアはありません。条件を減らしてみてください。
         </p>
       )}

@@ -78,10 +78,10 @@ export default function ChangeIssueView({
             </span>
           </p>
 
-          <p className="mt-6 text-[17px] font-semibold leading-[1.9] sm:text-lg dark:text-gray-100">
+          <p className="mt-6 text-[17px] font-semibold leading-[1.9] sm:text-lg dark:text-neutral-100">
             {issue.headline}
           </p>
-          <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-gray-400">
+          <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-neutral-400">
             {issue.summary}
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function ChangeIssueView({
          * いつ時点の調査かを出す。予告の項目は発表後に覆ることがあり、
          * 日付の無い「これから変わる」は誤情報になりうる。
          */}
-        <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-xs tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+        <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-xs tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-neutral-500">
           <span>{format(issue.researchedAt, "yyyy年M月d日")} 調査</span>
           <span aria-hidden className="opacity-40">
             ／
@@ -132,7 +132,7 @@ export default function ChangeIssueView({
                 <h2 className="mt-1.5 text-xl font-bold tracking-tight sm:text-2xl dark:text-white">
                   {section.heading(monthLabel)}
                 </h2>
-                <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+                <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
                   {section.note}
                 </p>
               </div>
@@ -156,7 +156,7 @@ export default function ChangeIssueView({
       ))}
 
       {issue.items.length === 0 && (
-        <p className="py-10 text-center text-sm text-muted-foreground dark:text-gray-400">
+        <p className="py-10 text-center text-sm text-muted-foreground dark:text-neutral-400">
           この月に特筆すべき変更はありませんでした。
         </p>
       )}

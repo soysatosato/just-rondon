@@ -55,7 +55,7 @@ function SectionHeading({
             <Icon className="h-4 w-4 shrink-0 opacity-60" />
             {heading}
           </h2>
-          <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
             {note}
           </p>
         </div>
@@ -291,7 +291,7 @@ export default function WeeklyBriefView({
       )}
 
       {brief.items.length === 0 && staples.length === 0 && (
-        <p className="py-10 text-center text-sm text-muted-foreground dark:text-gray-400">
+        <p className="py-10 text-center text-sm text-muted-foreground dark:text-neutral-400">
           この週に特筆すべき情報はありませんでした。
         </p>
       )}

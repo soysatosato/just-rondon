@@ -90,7 +90,7 @@ export default function EventGuideView({
   };
 
   return (
-    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 text-gray-900 dark:text-gray-100 sm:pb-10">
+    <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 text-neutral-900 dark:text-neutral-100 sm:pb-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/events/guides",
@@ -109,7 +109,7 @@ export default function EventGuideView({
         <h1 className="mt-1 text-2xl font-bold leading-tight md:text-4xl">
           {guide.title}
         </h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           {guide.engName}
         </p>
 
@@ -125,7 +125,7 @@ export default function EventGuideView({
             : `${edition.year}年の日程です(次回は未発表)`}
         </p>
 
-        <p className="mt-5 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-5 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {guide.lead}
         </p>
 
@@ -133,16 +133,16 @@ export default function EventGuideView({
           {glance.map((item) => (
             <div
               key={item.label}
-              className="rounded-lg border border-gray-200 bg-white p-3.5 dark:border-neutral-700 dark:bg-neutral-900"
+              className="rounded-lg border border-neutral-200 bg-white p-3.5 dark:border-neutral-700 dark:bg-neutral-900"
             >
-              <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                 {item.label}
               </dt>
-              <dd className="mt-1 text-base font-bold leading-snug tabular-nums text-gray-900 dark:text-gray-100">
+              <dd className="mt-1 text-base font-bold leading-snug tabular-nums text-neutral-900 dark:text-neutral-100">
                 {item.value}
               </dd>
               {item.sub && (
-                <dd className="mt-0.5 text-xs leading-snug text-gray-500 dark:text-gray-400">
+                <dd className="mt-0.5 text-xs leading-snug text-neutral-500 dark:text-neutral-400">
                   {item.sub}
                 </dd>
               )}
@@ -160,15 +160,15 @@ export default function EventGuideView({
           title={`${edition.year}年の日程`}
         >
           {!upcoming && (
-            <p className="mb-4 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mb-4 rounded-lg border border-amber-600/30 bg-amber-600/5 p-3.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {edition.year}
               年の開催は終わりました。次回の日程はまだ発表されていないか、このページにまだ載せていません。例年は{guide.usualTiming}です。
             </p>
           )}
           <EditionBlock edition={edition} />
           {previous && (
-            <details className="mt-4 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <summary className="cursor-pointer text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <details className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <summary className="cursor-pointer text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                 前回({previous.year}年)の記録
               </summary>
               <div className="mt-3">
@@ -186,7 +186,7 @@ export default function EventGuideView({
         {guide.places && (
           <MonthSection n={n("places")} id="places" title={guide.places.title}>
             {guide.places.intro && (
-              <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mb-4 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {guide.places.intro}
               </p>
             )}
@@ -194,17 +194,17 @@ export default function EventGuideView({
               {guide.places.items.map((place) => (
                 <li
                   key={place.name}
-                  className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+                  className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700"
                 >
-                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                     {place.name}
                   </p>
                   {place.meta && (
-                    <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                       {place.meta}
                     </p>
                   )}
-                  <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {place.body}
                   </p>
                   {place.href && (
@@ -229,13 +229,13 @@ export default function EventGuideView({
                 <p className="text-sm font-bold tabular-nums text-emerald-700 dark:text-emerald-400">
                   {step.time}
                 </p>
-                <p className="mt-0.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-0.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {step.body}
                 </p>
               </li>
             ))}
           </ol>
-          <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-4 text-xs text-neutral-500 dark:text-neutral-400">
             時刻は目安です。その年の時刻は「{edition.year}年の日程」を見てください。
           </p>
         </MonthSection>
@@ -250,16 +250,16 @@ export default function EventGuideView({
           <Summary>{guide.wear.summary}</Summary>
           <ItemList items={guide.wear.items} className="mt-4" />
           {guide.wear.banned.length > 0 && (
-            <div className="mt-4 rounded-lg bg-gray-50 p-4 dark:bg-neutral-800/60">
-              <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+            <div className="mt-4 rounded-lg bg-neutral-50 p-4 dark:bg-neutral-800/60">
+              <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
                 持ち込めないもの
               </p>
-              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
                 {guide.wear.banned.map((b) => (
                   <li key={b}>{b}</li>
                 ))}
               </ul>
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                 主催者がはっきり示しているものだけを挙げています。ほかの品は、チケットの規約で確かめてください。
               </p>
             </div>
@@ -278,7 +278,7 @@ export default function EventGuideView({
       </div>
 
       <section className="mt-12">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           あわせて読む
         </h2>
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -286,7 +286,7 @@ export default function EventGuideView({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="block rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-900 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-100"
+                className="block rounded-lg border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-900 transition hover:border-emerald-400 dark:border-neutral-700 dark:text-neutral-100"
               >
                 {link.label}
               </Link>
@@ -295,8 +295,8 @@ export default function EventGuideView({
         </ul>
       </section>
 
-      <section className="mt-12 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <section className="mt-12 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           参考・公式情報
         </h2>
         <ul className="mt-3 space-y-2 text-sm">
@@ -313,7 +313,7 @@ export default function EventGuideView({
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           {formatGuideDate(edition.checkedAt, true)}
           に公式の情報で確かめた内容です。日程・値段・持ち込みの規則は年によって変わるので、出かける前に公式サイトで確かめてください。
         </p>
@@ -349,18 +349,18 @@ function EditionBlock({ edition }: { edition: GuideEdition }) {
         {edition.dates.map((d) => (
           <li
             key={`${d.label ?? ""}${d.date}`}
-            className="flex gap-3 rounded-lg border border-gray-200 p-3.5 dark:border-neutral-700"
+            className="flex gap-3 rounded-lg border border-neutral-200 p-3.5 dark:border-neutral-700"
           >
             <CalendarCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
             <div className="min-w-0">
-              <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                 {d.label && <span className="mr-2">{d.label}</span>}
                 <span className="tabular-nums">
                   {formatGuideDateRange(d.date, d.endDate)}
                 </span>
               </p>
               {d.time && (
-                <p className="mt-0.5 text-sm text-gray-700 dark:text-gray-300">
+                <p className="mt-0.5 text-sm text-neutral-700 dark:text-neutral-300">
                   {d.time}
                 </p>
               )}
@@ -369,13 +369,13 @@ function EditionBlock({ edition }: { edition: GuideEdition }) {
         ))}
       </ul>
       {edition.notes.length > 0 && (
-        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-gray-700 marker:text-gray-400 dark:text-gray-300">
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
           {edition.notes.map((note) => (
             <li key={note}>{note}</li>
           ))}
         </ul>
       )}
-      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
         {formatGuideDate(edition.checkedAt, true)}に確認(
         {edition.sources.map((s, i) => (
           <span key={s.url}>
@@ -403,7 +403,7 @@ function sourceShortLabel(source: GuideSource): string {
 
 function Summary({ children }: { children: React.ReactNode }) {
   return (
-    <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-gray-900 dark:bg-emerald-950/30 dark:text-gray-100">
+    <p className="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-4 text-sm font-medium leading-relaxed text-neutral-900 dark:bg-emerald-950/30 dark:text-neutral-100">
       {children}
     </p>
   );
@@ -421,12 +421,12 @@ function ItemList({
       {items.map((item) => (
         <li
           key={item.title}
-          className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
+          className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-700"
         >
-          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+          <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
             {item.title}
           </p>
-          <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {item.body}
           </p>
         </li>

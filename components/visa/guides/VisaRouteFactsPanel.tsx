@@ -42,7 +42,7 @@ export default function VisaRouteFactsPanel({
   rows.push({ label: "審査期間", value: facts.processing });
 
   return (
-    <section className="mb-8 rounded-xl border border-gray-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+    <section className="mb-8 rounded-xl border border-neutral-300 bg-white p-5 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
       <h2 className="text-base font-bold">このビザの要件</h2>
 
       <p className="mt-3">
@@ -54,20 +54,20 @@ export default function VisaRouteFactsPanel({
           {VISA_SPONSOR_LABELS[facts.sponsor]}
         </span>
       </p>
-      <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+      <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
         {facts.sponsorNote}
       </p>
 
-      <dl className="mt-4 grid gap-4 border-t border-gray-200 pt-4 dark:border-neutral-700 sm:grid-cols-2">
+      <dl className="mt-4 grid gap-4 border-t border-neutral-200 pt-4 dark:border-neutral-700 sm:grid-cols-2">
         {rows.map((row) => (
           <div key={row.label}>
-            <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+            <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
               {row.label}
             </dt>
-            <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+            <dd className="mt-0.5 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
               {row.value}
               {row.note && (
-                <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
                   {row.note}
                 </span>
               )}
@@ -87,11 +87,11 @@ export default function VisaRouteFactsPanel({
             : "border-red-500 bg-red-50 dark:bg-red-950/25"
         }`}
       >
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           永住（ILR）に
           {facts.countsTowardsIlr ? "カウントされます" : "カウントされません"}
         </p>
-        <p className="mt-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-1 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {facts.ilrNote}
         </p>
       </div>

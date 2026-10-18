@@ -73,7 +73,7 @@ export default async function ConfirmPage({
 
   return (
     <SitePageShell>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500 dark:text-neutral-400">
         {result.kicker}
       </p>
       <h1
@@ -81,7 +81,7 @@ export default async function ConfirmPage({
       >
         {result.title}
       </h1>
-      <p className="mt-4 max-w-xl text-sm leading-8 text-gray-700 dark:text-gray-300 md:text-base">
+      <p className="mt-4 max-w-xl text-sm leading-8 text-neutral-700 dark:text-neutral-300 md:text-base">
         {result.body}
       </p>
 

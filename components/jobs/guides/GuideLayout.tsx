@@ -44,7 +44,7 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
   ];
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd data={breadcrumbJsonLd(article)} />
       <JsonLd data={articleJsonLd(article)} />
 
@@ -58,11 +58,11 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {article.engTitle}
         </p>
         {article.summary && (
-          <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
             {stripInlineMarkdown(article.summary)}
           </p>
         )}
@@ -85,11 +85,11 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
       <div className="space-y-8">
         {article.sections.map((section, i) => (
           <GuideSectionCard key={section.title}>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
             </h2>
             {section.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 {section.subtitle}
               </p>
             )}
@@ -103,12 +103,12 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
         <div className="mt-4 space-y-3">
           {relatedGuides.map((g) => (
             <Link key={g.slug} href={guidePath(g.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
+              <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="p-5">
                   <span className="block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -118,8 +118,8 @@ export default function GuideLayout({ article }: { article: JobGuideArticle }) {
         </div>
       </section>
 
-      <div className="mt-6 rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-6 space-y-2">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-6 space-y-2">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

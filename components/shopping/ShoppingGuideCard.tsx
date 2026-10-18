@@ -24,10 +24,10 @@ export default function ShoppingGuideCard({
 
   return (
     <Link href={shoppingGuidePath(meta.slug)} className="block">
-      <Card className="overflow-hidden border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+      <Card className="overflow-hidden border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
         <div className="sm:flex">
           {hero && (
-            <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-gray-100 dark:bg-neutral-800 sm:aspect-auto sm:h-auto sm:w-48">
+            <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-neutral-100 dark:bg-neutral-800 sm:aspect-auto sm:h-auto sm:w-48">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 {...responsiveImage(hero.image, "(min-width: 640px) 192px, 100vw")}
@@ -46,7 +46,7 @@ export default function ShoppingGuideCard({
             <span className="mt-1 block text-base font-semibold">
               {meta.label}
             </span>
-            <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
               {meta.blurb}
             </span>
           </CardContent>

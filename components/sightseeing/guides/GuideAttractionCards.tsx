@@ -23,7 +23,7 @@ export default async function GuideAttractionCards({
   return (
     <section className="mt-12">
       <h2 className="text-lg font-semibold">{heading}</h2>
-      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
         料金・所要時間・行き方は、それぞれの詳細ページにまとめています。
       </p>
 
@@ -47,7 +47,7 @@ export default async function GuideAttractionCards({
             <p className="mt-2 text-sm font-medium group-hover:underline">
               {spot.name}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
               {[
                 spot.isFree ? "入場無料" : spot.priceAdult,
                 spot.durationText ? `所要 ${spot.durationText}` : null,

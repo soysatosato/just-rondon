@@ -40,11 +40,11 @@ export default function MealDealPrices({
               className={`rounded-lg border p-4 ${
                 isCheapest
                   ? "border-emerald-400 bg-emerald-50/60 dark:border-emerald-700 dark:bg-emerald-950/25"
-                  : "border-gray-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
+                  : "border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
               }`}
             >
               <p className="flex items-baseline justify-between gap-2">
-                <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   {deal.label}
                 </span>
                 {isCheapest && (
@@ -54,21 +54,21 @@ export default function MealDealPrices({
                 )}
               </p>
 
-              <p className="mt-2 text-2xl font-bold leading-none text-gray-900 dark:text-gray-100">
+              <p className="mt-2 text-2xl font-bold leading-none text-neutral-900 dark:text-neutral-100">
                 {gbp(deal.member ?? deal.standard)}
               </p>
 
               {deal.member !== undefined ? (
-                <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                <p className="mt-1.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
                   <span className="line-through">{gbp(deal.standard)}</span>
                   {" → "}
-                  <strong className="font-semibold text-gray-900 dark:text-gray-100">
+                  <strong className="font-semibold text-neutral-900 dark:text-neutral-100">
                     {deal.scheme}
                   </strong>
                   で{gbp(saving)}安い
                 </p>
               ) : (
-                <p className="mt-1.5 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                <p className="mt-1.5 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                   会員価格なし。この額が唯一の値段
                 </p>
               )}
@@ -77,7 +77,7 @@ export default function MealDealPrices({
         })}
       </ul>
 
-      <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+      <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
         {asOf}時点。会員価格のある{withMemberPrice}
         社は、カードを出さないと通常価格を払うことになります。価格は年に1〜2回改定されるため、最終的な金額は店頭でご確認ください。
       </p>

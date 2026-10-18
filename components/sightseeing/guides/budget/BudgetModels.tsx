@@ -22,7 +22,7 @@ export default function BudgetModels() {
       <div
         role="tablist"
         aria-label="予算帯"
-        className="flex gap-1 rounded-lg bg-gray-100 p-1 dark:bg-neutral-800"
+        className="flex gap-1 rounded-lg bg-neutral-100 p-1 dark:bg-neutral-800"
       >
         {tiers.map((t) => {
           const on = t.id === active;
@@ -35,8 +35,8 @@ export default function BudgetModels() {
               onClick={() => setActive(t.id)}
               className={`flex-1 rounded-md px-3 py-2 text-sm font-semibold transition ${
                 on
-                  ? "bg-white text-gray-900 shadow-sm dark:bg-neutral-950 dark:text-gray-100"
-                  : "text-gray-600 hover:text-gray-900 dark:text-gray-400"
+                  ? "bg-white text-neutral-900 shadow-sm dark:bg-neutral-950 dark:text-neutral-100"
+                  : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400"
               }`}
             >
               {t.label}
@@ -49,13 +49,13 @@ export default function BudgetModels() {
         <div
           key={tier.id}
           hidden={tier.id !== active}
-          className="mt-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900"
+          className="mt-4 rounded-xl border border-neutral-200 bg-white p-5 dark:border-neutral-700 dark:bg-neutral-900"
         >
           <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
               {tier.total}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
               1日あたり約 {tier.perDay}
             </p>
           </div>
@@ -63,29 +63,29 @@ export default function BudgetModels() {
             {tier.blurb}
           </p>
 
-          <ul className="mt-4 divide-y divide-gray-200 dark:divide-neutral-800">
+          <ul className="mt-4 divide-y divide-neutral-200 dark:divide-neutral-800">
             {tier.rows.map((r) => (
               <li
                 key={r.item}
                 className="flex items-baseline justify-between gap-4 py-2.5 text-sm"
               >
-                <span className="text-gray-700 dark:text-gray-300">{r.item}</span>
-                <span className="shrink-0 font-mono font-semibold text-gray-900 dark:text-gray-100">
+                <span className="text-neutral-700 dark:text-neutral-300">{r.item}</span>
+                <span className="shrink-0 font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                   {r.amount}
                 </span>
               </li>
             ))}
-            <li className="flex items-baseline justify-between gap-4 border-t-2 border-gray-300 py-3 dark:border-neutral-600">
-              <span className="font-bold text-gray-900 dark:text-gray-100">
+            <li className="flex items-baseline justify-between gap-4 border-t-2 border-neutral-300 py-3 dark:border-neutral-600">
+              <span className="font-bold text-neutral-900 dark:text-neutral-100">
                 合計
               </span>
-              <span className="shrink-0 font-mono text-lg font-bold text-gray-900 dark:text-gray-100">
+              <span className="shrink-0 font-mono text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 約 {tier.total}
               </span>
             </li>
           </ul>
 
-          <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             {tier.closing}
           </p>
         </div>

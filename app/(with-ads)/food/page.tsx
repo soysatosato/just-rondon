@@ -160,14 +160,14 @@ function ScenarioCard({
 
   return (
     <Link href={foodGuidePath(slug)} className="block">
-      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-        <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+      <article className="flex h-full flex-col rounded-xl border border-neutral-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+        <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
           {audience}
         </p>
         <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
           → {answer}
         </p>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {detail}
         </p>
         <span className="mt-4 text-sm font-medium text-link">
@@ -182,7 +182,7 @@ export default function FoodHubPage() {
   const pageUrl = `${SITE_URL}${FOOD_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: FOOD_SECTION_NAME,
@@ -203,10 +203,10 @@ export default function FoodHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           ロンドンで食費を抑えるコツ
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           How to Eat Cheaply in London
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           ロンドンの外食は高い。ただ、
           <strong>仕組みを知っているかどうかだけで差がつく</strong>
           場面がかなりあります。滞在が数日なのか数ヶ月なのかで効く手段が変わるので、
@@ -221,10 +221,10 @@ export default function FoodHubPage() {
         まず会員カードと水という、費用ゼロで確実に効くものに絞って示す。
       */}
       <div className="mt-8 rounded-lg border border-sky-300 bg-sky-50/70 p-5 dark:border-sky-900/60 dark:bg-sky-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           迷ったら、この2つだけ先にやってください
         </p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             ・<strong>Clubcard か Nectar を作る</strong>（無料・その場で作れる・
             旅行者でも可）。イギリスのスーパーは会員価格と通常価格の二本立てで、
@@ -235,7 +235,7 @@ export default function FoodHubPage() {
             1日1本買うと月{gbp(WATER_SAVING.perMonth30Days)}前後の出費になります
           </li>
         </ul>
-        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           どちらも費用ゼロで、効果が確実です。
           <Link
             href="/food/loyalty-cards"
@@ -251,7 +251,7 @@ export default function FoodHubPage() {
         <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
           自分の状況を選んでください
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           全{foodGuides.length}
           本。一番近いものが1つ見つかれば、それがあなたの読むべきページです。
         </p>
@@ -279,18 +279,18 @@ export default function FoodHubPage() {
         <h2 id="price-overview" className="text-xl font-bold md:text-2xl">
           価格の基準線
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           「これは高いのか安いのか」を判断する目安です。
           <strong>Meal Deal の価格は年に1〜2回改定される</strong>
           ため、最終的な金額は店頭で確認してください。
         </p>
 
-        <h3 className="mt-6 text-sm font-bold text-gray-700 dark:text-gray-300">
+        <h3 className="mt-6 text-sm font-bold text-neutral-700 dark:text-neutral-300">
           Meal Deal ——チェーン別、実際に払う額の安い順
         </h3>
         <MealDealPrices asOf={FOOD_AS_OF} />
 
-        <h3 className="mt-8 text-sm font-bold text-gray-700 dark:text-gray-300">
+        <h3 className="mt-8 text-sm font-bold text-neutral-700 dark:text-neutral-300">
           そのほかの目安
         </h3>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -322,14 +322,14 @@ export default function FoodHubPage() {
           ].map((row) => (
             <div
               key={row.label}
-              className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+              className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
             >
-              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                 {row.label}
               </dt>
-              <dd className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+              <dd className="mt-1 text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {row.value}
-                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-gray-500 dark:text-gray-400">
+                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {row.note}
                 </span>
               </dd>
@@ -337,8 +337,8 @@ export default function FoodHubPage() {
           ))}
         </dl>
 
-        <p className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-amber-950/25 dark:text-gray-300">
-          <strong className="text-gray-900 dark:text-gray-100">
+        <p className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-neutral-700 dark:bg-amber-950/25 dark:text-neutral-300">
+          <strong className="text-neutral-900 dark:text-neutral-100">
             値引きの時刻と割引率は、店舗ごとの裁量で決まります。
           </strong>
           上の数字は複数店舗で確認した目安で、保証されるものではありません。
@@ -353,21 +353,21 @@ export default function FoodHubPage() {
         ハブ自体にコメント欄は置かない（話題が混ざって読めなくなるため）。
       */}
       <div className="mt-10 rounded-lg border border-emerald-200 bg-emerald-50/70 p-6 dark:border-emerald-900/60 dark:bg-emerald-950/25">
-        <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+        <h2 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
           あなたの工夫を教えてください
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           各記事の末尾にコメント欄があります。「この店舗は何時に値引きが入る」
           「このスーパーが安い」といった具体的な情報は、同じエリアに住む人にそのまま役立ちます。
           実践している工夫があれば、関連する記事のコメント欄に残していってください。
         </p>
       </div>
 
-      <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           あわせて読みたい
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           食費は生活費の一部です。住まいと働き方の条件が決まると、
           食費に回せる金額も変わります。
         </p>
@@ -399,7 +399,7 @@ export default function FoodHubPage() {
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの価格・割引率・値引きの時刻は{FOOD_AS_OF}
         時点で確認したものです。Meal Deal の価格は年に1〜2回改定され、
         閉店前の値引きや対象商品は店舗ごとの裁量で運用されているため、

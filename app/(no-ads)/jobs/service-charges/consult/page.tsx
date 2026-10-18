@@ -46,7 +46,7 @@ const CANNOT = [
 export default function ConsultPage() {
   return (
     <SitePageShell>
-      <nav className="mb-8 text-xs text-gray-500 dark:text-gray-400">
+      <nav className="mb-8 text-xs text-neutral-500 dark:text-neutral-400">
         <Link href={SERVICE_CHARGES_PATH} className="hover:underline">
           サービスチャージ
         </Link>
@@ -62,7 +62,7 @@ export default function ConsultPage() {
         lede="ロンドンの飲食店で、サービスチャージが正しく配られていない。そう感じている方の相談を、日本語で受け付けています。"
       />
 
-      <div className="mt-10 space-y-8 text-sm leading-7 text-gray-700 dark:text-gray-300 md:text-base md:leading-8">
+      <div className="mt-10 space-y-8 text-sm leading-7 text-neutral-700 dark:text-neutral-300 md:text-base md:leading-8">
         <p>
           相談に乗るのは、ロンドンのレストランで未払いのサービスチャージを請求し、弁護士を立てずに審判所の判決を得て、回収まで進めた本人です。経過は
           <Link
@@ -76,7 +76,7 @@ export default function ConsultPage() {
 
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               できること
             </h2>
             <ul className="mt-2 space-y-2">
@@ -91,13 +91,13 @@ export default function ConsultPage() {
             </ul>
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               できないこと
             </h2>
             <ul className="mt-2 space-y-2">
               {CANNOT.map((item) => (
                 <li key={item} className="flex gap-2 text-sm leading-7">
-                  <span aria-hidden className="text-gray-400 dark:text-gray-500">
+                  <span aria-hidden className="text-neutral-400 dark:text-neutral-500">
                     ×
                   </span>
                   {item}
@@ -107,7 +107,7 @@ export default function ConsultPage() {
           </div>
         </div>
 
-        <p className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm leading-7 dark:border-neutral-700 dark:bg-neutral-900">
+        <p className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-sm leading-7 dark:border-neutral-700 dark:bg-neutral-900">
           1週間を目安に、メールで返信します。費用はかかりません。期限が迫っているときは、返信を待たずに
           <a
             href={ACAS_EARLY_CONCILIATION_URL}

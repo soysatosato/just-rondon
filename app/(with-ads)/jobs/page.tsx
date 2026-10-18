@@ -52,7 +52,7 @@ export default function JobsHubPage() {
   };
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -66,7 +66,7 @@ export default function JobsHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {TITLE}
         </h1>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {DESCRIPTION}
         </p>
       </header>
@@ -75,18 +75,18 @@ export default function JobsHubPage() {
 
       <section>
         <h2 className="text-lg font-semibold">働き方の基本ガイド</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           最低賃金・契約・ビザ・ハラスメント対応など、働き始める前後に知っておきたいテーマ別ガイドです。
         </p>
         <div className="mt-4 space-y-3">
           {guides.map((g) => (
             <Link key={g.slug} href={guidePath(g.slug)} className="block">
-              <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
+              <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="p-5">
                   <span className="block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -100,7 +100,7 @@ export default function JobsHubPage() {
                 <span className="block text-base font-semibold">
                   イギリスの手取り計算機
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   時給・年収から、所得税・National Insurance・職場年金・学生ローンを引いた手取りを計算。給与明細の税コードを入れると、多く引かれている額も分かります。
                 </span>
               </CardContent>
@@ -111,17 +111,17 @@ export default function JobsHubPage() {
 
       <section className="mt-12">
         <h2 className="text-lg font-semibold">サービスチャージ・チップ</h2>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           レストラン・ホテル業界で特にトラブルになりやすいテーマを、制度解説と実体験の両面でまとめています。
         </p>
         <div className="mt-4 space-y-3">
           <Link href="/jobs/service-charges" className="block">
-            <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
+            <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
               <CardContent className="p-5">
                 <span className="block text-base font-semibold">
                   英国サービスチャージ完全ガイド
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   Tipping Act 2023の内容、強制・任意の違い、Tronc制度、税務・最低賃金との関係まで網羅的に解説。
                 </span>
               </CardContent>
@@ -133,19 +133,19 @@ export default function JobsHubPage() {
                 <span className="block text-base font-semibold">
                   サービスチャージ未払いで審判所に申立てた記録
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   Acas Early ConciliationからEmployment Tribunalの判決、強制執行までの実体験。認容された計算方法も公開。
                 </span>
               </CardContent>
             </Card>
           </Link>
           <Link href="/jobs/service-charges/stores" className="block">
-            <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
+            <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
               <CardContent className="p-5">
                 <span className="block text-base font-semibold">
                   ロンドン市内のサービスチャージ実態調査
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   働いた人からの匿名回答を店舗ごとに公開。3分の設問に答えると、自分の職場が法律どおりかその場で判定できます。
                 </span>
               </CardContent>

@@ -91,7 +91,7 @@ export default function BrandRelated({
                   {BRAND_CATEGORY_LABELS[b.category as BrandCategory] ?? "ブランド"}
                   {b.founded ? ` · ${b.founded}年創業` : ""}
                 </p>
-                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {b.blurb}
                 </p>
               </div>

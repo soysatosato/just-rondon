@@ -60,7 +60,7 @@ export default function Pagination({
       {currentPage > 1 && (
         <Link
           href={createPageUrl(currentPage - 1)}
-          className="px-3 py-1 border rounded border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          className="px-3 py-1 border rounded border-neutral-300 text-neutral-700 dark:border-neutral-600 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition"
         >
           前へ
         </Link>
@@ -75,7 +75,7 @@ export default function Pagination({
             ${
               page === currentPage
                 ? "bg-blue-600 text-white border-blue-600"
-                : "border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                : "border-neutral-300 text-neutral-700 dark:border-neutral-600 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700"
             }`}
         >
           {page}
@@ -86,7 +86,7 @@ export default function Pagination({
       {currentPage < totalPages && (
         <Link
           href={createPageUrl(currentPage + 1)}
-          className="px-3 py-1 border rounded border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          className="px-3 py-1 border rounded border-neutral-300 text-neutral-700 dark:border-neutral-600 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition"
         >
           次へ
         </Link>

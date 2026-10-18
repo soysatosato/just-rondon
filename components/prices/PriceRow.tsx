@@ -85,7 +85,7 @@ export default function PriceRow({
             item.label
           )}
         </p>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-gray-400">
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground dark:text-neutral-400">
           <a
             href={`#basis-${basis.id}`}
             className="underline decoration-dotted decoration-foreground/30 underline-offset-[3px] hover:decoration-foreground/60"
@@ -102,7 +102,7 @@ export default function PriceRow({
                   href={sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-baseline gap-0.5 hover:text-foreground dark:hover:text-gray-200"
+                  className="inline-flex items-baseline gap-0.5 hover:text-foreground dark:hover:text-neutral-200"
                 >
                   {item.basisNote}
                   <ExternalLink aria-hidden className="h-2.5 w-2.5 self-center opacity-60" />
@@ -133,7 +133,7 @@ export default function PriceRow({
           )}
         </p>
         {jpy && (
-          <p className="mt-0.5 whitespace-nowrap text-xs tabular-nums text-muted-foreground dark:text-gray-400">
+          <p className="mt-0.5 whitespace-nowrap text-xs tabular-nums text-muted-foreground dark:text-neutral-400">
             {jpy}
           </p>
         )}

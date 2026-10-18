@@ -22,7 +22,7 @@ export default function GuideSectionCard({
   return (
     <section
       id={id}
-      className="scroll-mt-24 space-y-2 border-t border-gray-200 pt-6 first:border-t-0 first:pt-0 dark:border-neutral-800 sm:rounded-xl sm:border sm:border-gray-300 sm:bg-white sm:p-6 sm:shadow-sm sm:first:border-t sm:first:pt-6 dark:sm:border-neutral-700 dark:sm:bg-neutral-900"
+      className="scroll-mt-24 space-y-2 border-t border-neutral-200 pt-6 first:border-t-0 first:pt-0 dark:border-neutral-800 sm:rounded-xl sm:border sm:border-neutral-300 sm:bg-white sm:p-6 sm:shadow-sm sm:first:border-t sm:first:pt-6 dark:sm:border-neutral-700 dark:sm:bg-neutral-900"
     >
       {children}
     </section>

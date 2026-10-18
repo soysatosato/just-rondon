@@ -50,10 +50,10 @@ export default async function EventsCalendarPage() {
         <h1 className="text-3xl font-bold dark:text-white">
           ロンドンイベントカレンダー 2026
         </h1>
-        <p className="mt-3 text-muted-foreground dark:text-gray-400">
+        <p className="mt-3 text-muted-foreground dark:text-neutral-400">
           四季を巡る、ロンドンの一年。旅行の時期を決めるときに使ってください。
         </p>
-        <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground dark:text-gray-400">
+        <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground dark:text-neutral-400">
           こちらは1年前から日程が決まっている恒例行事のカレンダーです。ストライキや突発的な催しなど、
           その週にならないと分からない情報は
           <Link href="/events" className="mx-1 underline hover:text-primary">
@@ -61,7 +61,7 @@ export default async function EventsCalendarPage() {
           </Link>
           にまとめています。
         </p>
-        <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground dark:text-gray-400">
+        <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground dark:text-neutral-400">
           年越し花火のようにチケットや場所取りが要る大きな行事は、
           <Link href="/events/guides" className="mx-1 underline hover:text-primary">
             年中行事ガイド

@@ -72,7 +72,7 @@ export default function EtaGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== etaMeta.slug);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(etaMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(etaMeta)} />
       <JsonLd data={faqPageJsonLd(etaFaq, pageUrl)} />
@@ -88,7 +88,7 @@ export default function EtaGuide() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {etaMeta.title}
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           {etaMeta.engTitle}
         </p>
         <div className="mt-3">
@@ -103,19 +103,19 @@ export default function EtaGuide() {
           読者が検索窓に打ち込んだ内容そのもので、以前は本文を数千字ぶん
           読み進めないと拾えなかった。
         */}
-        <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-neutral-700 dark:bg-neutral-700 sm:grid-cols-4">
+        <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-neutral-200 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-700 sm:grid-cols-4">
           {etaFacts.map((fact) => (
             <div
               key={fact.label}
               className="bg-white p-4 dark:bg-neutral-900"
             >
-              <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                 {fact.label}
               </dt>
-              <dd className="mt-1 text-lg font-bold leading-tight text-gray-900 dark:text-gray-100">
+              <dd className="mt-1 text-lg font-bold leading-tight text-neutral-900 dark:text-neutral-100">
                 {fact.value}
               </dd>
-              <dd className="mt-1 text-xs leading-snug text-gray-500 dark:text-gray-400">
+              <dd className="mt-1 text-xs leading-snug text-neutral-500 dark:text-neutral-400">
                 {fact.note}
               </dd>
             </div>
@@ -132,10 +132,10 @@ export default function EtaGuide() {
             <li key={snag.label}>
               <a
                 href={snag.href}
-                className="inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-emerald-400 hover:text-emerald-700 dark:border-neutral-700 dark:text-gray-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
+                className="inline-flex items-center gap-1.5 rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:border-emerald-400 hover:text-emerald-700 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-emerald-500 dark:hover:text-emerald-400"
               >
                 {snag.label}
-                <span aria-hidden className="text-gray-400">
+                <span aria-hidden className="text-neutral-400">
                   ↓
                 </span>
               </a>
@@ -152,7 +152,7 @@ export default function EtaGuide() {
           公式サイト gov.uk/eta で申請する
           <span aria-hidden>↗</span>
         </a>
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
           検索結果に並ぶ代行サイトは公式ではありません。
           <a href="#official-only" className="underline underline-offset-2">
             見分け方
@@ -171,14 +171,14 @@ export default function EtaGuide() {
             <p className="text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-300">
               結論
             </p>
-            <p className="mt-1 text-base font-bold leading-snug text-gray-900 dark:text-gray-100 sm:text-lg">
+            <p className="mt-1 text-base font-bold leading-snug text-neutral-900 dark:text-neutral-100 sm:text-lg">
               {etaVerdict.headline}
             </p>
             <ul className="mt-3 space-y-1.5">
               {etaVerdict.conditions.map((c) => (
                 <li
                   key={c}
-                  className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                  className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
                 >
                   <span aria-hidden className="text-emerald-700 dark:text-emerald-400">
                     ✓
@@ -187,23 +187,23 @@ export default function EtaGuide() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
               {etaVerdict.scope}
             </p>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 ETA が要らない人
               </p>
               <ul className="mt-3 space-y-3">
                 {etaVerdict.exempt.map((e) => (
                   <li key={e.who} className="text-sm leading-snug">
-                    <span className="block text-gray-700 dark:text-gray-300">
+                    <span className="block text-neutral-700 dark:text-neutral-300">
                       {e.who}
                     </span>
-                    <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+                    <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
                       → {e.instead}
                     </span>
                   </li>
@@ -211,24 +211,24 @@ export default function EtaGuide() {
               </ul>
             </div>
 
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 {etaVerdict.outOfScope.title}
               </p>
               <ul className="mt-3 space-y-1.5">
                 {etaVerdict.outOfScope.items.map((i) => (
                   <li
                     key={i}
-                    className="flex gap-2 text-sm text-gray-700 dark:text-gray-300"
+                    className="flex gap-2 text-sm text-neutral-700 dark:text-neutral-300"
                   >
-                    <span aria-hidden className="text-gray-400">
+                    <span aria-hidden className="text-neutral-400">
                       ✕
                     </span>
                     {i}
                   </li>
                 ))}
               </ul>
-              <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                 {etaVerdict.outOfScope.body}
               </p>
               <Link
@@ -246,7 +246,7 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 2. 乗り継ぎ */}
         <Section n={2} id="transit">
-          <p className="rounded-lg bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-900 dark:bg-neutral-800 dark:text-gray-100">
+          <p className="rounded-lg bg-neutral-100 px-4 py-3 text-sm font-semibold leading-relaxed text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100">
             {etaTransit.rule}
           </p>
 
@@ -254,25 +254,25 @@ export default function EtaGuide() {
             {etaTransit.cases.map((c) => (
               <li
                 key={c.situation}
-                className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-neutral-700"
+                className="flex items-start gap-3 rounded-lg border border-neutral-200 p-3 dark:border-neutral-700"
               >
                 <span
                   className={`mt-0.5 shrink-0 rounded px-2 py-0.5 text-xs font-bold ${
                     c.needed
                       ? "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300"
-                      : "bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-gray-400"
+                      : "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
                   }`}
                 >
                   {c.needed ? "必要" : "当面は不要"}
                 </span>
-                <span className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <span className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {c.situation}
                 </span>
               </li>
             ))}
           </ul>
 
-          <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="mt-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             {etaTransit.exemptionScope}
           </p>
 
@@ -282,7 +282,7 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 3. 準備 */}
         <Section n={3} id="checklist">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {etaChecklistWhy}
           </p>
           <div className="mt-5">
@@ -295,10 +295,10 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 4. 6ステップ */}
         <Section n={4} id="steps">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {etaStepsIntro.body}
           </p>
-          <p className="mt-3 rounded-lg border border-gray-200 px-4 py-3 text-sm dark:border-neutral-700">
+          <p className="mt-3 rounded-lg border border-neutral-200 px-4 py-3 text-sm dark:border-neutral-700">
             アプリ名は
             <strong className="font-semibold"> {etaStepsIntro.appName} </strong>
             、提供元は
@@ -314,7 +314,7 @@ export default function EtaGuide() {
             {etaSteps.map((step, i) => (
               <li
                 key={step.title}
-                className="flex gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-5"
+                className="flex gap-4 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-5"
               >
                 <span
                   aria-hidden
@@ -323,13 +323,13 @@ export default function EtaGuide() {
                   {i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-base font-bold leading-snug text-gray-900 dark:text-gray-100">
+                  <h3 className="text-base font-bold leading-snug text-neutral-900 dark:text-neutral-100">
                     {step.title}
                   </h3>
-                  <p className="mt-1 font-mono text-xs text-gray-500 dark:text-gray-400">
+                  <p className="mt-1 font-mono text-xs text-neutral-500 dark:text-neutral-400">
                     画面：{step.screen}
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                     {step.body}
                   </p>
                   {step.dos && (
@@ -337,9 +337,9 @@ export default function EtaGuide() {
                       {step.dos.map((d) => (
                         <li
                           key={d}
-                          className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                          className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
                         >
-                          <span aria-hidden className="text-gray-400">
+                          <span aria-hidden className="text-neutral-400">
                             ・
                           </span>
                           {d}
@@ -366,16 +366,16 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 5. 質問 */}
         <Section n={5} id="questions">
-          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             聞かれること
           </p>
           <ul className="mt-2 space-y-1.5">
             {etaQuestions.asked.map((q) => (
               <li
                 key={q}
-                className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
               >
-                <span aria-hidden className="text-gray-400">
+                <span aria-hidden className="text-neutral-400">
                   ・
                 </span>
                 {q}
@@ -383,25 +383,25 @@ export default function EtaGuide() {
             ))}
           </ul>
 
-          <div className="mt-5 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-5 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {etaQuestions.criminal.title}
             </h3>
             <MarkdownBody>{etaQuestions.criminal.body}</MarkdownBody>
           </div>
 
-          <div className="mt-4 rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <div className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+            <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {etaQuestions.address.title}
             </h3>
-            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+            <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
               {etaQuestions.address.body}
             </p>
-            <div className="mt-3 space-y-1 rounded bg-gray-50 p-3 dark:bg-neutral-800/60">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="mt-3 space-y-1 rounded bg-neutral-50 p-3 dark:bg-neutral-800/60">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 {etaQuestions.address.exampleJa}
               </p>
-              <p className="font-mono text-sm font-medium text-gray-900 dark:text-gray-100">
+              <p className="font-mono text-sm font-medium text-neutral-900 dark:text-neutral-100">
                 ↓ {etaQuestions.address.exampleEn}
               </p>
             </div>
@@ -412,7 +412,7 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 6. 対訳 */}
         <Section n={6} id="glossary">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             UK ETA アプリは英語のみで、日本語表示に切り替えられません。
             画面に出ている英語を検索して、このページを開いたまま進めてください。
           </p>
@@ -424,7 +424,7 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 7. 対処 */}
         <Section n={7} id="trouble">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             止まる箇所は決まっています。自分の症状だけ開いてください。
           </p>
 
@@ -438,44 +438,44 @@ export default function EtaGuide() {
               <details
                 key={t.id}
                 id={t.id}
-                className="group scroll-mt-24 rounded-lg border border-gray-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
+                className="group scroll-mt-24 rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 [&::-webkit-details-marker]:hidden">
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                       {t.symptom}
                     </span>
                     {t.cause && (
-                      <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+                      <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
                         {t.cause}
                       </span>
                     )}
                   </span>
                   <span
                     aria-hidden
-                    className="shrink-0 text-gray-400 transition group-open:rotate-180"
+                    className="shrink-0 text-neutral-400 transition group-open:rotate-180"
                   >
                     ▾
                   </span>
                 </summary>
-                <div className="border-t border-gray-200 px-4 py-4 dark:border-neutral-700">
+                <div className="border-t border-neutral-200 px-4 py-4 dark:border-neutral-700">
                   <ol className="space-y-2">
                     {t.fixes.map((fix, i) => (
                       <li key={fix} className="flex gap-3 text-sm leading-relaxed">
                         <span
                           aria-hidden
-                          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-600 dark:bg-neutral-800 dark:text-gray-400"
+                          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-xs font-bold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
                         >
                           {i + 1}
                         </span>
-                        <span className="text-gray-700 dark:text-gray-300">
+                        <span className="text-neutral-700 dark:text-neutral-300">
                           {fix}
                         </span>
                       </li>
                     ))}
                   </ol>
                   {t.note && (
-                    <p className="mt-3 rounded bg-gray-50 p-3 text-sm leading-relaxed text-gray-600 dark:bg-neutral-800/60 dark:text-gray-400">
+                    <p className="mt-3 rounded bg-neutral-50 p-3 text-sm leading-relaxed text-neutral-600 dark:bg-neutral-800/60 dark:text-neutral-400">
                       {t.note}
                     </p>
                   )}
@@ -489,35 +489,35 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 8. 申請後 */}
         <Section n={8} id="after">
-          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             届くメール
           </p>
           <ul className="mt-2 space-y-2">
             {etaAfter.emails.map((e) => (
               <li
                 key={e.what}
-                className="flex items-baseline gap-3 rounded-lg border border-gray-200 px-4 py-3 dark:border-neutral-700"
+                className="flex items-baseline gap-3 rounded-lg border border-neutral-200 px-4 py-3 dark:border-neutral-700"
               >
                 <span className="shrink-0 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                   {e.when}
                 </span>
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">
                   {e.what}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
             {etaAfter.emailNote}
           </p>
 
-          <dl className="mt-6 grid gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-neutral-700 dark:bg-neutral-700 sm:grid-cols-3">
+          <dl className="mt-6 grid gap-px overflow-hidden rounded-xl border border-neutral-200 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-700 sm:grid-cols-3">
             {etaAfter.validity.map((v) => (
               <div key={v.label} className="bg-white p-4 dark:bg-neutral-900">
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
                   {v.label}
                 </dt>
-                <dd className="mt-1 text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+                <dd className="mt-1 text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
                   {v.value}
                 </dd>
               </div>
@@ -525,17 +525,17 @@ export default function EtaGuide() {
           </dl>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 承認されたら
               </p>
               <ul className="mt-2 space-y-1.5">
                 {etaAfter.approved.map((a) => (
                   <li
                     key={a}
-                    className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                    className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
                   >
-                    <span aria-hidden className="text-gray-400">
+                    <span aria-hidden className="text-neutral-400">
                       ・
                     </span>
                     {a}
@@ -543,18 +543,18 @@ export default function EtaGuide() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
+              <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                 入国時に持っていくもの
               </p>
               <ul className="mt-2 space-y-2">
                 {etaAfter.bring.map((b) => (
                   <li key={b.item} className="text-sm leading-snug">
-                    <span className="block text-gray-700 dark:text-gray-300">
+                    <span className="block text-neutral-700 dark:text-neutral-300">
                       {b.item}
                     </span>
                     {b.note && (
-                      <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+                      <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
                         {b.note}
                       </span>
                     )}
@@ -571,12 +571,12 @@ export default function EtaGuide() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="block rounded-lg border border-gray-200 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
+                className="block rounded-lg border border-neutral-200 p-4 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
               >
-                <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <span className="block text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {l.label}
                 </span>
-                <span className="mt-0.5 block text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                <span className="mt-0.5 block text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {l.blurb}
                 </span>
               </Link>
@@ -586,20 +586,20 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 9. 却下 */}
         <Section n={9} id="rejected">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {etaRejected.first}
           </p>
 
-          <p className="mt-5 text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <p className="mt-5 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             よくある却下の理由
           </p>
           <ul className="mt-2 space-y-1.5">
             {etaRejected.reasons.map((r) => (
               <li
                 key={r}
-                className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
               >
-                <span aria-hidden className="text-gray-400">
+                <span aria-hidden className="text-neutral-400">
                   ・
                 </span>
                 {r}
@@ -611,18 +611,18 @@ export default function EtaGuide() {
             {etaRejected.options.map((o, i) => (
               <div
                 key={o.title}
-                className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+                className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
               >
                 <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
                   選択肢 {i + 1}
                 </p>
-                <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <p className="mt-1 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {o.title}
                 </p>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   {o.when}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                   {o.body}
                 </p>
               </div>
@@ -634,7 +634,7 @@ export default function EtaGuide() {
 
         {/* --------------------------------------------- 10. 公式 */}
         <Section n={10} id="official-only">
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {etaOfficial.warning}
           </p>
 
@@ -657,12 +657,12 @@ export default function EtaGuide() {
                     {c.value}
                   </a>
                 ) : (
-                  <p className="mt-1 font-mono text-base font-bold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 font-mono text-base font-bold text-neutral-900 dark:text-neutral-100">
                     {c.value}
                   </p>
                 )}
                 {c.note && (
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                     {c.note}
                   </p>
                 )}
@@ -670,14 +670,14 @@ export default function EtaGuide() {
             ))}
           </div>
 
-          <p className="mt-5 text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <p className="mt-5 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             代行サイトの見分け方
           </p>
           <ul className="mt-2 space-y-1.5">
             {etaOfficial.redFlags.map((f) => (
               <li
                 key={f}
-                className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
+                className="flex gap-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300"
               >
                 <span aria-hidden className="text-red-500">
                   ✕
@@ -687,7 +687,7 @@ export default function EtaGuide() {
             ))}
           </ul>
 
-          <p className="mt-4 text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <p className="mt-4 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             {etaOfficial.closing}
           </p>
 
@@ -703,7 +703,7 @@ export default function EtaGuide() {
         <div className="mt-4 space-y-3">
           {relatedGuides.map((g) => (
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
-              <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
+              <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
                   <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
@@ -711,7 +711,7 @@ export default function EtaGuide() {
                   <span className="mt-1 block text-base font-semibold">
                     {g.label}
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                     {g.blurb}
                   </span>
                 </CardContent>
@@ -721,8 +721,8 @@ export default function EtaGuide() {
         </div>
       </section>
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">
@@ -758,7 +758,7 @@ function Section({
 
   return (
     <section id={id} className="scroll-mt-20">
-      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-neutral-900 dark:text-neutral-100">
         <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>

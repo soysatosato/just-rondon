@@ -50,7 +50,7 @@ export default function HistoryChapterLayout({
   const hasJapanColumn = chapter.timeline.some((t) => t.japan);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-8 text-gray-900 dark:text-gray-100 md:pb-10">
+    <div data-page-main className="mx-auto max-w-4xl sm:px-4 pt-4 pb-8 text-neutral-900 dark:text-neutral-100 md:pb-10">
       <JsonLd data={chapterBreadcrumbJsonLd(chapter)} />
       <JsonLd data={chapterArticleJsonLd(chapter)} />
       {chapter.faq && chapter.faq.length > 0 && (
@@ -160,11 +160,11 @@ export default function HistoryChapterLayout({
       <div className="mt-8 space-y-8">
         {chapter.sections.map((section, i) => (
           <GuideSectionCard key={section.id} id={section.id}>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
             </h2>
             {section.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 {section.subtitle}
               </p>
             )}
@@ -181,11 +181,11 @@ export default function HistoryChapterLayout({
             )}
 
             {section.tips && section.tips.length > 0 && (
-              <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-                <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+              <div className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
+                <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
                   覚えておくと効くこと
                 </p>
-                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
                   {section.tips.map((tip) => (
                     <li key={tip} className="leading-relaxed">
                       {tip}

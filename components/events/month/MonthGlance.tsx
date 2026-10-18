@@ -67,20 +67,20 @@ export default function MonthGlance({
   ];
 
   return (
-    <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-neutral-700 dark:bg-neutral-700 sm:grid-cols-3 lg:grid-cols-5">
+    <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-neutral-200 bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-700 sm:grid-cols-3 lg:grid-cols-5">
       {items.map((item) => (
         <div
           key={item.label}
           // 5枚を2列・3列・5列で割り切れるよう、最後の1枚(祝日)の幅で埋める。
           className="bg-white p-3.5 dark:bg-neutral-900 last:col-span-2 lg:last:col-span-1"
         >
-          <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
             {item.label}
           </dt>
-          <dd className="mt-1 text-lg font-bold tabular-nums text-gray-900 dark:text-gray-100">
+          <dd className="mt-1 text-lg font-bold tabular-nums text-neutral-900 dark:text-neutral-100">
             {item.value}
           </dd>
-          <dd className="mt-0.5 text-xs leading-snug text-gray-500 dark:text-gray-400">
+          <dd className="mt-0.5 text-xs leading-snug text-neutral-500 dark:text-neutral-400">
             {item.sub}
           </dd>
         </div>

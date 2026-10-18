@@ -24,7 +24,7 @@ export default function QuickTables() {
         <h2 id="quick-table-heading" className="text-xl font-bold tracking-tight md:text-2xl">
           年収別の手取り早見表（{label}年度）
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           イングランド・ウェールズ・北アイルランド、税コード1257L、年金と学生ローンなしの場合。額面を押すと、その条件で計算機が開きます。
         </p>
 
@@ -81,7 +81,7 @@ export default function QuickTables() {
         <h2 id="hourly-matrix-heading" className="text-xl font-bold tracking-tight md:text-2xl">
           時給と週の時間から見る、手取りの月額
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           ワーキングホリデーやパートタイムで時給で働く人向け。イングランド等、年金なし、52週で計算しています。数字を押すとその条件で計算機が開きます。
         </p>
 

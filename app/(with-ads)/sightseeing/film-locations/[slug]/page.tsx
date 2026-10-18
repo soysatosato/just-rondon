@@ -117,7 +117,7 @@ export default function FilmWorkPage({ params }: Props) {
           {/* 斜体は欧文の題だけ。和文に掛けると機械的に傾いた字になる。 */}
           <span className="italic">{work.engTitle}</span> — {work.routeHint}
         </p>
-        <div className="space-y-3 text-gray-700 dark:text-gray-300 leading-relaxed">
+        <div className="space-y-3 text-neutral-700 dark:text-neutral-300 leading-relaxed">
           {work.lead.map((paragraph, i) => (
             <div
               key={i}
@@ -141,22 +141,22 @@ export default function FilmWorkPage({ params }: Props) {
       )}
 
       <section className="space-y-2">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+        <h2 className="text-lg font-semibold text-neutral-800 dark:text-neutral-100">
           掲載スポット
         </h2>
-        <ul className="list-none space-y-3 border-l border-gray-300 dark:border-gray-700 pl-3">
+        <ul className="list-none space-y-3 border-l border-neutral-300 dark:border-neutral-700 pl-3">
           {work.spots.map((spot, idx) => (
             <li key={spot.slug} className="leading-tight relative pl-6">
-              <span className="absolute left-0 text-gray-500 dark:text-gray-400 text-sm">
+              <span className="absolute left-0 text-neutral-500 dark:text-neutral-400 text-sm">
                 {idx + 1}.
               </span>
               <a
                 href={`#${spot.slug}`}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:underline text-sm font-medium"
+                className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:underline text-sm font-medium"
               >
                 {spot.name}
               </a>
-              <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
+              <p className="text-neutral-500 dark:text-neutral-400 text-xs mt-0.5">
                 {spot.scene}
               </p>
             </li>
@@ -195,7 +195,7 @@ export default function FilmWorkPage({ params }: Props) {
               <MapPin className="h-4 w-4 shrink-0 text-sky-500 mt-0.5" />
               <div>
                 <dt className="text-xs text-muted-foreground">エリア</dt>
-                <dd className="text-gray-800 dark:text-gray-100">{spot.area}</dd>
+                <dd className="text-neutral-800 dark:text-neutral-100">{spot.area}</dd>
               </div>
             </div>
 
@@ -203,7 +203,7 @@ export default function FilmWorkPage({ params }: Props) {
               <Train className="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" />
               <div>
                 <dt className="text-xs text-muted-foreground">最寄り駅</dt>
-                <dd className="text-gray-800 dark:text-gray-100">
+                <dd className="text-neutral-800 dark:text-neutral-100">
                   {spot.nearestStation}
                 </dd>
               </div>
@@ -213,7 +213,7 @@ export default function FilmWorkPage({ params }: Props) {
               <Ticket className="h-4 w-4 shrink-0 text-amber-500 mt-0.5" />
               <div>
                 <dt className="text-xs text-muted-foreground">見学の可否</dt>
-                <dd className="text-gray-800 dark:text-gray-100">
+                <dd className="text-neutral-800 dark:text-neutral-100">
                   {spot.access}
                 </dd>
               </div>
@@ -224,7 +224,7 @@ export default function FilmWorkPage({ params }: Props) {
                 <Lightbulb className="h-4 w-4 shrink-0 text-violet-500 mt-0.5" />
                 <div>
                   <dt className="text-xs text-muted-foreground">ひとこと</dt>
-                  <dd className="text-gray-800 dark:text-gray-100">
+                  <dd className="text-neutral-800 dark:text-neutral-100">
                     {spot.tips}
                   </dd>
                 </div>

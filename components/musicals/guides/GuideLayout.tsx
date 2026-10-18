@@ -40,7 +40,7 @@ export default async function GuideLayout({
   const topMusicals = await fetchTopMusicals(3);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd data={breadcrumbJsonLd(article)} />
       <JsonLd data={articleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
@@ -57,11 +57,11 @@ export default async function GuideLayout({
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {article.engTitle}
         </p>
         {article.summary && (
-          <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
             {stripInlineMarkdown(article.summary)}
           </p>
         )}
@@ -74,17 +74,17 @@ export default async function GuideLayout({
       <Separator className="my-6" />
 
       {article.atAGlance && article.atAGlance.length > 0 && (
-        <section className="mb-8 overflow-hidden rounded-lg border border-gray-300 dark:border-neutral-700">
-          <h2 className="border-b border-gray-300 bg-gray-100 px-4 py-2 text-sm font-semibold dark:border-neutral-700 dark:bg-neutral-800">
+        <section className="mb-8 overflow-hidden rounded-lg border border-neutral-300 dark:border-neutral-700">
+          <h2 className="border-b border-neutral-300 bg-neutral-100 px-4 py-2 text-sm font-semibold dark:border-neutral-700 dark:bg-neutral-800">
             要点
           </h2>
-          <dl className="divide-y divide-gray-200 dark:divide-neutral-700">
+          <dl className="divide-y divide-neutral-200 dark:divide-neutral-700">
             {article.atAGlance.map((fact) => (
               <div
                 key={fact.label}
                 className="grid grid-cols-1 gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4"
               >
-                <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:text-sm">
+                <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 sm:text-sm">
                   {fact.label}
                 </dt>
                 <dd className="text-sm leading-relaxed">
@@ -109,22 +109,22 @@ export default async function GuideLayout({
       <div className="mt-8 space-y-8">
         {article.sections.map((section, i) => (
           <GuideSectionCard key={section.id} id={section.id}>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
             </h2>
             {section.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 {section.subtitle}
               </p>
             )}
             <MarkdownBody>{section.body}</MarkdownBody>
 
             {section.tips && section.tips.length > 0 && (
-              <div className="mt-5 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
-                <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+              <div className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-800/60">
+                <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
                   実務メモ
                 </p>
-                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+                <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
                   {section.tips.map((tip) => (
                     <li key={tip} className="leading-relaxed">
                       {tip}
@@ -160,12 +160,12 @@ export default async function GuideLayout({
 
           return (
             <div key={category} className="space-y-3">
-              <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+              <h3 className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
                 {MUSICAL_GUIDE_CATEGORY_LABELS[category]}
               </h3>
               {others.map((g) => (
                 <Link key={g.slug} href={guidePath(g.slug)} className="block">
-                  <Card className="border-gray-300 bg-white shadow-sm transition hover:border-blue-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500">
+                  <Card className="border-neutral-300 bg-white shadow-sm transition hover:border-blue-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500">
                     <CardContent className="p-5">
                       <span className="block text-xs font-semibold text-link">
                         {g.eyebrow}
@@ -173,7 +173,7 @@ export default async function GuideLayout({
                       <span className="mt-1 block text-base font-semibold">
                         {g.label}
                       </span>
-                      <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                      <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                         {g.blurb}
                       </span>
                     </CardContent>
@@ -188,13 +188,13 @@ export default async function GuideLayout({
       {topMusicals.length > 0 && (
         <section className="mt-12">
           <h2 className="text-lg font-semibold">人気ミュージカルをチェック</h2>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
             観劇前にあらすじや曲を予習しておくと、当日の理解がぐっと深まります。
           </p>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {topMusicals.map((m) => (
               <Link key={m.slug} href={`/musicals/${m.slug}`} className="block">
-                <Card className="overflow-hidden border-gray-300 bg-white shadow-sm transition hover:border-blue-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500">
+                <Card className="overflow-hidden border-neutral-300 bg-white shadow-sm transition hover:border-blue-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500">
                   <div className="relative h-28 w-full">
                     <Image
                       src={m.image}
@@ -207,7 +207,7 @@ export default async function GuideLayout({
                   </div>
                   <CardContent className="p-3">
                     <span className="block text-sm font-semibold">{m.name}</span>
-                    <span className="block text-xs text-gray-500 dark:text-gray-400">
+                    <span className="block text-xs text-neutral-500 dark:text-neutral-400">
                       {m.engName}
                     </span>
                   </CardContent>
@@ -218,8 +218,8 @@ export default async function GuideLayout({
         </section>
       )}
 
-      <div className="mt-6 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-6 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

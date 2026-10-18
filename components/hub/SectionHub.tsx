@@ -145,7 +145,7 @@ export default function SectionHub({
                         </Link>
                       </Heading>
 
-                      <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                      <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                         {section.blurb}
                       </p>
 

@@ -157,14 +157,14 @@ function ScenarioCard({
 
   return (
     <Link href={healthGuidePath(slug)} className="block">
-      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-        <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+      <article className="flex h-full flex-col rounded-xl border border-neutral-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+        <p className="text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
           {audience}
         </p>
         <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
           → {answer}
         </p>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {detail}
         </p>
         <span className="mt-4 text-sm font-medium text-link">
@@ -179,7 +179,7 @@ export default function HealthHubPage() {
   const pageUrl = `${SITE_URL}${HEALTH_BASE}`;
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: HEALTH_SECTION_NAME,
@@ -200,10 +200,10 @@ export default function HealthHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           ロンドンの医療・NHS ガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Using the NHS in London: GP, Emergencies, Pharmacies and Costs
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           英国の医療は、日本と<strong>入口の作りがまったく違います</strong>。
           町の内科に相当するものがなく、すべてが GP を経由します。
           下から自分の状況に近いものを選んでください。
@@ -219,7 +219,7 @@ export default function HealthHubPage() {
         <p className="text-sm font-bold text-red-800 dark:text-red-300">
           いま緊急なら、この番号です
         </p>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
           <li>
             ・<strong>{NHS_CONTACTS.emergency}</strong>
             ｜意識がない、呼吸が苦しい、大量出血、胸の痛み、
@@ -230,7 +230,7 @@ export default function HealthHubPage() {
             ｜緊急かどうか判断がつかないとき。24時間・無料・通訳を頼めます
           </li>
         </ul>
-        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           英語に不安があれば、つながってから「I need a Japanese interpreter」と
           伝えれば通訳が入ります。費用はかかりません。
         </p>
@@ -240,7 +240,7 @@ export default function HealthHubPage() {
         <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
           自分の状況を選んでください
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           一番近いものが1つ見つかれば、それがあなたの読むべきページです。
         </p>
 
@@ -267,7 +267,7 @@ export default function HealthHubPage() {
         <h2 id="cost-overview" className="text-xl font-bold md:text-2xl">
           何が無料で、何にいくらかかるか
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           「NHS は無料」は半分だけ正しい表現です。
           <strong>自己負担があるのは処方箋・歯科・眼科の3つだけ</strong>
           で、それ以外の診療は無料です。以下は{HEALTH_AS_OF}
@@ -276,10 +276,10 @@ export default function HealthHubPage() {
         </p>
 
         <div className="mt-5 rounded-lg border-l-4 border-emerald-500 bg-emerald-50 px-4 py-3 dark:bg-emerald-950/25">
-          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+          <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
             無料になるもの（IHS 支払い済み・通常居住者）
           </p>
-          <ul className="mt-2 flex flex-wrap gap-x-2 gap-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+          <ul className="mt-2 flex flex-wrap gap-x-2 gap-y-1.5 text-sm text-neutral-700 dark:text-neutral-300">
             {[
               "GP の診察",
               "専門医の診察・治療",
@@ -298,7 +298,7 @@ export default function HealthHubPage() {
           </ul>
         </div>
 
-        <h3 className="mt-6 text-sm font-bold text-gray-700 dark:text-gray-300">
+        <h3 className="mt-6 text-sm font-bold text-neutral-700 dark:text-neutral-300">
           自己負担があるもの
         </h3>
         <dl className="mt-3 grid gap-3 sm:grid-cols-3">
@@ -340,14 +340,14 @@ export default function HealthHubPage() {
           ].map((row) => (
             <div
               key={row.label}
-              className="rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+              className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
             >
-              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                 {row.label}
               </dt>
-              <dd className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+              <dd className="mt-1 text-lg font-bold text-neutral-900 dark:text-neutral-100">
                 {row.value}
-                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-gray-500 dark:text-gray-400">
+                <span className="mt-0.5 block text-xs font-normal leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {row.note}
                 </span>
               </dd>
@@ -355,8 +355,8 @@ export default function HealthHubPage() {
           ))}
         </dl>
 
-        <p className="mt-4 rounded-lg border-l-4 border-sky-500 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-gray-700 dark:bg-sky-950/25 dark:text-gray-300">
-          <strong className="text-gray-900 dark:text-gray-100">
+        <p className="mt-4 rounded-lg border-l-4 border-sky-500 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-neutral-700 dark:bg-sky-950/25 dark:text-neutral-300">
+          <strong className="text-neutral-900 dark:text-neutral-100">
             処方箋が有料なのはイングランドだけです。
           </strong>
           スコットランド・ウェールズ・北アイルランドは全面的に無料です。また
@@ -369,11 +369,11 @@ export default function HealthHubPage() {
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           渡英後の手続きで、あわせて必要になること
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           GP 登録は、銀行口座や住まいと並んで渡英直後に片づけるべき手続きの一つです。
           GP の登録完了通知が住所証明として使えることもあるため、
           先に済ませておくと後の手続きが楽になります。
@@ -406,7 +406,7 @@ export default function HealthHubPage() {
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの情報は{HEALTH_AS_OF}
         時点のもので、NHS の制度と手続きを説明する情報提供です。医学的な助言・診断では
         ありません。症状の判断は必ず医療者に委ねてください。ここで扱う制度はイングランドの

@@ -98,7 +98,7 @@ export default function ChangeEntry({
             </span>
 
             {audience && (
-              <span className="rounded-sm border border-foreground/20 px-1.5 py-0.5 text-xs font-bold leading-none text-foreground/70 dark:text-gray-300">
+              <span className="rounded-sm border border-foreground/20 px-1.5 py-0.5 text-xs font-bold leading-none text-foreground/70 dark:text-neutral-300">
                 {audience}
               </span>
             )}
@@ -113,7 +113,7 @@ export default function ChangeEntry({
               {hasDelta && (
                 <span className="inline-flex items-baseline gap-2 tabular-nums">
                   {item.before && (
-                    <span className="text-sm text-muted-foreground line-through decoration-muted-foreground/50 dark:text-gray-500">
+                    <span className="text-sm text-muted-foreground line-through decoration-muted-foreground/50 dark:text-neutral-500">
                       {item.before}
                     </span>
                   )}
@@ -134,7 +134,7 @@ export default function ChangeEntry({
                 </span>
               )}
               {effective && (
-                <span className="text-xs font-semibold tabular-nums text-muted-foreground dark:text-gray-400">
+                <span className="text-xs font-semibold tabular-nums text-muted-foreground dark:text-neutral-400">
                   {effective}から
                 </span>
               )}
@@ -151,7 +151,7 @@ export default function ChangeEntry({
             </p>
           )}
 
-          <div className="prose prose-sm mt-3 max-w-none leading-[1.95] text-muted-foreground marker:text-muted-foreground dark:prose-invert dark:text-gray-300 prose-headings:text-foreground prose-strong:text-foreground dark:prose-strong:text-white">
+          <div className="prose prose-sm mt-3 max-w-none leading-[1.95] text-muted-foreground marker:text-muted-foreground dark:prose-invert dark:text-neutral-300 prose-headings:text-foreground prose-strong:text-foreground dark:prose-strong:text-white">
             <ReactMarkdown>{item.description}</ReactMarkdown>
           </div>
 
@@ -159,7 +159,7 @@ export default function ChangeEntry({
             {item.sitePath && (
               <Link
                 href={item.sitePath}
-                className="group inline-flex items-center gap-1 font-bold underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground dark:text-gray-200"
+                className="group inline-flex items-center gap-1 font-bold underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground dark:text-neutral-200"
               >
                 {sitePageLabel(item.sitePath)}の解説へ
                 <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
@@ -169,7 +169,7 @@ export default function ChangeEntry({
               href={item.source}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-muted-foreground underline decoration-muted-foreground/30 underline-offset-4 hover:text-foreground dark:text-gray-400"
+              className="inline-flex items-center gap-1 text-muted-foreground underline decoration-muted-foreground/30 underline-offset-4 hover:text-foreground dark:text-neutral-400"
             >
               出典: {sourceLabel(item)}
               <ExternalLink className="h-3 w-3" />

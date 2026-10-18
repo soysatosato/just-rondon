@@ -207,7 +207,7 @@ export default function HistoryHubPage() {
   const firstChapter = historyChapters[0];
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-8 text-gray-900 dark:text-gray-100 md:pb-10">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-8 text-neutral-900 dark:text-neutral-100 md:pb-10">
       <JsonLd
         data={breadcrumbJsonLd({
           name: HISTORY_SECTION_NAME,

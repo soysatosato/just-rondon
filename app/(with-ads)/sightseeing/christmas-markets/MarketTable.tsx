@@ -27,9 +27,9 @@ export default function MarketTable({
       <h2 id="market-table" className="text-lg font-bold">
         {year}年の会期と比較
       </h2>
-      <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 dark:border-neutral-700">
+      <div className="mt-3 overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-700">
         <table className="w-full min-w-[40rem] text-left text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-600 dark:bg-neutral-800/60 dark:text-gray-400">
+          <thead className="bg-neutral-50 text-xs text-neutral-600 dark:bg-neutral-800/60 dark:text-neutral-400">
             <tr>
               <th scope="col" className="px-3 py-2 font-semibold">
                 マーケット
@@ -48,7 +48,7 @@ export default function MarketTable({
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
+          <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
             {markets.map((m) => (
               <tr key={m.slug} className="align-top">
                 <th scope="row" className="px-3 py-2 font-medium">
@@ -77,7 +77,7 @@ export default function MarketTable({
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
         会期は主催者の公式発表を確かめたものだけを載せています({formatFullDate(LAST_CHECKED)}時点)。
         「未発表」は発表がまだ無いもの、12月25日の「—」は公式の案内に記載が無いものです。
         出典は各マーケットの節にあります。

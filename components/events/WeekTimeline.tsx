@@ -91,13 +91,13 @@ export default function WeekTimeline({
                       ? "text-sky-700 dark:text-sky-400"
                       : slot.isWeekend
                         ? "text-rose-600 dark:text-rose-400"
-                        : "text-foreground/70 dark:text-gray-300"
+                        : "text-foreground/70 dark:text-neutral-300"
                   )}
                 >
                   {slot.weekday}
                 </span>
 
-                <span className="text-xs leading-none tabular-nums text-muted-foreground dark:text-gray-500">
+                <span className="text-xs leading-none tabular-nums text-muted-foreground dark:text-neutral-500">
                   {slot.label}
                 </span>
 
@@ -109,7 +109,7 @@ export default function WeekTimeline({
                     <span className="sr-only">
                       {day.weather}、最高{day.tempMax}度、最低{day.tempMin}度
                     </span>
-                    <span className="text-xs leading-none tabular-nums text-foreground/70 dark:text-gray-300">
+                    <span className="text-xs leading-none tabular-nums text-foreground/70 dark:text-neutral-300">
                       {day.tempMax}°
                     </span>
                   </>
@@ -121,7 +121,7 @@ export default function WeekTimeline({
                       "flex items-center gap-0.5 text-xs leading-none tabular-nums",
                       rainy
                         ? "font-semibold text-sky-700 dark:text-sky-400"
-                        : "text-muted-foreground dark:text-gray-400"
+                        : "text-muted-foreground dark:text-neutral-400"
                     )}
                   >
                     {rainy && <Umbrella className="h-2.5 w-2.5 shrink-0" />}
@@ -141,7 +141,7 @@ export default function WeekTimeline({
                       ? "text-muted-foreground/40"
                       : isPeak
                         ? "font-bold text-foreground underline decoration-2 underline-offset-4 dark:text-white"
-                        : "text-foreground/70 dark:text-gray-300"
+                        : "text-foreground/70 dark:text-neutral-300"
                   )}
                 >
                   {slot.count === 0 ? "—" : slot.count}
@@ -152,7 +152,7 @@ export default function WeekTimeline({
         })}
       </ul>
 
-      <p className="mt-2 text-xs leading-relaxed text-muted-foreground dark:text-gray-500">
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground dark:text-neutral-500">
         下段の数字は、その日に始まる・終わるものの件数。
         {hasForecast && "気温は最高気温、％は降水確率(出典 Open-Meteo)。"}
         {isPartial && "予報は7日先までのため、会期の後半は出していない。"}

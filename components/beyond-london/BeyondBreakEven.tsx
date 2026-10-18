@@ -13,11 +13,11 @@ import type { BreakEven } from "./types";
 export default function BeyondBreakEven({ data }: { data: BreakEven }) {
   return (
     <section className="mb-8">
-      <Card className="border-gray-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
+      <Card className="border-neutral-300 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
         <CardContent className="space-y-4 p-4 sm:p-6">
           <div>
             <h2 className="text-lg font-semibold">結論：元が取れる条件</h2>
-            <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <div className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
               <MarkdownBody size="compact">{data.premise}</MarkdownBody>
             </div>
           </div>
@@ -27,10 +27,10 @@ export default function BeyondBreakEven({ data }: { data: BreakEven }) {
           </div>
 
           <div>
-            <p className="text-xs font-bold tracking-wide text-gray-600 dark:text-gray-400">
+            <p className="text-xs font-bold tracking-wide text-neutral-600 dark:text-neutral-400">
               元が取れないケース
             </p>
-            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-gray-700 marker:text-gray-400 dark:text-gray-300">
+            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-neutral-700 marker:text-neutral-400 dark:text-neutral-300">
               {data.whenNotWorth.map((item) => (
                 <li key={item} className="leading-relaxed">
                   {item}

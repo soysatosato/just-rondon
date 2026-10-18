@@ -60,7 +60,7 @@ const TIME_FIT_LABELS: Record<BeyondTimeFit, string> = {
  * 同程度の日帰り先に見えてしまう。
  */
 const LOCAL_TRANSPORT_STYLES: Record<BeyondLocalTransport, string> = {
-  walk: "bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-gray-400",
+  walk: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
   local: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
   tour: "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300",
 };
@@ -74,7 +74,7 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
   return (
     <Link
       href={beyondPath(d.slug)}
-      className="group block rounded-xl border border-gray-300 bg-white shadow-sm transition hover:border-teal-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-teal-500"
+      className="group block rounded-xl border border-neutral-300 bg-white shadow-sm transition hover:border-teal-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-teal-500"
     >
       <div className="p-5">
         <div className="flex flex-wrap items-start justify-between gap-2">
@@ -103,29 +103,29 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
           決めているのに、以前のハブは1つも出していなかった。
         */}
         <dl className="mt-4 grid gap-x-4 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">
-          <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:pt-0.5">
+          <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 sm:pt-0.5">
             出発
           </dt>
-          <dd className="text-gray-700 dark:text-gray-300">
+          <dd className="text-neutral-700 dark:text-neutral-300">
             {d.fromStation}
             {d.county && (
-              <span className="text-gray-500 dark:text-gray-400">
+              <span className="text-neutral-500 dark:text-neutral-400">
                 {" → "}
                 {d.county}
               </span>
             )}
           </dd>
 
-          <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:pt-0.5">
+          <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 sm:pt-0.5">
             片道
           </dt>
           <dd>
-            <span className="text-gray-700 dark:text-gray-300">
+            <span className="text-neutral-700 dark:text-neutral-300">
               {d.journeyTime}
             </span>
             <span
               aria-hidden
-              className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-neutral-800"
+              className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800"
             >
               <span
                 className="block h-full rounded-full bg-teal-500/70"
@@ -136,15 +136,15 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
 
           {fare && (
             <>
-              <dt className="text-xs font-semibold text-gray-500 dark:text-gray-400 sm:pt-0.5">
+              <dt className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 sm:pt-0.5">
                 運賃
               </dt>
-              <dd className="text-gray-700 dark:text-gray-300">
+              <dd className="text-neutral-700 dark:text-neutral-300">
                 {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
-                <span aria-hidden className="mx-1.5 text-gray-400">
+                <span aria-hidden className="mx-1.5 text-neutral-400">
                   →
                 </span>
-                <span className="text-gray-500 dark:text-gray-400">
+                <span className="text-neutral-500 dark:text-neutral-400">
                   当日 {fare.onTheDay}
                 </span>
               </dd>
@@ -162,19 +162,19 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
               {BEYOND_LOCAL_TRANSPORT_LABELS[d.localTransport]}
             </span>
             {d.localTransportNote && (
-              <span className="text-gray-500 dark:text-gray-400">
+              <span className="text-neutral-500 dark:text-neutral-400">
                 {d.localTransportNote}
               </span>
             )}
           </p>
         )}
 
-        <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {d.blurb}
         </p>
 
         {d.themes && d.themes.length > 0 && (
-          <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-neutral-400">
+          <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400">
             {d.themes.map((t) => (
               <li key={t}>{BEYOND_THEME_LABELS[t]}</li>
             ))}
@@ -204,7 +204,7 @@ export default function BeyondHub() {
     }));
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 pt-4 pb-10 text-neutral-900 dark:text-neutral-100 sm:px-4">
       <JsonLd
         data={beyondHubCollectionJsonLd({
           name: HUB_TITLE,
@@ -225,13 +225,13 @@ export default function BeyondHub() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           Beyond London
         </h1>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
           ロンドンから日帰り・週末で行く英国
         </p>
         <div className="mt-3">
           <GuideFreshness dataAsOf={RAIL_AS_OF} updatedAt={RAIL_UPDATED_AT} />
         </div>
-        <p className="mt-6 text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {HUB_LEAD}
         </p>
       </header>
@@ -247,10 +247,10 @@ export default function BeyondHub() {
             key={p.id}
             className="rounded-lg border-l-4 border-amber-500 bg-amber-50 px-4 py-3 dark:bg-amber-950/25"
           >
-            <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
               {p.headline}
             </p>
-            <p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+            <p className="mt-1.5 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
               {p.body}
             </p>
             {p.link && (
@@ -269,7 +269,7 @@ export default function BeyondHub() {
 
       <section className="mt-10">
         <h2 className="text-lg font-semibold">行き先を絞り込む</h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           日本語の日帰り情報は「何があるか」は丁寧に書きますが、どの駅から乗り、何分かかり、いくらで、着いてから歩けるのかを書いているものは多くありません。実際に行こうとすると、そこで詰まります。各記事は街の紹介より先に行き方の表を置いていて、この一覧はその要約です。
         </p>
 
@@ -282,8 +282,8 @@ export default function BeyondHub() {
 
       <GuideFaq items={hubFaq} />
 
-      <div className="mt-10 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900 sm:p-6">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           関連ページ
         </h2>
         <ul className="space-y-2 text-sm">

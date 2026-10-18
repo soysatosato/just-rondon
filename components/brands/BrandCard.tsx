@@ -79,7 +79,7 @@ export default function BrandCard({ brand }: { brand: Brand }) {
             )}
           </div>
 
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             {brand.blurb}
           </p>
 

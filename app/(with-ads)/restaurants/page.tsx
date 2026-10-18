@@ -148,7 +148,7 @@ export default async function RestaurantsPage() {
         <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
           ロンドンのレストラン
         </h1>
-        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-4 leading-relaxed text-neutral-700 dark:text-neutral-300">
           「イギリスの料理はまずい」という評判は、もう実態を表していません。ただし
           <strong className="font-semibold">当たり外れの幅は本当に大きい</strong>
           。だからこの特集は、店ではなく
@@ -225,17 +225,17 @@ export default async function RestaurantsPage() {
         <h2 className="text-xl font-bold tracking-tight">
           なぜ「料理から」入るのか
         </h2>
-        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-4 leading-relaxed text-neutral-700 dark:text-neutral-300">
           同じフィッシュ&チップスでも、店を選べば忘れられない一皿になり、選ばなければただの油っぽい揚げ物で終わります。「まずい」という評判の多くは、この選び方の差から来ています。店の名前を先に並べても、その差は埋まりません。
         </p>
-        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-4 leading-relaxed text-neutral-700 dark:text-neutral-300">
           そしてロンドンの外食は、イギリス料理だけではありません。
           <strong className="font-semibold">
             移民が持ち込んだ料理こそがこの街の日常
           </strong>
           で、インドカレーもチャイナタウンの飲茶も、観光客向けではなく地元の食事として根づいています。日本食も同じで、「日本の味が恋しくなったとき」に行ける店が揃っています。
         </p>
-        <p className="mt-4 leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-4 leading-relaxed text-neutral-700 dark:text-neutral-300">
           だからこの特集は、{dishes.length}品それぞれについて、何を食べているのか・どう頼むのか・どこで食べるのかをまとめています。掲載店は全
           {totalRestaurants}軒です。
         </p>

@@ -78,7 +78,7 @@ export default function BriefMasthead({
            * 会期は誌名と同じ見出しの中に入れる。別行の補足に落とすと、
            * 過去号を開いたときに「いつの号か」が題字から読めなくなる。
            */}
-          <span className="mt-2 block text-base font-semibold tabular-nums text-muted-foreground sm:text-lg dark:text-gray-400">
+          <span className="mt-2 block text-base font-semibold tabular-nums text-muted-foreground sm:text-lg dark:text-neutral-400">
             {formatWeekRange(weekStart, weekEnd)}
           </span>
         </Title>
@@ -110,11 +110,11 @@ export default function BriefMasthead({
         </p>
 
         {/* リード。この号を読むかどうかは、ここ数行で決まる。 */}
-        <p className="mt-6 text-[17px] font-semibold leading-[1.9] sm:text-lg dark:text-gray-100">
+        <p className="mt-6 text-[17px] font-semibold leading-[1.9] sm:text-lg dark:text-neutral-100">
           {headline}
         </p>
 
-        <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-gray-400">
+        <p className="mt-5 max-w-[42rem] text-sm leading-[2] text-muted-foreground dark:text-neutral-400">
           {summary}
         </p>
       </div>
@@ -124,7 +124,7 @@ export default function BriefMasthead({
        * あわせて更新の頻度も出す。次にいつ来ればいいかが分からないと、
        * 読み終えた読者はそのまま離れてしまう。
        */}
-      <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-xs tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-gray-500">
+      <p className="mt-7 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border pt-3 text-xs tabular-nums text-muted-foreground dark:border-neutral-800 dark:text-neutral-500">
         <span>{format(researchedAt, "yyyy年M月d日")} 調査</span>
         <span aria-hidden className="opacity-40">
           ／

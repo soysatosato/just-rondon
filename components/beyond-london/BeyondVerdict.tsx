@@ -46,7 +46,7 @@ export default function BeyondVerdict({
   return (
     <section className="mb-8">
       <ul className="flex flex-wrap gap-1.5">
-        <li className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-neutral-800 dark:text-gray-400">
+        <li className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
           {county}
         </li>
         {(meta?.timeFit ?? []).map((t) => (
@@ -58,14 +58,14 @@ export default function BeyondVerdict({
           </li>
         ))}
         {meta?.localTransport && (
-          <li className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-neutral-800 dark:text-gray-400">
+          <li className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
             {BEYOND_LOCAL_TRANSPORT_LABELS[meta.localTransport]}
           </li>
         )}
         {(meta?.themes ?? []).map((t) => (
           <li
             key={t}
-            className="rounded-full border border-gray-200 px-2.5 py-1 text-xs text-gray-500 dark:border-neutral-700 dark:text-gray-400"
+            className="rounded-full border border-neutral-200 px-2.5 py-1 text-xs text-neutral-500 dark:border-neutral-700 dark:text-neutral-400"
           >
             {BEYOND_THEME_LABELS[t]}
           </li>
@@ -79,13 +79,13 @@ export default function BeyondVerdict({
             className={`rounded-lg border-l-4 py-2 pl-4 ${
               row.accent
                 ? "border-amber-500 bg-amber-50/60 dark:bg-amber-950/20"
-                : "border-gray-200 dark:border-neutral-700"
+                : "border-neutral-200 dark:border-neutral-700"
             }`}
           >
-            <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+            <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
               {row.label}
             </dt>
-            <dd className="mt-0.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+            <dd className="mt-0.5 text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
               {row.value}
             </dd>
           </div>

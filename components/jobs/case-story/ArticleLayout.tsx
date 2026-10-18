@@ -35,13 +35,13 @@ export default function ArticleLayout({
   const path = chapterPath(article.slug, locale);
 
   return (
-    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       {locale === "en" && <HtmlLang lang="en" />}
       <JsonLd data={breadcrumbJsonLd(article, locale)} />
       <JsonLd data={articleJsonLd(article, locale)} />
 
       <div className="mb-6 flex items-center justify-between gap-4">
-        <nav className="text-xs text-gray-500 dark:text-gray-400">
+        <nav className="text-xs text-neutral-500 dark:text-neutral-400">
           <Link href={SERVICE_CHARGES_PATH} className="hover:underline">
             {strings.breadcrumbServiceCharges}
           </Link>
@@ -62,11 +62,11 @@ export default function ArticleLayout({
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           {article.title}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {article.engTitle}
         </p>
         {article.summary && (
-          <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
             {stripInlineMarkdown(article.summary)}
           </p>
         )}
@@ -96,11 +96,11 @@ export default function ArticleLayout({
       <div className="space-y-8">
         {article.sections.map((section, i) => (
           <GuideSectionCard key={section.title}>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
             </h2>
             {section.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-neutral-500 dark:text-neutral-400">
                 {section.subtitle}
               </p>
             )}

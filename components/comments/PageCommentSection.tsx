@@ -78,14 +78,14 @@ function OfficialReply({
         />
         <div className="min-w-0">
           <p className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+            <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               {SITE_NAME}
             </span>
             <span className="rounded bg-rose-600 px-1.5 py-0.5 text-xs font-bold leading-none text-white">
               運営
             </span>
           </p>
-          <p className="mt-0.5 flex items-start gap-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-0.5 flex items-start gap-1 text-xs text-neutral-500 dark:text-neutral-400">
             <CornerDownRight className="mt-px h-3 w-3 shrink-0" aria-hidden />
             <span className="[overflow-wrap:anywhere]">
               {replyTo}さんへの返信・{formatDate(reply.createdAt)}
@@ -93,7 +93,7 @@ function OfficialReply({
           </p>
         </div>
       </div>
-      <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-800 dark:text-gray-200">
+      <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
         {reply.content}
       </p>
     </li>
@@ -164,10 +164,10 @@ export default function PageCommentSection({
 
   if (!formOpen && comments.length === 0) {
     return (
-      <section className="mt-12 flex flex-col gap-3 rounded-xl border border-dashed border-gray-300 p-4 dark:border-neutral-700 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+      <section className="mt-12 flex flex-col gap-3 rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div className="min-w-0">
           <h2 className="text-base font-semibold">{heading}</h2>
-          <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
             {prompt}
           </p>
         </div>
@@ -186,17 +186,17 @@ export default function PageCommentSection({
   return (
     <section className="mt-12">
       <h2 className="text-lg font-semibold">{heading}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
         {prompt}
       </p>
 
-      <Card className="mt-4 bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm">
+      <Card className="mt-4 bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm">
         <CardContent className="p-5">
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
               <label
                 htmlFor="comment-author"
-                className="block text-xs font-semibold text-gray-600 dark:text-gray-400"
+                className="block text-xs font-semibold text-neutral-600 dark:text-neutral-400"
               >
                 お名前（任意）
               </label>
@@ -213,7 +213,7 @@ export default function PageCommentSection({
             <div>
               <label
                 htmlFor="comment-content"
-                className="block text-xs font-semibold text-gray-600 dark:text-gray-400"
+                className="block text-xs font-semibold text-neutral-600 dark:text-neutral-400"
               >
                 コメント
               </label>
@@ -247,7 +247,7 @@ export default function PageCommentSection({
             )}
 
             <div className="flex items-center justify-between gap-4">
-              <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+              <p className="text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                 投稿は誰でも読めます。個人情報は書かないでください。
               </p>
               <Button
@@ -267,22 +267,22 @@ export default function PageCommentSection({
           {comments.map((c) => (
             <li
               key={c.id}
-              className="rounded-lg border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 p-4"
+              className="rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 p-4"
             >
               <div className="flex items-baseline justify-between gap-3">
-                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
                   {c.author}
                 </span>
                 <span className="shrink-0 text-xs text-muted-foreground">
                   {formatDate(c.createdAt)}
                 </span>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
                 {c.content}
               </p>
 
               {c.replies.length > 0 && (
-                <ul className="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-neutral-700">
+                <ul className="mt-4 space-y-3 border-t border-neutral-200 pt-4 dark:border-neutral-700">
                   {c.replies.map((r) => (
                     <OfficialReply key={r.id} reply={r} replyTo={c.author} />
                   ))}

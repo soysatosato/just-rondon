@@ -51,7 +51,7 @@ export default function BriefSectionNav({
                   section.dotClass
                 )}
               />
-              <span className="whitespace-nowrap dark:text-gray-200">
+              <span className="whitespace-nowrap dark:text-neutral-200">
                 {section.label}
               </span>
               <span className="font-serif text-sm tabular-nums text-muted-foreground">

@@ -152,17 +152,17 @@ function ScenarioCard({
 
   return (
     <Link href={billsGuidePath(slug)} className="block">
-      <article className="flex h-full flex-col rounded-xl border border-gray-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
-        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+      <article className="flex h-full flex-col rounded-xl border border-neutral-300 bg-white p-5 shadow-sm transition hover:border-sky-400 hover:shadow-md dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
+        <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
           {BILLS_CATEGORY_LABELS[meta.category]}
         </p>
-        <p className="mt-1.5 text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+        <p className="mt-1.5 text-sm font-semibold leading-snug text-neutral-900 dark:text-neutral-100">
           {audience}
         </p>
         <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
           → {answer}
         </p>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           {detail}
         </p>
         <span className="mt-4 text-sm font-medium text-link">
@@ -210,7 +210,7 @@ export default function BillsHubPage() {
   ];
 
   return (
-    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl sm:px-4 pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: BILLS_SECTION_NAME,
@@ -231,11 +231,11 @@ export default function BillsHubPage() {
         <h1 className="text-2xl font-bold leading-tight md:text-4xl">
           イギリスの光熱費と生活の契約ガイド
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           Household Bills in London: Council Tax, Energy, Water, TV Licence and
           Broadband
         </p>
-        <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           家賃のほかに毎月出ていくお金は、ほぼ5つに決まっています。
           <strong>Council Tax・ガス電気・水道・ネット回線・TV Licence</strong>
           。どれも入居した日から発生し、日本と違って
@@ -252,13 +252,13 @@ export default function BillsHubPage() {
         どれも「知っていれば起きない」失敗なので、手順として先に見せる。
       */}
       <div className="mt-8 rounded-lg border border-sky-300 bg-sky-50/70 p-5 dark:border-sky-900/60 dark:bg-sky-950/25">
-        <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
           入居の前後に、この順で片づけます
         </p>
-        <ol className="mt-3 space-y-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <ol className="mt-3 space-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           <li>
             <strong>1. 契約前｜bills に何が含まれるかをメールで確かめる</strong>
-            <span className="block text-gray-600 dark:text-gray-400">
+            <span className="block text-neutral-600 dark:text-neutral-400">
               含まれない分を足してから家賃を比べる。
               <Link
                 href={billsGuidePath("bills-included")}
@@ -270,7 +270,7 @@ export default function BillsHubPage() {
           </li>
           <li>
             <strong>2. 入居日が決まったら｜ネット回線を申し込む</strong>
-            <span className="block text-gray-600 dark:text-gray-400">
+            <span className="block text-neutral-600 dark:text-neutral-400">
               開通日を入居日以降に指定する。入居してからでは数週間つながらない。
               <Link
                 href={billsGuidePath("broadband")}
@@ -282,7 +282,7 @@ export default function BillsHubPage() {
           </li>
           <li>
             <strong>3. 入居日｜ガス・電気・水道のメーターを撮る</strong>
-            <span className="block text-gray-600 dark:text-gray-400">
+            <span className="block text-neutral-600 dark:text-neutral-400">
               これで前の住人の使用分と切り離せる。
               <Link
                 href={billsGuidePath("energy")}
@@ -294,7 +294,7 @@ export default function BillsHubPage() {
           </li>
           <li>
             <strong>4. 入居後すぐ｜区・供給会社・水道会社に届け出る</strong>
-            <span className="block text-gray-600 dark:text-gray-400">
+            <span className="block text-neutral-600 dark:text-neutral-400">
               Council Tax の割引や免除は、ここで同時に申請する。
               <Link
                 href={billsGuidePath("council-tax")}
@@ -313,7 +313,7 @@ export default function BillsHubPage() {
           </li>
           <li>
             <strong>5. ライブ放送か iPlayer を見るなら｜TV Licence を買う</strong>
-            <span className="block text-gray-600 dark:text-gray-400">
+            <span className="block text-neutral-600 dark:text-neutral-400">
               見ないなら、届く手紙に「要らない」と申告する。
               <Link
                 href={billsGuidePath("tv-licence")}
@@ -324,7 +324,7 @@ export default function BillsHubPage() {
             </span>
           </li>
         </ol>
-        <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           英国の電話番号がまだなければ、これより前に
           <Link
             href={billsGuidePath("mobile")}
@@ -340,7 +340,7 @@ export default function BillsHubPage() {
         <h2 id="cost-overview" className="text-xl font-bold md:text-2xl">
           家賃のほかに、年いくら出ていくか
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           世帯あたりの目安です。シェアなら人数で割ります。ネット回線は事業者と
           契約で違うので、ここには含めていません。
           <strong>ガス・電気は{ENERGY_CAP.nextChange}に、それ以外は毎年4月に改定</strong>
@@ -351,16 +351,16 @@ export default function BillsHubPage() {
           {costRows.map((row) => (
             <div
               key={row.label}
-              className="flex flex-col rounded-lg border border-gray-200 p-4 dark:border-neutral-700"
+              className="flex flex-col rounded-lg border border-neutral-200 p-4 dark:border-neutral-700"
             >
-              <dt className="text-xs font-bold text-gray-500 dark:text-gray-400">
+              <dt className="text-xs font-bold text-neutral-500 dark:text-neutral-400">
                 {row.label}
               </dt>
               <dd className="mt-1 flex flex-1 flex-col">
-                <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                <span className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
                   {row.value}
                 </span>
-                <span className="mt-0.5 flex-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                <span className="mt-0.5 flex-1 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {row.note}
                 </span>
                 <Link
@@ -381,7 +381,7 @@ export default function BillsHubPage() {
         <h2 id="find-your-stage" className="text-xl font-bold md:text-2xl">
           自分の状況を選んでください
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           全{billsGuides.length}本。一番近いものが1つ見つかれば、それがあなたの読むべきページです。
         </p>
 
@@ -394,11 +394,11 @@ export default function BillsHubPage() {
 
       <GuideFaq items={FAQ_ITEMS} />
 
-      <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+      <div className="mt-10 rounded-lg border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-700 dark:bg-neutral-900">
+        <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
           住み始める前後に、あわせて必要になること
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
           光熱費の引き落としには英国の銀行口座が要り、物件選びの段階で
           Council Tax の band と暖房方式を見ておくと、入居後の請求で驚かずに済みます。
         </p>
@@ -438,7 +438,7 @@ export default function BillsHubPage() {
         </ul>
       </div>
 
-      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-gray-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-gray-300">
+      <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの情報は{BILLS_AS_OF}
         時点のイングランドの制度と料金にもとづく情報提供で、特定の事業者や料金プランを
         勧めるものではありません。ガス・電気の単価は3か月ごと、Council Tax・水道・
