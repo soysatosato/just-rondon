@@ -25,9 +25,16 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { MdMail } from "react-icons/md";
 
-import { NAV_SECTIONS, groupColsFor, menuWidthFor } from "./menu";
+import {
+  NAV_SECTIONS,
+  currentSectionHref,
+  groupColsFor,
+  menuWidthFor,
+} from "./menu";
+import { ancestorCrumbs } from "@/components/navigation/tree";
 import Wordmark from "./Wordmark";
 import AuthMenu from "./AuthMenu";
 import { useAutoHideHeader } from "./useAutoHideHeader";
@@ -37,6 +44,19 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   // スマホのヘッダーは下へ読むと隠れ、少し戻すと出る(useAutoHideHeader.ts)。
   const header = useAutoHideHeader({ paused: open });
+
+  // 現在地。いま開いているページが属する区分と、そのページ自身のリンク。
+  // 区分はボタンの下の線、ページは太字と aria-current で示す。
+  const pathname = usePathname();
+  const currentSection = currentSectionHref(
+    pathname,
+    ancestorCrumbs(pathname).flatMap((c) => (c.href ? [c.href] : [])),
+  );
+  const pageProps = (href: string) =>
+    href === pathname ? { "aria-current": "page" as const } : {};
+  const currentMenuLabel = NAV_SECTIONS.find(
+    (s) => s.kind === "menu" && s.href === currentSection,
+  )?.label;
 
   // モバイルはアコーディオンと素のリンクを別々に並べる必要があるので、
   // 種類ごとに分ける。NAV_SECTIONS は menu を先、link を後に並べてあるため、
@@ -103,7 +123,11 @@ export default function Navbar() {
                     トップページ
                   </Link>
 
-                  <Accordion type="single" collapsible>
+                  <Accordion
+                    type="single"
+                    collapsible
+                    defaultValue={currentMenuLabel}
+                  >
                     {menuSections.map((section) => {
                       if (section.kind !== "menu") return null;
                       return (
@@ -140,7 +164,8 @@ export default function Navbar() {
                                   <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="text-sm hover:text-red-600 transition"
+                                    {...pageProps(link.href)}
+                                    className="text-sm hover:text-red-600 transition aria-[current=page]:font-semibold aria-[current=page]:text-foreground"
                                     onClick={() => setOpen(false)}
                                   >
                                     {link.label}
@@ -158,7 +183,10 @@ export default function Navbar() {
                     <Link
                       key={section.href}
                       href={section.href}
-                      className="hover:text-red-600 transition"
+                      {...(section.href === currentSection
+                        ? { "aria-current": "page" as const }
+                        : {})}
+                      className="hover:text-red-600 transition aria-[current=page]:font-semibold"
                       onClick={() => setOpen(false)}
                     >
                       {section.label}
@@ -218,9 +246,18 @@ export default function Navbar() {
                       <NavigationMenuLink asChild>
                         <Link
                           href={section.href}
-                          className="inline-flex h-9 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                          {...(section.href === currentSection
+                            ? { "aria-current": "page" as const }
+                            : {})}
+                          className="relative inline-flex h-9 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                         >
                           {section.label}
+                          {section.href === currentSection && (
+                            <span
+                              aria-hidden
+                              className={`absolute inset-x-3 bottom-0.5 h-0.5 rounded-full ${section.accent.stripe}`}
+                            />
+                          )}
                         </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
@@ -229,8 +266,19 @@ export default function Navbar() {
 
                 return (
                   <NavigationMenuItem key={section.label} className="shrink-0">
-                    <NavigationMenuTrigger className="whitespace-nowrap px-3">
+                    <NavigationMenuTrigger
+                      className="relative whitespace-nowrap px-3"
+                      {...(section.href === currentSection
+                        ? { "aria-current": "true" as const }
+                        : {})}
+                    >
                       {section.label}
+                      {section.href === currentSection && (
+                        <span
+                          aria-hidden
+                          className={`absolute inset-x-3 bottom-0.5 h-0.5 rounded-full ${section.accent.stripe}`}
+                        />
+                      )}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent
                       className={`p-6 ${menuWidthFor(section.groups.length)}`}
@@ -273,7 +321,8 @@ export default function Navbar() {
                                   <li key={link.href}>
                                     <Link
                                       href={link.href}
-                                      className="text-sm hover:underline"
+                                      {...pageProps(link.href)}
+                                      className="text-sm hover:underline aria-[current=page]:font-semibold"
                                     >
                                       {link.label}
                                     </Link>

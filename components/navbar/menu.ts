@@ -481,3 +481,53 @@ export function groupColsFor(groupCount: number): string {
 export function menuWidthFor(groupCount: number): string {
   return MENU_WIDTH[clampGroups(groupCount)];
 }
+
+/** href が pathname と同じか、その上の階層か。 */
+function covers(href: string, pathname: string): boolean {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/**
+ * いま開いているページが属する区分(NAV_SECTIONS の href)。ナビに
+ * 「現在地」を示すのに使う。決められないときは null(何も示さない)。
+ *
+ * 決め方は、ナビに並ぶリンク(区分のハブを含む)のうち、URL の頭が
+ * いちばん長く一致するものの区分。パンくずの階層(tree.ts)をそのまま
+ * 使わないのは、ナビの区分と階層がずれる箇所があるため(交通の切符は
+ * 階層では観光の下、ナビでは旅の準備とロンドンの外への下)。
+ *
+ * 同じリンクを2つの区分に置いている場合(トラブル対応・物価・
+ * 今週のロンドンなど)は、パンくずの最上位の区分で決める。それでも
+ * 決まらなければ null にする——違う区分を現在地と示すよりよい。
+ */
+export function currentSectionHref(
+  pathname: string,
+  ancestorHrefs: string[],
+): string | null {
+  let best = 0;
+  let owners: string[] = [];
+
+  for (const section of NAV_SECTIONS) {
+    const hrefs =
+      section.kind === "link"
+        ? [section.href]
+        : [section.href, ...section.groups.flatMap((g) => g.links.map((l) => l.href))];
+    const longest = Math.max(
+      0,
+      ...hrefs.filter((href) => covers(href, pathname)).map((href) => href.length),
+    );
+    if (longest === 0) continue;
+    if (longest > best) {
+      best = longest;
+      owners = [section.href];
+    } else if (longest === best) {
+      owners.push(section.href);
+    }
+  }
+
+  if (owners.length === 1) return owners[0];
+  if (owners.length === 0) return null;
+
+  const top = [...ancestorHrefs, pathname].find((href) => owners.includes(href));
+  return top ?? null;
+}
