@@ -463,7 +463,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             <button
               type="button"
               onClick={keepAccountPlan}
-              className="rounded-full bg-amber-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-amber-700"
+              className="rounded-full bg-amber-700 px-4 py-2 text-xs font-semibold text-white transition hover:bg-amber-800"
             >
               アカウントのプランを開く
             </button>

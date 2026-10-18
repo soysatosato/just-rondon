@@ -21,8 +21,8 @@ type Result = {
 };
 
 const TONE = {
-  ok: "text-emerald-600 dark:text-emerald-400",
-  warn: "text-amber-600 dark:text-amber-400",
+  ok: "text-emerald-700 dark:text-emerald-400",
+  warn: "text-amber-700 dark:text-amber-400",
   error: "text-red-600 dark:text-red-400",
 } as const;
 
@@ -73,7 +73,7 @@ export default async function ConfirmPage({
 
   return (
     <SitePageShell>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
         {result.kicker}
       </p>
       <h1

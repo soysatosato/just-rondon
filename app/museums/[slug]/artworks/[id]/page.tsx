@@ -98,7 +98,7 @@ export default async function ArtworkDetailPage({
       <section className="flex flex-col items-center gap-2">
         <div className="flex flex-col items-center text-center">
           {/* {artwork?.engTitle && ( */}
-          <p className="text-sm text-gray-400 italic">{artwork?.engTitle}</p>
+          <p className="text-sm text-gray-500 italic dark:text-gray-400">{artwork?.engTitle}</p>
           {/* )} */}
           <h1 className="text-2xl md:text-3xl font-serif font-bold">
             {artwork?.title}

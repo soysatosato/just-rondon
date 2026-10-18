@@ -40,7 +40,7 @@ export default function MonthNav({ month }: { month: number }) {
             {m === month ? (
               <span
                 aria-current="page"
-                className="block rounded-lg bg-emerald-600 py-1.5 text-center text-sm font-semibold text-white"
+                className="block rounded-lg bg-emerald-700 py-1.5 text-center text-sm font-semibold text-white"
               >
                 {m}月
               </span>

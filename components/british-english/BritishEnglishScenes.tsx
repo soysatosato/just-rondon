@@ -73,7 +73,7 @@ const SCENES: Scene[] = [
     wrapClass:
       "border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-amber-950/20",
     iconWrapClass:
-      "bg-amber-100 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400",
+      "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400",
     chipClass:
       "border-amber-600/30 bg-amber-600/10 text-amber-700 dark:text-amber-300",
     sayClass: "text-amber-700 dark:text-amber-300",
@@ -126,7 +126,7 @@ const SCENES: Scene[] = [
     wrapClass:
       "border-emerald-200 bg-emerald-50/60 dark:border-emerald-900/60 dark:bg-emerald-950/20",
     iconWrapClass:
-      "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400",
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400",
     chipClass:
       "border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-300",
     sayClass: "text-emerald-700 dark:text-emerald-300",
@@ -179,7 +179,7 @@ const SCENES: Scene[] = [
     wrapClass:
       "border-sky-200 bg-sky-50/60 dark:border-sky-900/60 dark:bg-sky-950/20",
     iconWrapClass:
-      "bg-sky-100 text-sky-600 dark:bg-sky-950/50 dark:text-sky-400",
+      "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-400",
     chipClass: "border-sky-600/30 bg-sky-600/10 text-sky-700 dark:text-sky-300",
     sayClass: "text-sky-700 dark:text-sky-300",
   },

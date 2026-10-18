@@ -230,7 +230,7 @@ export default async function AreasHubPage() {
                   <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
                     {s.situation}
                   </p>
-                  <p className="mt-3 text-xs font-bold tracking-wide text-emerald-600 dark:text-emerald-400">
+                  <p className="mt-3 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400">
                     → {s.answer}
                   </p>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
@@ -278,7 +278,7 @@ export default async function AreasHubPage() {
                   <Link key={a.slug} href={areaGuidePath(a.slug)} className="block">
                     <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                       <CardContent className="p-5">
-                        <span className="block text-xs font-semibold text-emerald-600">
+                        <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                           {a.eyebrow}
                         </span>
                         <span className="mt-1 block text-base font-semibold">

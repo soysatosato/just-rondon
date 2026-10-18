@@ -46,7 +46,7 @@ export default function ColumnCard({
             fetchPriority="low"
           />
           {seriesBadge && (
-            <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-amber-600/95 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
+            <span className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-amber-700/95 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
               {seriesBadge}
             </span>
           )}

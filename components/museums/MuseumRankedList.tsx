@@ -60,7 +60,7 @@ export default function MuseumRankedList({
                 <Badge
                   className={
                     m.price === 0
-                      ? "bg-emerald-600 text-white hover:bg-emerald-600"
+                      ? "bg-emerald-700 text-white hover:bg-emerald-700"
                       : "bg-slate-800 text-white hover:bg-slate-800"
                   }
                 >
@@ -68,7 +68,7 @@ export default function MuseumRankedList({
                   {m.price === 0 ? "常設展 無料" : `£${m.price}〜`}
                 </Badge>
                 {showKidsBadge && m.isForChildren && (
-                  <Badge className="bg-sky-600 text-white hover:bg-sky-600">
+                  <Badge className="bg-sky-700 text-white hover:bg-sky-700">
                     <Baby className="mr-1 h-3 w-3" />
                     子ども向き
                   </Badge>

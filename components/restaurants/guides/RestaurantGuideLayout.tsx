@@ -173,7 +173,7 @@ export default function RestaurantGuideLayout({
             >
               <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-emerald-600">
+                  <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
                   </span>
                   <span className="mt-1 block text-base font-semibold">

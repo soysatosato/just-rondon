@@ -23,20 +23,20 @@ const ACCENTS = [
   {
     stripe: "bg-sky-500",
     wrap: "hover:border-sky-300 dark:hover:border-sky-800",
-    eng: "text-sky-600 dark:text-sky-400",
-    more: "text-sky-600 dark:text-sky-400",
+    eng: "text-sky-700 dark:text-sky-400",
+    more: "text-sky-700 dark:text-sky-400",
   },
   {
     stripe: "bg-amber-500",
     wrap: "hover:border-amber-300 dark:hover:border-amber-800",
-    eng: "text-amber-600 dark:text-amber-400",
-    more: "text-amber-600 dark:text-amber-400",
+    eng: "text-amber-700 dark:text-amber-400",
+    more: "text-amber-700 dark:text-amber-400",
   },
   {
     stripe: "bg-emerald-500",
     wrap: "hover:border-emerald-300 dark:hover:border-emerald-800",
-    eng: "text-emerald-600 dark:text-emerald-400",
-    more: "text-emerald-600 dark:text-emerald-400",
+    eng: "text-emerald-700 dark:text-emerald-400",
+    more: "text-emerald-700 dark:text-emerald-400",
   },
   {
     stripe: "bg-violet-500",

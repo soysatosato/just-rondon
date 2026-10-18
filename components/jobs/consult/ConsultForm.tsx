@@ -87,7 +87,7 @@ export default function ConsultForm() {
     return (
       <div className="space-y-4">
         <div className="flex gap-3 rounded-lg border border-emerald-600/30 bg-emerald-50 p-5 dark:bg-emerald-950/30">
-          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700 dark:text-emerald-400" />
           <div className="space-y-1">
             <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-200">
               確認メールを送信しました

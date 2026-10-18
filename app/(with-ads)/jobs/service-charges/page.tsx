@@ -169,7 +169,7 @@ export default function ServiceChargeGuidePage() {
                   href={`#section-${section.id}`}
                   className="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-sm leading-snug text-muted-foreground transition hover:border-foreground hover:text-foreground"
                 >
-                  <span className="tabular-nums text-muted-foreground/70">
+                  <span className="tabular-nums text-muted-foreground">
                     {i + 1}.
                   </span>{" "}
                   {section.title}

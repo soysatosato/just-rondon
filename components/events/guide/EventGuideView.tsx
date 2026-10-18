@@ -351,7 +351,7 @@ function EditionBlock({ edition }: { edition: GuideEdition }) {
             key={`${d.label ?? ""}${d.date}`}
             className="flex gap-3 rounded-lg border border-gray-200 p-3.5 dark:border-neutral-700"
           >
-            <CalendarCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <CalendarCheck2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700 dark:text-emerald-400" />
             <div className="min-w-0">
               <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
                 {d.label && <span className="mr-2">{d.label}</span>}

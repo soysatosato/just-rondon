@@ -178,7 +178,7 @@ export default function MuseumsHub({
       {/* テーマ別の入口 */}
       <section className="space-y-5">
         <div>
-          <span className="inline-block rounded-full bg-sky-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          <span className="inline-block rounded-full bg-sky-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
             Browse
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">
@@ -216,7 +216,7 @@ export default function MuseumsHub({
         <section className="space-y-5">
           <div className="flex items-baseline justify-between gap-4">
             <div>
-              <span className="inline-block rounded-full bg-emerald-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+              <span className="inline-block rounded-full bg-emerald-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
                 Highlights
               </span>
               <h2 className="mt-3 text-2xl font-bold tracking-tight">
@@ -244,7 +244,7 @@ export default function MuseumsHub({
                       decoding="async"
                     />
                     {m.price === 0 && (
-                      <Badge className="absolute right-2 top-2 bg-emerald-600 text-white hover:bg-emerald-600">
+                      <Badge className="absolute right-2 top-2 bg-emerald-700 text-white hover:bg-emerald-700">
                         常設展 無料
                       </Badge>
                     )}
@@ -273,7 +273,7 @@ export default function MuseumsHub({
       {/* 実用Tips */}
       <section className="space-y-5">
         <div>
-          <span className="inline-block rounded-full bg-amber-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          <span className="inline-block rounded-full bg-amber-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
             Before You Go
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">
@@ -287,7 +287,7 @@ export default function MuseumsHub({
               className="rounded-xl border border-border bg-card p-5"
             >
               <div className="flex items-center gap-2">
-                <Icon className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-500" />
+                <Icon className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-500" />
                 <h3 className="font-semibold tracking-tight">{title}</h3>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

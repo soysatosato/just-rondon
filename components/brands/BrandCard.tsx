@@ -83,7 +83,7 @@ export default function BrandCard({ brand }: { brand: Brand }) {
             {brand.blurb}
           </p>
 
-          <p className="text-right text-xs font-medium text-sky-600 dark:text-sky-300">
+          <p className="text-right text-xs font-medium text-sky-700 dark:text-sky-300">
             詳しく見る →
           </p>
         </CardContent>

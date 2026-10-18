@@ -88,7 +88,7 @@ export const SEASON_META: Record<Season, SeasonMeta> = {
     label: "夏",
     icon: Sun,
     iconWrapClass:
-      "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
+      "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
     badgeClass:
       "border-amber-600/40 bg-amber-600/10 text-amber-700 dark:text-amber-400",
   },
@@ -104,7 +104,7 @@ export const SEASON_META: Record<Season, SeasonMeta> = {
     label: "冬",
     icon: Snowflake,
     iconWrapClass:
-      "bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400",
+      "bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-400",
     badgeClass:
       "border-sky-600/40 bg-sky-600/10 text-sky-700 dark:text-sky-400",
   },

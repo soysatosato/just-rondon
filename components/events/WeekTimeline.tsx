@@ -121,7 +121,7 @@ export default function WeekTimeline({
                       "flex items-center gap-0.5 text-xs leading-none tabular-nums",
                       rainy
                         ? "font-semibold text-sky-700 dark:text-sky-400"
-                        : "text-muted-foreground/70 dark:text-gray-500"
+                        : "text-muted-foreground dark:text-gray-400"
                     )}
                   >
                     {rainy && <Umbrella className="h-2.5 w-2.5 shrink-0" />}

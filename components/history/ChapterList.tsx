@@ -45,7 +45,7 @@ export default function ChapterList({
                 <span className="rounded-full bg-amber-50 px-2.5 py-0.5 font-serif text-xs font-semibold tabular-nums text-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
                   {c.period}
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                   {c.eyebrow}
                 </span>
               </div>

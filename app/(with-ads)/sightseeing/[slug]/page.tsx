@@ -144,7 +144,7 @@ function AttractionBadges({ attraction }: { attraction: any }) {
       {attraction.mustSee && (
         <Badge
           className="flex items-center gap-1 
-          bg-red-500 text-white 
+          bg-red-600 text-white 
           dark:bg-red-600
         "
         >

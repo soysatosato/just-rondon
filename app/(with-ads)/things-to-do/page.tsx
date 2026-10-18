@@ -182,7 +182,7 @@ export default async function ThingsToDoPage() {
       {/* 1. ヒーロー。左に文言と段取り、右に実物の写真。 */}
       <section className="mt-5 grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="lg:col-span-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-500">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-700 dark:text-amber-500">
             Things to Do
           </p>
           <h1 className="mt-2 text-4xl font-bold leading-none tracking-tight md:text-5xl">

@@ -19,7 +19,7 @@ export function SitePageHeader({
 }) {
   return (
     <header>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
         {kicker}
       </p>
       <h1 className="mt-3 text-3xl font-bold leading-tight tracking-tight md:text-5xl">

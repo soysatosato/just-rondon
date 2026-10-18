@@ -468,7 +468,7 @@ export default async function Page() {
                 href={travelGuidePath(guide.slug)}
                 className="group flex gap-4 p-4 transition-colors hover:bg-muted/50"
               >
-                <span className="w-7 shrink-0 pt-0.5 text-sm font-bold tabular-nums text-sky-600 dark:text-sky-400">
+                <span className="w-7 shrink-0 pt-0.5 text-sm font-bold tabular-nums text-sky-700 dark:text-sky-400">
                   {String(idx + 1).padStart(2, "0")}
                 </span>
                 <span className="min-w-0 flex-1">

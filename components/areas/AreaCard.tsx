@@ -30,12 +30,12 @@ const ACCENTS = [
   {
     stripe: "bg-teal-500",
     wrap: "hover:border-teal-300 dark:hover:border-teal-800",
-    more: "text-teal-600 dark:text-teal-400",
+    more: "text-teal-700 dark:text-teal-400",
   },
   {
     stripe: "bg-sky-500",
     wrap: "hover:border-sky-300 dark:hover:border-sky-800",
-    more: "text-sky-600 dark:text-sky-400",
+    more: "text-sky-700 dark:text-sky-400",
   },
 ];
 

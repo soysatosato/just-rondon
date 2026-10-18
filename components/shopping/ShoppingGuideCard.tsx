@@ -40,7 +40,7 @@ export default function ShoppingGuideCard({
             </div>
           )}
           <CardContent className="p-5">
-            <span className="block text-xs font-semibold text-emerald-600">
+            <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
               {meta.eyebrow}
             </span>
             <span className="mt-1 block text-base font-semibold">

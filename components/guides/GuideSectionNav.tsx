@@ -93,15 +93,15 @@ export default function GuideSectionNav({
                 aria-current={active ? "true" : undefined}
                 className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                   active
-                    ? "bg-emerald-600 text-white"
+                    ? "bg-emerald-700 text-white"
                     : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800"
                 }`}
               >
                 <span
                   className={
                     active
-                      ? "text-emerald-200"
-                      : "text-gray-400 dark:text-neutral-600"
+                      ? "text-emerald-100"
+                      : "text-gray-500 dark:text-neutral-400"
                   }
                 >
                   {i + 1}

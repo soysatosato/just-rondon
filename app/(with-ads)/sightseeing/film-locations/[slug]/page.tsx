@@ -107,7 +107,7 @@ export default function FilmWorkPage({ params }: Props) {
       <Breadcrumbs path="/sightseeing/film-locations" current={work.title} />
 
       <header>
-        <p className="text-sm font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-2">
+        <p className="text-sm font-medium tracking-wide text-sky-700 dark:text-sky-300 mb-2">
           {work.eyebrow} · {work.years}
         </p>
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
@@ -133,7 +133,7 @@ export default function FilmWorkPage({ params }: Props) {
 
       {work.note && (
         <div className="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
-          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-700 dark:text-amber-400 mt-0.5" />
           <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">
             {work.note}
           </p>
@@ -171,7 +171,7 @@ export default function FilmWorkPage({ params }: Props) {
           className="space-y-4 border-t border-slate-200 dark:border-slate-700 pt-8 scroll-mt-20"
         >
           <div>
-            <p className="text-xs font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-1">
+            <p className="text-xs font-medium tracking-wide text-sky-700 dark:text-sky-300 mb-1">
               {spot.scene}
             </p>
             <h2 className="text-xl sm:text-2xl font-semibold">
@@ -237,7 +237,7 @@ export default function FilmWorkPage({ params }: Props) {
               href={googleMapsUrl(spot.mapQuery)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sky-600 hover:underline dark:text-sky-300"
+              className="inline-flex items-center gap-1 text-sky-700 hover:underline dark:text-sky-300"
             >
               <MapPin className="h-4 w-4" />
               地図で見る
@@ -247,7 +247,7 @@ export default function FilmWorkPage({ params }: Props) {
                 href={spot.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sky-600 hover:underline dark:text-sky-300"
+                className="inline-flex items-center gap-1 text-sky-700 hover:underline dark:text-sky-300"
               >
                 <ExternalLink className="h-4 w-4" />
                 公式サイト
@@ -272,7 +272,7 @@ export default function FilmWorkPage({ params }: Props) {
               <li key={w.slug}>
                 <Link
                   href={filmWorkPath(w.slug)}
-                  className="text-sky-600 hover:underline dark:text-sky-300"
+                  className="text-sky-700 hover:underline dark:text-sky-300"
                 >
                   {w.title}のロケ地
                 </Link>
@@ -282,7 +282,7 @@ export default function FilmWorkPage({ params }: Props) {
           <li>
             <Link
               href="/sightseeing/harry-potter"
-              className="text-sky-600 hover:underline dark:text-sky-300"
+              className="text-sky-700 hover:underline dark:text-sky-300"
             >
               ハリー・ポッターのロケ地
             </Link>
@@ -291,7 +291,7 @@ export default function FilmWorkPage({ params }: Props) {
           <li>
             <Link
               href={FILM_LOCATIONS_BASE}
-              className="text-sky-600 hover:underline dark:text-sky-300"
+              className="text-sky-700 hover:underline dark:text-sky-300"
             >
               ロケ地巡りガイド トップ
             </Link>

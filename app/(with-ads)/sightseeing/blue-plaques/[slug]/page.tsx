@@ -107,7 +107,7 @@ export default function PlaqueAreaPage({ params }: Props) {
       <Breadcrumbs path="/sightseeing/blue-plaques" current={area.title} />
 
       <header>
-        <p className="text-sm font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-2">
+        <p className="text-sm font-medium tracking-wide text-sky-700 dark:text-sky-300 mb-2">
           {area.eyebrow}
         </p>
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
@@ -133,7 +133,7 @@ export default function PlaqueAreaPage({ params }: Props) {
 
       {area.note && (
         <div className="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 dark:border-amber-500/40 dark:bg-amber-500/10">
-          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 shrink-0 text-amber-700 dark:text-amber-400 mt-0.5" />
           <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">
             {area.note}
           </p>
@@ -171,7 +171,7 @@ export default function PlaqueAreaPage({ params }: Props) {
           className="space-y-4 border-t border-slate-200 dark:border-slate-700 pt-8 scroll-mt-20"
         >
           <div>
-            <p className="text-xs font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-1">
+            <p className="text-xs font-medium tracking-wide text-sky-700 dark:text-sky-300 mb-1">
               {plaque.title} · {plaque.years}
             </p>
             <h2 className="text-xl sm:text-2xl font-semibold">
@@ -239,7 +239,7 @@ export default function PlaqueAreaPage({ params }: Props) {
               href={googleMapsUrl(plaque.mapQuery)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sky-600 hover:underline dark:text-sky-300"
+              className="inline-flex items-center gap-1 text-sky-700 hover:underline dark:text-sky-300"
             >
               <MapPin className="h-4 w-4" />
               地図で見る
@@ -249,7 +249,7 @@ export default function PlaqueAreaPage({ params }: Props) {
                 href={plaque.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sky-600 hover:underline dark:text-sky-300"
+                className="inline-flex items-center gap-1 text-sky-700 hover:underline dark:text-sky-300"
               >
                 <ExternalLink className="h-4 w-4" />
                 公式サイト
@@ -274,7 +274,7 @@ export default function PlaqueAreaPage({ params }: Props) {
               <li key={a.slug}>
                 <Link
                   href={plaqueAreaPath(a.slug)}
-                  className="text-sky-600 hover:underline dark:text-sky-300"
+                  className="text-sky-700 hover:underline dark:text-sky-300"
                 >
                   {a.title}のブループラーク
                 </Link>
@@ -284,7 +284,7 @@ export default function PlaqueAreaPage({ params }: Props) {
           <li>
             <Link
               href={BLUE_PLAQUES_BASE}
-              className="text-sky-600 hover:underline dark:text-sky-300"
+              className="text-sky-700 hover:underline dark:text-sky-300"
             >
               ブループラーク巡りガイド トップ
             </Link>

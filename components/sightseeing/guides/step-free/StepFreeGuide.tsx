@@ -146,7 +146,7 @@ export default function StepFreeGuide() {
                       bad
                         ? "bg-red-600 text-white"
                         : ok
-                          ? "bg-emerald-600 text-white"
+                          ? "bg-emerald-700 text-white"
                           : "bg-gray-200 text-gray-700 dark:bg-neutral-700 dark:text-gray-300"
                     }`}
                   >
@@ -191,7 +191,7 @@ export default function StepFreeGuide() {
               >
                 <span
                   aria-hidden
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-sm font-bold text-white"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-sm font-bold text-white"
                 >
                   {h.n}
                 </span>
@@ -353,7 +353,7 @@ export default function StepFreeGuide() {
                     key={c}
                     className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
                   >
-                    <span aria-hidden className="text-emerald-600 dark:text-emerald-400">
+                    <span aria-hidden className="text-emerald-700 dark:text-emerald-400">
                       ✓
                     </span>
                     {c}
@@ -425,7 +425,7 @@ export default function StepFreeGuide() {
                   key={p}
                   className="flex gap-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300"
                 >
-                  <span aria-hidden className="text-emerald-600 dark:text-emerald-400">
+                  <span aria-hidden className="text-emerald-700 dark:text-emerald-400">
                     ✓
                   </span>
                   {p}
@@ -625,7 +625,7 @@ export default function StepFreeGuide() {
               >
                 <span
                   aria-hidden
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white"
                 >
                   {i + 1}
                 </span>
@@ -686,7 +686,7 @@ export default function StepFreeGuide() {
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
               <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-emerald-600">
+                  <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
                   </span>
                   <span className="mt-1 block text-base font-semibold">
@@ -740,7 +740,7 @@ function Section({
   return (
     <section id={id} className="scroll-mt-20">
       <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
-        <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+        <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
         {section?.label}

@@ -162,7 +162,7 @@ export default async function CreditsPage() {
           <section key={group.title} className="py-8 first:pt-0">
             <h2 className="text-lg font-bold tracking-tight md:text-xl">
               {group.title}
-              <span className="ml-2 text-sm font-normal tabular-nums text-gray-400">
+              <span className="ml-2 text-sm font-normal tabular-nums text-gray-500 dark:text-gray-400">
                 {group.rows.length}件
               </span>
             </h2>

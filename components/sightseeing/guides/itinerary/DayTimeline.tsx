@@ -57,7 +57,7 @@ function PartBlock({ part }: { part: DayPart }) {
     <div className="flex gap-3 sm:gap-4">
       {/* 時間帯の帯。1日の骨格を左端で固定して、縦に追えるようにする。 */}
       <div className="flex w-12 shrink-0 flex-col items-center sm:w-16">
-        <span className="rounded-full bg-emerald-600 px-2 py-1 text-center text-xs font-bold text-white">
+        <span className="rounded-full bg-emerald-700 px-2 py-1 text-center text-xs font-bold text-white">
           {part.part}
         </span>
         <span

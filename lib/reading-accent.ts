@@ -61,7 +61,7 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     titleOnDark: "text-amber-400",
     glow: "bg-amber-500/25",
     text: "text-amber-700 dark:text-amber-400",
-    on: "bg-amber-500 text-white",
+    on: "bg-amber-700 text-white",
     idle:
       "hover:border-amber-300 hover:text-amber-700 dark:hover:border-amber-700 dark:hover:text-amber-400",
     soft: "hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/40 dark:hover:text-amber-400",
@@ -92,7 +92,7 @@ export const READING_ACCENT: Record<ReadingAccentName, ReadingAccent> = {
     titleOnDark: "text-amber-400",
     glow: "bg-amber-500/25",
     text: "text-amber-700 dark:text-amber-400",
-    on: "bg-amber-500 text-white",
+    on: "bg-amber-700 text-white",
     idle:
       "hover:border-amber-300 hover:text-amber-700 dark:hover:border-amber-700 dark:hover:text-amber-400",
     soft: "hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-950/40 dark:hover:text-amber-400",

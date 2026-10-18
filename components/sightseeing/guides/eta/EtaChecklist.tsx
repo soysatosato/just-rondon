@@ -97,7 +97,7 @@ export default function EtaChecklist() {
                         aria-hidden
                         className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition ${
                           on
-                            ? "border-emerald-500 bg-emerald-500 text-white"
+                            ? "border-emerald-500 bg-emerald-700 text-white"
                             : "border-gray-300 dark:border-neutral-600"
                         }`}
                       >

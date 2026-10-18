@@ -217,7 +217,7 @@ export const KIND_META: Record<BriefKind, KindMeta> = {
     group: "alert",
     icon: Users,
     iconWrapClass:
-      "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
+      "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
     badgeClass:
       "border-amber-600/40 bg-amber-600/10 text-amber-700 dark:text-amber-400",
     dotClass: "bg-amber-500",
@@ -253,7 +253,7 @@ export const KIND_META: Record<BriefKind, KindMeta> = {
     group: "opportunity",
     icon: Tag,
     iconWrapClass:
-      "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
+      "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
     badgeClass:
       "border-emerald-600/40 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400",
     dotClass: "bg-emerald-500",
@@ -265,7 +265,7 @@ export const KIND_META: Record<BriefKind, KindMeta> = {
     group: "opportunity",
     icon: Store,
     iconWrapClass:
-      "bg-teal-50 text-teal-600 dark:bg-teal-950/40 dark:text-teal-400",
+      "bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400",
     badgeClass:
       "border-teal-600/40 bg-teal-600/10 text-teal-700 dark:text-teal-400",
     dotClass: "bg-teal-500",
@@ -276,7 +276,7 @@ export const KIND_META: Record<BriefKind, KindMeta> = {
     eng: "Weather",
     group: "context",
     icon: CloudSun,
-    iconWrapClass: "bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400",
+    iconWrapClass: "bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-400",
     badgeClass: "border-sky-600/40 bg-sky-600/10 text-sky-700 dark:text-sky-400",
     dotClass: "bg-sky-500",
     textClass: "text-sky-700 dark:text-sky-400",

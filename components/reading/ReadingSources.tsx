@@ -44,7 +44,7 @@ function SourceRow({ source, index }: { source: ReadingSource; index: number }) 
     <>
       <span
         aria-hidden
-        className="pt-0.5 text-xs font-semibold tabular-nums text-muted-foreground/60"
+        className="pt-0.5 text-xs font-semibold tabular-nums text-muted-foreground"
       >
         {String(index + 1).padStart(2, "0")}
       </span>
@@ -71,7 +71,7 @@ function SourceRow({ source, index }: { source: ReadingSource; index: number }) 
             )}
           </span>
           {host && (
-            <span className="font-mono text-xs text-muted-foreground/70">
+            <span className="font-mono text-xs text-muted-foreground">
               {host}
             </span>
           )}

@@ -57,7 +57,7 @@ export default function MuseumHero({ museum }: { museum: any }) {
             <Badge
               className={
                 isFree
-                  ? "bg-emerald-600 text-white hover:bg-emerald-600"
+                  ? "bg-emerald-700 text-white hover:bg-emerald-700"
                   : "bg-slate-900/80 text-white hover:bg-slate-900/80"
               }
             >

@@ -380,7 +380,7 @@ export default async function Page() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-sky-600 hover:bg-sky-700"
+                    className="bg-sky-700 text-white hover:bg-sky-800"
                   >
                     <Link href="/events">
                       {isThisWeek

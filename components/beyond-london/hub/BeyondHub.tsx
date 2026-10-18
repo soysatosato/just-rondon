@@ -79,7 +79,7 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
       <div className="p-5">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <span className="block text-xs font-semibold text-teal-600">
+            <span className="block text-xs font-semibold text-teal-700 dark:text-teal-400">
               {d.eyebrow}
             </span>
             <span className="mt-0.5 block text-lg font-bold group-hover:text-teal-700 dark:group-hover:text-teal-400">
@@ -174,7 +174,7 @@ function DestinationCard({ d }: { d: BeyondMeta }) {
         </p>
 
         {d.themes && d.themes.length > 0 && (
-          <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-400 dark:text-neutral-500">
+          <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-neutral-400">
             {d.themes.map((t) => (
               <li key={t}>{BEYOND_THEME_LABELS[t]}</li>
             ))}

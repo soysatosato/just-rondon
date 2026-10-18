@@ -276,7 +276,7 @@ export default function TippingGuide() {
                       bad
                         ? "text-red-600 dark:text-red-400"
                         : ok
-                          ? "text-emerald-600 dark:text-emerald-400"
+                          ? "text-emerald-700 dark:text-emerald-400"
                           : "text-gray-400"
                     }`}
                   >
@@ -552,7 +552,7 @@ export default function TippingGuide() {
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
               <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-emerald-600">
+                  <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
                   </span>
                   <span className="mt-1 block text-base font-semibold">
@@ -606,7 +606,7 @@ function Section({
   return (
     <section id={id} className="scroll-mt-20">
       <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
-        <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+        <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
         {section?.label}

@@ -274,7 +274,7 @@ export default function HistoryChapterLayout({
             >
               <div className="flex-1 p-4 sm:p-5">
                 <div className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500 font-serif text-xs font-bold tabular-nums text-white">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-700 font-serif text-xs font-bold tabular-nums text-white">
                     {i + 1}
                   </span>
                   <div className="min-w-0">

@@ -127,7 +127,7 @@ export default function SectionHub({
               return (
                 <li key={section.href} className="py-6">
                   <div className="flex gap-4 sm:gap-6">
-                    <span className="mt-1 w-6 shrink-0 text-sm font-bold tabular-nums text-muted-foreground/60">
+                    <span className="mt-1 w-6 shrink-0 text-sm font-bold tabular-nums text-muted-foreground">
                       {String(number).padStart(2, "0")}
                     </span>
 

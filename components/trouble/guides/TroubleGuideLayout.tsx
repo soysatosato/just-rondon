@@ -100,7 +100,7 @@ export default function TroubleGuideLayout({
           <ol className="mt-3 space-y-3">
             {article.immediateSteps.map((step, i) => (
               <li key={step.action} className="flex gap-3">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky-600 text-xs font-bold text-white dark:bg-sky-500">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky-700 text-xs font-bold text-white dark:bg-sky-700">
                   {i + 1}
                 </span>
                 <div className="space-y-1">
@@ -225,7 +225,7 @@ export default function TroubleGuideLayout({
             <Link key={g.slug} href={troubleGuidePath(g.slug)} className="block">
               <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-sky-400 dark:hover:border-sky-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-sky-600">
+                  <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">
                     {g.eyebrow}
                   </span>
                   <span className="mt-1 block text-base font-semibold">

@@ -254,7 +254,7 @@ export default function ColumnDetail({
                     className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                       isCurrent
                         ? "bg-slate-400 text-white dark:bg-slate-600"
-                        : "bg-amber-600 text-white"
+                        : "bg-amber-700 text-white"
                     }`}
                   >
                     {entry.seriesOrder ?? "–"}
@@ -350,7 +350,7 @@ export default function ColumnDetail({
       <p className="pt-4">
         <Link
           href="/column"
-          className="text-sm font-medium text-sky-600 dark:text-sky-300 underline"
+          className="text-sm font-medium text-sky-700 dark:text-sky-300 underline"
         >
           ← コラム一覧に戻る
         </Link>

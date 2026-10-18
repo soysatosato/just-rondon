@@ -221,7 +221,7 @@ export default function SalaryCalculatorPage() {
             <Link key={item.href} href={item.href} className="block">
               <Card className="h-full border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-sky-600">{item.eyebrow}</span>
+                  <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">{item.eyebrow}</span>
                   <span className="mt-1 block text-base font-semibold">{item.label}</span>
                   <span className="mt-1 block text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {item.blurb}

@@ -164,7 +164,7 @@ export default function MoneyGuideLayout({
             <Link key={g.slug} href={moneyGuidePath(g.slug)} className="block">
               <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-sky-400 dark:hover:border-sky-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-sky-600">
+                  <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">
                     {g.eyebrow}
                   </span>
                   <span className="mt-1 block text-base font-semibold">

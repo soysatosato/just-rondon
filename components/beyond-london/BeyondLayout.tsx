@@ -256,7 +256,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
                             </span>
                           )}
                           {fare && (
-                            <span className="text-xs text-gray-400 dark:text-neutral-500">
+                            <span className="text-xs text-gray-500 dark:text-neutral-400">
                               {fare.earlyLabel ?? "Advance"} {fare.advanceFrom}
                             </span>
                           )}

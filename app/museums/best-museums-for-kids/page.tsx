@@ -59,7 +59,7 @@ export default async function KidsMuseumsPage() {
       </div>
 
       <header className="mb-8 space-y-4">
-        <span className="inline-block rounded-full bg-sky-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+        <span className="inline-block rounded-full bg-sky-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
           For Kids
         </span>
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">

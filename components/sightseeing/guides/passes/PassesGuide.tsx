@@ -214,7 +214,7 @@ export default async function PassesGuide() {
                       : "border-gray-200 dark:border-neutral-700"
                   }`}
                 >
-                  <span className="w-5 shrink-0 font-mono text-xs text-gray-400">
+                  <span className="w-5 shrink-0 font-mono text-xs text-gray-500 dark:text-gray-400">
                     {r.nth}
                   </span>
                   <span className="flex-1 text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -307,7 +307,7 @@ export default async function PassesGuide() {
               <div key={g.category}>
                 <h3 className="flex items-baseline gap-2 text-sm font-bold text-gray-900 dark:text-gray-100">
                   {g.label}
-                  <span className="font-mono text-xs font-normal text-gray-400">
+                  <span className="font-mono text-xs font-normal text-gray-500 dark:text-gray-400">
                     {g.spots.length}
                   </span>
                 </h3>
@@ -537,7 +537,7 @@ function Section({
   return (
     <section id={id} className="scroll-mt-20">
       <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
-        <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+        <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
         {section?.label}

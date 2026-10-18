@@ -82,7 +82,7 @@ export default function ConsultPage() {
             <ul className="mt-2 space-y-2">
               {CAN.map((item) => (
                 <li key={item} className="flex gap-2 text-sm leading-7">
-                  <span aria-hidden className="text-emerald-600 dark:text-emerald-400">
+                  <span aria-hidden className="text-emerald-700 dark:text-emerald-400">
                     ○
                   </span>
                   {item}

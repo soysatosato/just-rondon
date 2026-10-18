@@ -28,7 +28,7 @@ export default function AreaWalkRoute({
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {walk.title}
           </h2>
-          <span className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
+          <span className="rounded-full bg-emerald-700 px-3 py-1 text-xs font-semibold text-white">
             所要 {walk.duration}
           </span>
         </div>
@@ -48,7 +48,7 @@ export default function AreaWalkRoute({
               <li key={`${step.title}-${i}`} className="relative flex gap-4">
                 {/* 番号と、次のステップへ繋ぐ縦線 */}
                 <div className="flex flex-col items-center">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white">
                     {i + 1}
                   </span>
                   {!isLast && (

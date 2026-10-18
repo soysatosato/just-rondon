@@ -307,7 +307,7 @@ export default function HistoryHubPage() {
             </h2>
             <Link
               href={chapterPath(firstChapter.slug)}
-              className="shrink-0 rounded-full bg-amber-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-amber-600"
+              className="shrink-0 rounded-full bg-amber-700 px-4 py-2 text-xs font-bold text-white transition hover:bg-amber-800"
             >
               第1章から読む →
             </Link>

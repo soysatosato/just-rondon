@@ -237,7 +237,7 @@ export default function MusicalStoryArticle({
             <Card className="border-amber-300 bg-amber-50/60 shadow-none dark:border-amber-900/60 dark:bg-amber-950/20">
               <AccordionTrigger className="px-5 py-4 text-left">
                 <span className="flex items-center gap-2 text-sm font-bold">
-                  <EyeOff className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-500" />
+                  <EyeOff className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-500" />
                   結末を読む（ネタバレ）
                 </span>
               </AccordionTrigger>

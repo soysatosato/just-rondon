@@ -77,7 +77,7 @@ function Chip({ leg }: { leg: TravelLeg }) {
           </p>
         )}
       {dest.note && (
-        <p className="mt-0.5 text-xs leading-snug text-gray-400 dark:text-gray-500">
+        <p className="mt-0.5 text-xs leading-snug text-gray-500 dark:text-gray-400">
           {dest.note}
         </p>
       )}

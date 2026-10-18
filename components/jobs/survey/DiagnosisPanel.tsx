@@ -18,12 +18,12 @@ const LEVEL_STYLE: Record<
   },
   check: {
     ring: "border-amber-500/40 bg-amber-500/[0.06]",
-    chip: "bg-amber-500 text-white dark:bg-amber-600",
+    chip: "bg-amber-700 text-white dark:bg-amber-700",
     label: "確認が必要",
   },
   clear: {
     ring: "border-emerald-600/40 bg-emerald-600/[0.05]",
-    chip: "bg-emerald-600 text-white",
+    chip: "bg-emerald-700 text-white",
     label: "問題なし",
   },
   unknown: {

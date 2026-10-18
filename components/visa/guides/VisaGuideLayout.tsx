@@ -195,7 +195,7 @@ export default function VisaGuideLayout({
                         ? "スポンサー不要"
                         : "スポンサー要"}
                     </span>
-                    <span className="text-xs text-gray-400 dark:text-neutral-500">
+                    <span className="text-xs text-gray-500 dark:text-neutral-400">
                       {g.routeFacts.upfrontCost}
                     </span>
                   </>

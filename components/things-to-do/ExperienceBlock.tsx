@@ -45,7 +45,7 @@ export default function ExperienceBlock({
   const head = (
     <>
       <p className="flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
-        <span className="text-amber-600 tabular-nums dark:text-amber-500">
+        <span className="text-amber-700 tabular-nums dark:text-amber-500">
           {String(index).padStart(2, "0")}
         </span>
         <span className="h-3 w-px shrink-0 bg-amber-500/60" />

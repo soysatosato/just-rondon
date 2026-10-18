@@ -196,7 +196,7 @@ export default function SocialHubPage() {
                   <p className="mt-2.5 text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
                     {s.situation}
                   </p>
-                  <p className="mt-3 text-xs font-bold tracking-wide text-sky-600 dark:text-sky-400">
+                  <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
                     → {s.answer}
                   </p>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
@@ -268,7 +268,7 @@ export default function SocialHubPage() {
                   >
                     <Card className="border-gray-300 bg-white shadow-sm transition hover:border-sky-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-sky-500">
                       <CardContent className="p-5">
-                        <span className="block text-xs font-semibold text-sky-600">
+                        <span className="block text-xs font-semibold text-sky-700 dark:text-sky-400">
                           {g.eyebrow}
                         </span>
                         <span className="mt-1 block text-base font-semibold">

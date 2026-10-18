@@ -165,7 +165,7 @@ function SeriesCard({ series }: { series: ColumnSeries }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10" />
         <div className="absolute inset-x-0 bottom-0 p-3">
-          <span className="inline-block rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
+          <span className="inline-block rounded-full bg-amber-700 px-2 py-0.5 text-xs font-bold text-white">
             全 {series.entries.length} 回
           </span>
           <h3 className="mt-1.5 line-clamp-2 text-sm font-bold leading-snug text-white">

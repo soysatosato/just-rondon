@@ -16,7 +16,7 @@ export default function MonthSection({
   return (
     <section id={id} className="mt-12 scroll-mt-20 first-of-type:mt-0">
       <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
-        <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+        <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
         {title}

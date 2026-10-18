@@ -106,7 +106,7 @@ export default function EventDetailCard({
 
           {event.tips && (
             <div className="mt-3 flex gap-2 rounded-xl border border-amber-600/30 bg-amber-600/5 p-3">
-              <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
+              <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-700 dark:text-amber-400" />
               <div>
                 <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">訪問のヒント</p>
                 <p className="mt-1 text-xs text-muted-foreground dark:text-gray-300">{event.tips}</p>

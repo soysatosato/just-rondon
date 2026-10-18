@@ -106,7 +106,7 @@ export default function TravelTipsGuide() {
               key={f.wrong}
               className="rounded-xl border border-gray-200 p-4 dark:border-neutral-700"
             >
-              <p className="text-xs text-gray-400 line-through dark:text-gray-500">
+              <p className="text-xs text-gray-500 line-through dark:text-gray-400">
                 {f.wrong}
               </p>
               <p className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100">
@@ -154,7 +154,7 @@ export default function TravelTipsGuide() {
               <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
                 {beforeYouFly.eta.title}
               </h3>
-              <span className="rounded bg-emerald-600 px-2 py-0.5 text-xs font-bold text-white">
+              <span className="rounded bg-emerald-700 px-2 py-0.5 text-xs font-bold text-white">
                 {beforeYouFly.eta.verdict}
               </span>
             </div>
@@ -378,7 +378,7 @@ export default function TravelTipsGuide() {
                       key={p}
                       className="flex gap-2 text-sm leading-snug text-gray-700 dark:text-gray-300"
                     >
-                      <span aria-hidden className="text-emerald-600 dark:text-emerald-400">
+                      <span aria-hidden className="text-emerald-700 dark:text-emerald-400">
                         ✓
                       </span>
                       {p}
@@ -716,7 +716,7 @@ export default function TravelTipsGuide() {
             <Link key={g.slug} href={travelGuidePath(g.slug)} className="block">
               <Card className="border-gray-300 bg-white shadow-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500">
                 <CardContent className="p-5">
-                  <span className="block text-xs font-semibold text-emerald-600">
+                  <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                     {g.eyebrow}
                   </span>
                   <span className="mt-1 block text-base font-semibold">
@@ -770,7 +770,7 @@ function Section({
   return (
     <section id={id} className="scroll-mt-20">
       <h2 className="mb-4 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
-        <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+        <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
           {n}
         </span>
         {section?.label}

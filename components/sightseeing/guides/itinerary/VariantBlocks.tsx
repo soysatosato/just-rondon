@@ -110,7 +110,7 @@ function BlockView({ block }: { block: Block }) {
                   aria-hidden
                   className={
                     block.tone === "do"
-                      ? "text-emerald-600 dark:text-emerald-400"
+                      ? "text-emerald-700 dark:text-emerald-400"
                       : block.tone === "dont"
                         ? "text-red-500"
                         : "text-gray-400"
@@ -171,7 +171,7 @@ function BlockView({ block }: { block: Block }) {
             >
               <span
                 aria-hidden
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white"
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-xs font-bold text-white"
               >
                 {i + 1}
               </span>

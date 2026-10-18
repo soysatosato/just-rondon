@@ -742,12 +742,12 @@ function SpotCard({
         />
         <div className="absolute right-2 top-2 hidden flex-wrap justify-end gap-1 sm:flex">
           {a.isForKids && (
-            <Badge className="bg-sky-600 text-white hover:bg-sky-600">
+            <Badge className="bg-sky-700 text-white hover:bg-sky-700">
               キッズ
             </Badge>
           )}
           {a.isFree && (
-            <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">
+            <Badge className="bg-emerald-700 text-white hover:bg-emerald-700">
               無料
             </Badge>
           )}
@@ -758,7 +758,7 @@ function SpotCard({
           </span>
         )}
         {a.mustSee && (
-          <span className="absolute bottom-1.5 right-1.5 rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white sm:bottom-2 sm:right-2">
+          <span className="absolute bottom-1.5 right-1.5 rounded-full bg-amber-700 px-2 py-0.5 text-xs font-bold text-white sm:bottom-2 sm:right-2">
             定番
           </span>
         )}

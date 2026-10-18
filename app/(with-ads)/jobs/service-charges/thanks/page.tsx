@@ -76,7 +76,7 @@ export default async function ThanksPage({ searchParams }: Props) {
     <main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-2xl px-4 py-10 md:py-16">
         <div className="flex items-center gap-3">
-          <CheckCircle2 className="h-8 w-8 shrink-0 text-emerald-600 dark:text-emerald-500" />
+          <CheckCircle2 className="h-8 w-8 shrink-0 text-emerald-700 dark:text-emerald-500" />
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
             ご協力ありがとうございました
           </h1>

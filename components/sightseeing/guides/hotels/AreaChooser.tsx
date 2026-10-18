@@ -57,7 +57,7 @@ export default function AreaChooser({ cards }: { cards: AreaCard[] }) {
                   aria-pressed={active}
                   className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
                     active
-                      ? "bg-emerald-600 text-white"
+                      ? "bg-emerald-700 text-white"
                       : "border border-gray-300 bg-white text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-800 dark:text-gray-300"
                   }`}
                 >

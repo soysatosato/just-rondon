@@ -101,7 +101,7 @@ export default function ChangeIssueView({
 
       {freshness.isPast && (
         <div className="mb-8 flex gap-3 border-l-[3px] border-amber-500 bg-amber-500/[0.06] p-4">
-          <History className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+          <History className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-400" />
           <div className="text-sm text-amber-800 dark:text-amber-300">
             <p className="font-bold">この号は{freshness.label}({monthLabel})の情報です</p>
             <p className="mt-1 leading-relaxed">

@@ -161,7 +161,7 @@ function ScenarioCard({
         <p className="text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
           {audience}
         </p>
-        <p className="mt-3 text-xs font-bold tracking-wide text-sky-600 dark:text-sky-400">
+        <p className="mt-3 text-xs font-bold tracking-wide text-sky-700 dark:text-sky-400">
           → {answer}
         </p>
         <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">

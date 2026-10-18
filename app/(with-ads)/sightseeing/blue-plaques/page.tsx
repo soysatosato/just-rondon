@@ -46,7 +46,7 @@ export default function BluePlaquesHubPage() {
       <Breadcrumbs path="/sightseeing/blue-plaques" className="mb-6" />
 
       <header className="mb-8">
-        <p className="text-sm font-medium tracking-wide text-sky-600 dark:text-sky-300 mb-2">
+        <p className="text-sm font-medium tracking-wide text-sky-700 dark:text-sky-300 mb-2">
           Blue Plaque Tour in London
         </p>
         <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-snug mb-4">
@@ -85,7 +85,7 @@ export default function BluePlaquesHubPage() {
                   </div>
                 )}
                 <CardHeader className="space-y-2 px-4 py-3">
-                  <p className="text-xs font-medium tracking-wide text-sky-600 dark:text-sky-300">
+                  <p className="text-xs font-medium tracking-wide text-sky-700 dark:text-sky-300">
                     {area.eyebrow}
                   </p>
                   <CardTitle className="text-base font-semibold">
@@ -116,7 +116,7 @@ export default function BluePlaquesHubPage() {
                     </p>
                   </div>
 
-                  <p className="text-right text-xs text-sky-600 dark:text-sky-300 font-medium">
+                  <p className="text-right text-xs text-sky-700 dark:text-sky-300 font-medium">
                     プラークを見る →
                   </p>
                 </CardContent>

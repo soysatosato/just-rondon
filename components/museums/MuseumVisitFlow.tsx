@@ -66,7 +66,7 @@ export default function MuseumVisitFlow({
   return (
     <section className="mx-auto max-w-4xl px-4 py-10">
       <div className="mb-6">
-        <span className="inline-block rounded-full bg-sky-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+        <span className="inline-block rounded-full bg-sky-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
           Route
         </span>
         <h2 className="mt-3 text-2xl font-bold tracking-tight">

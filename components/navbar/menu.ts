@@ -32,16 +32,16 @@ export type NavAccent = {
 };
 
 export const NAV_ACCENTS = {
-  red: { text: "text-red-600", underline: "decoration-red-400", stripe: "bg-red-500" },
-  amber: { text: "text-amber-600", underline: "decoration-amber-400", stripe: "bg-amber-500" },
-  sky: { text: "text-sky-600", underline: "decoration-sky-400", stripe: "bg-sky-500" },
-  emerald: { text: "text-emerald-600", underline: "decoration-emerald-400", stripe: "bg-emerald-500" },
-  violet: { text: "text-violet-600", underline: "decoration-violet-400", stripe: "bg-violet-500" },
-  rose: { text: "text-rose-600", underline: "decoration-rose-400", stripe: "bg-rose-500" },
+  red: { text: "text-red-600 dark:text-red-400", underline: "decoration-red-400", stripe: "bg-red-500" },
+  amber: { text: "text-amber-700 dark:text-amber-400", underline: "decoration-amber-400", stripe: "bg-amber-500" },
+  sky: { text: "text-sky-700 dark:text-sky-400", underline: "decoration-sky-400", stripe: "bg-sky-500" },
+  emerald: { text: "text-emerald-700 dark:text-emerald-400", underline: "decoration-emerald-400", stripe: "bg-emerald-500" },
+  violet: { text: "text-violet-600 dark:text-violet-400", underline: "decoration-violet-400", stripe: "bg-violet-500" },
+  rose: { text: "text-rose-600 dark:text-rose-400", underline: "decoration-rose-400", stripe: "bg-rose-500" },
   // Beyond London(ロンドンの外へ)。
-  teal: { text: "text-teal-600", underline: "decoration-teal-400", stripe: "bg-teal-500" },
+  teal: { text: "text-teal-700 dark:text-teal-400", underline: "decoration-teal-400", stripe: "bg-teal-500" },
   // 旅行プラン作成。記事ではなく道具なので、読み物系のどの色とも被らせない。
-  indigo: { text: "text-indigo-600", underline: "decoration-indigo-400", stripe: "bg-indigo-500" },
+  indigo: { text: "text-indigo-600 dark:text-indigo-400", underline: "decoration-indigo-400", stripe: "bg-indigo-500" },
 } as const satisfies Record<string, NavAccent>;
 
 export type NavLink = { href: string; label: string };

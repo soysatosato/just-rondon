@@ -32,7 +32,7 @@ export default function DeadlineNotice({
         className={cn(
           "mt-0.5 h-5 w-5 shrink-0",
           advice.tone === "ok" && "text-muted-foreground",
-          advice.tone === "urgent" && "text-amber-600 dark:text-amber-400",
+          advice.tone === "urgent" && "text-amber-700 dark:text-amber-400",
           advice.tone === "past" && "text-red-600 dark:text-red-400",
         )}
       />

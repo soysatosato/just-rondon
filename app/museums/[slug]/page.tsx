@@ -219,7 +219,7 @@ export default async function MuseumDetailsPage({
       {/* 地図 */}
       <section className="py-10 sm:px-4">
         <div className="mb-6">
-          <span className="inline-block rounded-full bg-sky-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          <span className="inline-block rounded-full bg-sky-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
             Access
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">場所</h2>

@@ -127,7 +127,7 @@ export default async function FeatureLayout({
         <ol className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
           {article.items.map((item, idx) => (
             <li key={item.slug} className="flex gap-2 text-sm">
-              <span className="shrink-0 tabular-nums text-gray-400">
+              <span className="shrink-0 tabular-nums text-gray-500 dark:text-gray-400">
                 {String(idx + 1).padStart(2, "0")}
               </span>
               <a

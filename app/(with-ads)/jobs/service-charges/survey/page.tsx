@@ -75,7 +75,7 @@ export default async function SurveyPage({ searchParams }: Props) {
               >
                 <Check
                   aria-hidden
-                  className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-500"
+                  className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-500"
                 />
                 {p.short}
               </li>

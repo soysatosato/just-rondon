@@ -23,8 +23,8 @@ import {
 
 /** status ごとのバッジの見た目。現存しないものは赤で、目立たせて事故を防ぐ。 */
 const STATUS_STYLE: Record<ArtworkStatus, string> = {
-  present: "bg-emerald-600 text-white hover:bg-emerald-600",
-  altered: "bg-amber-600 text-white hover:bg-amber-600",
+  present: "bg-emerald-700 text-white hover:bg-emerald-700",
+  altered: "bg-amber-700 text-white hover:bg-amber-700",
   gone: "bg-rose-600 text-white hover:bg-rose-600",
   unconfirmed: "bg-slate-500 text-white hover:bg-slate-500",
 };
@@ -113,7 +113,7 @@ export default function MuseumBanksy() {
 
         {goneCount > 0 && (
           <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/30">
-            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-500" />
+            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-500" />
             <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-200">
               掲載{BANKSY_ARTWORKS.length}点のうち{goneCount}点は、
               すでに現地から失われています。記録として残していますが、
@@ -213,7 +213,7 @@ export default function MuseumBanksy() {
       {/* 地図 */}
       <section className="space-y-5">
         <div>
-          <span className="inline-block rounded-full bg-sky-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          <span className="inline-block rounded-full bg-sky-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
             Map
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">
@@ -238,7 +238,7 @@ export default function MuseumBanksy() {
         return (
           <section key={area.key} className="space-y-5">
             <div>
-              <span className="inline-block rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <span className="inline-block rounded-full bg-emerald-700 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white">
                 {area.name}
               </span>
               <h2 className="mt-3 text-2xl font-bold tracking-tight">
@@ -334,7 +334,7 @@ export default function MuseumBanksy() {
       {/* 見に行く前に */}
       <section className="space-y-5">
         <div>
-          <span className="inline-block rounded-full bg-amber-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          <span className="inline-block rounded-full bg-amber-700 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
             Before You Go
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">

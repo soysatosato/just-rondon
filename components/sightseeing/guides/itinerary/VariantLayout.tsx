@@ -112,7 +112,7 @@ export default function VariantLayout({
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="scroll-mt-20">
             <h2 className="mb-1 flex items-baseline gap-2.5 text-xl font-bold text-gray-900 dark:text-gray-100">
-              <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="text-base font-bold text-emerald-700 dark:text-emerald-400">
                 {i + 1}
               </span>
               {s.label}
@@ -145,7 +145,7 @@ export default function VariantLayout({
               href={itineraryVariantPath(v.slug)}
               className="block rounded-xl border border-gray-300 p-5 transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
             >
-              <span className="block text-xs font-semibold text-emerald-600">
+              <span className="block text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                 {v.eyebrow}
               </span>
               <span className="mt-1 block text-base font-bold text-gray-900 dark:text-gray-100">

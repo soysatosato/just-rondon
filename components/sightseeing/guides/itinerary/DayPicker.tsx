@@ -30,7 +30,7 @@ export default function DayPicker() {
               aria-pressed={on}
               className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
                 on
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-emerald-700 text-white"
                   : "border border-gray-300 text-gray-700 hover:border-emerald-400 dark:border-neutral-700 dark:text-gray-300"
               }`}
             >

@@ -229,7 +229,7 @@ export default function PageCommentSection({
                 autoFocus={initialComments.length === 0}
                 required
               />
-              <p className="mt-1 text-right text-xs text-gray-400">
+              <p className="mt-1 text-right text-xs text-muted-foreground">
                 残り{remaining}文字
               </p>
             </div>
@@ -273,7 +273,7 @@ export default function PageCommentSection({
                 <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                   {c.author}
                 </span>
-                <span className="shrink-0 text-xs text-gray-400">
+                <span className="shrink-0 text-xs text-muted-foreground">
                   {formatDate(c.createdAt)}
                 </span>
               </div>
