@@ -50,7 +50,7 @@ export default function HistoryChapterLayout({
   const hasJapanColumn = chapter.timeline.some((t) => t.japan);
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8 text-gray-900 dark:text-gray-100 md:py-10">
+    <div data-page-main className="mx-auto max-w-4xl px-4 py-8 text-gray-900 dark:text-gray-100 md:py-10">
       <JsonLd data={chapterBreadcrumbJsonLd(chapter)} />
       <JsonLd data={chapterArticleJsonLd(chapter)} />
       {chapter.faq && chapter.faq.length > 0 && (
@@ -394,6 +394,6 @@ export default function HistoryChapterLayout({
         </Link>
         {" "}の第{chapter.number}章です。
       </p>
-    </main>
+    </div>
   );
 }

@@ -91,18 +91,17 @@ export default function MusicalFactBar({
       className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5"
     >
       <dl className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+        {/* 各組は div > dt + dd に限る。アイコンは dt の中で左へ絶対配置。 */}
         {rows.map((f) => (
-          <div key={f.label} className="flex items-start gap-3">
-            <f.icon
-              className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground"
-              aria-hidden
-            />
-            <div className="min-w-0">
-              <dt className="text-xs font-medium text-muted-foreground">
-                {f.label}
-              </dt>
-              <dd className="text-sm font-semibold leading-snug">{f.value}</dd>
-            </div>
+          <div key={f.label} className="relative min-w-0 pl-8">
+            <dt className="text-xs font-medium text-muted-foreground">
+              <f.icon
+                className="absolute left-0 top-0.5 h-5 w-5 text-muted-foreground"
+                aria-hidden
+              />
+              {f.label}
+            </dt>
+            <dd className="text-sm font-semibold leading-snug">{f.value}</dd>
           </div>
         ))}
       </dl>

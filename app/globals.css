@@ -124,7 +124,10 @@
     color: #000 !important;
   }
 
-  main {
+  /* ページ側の本文の入れ物は main ではなく data-page-main の div
+     (main は1ページに1つ、ルートのレイアウトだけが持つ)。 */
+  main,
+  [data-page-main] {
     max-width: none !important;
     padding: 0 !important;
   }

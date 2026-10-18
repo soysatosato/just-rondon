@@ -207,7 +207,7 @@ export default function HistoryHubPage() {
   const firstChapter = historyChapters[0];
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8 text-gray-900 dark:text-gray-100 md:py-10">
+    <div data-page-main className="mx-auto max-w-5xl px-4 py-8 text-gray-900 dark:text-gray-100 md:py-10">
       <JsonLd
         data={breadcrumbJsonLd({
           name: HISTORY_SECTION_NAME,
@@ -385,6 +385,6 @@ export default function HistoryHubPage() {
       <GuideFaq items={FAQ_ITEMS} />
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }

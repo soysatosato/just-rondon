@@ -86,7 +86,12 @@ const markdownComponents = {
   ),
   hr: () => <Separator className="my-8" />,
   table: (props: React.ComponentProps<"table">) => (
-    <div className="my-5 w-full overflow-x-auto">
+    <div
+      className="my-5 w-full overflow-x-auto"
+      tabIndex={0}
+      role="region"
+      aria-label="表(横にスクロールできます)"
+    >
       <table className="w-full border-collapse text-sm">{props.children}</table>
     </div>
   ),
@@ -126,7 +131,7 @@ export default function ServiceChargeGuidePage() {
   const content = serviceChargeGuide;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 md:py-14">
+    <div data-page-main className="mx-auto max-w-6xl px-4 py-10 md:py-14">
       <JsonLd data={breadcrumbListJsonLd({ path: "/jobs/service-charges" })} />
 
       <Breadcrumbs path="/jobs/service-charges" className="mb-6" />
@@ -283,6 +288,6 @@ export default function ServiceChargeGuidePage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

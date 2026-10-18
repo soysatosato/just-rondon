@@ -210,7 +210,7 @@ export default function BillsHubPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: BILLS_SECTION_NAME,
@@ -447,6 +447,6 @@ export default function BillsHubPage() {
       </p>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }

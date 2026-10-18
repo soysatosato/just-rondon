@@ -76,7 +76,7 @@ export default async function StoresPage() {
   const overview = await fetchServiceChargeOverview();
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <div data-page-main className="min-h-dvh bg-background text-foreground">
       <JsonLd
         data={breadcrumbListJsonLd({ path: "/jobs/service-charges/stores" })}
       />
@@ -261,6 +261,6 @@ export default async function StoresPage() {
           </ul>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

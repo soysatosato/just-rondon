@@ -63,7 +63,7 @@ export default async function VoicesPage({ searchParams }: Props) {
   }
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <div data-page-main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-3xl px-4 py-8 md:py-12">
         <nav className="mb-6 text-sm text-muted-foreground">
           <Link
@@ -168,6 +168,6 @@ export default async function VoicesPage({ searchParams }: Props) {
           </p>
         </SurveyAskCard>
       </div>
-    </main>
+    </div>
   );
 }

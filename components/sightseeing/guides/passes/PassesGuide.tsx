@@ -78,7 +78,7 @@ export default async function PassesGuide() {
     }));
 
   return (
-    <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(passesMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(passesMeta)} />
       <JsonLd data={faqPageJsonLd(passesFaq, pageUrl)} />
@@ -493,7 +493,7 @@ export default async function PassesGuide() {
       </div>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }
 

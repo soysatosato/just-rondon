@@ -218,7 +218,7 @@ export default function Navbar() {
                       <NavigationMenuLink asChild>
                         <Link
                           href={section.href}
-                          className="inline-flex h-9 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                          className="inline-flex h-9 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                         >
                           {section.label}
                         </Link>
@@ -294,7 +294,7 @@ export default function Navbar() {
                   <Link
                     href="/contact"
                     aria-label="お問い合わせ"
-                    className="inline-flex h-9 items-center rounded-md px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground"
+                    className="inline-flex h-9 items-center rounded-md px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
                   >
                     <MdMail className="w-5 h-5" />
                   </Link>

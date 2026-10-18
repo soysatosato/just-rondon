@@ -37,7 +37,7 @@ export default async function KidsMuseumsPage() {
   const museums = await fetchKidsMuseums();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-5xl px-4 py-8 md:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/museums",
@@ -129,6 +129,6 @@ export default async function KidsMuseumsPage() {
       <div className="mt-10">
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
-    </main>
+    </div>
   );
 }

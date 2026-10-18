@@ -52,7 +52,7 @@ export default function JobsHubPage() {
   };
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -153,6 +153,6 @@ export default function JobsHubPage() {
           </Link>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

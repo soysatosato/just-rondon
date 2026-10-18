@@ -73,7 +73,7 @@ export default async function ThanksPage({ searchParams }: Props) {
   const store = storePage?.store;
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <div data-page-main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-2xl px-4 py-10 md:py-16">
         <div className="flex items-center gap-3">
           <CheckCircle2 className="h-8 w-8 shrink-0 text-emerald-700 dark:text-emerald-500" />
@@ -208,6 +208,6 @@ export default async function ThanksPage({ searchParams }: Props) {
           個別の事案については Acas または資格を持つ専門家にご相談ください。
         </p>
       </div>
-    </main>
+    </div>
   );
 }

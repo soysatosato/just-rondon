@@ -142,15 +142,17 @@ export default function MuseumInfo({
       </div>
 
       <dl className="grid grid-cols-1 gap-x-6 gap-y-4 rounded-xl border border-border bg-card p-5 sm:grid-cols-2">
+        {/* 各組は div > dt + dd に限る。アイコンは dt の中で左へ絶対配置。 */}
         {items.map(({ icon: Icon, label, value }) => (
-          <div key={label} className="flex items-start gap-3">
-            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-            <div className="min-w-0">
-              <dt className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {label}
-              </dt>
-              <dd className="mt-0.5 text-sm">{value}</dd>
-            </div>
+          <div key={label} className="relative min-w-0 pl-7">
+            <dt className="text-xs font-medium text-muted-foreground">
+              <Icon
+                className="absolute left-0 top-0.5 h-4 w-4 text-muted-foreground"
+                aria-hidden
+              />
+              {label}
+            </dt>
+            <dd className="mt-0.5 text-sm">{value}</dd>
           </div>
         ))}
       </dl>

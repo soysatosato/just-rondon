@@ -72,7 +72,7 @@ export default function EtaGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== etaMeta.slug);
 
   return (
-    <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(etaMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(etaMeta)} />
       <JsonLd data={faqPageJsonLd(etaFaq, pageUrl)} />
@@ -740,7 +740,7 @@ export default function EtaGuide() {
       </div>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }
 

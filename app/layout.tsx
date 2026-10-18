@@ -51,10 +51,33 @@ export default function RootLayout({
         <body className="bg-background text-foreground transition-colors duration-300">
           <SiteJsonLd />
           <Providers>
+            {/*
+              本文へのスキップリンク。キーボードで最初に止まる位置に置く。
+              ナビは区分だけで10項目以上あり、無いと毎ページそれを全部
+              通らないと本文に届かない。普段は隠し、フォーカスで出す。
+            */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow-lg focus:ring-2 focus:ring-ring"
+            >
+              本文へスキップ
+            </a>
             <MainNav />
             {/* サイト内検索の画面。どこから開いても同じ1つを使う。 */}
             <SearchDialog />
-            <main className="container py-4">{children}</main>
+            {/*
+              main はここの1つだけ。ページ側の本文の入れ物は
+              data-page-main の div にしてある(main が入れ子になると、
+              読み上げで本文の領域が2つあることになる)。
+              tabIndex=-1 はスキップリンクで飛んだ先にフォーカスを移すため。
+            */}
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="container py-4 focus:outline-none"
+            >
+              {children}
+            </main>
             <MainFooter />
             {/* 組みかけの旅程はどのページからでも開ける。空なら何も出ない。 */}
             <PlanFloatingBar />

@@ -56,7 +56,7 @@ export default async function DashboardPage() {
   );
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <div data-page-main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-8 md:py-12">
         {/* ヘッダー。答える入口を見出しの隣に置き、最初の画面から外さない。 */}
         <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-12">
@@ -292,6 +292,6 @@ export default async function DashboardPage() {
       </div>
 
       <SurveyStickyBar anchorId={ENTRY_ID} hideWhenVisible={[WHY_ID, END_ID]} />
-    </main>
+    </div>
   );
 }

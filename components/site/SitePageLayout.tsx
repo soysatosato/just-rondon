@@ -148,8 +148,8 @@ export function SiteSections({ sections }: { sections: SiteSection[] }) {
 
 export function SitePageShell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="mx-auto max-w-3xl px-1 py-12 text-gray-900 dark:text-gray-100 sm:px-4 md:py-16">
+    <div data-page-main className="mx-auto max-w-3xl px-1 py-12 text-gray-900 dark:text-gray-100 sm:px-4 md:py-16">
       {children}
-    </main>
+    </div>
   );
 }

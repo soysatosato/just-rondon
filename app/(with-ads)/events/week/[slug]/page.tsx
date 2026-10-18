@@ -103,7 +103,7 @@ export default async function WeeklyBriefPage({
     : buildBriefJsonLd(brief);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -153,6 +153,6 @@ export default async function WeeklyBriefPage({
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </footer>
-    </main>
+    </div>
   );
 }

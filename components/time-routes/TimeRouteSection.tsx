@@ -147,7 +147,9 @@ function RoutePanel({
                 {stop.href ? (
                   <Link
                     href={stop.href}
-                    className="underline decoration-indigo-300 underline-offset-4 hover:text-indigo-600 dark:decoration-indigo-700 dark:hover:text-indigo-400"
+                    // 押せる範囲を上下に広げる(見た目の行の高さは -my で据え置き)。
+                    // 1行のリンクは高さ18pxで、基準の24pxに届いていなかった。
+                    className="-my-1 inline-block py-1 underline decoration-indigo-300 underline-offset-4 hover:text-indigo-600 dark:decoration-indigo-700 dark:hover:text-indigo-400"
                   >
                     {stop.title}
                   </Link>

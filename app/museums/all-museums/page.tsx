@@ -45,7 +45,7 @@ export default async function AllMuseumsPage() {
   ).length;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/museums",
@@ -103,6 +103,6 @@ export default async function AllMuseumsPage() {
       <div className="mt-10">
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
-    </main>
+    </div>
   );
 }

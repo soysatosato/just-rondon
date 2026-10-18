@@ -204,7 +204,7 @@ export default async function ReadingHubPage() {
   const firstChapter = historyChapters[0];
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd data={breadcrumbJsonLd({ name: PAGE_NAME, path: PAGE_PATH })} />
       <JsonLd data={readingHubCollectionJsonLd()} />
 
@@ -414,6 +414,6 @@ export default async function ReadingHubPage() {
       </section>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-12" />
-    </main>
+    </div>
   );
 }

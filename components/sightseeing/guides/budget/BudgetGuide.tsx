@@ -62,7 +62,7 @@ export default function BudgetGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== budgetMeta.slug);
 
   return (
-    <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(budgetMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(budgetMeta)} />
       <JsonLd data={faqPageJsonLd(budgetFaq, pageUrl)} />
@@ -735,7 +735,7 @@ export default function BudgetGuide() {
       </div>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }
 

@@ -123,7 +123,12 @@ export default function PlanCostPanel({
       </div>
 
       {/* 日別 */}
-      <div className="overflow-x-auto border-b border-border">
+      <div
+        className="overflow-x-auto border-b border-border"
+        tabIndex={0}
+        role="region"
+        aria-label="日別の費用(横にスクロールできます)"
+      >
         <table className="w-full text-xs tabular-nums">
           <thead>
             <tr className="border-b border-border text-left text-xs text-muted-foreground">

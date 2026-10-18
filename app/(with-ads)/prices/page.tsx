@@ -124,7 +124,7 @@ export default async function PricesPage() {
         : `ポンドの値段が同じなら、円で払う額は1年前より${Math.abs(yearAgoChange).toFixed(1)}%減っています。`;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/prices" })} />
       <Breadcrumbs path="/prices" className="mb-5" />
 
@@ -291,6 +291,6 @@ export default async function PricesPage() {
         </Link>
         にまとめています。
       </p>
-    </main>
+    </div>
   );
 }

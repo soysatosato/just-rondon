@@ -60,7 +60,7 @@ export default async function ColumnHubPage() {
   const newest = columns[0] ?? null;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/column" })} />
       <JsonLd data={columnHubCollectionJsonLd(columns)} />
 
@@ -119,6 +119,6 @@ export default async function ColumnHubPage() {
       <div className="mt-12">
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
-    </main>
+    </div>
   );
 }

@@ -47,7 +47,7 @@ export default function BillsGuideLayout({
   }));
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd data={billsGuideBreadcrumbJsonLd(article)} />
       <JsonLd data={billsGuideArticleJsonLd(article)} />
       {article.faq && article.faq.length > 0 && (
@@ -203,6 +203,6 @@ export default function BillsGuideLayout({
       </div>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }

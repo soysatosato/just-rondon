@@ -35,7 +35,7 @@ export const metadata = buildPageMetadata({
 
 export default function BluePlaquesHubPage() {
   return (
-    <main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
+    <div data-page-main className="max-w-5xl mx-auto py-8 px-4 md:py-10">
       <JsonLd data={bluePlaquesHubJsonLd(plaqueAreas)} />
       <JsonLd
         data={sightseeingBreadcrumbJsonLd([
@@ -151,6 +151,6 @@ export default function BluePlaquesHubPage() {
       <div className="mt-10">
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
-    </main>
+    </div>
   );
 }

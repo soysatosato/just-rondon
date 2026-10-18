@@ -68,7 +68,7 @@ async function CalendarFallback() {
   const contents = await fetchEvents2026();
 
   return (
-    <main className="container mx-auto px-4 py-10">
+    <div data-page-main className="container mx-auto px-4 py-10">
       <h1 className="mb-6 text-center text-3xl font-bold dark:text-white">
         ロンドンイベントカレンダー 2026
       </h1>
@@ -84,7 +84,7 @@ async function CalendarFallback() {
           />
         ))}
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -113,7 +113,7 @@ export default async function EventsPage() {
 
   return (
     // 本文が主役のページなので、コンテナ幅いっぱいに広げず読める行長に収める。
-    <main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -212,6 +212,6 @@ export default async function EventsPage() {
         この号は{format(brief.researchedAt, "yyyy年M月d日")}時点の調査です。
         運行情報や開催情報は変わることがあるため、出発前に各公式サイトで最新の状況を確認してください。
       </p>
-    </main>
+    </div>
   );
 }

@@ -39,7 +39,7 @@ export default async function SurveyPage({ searchParams }: Props) {
     : q?.trim().slice(0, 80) || undefined;
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <div data-page-main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
         <nav className="mb-6 text-sm text-muted-foreground">
           <Link
@@ -100,6 +100,6 @@ export default async function SurveyPage({ searchParams }: Props) {
           取り消しをご希望の場合は、店舗名と回答時期を添えてお問い合わせください。
         </p>
       </div>
-    </main>
+    </div>
   );
 }

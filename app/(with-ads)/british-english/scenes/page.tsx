@@ -27,7 +27,7 @@ export const metadata = buildPageMetadata({
 
 export default function BritishEnglishScenesPage() {
   return (
-    <main className="max-w-3xl mx-auto py-8 px-4 md:py-10">
+    <div data-page-main className="max-w-3xl mx-auto py-8 px-4 md:py-10">
       <JsonLd
           data={breadcrumbListJsonLd({
             path: "/british-english",
@@ -96,6 +96,6 @@ export default function BritishEnglishScenesPage() {
       <div className="mt-10">
         <AdSenseUnit slot={AD_SLOTS.listing} />
       </div>
-    </main>
+    </div>
   );
 }

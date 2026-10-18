@@ -90,7 +90,7 @@ export default function EventGuideView({
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/events/guides",
@@ -318,7 +318,7 @@ export default function EventGuideView({
           に公式の情報で確かめた内容です。日程・値段・持ち込みの規則は年によって変わるので、出かける前に公式サイトで確かめてください。
         </p>
       </section>
-    </main>
+    </div>
   );
 }
 

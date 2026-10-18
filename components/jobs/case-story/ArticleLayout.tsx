@@ -35,7 +35,7 @@ export default function ArticleLayout({
   const path = chapterPath(article.slug, locale);
 
   return (
-    <main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-4xl py-10 text-gray-900 dark:text-gray-100">
       {locale === "en" && <HtmlLang lang="en" />}
       <JsonLd data={breadcrumbJsonLd(article, locale)} />
       <JsonLd data={articleJsonLd(article, locale)} />
@@ -131,6 +131,6 @@ export default function ArticleLayout({
 
       <ChapterNav slug={article.slug} locale={locale} />
       <Disclaimer locale={locale} />
-    </main>
+    </div>
   );
 }

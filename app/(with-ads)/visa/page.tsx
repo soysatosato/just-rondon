@@ -225,7 +225,7 @@ export default function VisaHubPage() {
   const pageUrl = `${SITE_URL}${VISA_BASE}`;
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd
         data={breadcrumbJsonLd({ name: VISA_SECTION_NAME, path: VISA_BASE })}
       />
@@ -402,6 +402,6 @@ export default function VisaHubPage() {
       </p>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }

@@ -70,7 +70,7 @@ export default function HotelsGuide() {
   const relatedGuides = travelGuides.filter((g) => g.slug !== hotelsMeta.slug);
 
   return (
-    <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(hotelsMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(hotelsMeta)} />
       <JsonLd data={faqPageJsonLd(hotelsFaq, pageUrl)} />
@@ -486,7 +486,7 @@ export default function HotelsGuide() {
       </div>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }
 

@@ -66,7 +66,7 @@ export default function TravelTipsGuide() {
   );
 
   return (
-    <main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
+    <div data-page-main className="mx-auto max-w-4xl px-1 py-10 text-gray-900 dark:text-gray-100 sm:px-4">
       <JsonLd data={travelGuideBreadcrumbJsonLd(travelTipsMeta)} />
       <JsonLd data={travelGuideArticleJsonLd(travelTipsMeta)} />
       <JsonLd data={faqPageJsonLd(travelTipsFaq, pageUrl)} />
@@ -751,7 +751,7 @@ export default function TravelTipsGuide() {
       </div>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }
 

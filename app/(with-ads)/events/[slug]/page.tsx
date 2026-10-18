@@ -250,7 +250,7 @@ export default async function MonthPage({
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/events/calendar",
@@ -504,6 +504,6 @@ export default async function MonthPage({
           気温・雨・日照は1991〜2020年の平年値で、その年の天気ではありません。日の出・日の入りは天文計算による目安です。イベントの日程や施設の営業は変わることがあるため、出かける前に各公式サイトで確かめてください。
         </p>
       </section>
-    </main>
+    </div>
   );
 }

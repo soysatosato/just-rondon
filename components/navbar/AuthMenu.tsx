@@ -91,7 +91,7 @@ export default function AuthMenu({
       <Link
         href={STAMP_BOOK_HREF}
         aria-label="スタンプ帳"
-        className="inline-flex h-9 items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+        className="inline-flex h-9 items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       >
         <Stamp className="h-4 w-4" aria-hidden />
         スタンプ帳
@@ -99,7 +99,7 @@ export default function AuthMenu({
       <SignedOut>
         <Link
           href="/sign-in"
-          className="inline-flex h-9 items-center whitespace-nowrap rounded-full border border-border px-4 text-sm font-medium transition-colors hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+          className="inline-flex h-9 items-center whitespace-nowrap rounded-full border border-border px-4 text-sm font-medium transition-colors hover:border-red-400 hover:text-red-600 dark:hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         >
           ログイン
         </Link>
@@ -121,7 +121,7 @@ function AccountDropdown() {
         <button
           type="button"
           aria-label="アカウント"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border transition-colors hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border transition-colors hover:border-red-400 hover:text-red-600 dark:hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         >
           <UserRound className="h-4 w-4" aria-hidden />
         </button>

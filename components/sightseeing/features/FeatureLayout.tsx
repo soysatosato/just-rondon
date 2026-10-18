@@ -70,7 +70,7 @@ export default async function FeatureLayout({
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
+    <div data-page-main className="mx-auto max-w-5xl px-4 py-10">
       <JsonLd data={featureBreadcrumbJsonLd(article)} />
       <JsonLd data={featureItemListJsonLd(article, hrefs)} />
 
@@ -175,7 +175,7 @@ export default async function FeatureLayout({
           </ul>
         </section>
       )}
-    </main>
+    </div>
   );
 }
 

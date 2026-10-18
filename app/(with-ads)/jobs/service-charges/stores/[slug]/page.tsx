@@ -91,7 +91,7 @@ export default async function StorePage({ params }: Props) {
     | undefined;
 
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <div data-page-main className="min-h-dvh bg-background text-foreground">
       <JsonLd
         data={breadcrumbListJsonLd({
           path: "/jobs/service-charges/stores",
@@ -235,6 +235,6 @@ export default async function StorePage({ params }: Props) {
           から店舗の方にご連絡いただければ確認・修正します。
         </p>
       </div>
-    </main>
+    </div>
   );
 }

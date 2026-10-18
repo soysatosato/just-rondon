@@ -96,23 +96,27 @@ function FactRow({
   wide?: boolean;
 }) {
   return (
-    <div className={wide ? "sm:col-span-2" : undefined}>
-      <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+    // 組は div > dt + dd に限る。丸いアイコンは dt の中で左へ絶対配置。
+    <div
+      className={`relative min-h-10 min-w-0 pl-[3.25rem] ${wide ? "sm:col-span-2" : ""}`}
+    >
+      <dt className="text-xs font-semibold text-muted-foreground">
+        <span
+          aria-hidden
+          className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"
+        >
           <Icon size={18} />
         </span>
-        <div className="min-w-0">
-          <dt className="text-xs uppercase tracking-widest font-semibold text-muted-foreground">
-            {label}
-          </dt>
-          <dd className="mt-1 text-sm font-medium text-foreground">{value}</dd>
-          {note && (
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              {note}
-            </p>
-          )}
-        </div>
-      </div>
+        {label}
+      </dt>
+      <dd className="mt-1 text-sm font-medium text-foreground">
+        {value}
+        {note && (
+          <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
+            {note}
+          </span>
+        )}
+      </dd>
     </div>
   );
 }

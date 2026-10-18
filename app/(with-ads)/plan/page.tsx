@@ -100,7 +100,7 @@ export default async function PlanPage() {
   const spots = await fetchPlanSpots();
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
+    <div data-page-main className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       <div className="mb-6 print:hidden">
         <Breadcrumbs path="/plan" />
       </div>
@@ -216,6 +216,6 @@ export default async function PlanPage() {
           を読んでから戻ってくると早いです。
         </p>
       </section>
-    </main>
+    </div>
   );
 }

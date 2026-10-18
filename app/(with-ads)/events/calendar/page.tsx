@@ -30,7 +30,7 @@ export default async function EventsCalendarPage() {
   const contents = await fetchEvents2026();
 
   return (
-    <main className="container mx-auto px-4 py-10">
+    <div data-page-main className="container mx-auto px-4 py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/events/calendar" })} />
 
       <Breadcrumbs path="/events/calendar" className="mb-6" />
@@ -79,6 +79,6 @@ export default async function EventsCalendarPage() {
           />
         ))}
       </div>
-    </main>
+    </div>
   );
 }

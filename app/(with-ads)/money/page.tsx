@@ -147,7 +147,7 @@ export default function MoneyHubPage() {
   const pageUrl = `${SITE_URL}${MONEY_BASE}`;
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
+    <div data-page-main className="mx-auto max-w-5xl px-4 py-10 text-gray-900 dark:text-gray-100">
       <JsonLd
         data={breadcrumbJsonLd({
           name: MONEY_SECTION_NAME,
@@ -437,6 +437,6 @@ ${TRANSFER_SERVICES.map(
       </p>
 
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-    </main>
+    </div>
   );
 }

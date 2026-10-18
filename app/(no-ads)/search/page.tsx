@@ -15,7 +15,7 @@ export const metadata = noindexMetadata("サイト内検索");
 
 export default function SearchPage() {
   return (
-    <main className="mx-auto max-w-3xl px-1 py-8 sm:px-4 md:py-12">
+    <div data-page-main className="mx-auto max-w-3xl px-1 py-8 sm:px-4 md:py-12">
       <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
         サイト内検索
       </h1>
@@ -24,6 +24,6 @@ export default function SearchPage() {
       >
         <SearchPageResults />
       </Suspense>
-    </main>
+    </div>
   );
 }

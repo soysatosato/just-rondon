@@ -9,22 +9,60 @@ import { cn } from "@/lib/utils";
  * 見出しの大きさは em で持ち、本文の大きさ(size)に比例させる。
  * 行送りは段落・箇条書きに書かず、外側の div から受け継がせる。
  */
+
+/** 見出しの見た目。マークダウンの段(## / ### / ####)で決める。 */
+const HEADING_STYLES = [
+  "mt-8 mb-3 text-[1.25em] font-semibold leading-snug text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-neutral-700 pb-1",
+  "mt-6 mb-2 text-[1.125em] font-semibold leading-snug text-gray-800 dark:text-gray-200",
+  "mt-4 mb-1 text-[1em] font-semibold leading-snug text-gray-700 dark:text-gray-300",
+] as const;
+
+/** 本文の中でいちばん大きい見出しの段(# の数)。見出しが無ければ 2。 */
+function topHeadingDepth(markdown: string): number {
+  let min = 7;
+  let inFence = false;
+  for (const line of markdown.split("\n")) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const m = /^(#{1,6})\s/.exec(line);
+    if (m) min = Math.min(min, m[1].length);
+  }
+  return min === 7 ? 2 : min;
+}
+
+/**
+ * 見出しの段(h3〜h6)は、本文の中でいちばん大きい見出しを h3 にして
+ * そこから数える。本文は章の見出し(h2)の下に置かれる。
+ *
+ * 以前は ## を h3、### を h4 に固定していたため、### から書き始めた
+ * 本文では h2 の次に h4 が来て段が飛び、読み上げの見出し一覧で
+ * 構造が崩れていた(ビザ・住まいの記事など)。見た目は従来どおり
+ * マークダウンの段で決め、段の番号だけを詰める。
+ */
+function headingComponents(topDepth: number) {
+  const make = (depth: number) => {
+    const level = Math.min(6, 3 + Math.max(0, depth - topDepth));
+    const Tag = `h${level}` as "h3" | "h4" | "h5" | "h6";
+    const style = HEADING_STYLES[Math.min(Math.max(depth - 2, 0), 2)];
+    function MarkdownHeading({ children }: { children?: React.ReactNode }) {
+      return <Tag className={style}>{children}</Tag>;
+    }
+    return MarkdownHeading;
+  };
+  return {
+    h1: make(1),
+    h2: make(2),
+    h3: make(3),
+    h4: make(4),
+    h5: make(5),
+    h6: make(6),
+  };
+}
+
 const components = {
-  h2: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="mt-8 mb-3 text-[1.25em] font-semibold leading-snug text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-neutral-700 pb-1">
-      {children}
-    </h3>
-  ),
-  h3: ({ children }: { children?: React.ReactNode }) => (
-    <h4 className="mt-6 mb-2 text-[1.125em] font-semibold leading-snug text-gray-800 dark:text-gray-200">
-      {children}
-    </h4>
-  ),
-  h4: ({ children }: { children?: React.ReactNode }) => (
-    <h5 className="mt-4 mb-1 text-[1em] font-semibold leading-snug text-gray-700 dark:text-gray-300">
-      {children}
-    </h5>
-  ),
   p: ({ children }: { children?: React.ReactNode }) => (
     <p className="mt-3 mb-1">{children}</p>
   ),
@@ -76,8 +114,15 @@ const components = {
   ),
   // 表は幅が出やすいので、必ず自分の中で横スクロールさせる。
   // ページ本体が横スクロールしないようにするため。
+  // 枠をキーボードで選べるようにする(tabIndex)。そうしないと、
+  // 矢印キーで横に送れず、はみ出した列がキーボードでは読めない。
   table: ({ children }: { children?: React.ReactNode }) => (
-    <div className="my-4 overflow-x-auto">
+    <div
+      className="my-4 overflow-x-auto"
+      tabIndex={0}
+      role="region"
+      aria-label="表(横にスクロールできます)"
+    >
       <table className="w-full min-w-[32rem] border-collapse border border-gray-300 dark:border-neutral-600 text-sm">
         {children}
       </table>
@@ -123,7 +168,13 @@ export default function MarkdownBody({
 }) {
   return (
     <div className={cn(SIZE[size], className)}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          ...components,
+          ...headingComponents(topHeadingDepth(children)),
+        }}
+      >
         {children}
       </ReactMarkdown>
     </div>

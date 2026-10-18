@@ -5,7 +5,12 @@ import Image from "next/image";
 import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
 import { CommentTargetType } from "@prisma/client";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   fetchAttractionColumns,
   fetchAttractionDetails,
@@ -350,7 +355,7 @@ export default async function AttractionDetail({
   );
 
   return (
-    <main className="mx-auto w-full max-w-5xl">
+    <div data-page-main className="mx-auto w-full max-w-5xl">
       <JsonLd data={attractionBreadcrumbJsonLd(attraction)} />
       <JsonLd data={attractionJsonLd(attraction)} />
 
@@ -360,31 +365,45 @@ export default async function AttractionDetail({
 
       {/* Hero image full width */}
       <Dialog>
-        {/* 通常表示（クリックで開く） */}
-        <DialogTrigger asChild>
-          <div className="relative aspect-[16/9] w-full overflow-hidden md:aspect-[3/1]">
-            {/* RecommendLevel Overlay */}
-            {attraction.recommendLevel ? (
-              <div className="absolute bottom-4 right-4 z-10">
-                <RecommendLevel level={attraction.recommendLevel} />
-              </div>
-            ) : null}
-
-            {/* このページのLCP要素。priority を付けないと最後に読み込まれる */}
-            <Image
-              src={attraction.image}
-              unoptimized={!isResizableImage(attraction.image)}
-              alt={`${attraction.name}｜ロンドン観光スポット`}
-              fill
-              sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover"
-              priority
-            />
-          </div>
-        </DialogTrigger>
+        {/*
+          押すと拡大する写真。以前は div を押させていたので、キーボードでは
+          開けず、読み上げでも押せるものだと分からなかった。button にして
+          名前を付けている。おすすめ度はボタンの外に重ねる(中に入れると
+          ボタンの名前に隠れて読まれない)。押しても下のボタンに届くよう、
+          重ねた側はクリックを透過させる。
+        */}
+        <div className="relative">
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              aria-label={`${attraction.name}の写真を拡大`}
+              className="relative block aspect-[16/9] w-full cursor-zoom-in overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:aspect-[3/1]"
+            >
+              {/* このページのLCP要素。priority を付けないと最後に読み込まれる */}
+              <Image
+                src={attraction.image}
+                unoptimized={!isResizableImage(attraction.image)}
+                alt={`${attraction.name}｜ロンドン観光スポット`}
+                fill
+                sizes="(max-width: 1024px) 100vw, 1024px"
+                className="object-cover"
+                priority
+              />
+            </button>
+          </DialogTrigger>
+          {attraction.recommendLevel ? (
+            <div className="pointer-events-none absolute bottom-4 right-4 z-10">
+              <RecommendLevel level={attraction.recommendLevel} />
+            </div>
+          ) : null}
+        </div>
 
         {/* 拡大表示 */}
-        <DialogContent className="max-h-[95vh] max-w-[95vw] border-none bg-black/80 p-0">
+        <DialogContent
+          aria-describedby={undefined}
+          className="max-h-[95vh] max-w-[95vw] border-none bg-black/80 p-0"
+        >
+          <DialogTitle className="sr-only">{attraction.name}の写真</DialogTitle>
           <img
             src={attraction.image}
             alt={`${attraction.name}｜ロンドン観光スポット`}
@@ -663,6 +682,6 @@ export default async function AttractionDetail({
 
       {/* 閲覧の記録(内部データ)。何も描画しない。 */}
       <ViewTracker targetType="attraction" slug={attraction.slug} />
-    </main>
+    </div>
   );
 }

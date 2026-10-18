@@ -73,7 +73,7 @@ export default function EventGuidesPage() {
   );
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
+    <div data-page-main className="mx-auto max-w-3xl px-4 py-8 text-gray-900 dark:text-gray-100 sm:py-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/events/guides" })} />
 
       <Breadcrumbs path="/events/guides" className="mb-6" />
@@ -126,6 +126,6 @@ export default function EventGuidesPage() {
         </Link>
         にまとめています。
       </p>
-    </main>
+    </div>
   );
 }

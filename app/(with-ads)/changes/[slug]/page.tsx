@@ -87,7 +87,7 @@ export default async function ChangeIssuePage({
   return (
     <>
       <PreviewBanner publishedAt={issue.publishedAt} />
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
+      <div data-page-main className="mx-auto max-w-3xl px-4 py-8 sm:py-10">
         <JsonLd data={articleJsonLd} />
         <JsonLd
           data={breadcrumbListJsonLd({
@@ -129,7 +129,7 @@ export default async function ChangeIssuePage({
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </footer>
-      </main>
+      </div>
     </>
   );
 }

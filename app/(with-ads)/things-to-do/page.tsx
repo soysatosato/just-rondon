@@ -157,7 +157,7 @@ export default async function ThingsToDoPage() {
   ].filter(Boolean);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-6 md:py-8">
+    <div data-page-main className="mx-auto max-w-6xl px-4 py-6 md:py-8">
       <JsonLd data={breadcrumbListJsonLd({ path: PATH })} />
       <JsonLd
         data={{
@@ -307,6 +307,6 @@ export default async function ThingsToDoPage() {
           </ul>
         </section>
       )}
-    </main>
+    </div>
   );
 }

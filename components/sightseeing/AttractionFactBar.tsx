@@ -125,24 +125,29 @@ export default function AttractionFactBar({
       aria-label="訪問前に知っておきたいこと"
       className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5"
     >
+      {/*
+        dl の各組は div > dt + dd に限る(div の中にさらに div を挟むと、
+        読み上げで項目名と値の対応が取れなくなる)。アイコンは dt の中に
+        入れ、左の余白へ絶対配置して見た目を保っている。
+      */}
       <dl className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
         {facts.map((f) => (
-          <div key={f.label} className="flex items-start gap-3">
-            <f.icon
-              className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground"
-              aria-hidden
-            />
-            <div className="min-w-0">
-              <dt className="text-xs font-medium text-muted-foreground">
-                {f.label}
-              </dt>
-              <dd className="text-sm font-semibold leading-snug">{f.value}</dd>
+          <div key={f.label} className="relative min-w-0 pl-8">
+            <dt className="text-xs font-medium text-muted-foreground">
+              <f.icon
+                className="absolute left-0 top-0.5 h-5 w-5 text-muted-foreground"
+                aria-hidden
+              />
+              {f.label}
+            </dt>
+            <dd className="text-sm font-semibold leading-snug">
+              {f.value}
               {f.note && (
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">
                   {f.note}
-                </p>
+                </span>
               )}
-            </div>
+            </dd>
           </div>
         ))}
       </dl>
