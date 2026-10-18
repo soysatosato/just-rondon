@@ -191,7 +191,7 @@ export default function Navbar() {
             <div className="flex flex-col items-center">
               <Wordmark className="h-10" />
               <span className="mt-1 text-xs text-gray-600 dark:text-gray-400 font-normal italic opacity-70">
-                Live.Love.London. - 最強ロンドンガイド
+                ロンドン観光・旅行・現地ガイド
               </span>
             </div>
           </Link>

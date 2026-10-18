@@ -58,7 +58,7 @@ export default function MusicalSchedule({
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="shrink-0 inline-flex items-center gap-1 text-sm text-primary hover:underline"
+                className="shrink-0 inline-flex items-center gap-1 py-2 text-sm text-primary hover:underline"
               >
                 チケット
                 <ExternalLink size={13} />

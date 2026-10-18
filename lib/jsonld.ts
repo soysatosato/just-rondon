@@ -1,6 +1,7 @@
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import { stripInlineMarkdown } from "@/lib/plain-text";
 import {
+  HOME_LABEL,
   ancestorCrumbs,
   crumbFor,
   crumbsJsonLd,
@@ -55,7 +56,7 @@ export function breadcrumbJsonLd(
   trail: { name: string; path: string }[] = []
 ) {
   return crumbsJsonLd([
-    { label: "Home", href: "/" },
+    { label: HOME_LABEL, href: "/" },
     ...ancestorCrumbs(section.path),
     crumbFor(section),
     ...trail.map(crumbFor),

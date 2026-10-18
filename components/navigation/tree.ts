@@ -125,6 +125,13 @@ for (const [path, node] of Object.entries(TREE) as [string, TreeNode][]) {
 
 export type Crumb = { label: string; href?: string };
 
+/**
+ * パンくずの先頭(トップページ)の名前。画面と構造化データの両方に出る。
+ * 以前は英語の「Home」で、日本語のサイトの中でここだけ英語だった。
+ * lib/jsonld.ts もこれを使う(2か所で書くと画面とJSON-LDが食い違う)。
+ */
+export const HOME_LABEL = "ホーム";
+
 /** 登録済みなら木のラベル。未登録なら undefined。 */
 export function treeLabel(path: string): string | undefined {
   return path in TREE ? TREE[path as BreadcrumbPath].label : undefined;
@@ -190,7 +197,7 @@ export function ancestorCrumbs(path: string): Crumb[] {
  */
 export function resolveCrumbs(spec: BreadcrumbSpec): Crumb[] {
   return [
-    { label: "Home", href: "/" },
+    { label: HOME_LABEL, href: "/" },
     ...chainOf(spec.path),
     ...(spec.trail ?? []),
     ...(spec.current
