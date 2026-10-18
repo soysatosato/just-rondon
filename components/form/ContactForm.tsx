@@ -1,6 +1,7 @@
 "use client";
 
 import { sendContact } from "@/utils/actions/contact";
+import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,25 +19,72 @@ function SubmitButton() {
   );
 }
 
+/** 入力欄に渡す属性。ラベル・補足・エラーと欄を結び付ける。 */
+type FieldControlProps = {
+  id: string;
+  "aria-required": true;
+  "aria-invalid"?: true;
+  "aria-describedby"?: string;
+};
+
+/**
+ * ラベル付きの入力欄。
+ *
+ * 以前は <label> に htmlFor が無く、欄とつながっていなかった。読み上げでは
+ * 欄が名前の無い「編集テキスト」になり、ラベルを押しても欄に移らなかった。
+ * ラベルは htmlFor で、補足とエラーは aria-describedby で欄に結ぶ。
+ *
+ * 必須は required 属性ではなく aria-required で伝える。required にすると
+ * 送信前にブラウザの吹き出しが出て、サーバーの検証(utils/schemas.ts)の
+ * 日本語のエラーと二重の仕組みになる。
+ */
 function Field({
+  id,
   label,
+  hint,
   error,
   children,
 }: {
+  id: string;
   label: string;
+  hint?: string;
   error?: string;
-  children: React.ReactNode;
+  children: (props: FieldControlProps) => React.ReactNode;
 }) {
+  const hintId = hint ? `${id}-hint` : undefined;
+  const errorId = error ? `${id}-error` : undefined;
+  const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
+
   return (
     <div className="space-y-2">
-      <label className="block text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">
+      <label htmlFor={id} className="flex items-center gap-2 text-sm font-semibold">
         {label}
+        <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
+          必須
+        </span>
       </label>
-      {children}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {hint && (
+        <p id={hintId} className="text-xs leading-relaxed text-muted-foreground">
+          {hint}
+        </p>
+      )}
+      {children({
+        id,
+        "aria-required": true,
+        ...(error ? { "aria-invalid": true as const } : {}),
+        ...(describedBy ? { "aria-describedby": describedBy } : {}),
+      })}
+      {error && (
+        <p id={errorId} className="text-sm text-red-600 dark:text-red-400">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
+
+/** エラーがあったときにフォーカスを移す順。画面の上から。 */
+const FIELD_ORDER = ["name", "email", "message"] as const;
 
 export default function ContactForm() {
   const [state, formAction] = useFormState<{
@@ -47,6 +95,14 @@ export default function ContactForm() {
     success: false,
     errors: {},
   });
+
+  // 送信してエラーが返ったら、最初の誤りの欄へ移す。エラー文は欄の下に
+  // 出るだけなので、移さないと読み上げの利用者には何も起きないように聞こえる。
+  // 欄に移ればラベルとエラー文(aria-describedby)が続けて読まれる。
+  useEffect(() => {
+    const first = FIELD_ORDER.find((key) => state.errors?.[key]?.length);
+    if (first) document.getElementById(`contact-${first}`)?.focus();
+  }, [state]);
 
   if (state.success) {
     return (
@@ -78,20 +134,37 @@ export default function ContactForm() {
       <BotGuardFields />
 
       <div className="space-y-6">
-        <Field label="お名前" error={state.errors?.name?.[0]}>
-          <Input name="name" autoComplete="name" />
+        <Field id="contact-name" label="お名前" error={state.errors?.name?.[0]}>
+          {(props) => <Input {...props} name="name" autoComplete="name" />}
         </Field>
 
-        <Field label="メールアドレス" error={state.errors?.email?.[0]}>
-          <Input name="email" type="email" autoComplete="email" />
+        <Field
+          id="contact-email"
+          label="メールアドレス"
+          error={state.errors?.email?.[0]}
+        >
+          {(props) => (
+            <Input {...props} name="email" type="email" autoComplete="email" />
+          )}
         </Field>
 
-        <Field label="お問い合わせ内容" error={state.errors?.message?.[0]}>
-          <Textarea name="message" rows={7} />
+        {/* 文字数の条件は utils/schemas.ts の contactSchema と揃える。
+            書いておかないと、短い問い合わせが送ってから弾かれる。 */}
+        <Field
+          id="contact-message"
+          label="お問い合わせ内容"
+          hint="10文字以上、1,000文字以内でお書きください。"
+          error={state.errors?.message?.[0]}
+        >
+          {(props) => <Textarea {...props} name="message" rows={7} />}
         </Field>
       </div>
 
-      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state.error && (
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+          {state.error}
+        </p>
+      )}
 
       <SubmitButton />
     </form>

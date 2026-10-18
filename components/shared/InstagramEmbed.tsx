@@ -118,6 +118,27 @@ export default function InstagramEmbed({
     };
   }, [inView]);
 
+  /*
+    embed.js が blockquote と差し替える iframe には title が付かない。
+    読み上げでは中身の分からない「フレーム」になるので、差し込まれた時点で
+    名前を付ける。差し替えは非同期なので、入れ物の中を監視して待つ。
+  */
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!inView || !el) return;
+
+    const nameFrames = () => {
+      el.querySelectorAll("iframe:not([title])").forEach((frame) => {
+        frame.setAttribute("title", "Instagram の投稿");
+      });
+    };
+
+    nameFrames();
+    const observer = new MutationObserver(nameFrames);
+    observer.observe(el, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [inView]);
+
   if (blocked) {
     return (
       <a

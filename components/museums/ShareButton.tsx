@@ -28,8 +28,16 @@ export default function ShareButton({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon">
-          <LuShare2 />
+        {/* アイコンだけのボタンなので名前を付ける。以前は名前が無く、
+            読み上げでは「ボタン」としか聞こえなかった。react-share の各ボタンは
+            既定で "twitter" 等の英語名になるので、それも日本語で渡す。 */}
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label={`${name}を共有`}
+          className="h-11 w-11"
+        >
+          <LuShare2 aria-hidden />
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -38,13 +46,13 @@ export default function ShareButton({
         sideOffset={10}
         className="flex items-center justify-center gap-x-2 w-full"
       >
-        <TwitterShareButton url={shareUrl} title={name}>
+        <TwitterShareButton url={shareUrl} title={name} aria-label="Xで共有">
           <TwitterIcon size={32} round />
         </TwitterShareButton>
-        <LineShareButton url={shareUrl} title={name}>
+        <LineShareButton url={shareUrl} title={name} aria-label="LINEで共有">
           <LineIcon size={32} round />
         </LineShareButton>
-        <EmailShareButton url={shareUrl} title={name}>
+        <EmailShareButton url={shareUrl} title={name} aria-label="メールで送る">
           <EmailIcon size={32} round />
         </EmailShareButton>
       </PopoverContent>
