@@ -44,7 +44,7 @@ export default function SeasonBand({
         {band.entries.map((entry) => (
           <li key={entry.title}>
             <span className="mr-1.5 inline-block rounded bg-white px-1.5 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-200 dark:bg-neutral-900 dark:text-emerald-300 dark:ring-emerald-900">
-              {entry.relation === "here" ? "ここで" : "すぐ近くで"}
+              {entry.relation === "here" ? "ここで" : entry.relation === "nearby" ? "すぐ近くで" : "関連"}
             </span>
             <Link href={entry.href} className="font-semibold underline-offset-2 hover:underline">
               {entry.title}

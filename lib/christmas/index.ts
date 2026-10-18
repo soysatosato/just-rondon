@@ -300,8 +300,9 @@ export function seasonBandFor(
 
   if (entries.length === 0 && closures.length === 0) return null;
 
-  // その場所で開かれるものを先に、すぐ近くのものをあとに。
-  entries.sort((a, b) => (a.relation === b.relation ? 0 : a.relation === "here" ? -1 : 1));
+  // その場所で開かれるもの → すぐ近くのもの → 同じ題材のもの、の順。
+  const order = { here: 0, nearby: 1, related: 2 } as const;
+  entries.sort((a, b) => order[a.relation] - order[b.relation]);
   return { year, entries, closures };
 }
 

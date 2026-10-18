@@ -47,6 +47,7 @@ import AdventDays, { type AdventTile } from "@/components/christmas/AdventDays";
 import RinkTable from "@/components/christmas/RinkTable";
 import FreeList from "@/components/christmas/FreeList";
 import StatusChip from "@/components/christmas/StatusChip";
+import HarryPotterWinter from "@/components/christmas/HarryPotterWinter";
 
 /**
  * ロンドンのクリスマス特集のハブ(/events/christmas)。
@@ -337,6 +338,7 @@ export default async function ChristmasPage() {
     { id: "rinks", navLabel: "スケートリンク" },
     { id: "markets", navLabel: "マーケット" },
     { id: "shows", navLabel: "舞台" },
+    { id: "harry-potter", navLabel: "ハリー・ポッター" },
     { id: "free", navLabel: "無料で楽しむ" },
     { id: "read", navLabel: "読みもの" },
     { id: "basis", navLabel: "基準と出典" },
@@ -633,6 +635,23 @@ export default async function ChristmasPage() {
         </XmasSection>
 
         <XmasSection
+          n={n("harry-potter")}
+          id="harry-potter"
+          title="ハリー・ポッターの冬"
+          lead={
+            <>
+              スタジオツアーの雪の飾り、オックスフォード・ストリートの灯り、街の中のロケ地。冬にしか見られないものと一緒に回る組み方です。ロケ地の一覧は
+              <Link href="/sightseeing/harry-potter" className="mx-1 text-link underline underline-offset-2">
+                ハリー・ポッターの舞台
+              </Link>
+              に。
+            </>
+          }
+        >
+          <HarryPotterWinter />
+        </XmasSection>
+
+        <XmasSection
           n={n("free")}
           id="free"
           title="無料で楽しむ"
@@ -658,6 +677,11 @@ export default async function ChristmasPage() {
                 href: "/british-english/pudding",
                 label: "イギリス英語",
                 title: "「Pudding?」はプリンのことではない",
+              },
+              {
+                href: "/sightseeing/film-locations/love-actually",
+                label: "映画のロケ地",
+                title: "ラブ・アクチュアリーのロケ地巡り",
               },
               {
                 href: "/events/december",

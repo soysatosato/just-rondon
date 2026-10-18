@@ -118,7 +118,13 @@ export const christmasLights: SeasonItem[] = [
         checkedAt: CHECKED,
       },
     ],
-    places: [{ spot: "selfridges-london", relation: "here" }],
+    // 2026年は飾りの一部がハリー・ポッター仕様なので、関連のスポットにも出す
+    // (点灯日が発表されるまでは、帯には出ない)。
+    places: [
+      { spot: "selfridges-london", relation: "here" },
+      { spot: "harry-potter-shop-platform-934", relation: "related" },
+      { spot: "leadenhall-market-london", relation: "related" },
+    ],
   },
   {
     slug: "bond-street",

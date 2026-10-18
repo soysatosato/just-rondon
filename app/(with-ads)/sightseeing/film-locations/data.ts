@@ -880,6 +880,147 @@ export const filmWorks: FilmWork[] = [
       },
     ],
   },
+  {
+    slug: "love-actually",
+    title: "ラブ・アクチュアリー",
+    engTitle: "Love Actually",
+    eyebrow: "Film",
+    years: "2003",
+    summary:
+      "クリスマスまでの5週間のロンドンで、いくつもの恋が交差する群像劇。スケッチブックの告白の路地、結婚式の礼拝堂、ネックレスの百貨店、テムズ川のベンチを、冬の飾りの街で巡れる。",
+    routeHint: "ノッティング・ヒル〜メイフェア〜サウスバンクで半日",
+    lead: [
+      "『ラブ・アクチュアリー』(2003年、リチャード・カーティス脚本・監督)は、クリスマスまでの5週間のロンドンを舞台に、何組もの恋と家族の話が重なっていく群像劇です。撮影の多くは、ロンドンに実在する場所で行われました。",
+      "ここでは、いまも訪ねられる場所を、ノッティング・ヒル、メイフェア、オックスフォード・ストリート、サウスバンクの順に紹介します。冬に歩けば、映画と同じクリスマスの飾りの街で巡れます。灯りの点灯日と年末年始の営業は[ロンドンのクリスマス特集](/events/christmas)にまとめています。",
+    ],
+    note: "セント・ルークス・ミューズは人が暮らす住宅街の路地です。外観の見学・撮影にとどめ、玄関先に長く立ち止まったり、住人に声をかけたりしないでください。",
+    keywords: [
+      "ラブ・アクチュアリー ロケ地",
+      "ラブアクチュアリー ロケ地",
+      "Love Actually ロケ地",
+      "ラブ・アクチュアリー スケッチブック 場所",
+      "セント・ルークス・ミューズ",
+      "ロンドン クリスマス 映画 ロケ地",
+      "聖地巡礼 ロンドン",
+    ],
+    spots: [
+      {
+        slug: "st-lukes-mews",
+        name: "セント・ルークス・ミューズ27番地(ジュリエットの家)",
+        engName: "27 St Luke's Mews, Notting Hill",
+        scene: "マークがスケッチブックの言葉で、ジュリエットに想いを伝える場面",
+        body: `クリスマスの夜、マーク(アンドリュー・リンカーン)がキャロル隊を装ってジュリエット(キーラ・ナイトレイ)の家の戸口に立ち、スケッチブックの言葉を1枚ずつめくって想いを伝える、映画でいちばん知られた場面の撮影地です。
+
+セント・ルークス・ミューズは、ノッティング・ヒルの北の端にある石畳の細い路地です。ミューズはもともと馬と馬車を置くための裏通りの厩舎で、いまは色とりどりに塗られた住宅が並びます。27番地は2019年の時点でも映画と同じピンク色で、写真を撮りに来る人が絶えないと報じられています。`,
+        area: "ノッティング・ヒル",
+        nearestStation: "Westbourne Park 駅、Ladbroke Grove 駅(いずれも徒歩約10分)",
+        access:
+          "実際に人が暮らす住宅街の路地です。家に入ることはできません。通りから外観を見て撮影するだけにしてください。",
+        tips: "ポートベロー・ロードのマーケットはすぐ近くです。店がいちばん多く出る土曜に合わせると、市場とあわせて歩けます。",
+        mapQuery: "St Luke's Mews Notting Hill London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/St_Lukes_Mews_2025-06-14.jpg/1280px-St_Lukes_Mews_2025-06-14.jpg",
+        imageSource: "commons",
+        imageCredit: "Bex Walton (CC BY 4.0)",
+        imageLink: "https://commons.wikimedia.org/wiki/File:St_Lukes_Mews_2025-06-14.jpg",
+      },
+      {
+        slug: "grosvenor-chapel",
+        name: "グロヴナー礼拝堂(ピーターとジュリエットの結婚式)",
+        engName: "Grosvenor Chapel, Mayfair",
+        scene: "結婚式の最中に、客席から『愛こそはすべて』の演奏が始まる場面",
+        body: `ピーター(キウェテル・イジョフォー)とジュリエットの結婚式の場面の撮影地です。式の途中で、客席に紛れていた歌い手と演奏者が次々に立ち上がり、ビートルズの『愛こそはすべて(All You Need Is Love)』を奏でます。
+
+グロヴナー礼拝堂は、メイフェアのサウス・オードリー・ストリートに1730年代に建った英国国教会の礼拝堂です。白い外壁に小さな塔を載せたジョージ王朝様式の建物で、いまも礼拝が続く現役の教会です。`,
+        area: "メイフェア",
+        nearestStation: "Bond Street 駅、Green Park 駅(いずれも徒歩約10分)",
+        access:
+          "ふだんは平日の8:00〜14:30に見学者に開いています(祝日や貸し切りの日を除く)。日曜11時の礼拝は聖歌隊つきで、礼拝として加われます。",
+        tips: "火曜の昼(13:10〜13:50)には、無料のオルガン演奏会が開かれることがあります。会場は近くのセント・ジョージ教会になる回もあります。",
+        website: "https://www.grosvenorchapel.org.uk/",
+        mapQuery: "Grosvenor Chapel South Audley Street London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Grosvenor_Chapel_2020.jpg/1280px-Grosvenor_Chapel_2020.jpg",
+        imageSource: "commons",
+        imageCredit: "GrindtXX (CC BY-SA 4.0)",
+        imageLink: "https://commons.wikimedia.org/wiki/File:Grosvenor_Chapel_2020.jpg",
+      },
+      {
+        slug: "selfridges-love-actually",
+        name: "セルフリッジズ(ハリーがネックレスを買う百貨店)",
+        engName: "Selfridges, Oxford Street",
+        scene: "ハリーがネックレスを買い、店員がいつまでも包装をやめない場面",
+        body: `ハリー(アラン・リックマン)が部下への贈り物にネックレスを買い、店員(ローワン・アトキンソン)がリボンや飾りを足し続けて、なかなか包装を終えない場面の撮影地です。撮影のために、百貨店が店を開けて協力したと伝えられています。
+
+1909年に開業した、オックスフォード・ストリートの大型百貨店です。冬はクリスマスのショーウィンドウが見どころで、店の前の通りの灯りとあわせて楽しめます。通りの点灯日と歩く順路は[イルミネーションのページ](/sightseeing/christmas-lights)にあります。`,
+        area: "オックスフォード・ストリート",
+        nearestStation: "Bond Street 駅、Marble Arch 駅(いずれも徒歩約5分)",
+        access:
+          "百貨店として毎日営業しています。12月25日は休み(床面積の広い店は、法律でクリスマス当日に開けません)。",
+        website: "https://www.selfridges.com/",
+        mapQuery: "Selfridges Oxford Street London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Selfridges_Oxford_Street_store_Mars_2014_01.jpg/1280px-Selfridges_Oxford_Street_store_Mars_2014_01.jpg",
+        imageSource: "commons",
+        imageCredit: "Arild Vågen (CC BY-SA 3.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Selfridges_Oxford_Street_store_Mars_2014_01.jpg",
+      },
+      {
+        slug: "gabriels-wharf-bench",
+        name: "ガブリエルズ・ワーフ前の川沿いのベンチ(ダニエルとサム)",
+        engName: "Queen's Walk by Gabriel's Wharf, South Bank",
+        scene: "ダニエルが、継子サムの悩みの正体が恋だと知る場面",
+        body: `妻を亡くしたダニエル(リーアム・ニーソン)が、塞ぎ込む継子のサム(トーマス・ブロディ=サングスター)とテムズ川沿いのベンチに並んで座り、悩みの正体が初恋だと打ち明けられる場面の撮影地です。
+
+ベンチがあるのは、サウスバンクの川沿いの遊歩道(クイーンズ・ウォーク)の、ガブリエルズ・ワーフの前です。ガブリエルズ・ワーフは小さな店と飲食店が集まる川沿いの一角で、対岸にはセント・ポール大聖堂のドームが見えます。`,
+        area: "サウスバンク",
+        nearestStation: "Waterloo 駅、Southwark 駅(いずれも徒歩約10分)",
+        access: "公共の遊歩道で、いつでも歩けます。",
+        tips: "サウスバンク・センターのウィンターマーケットから川沿いに歩いて10分ほどです。冬は、灯りの順路「テムズ川の南岸を歩く」の途中で寄れます。",
+        mapQuery: "Gabriel's Wharf London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Gabriel%27s_Wharf_%2C_South_Bank_-_geograph.org.uk_-_4240135.jpg/1280px-Gabriel%27s_Wharf_%2C_South_Bank_-_geograph.org.uk_-_4240135.jpg",
+        imageSource: "commons",
+        imageCredit: "Len Williams (CC BY-SA 2.0)",
+        imageLink:
+          "https://commons.wikimedia.org/wiki/File:Gabriel%27s_Wharf_,_South_Bank_-_geograph.org.uk_-_4240135.jpg",
+      },
+      {
+        slug: "oxo-tower-wharf",
+        name: "オクソ・タワー・ワーフ(マークの部屋)",
+        engName: "Oxo Tower Wharf, South Bank",
+        scene: "ジュリエットが結婚式のビデオを見に、マークの部屋を訪ねる場面",
+        body: `ジュリエットが結婚式のビデオを見せてもらいにマークの部屋を訪ね、そこで初めて彼の気持ちに気づく場面で、マークが住む建物として使われました。気まずくなったマークは部屋を出て、建物の裏手から外へ出ていきます。
+
+塔の窓が「OXO」の文字の形に並ぶこの建物は、もとは食品会社オクソの倉庫でした。いまは川沿いにデザインの店や工房が入り、上の階には住居と、最上階のレストランがあります。`,
+        area: "サウスバンク",
+        nearestStation: "Southwark 駅、Blackfriars 駅(いずれも徒歩約10分)",
+        access: "川沿いの通路と1階の店は自由に歩けます。住居の階には入れません。",
+        tips: "ガブリエルズ・ワーフのベンチから、川沿いを東へ歩いてすぐです。",
+        mapQuery: "Oxo Tower Wharf London",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/OXO_Tower_Wharf_-_geograph.org.uk_-_6325529.jpg/1280px-OXO_Tower_Wharf_-_geograph.org.uk_-_6325529.jpg",
+        imageSource: "commons",
+        imageCredit: "Steve Daniels (CC BY-SA 2.0)",
+        imageLink: "https://commons.wikimedia.org/wiki/File:OXO_Tower_Wharf_-_geograph.org.uk_-_6325529.jpg",
+      },
+      {
+        slug: "heathrow-arrivals",
+        name: "ヒースロー空港の到着ロビー(冒頭と結末)",
+        engName: "Heathrow Airport, arrivals",
+        scene: "到着ロビーで再会を喜ぶ人々を映す、冒頭と結末の場面",
+        body: `映画は、ヒースロー空港の到着ロビーで抱き合って再会を喜ぶ人々の姿と、首相(ヒュー・グラント)のナレーションで始まり、同じ場所の光景で終わります。この冒頭と結末の場面は、ヒースロー空港で撮影されたとされています。
+
+日本からの直行便も着く、ロンドンの空の玄関口です。到着した日に、出口の向こうで待つ人たちの姿を見れば、それが映画の冒頭と同じ光景です。`,
+        area: "ヒースロー空港",
+        nearestStation: "空港の各ターミナルの駅(エリザベス線、ピカデリー線、ヒースロー・エクスプレス)",
+        access: "到着ロビーの、到着客を出迎える側は誰でも入れる場所です。",
+        tips: "12月25日は、空港と中心部を結ぶ鉄道がすべて止まります。この日に着く便は、宿までの移動を先に手配してください。詳しくは[12月25日と年末年始のロンドン](/events/christmas/christmas-day)に。",
+        mapQuery: "Heathrow Airport arrivals",
+      },
+    ],
+  },
 ];
 
 export function getFilmWork(slug: string) {

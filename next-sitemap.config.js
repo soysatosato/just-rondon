@@ -268,6 +268,7 @@ module.exports = {
       "/sightseeing/film-locations/downton-abbey",
       "/sightseeing/film-locations/paddington",
       "/sightseeing/film-locations/james-bond",
+      "/sightseeing/film-locations/love-actually",
       // ブループラーク巡り。エリアページもDBではなく
       // app/(with-ads)/sightseeing/blue-plaques/data.ts の plaqueAreas なので、
       // エリアを足したらここにも1行足すこと。

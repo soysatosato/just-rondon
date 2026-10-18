@@ -4,6 +4,7 @@ import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
 import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { buildPageMetadata } from "@/lib/seo";
 import { hpActivities } from "./data";
+import HarryPotterWinter from "@/components/christmas/HarryPotterWinter";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/harry-potter",
@@ -61,6 +62,11 @@ const article: FeatureArticle = {
   })),
   related: [
     {
+      href: "/events/christmas",
+      label: "ロンドンのクリスマス特集",
+      note: "灯りの点灯日、マーケットの会期、12月25日の過ごし方。",
+    },
+    {
       href: "/sightseeing/film-locations",
       label: "映画・ドラマのロケ地巡り",
       note: "シャーロックやブリジャートン家など、他作品のロケ地。",
@@ -74,5 +80,10 @@ const article: FeatureArticle = {
 };
 
 export default function HarryPotterPage() {
-  return <FeatureLayout article={article} />;
+  return (
+    <FeatureLayout article={article}>
+      {/* 冬だけの催しと出来事。10月からスタジオツアーの冬の催しが終わるまで出る。 */}
+      <HarryPotterWinter heading className="mt-8" />
+    </FeatureLayout>
+  );
 }

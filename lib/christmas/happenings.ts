@@ -91,6 +91,8 @@ export const christmasHappenings: SeasonItem[] = [
     ],
     places: [
       { spot: "warner-bros-studio-tour-harry-potter", relation: "here" },
+      { spot: "harry-potter-shop-platform-934", relation: "related" },
+      { spot: "leadenhall-market-london", relation: "related" },
     ],
   },
   {

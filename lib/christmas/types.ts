@@ -79,8 +79,12 @@ export type SeasonPlace = {
   spot?: string;
   /** /museums/<museum> */
   museum?: string;
-  /** here = その場所で開かれる / nearby = すぐ近くで開かれる */
-  relation: "here" | "nearby";
+  /**
+   * here = その場所で開かれる / nearby = すぐ近くで開かれる /
+   * related = 場所は離れているが、同じ題材の催し(ハリー・ポッターの店に、
+   * スタジオツアーの冬の催しを知らせるなど)
+   */
+  relation: "here" | "nearby" | "related";
 };
 
 /** 特集に載せる1件。 */
