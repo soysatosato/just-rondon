@@ -67,7 +67,7 @@ export default function ConsultPage() {
           相談に乗るのは、ロンドンのレストランで未払いのサービスチャージを請求し、弁護士を立てずに審判所の判決を得て、回収まで進めた本人です。経過は
           <Link
             href={CASE_STORY_BASE}
-            className="text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
+            className="text-link underline-offset-4 hover:underline dark:text-blue-400"
           >
             当事者の記録
           </Link>
@@ -113,7 +113,7 @@ export default function ConsultPage() {
             href={ACAS_EARLY_CONCILIATION_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
+            className="text-link underline-offset-4 hover:underline dark:text-blue-400"
           >
             Acas
           </a>

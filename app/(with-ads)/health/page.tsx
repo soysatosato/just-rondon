@@ -167,7 +167,7 @@ function ScenarioCard({
         <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           {detail}
         </p>
-        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+        <span className="mt-4 text-sm font-medium text-link">
           {meta.label} を読む →
         </span>
       </article>
@@ -382,7 +382,7 @@ export default function HealthHubPage() {
           <li>
             <Link
               href="/money"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               お金・銀行ガイド｜口座開設と日本からの送金
             </Link>
@@ -390,7 +390,7 @@ export default function HealthHubPage() {
           <li>
             <Link
               href="/housing"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               住まい探しガイド｜物件探しから契約・退去まで
             </Link>
@@ -398,7 +398,7 @@ export default function HealthHubPage() {
           <li>
             <Link
               href="/visa"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               英国ビザガイド｜自分に必要なビザを見つける
             </Link>

@@ -110,7 +110,7 @@ export default function MusicalFactBar({
         {(runtime || minAge || form) && (
           <a
             href="#before-you-go"
-            className="font-medium text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+            className="font-medium text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
           >
             上演時間・英語の詳しい説明
           </a>
@@ -118,7 +118,7 @@ export default function MusicalFactBar({
         {hasSchedule && (
           <a
             href="#musical-schedule"
-            className="font-medium text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+            className="font-medium text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
           >
             公演日程をすべて見る
           </a>
@@ -126,7 +126,7 @@ export default function MusicalFactBar({
         {theatreName && (
           <a
             href="#theatre-info"
-            className="font-medium text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+            className="font-medium text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
           >
             劇場の場所
           </a>

@@ -49,7 +49,7 @@ export default function ChapterNav({
 
       <Link
         href={caseStoryBase(locale)}
-        className="inline-block text-sm text-blue-600 dark:text-blue-400 hover:opacity-80"
+        className="inline-block text-sm text-link hover:opacity-80"
       >
         {strings.backToIndex}
       </Link>

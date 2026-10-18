@@ -165,7 +165,7 @@ export default function AttractionFactBar({
               href={website}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+              className="font-medium text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
             >
               公式サイト
             </a>{" "}

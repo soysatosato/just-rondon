@@ -233,7 +233,7 @@ export default function EtaGuide() {
               </p>
               <Link
                 href={etaVerdict.outOfScope.linkHref}
-                className="mt-2 inline-block text-sm text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="mt-2 inline-block text-sm text-link underline underline-offset-2 dark:text-blue-400"
               >
                 {etaVerdict.outOfScope.linkLabel}
               </Link>
@@ -350,7 +350,7 @@ export default function EtaGuide() {
                   {step.link && (
                     <a
                       href={step.link.href}
-                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-link underline underline-offset-2 dark:text-blue-400"
                     >
                       {step.link.label}
                       <span aria-hidden>↓</span>
@@ -652,7 +652,7 @@ export default function EtaGuide() {
                     href={c.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 block font-mono text-base font-bold text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                    className="mt-1 block font-mono text-base font-bold text-link underline underline-offset-2 dark:text-blue-400"
                   >
                     {c.value}
                   </a>
@@ -730,7 +730,7 @@ export default function EtaGuide() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

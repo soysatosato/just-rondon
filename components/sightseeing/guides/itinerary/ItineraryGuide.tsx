@@ -139,7 +139,7 @@ export default function ItineraryGuide() {
                       {" "}
                       <Link
                         href={a.href}
-                        className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                        className="text-link underline underline-offset-2 dark:text-blue-400"
                       >
                         {a.label}
                       </Link>
@@ -439,7 +439,7 @@ export default function ItineraryGuide() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

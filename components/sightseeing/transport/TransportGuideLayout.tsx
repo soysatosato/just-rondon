@@ -196,7 +196,7 @@ export default function TransportGuideLayout({
           <li>
             <Link
               href={TRANSPORT_BASE}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンの交通ガイド トップ
             </Link>
@@ -205,7 +205,7 @@ export default function TransportGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

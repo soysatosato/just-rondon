@@ -477,7 +477,7 @@ export default function TravelTipsGuide() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                    className="text-link underline underline-offset-2 dark:text-blue-400"
                   >
                     {l.label}
                   </Link>
@@ -533,7 +533,7 @@ export default function TravelTipsGuide() {
                 href={safety.embassy.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-1 text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="ml-1 text-link underline underline-offset-2 dark:text-blue-400"
               >
                 大使館のサイト
               </a>
@@ -692,7 +692,7 @@ export default function TravelTipsGuide() {
                 {m.link && (
                   <Link
                     href={m.link.href}
-                    className="mt-1.5 inline-block text-sm text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                    className="mt-1.5 inline-block text-sm text-link underline underline-offset-2 dark:text-blue-400"
                   >
                     {m.link.label}
                   </Link>
@@ -741,7 +741,7 @@ export default function TravelTipsGuide() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

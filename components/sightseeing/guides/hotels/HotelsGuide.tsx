@@ -139,7 +139,7 @@ export default function HotelsGuide() {
                   {p.link && (
                     <Link
                       href={p.link.href}
-                      className="mt-1 inline-block text-sm text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                      className="mt-1 inline-block text-sm text-link underline underline-offset-2 dark:text-blue-400"
                     >
                       {p.link.label}
                     </Link>
@@ -254,7 +254,7 @@ export default function HotelsGuide() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                    className="text-link underline underline-offset-2 dark:text-blue-400"
                   >
                     {l.label}
                   </Link>
@@ -320,7 +320,7 @@ export default function HotelsGuide() {
                 {g.link && (
                   <Link
                     href={g.link.href}
-                    className="mt-1.5 inline-block text-sm text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                    className="mt-1.5 inline-block text-sm text-link underline underline-offset-2 dark:text-blue-400"
                   >
                     {g.link.label}
                   </Link>
@@ -476,7 +476,7 @@ export default function HotelsGuide() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>
@@ -606,7 +606,7 @@ function AreaCard({ area }: { area: Area }) {
 
       {area.body && (
         <details className="group border-t border-gray-200 dark:border-neutral-700">
-          <summary className="flex cursor-pointer list-none items-center gap-1 px-4 py-3 text-sm font-medium text-blue-600 dark:text-blue-400 sm:px-5 [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-center gap-1 px-4 py-3 text-sm font-medium text-link sm:px-5 [&::-webkit-details-marker]:hidden">
             <span className="underline underline-offset-2 group-open:no-underline">
               詳しく読む
             </span>

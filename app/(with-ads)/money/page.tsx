@@ -210,7 +210,7 @@ export default function MoneyHubPage() {
           「ちゃんとした銀行を先に作ろう」と考えると、高街銀行の住所証明で詰まります。
           <Link
             href="/money/opening-an-account"
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             口座開設の手順
           </Link>
@@ -275,7 +275,7 @@ export default function MoneyHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -388,7 +388,7 @@ ${TRANSFER_SERVICES.map(
           <li>
             <Link
               href="/health"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               医療・NHS ガイド｜GP 登録から救急・薬・歯科まで
             </Link>
@@ -396,7 +396,7 @@ ${TRANSFER_SERVICES.map(
           <li>
             <Link
               href="/housing"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               住まい探しガイド｜物件探しから契約・退去まで
             </Link>
@@ -404,7 +404,7 @@ ${TRANSFER_SERVICES.map(
           <li>
             <Link
               href="/jobs"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンで働く人のための労働問題ガイド
             </Link>
@@ -412,7 +412,7 @@ ${TRANSFER_SERVICES.map(
           <li>
             <Link
               href="/bills"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               光熱費・生活の契約ガイド｜Council Tax からネット回線まで
             </Link>
@@ -420,7 +420,7 @@ ${TRANSFER_SERVICES.map(
           <li>
             <Link
               href="/food"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               食費を抑えるコツ｜Meal Deal から買う店の選び方まで
             </Link>

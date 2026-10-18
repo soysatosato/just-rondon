@@ -212,7 +212,7 @@ export default function FoodGuideLayout({
           <li>
             <Link
               href={FOOD_BASE}
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               食費を抑えるコツ トップ
             </Link>
@@ -221,7 +221,7 @@ export default function FoodGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                className="text-link hover:opacity-80"
               >
                 {link.label}
               </Link>

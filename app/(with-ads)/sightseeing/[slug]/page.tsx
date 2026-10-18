@@ -282,7 +282,7 @@ function SectionToc({
           <li key={story.id}>
             <a
               href={`#${storyAnchor(story)}`}
-              className="text-sm text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
+              className="text-sm text-link underline-offset-2 hover:underline dark:text-blue-400"
             >
               {heading}
             </a>

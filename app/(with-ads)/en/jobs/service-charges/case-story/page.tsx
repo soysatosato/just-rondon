@@ -238,7 +238,7 @@ export default function CaseStoryIndexPageEn() {
             >
               <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="flex gap-4 p-5">
-                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-blue-600 dark:text-blue-400">
+                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-link">
                     {String(chapters.indexOf(c) + 1).padStart(2, "0")}
                   </span>
                   <span>
@@ -271,7 +271,7 @@ export default function CaseStoryIndexPageEn() {
             >
               <Card className="border-blue-200 dark:border-blue-900/60 bg-blue-50/60 dark:bg-blue-950/20 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="flex gap-4 p-5">
-                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-blue-600 dark:text-blue-400">
+                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-link">
                     {String(chapters.indexOf(c) + 1).padStart(2, "0")}
                   </span>
                   <span>
@@ -302,7 +302,7 @@ export default function CaseStoryIndexPageEn() {
             <Link
               href={SERVICE_CHARGES_PATH}
               hrefLang="ja"
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               UK service charge guide — the Tipping Act 2023 and workers&apos;
               rights
@@ -312,7 +312,7 @@ export default function CaseStoryIndexPageEn() {
             <Link
               href="/jobs/service-charges/dashboard"
               hrefLang="ja"
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               London service charge survey (original research)
             </Link>

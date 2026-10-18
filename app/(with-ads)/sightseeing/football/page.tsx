@@ -277,7 +277,7 @@ export default function FootballHubPage() {
           転売が違法である理由と、合法な入手経路との見分け方は
           <Link
             href="/sightseeing/football/resale-warning"
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             買ってはいけないチケット
           </Link>
@@ -311,7 +311,7 @@ export default function FootballHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -426,7 +426,7 @@ ${LONDON_CLUBS.map(
           <li>
             <Link
               href="/sightseeing/stadium-tours"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンのスタジアムツアー一覧
             </Link>
@@ -434,7 +434,7 @@ ${LONDON_CLUBS.map(
           <li>
             <Link
               href="/sightseeing/transport/fares"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンの運賃と支払い方法｜切符は買いません
             </Link>
@@ -442,7 +442,7 @@ ${LONDON_CLUBS.map(
           <li>
             <Link
               href="/sightseeing/hotels"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               宿泊エリア別ホテル選び｜どのゾーンに泊まるべきか
             </Link>
@@ -450,7 +450,7 @@ ${LONDON_CLUBS.map(
           <li>
             <Link
               href="/sightseeing/itinerary"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドン モデルコース（1〜5日）
             </Link>

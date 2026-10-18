@@ -150,7 +150,7 @@ export default async function SongsPage({
           筋を見失いにくくなるので、観劇前にひと通り眺めておくのがおすすめです。チケットの買い方やお得な観劇方法は
           <Link
             href="/musicals/west-end-tickets"
-            className="text-blue-600 dark:text-blue-300 underline hover:opacity-80 mx-1"
+            className="text-link underline hover:opacity-80 mx-1"
           >
             チケットの買い方・お得な料金ガイド
           </Link>

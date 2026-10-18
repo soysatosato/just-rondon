@@ -68,6 +68,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        /* 本文中のリンクの色。text-blue-600 を直書きしていた箇所の置き換え。 */
+        link: "hsl(var(--link))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

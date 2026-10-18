@@ -231,7 +231,7 @@ export default function CaseStoryIndexPage() {
             <Link key={c.slug} href={chapterPath(c.slug)} className="block">
               <Card className="bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="flex gap-4 p-5">
-                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-blue-600 dark:text-blue-400">
+                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-link">
                     {String(chapters.indexOf(c) + 1).padStart(2, "0")}
                   </span>
                   <span>
@@ -260,7 +260,7 @@ export default function CaseStoryIndexPage() {
             <Link key={c.slug} href={chapterPath(c.slug)} className="block">
               <Card className="border-blue-200 dark:border-blue-900/60 bg-blue-50/60 dark:bg-blue-950/20 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
                 <CardContent className="flex gap-4 p-5">
-                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-blue-600 dark:text-blue-400">
+                  <span className="mt-0.5 shrink-0 text-sm font-semibold tabular-nums text-link">
                     {String(chapters.indexOf(c) + 1).padStart(2, "0")}
                   </span>
                   <span>
@@ -289,7 +289,7 @@ export default function CaseStoryIndexPage() {
           <li>
             <Link
               href="/jobs/service-charges"
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               英国サービスチャージ完全ガイド｜Tipping Act 2023と従業員の権利
             </Link>
@@ -297,7 +297,7 @@ export default function CaseStoryIndexPage() {
           <li>
             <Link
               href="/jobs/service-charges/dashboard"
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               ロンドン市内のサービスチャージ実態調査（独自調査）
             </Link>

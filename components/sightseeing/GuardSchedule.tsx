@@ -16,7 +16,7 @@ import {
  */
 
 const linkClass =
-  "font-medium text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400";
+  "font-medium text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400";
 
 function OfficialLink({ children }: { children: React.ReactNode }) {
   return (

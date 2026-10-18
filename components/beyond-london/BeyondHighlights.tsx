@@ -80,14 +80,14 @@ export default function BeyondHighlights({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                  className="text-link hover:opacity-80 dark:text-blue-400"
                 >
                   地図で見る
                 </a>
                 {spot.internalLink && (
                   <Link
                     href={spot.internalLink.href}
-                    className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                    className="text-link hover:opacity-80 dark:text-blue-400"
                   >
                     {spot.internalLink.label}
                   </Link>

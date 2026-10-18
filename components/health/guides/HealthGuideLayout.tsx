@@ -205,7 +205,7 @@ export default function HealthGuideLayout({
           <li>
             <Link
               href={HEALTH_BASE}
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               医療・NHS ガイド トップ
             </Link>
@@ -214,7 +214,7 @@ export default function HealthGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                className="text-link hover:opacity-80"
               >
                 {link.label}
               </Link>

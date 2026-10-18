@@ -167,7 +167,7 @@ export default function VariantLayout({
           <li>
             <Link
               href={travelGuidePath(PARENT.slug)}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               {PARENT.name}
             </Link>
@@ -176,7 +176,7 @@ export default function VariantLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

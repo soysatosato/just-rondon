@@ -263,7 +263,7 @@ export default function HousingHubPage() {
           日本語で流通している家探し情報の大半は、まだ改正前を前提にしています。
           <Link
             href="/housing/tenancy-types"
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             契約形態の地図
           </Link>
@@ -297,7 +297,7 @@ export default function HousingHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -405,7 +405,7 @@ export default function HousingHubPage() {
           <li>
             <Link
               href="/visa/after-arrival"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               渡英後の手続きガイド｜share code・NINo・GP登録・銀行口座
             </Link>
@@ -413,7 +413,7 @@ export default function HousingHubPage() {
           <li>
             <Link
               href="/visa"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               英国ビザガイド｜自分に必要なビザを見つける
             </Link>
@@ -421,7 +421,7 @@ export default function HousingHubPage() {
           <li>
             <Link
               href="/jobs"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンで働く人のための労働問題ガイド
             </Link>

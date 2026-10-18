@@ -199,7 +199,7 @@ export default function HousingGuideLayout({
           <li>
             <Link
               href={HOUSING_BASE}
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               住まい探しガイド トップ
             </Link>
@@ -208,7 +208,7 @@ export default function HousingGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                className="text-link hover:opacity-80"
               >
                 {link.label}
               </Link>

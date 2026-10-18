@@ -256,7 +256,7 @@ export default function TransportHubPage() {
           仕組みの詳細は
           <Link
             href="/sightseeing/transport/fares"
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             運賃と支払い方法のすべて
           </Link>
@@ -302,7 +302,7 @@ export default function TransportHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -437,7 +437,7 @@ export default function TransportHubPage() {
           <li>
             <Link
               href="/sightseeing/hotels"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               宿泊エリア別ホテル選び｜どのゾーンに泊まるべきか
             </Link>
@@ -445,7 +445,7 @@ export default function TransportHubPage() {
           <li>
             <Link
               href="/sightseeing/itinerary"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドン モデルコース（1〜5日）
             </Link>
@@ -453,7 +453,7 @@ export default function TransportHubPage() {
           <li>
             <Link
               href="/plan"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               旅行プラン作成｜旅程から交通費とロンドンパスの損得を出す
             </Link>
@@ -461,7 +461,7 @@ export default function TransportHubPage() {
           <li>
             <Link
               href="/housing/where-to-live"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               エリアの選び方と、家賃と交通費の総額
             </Link>
@@ -469,7 +469,7 @@ export default function TransportHubPage() {
           <li>
             <Link
               href="/sightseeing/travel-tips"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドン旅行の実用情報｜両替・カード・治安・eSIM
             </Link>

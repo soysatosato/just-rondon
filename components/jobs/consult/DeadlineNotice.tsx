@@ -47,7 +47,7 @@ export default function DeadlineNotice({
           href={ACAS_EARLY_CONCILIATION_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block text-sm font-medium text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
+          className="inline-block text-sm font-medium text-link underline-offset-4 hover:underline dark:text-blue-400"
         >
           Acas Early Conciliation（無料）→
         </a>

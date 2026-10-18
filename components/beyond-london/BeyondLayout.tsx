@@ -273,7 +273,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
           <li>
             <Link
               href={BEYOND_BASE}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               Beyond London トップ｜空いている時間から行き先を絞り込む
             </Link>
@@ -282,7 +282,7 @@ export default function BeyondLayout({ article }: { article: BeyondArticle }) {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

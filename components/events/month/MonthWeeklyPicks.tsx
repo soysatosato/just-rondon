@@ -132,7 +132,7 @@ export default function MonthWeeklyPicks({
               <li key={b.slug}>
                 <Link
                   href={`/events/week/${b.slug}`}
-                  className="text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+                  className="text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
                 >
                   {b.weekStart.getUTCFullYear()}年{" "}
                   {formatWeekRange(b.weekStart, b.weekEnd).replace(

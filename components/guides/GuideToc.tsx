@@ -24,7 +24,7 @@ export default function GuideToc({
           <li key={section.id}>
             <a
               href={`#${section.id}`}
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline underline-offset-2"
+              className="text-sm text-link hover:underline underline-offset-2"
             >
               {i + 1}. {section.title}
             </a>

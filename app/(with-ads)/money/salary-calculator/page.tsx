@@ -195,7 +195,7 @@ export default function SalaryCalculatorPage() {
                 href={source.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+                className="text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
               >
                 {source.label}
               </a>
@@ -232,7 +232,7 @@ export default function SalaryCalculatorPage() {
           ))}
         </div>
         <p className="mt-4 text-sm">
-          <Link href={MONEY_BASE} className="text-blue-600 hover:opacity-80 dark:text-blue-400">
+          <Link href={MONEY_BASE} className="text-link hover:opacity-80 dark:text-blue-400">
             お金・銀行ガイド トップへ
           </Link>
         </p>

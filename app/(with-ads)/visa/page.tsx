@@ -213,7 +213,7 @@ function ScenarioCard({
         <p className="mt-3 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           {why}
         </p>
-        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+        <span className="mt-4 text-sm font-medium text-link">
           {meta.label} を読む →
         </span>
       </article>
@@ -300,7 +300,7 @@ export default function VisaHubPage() {
           <p className="mt-1 text-gray-700 dark:text-gray-300">
             <Link
               href="/visa/uk-visa-guide"
-              className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+              className="text-link underline underline-offset-2 dark:text-blue-400"
             >
               英国ビザ全ルート比較
             </Link>
@@ -377,7 +377,7 @@ export default function VisaHubPage() {
           <li>
             <Link
               href="/jobs"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンで働く人のための労働問題ガイド
             </Link>
@@ -385,7 +385,7 @@ export default function VisaHubPage() {
           <li>
             <Link
               href="/jobs/visa-and-work"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ビザと就労の接点｜働ける範囲とSkilled Workerへの切り替え
             </Link>

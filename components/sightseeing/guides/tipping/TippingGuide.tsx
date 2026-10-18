@@ -116,7 +116,7 @@ export default function TippingGuide() {
           {payerScope.body}{" "}
           <Link
             href={payerScope.href}
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             {payerScope.label}
           </Link>
@@ -161,7 +161,7 @@ export default function TippingGuide() {
                   {c.href && (
                     <Link
                       href={c.href}
-                      className="mt-0.5 inline-block text-sm text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                      className="mt-0.5 inline-block text-sm text-link underline underline-offset-2 dark:text-blue-400"
                     >
                       {c.hrefLabel}
                     </Link>
@@ -577,7 +577,7 @@ export default function TippingGuide() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

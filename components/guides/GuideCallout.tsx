@@ -14,7 +14,7 @@ const TONE_STYLES: Record<
   info: {
     wrapper:
       "border-blue-200 bg-blue-50/70 dark:border-blue-900/60 dark:bg-blue-950/25",
-    label: "text-blue-700 dark:text-blue-300",
+    label: "text-link",
     text: "補足",
   },
   warn: {

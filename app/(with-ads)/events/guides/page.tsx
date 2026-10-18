@@ -113,14 +113,14 @@ export default function EventGuidesPage() {
         ほかの行事の日程は
         <Link
           href="/events/calendar"
-          className="mx-1 text-blue-600 underline underline-offset-2 dark:text-blue-400"
+          className="mx-1 text-link underline underline-offset-2 dark:text-blue-400"
         >
           年間イベントカレンダー
         </Link>
         に、その週だけの催しやストライキは
         <Link
           href="/events"
-          className="mx-1 text-blue-600 underline underline-offset-2 dark:text-blue-400"
+          className="mx-1 text-link underline underline-offset-2 dark:text-blue-400"
         >
           今週のロンドン
         </Link>

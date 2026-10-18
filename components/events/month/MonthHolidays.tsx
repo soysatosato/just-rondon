@@ -27,7 +27,7 @@ export default function MonthHolidays({
             href={BANK_HOLIDAY_SOURCE.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-1 text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="mx-1 text-link underline underline-offset-2 dark:text-blue-400"
           >
             GOV.UK
           </a>

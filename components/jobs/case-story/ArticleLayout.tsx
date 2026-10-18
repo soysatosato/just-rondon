@@ -55,7 +55,7 @@ export default function ArticleLayout({
 
       <header className="space-y-3">
         {position > 0 && (
-          <p className="text-xs font-medium tracking-wide text-blue-600 dark:text-blue-400">
+          <p className="text-xs font-medium tracking-wide text-link">
             {strings.chapterLabel(position)}
           </p>
         )}

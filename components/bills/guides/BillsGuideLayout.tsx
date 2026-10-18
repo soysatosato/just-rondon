@@ -178,7 +178,7 @@ export default function BillsGuideLayout({
           <li>
             <Link
               href={BILLS_BASE}
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               光熱費・生活の契約ガイド トップ
             </Link>
@@ -187,7 +187,7 @@ export default function BillsGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                className="text-link hover:opacity-80"
               >
                 {link.label}
               </Link>

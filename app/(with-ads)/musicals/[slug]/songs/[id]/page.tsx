@@ -125,7 +125,7 @@ export default async function SongDetailsPage({
         <div className="mt-4 text-left">
           <Link
             href={`/musicals/${params.slug}/songs`}
-            className="inline-flex items-center text-sm text-blue-600 dark:text-blue-300 underline hover:opacity-80"
+            className="inline-flex items-center text-sm text-link underline hover:opacity-80"
           >
             ← 曲一覧へ戻る
           </Link>

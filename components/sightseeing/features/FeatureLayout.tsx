@@ -277,7 +277,7 @@ function FeatureItemBlock({
                 {item.summary}
               </p>
             )}
-            <p className="mt-3 text-xs font-semibold text-blue-700 dark:text-blue-400">
+            <p className="mt-3 text-xs font-semibold text-link">
               詳しく見る →
             </p>
             {/* カード全体がリンクなので、表記はリンクにせず文字だけ出す。 */}

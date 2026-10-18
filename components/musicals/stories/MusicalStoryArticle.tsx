@@ -82,7 +82,7 @@ export default function MusicalStoryArticle({
               {facts.theatreSlug ? (
                 <Link
                   href={theatrePath(facts.theatreSlug)}
-                  className="text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+                  className="text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
                 >
                   {facts.theatreName}
                 </Link>
@@ -403,7 +403,7 @@ function StoryToc({ story }: { story: MusicalStory }) {
           <li key={item.id}>
             <a
               href={`#${item.id}`}
-              className="text-sm text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
+              className="text-sm text-link underline-offset-2 hover:underline dark:text-blue-400"
             >
               {i + 1}. {item.label}
             </a>

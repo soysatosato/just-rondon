@@ -25,7 +25,7 @@ export default function GuideSources({
               href={source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:opacity-80"
+              className="text-link underline underline-offset-2 hover:opacity-80"
             >
               {source.label}
             </a>

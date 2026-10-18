@@ -213,7 +213,7 @@ export default function AreaGuideLayout({
           <li>
             <Link
               href={AREAS_BASE}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンのエリアガイド トップ
             </Link>
@@ -222,7 +222,7 @@ export default function AreaGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

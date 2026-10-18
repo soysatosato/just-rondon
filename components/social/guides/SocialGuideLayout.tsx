@@ -247,7 +247,7 @@ export default function SocialGuideLayout({
           <li>
             <Link
               href={SOCIAL_BASE}
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               出会いと人間関係ガイド トップ
             </Link>
@@ -256,7 +256,7 @@ export default function SocialGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                className="text-link hover:opacity-80"
               >
                 {link.label}
               </Link>

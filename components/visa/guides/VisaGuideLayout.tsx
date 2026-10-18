@@ -208,7 +208,7 @@ export default function VisaGuideLayout({
           <li>
             <Link
               href={VISA_BASE}
-              className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+              className="text-link hover:opacity-80"
             >
               ビザガイド トップ（自分に必要なビザを診断する）
             </Link>
@@ -217,7 +217,7 @@ export default function VisaGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 dark:text-blue-400 hover:opacity-80"
+                className="text-link hover:opacity-80"
               >
                 {link.label}
               </Link>

@@ -321,14 +321,14 @@ export default function HistoryChapterLayout({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                  className="text-link hover:opacity-80 dark:text-blue-400"
                 >
                   地図で見る ↗
                 </a>
                 {place.internalLink && (
                   <Link
                     href={place.internalLink.href}
-                    className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                    className="text-link hover:opacity-80 dark:text-blue-400"
                   >
                     {place.internalLink.label} →
                   </Link>
@@ -370,7 +370,7 @@ export default function HistoryChapterLayout({
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                  className="text-link hover:opacity-80 dark:text-blue-400"
                 >
                   {link.label} →
                 </Link>
@@ -383,7 +383,7 @@ export default function HistoryChapterLayout({
       <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
 
       <p className="mt-8 text-xs leading-relaxed text-muted-foreground">
-        <Link href={HISTORY_BASE} className="text-blue-600 dark:text-blue-400">
+        <Link href={HISTORY_BASE} className="text-link">
           イギリスの歴史 全10章
         </Link>
         {" "}の第{chapter.number}章です。

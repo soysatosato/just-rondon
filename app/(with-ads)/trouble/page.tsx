@@ -285,7 +285,7 @@ export default function TroubleHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -396,7 +396,7 @@ export default function TroubleHubPage() {
             href={EMBASSY.emergencyUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+            className="text-link hover:opacity-80 dark:text-blue-400"
           >
             大使館の緊急連絡先ページ（外部サイト）
           </a>
@@ -417,7 +417,7 @@ export default function TroubleHubPage() {
           <li>
             <Link
               href="/sightseeing/travel-tips"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドン旅行の実用情報｜治安とスリ対策（予防）
             </Link>
@@ -425,7 +425,7 @@ export default function TroubleHubPage() {
           <li>
             <Link
               href="/health"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               医療・NHS ガイド｜体調を崩したときの行き先
             </Link>
@@ -433,7 +433,7 @@ export default function TroubleHubPage() {
           <li>
             <Link
               href="/money"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               お金・銀行ガイド｜口座とカードの基礎
             </Link>
@@ -441,7 +441,7 @@ export default function TroubleHubPage() {
           <li>
             <Link
               href="/visa"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               英国ビザガイド｜在留資格の手続き
             </Link>

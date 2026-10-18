@@ -165,7 +165,7 @@ function ScenarioCard({
         <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           {detail}
         </p>
-        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+        <span className="mt-4 text-sm font-medium text-link">
           {meta.label} を読む →
         </span>
       </article>
@@ -262,7 +262,7 @@ export default function BillsHubPage() {
               含まれない分を足してから家賃を比べる。
               <Link
                 href={billsGuidePath("bills-included")}
-                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="text-link underline underline-offset-2 dark:text-blue-400"
               >
                 bills included の中身
               </Link>
@@ -274,7 +274,7 @@ export default function BillsHubPage() {
               開通日を入居日以降に指定する。入居してからでは数週間つながらない。
               <Link
                 href={billsGuidePath("broadband")}
-                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="text-link underline underline-offset-2 dark:text-blue-400"
               >
                 ネット回線
               </Link>
@@ -286,7 +286,7 @@ export default function BillsHubPage() {
               これで前の住人の使用分と切り離せる。
               <Link
                 href={billsGuidePath("energy")}
-                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="text-link underline underline-offset-2 dark:text-blue-400"
               >
                 ガス・電気
               </Link>
@@ -298,14 +298,14 @@ export default function BillsHubPage() {
               Council Tax の割引や免除は、ここで同時に申請する。
               <Link
                 href={billsGuidePath("council-tax")}
-                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="text-link underline underline-offset-2 dark:text-blue-400"
               >
                 Council Tax
               </Link>
               ・
               <Link
                 href={billsGuidePath("water")}
-                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="text-link underline underline-offset-2 dark:text-blue-400"
               >
                 水道
               </Link>
@@ -317,7 +317,7 @@ export default function BillsHubPage() {
               見ないなら、届く手紙に「要らない」と申告する。
               <Link
                 href={billsGuidePath("tv-licence")}
-                className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                className="text-link underline underline-offset-2 dark:text-blue-400"
               >
                 TV Licence
               </Link>
@@ -328,7 +328,7 @@ export default function BillsHubPage() {
           英国の電話番号がまだなければ、これより前に
           <Link
             href={billsGuidePath("mobile")}
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             SIM を確保
           </Link>
@@ -365,7 +365,7 @@ export default function BillsHubPage() {
                 </span>
                 <Link
                   href={row.href}
-                  className="mt-2 text-xs font-medium text-blue-600 hover:opacity-80 dark:text-blue-400"
+                  className="mt-2 text-xs font-medium text-link hover:opacity-80 dark:text-blue-400"
                 >
                   詳しく →
                 </Link>
@@ -406,7 +406,7 @@ export default function BillsHubPage() {
           <li>
             <Link
               href="/housing"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               住まい探しガイド｜物件探しから契約・退去まで
             </Link>
@@ -414,7 +414,7 @@ export default function BillsHubPage() {
           <li>
             <Link
               href="/money"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               お金・銀行ガイド｜口座開設と日本からの送金
             </Link>
@@ -422,7 +422,7 @@ export default function BillsHubPage() {
           <li>
             <Link
               href="/food"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               食費を抑えるコツ｜Meal Deal から買う店の選び方まで
             </Link>
@@ -430,7 +430,7 @@ export default function BillsHubPage() {
           <li>
             <Link
               href="/health"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               医療・NHS ガイド｜GP 登録から救急・薬・歯科まで
             </Link>

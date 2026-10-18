@@ -192,7 +192,7 @@ export default function RestaurantGuideLayout({
           <li>
             <Link
               href={RESTAURANT_BASE}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンのレストラン トップ
             </Link>
@@ -201,7 +201,7 @@ export default function RestaurantGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

@@ -372,7 +372,7 @@ export default async function MonthPage({
             ほかの月との比べ方や、季節を問わない服装の基本は
             <Link
               href="/sightseeing/travel-tips#weather"
-              className="mx-1 text-blue-600 underline underline-offset-2 dark:text-blue-400"
+              className="mx-1 text-link underline underline-offset-2 dark:text-blue-400"
             >
               旅の実用情報
             </Link>
@@ -493,7 +493,7 @@ export default async function MonthPage({
                 href={source.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+                className="text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
               >
                 {source.label}
               </a>

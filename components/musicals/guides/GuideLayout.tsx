@@ -167,7 +167,7 @@ export default async function GuideLayout({
                 <Link key={g.slug} href={guidePath(g.slug)} className="block">
                   <Card className="border-gray-300 bg-white shadow-sm transition hover:border-blue-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-blue-500">
                     <CardContent className="p-5">
-                      <span className="block text-xs font-semibold text-blue-600 dark:text-blue-400">
+                      <span className="block text-xs font-semibold text-link">
                         {g.eyebrow}
                       </span>
                       <span className="mt-1 block text-base font-semibold">
@@ -226,7 +226,7 @@ export default async function GuideLayout({
           <li>
             <Link
               href={MUSICALS_BASE}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンのミュージカル トップ
             </Link>
@@ -235,7 +235,7 @@ export default async function GuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

@@ -197,7 +197,7 @@ export default function FootballGuideLayout({
           <li>
             <Link
               href={FOOTBALL_BASE}
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               プレミアリーグ観戦ガイド トップ
             </Link>
@@ -206,7 +206,7 @@ export default function FootballGuideLayout({
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+                className="text-link hover:opacity-80 dark:text-blue-400"
               >
                 {link.label}
               </Link>

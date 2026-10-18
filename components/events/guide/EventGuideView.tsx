@@ -210,7 +210,7 @@ export default function EventGuideView({
                   {place.href && (
                     <Link
                       href={place.href}
-                      className="mt-2 inline-block text-xs font-semibold text-blue-600 underline underline-offset-2 dark:text-blue-400"
+                      className="mt-2 inline-block text-xs font-semibold text-link underline underline-offset-2 dark:text-blue-400"
                     >
                       {place.name}の観光ガイドへ
                     </Link>
@@ -306,7 +306,7 @@ export default function EventGuideView({
                 href={source.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+                className="text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
               >
                 {source.label}
               </a>

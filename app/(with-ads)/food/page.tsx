@@ -170,7 +170,7 @@ function ScenarioCard({
         <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
           {detail}
         </p>
-        <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+        <span className="mt-4 text-sm font-medium text-link">
           {meta.label} を読む →
         </span>
       </article>
@@ -239,7 +239,7 @@ export default function FoodHubPage() {
           どちらも費用ゼロで、効果が確実です。
           <Link
             href="/food/loyalty-cards"
-            className="text-blue-600 underline underline-offset-2 dark:text-blue-400"
+            className="text-link underline underline-offset-2 dark:text-blue-400"
           >
             会員カードの作り方
           </Link>
@@ -375,7 +375,7 @@ export default function FoodHubPage() {
           <li>
             <Link
               href="/housing"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンの住まい探しガイド｜物件の探し方から契約・退去まで
             </Link>
@@ -383,7 +383,7 @@ export default function FoodHubPage() {
           <li>
             <Link
               href="/jobs"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンで働く人のための労働問題ガイド
             </Link>
@@ -391,7 +391,7 @@ export default function FoodHubPage() {
           <li>
             <Link
               href="/restaurants"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドンのレストランガイド
             </Link>

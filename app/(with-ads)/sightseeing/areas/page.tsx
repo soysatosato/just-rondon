@@ -236,7 +236,7 @@ export default async function AreasHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -318,7 +318,7 @@ export default async function AreasHubPage() {
           <li>
             <Link
               href="/sightseeing/hotels"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               宿泊エリア別ホテル選び｜どのゾーンに泊まるべきか
             </Link>
@@ -326,7 +326,7 @@ export default async function AreasHubPage() {
           <li>
             <Link
               href="/sightseeing/itinerary"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               ロンドン モデルコース（1〜5日）
             </Link>
@@ -334,7 +334,7 @@ export default async function AreasHubPage() {
           <li>
             <Link
               href="/sightseeing/transport/fares"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               運賃と支払い方法のすべて
             </Link>
@@ -342,7 +342,7 @@ export default async function AreasHubPage() {
           <li>
             <Link
               href="/sightseeing/all"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               観光スポット一覧
             </Link>

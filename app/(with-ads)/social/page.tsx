@@ -202,7 +202,7 @@ export default function SocialHubPage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {s.detail}
                   </p>
-                  <span className="mt-4 text-sm font-medium text-blue-600 dark:text-blue-400">
+                  <span className="mt-4 text-sm font-medium text-link">
                     {s.cta} →
                   </span>
                 </CardContent>
@@ -300,7 +300,7 @@ export default function SocialHubPage() {
           <li>
             <Link
               href="/housing"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               住まい探しガイド｜フラットシェアと契約の基礎
             </Link>
@@ -308,7 +308,7 @@ export default function SocialHubPage() {
           <li>
             <Link
               href="/jobs"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               働き方ガイド｜職場の人間関係と労働条件
             </Link>
@@ -316,7 +316,7 @@ export default function SocialHubPage() {
           <li>
             <Link
               href="/trouble/stalking-harassment"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               つきまとい・ストーカー被害に遭ったら
             </Link>
@@ -324,7 +324,7 @@ export default function SocialHubPage() {
           <li>
             <Link
               href="/british-english"
-              className="text-blue-600 hover:opacity-80 dark:text-blue-400"
+              className="text-link hover:opacity-80 dark:text-blue-400"
             >
               イギリス英語｜会話で出てくる言い回し
             </Link>

@@ -53,7 +53,7 @@ export default function ChapterNav({ slug }: { slug: string }) {
 
       <Link
         href={HISTORY_BASE}
-        className="inline-block text-sm text-blue-600 hover:opacity-80 dark:text-blue-400"
+        className="inline-block text-sm text-link hover:opacity-80 dark:text-blue-400"
       >
         全10章の目次に戻る
       </Link>
