@@ -1,8 +1,11 @@
 /**
- * グローバルナビの定義。
+ * グローバルナビの定義。サイトの区分とリンクはここだけに書く。
  *
  * デスクトップとモバイルでリンクを二重に手書きしていた結果、片方だけ古いURLが
  * 残って404になっていたため、定義をここ一箇所に集約して両方から描画する。
+ * トップページの索引(app/page.tsx)・フッター(MainFooter)・404 もここから描く。
+ * 以前はトップの索引だけ別に手書きしていて、同じURLのラベルが21件食い違い、
+ * 「ロンドンの外へ」「今週のロンドン」の置き場所まで違っていた。
  *
  * 区分はトップページの大区分と同じで、振り分けの基準もひとつだけ:
  *
@@ -24,19 +27,21 @@
 export type NavAccent = {
   text: string;
   underline: string;
+  /** トップの索引・フッターの細い罫。 */
+  stripe: string;
 };
 
 export const NAV_ACCENTS = {
-  red: { text: "text-red-600", underline: "decoration-red-400" },
-  amber: { text: "text-amber-600", underline: "decoration-amber-400" },
-  sky: { text: "text-sky-600", underline: "decoration-sky-400" },
-  emerald: { text: "text-emerald-600", underline: "decoration-emerald-400" },
-  violet: { text: "text-violet-600", underline: "decoration-violet-400" },
-  rose: { text: "text-rose-600", underline: "decoration-rose-400" },
+  red: { text: "text-red-600", underline: "decoration-red-400", stripe: "bg-red-500" },
+  amber: { text: "text-amber-600", underline: "decoration-amber-400", stripe: "bg-amber-500" },
+  sky: { text: "text-sky-600", underline: "decoration-sky-400", stripe: "bg-sky-500" },
+  emerald: { text: "text-emerald-600", underline: "decoration-emerald-400", stripe: "bg-emerald-500" },
+  violet: { text: "text-violet-600", underline: "decoration-violet-400", stripe: "bg-violet-500" },
+  rose: { text: "text-rose-600", underline: "decoration-rose-400", stripe: "bg-rose-500" },
   // Beyond London(ロンドンの外へ)。
-  teal: { text: "text-teal-600", underline: "decoration-teal-400" },
+  teal: { text: "text-teal-600", underline: "decoration-teal-400", stripe: "bg-teal-500" },
   // 旅行プラン作成。記事ではなく道具なので、読み物系のどの色とも被らせない。
-  indigo: { text: "text-indigo-600", underline: "decoration-indigo-400" },
+  indigo: { text: "text-indigo-600", underline: "decoration-indigo-400", stripe: "bg-indigo-500" },
 } as const satisfies Record<string, NavAccent>;
 
 export type NavLink = { href: string; label: string };
@@ -76,6 +81,7 @@ export const NAV_SECTIONS: NavSection[] = [
           { href: "/sightseeing/must-see", label: "必見スポット" },
           { href: "/sightseeing/areas", label: "エリア別ガイド（街区で歩く）" },
           { href: "/sightseeing/royal-london", label: "ロイヤル・ロンドン" },
+          { href: "/sightseeing/free", label: "無料で楽しむロンドン" },
           { href: "/sightseeing/all", label: "観光スポット一覧" },
         ],
       },
@@ -116,6 +122,7 @@ export const NAV_SECTIONS: NavSection[] = [
         heading: "食べる・買う",
         links: [
           { href: "/restaurants", label: "イギリス料理" },
+          { href: "/restaurants/must-visit", label: "行くべきレストラン" },
           { href: "/restaurants/pub-etiquette", label: "パブの作法" },
           { href: "/shopping", label: "ロンドンの買い物" },
           { href: "/shopping/markets", label: "マーケット（曜日別）" },
@@ -232,6 +239,9 @@ export const NAV_SECTIONS: NavSection[] = [
             label: "鉄道切符の買い方（ロンドン外へ）",
           },
           { href: "/sightseeing/travel-tips", label: "旅の実用情報" },
+          { href: "/sightseeing/budget", label: "旅の予算" },
+          { href: "/sightseeing/tipping-and-payment", label: "チップと支払い" },
+          { href: "/sightseeing/step-free", label: "バリアフリーで回る" },
           { href: "/trouble", label: "トラブル対応（盗難・紛失）" },
           { href: "/events", label: "今週のロンドン（運休・ストライキ）" },
           { href: "/changes", label: "今月変わったロンドン（運賃・料金の改定）" },
@@ -254,6 +264,7 @@ export const NAV_SECTIONS: NavSection[] = [
         heading: "ビザ",
         links: [
           { href: "/visa", label: "英国ビザガイド トップ" },
+          { href: "/visa/uk-visa-guide", label: "ビザ全ルート比較" },
           { href: "/visa/after-arrival", label: "渡英後の手続き" },
         ],
       },
@@ -261,6 +272,7 @@ export const NAV_SECTIONS: NavSection[] = [
         heading: "住まい探し",
         links: [
           { href: "/housing", label: "住まい探しガイド トップ" },
+          { href: "/housing/where-to-live", label: "住むエリアの選び方" },
           {
             href: "/housing/rightmove-zoopla-openrent",
             label: "物件サイトの使い分け",
@@ -306,6 +318,10 @@ export const NAV_SECTIONS: NavSection[] = [
             label: "店舗別サービスチャージ",
           },
         ],
+      },
+      {
+        heading: "出会いと人間関係",
+        links: [{ href: "/social", label: "出会いと人間関係 トップ" }],
       },
       {
         // 「旅の準備」にも同じリンクを置いている。月次号は運賃と入場料
@@ -361,6 +377,64 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
 ];
+
+export type MenuSection = Extract<NavSection, { kind: "menu" }>;
+export type LinkSection = Extract<NavSection, { kind: "link" }>;
+
+export const MENU_SECTIONS = NAV_SECTIONS.filter(
+  (s): s is MenuSection => s.kind === "menu",
+);
+export const LINK_SECTIONS = NAV_SECTIONS.filter(
+  (s): s is LinkSection => s.kind === "link",
+);
+
+/**
+ * 区分のリンクを全部、重複を除いて並べる。区分のハブを先頭に置く。
+ * トップページの索引が使う(索引の仕事は網羅なので束は崩してよい)。
+ */
+export function sectionLinks(section: MenuSection): NavLink[] {
+  const seen = new Set<string>();
+  const out: NavLink[] = [];
+  for (const link of [
+    { href: section.href, label: section.hubLabel },
+    ...section.groups.flatMap((g) => g.links),
+  ]) {
+    if (seen.has(link.href)) continue;
+    seen.add(link.href);
+    out.push(link);
+  }
+  return out;
+}
+
+/**
+ * フッター用に、各束の先頭から順に1本ずつ拾って max 本にする。
+ * 先頭から詰めると最初の束(「観る」など)だけで埋まってしまうため。
+ * ハブは見出しのリンクになるので入れない。
+ */
+export function featuredLinks(section: MenuSection, max: number): NavLink[] {
+  const seen = new Set<string>([section.href]);
+  const out: NavLink[] = [];
+  const depth = Math.max(...section.groups.map((g) => g.links.length));
+  for (let i = 0; i < depth && out.length < max; i++) {
+    for (const group of section.groups) {
+      const link = group.links[i];
+      if (!link || seen.has(link.href)) continue;
+      seen.add(link.href);
+      out.push(link);
+      if (out.length === max) break;
+    }
+  }
+  return out;
+}
+
+/**
+ * 狭い場所(フッター)に出すときのラベル。ドロップダウン向けの補足
+ * 「（地下鉄・バス・空港）」と末尾の「トップ」を落とす。リンク先と元の
+ * ラベルは同じなので、別名を持つことにはならない。
+ */
+export function shortLabel(label: string): string {
+  return label.replace(/（[^）]*）$/, "").replace(/\s*トップ$/, "");
+}
 
 /**
  * ドロップダウンの列数と幅。Tailwind が静的に拾えるよう、動的生成せず対応表で持つ。

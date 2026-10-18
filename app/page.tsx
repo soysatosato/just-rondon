@@ -26,6 +26,11 @@ import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 import { publishedDateOf } from "@/lib/publish-schedule";
 import { stripInlineMarkdown } from "@/lib/plain-text";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import {
+  LINK_SECTIONS,
+  MENU_SECTIONS,
+  sectionLinks,
+} from "@/components/navbar/menu";
 
 export const metadata = buildPageMetadata({
   path: "/",
@@ -137,111 +142,32 @@ const READING_SECTIONS = [
  * 旧トップにあった大区分ハブ(カード9枚)と、各セクション末尾の
  * 「◯◯ナビを見る →」ボタンを、ここ1箇所に統合したもの。
  * カードをやめたのは、導線の一覧はデザインではなく網羅性が仕事だから。
- * カードだと1区分に載せられるのは3〜4本だが、いまの形なら10本以上入る。
  *
- * 描き方は「5区分を縦の列に分ける」から「1区分1行、リンクは折り返す札」に
- * 変えた。列に分けると、区分ごとの本数の差(6本〜13本)がそのまま列の高さの
- * 差になり、いちばん多い区分に合わせて空白の列が並ぶ。lg(3列)では2段に
- * 割れて更に間延びし、スマホでは5本の長い箇条書きが縦に積み上がるだけで、
- * 画面1つぶんを灰色の文字で埋めていた。札にすると横幅を使い切るので、
- * 本数が違っても行の高さは1〜3段に収まり、余った幅が空白にならない。
+ * 描き方は「1区分1行、リンクは折り返す札」。列に分けると区分ごとの本数の差が
+ * そのまま列の高さの差になり、空白の列が並ぶ。札にすると横幅を使い切るので、
+ * 本数が違っても行の高さは数段に収まる。
  *
- * 区分の振り分け基準は従来どおり一つだけ:
- *   観光 = 見る(場所そのもの) / 体験 = する / 旅の準備 = 旅行者の実務 /
- *   住む・働く = 在住者の実務 / 読む = 読み物と更新もの。
- * ロンドン外の目的地は市内かどうかだけで決まるので「旅の準備」に置く。
+ * 区分・リンク・ラベルはグローバルナビ(components/navbar/menu.ts)から作る。
+ * 以前はここだけ手書きしていて、同じURLのラベルが21件食い違い、
+ * 「ロンドンの外へ」は旅の準備の中、「今週のロンドン」は読み物の中と、
+ * 置き場所までナビと違っていた。リンクを足すときは menu.ts に足す。
  */
 const SITE_INDEX = [
+  ...MENU_SECTIONS.map((section) => ({
+    eng: section.eyebrow,
+    label: section.label,
+    stripe: section.accent.stripe,
+    links: sectionLinks(section),
+  })),
+  // ナビで単独のリンクになっている「旅行プランを作る」「今週のロンドン」。
+  // どの区分の札にも入らないので、トップの「使う」帯と同じ名前の行にまとめる。
   {
-    eng: "Sightseeing",
-    label: "観光する",
-    stripe: "bg-red-500",
-    links: [
-      { href: "/sightseeing", label: "ロンドン観光ナビ" },
-      { href: "/sightseeing/must-see", label: "見逃せない観光名所" },
-      { href: "/sightseeing/all", label: "観光スポット一覧" },
-      { href: "/sightseeing/areas", label: "エリア別ガイド" },
-      { href: "/sightseeing/royal-london", label: "ロイヤル・ロンドン" },
-      { href: "/sightseeing/free", label: "無料で楽しむロンドン" },
-      { href: "/museums", label: "美術館ナビ" },
-      { href: "/museums/best-10-museums", label: "絶対に行くべき美術館10選" },
-      { href: "/museums/best-museums-for-kids", label: "キッズ向け美術館" },
-      { href: "/museums/banksy-artworks", label: "街で見つかるバンクシー" },
-    ],
+    eng: "Use",
+    label: "使う",
+    stripe: "bg-indigo-500",
+    links: LINK_SECTIONS.map(({ href, label }) => ({ href, label })),
   },
-  {
-    eng: "Things to Do",
-    label: "体験する",
-    stripe: "bg-amber-500",
-    links: [
-      { href: "/musicals", label: "ウエストエンドのミュージカル" },
-      { href: "/restaurants", label: "イギリス料理を食べる" },
-      { href: "/restaurants/must-visit", label: "行くべきレストラン" },
-      { href: "/souvenirs", label: "お土産を選ぶ" },
-      { href: "/shopping", label: "買い物ガイド" },
-      { href: "/brands", label: "イギリスのブランド" },
-      { href: "/sightseeing/harry-potter", label: "ハリー・ポッターの世界" },
-      { href: "/sightseeing/film-locations", label: "映画・ドラマのロケ地" },
-      { href: "/sightseeing/football", label: "フットボールを観る" },
-      { href: "/sightseeing/stadium-tours", label: "スタジアムツアー" },
-      { href: "/sightseeing/thames-cruise", label: "テムズ川クルーズ" },
-      { href: "/sightseeing/christmas-markets", label: "クリスマスマーケット" },
-      { href: "/sightseeing/kids-free-activities", label: "子どもと無料で楽しむ" },
-    ],
-  },
-  {
-    eng: "Traveller Info",
-    label: "旅の準備",
-    stripe: "bg-sky-500",
-    links: [
-      { href: "/plan", label: "旅行プランを作る" },
-      { href: "/sightseeing/eta-uk-visa-guide", label: "ETA（電子渡航認証）" },
-      { href: "/sightseeing/itinerary", label: "モデルコース（1〜5日）" },
-      { href: "/sightseeing/hotels", label: "宿泊エリアの選び方" },
-      { href: "/sightseeing/transport", label: "地下鉄・バスの乗り方" },
-      { href: "/sightseeing/travel-tips", label: "旅の実用情報" },
-      { href: "/sightseeing/tipping-and-payment", label: "チップと支払い" },
-      { href: "/sightseeing/budget", label: "旅の予算" },
-      { href: "/sightseeing/step-free", label: "バリアフリーで回る" },
-      { href: "/events/calendar", label: "年間イベントカレンダー" },
-      { href: "/beyond-london", label: "ロンドンの外へ（日帰り）" },
-    ],
-  },
-  {
-    eng: "Resident Info",
-    label: "住む・働く",
-    stripe: "bg-emerald-500",
-    links: [
-      { href: "/visa", label: "英国ビザ" },
-      { href: "/visa/uk-visa-guide", label: "ビザ全ルート比較" },
-      { href: "/housing", label: "住まい探し" },
-      { href: "/housing/where-to-live", label: "住むエリアの選び方" },
-      { href: "/jobs", label: "働く・労働問題" },
-      {
-        href: "/jobs/service-charges/stores",
-        label: "サービスチャージ店舗別データベース",
-      },
-      { href: "/money", label: "お金・銀行" },
-      { href: "/bills", label: "光熱費・Council Tax" },
-      { href: "/health", label: "医療・NHS" },
-      { href: "/trouble", label: "トラブルに遭ったら" },
-      { href: "/social", label: "人づきあいと社会" },
-    ],
-  },
-  {
-    eng: "Reading Britain",
-    label: "読む",
-    stripe: "bg-violet-500",
-    links: [
-      { href: "/reading", label: "読み物トップ" },
-      { href: "/column", label: "コラム" },
-      { href: "/modern-britain", label: "英国のいまを論じる" },
-      { href: "/history", label: "イギリスの歴史 全10章" },
-      { href: "/british-english", label: "イギリス英語" },
-      { href: "/events", label: "今週のロンドン" },
-    ],
-  },
-] as const;
+];
 
 export default async function Page() {
   const now = new Date();
