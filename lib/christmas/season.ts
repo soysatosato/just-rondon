@@ -148,6 +148,7 @@ export function statusOn(
   if (!edition?.start) return "unannounced";
   if (date < edition.start) return "before";
   if (date > effectiveEnd(edition)) return "after";
+  if (edition.onlyDates) return edition.onlyDates.includes(date) ? "open" : "closed-day";
   if (edition.closedDates?.includes(date)) return "closed-day";
   if (date.slice(5) === "12-25") {
     if (edition.christmasDay === "closed") return "closed-day";

@@ -30,6 +30,7 @@ const BAR: Record<ResolvedItem["kind"], string> = {
   market: "bg-red-500",
   rink: "bg-sky-500",
   event: "bg-emerald-500",
+  show: "bg-violet-500",
 };
 
 const LABEL_COL = "grid grid-cols-[8.5rem_1fr] gap-3 sm:grid-cols-[10rem_1fr]";
@@ -40,6 +41,12 @@ type Segment = { start: string; end: string; open: boolean };
 function segments(item: ResolvedItem, axis: SeasonAxis): Segment[] {
   const edition = item.edition;
   if (!edition?.start) return [];
+  // 公演日が決まっている舞台は、その日だけを1日ずつ描く。
+  if (edition.onlyDates) {
+    return edition.onlyDates
+      .filter((day) => day >= axis.start && day <= axis.end)
+      .map((day) => ({ start: day, end: day, open: true }));
+  }
   const start = edition.start < axis.start ? axis.start : edition.start;
   // 終わりが未発表なら、飾りを片付ける1月6日まで(先を薄くして描く)。
   const end = effectiveEnd(edition) > axis.end ? axis.end : effectiveEnd(edition);

@@ -12,7 +12,8 @@ const PAGES = [
   { key: "lights", href: "/sightseeing/christmas-lights", label: "イルミネーション" },
   { key: "markets", href: "/sightseeing/christmas-markets", label: "マーケット" },
   { key: "rinks", href: "/events/christmas#rinks", label: "スケートリンク" },
-  { key: "days", href: "/events/christmas#days", label: "12月25日の前後" },
+  { key: "shows", href: "/musicals/christmas-shows", label: "舞台" },
+  { key: "days", href: "/events/christmas/christmas-day", label: "12月25日と年末年始" },
 ] as const;
 
 export type SeriesPage = (typeof PAGES)[number]["key"];

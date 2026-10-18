@@ -50,7 +50,7 @@ export const MUSICAL_GUIDE_CATEGORY_BLURBS: Record<
   onTheDay:
     "チケットを取ったあとに読む2本。何時に着いて、休憩で何が起きて、終演後どう帰るか。",
   choosing:
-    "英語が不安なとき、子どもと行くとき。作品選びの基準が変わる場合の2本です。",
+    "英語が不安なとき、子どもと行くとき、クリスマスの時期。作品選びの基準が変わる場合の3本です。",
 };
 
 export const MUSICAL_GUIDE_CATEGORY_ORDER: MusicalGuideCategory[] = [
@@ -122,6 +122,16 @@ export const guides: GuideMeta[] = [
     label: "子連れ観劇ガイド",
     blurb:
       "年齢の目安の読み方、マチネと夜公演の選び方、上演時間と座席。子どもと行くときだけ判断基準が変わります。",
+  },
+  {
+    // クリスマス特集の一部。GuideLayout ではなく専用のページ
+    // (app/(with-ads)/musicals/christmas-shows)で、会期は lib/christmas/shows.ts。
+    slug: "christmas-shows",
+    category: "choosing",
+    eyebrow: "Christmas Shows",
+    label: "クリスマスの舞台(パント・バレエ・芝居)",
+    blurb:
+      "日本のパントマイムとは別物の「パント」の楽しみ方と、『くるみ割り人形』『クリスマス・キャロル』。その年の上演の会期つき。",
   },
 ];
 

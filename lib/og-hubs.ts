@@ -72,6 +72,20 @@ export const OG_HUBS = {
     glyph: "聖",
     theme: "christmas",
   },
+  "christmas-day": {
+    badge: "CHRISTMAS DAY",
+    head: "12月25日と年末年始のロンドン",
+    tail: "美術館・名所・市場の年末年始の営業の早見表と、25日の動き方・過ごし方。",
+    glyph: "暦",
+    theme: "christmas",
+  },
+  "christmas-shows": {
+    badge: "CHRISTMAS SHOWS",
+    head: "ロンドンのクリスマスの舞台",
+    tail: "パントマイムとは別物の「パント」、くるみ割り人形、クリスマス・キャロル。その年の上演つき。",
+    glyph: "幕",
+    theme: "christmas",
+  },
   "christmas-lights": {
     badge: "CHRISTMAS LIGHTS",
     head: "ロンドンのイルミネーション",

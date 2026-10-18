@@ -46,6 +46,11 @@ export type SeasonEdition = {
   christmasDay?: "closed" | "open";
   /** 会期中の休み(12月25日を除く)。"YYYY-MM-DD"。 */
   closedDates?: string[];
+  /**
+   * 会期のうち、この日にしか開かないもの(公演が3回だけの舞台など)。
+   * "YYYY-MM-DD"。あれば start〜end の間でもこれ以外の日は休みとして扱う。
+   */
+  onlyDates?: string[];
   /** 料金。1行で。 */
   price?: string;
   /** 予約が要るもの。 */
@@ -64,8 +69,9 @@ export type SeasonEdition = {
  *   market  屋台の並ぶマーケット
  *   rink    スケートリンク
  *   event   入場の要る季節の催し(光の小道、テーマパーク、映画のセットなど)
+ *   show    クリスマスの時期の舞台(パント、バレエ、芝居)
  */
-export type SeasonKind = "lights" | "market" | "rink" | "event";
+export type SeasonKind = "lights" | "market" | "rink" | "event" | "show";
 
 /** 季節の帯を出すページと、そのページから見た関係。 */
 export type SeasonPlace = {
@@ -103,15 +109,35 @@ export type SeasonItem = {
 };
 
 /**
- * 年末年始に休む館。休みが毎年同じ規則(「12月24〜26日は休館」)として
- * 公式に書かれているものだけを載せる。
+ * 年末年始の休みと営業。公式サイトに書かれていることだけを載せる。
+ *
+ * 多くは「12月24〜26日は休館」のように毎年同じ決まりとして書かれていて、
+ * その場合は season を省く。その年の案内としてだけ出ているもの(市場の
+ * 年末の営業など)は season にシーズン年を入れ、ほかの年には使わない。
  */
 export type VenueClosure = {
   id: string;
   name: string;
-  /** "MM-DD"。 */
+  /** 早見表の段。 */
+  group: "museum" | "sight" | "shop";
+  /** 休む日。"MM-DD"。 */
   closed: string[];
-  /** 休みではないが見学できない日など。1要素1文。 */
+  /**
+   * 公式の案内が「◯日以外は毎日開く」と書いているとき true。早見表で、
+   * 休みでない日を「開」にしてよい根拠になる。書かれていなければ、休みで
+   * ない日は「記載なし」のまま出す(開くとは言い切らない)。
+   */
+  openOtherDays?: boolean;
+  /** 短縮営業など、その日だけの時間。day は "MM-DD"。 */
+  hours?: { day: string; text: string }[];
+  /** 観光の見学はできず、礼拝のためだけに開く日。"MM-DD"。 */
+  worshipOnly?: string[];
+  /** その年の案内なら、そのシーズン年。毎年の決まりなら省く。 */
+  season?: number;
+  /** 改修などの長期休館。"YYYY-MM-DD" から(再開日が分かれば reopens)。 */
+  closedFrom?: string;
+  reopens?: string;
+  /** 補足。1要素1文。 */
   notes?: string[];
   places: SeasonPlace[];
   source: SeasonSource;

@@ -146,6 +146,17 @@ export const christmasHappenings: SeasonItem[] = [
         start: "2026-11-28",
         end: "2027-01-03",
         hours: "10:00〜16:30(延長の日あり)",
+        christmasDay: "closed",
+        closedDates: [
+          "2026-11-30",
+          "2026-12-01",
+          "2026-12-07",
+          "2026-12-08",
+          "2026-12-14",
+          "2026-12-15",
+          "2026-12-24",
+          "2026-12-26",
+        ],
         booking: {
           status: "宮殿の入場は30分ごとの時間指定",
           url: "https://www.hrp.org.uk/hampton-court-palace/christmas/",
@@ -155,11 +166,47 @@ export const christmasHappenings: SeasonItem[] = [
             label: "Historic Royal Palaces – Christmas at Hampton Court Palace",
             url: "https://www.hrp.org.uk/hampton-court-palace/christmas/",
           },
+          {
+            label: "Historic Royal Palaces – Winter Palace FAQs",
+            url: "https://www.hrp.org.uk/hampton-court-palace/whats-on/winter-palace/winter-palace-faqs/",
+          },
         ],
         checkedAt: CHECKED,
       },
     ],
     places: [{ spot: "hampton-court-palace", relation: "here" }],
+  },
+  {
+    slug: "westminster-abbey-carols",
+    kind: "event",
+    title: "ウェストミンスター寺院のキャロル礼拝",
+    shortTitle: "ウェストミンスター寺院のキャロル礼拝",
+    engTitle: "Lessons and Carols at Westminster Abbey",
+    summary:
+      "聖書の朗読とキャロルを交互に重ねる、英国の伝統的な聖歌礼拝(レッスンズ・アンド・キャロルズ)。礼拝は無料だが、入るには券が要る。",
+    station: "ウェストミンスター駅",
+    href: "/sightseeing/westminster-abbey",
+    free: true,
+    entry: "無料(券が要る)",
+    usualTiming: "例年12月、クリスマスの前",
+    editions: [
+      {
+        year: 2026,
+        booking: {
+          status: "券は11月16日(月)と18日(水)の9:30と14:30に配られる",
+          url: "https://www.westminster-abbey.org/worship-and-music/services-and-times/advent-and-christmas",
+        },
+        notes: ["礼拝の日時は、まだ案内されていない。"],
+        sources: [
+          {
+            label: "Westminster Abbey – Christmas",
+            url: "https://www.westminster-abbey.org/worship-and-music/services-and-times/advent-and-christmas",
+          },
+        ],
+        checkedAt: CHECKED,
+      },
+    ],
+    places: [{ spot: "westminster-abbey", relation: "here" }],
   },
   {
     slug: "st-pauls-carol-service",

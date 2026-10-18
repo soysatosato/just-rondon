@@ -107,6 +107,10 @@ const TREE = {
   "/events/guides": { label: "年中行事ガイド", parent: "/events" },
   // クリスマス特集のハブ。イルミネーションとマーケット比較は URL どおり「観光」の下。
   "/events/christmas": { label: "ロンドンのクリスマス", parent: "/events" },
+  "/events/christmas/christmas-day": {
+    label: "12月25日と年末年始",
+    parent: "/events/christmas",
+  },
 
   // ---- 英国を読む ----------------------------------------------------
   "/column": { label: "コラム", parent: "/reading" },

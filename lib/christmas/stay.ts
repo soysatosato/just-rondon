@@ -1,6 +1,7 @@
 import { addDays, daysBetween, formatShortDay, statusOn } from "./season";
 import type { ResolvedItem } from "./index";
 import type { SpecialDay } from "./days";
+import { isClosedOn, isLongTermClosed } from "./closures";
 import type { VenueClosure } from "./types";
 
 /**
@@ -50,8 +51,12 @@ export type StayResult = {
   noDays: ItemStay[];
   /** そのシーズンの日程が未発表。 */
   unannounced: ItemStay[];
-  /** 滞在中に休む館と、その日。 */
-  closures: { closure: VenueClosure; dates: string[] }[];
+  /**
+   * 滞在中に休む館。休む日が同じ館をまとめてある(「12/24〜12/26: 大英博物館、
+   * ナショナル・ギャラリー、…」)。長期休館の館は longTerm にまとめる。
+   */
+  closures: { dates: string[]; names: string[] }[];
+  longTerm: string[];
   /** 滞在中の、旅程に響く日。 */
   specialDays: { date: string; day: SpecialDay }[];
   /** 滞在中の祝日(gov.uk)。 */
@@ -62,6 +67,13 @@ function describe(stay: Omit<ItemStay, "detail">, range: StayRange): string {
   const edition = stay.item.edition;
   if (!edition?.start) {
     return `日程は未発表(${stay.item.usualTiming})`;
+  }
+  // 公演日が決まっている舞台は、滞在中の公演日だけを書く。
+  if (edition.onlyDates) {
+    const shows = edition.onlyDates.filter((d) => d >= range.from && d <= range.to);
+    return shows.length > 0
+      ? `${shows.map(formatShortDay).join("・")}に公演`
+      : "滞在中の公演なし";
   }
   if (stay.openDays === 0) {
     if (edition.start > range.to) return `${formatShortDay(edition.start)}から`;
@@ -100,6 +112,7 @@ export function evaluateStay(
     noDays: [],
     unannounced: [],
     closures: [],
+    longTerm: [],
     specialDays: [],
     bankHolidays: [],
   };
@@ -112,7 +125,9 @@ export function evaluateStay(
     const base = { item, openDays, totalDays: dates.length, closedDays, unknownDays };
     const stay: ItemStay = { ...base, detail: describe(base, range) };
     // 終わりの日が未発表のもの(灯り以外)は、全日程開いているとは言い切らない。
-    const undatedEnd = !item.edition?.end && item.kind !== "lights";
+    // 公演日だけの舞台も「ずっと」にはしない。
+    const undatedEnd =
+      (!item.edition?.end && item.kind !== "lights") || !!item.edition?.onlyDates;
 
     if (!item.edition?.start) result.unannounced.push(stay);
     else if (openDays === dates.length && !undatedEnd) result.allDays.push(stay);
@@ -120,10 +135,20 @@ export function evaluateStay(
     else result.noDays.push(stay);
   }
 
+  const groups = new Map<string, { dates: string[]; names: string[] }>();
   for (const closure of data.closures) {
-    const closed = dates.filter((date) => closure.closed.includes(date.slice(5)));
-    if (closed.length > 0) result.closures.push({ closure, dates: closed });
+    if (dates.some((date) => isLongTermClosed(closure, date))) {
+      result.longTerm.push(closure.name);
+      continue;
+    }
+    const closed = dates.filter((date) => isClosedOn(closure, date));
+    if (closed.length === 0) continue;
+    const key = closed.join(",");
+    const group = groups.get(key) ?? { dates: closed, names: [] };
+    group.names.push(closure.name);
+    groups.set(key, group);
   }
+  result.closures = [...groups.values()].sort((a, b) => a.dates[0].localeCompare(b.dates[0]));
 
   for (const date of dates) {
     const day = data.specialDays.find((d) => d.monthDay === date.slice(5));

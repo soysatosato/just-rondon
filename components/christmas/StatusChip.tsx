@@ -1,4 +1,5 @@
 import type { DayStatus } from "@/lib/christmas/season";
+import type { SeasonKind } from "@/lib/christmas/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,14 +14,14 @@ const STYLES: Record<DayStatus, string> = {
   unannounced: "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-300",
 };
 
-export function statusLabel(status: DayStatus, lights = false): string {
+export function statusLabel(status: DayStatus, kind?: SeasonKind): string {
   switch (status) {
     case "open":
-      return lights ? "点灯中" : "開催中";
+      return kind === "lights" ? "点灯中" : kind === "show" ? "上演中" : "開催中";
     case "before":
       return "これから";
     case "closed-day":
-      return "今日は休み";
+      return kind === "show" ? "今日は公演なし" : "今日は休み";
     case "after":
       return "終了";
     case "unknown":
@@ -32,11 +33,11 @@ export function statusLabel(status: DayStatus, lights = false): string {
 
 export default function StatusChip({
   status,
-  lights = false,
+  kind,
   className,
 }: {
   status: DayStatus;
-  lights?: boolean;
+  kind?: SeasonKind;
   className?: string;
 }) {
   return (
@@ -47,7 +48,7 @@ export default function StatusChip({
         className,
       )}
     >
-      {statusLabel(status, lights)}
+      {statusLabel(status, kind)}
     </span>
   );
 }

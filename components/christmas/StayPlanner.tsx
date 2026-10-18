@@ -230,7 +230,10 @@ export default function StayPlanner({ payload }: { payload: StayPayload }) {
               {formatDay(range!.from)}〜{formatDay(range!.to)}の{daysBetween(range!.from, range!.to) + 1}日間
             </p>
 
-            {(result.specialDays.length > 0 || result.bankHolidays.length > 0 || result.closures.length > 0) && (
+            {(result.specialDays.length > 0 ||
+              result.bankHolidays.length > 0 ||
+              result.closures.length > 0 ||
+              result.longTerm.length > 0) && (
               <div className="rounded-xl border border-red-200 bg-red-50/70 p-4 dark:border-red-900/60 dark:bg-red-950/20">
                 <h3 className="flex items-center gap-1.5 text-sm font-bold text-red-900 dark:text-red-200">
                   <TriangleAlert className="h-4 w-4" aria-hidden="true" />
@@ -250,14 +253,23 @@ export default function StayPlanner({ payload }: { payload: StayPayload }) {
                         : 銀行と役所は休み。鉄道は工事で運休・バス代行になる区間がある
                       </li>
                     ))}
-                  {result.closures.map(({ closure, dates }) => (
-                    <li key={closure.id}>
-                      <span className="font-semibold">{closure.name}</span>: {dates.map(formatDay).join("・")}は休み
+                  {result.closures.map(({ dates, names }) => (
+                    <li key={dates.join()}>
+                      <span className="font-semibold">{dates.map(formatDay).join("・")}は休み</span>: {names.join("、")}
                     </li>
                   ))}
+                  {result.longTerm.length > 0 && (
+                    <li>
+                      <span className="font-semibold">長期休館中</span>: {result.longTerm.join("、")}
+                    </li>
+                  )}
                 </ul>
                 <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
-                  1日ずつの詳しい案内は、下の「12月24日〜1月1日」の節にあります。
+                  1日ずつの案内は下の「12月24日〜1月1日」の節に、館ごとの営業は
+                  <Link href="/events/christmas/christmas-day#hours" className="mx-1 text-link underline underline-offset-2">
+                    年末年始の営業の早見表
+                  </Link>
+                  にあります。
                 </p>
               </div>
             )}

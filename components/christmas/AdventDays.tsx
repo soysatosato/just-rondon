@@ -23,6 +23,9 @@ export type AdventTile = {
   links: { href: string; label: string }[];
 };
 
+/** 札に名前を並べる休館の数。残りは早見表へ送る。 */
+const CLOSED_SHOWN = 6;
+
 const HEADER: Record<AdventTile["tone"], string> = {
   stop: cn(styles.candy, "text-white"),
   warn: "bg-amber-400 text-neutral-950",
@@ -79,11 +82,24 @@ export default function AdventDays({ tiles }: { tiles: AdventTile[] }) {
             <NoteList icon={Bus} label="交通" notes={tile.transport.map((n) => n.text)} />
             <NoteList icon={Store} label="店と催し" notes={tile.life.map((n) => n.text)} />
             {tile.closed.length > 0 && (
-              <NoteList
-                icon={Landmark}
-                label="休館"
-                notes={[`休館: ${tile.closed.join("、")}`]}
-              />
+              <div className="flex gap-2">
+                <Landmark className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500 dark:text-neutral-400" aria-label="休館" />
+                <p>
+                  休館: {tile.closed.slice(0, CLOSED_SHOWN).join("、")}
+                  {tile.closed.length > CLOSED_SHOWN && (
+                    <>
+                      ほか{tile.closed.length - CLOSED_SHOWN}か所(
+                      <Link
+                        href="/events/christmas/christmas-day#hours"
+                        className="text-link underline underline-offset-2"
+                      >
+                        早見表
+                      </Link>
+                      )
+                    </>
+                  )}
+                </p>
+              </div>
             )}
             {tile.happenings.length > 0 && (
               <NoteList icon={Sparkles} label="この日の催し" notes={tile.happenings} />

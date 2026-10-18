@@ -122,7 +122,7 @@ function LightCard({ item, today }: { item: ResolvedItem; today: string }) {
           <h3 className="text-lg font-bold leading-snug">{item.title}</h3>
           <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.engTitle}</p>
         </div>
-        <StatusChip status={statusOn(edition, today, item.kind)} lights />
+        <StatusChip status={statusOn(edition, today, item.kind)} kind={item.kind} />
       </div>
       <p className="mt-3 text-base font-semibold tabular-nums text-amber-900 dark:text-amber-200">
         {edition ? formatRange(edition) : `未発表(${item.usualTiming})`}
@@ -361,7 +361,7 @@ export default function ChristmasLightsPage() {
                           {item && (
                             <StatusChip
                               status={statusOn(item.edition, today, item.kind)}
-                              lights={item.kind === "lights"}
+                              kind={item.kind}
                             />
                           )}
                         </p>

@@ -127,7 +127,8 @@ function buildAdventTiles(
       (d) => d.monthDay === date.slice(5),
     );
     const bank = bankHolidays.find((b) => b.date === date);
-    const closed = closedOn(date).map((c) => c.name);
+    // 改修などの長期休館は毎日同じ館が並ぶだけなので、札には出さない。
+    const closed = closedOn(date, { longTerm: false }).map((c) => c.name);
     const isSunday = new Date(`${date}T12:00:00Z`).getUTCDay() === 0;
     const happenings = items
       .filter(
@@ -219,9 +220,13 @@ function buildBookingRows(items: ResolvedItem[], year: number, today: string): B
     });
   }
 
+  // 舞台は演目が多いので、ここでは1行にまとめて舞台のページへ送る。
   const booked = items
     .filter(
-      (item) => item.edition?.booking && statusOn(item.edition, today, item.kind) !== "after",
+      (item) =>
+        item.kind !== "show" &&
+        item.edition?.booking &&
+        statusOn(item.edition, today, item.kind) !== "after",
     )
     .sort((a, b) => (a.edition?.start ?? "").localeCompare(b.edition?.start ?? ""));
   for (const item of booked) {
@@ -235,6 +240,19 @@ function buildBookingRows(items: ResolvedItem[], year: number, today: string): B
       price: edition.price,
       href: item.href,
       url: booking.url,
+    });
+  }
+
+  const shows = items.filter((i) => i.kind === "show" && i.edition?.start);
+  if (shows.length > 0) {
+    const first = shows.map((i) => i.edition!.start!).sort()[0];
+    const last = shows.map((i) => i.edition!.end ?? i.edition!.start!).sort().reverse()[0];
+    rows.push({
+      key: "shows",
+      title: "クリスマスの舞台(パント・バレエ・芝居)",
+      when: `${formatDay(first)}〜${formatDay(last)}`,
+      status: `${shows.length}演目、どれも劇場の公式サイトで発売中`,
+      href: "/musicals/christmas-shows",
     });
   }
 
@@ -318,6 +336,7 @@ export default async function ChristmasPage() {
     { id: "walk", navLabel: "夜の歩き方" },
     { id: "rinks", navLabel: "スケートリンク" },
     { id: "markets", navLabel: "マーケット" },
+    { id: "shows", navLabel: "舞台" },
     { id: "free", navLabel: "無料で楽しむ" },
     { id: "read", navLabel: "読みもの" },
     { id: "basis", navLabel: "基準と出典" },
@@ -533,7 +552,7 @@ export default async function ChristmasPage() {
                   <span className="text-xs tabular-nums text-neutral-600 dark:text-neutral-400">
                     {item.edition?.start ? formatDay(item.edition.start) : item.usualTiming}
                   </span>
-                  <StatusChip status={statusOn(item.edition, today, item.kind)} lights />
+                  <StatusChip status={statusOn(item.edition, today, item.kind)} kind={item.kind} />
                 </span>
               </li>
             ))}
@@ -570,13 +589,46 @@ export default async function ChristmasPage() {
                   <Link href={item.href} className="min-w-0 text-sm font-semibold underline-offset-2 hover:underline">
                     {item.title}
                   </Link>
-                  <StatusChip status={statusOn(item.edition, today, item.kind)} />
+                  <StatusChip status={statusOn(item.edition, today, item.kind)} kind={item.kind} />
                 </div>
                 <p className="mt-0.5 text-xs tabular-nums text-neutral-600 dark:text-neutral-400">
                   {item.edition ? formatRange(item.edition) : `未発表(${item.usualTiming})`}・{item.station}
                 </p>
               </li>
             ))}
+          </ul>
+        </XmasSection>
+
+        <XmasSection
+          n={n("shows")}
+          id="shows"
+          title="クリスマスの舞台"
+          lead={
+            <>
+              ロンドンの冬は、劇場がいちばん賑わう季節です。日本でいう無言劇のパントマイムとは別物の「パント」、『くるみ割り人形』、『クリスマス・キャロル』。選び方と観方は
+              <Link href="/musicals/christmas-shows" className="mx-1 text-link underline underline-offset-2">
+                クリスマスの舞台のページ
+              </Link>
+              にまとめています。
+            </>
+          }
+        >
+          <ul className="divide-y divide-neutral-200 rounded-xl border border-neutral-200 dark:divide-neutral-700 dark:border-neutral-700">
+            {items
+              .filter((item) => item.kind === "show")
+              .map((item) => (
+                <li key={item.slug} className="px-4 py-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <Link href={item.href} className="min-w-0 text-sm font-semibold underline-offset-2 hover:underline">
+                      {item.title}
+                    </Link>
+                    <StatusChip status={statusOn(item.edition, today, item.kind)} kind={item.kind} />
+                  </div>
+                  <p className="mt-0.5 text-xs tabular-nums text-neutral-600 dark:text-neutral-400">
+                    {item.edition ? formatRange(item.edition) : `未発表(${item.usualTiming})`}・{item.station}
+                  </p>
+                </li>
+              ))}
           </ul>
         </XmasSection>
 

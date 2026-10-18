@@ -9,6 +9,7 @@ export const KIND_LABELS: Record<SeasonKind, string> = {
   market: "マーケット",
   rink: "スケートリンク",
   event: "催し",
+  show: "舞台",
 };
 
-export const KIND_ORDER: readonly SeasonKind[] = ["lights", "market", "rink", "event"];
+export const KIND_ORDER: readonly SeasonKind[] = ["lights", "market", "rink", "event", "show"];

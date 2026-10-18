@@ -58,11 +58,15 @@ export default function SeasonBand({
         {band.closures.map((closure) => (
           <li key={closure.name}>
             <span className="mr-1.5 inline-block rounded bg-white px-1.5 text-xs font-semibold text-red-800 ring-1 ring-red-200 dark:bg-neutral-900 dark:text-red-300 dark:ring-red-900">
-              年末年始
+              {closure.kind === "long" ? "休館中" : "年末年始"}
             </span>
-            {closure.days ? (
+            {closure.kind === "days" ? (
               <>
-                <span className="font-semibold">{closure.name}</span>は{closure.days}が休み。
+                <span className="font-semibold">{closure.name}</span>は{closure.text}が休み。
+              </>
+            ) : closure.kind === "long" ? (
+              <>
+                <span className="font-semibold">{closure.name}</span>は{closure.text}長期休館。
               </>
             ) : (
               <span className="font-semibold">{closure.name}</span>

@@ -2,6 +2,7 @@ import { christmasHappenings } from "./happenings";
 import { christmasLights } from "./lights";
 import { marketSeasonItems } from "./markets";
 import { christmasRinks } from "./rinks";
+import { christmasShows } from "./shows";
 import { venueClosures } from "./closures";
 import { KIND_ORDER } from "./kinds";
 import {
@@ -9,6 +10,7 @@ import {
   christmasDayOf,
   daysBetween,
   editionFor,
+  formatFullDate,
   formatRange,
   previousEdition,
   statusOn,
@@ -39,13 +41,14 @@ export const SEASON_CHECKED = "2026-10-18";
 
 export { KIND_LABELS, KIND_ORDER } from "./kinds";
 
-/** 特集に載せる全件。灯り → マーケット → リンク → 催しの順。 */
+/** 特集に載せる全件。灯り → マーケット → リンク → 催し → 舞台の順。 */
 export function allSeasonItems(): SeasonItem[] {
   const items = [
     ...christmasLights,
     ...marketSeasonItems(),
     ...christmasRinks,
     ...christmasHappenings,
+    ...christmasShows,
   ];
   const seen = new Set<string>();
   for (const item of items) {
@@ -177,7 +180,17 @@ export type BandEntry = {
   href: string;
 };
 
-export type BandClosure = { name: string; days: string; notes: string[] };
+export type BandClosure = {
+  name: string;
+  /**
+   * days  年末年始のある日に休む(text は「12月24〜26日」)
+   * long  改修などで長く休んでいる(text は「2026年11月2日から」)
+   * note  休みの日は無いが、知らせることがある(礼拝のみの日など)
+   */
+  kind: "days" | "long" | "note";
+  text: string;
+  notes: string[];
+};
 
 export type SeasonBand = {
   year: number;
@@ -188,6 +201,12 @@ export type SeasonBand = {
 const matches = (place: SeasonPlace, target: { spot?: string; museum?: string }) =>
   (!!target.spot && place.spot === target.spot) ||
   (!!target.museum && place.museum === target.museum);
+
+/** "12-24" → "12月24日"。 */
+export function formatMonthDay(monthDay: string): string {
+  const [m, d] = monthDay.split("-").map(Number);
+  return `${m}月${d}日`;
+}
 
 /** "12-24","12-25","12-26" → "12月24〜26日"。 */
 function formatClosedDays(days: string[]): string {
@@ -236,12 +255,14 @@ export function seasonBandFor(
   const entries: BandEntry[] = [];
   for (const item of resolveItems(year)) {
     const place = item.places?.find((p) => matches(p, target));
-    if (!place || !item.edition?.start) continue;
+    // 日程が未発表でも、券の配り方が出ていれば知らせる(礼拝の券など)。
+    if (!place || !item.edition || (!item.edition.start && !item.edition.booking)) continue;
     const status = statusOn(item.edition, today, item.kind);
     if (status === "after") continue;
     const notes = [
       item.edition.price,
       item.edition.christmasDay === "closed" ? "12月25日は休み" : null,
+      item.edition.booking?.status,
     ].filter(Boolean);
     entries.push({
       title: item.title,
@@ -255,12 +276,26 @@ export function seasonBandFor(
   const closures: BandClosure[] =
     today <= `${year + 1}-01-01`
       ? venueClosures
-          .filter((c: VenueClosure) => c.places.some((p) => matches(p, target)))
-          .map((c) => ({
-            name: c.name,
-            days: c.closed.length > 0 ? formatClosedDays(c.closed) : "",
-            notes: c.notes ?? [],
-          }))
+          .filter(
+            (c: VenueClosure) =>
+              c.places.some((p) => matches(p, target)) &&
+              (c.season === undefined || c.season === year),
+          )
+          .map((c) => {
+            const notes = [
+              ...(c.hours ?? []).map((h) => `${formatMonthDay(h.day)}は${h.text}。`),
+              ...(c.worshipOnly ?? []).map(
+                (d) => `${formatMonthDay(d)}は礼拝のためだけに開き、観光の見学はできない。`,
+              ),
+              ...(c.notes ?? []),
+            ];
+            if (c.closedFrom) {
+              return { name: c.name, kind: "long" as const, text: `${formatFullDate(c.closedFrom)}から`, notes };
+            }
+            return c.closed.length > 0
+              ? { name: c.name, kind: "days" as const, text: formatClosedDays(c.closed), notes }
+              : { name: c.name, kind: "note" as const, text: "", notes };
+          })
       : [];
 
   if (entries.length === 0 && closures.length === 0) return null;

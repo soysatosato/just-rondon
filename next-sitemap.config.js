@@ -136,6 +136,7 @@ module.exports = {
       "/musicals/first-time-theatre",
       "/musicals/shows-without-english",
       "/musicals/theatre-with-kids",
+      "/musicals/christmas-shows",
       // 劇場ガイドのハブ。各劇場ページ(/musicals/theatres/<slug>)は
       // DB 由来なので下の additionalPaths が出す。
       "/musicals/theatres",
@@ -150,6 +151,7 @@ module.exports = {
       "/events/calendar",
       // クリスマス特集のハブ。子ページのイルミネーションは観光の並びにある。
       "/events/christmas",
+      "/events/christmas/christmas-day",
       // 年中行事ガイド。並びは lib/annual-events/index.ts の GUIDES と
       // 一致させること(このファイルは CJS なので TS を読めない)。
       "/events/guides",
