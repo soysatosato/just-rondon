@@ -103,7 +103,7 @@ export default function ArtworkBrowser({
   return (
     <div className="space-y-6">
       {/* 検索・絞り込み。作品数が多いので、スクロール中も操作できるよう追従させる */}
-      <div className="sticky top-0 z-20 -mx-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <div className="sticky top-[var(--sticky-top,0px)] z-20 transition-[top] duration-300 motion-reduce:transition-none -mx-4 border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="space-y-3">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

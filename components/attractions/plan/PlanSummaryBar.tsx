@@ -58,7 +58,7 @@ export default function PlanSummaryBar({
   shareCopied: boolean;
 }) {
   return (
-    <div className="sticky top-0 z-30 -mx-4 mb-5 border-b border-border bg-background/95 px-4 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/80 print:hidden">
+    <div className="sticky top-[var(--sticky-top,0px)] z-30 transition-[top] duration-300 motion-reduce:transition-none -mx-4 mb-5 border-b border-border bg-background/95 px-4 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/80 print:hidden">
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
         <dl className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
           <Figure label="日数" value={`${days.length}日`} />

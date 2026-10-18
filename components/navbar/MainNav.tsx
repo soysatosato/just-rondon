@@ -30,9 +30,12 @@ import { MdMail } from "react-icons/md";
 import { NAV_SECTIONS, groupColsFor, menuWidthFor } from "./menu";
 import Wordmark from "./Wordmark";
 import AuthMenu from "./AuthMenu";
+import { useAutoHideHeader } from "./useAutoHideHeader";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  // スマホのヘッダーは下へ読むと隠れ、少し戻すと出る(useAutoHideHeader.ts)。
+  const header = useAutoHideHeader({ paused: open });
 
   // モバイルはアコーディオンと素のリンクを別々に並べる必要があるので、
   // 種類ごとに分ける。NAV_SECTIONS は menu を先、link を後に並べてあるため、
@@ -41,7 +44,12 @@ export default function Navbar() {
   const linkSections = NAV_SECTIONS.filter((s) => s.kind === "link");
 
   return (
-    <nav className="w-full print:hidden">
+    <nav
+      onFocusCapture={header.reveal}
+      className={`sticky top-0 z-40 w-full bg-background transition-transform duration-300 motion-reduce:transition-none print:hidden xl:static ${
+        header.hidden ? "max-xl:-translate-y-full" : ""
+      }`}
+    >
       {/*
         モバイル。タブレット(768〜1279px)もこちらを使う。
 
@@ -50,7 +58,7 @@ export default function Navbar() {
         横スクロールになり、「観光」の頭と右端のスタンプ帳・ログインに
         届かなかった。全項目が1行に収まる xl(1280px)まではメニューに畳む。
       */}
-      <div className="xl:hidden">
+      <div ref={header.ref} className="border-b border-border/60 xl:hidden">
         <div className="flex justify-between px-6 py-2">
           <Link href="/">
             <div className="flex flex-col">
@@ -63,14 +71,20 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" className="p-2">
-                  <Menu className="w-6 h-6" />
+                {/* 44px 四方にしてあるのは、追従するヘッダーで最もよく押す
+                    ボタンだから。以前は 34×36px で、名前も無かった。 */}
+                <Button
+                  variant="outline"
+                  aria-label="メニューを開く"
+                  className="h-11 w-11 p-0"
+                >
+                  <Menu className="w-6 h-6" aria-hidden />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-72 overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle className="flex justify-between items-center">
-                    <span>Menu</span>
+                    <span>メニュー</span>
                   </SheetTitle>
                 </SheetHeader>
 

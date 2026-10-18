@@ -29,7 +29,7 @@ export default function BriefSectionNav({
   return (
     <nav
       aria-label="この号の内容"
-      className="sticky top-0 z-30 -mx-4 mb-10 border-b border-foreground/15 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75"
+      className="sticky top-[var(--sticky-top,0px)] z-30 transition-[top] duration-300 motion-reduce:transition-none -mx-4 mb-10 border-b border-foreground/15 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75"
     >
       {/* 狭い画面では横スクロールさせ、折り返して2段になるのを避ける。 */}
       <ul className="flex snap-x items-stretch overflow-x-auto px-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

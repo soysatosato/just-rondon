@@ -77,7 +77,7 @@ export default function GuideSectionNav({
   return (
     <nav
       aria-label="このページの目次"
-      className="sticky top-0 z-30 -mx-1 mb-8 border-b border-gray-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90 sm:-mx-4"
+      className="sticky top-[var(--sticky-top,0px)] z-30 transition-[top] duration-300 motion-reduce:transition-none -mx-1 mb-8 border-b border-gray-200 bg-white/90 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/90 sm:-mx-4"
     >
       <ul
         ref={listRef}
