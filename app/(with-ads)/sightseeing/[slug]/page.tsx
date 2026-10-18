@@ -520,7 +520,7 @@ export default async function AttractionDetail({
             白い箱に入れていたが、/overview.png が135ページすべてで同じ位置に
             出るだけで、読む助けにはなっていなかった。 */}
         {attraction.summary && (
-          <p className="whitespace-pre-line border-l-4 border-neutral-300 pl-5 text-[17px] font-light leading-relaxed text-neutral-800 dark:border-neutral-700 dark:text-neutral-300">
+          <p className="whitespace-pre-line border-l-4 border-neutral-300 pl-5 text-[17px] leading-relaxed text-neutral-800 dark:border-neutral-700 dark:text-neutral-300">
             {attraction.summary}
           </p>
         )}

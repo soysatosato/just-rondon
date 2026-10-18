@@ -9,6 +9,34 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      /*
+        和文の書体を明示する。以前は Tailwind 既定の system-ui 任せで、
+        Windows では細く表示される Yu Gothic UI になっていた。
+
+        欧文は各OSのUI書体(Mac/iPhone は SF、Windows は Segoe UI)。
+        和文はその後ろから拾われる: Mac/iPhone はヒラギノ、Windows は
+        BIZ UDPゴシック(Windows 10 1809 以降に標準で入っている、読みやすさを
+        優先した書体)、無ければメイリオ。Android は該当が無く sans-serif
+        (Roboto+Noto Sans CJK)になり、従来と同じ。Webフォントは読み込まない
+        (和文フォントは数MBあり、表示が遅れる)。
+      */
+      fontFamily: {
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          '"Segoe UI"',
+          '"Hiragino Sans"',
+          '"Hiragino Kaku Gothic ProN"',
+          '"Noto Sans JP"',
+          '"BIZ UDPGothic"',
+          "Meiryo",
+          "sans-serif",
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"',
+          '"Noto Color Emoji"',
+        ],
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

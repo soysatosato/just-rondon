@@ -95,7 +95,7 @@ export default async function SongsPage({
           <span className="block text-4xl font-extrabold text-indigo-700 dark:text-indigo-400">
             {musical.name}
           </span>
-          <span className="block text-xl font-light text-gray-500 dark:text-gray-300 mt-1">
+          <span className="block text-xl font-normal text-gray-500 dark:text-gray-300 mt-1">
             {musical.engName} - 曲一覧
           </span>
         </h1>
