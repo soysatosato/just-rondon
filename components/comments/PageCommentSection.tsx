@@ -21,6 +21,11 @@ import { SITE_NAME } from "@/lib/seo";
  * 承認制にしていないので投稿は即時表示される。サーバ側から渡された
  * initialComments に、投稿成功したものを先頭に足していく。
  *
+ * コメントが1件も無いページでは、見出しと誘導文と「コメントを書く」ボタンの
+ * 1行だけを出し、押したらフォームを開く。以前は空のフォーム(約450px)と
+ * 「まだコメントはありません」を全ページ(341ページ)に出しており、
+ * 記事の最後に空欄が続く見え方になっていた。
+ *
  * 運営の返信は管理ページ(/admin/comments)から付ける。どのコメントへの
  * 返信かが一目でわかるよう、元のコメントの枠の中に「〇〇さんへの返信」と
  * 添えて入れ、ロゴ・「運営」バッジ・ブランドの赤の枠で描く。読者は名前を
@@ -114,6 +119,8 @@ export default function PageCommentSection({
   initialComments: PageCommentItem[];
 }) {
   const [comments, setComments] = useState(initialComments);
+  // コメントがあるページは最初からフォームを開いておく(読んだ流れで書けるように)。
+  const [formOpen, setFormOpen] = useState(initialComments.length > 0);
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
@@ -153,6 +160,27 @@ export default function PageCommentSection({
       setError("通信に失敗しました。電波状況を確認してください。");
       setStatus("idle");
     }
+  }
+
+  if (!formOpen && comments.length === 0) {
+    return (
+      <section className="mt-12 flex flex-col gap-3 rounded-xl border border-dashed border-gray-300 p-4 dark:border-neutral-700 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold">{heading}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            {prompt}
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setFormOpen(true)}
+          className="shrink-0 self-start sm:self-center"
+        >
+          コメントを書く
+        </Button>
+      </section>
+    );
   }
 
   return (
@@ -197,6 +225,8 @@ export default function PageCommentSection({
                 rows={4}
                 placeholder={placeholder}
                 className="mt-1"
+                // 「コメントを書く」で開いたときは、そのまま打てるようにする。
+                autoFocus={initialComments.length === 0}
                 required
               />
               <p className="mt-1 text-right text-xs text-gray-400">
@@ -232,7 +262,7 @@ export default function PageCommentSection({
         </CardContent>
       </Card>
 
-      {comments.length > 0 ? (
+      {comments.length > 0 && (
         <ul className="mt-6 space-y-3">
           {comments.map((c) => (
             <li
@@ -261,10 +291,6 @@ export default function PageCommentSection({
             </li>
           ))}
         </ul>
-      ) : (
-        <p className="mt-6 rounded-lg border border-dashed border-gray-300 dark:border-neutral-700 p-6 text-center text-sm text-gray-500 dark:text-gray-400">
-          まだコメントはありません。最初の投稿をお待ちしています。
-        </p>
       )}
     </section>
   );
