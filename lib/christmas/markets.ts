@@ -82,6 +82,12 @@ export type ChristmasMarket = {
   hubKind: SeasonKind;
   /** 季節の帯を出す観光スポット。 */
   places?: SeasonPlace[];
+  /**
+   * カードの写真。Wikimedia Commons の CC 画像だけを使い、作者とライセンスを
+   * credit に書く(表示が利用の条件)。会場そのものか、その会場の冬の様子を
+   * 写したもの。年はばらばらなので、その年の飾りと同じとは限らない。
+   */
+  photo?: { url: string; credit: string; link: string };
 };
 
 /**
@@ -98,6 +104,11 @@ function map(label: string): string {
 export const christmasMarkets: ChristmasMarket[] = [
   {
     slug: "covent-garden-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Covent_Garden_Market_Christmas_2017_Decorations_3.jpg/1280px-Covent_Garden_Market_Christmas_2017_Decorations_3.jpg",
+      credit: "Simeon87 (CC BY-SA 4.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Covent_Garden_Market_Christmas_2017_Decorations_3.jpg",
+    },
     title: "コヴェント・ガーデンのクリスマス",
     shortTitle: "コヴェント・ガーデン",
     engTitle: "Christmas at Covent Garden",
@@ -137,6 +148,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "southbank-centre-winter-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Christmas_Market%2C_South_Bank%2C_London_SE1_-_geograph.org.uk_-_4284602.jpg",
+      credit: "Christine Matthews (CC BY-SA 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Christmas_Market,_South_Bank,_London_SE1_-_geograph.org.uk_-_4284602.jpg",
+    },
     title: "サウスバンク・センター・ウィンターマーケット",
     shortTitle: "サウスバンク",
     engTitle: "Southbank Centre Winter Market",
@@ -173,6 +189,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "winter-by-the-river",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Christmas_Market_on_the_South_Bank_-_geograph.org.uk_-_5635608.jpg/1280px-Christmas_Market_on_the_South_Bank_-_geograph.org.uk_-_5635608.jpg",
+      credit: "Christine Matthews (CC BY-SA 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Christmas_Market_on_the_South_Bank_-_geograph.org.uk_-_5635608.jpg",
+    },
     title: "ウィンター・バイ・ザ・リバー(ロンドン・ブリッジ)",
     shortTitle: "ウィンター・バイ・ザ・リバー",
     engTitle: "Winter by the River",
@@ -231,6 +252,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "trafalgar-square-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Christmas_Tree_in_Trafalgar_Square_-_geograph.org.uk_-_2197843.jpg/1280px-Christmas_Tree_in_Trafalgar_Square_-_geograph.org.uk_-_2197843.jpg",
+      credit: "Paul Gillett (CC BY-SA 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Christmas_Tree_in_Trafalgar_Square_-_geograph.org.uk_-_2197843.jpg",
+    },
     title: "トラファルガー広場のツリーとマーケット",
     shortTitle: "トラファルガー広場",
     engTitle: "Christmas at Trafalgar Square",
@@ -260,6 +286,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "leicester-square-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Leicester_Square_ice_rink%2C_2025-11-16.jpg/1280px-Leicester_Square_ice_rink%2C_2025-11-16.jpg",
+      credit: "Matt Brown (CC BY 4.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Leicester_Square_ice_rink,_2025-11-16.jpg",
+    },
     title: "レスター・スクエアのスケートリンクとマーケット",
     shortTitle: "レスター・スクエア",
     engTitle: "Skate Leicester Square",
@@ -299,6 +330,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "winter-wonderland",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Winter_Wonderland%2C_Hyde_Park%2C_London_-_geograph.org.uk_-_4749324.jpg/1280px-Winter_Wonderland%2C_Hyde_Park%2C_London_-_geograph.org.uk_-_4749324.jpg",
+      credit: "Christine Matthews (CC BY-SA 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Winter_Wonderland,_Hyde_Park,_London_-_geograph.org.uk_-_4749324.jpg",
+    },
     spotSlug: "hyde-park-winter-wonderland",
     title: "ハイド・パーク・ウィンター・ワンダーランド",
     shortTitle: "ウィンター・ワンダーランド",
@@ -337,6 +373,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "battersea-power-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Glide_at_Battersea_Power_Station_2024-12-23.jpg/1280px-Glide_at_Battersea_Power_Station_2024-12-23.jpg",
+      credit: "Matt Brown (CC BY 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Glide_at_Battersea_Power_Station_2024-12-23.jpg",
+    },
     title: "バタシー発電所のクリスマス",
     shortTitle: "バタシー発電所",
     engTitle: "Christmas at Battersea Power Station",
@@ -395,6 +436,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "kings-cross-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Christmas_tree_in_the_Coal_Drops_-_geograph.org.uk_-_8188988.jpg",
+      credit: "DS Pugh (CC BY-SA 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Christmas_tree_in_the_Coal_Drops_-_geograph.org.uk_-_8188988.jpg",
+    },
     title: "キングス・クロスのクリスマスマーケット",
     shortTitle: "キングス・クロス",
     engTitle: "Christmas at King's Cross",
@@ -421,6 +467,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "spitalfields-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Spitalfields_Market_interior_Tower_Hamlets_London_England_01.jpg/1280px-Spitalfields_Market_interior_Tower_Hamlets_London_England_01.jpg",
+      credit: "Acabashi (CC BY-SA 4.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Spitalfields_Market_interior_Tower_Hamlets_London_England_01.jpg",
+    },
     title: "スピタルフィールズのクリスマス",
     shortTitle: "スピタルフィールズ",
     engTitle: "Christmas at Old Spitalfields Market",
@@ -461,6 +512,11 @@ export const christmasMarkets: ChristmasMarket[] = [
   },
   {
     slug: "kingston-christmas-market",
+    photo: {
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kingston-upon-Thames_-_Christmas_Market_-_geograph.org.uk_-_7671734.jpg/1280px-Kingston-upon-Thames_-_Christmas_Market_-_geograph.org.uk_-_7671734.jpg",
+      credit: "Colin Smith (CC BY-SA 2.0)",
+      link: "https://commons.wikimedia.org/wiki/File:Kingston-upon-Thames_-_Christmas_Market_-_geograph.org.uk_-_7671734.jpg",
+    },
     title: "キングストン・クリスマスマーケット",
     shortTitle: "キングストン",
     engTitle: "Kingston Christmas Market",

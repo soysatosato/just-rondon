@@ -80,6 +80,9 @@ export default function ChristmasMarketsPage() {
           summary: m.summary,
           href: `/sightseeing/${m.spotSlug}`,
           factsText: facts,
+          image: m.photo?.url,
+          imageCredit: m.photo?.credit,
+          imageLink: m.photo?.link,
         };
       }
 
@@ -90,6 +93,9 @@ export default function ChristmasMarketsPage() {
         summary: m.summary,
         mainText: m.body.join("\n\n"),
         website: m.website,
+        image: m.photo?.url,
+        imageCredit: m.photo?.credit,
+        imageLink: m.photo?.link,
         factsText: facts,
         sections: [
           { title: `${year}年の会期`, description: seasonDescription(m, year) },
