@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import RecommendStars from "./shared/RecommendStars";
 
 /**
- * 「上映中」を人が最後に確かめてから、この日数を過ぎたら断定をやめる。
+ * 「上演中」を人が最後に確かめてから、この日数を過ぎたら断定をやめる。
  *
  * scripts/check-musical-freshness.ts の STALE_DAYS と揃えている。
  * あちらが「そろそろ見よう」の基準、こちらが「まだ言い切ってよいか」の
@@ -43,6 +43,32 @@ export default function MusicalInfo({
         基本情報
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5">
+        {/*
+          終わった作品にもステータスを出す。以前は上演中の作品にしか
+          この欄が無く、終わった作品は何も書かれないまま「上演中と
+          同じ見た目」になっていた。
+        */}
+        {!isOnShow && (
+          <InfoItem
+            icon={CalendarClock}
+            label="ステータス"
+            value={
+              <div className="flex flex-col gap-1">
+                <Badge
+                  variant="outline"
+                  className="w-fit border-neutral-500/40 bg-neutral-500/10 text-neutral-700 dark:text-neutral-300"
+                >
+                  上演終了
+                </Badge>
+                {lastVerifiedAt && (
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {formatVerifiedAt(lastVerifiedAt)}
+                  </span>
+                )}
+              </div>
+            }
+          />
+        )}
         {isOnShow && (
           <InfoItem
             icon={verified ? BadgeCheck : CalendarClock}
@@ -54,7 +80,7 @@ export default function MusicalInfo({
                     variant="outline"
                     className="w-fit border-emerald-600/40 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400"
                   >
-                    上映中
+                    上演中
                   </Badge>
                   <span className="text-xs font-normal text-muted-foreground">
                     {formatVerifiedAt(lastVerifiedAt!)}

@@ -93,7 +93,11 @@ function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
         <div className="absolute left-2 top-2 right-2 flex items-start justify-between gap-1">
-          {musical.mustSee ? (
+          {!musical.isOnShow ? (
+            <Badge className="bg-neutral-800 text-white border-transparent shadow">
+              上演終了
+            </Badge>
+          ) : musical.mustSee ? (
             <Badge className="bg-rose-600 text-white border-transparent shadow">
               Must See
             </Badge>
@@ -133,19 +137,24 @@ export default function MusicalHomePage({
    */
   ranking: { weekly: RankedItem[]; allTime: RankedItem[] };
 }) {
-  // 現状は全31作品が isOnShow: true のため、onShowOnly は今のところ
-  // 見た目上の絞り込み効果を持たない。上映終了作品が出た際に機能する。
+  // 上演が終わった作品(isOnShow: false)も一覧には残す。作品名で探しに
+  // 来た人が、終わったことを確かめられるようにするため。ただし注目枠と
+  // ヒーローの写真には出さず、おすすめ順では上演中の作品の後ろに回す。
   const [filters, setFilters] = useUrlState(FILTERS_IN_URL);
   const { search, mustSeeOnly, onShowOnly, sortBy } = filters;
   const update = (patch: Partial<Filters>) =>
     setFilters((current) => ({ ...current, ...patch }));
   const [view, setView] = useState<ViewMode>("grid");
 
-  const spotlightMusicals = useMemo(
-    () => musicals.filter((m) => m.mustSee).slice(0, 8),
+  const onShowMusicals = useMemo(
+    () => musicals.filter((m) => m.isOnShow),
     [musicals],
   );
-  const heroImages = useMemo(() => musicals.slice(0, 4), [musicals]);
+  const spotlightMusicals = useMemo(
+    () => onShowMusicals.filter((m) => m.mustSee).slice(0, 8),
+    [onShowMusicals],
+  );
+  const heroImages = useMemo(() => onShowMusicals.slice(0, 4), [onShowMusicals]);
 
   const filteredMusicals = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -171,7 +180,12 @@ export default function MusicalHomePage({
     if (sortBy === "name") {
       sorted.sort((a, b) => a.name.localeCompare(b.name, "ja"));
     } else {
-      sorted.sort((a, b) => b.recommendLevel - a.recommendLevel);
+      // おすすめ順は「いま観られる作品」の中での順番。終わった作品は後ろへ。
+      sorted.sort(
+        (a, b) =>
+          Number(b.isOnShow) - Number(a.isOnShow) ||
+          b.recommendLevel - a.recommendLevel,
+      );
     }
 
     return sorted;
@@ -271,7 +285,7 @@ export default function MusicalHomePage({
                     : "border-border bg-transparent text-muted-foreground hover:bg-muted",
                 )}
               >
-                上映中のみ
+                上演中のみ
               </button>
               <Select
                 value={sortBy}
@@ -350,8 +364,9 @@ export default function MusicalHomePage({
           ===== 条件から探す =====
           作品名を知らない読者はキーワード検索を使えない。
           「英語が不安」「子連れ」「時間がない」の3軸で絞り込ませる。
+          観に行く作品を選ぶ道具なので、上演が終わった作品は渡さない。
         */}
-        <MusicalFinder musicals={musicals} />
+        <MusicalFinder musicals={onShowMusicals} />
 
         {/*
           ===== よく見られている作品 =====

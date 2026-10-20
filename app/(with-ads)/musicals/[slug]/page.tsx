@@ -124,6 +124,7 @@ export default async function musicalDetailsPage({
           recommendLevel={musical.recommendLevel}
           theatreName={musical.theatreName}
           songsCount={musical.songs.length}
+          isOnShow={musical.isOnShow}
         />
 
         {/*

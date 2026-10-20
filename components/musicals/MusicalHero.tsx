@@ -24,6 +24,7 @@ export default function MusicalHero({
   recommendLevel,
   theatreName,
   songsCount,
+  isOnShow,
 }: {
   name: string;
   engName: string;
@@ -37,6 +38,12 @@ export default function MusicalHero({
   recommendLevel: number;
   theatreName: string;
   songsCount: number;
+  /**
+   * false は上演が終わった作品。作品名で検索して着いた人が最初に見る
+   * 位置なので、「Must See」と「予約する」を残したままにしない。
+   * 終わったと分かれば、次に要るのは上演中の作品のほう。
+   */
+  isOnShow: boolean;
 }) {
   // 曲一覧ページが生えている作品だけボタンを出す。押せないボタンを
   // 並べても、未完成のページがあると伝えるだけになる。
@@ -57,7 +64,11 @@ export default function MusicalHero({
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-2">
-          {mustSee ? (
+          {!isOnShow ? (
+            <Badge className="bg-neutral-800 text-white border-transparent shadow">
+              上演終了
+            </Badge>
+          ) : mustSee ? (
             <Badge className="bg-rose-600 text-white border-transparent shadow">
               Must See
             </Badge>
@@ -128,13 +139,25 @@ export default function MusicalHero({
             <p className="text-sm text-muted-foreground">{blurb}</p>
           )}
 
+          {!isOnShow && (
+            <p className="rounded-lg border border-border bg-muted/60 px-3 py-2 text-sm font-medium">
+              ロンドンでの上演は終わっています。このページは作品の紹介として残しています。
+            </p>
+          )}
+
           <div className="flex flex-wrap gap-2">
-            <Button asChild size="lg">
-              <Link href={website} target="_blank" rel="noopener noreferrer">
-                <Ticket className="h-4 w-4" />
-                予約する
-              </Link>
-            </Button>
+            {isOnShow ? (
+              <Button asChild size="lg">
+                <Link href={website} target="_blank" rel="noopener noreferrer">
+                  <Ticket className="h-4 w-4" />
+                  予約する
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild size="lg">
+                <Link href="/musicals">上演中の作品を探す</Link>
+              </Button>
+            )}
             {hasSongs && (
               <Button asChild size="lg" variant="outline">
                 <Link href={`/musicals/${slug}/songs`}>曲一覧へ</Link>
@@ -142,16 +165,18 @@ export default function MusicalHero({
             )}
           </div>
 
-          <p className="text-sm text-muted-foreground">
-            チケットの選び方は
-            <Link
-              href="/musicals/west-end-tickets"
-              className="underline text-primary hover:text-primary/80 transition-colors"
-            >
-              チケットの買い方・お得な料金ガイド
-            </Link>
-            もあわせてどうぞ。
-          </p>
+          {isOnShow && (
+            <p className="text-sm text-muted-foreground">
+              チケットの選び方は
+              <Link
+                href="/musicals/west-end-tickets"
+                className="underline text-primary hover:text-primary/80 transition-colors"
+              >
+                チケットの買い方・お得な料金ガイド
+              </Link>
+              もあわせてどうぞ。
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>
