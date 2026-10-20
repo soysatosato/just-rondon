@@ -374,7 +374,7 @@ export const withKidsSections: VariantSection[] = [
           { name: "キングス・クロス 9¾番線", free: true, meta: [{ label: "", value: "6歳〜" }], note: "写真スポット。行列あり" },
           { name: "テムズ川クルーズ", meta: [{ label: "", value: "全年齢" }], note: "有料。座って景色が変わるので飽きにくい" },
           { name: "ハムリーズ（おもちゃ店）", free: true, meta: [{ label: "", value: "全年齢" }], note: "入場は無料。実演販売が楽しい。リージェント通り" },
-          { name: "グリニッジ", meta: [{ label: "", value: "5歳〜" }], note: "一部無料。本初子午線をまたげる。船で行くと移動も楽しい" },
+          { name: "グリニッジ", meta: [{ label: "", value: "5歳〜" }], note: "一部無料。船で行くと移動も楽しい。本初子午線のある天文台は2026年11月2日から休館" },
         ],
       },
       {

@@ -285,7 +285,7 @@ export const filmWorks: FilmWork[] = [
         nearestStation: "Cutty Sark(DLR)から徒歩約20分、Blackheath 駅から徒歩約10分",
         access:
           "イングリッシュ・ヘリテッジの有料施設。開館は季節によって週数日に限られるため、必ず公式サイトで開館日を確認してください。外観は公園側からいつでも見られます。",
-        tips: "グリニッジ・パークの丘を登れば旧王立天文台と本初子午線。同じ日にまとめて回れます。",
+        tips: "グリニッジ・パークの丘を登れば旧王立天文台。同じ日にまとめて回れますが、天文台(本初子午線の中庭を含む)は2026年11月2日から改修で休館に入ります。",
         website: "https://www.english-heritage.org.uk/visit/places/rangers-house-the-wernher-collection/",
         mapQuery: "Ranger's House Greenwich London",
         image:

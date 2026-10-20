@@ -526,6 +526,32 @@ export function isLongTermClosed(closure: VenueClosure, date: string): boolean {
   );
 }
 
+/**
+ * その場所が date の時点で長期休館中なら、その休館を返す。
+ *
+ * 季節の帯(SeasonBand)は10月〜1月上旬にしか出ないので、帯だけに頼ると、
+ * 1月以降の館ページは休館中でも開館時間を出し続ける。館ページの「本日」の
+ * 欄は季節に関係なくここから引く。対象は relation が "here" の場所だけ
+ * (近くの館が閉まっていることは、その館の休みではない)。
+ */
+export function longTermClosureFor(
+  place: { spot?: string; museum?: string },
+  date: string,
+): VenueClosure | null {
+  return (
+    venueClosures.find(
+      (closure) =>
+        isLongTermClosed(closure, date) &&
+        closure.places.some(
+          (p) =>
+            p.relation === "here" &&
+            ((!!place.museum && p.museum === place.museum) ||
+              (!!place.spot && p.spot === place.spot)),
+        ),
+    ) ?? null
+  );
+}
+
 /** その日("YYYY-MM-DD")に休むか。 */
 export function isClosedOn(closure: VenueClosure, date: string): boolean {
   if (isLongTermClosed(closure, date)) return true;

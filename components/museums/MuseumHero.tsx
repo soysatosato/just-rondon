@@ -19,13 +19,29 @@ type OpeningHour = {
   closeTime: string | null;
 };
 
-export default function MuseumHero({ museum }: { museum: any }) {
+/** "2026-11-02" → "2026年11月2日" */
+function formatJaDate(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${y}年${m}月${d}日`;
+}
+
+export default function MuseumHero({
+  museum,
+  longClosure = null,
+}: {
+  museum: any;
+  /**
+   * 改修などの長期休館中なら、その開始日と補足(lib/christmas/closures.ts)。
+   * あるときは曜日の開館時間を「本日」に出さない。
+   */
+  longClosure?: { from: string; note: string | null } | null;
+}) {
   const today = new Date();
   const dayOfWeek = today.toLocaleDateString("en-US", { weekday: "long" });
   const hours: OpeningHour[] = museum.openingHours ?? [];
   const todayHours = hours.find((h) => h.dayOfWeek === dayOfWeek);
   const openToday =
-    todayHours?.openTime && todayHours?.closeTime
+    !longClosure && todayHours?.openTime && todayHours?.closeTime
       ? `${todayHours.openTime}–${todayHours.closeTime}`
       : null;
 
@@ -91,9 +107,16 @@ export default function MuseumHero({ museum }: { museum: any }) {
             <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
             <span className="text-muted-foreground">本日:</span>
             <strong className={openToday ? "" : "text-destructive"}>
-              {openToday ?? "休館"}
+              {longClosure ? "長期休館中" : (openToday ?? "休館")}
             </strong>
           </p>
+          {longClosure && (
+            <p className="pl-6 text-xs leading-relaxed text-muted-foreground">
+              {/* note は休館データの文体(である調)なので、こちらも体言止めで揃える。 */}
+              {formatJaDate(longClosure.from)}から休館中。
+              {longClosure.note}
+            </p>
+          )}
           <p className="flex items-start gap-2">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             <span className="text-muted-foreground">{museum.address}</span>

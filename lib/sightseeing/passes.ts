@@ -150,11 +150,10 @@ export const BREAK_EVEN_LADDER = [
     price: ADMISSIONS.kewGardens,
     where: "西郊・半日",
   },
-  {
-    name: "王立天文台（グリニッジ）",
-    price: GREENWICH.observatory,
-    where: "東郊・半日",
-  },
+  // 王立天文台(GREENWICH.observatory)はパスの対象だが、2026年11月2日から
+  // 改修で全館休館(再開日は未発表。lib/christmas/closures.ts)。入れない施設を
+  // 積むとパスが実際より得に見えるので、休館中は梯子から外している。
+  // 再開したら、カティサークの前に戻すこと。
   {
     name: "カティサーク（グリニッジ）",
     price: GREENWICH.cuttySark,

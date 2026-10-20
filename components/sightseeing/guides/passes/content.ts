@@ -241,9 +241,10 @@ export const passComparison = [
     axis: "1地区の館だけ",
     priceLine: `大人 ${gbp(GREENWICH.dayPassAdult)} / 子供（4〜15歳）${gbp(GREENWICH.dayPassChild)}`,
     childLine: `単体は王立天文台 ${gbp(GREENWICH.observatory)}、カティサーク ${gbp(GREENWICH.cuttySark)}`,
-    fitsWho: `グリニッジで有料の2館を両方見る人。単体で買うと ${gbp(GREENWICH.observatory + GREENWICH.cuttySark)} なので、${gbp(GREENWICH.observatory + GREENWICH.cuttySark - GREENWICH.dayPassAdult)} 安くなります`,
-    caution: `同じ敷地の${GREENWICH.freeSites.join("と")}は元から無料です。デイパスの対象に入っていないのはそのためで、損ではありません`,
-    recommended: true,
+    fitsWho: `天文台が開いている時期に、グリニッジで有料の2館を両方見る人。単体で買うと ${gbp(GREENWICH.observatory + GREENWICH.cuttySark)} なので、${gbp(GREENWICH.observatory + GREENWICH.cuttySark - GREENWICH.dayPassAdult)} 安くなります`,
+    caution: `王立天文台は2026年11月2日から改修で全館休館に入り、再開の日は発表されていません。休館中は天文台に入れないので、デイパスを買う理由がなくなります。カティサークだけなら単体で買ってください。同じ敷地の${GREENWICH.freeSites.join("と")}は元から無料です`,
+    // 天文台の休館中(2026年11月2日〜、再開日未発表)は勧めない。再開したら true に戻す。
+    recommended: false,
   },
 ] as const;
 
@@ -326,7 +327,7 @@ export const passesFaq: GuideFaqItem[] = [
   },
   {
     question: "グリニッジのデイパスは買う価値がありますか？",
-    answer: `**王立天文台とカティサークの両方に行くなら、はっきり得です**。単体だと ${gbp(GREENWICH.observatory)} と ${gbp(GREENWICH.cuttySark)} で合計 ${gbp(GREENWICH.observatory + GREENWICH.cuttySark)}、デイパスなら ${gbp(GREENWICH.dayPassAdult)} なので ${gbp(GREENWICH.observatory + GREENWICH.cuttySark - GREENWICH.dayPassAdult)} 安くなります。片方だけなら単体で買ってください。同じ敷地の${GREENWICH.freeSites.join("と")}は元から無料です。`,
+    answer: `**王立天文台は2026年11月2日から改修で全館休館に入る(再開日は未発表)ので、休館中は買う理由がありません。** カティサークだけなら単体で買ってください。天文台が開いている時期に**王立天文台とカティサークの両方に行くなら、はっきり得です**。単体だと ${gbp(GREENWICH.observatory)} と ${gbp(GREENWICH.cuttySark)} で合計 ${gbp(GREENWICH.observatory + GREENWICH.cuttySark)}、デイパスなら ${gbp(GREENWICH.dayPassAdult)} なので ${gbp(GREENWICH.observatory + GREENWICH.cuttySark - GREENWICH.dayPassAdult)} 安くなります。片方だけなら単体で買ってください。同じ敷地の${GREENWICH.freeSites.join("と")}は元から無料です。`,
   },
 ];
 

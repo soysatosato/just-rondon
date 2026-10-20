@@ -38,6 +38,8 @@ import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
 import { timeRouteForMuseum } from "@/lib/time-routes";
 import SeasonBand from "@/components/christmas/SeasonBand";
+import { longTermClosureFor } from "@/lib/christmas/closures";
+import { londonDate } from "@/lib/publish-schedule";
 
 const TITLE_SUFFIXES = [
   "の見どころ・所要時間・アクセス｜ロンドン美術館ガイド",
@@ -111,6 +113,14 @@ export default async function MuseumDetailsPage({
 
   const timeRoute = timeRouteForMuseum(params.slug);
 
+  // 改修などで長期休館中なら、冒頭の「本日」に開館時間ではなく休館を出す。
+  // 開館時間の表(DB)は曜日ごとの平常時の時間しか持てないため。
+  // 1時間ごとに描き直すので、日付の判定はここ(サーバー)でしてよい。
+  const closure = longTermClosureFor(
+    { museum: params.slug },
+    londonDate(new Date()),
+  );
+
   // 同じ館が /sightseeing 側にもある場合は、そちらの観光目線のページへ渡す。
   const pairedAttractionSlug = attractionSlugForMuseum(params.slug);
   const pairedAttraction = pairedAttractionSlug
@@ -140,7 +150,14 @@ export default async function MuseumDetailsPage({
         <Breadcrumbs path="/museums" current={museum.name} />
       </div>
 
-      <MuseumHero museum={museum} />
+      <MuseumHero
+        museum={museum}
+        longClosure={
+          closure?.closedFrom
+            ? { from: closure.closedFrom, note: closure.notes?.[0] ?? null }
+            : null
+        }
+      />
 
       {/* blurb は詩的な一文。以前はこれを h1 にしていたため、
           館名の h1 と二重になっていた。リード文として置く。 */}
