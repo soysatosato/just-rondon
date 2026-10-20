@@ -7,7 +7,11 @@ import type { ForecastResult } from "@/lib/weather/forecast";
 import type { FxRate } from "@/lib/fx/rate";
 
 /**
- * トップページのヒーロー直下に置く「今日のロンドン」1行帯。
+ * トップページのヘッダー直下に置く「今日のロンドン」1行帯。
+ *
+ * 以前はヒーローの下に置いていて、スマホでは帯が850pxから始まり、
+ * 1画面目(844px)に入らなかった。外側の余白(mt-8)は、ヒーローの中に
+ * 置いていた頃の名残だったので外した。
  *
  * 他ページにある詳細ウィジェット(TflStatusWidget / FxRateWidget)とは
  * 役割が違う。あちらは腰を据えて読む人向けで、こちらは訪問直後の読者に
@@ -86,7 +90,7 @@ export default function LiveStrip() {
   if (!data) {
     return (
       <div
-        className={`mx-auto mt-8 flex max-w-2xl items-center justify-center rounded-full border bg-card/60 px-4 ${STRIP_HEIGHT}`}
+        className={`mx-auto flex max-w-2xl items-center justify-center rounded-full border bg-card/60 px-4 ${STRIP_HEIGHT}`}
       >
         <div className="h-3 w-52 animate-pulse rounded-full bg-muted" />
       </div>
@@ -180,7 +184,7 @@ export default function LiveStrip() {
 
   return (
     <div
-      className={`mx-auto mt-8 flex max-w-2xl items-center justify-center gap-1 overflow-x-auto rounded-full border bg-card/60 px-2 text-xs shadow-sm backdrop-blur-sm sm:gap-2 sm:px-4 sm:text-sm ${STRIP_HEIGHT}`}
+      className={`mx-auto flex max-w-2xl items-center justify-center gap-1 overflow-x-auto rounded-full border bg-card/60 px-2 text-xs shadow-sm backdrop-blur-sm sm:gap-2 sm:px-4 sm:text-sm ${STRIP_HEIGHT}`}
     >
       {items.map((item, i) => (
         <div key={item.key} className="flex shrink-0 items-center gap-1 sm:gap-2">

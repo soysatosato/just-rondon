@@ -1,27 +1,34 @@
 export const revalidate = 60 * 60;
 
 import Link from "next/link";
-import { TriangleAlert } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import AdSenseLoader from "@/components/ads/AdSenseLoader";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import HeroIntro from "@/components/home/HeroIntro";
 import HeroMosaic from "@/components/home/HeroMosaic";
-import PhotoRail from "@/components/home/PhotoRail";
-import LiveStrip from "@/components/live/LiveStrip";
+import HomeClickTracker from "@/components/home/HomeClickTracker";
 import PlanPromo from "@/components/home/PlanPromo";
-import Reveal, { RevealGroup, RevealItem } from "@/components/home/Reveal";
+import RailTabs from "@/components/home/RailTabs";
+import SeasonFeatureBand, {
+  isSeasonBandVisible,
+} from "@/components/home/SeasonFeatureBand";
+import SiteIndexGroup from "@/components/home/SiteIndexGroup";
+import WeeklyCard from "@/components/home/WeeklyCard";
+import LiveStrip from "@/components/live/LiveStrip";
 import {
   fetchColumns,
   fetchBritishEnglishEntries,
   fetchModernBritainEntries,
-  fetchHeroSlides,
 } from "@/utils/actions/contents";
-import { fetchHomeRails } from "@/utils/actions/home";
+import {
+  fetchHeroTiles,
+  fetchHomeRails,
+  fetchSiteCounts,
+  type RailItem,
+} from "@/utils/actions/home";
 import { fetchCurrentBriefs } from "@/utils/actions/weekly";
-import { formatWeekRange, getIssueFreshness, getKindMeta } from "@/lib/weekly";
+import { MIN_WEEKLY, fetchWeeklyTopIds } from "@/utils/rankings";
 import { buildPageMetadata, SITE_NAME } from "@/lib/seo";
 import { READING_ACCENT } from "@/lib/reading-accent";
 import { londonDate, publishedDateOf } from "@/lib/publish-schedule";
@@ -60,24 +67,29 @@ export const metadata = buildPageMetadata({
  * 上から順に、実物(写真・記事・今週の項目)だけを出す。カテゴリ名の
  * 一覧は最下部の索引1つに集約し、途中では一切繰り返さない。
  *
- *   1. ヒーロー      名前つきの写真モザイク + このサイトが何かの1文 + 検索
- *   2. 今日          LiveStrip。天気・運行・為替の要約
- *   3. 使う          旅程を組む / 今週のロンドン。2枚並べて1帯にしている
- *   4. 英国を読む    自分たちが書いたものが主役。旧は10ブロック中の9番目だった
- *   5. 見る・する    DBの写真を横スクロールの棚に5列。旧の観光+体験の置き換え
- *   6. サイト索引    全区分のテキスト索引 + サイト概要
+ * 2026-10-19 の調査で、フロントページの中でも「日付のある情報」(今日の帯・
+ * 今週号・今月)がスマホの縦の9%しかなく、毎日変わらない名所の写真が冒頭と
+ * 中盤に2回、索引と5本の棚が59%を占めていると分かった。今週号は13項目あるのに
+ * トップで読めるのは見出し文に入った3つだけで、クリスマス特集は札1枚だった。
+ * そこで日付のあるものを上に寄せ、棚と索引を畳んだ。
  *
- * 3 をこの位置に置いているのは、このサイトで唯一の「読む」ではなく
+ *   1. 今日          LiveStrip。天気・運行・為替の要約。ヘッダーの直下
+ *   2. ヒーロー      言い切りの見出し + 検索 + 近道 + その月の場所の写真
+ *   3. 季節の特集    10〜1月はクリスマス特集(SeasonFeatureBand)
+ *   4. 使う          旅程を組む / 今週のロンドン(項目つき)/ 今月のロンドン
+ *   5. 英国を読む    自分たちが書いたものが主役。旧は10ブロック中の9番目だった
+ *   6. 見る・する    写真の棚を区分の切り替えで2本に(RailTabs)
+ *   7. 索引と書き方  全区分の索引(スマホは区分ごとに開閉)+ このサイトの書き方
+ *
+ * 4 の旅程をこの位置に置いているのは、このサイトで唯一の「読む」ではなく
  * 「する」ものだから。下に置くと、旅程を組めること自体に気づかれない。
- * 旅程と今週号はどちらも「見出し+説明+ボタン」の同じ形なので、縦に
- * 2帯並べず横に2枚並べた。それぞれ中身の一覧(押せる名所タイル・今週号の
- * 項目リスト)を添えていたが、トップで中身まで見せると帯が長くなるだけで、
- * 押す先は結局1つしかない。一覧は行き先のページに任せる。
  *
  * 色の使い分けは踏襲する(観光=赤、体験=琥珀、旅=空、在住=翠、読み物=菫)。
- * ただし色を載せるのは索引の細い罫と棚の見出しだけにした。旧トップは
- * 8色を全部「角丸の箱に色付きアイコン」という同じ形に載せていたため、
- * 色を分けても差として効いていなかった。
+ * ただし色を載せるのは索引の細い罫と、記事の区分名だけにした。英字の小見出し
+ * (TRIP PLANNER・SEE & DO など21個)は、すぐ下の日本語見出しの言い換えだったので外した。
+ *
+ * 計測のため、ブロックの入れ物に data-home-module を付けている。中のリンクが
+ * 押されると HomeClickTracker が GA4 に送る。ブロックを足したら名前も付けること。
  */
 
 /**
@@ -113,36 +125,17 @@ const READING_CATEGORY = {
 
 type ReadingCategoryKey = keyof typeof READING_CATEGORY;
 
-/** 読み物4区分への導線。ハブ(/reading)と同じ並び・同じ色にする。 */
+/**
+ * 読み物4区分への導線。ハブ(/reading)と同じ並び。
+ *
+ * 以前は英字の小見出しつきのカードを4枚並べていて、スマホでは縦に積まれて
+ * 約290pxあった。行き先はナビと索引にもあるので、1行の文字リンクにした。
+ */
 const READING_SECTIONS = [
-  {
-    href: "/column",
-    eyebrow: "Column",
-    label: "コラム",
-    stripe: READING_ACCENT.column.bar,
-    text: READING_ACCENT.column.text,
-  },
-  {
-    href: "/modern-britain",
-    eyebrow: "Britain, Argued",
-    label: "英国のいまを論じる",
-    stripe: READING_ACCENT["modern-britain"].bar,
-    text: READING_ACCENT["modern-britain"].text,
-  },
-  {
-    href: "/history",
-    eyebrow: "A History of Britain",
-    label: "イギリスの歴史 全10章",
-    stripe: READING_ACCENT.history.bar,
-    text: READING_ACCENT.history.text,
-  },
-  {
-    href: "/british-english",
-    eyebrow: "British English",
-    label: "イギリス英語",
-    stripe: READING_ACCENT["british-english"].bar,
-    text: READING_ACCENT["british-english"].text,
-  },
+  { href: "/column", label: "コラム" },
+  { href: "/modern-britain", label: "英国のいまを論じる" },
+  { href: "/history", label: "イギリスの歴史 全10章" },
+  { href: "/british-english", label: "イギリス英語" },
 ] as const;
 
 /**
@@ -154,7 +147,7 @@ const READING_SECTIONS = [
  *
  * 描き方は「1区分1行、リンクは折り返す札」。列に分けると区分ごとの本数の差が
  * そのまま列の高さの差になり、空白の列が並ぶ。札にすると横幅を使い切るので、
- * 本数が違っても行の高さは数段に収まる。
+ * 本数が違っても行の高さは数段に収まる。スマホでは区分ごとに畳む(SiteIndexGroup)。
  *
  * 区分・リンク・ラベルはグローバルナビ(components/navbar/menu.ts)から作る。
  * 以前はここだけ手書きしていて、同じURLのラベルが21件食い違い、
@@ -163,7 +156,6 @@ const READING_SECTIONS = [
  */
 const SITE_INDEX = [
   ...MENU_SECTIONS.map((section) => ({
-    eng: section.eyebrow,
     label: section.label,
     stripe: section.accent.stripe,
     links: sectionLinks(section),
@@ -171,7 +163,6 @@ const SITE_INDEX = [
   // ナビで単独のリンクになっている「旅行プランを作る」「今週のロンドン」。
   // どの区分の札にも入らないので、トップの「使う」帯と同じ名前の行にまとめる。
   {
-    eng: "Use",
     label: "使う",
     stripe: "bg-indigo-500",
     links: LINK_SECTIONS.map(({ href, label }) => ({ href, label })),
@@ -182,10 +173,14 @@ const SITE_INDEX = [
  * 「今月」の帯に添える行事。月(ロンドン時間、1〜12)で出し分ける。
  * 会期・発売日は各ページが出典つきで持つので、ここはリンクだけ。
  * 行事のページを足したら、ここにも出す月を足す。
+ *
+ * クリスマス特集は、季節の特集の帯(SeasonFeatureBand)が出ている間は
+ * ここから外す。同じ行き先が帯と札の両方に並ぶため。
  */
+const CHRISTMAS_HUB = "/events/christmas";
 const SEASONAL_LINKS: { months: number[]; href: string; label: string }[] = [
   { months: [10, 11], href: "/events/bonfire-night", label: "ボンファイア・ナイトの花火" },
-  { months: [10, 11, 12, 1], href: "/events/christmas", label: "ロンドンのクリスマス特集" },
+  { months: [10, 11, 12, 1], href: CHRISTMAS_HUB, label: "ロンドンのクリスマス特集" },
   { months: [10, 11, 12], href: "/sightseeing/christmas-markets", label: "クリスマスマーケット" },
   { months: [11, 12], href: "/sightseeing/christmas-lights", label: "イルミネーション" },
   { months: [11, 12], href: "/sightseeing/hyde-park-winter-wonderland", label: "ウィンター・ワンダーランド" },
@@ -193,15 +188,43 @@ const SEASONAL_LINKS: { months: number[]; href: string; label: string }[] = [
   { months: [12, 1], href: "/events/new-years-day-parade", label: "元日のパレード" },
 ];
 
+/** 写真の棚に1区分で出す枚数。 */
+const RAIL_SIZE = 12;
+
+/**
+ * 棚を直近1週間の閲覧順に並べ替える(utils/rankings.ts)。
+ *
+ * 以前の並びはおすすめ度と名前の順で、いつ来ても同じ顔だった。閲覧の
+ * 多いものを先に出すと、その時期に調べられているもの(チェルシー・フラワー・
+ * ショーや衛兵交代式など)が前に来る。数えた件数が MIN_WEEKLY に届かない
+ * 週は、元の並びのままにする。
+ */
+function byWeeklyViews(items: RailItem[], topIds: string[]): RailItem[] {
+  const rank = new Map(topIds.map((id, index) => [id, index]));
+  const ranked = items
+    .filter((item) => item.id !== undefined && rank.has(item.id))
+    .sort((a, b) => (rank.get(a.id!) ?? 0) - (rank.get(b.id!) ?? 0));
+  if (ranked.length < MIN_WEEKLY) return items;
+  const rankedSlugs = new Set(ranked.map((item) => item.slug));
+  return [...ranked, ...items.filter((item) => !rankedSlugs.has(item.slug))];
+}
+
 export default async function Page() {
   const now = new Date();
+  const today = londonDate(now);
+  const month = Number(today.slice(5, 7));
+
   const [
     latestColumns,
     latestModernBritain,
     latestBritishEnglish,
     { brief: latestBrief },
-    heroSlides,
+    heroTiles,
     rails,
+    counts,
+    weeklyAttractions,
+    weeklyMuseums,
+    weeklyMusicals,
   ] = await Promise.all([
     fetchColumns(),
     fetchModernBritainEntries(),
@@ -209,25 +232,32 @@ export default async function Page() {
     // /events と同じ号を選ぶ。号は2週ほど先まで公開しているので、最新号を
     // 出すとリンク先(/events は今週号)と別の週が並んでしまう。
     fetchCurrentBriefs(),
-    fetchHeroSlides(6),
+    fetchHeroTiles(month),
     fetchHomeRails(),
+    fetchSiteCounts(),
+    fetchWeeklyTopIds("attraction", RAIL_SIZE),
+    fetchWeeklyTopIds("museum", RAIL_SIZE),
+    fetchWeeklyTopIds("musical", RAIL_SIZE),
   ]);
 
-  // ヒーローのモザイクに渡す形に均す。棚(PhotoRail)と同じ RailItem に
-  // 揃えておくと、タイルとカードで別々の props を持たずに済む。
-  const heroTiles = heroSlides.map((slide) => ({
-    slug: slide.slug,
-    href: `/sightseeing/${slide.slug}`,
-    name: slide.name,
-    engName: slide.engName,
-    image: slide.image,
-    blurb: slide.tagline,
-  }));
+  // ヒーローに出した名所は棚から外す。以前は同じ名所が冒頭と棚に同じ順で出ていた。
+  const heroSlugs = new Set(heroTiles.map((tile) => tile.slug));
+  const sights = byWeeklyViews(
+    rails.attractions.filter((item) => !heroSlugs.has(item.slug)),
+    weeklyAttractions,
+  ).slice(0, RAIL_SIZE);
+  const museums = byWeeklyViews(rails.museums, weeklyMuseums);
+  const musicals = byWeeklyViews(rails.musicals, weeklyMusicals);
+
+  const showSeasonBand = isSeasonBandVisible(today);
 
   // 今月の帯。本文を書いた月(lib/london-months)か、行事のある時期にだけ出す。
-  const month = Number(londonDate(now).slice(5, 7));
   const monthGuide = getMonthGuide(month);
-  const seasonal = SEASONAL_LINKS.filter((link) => link.months.includes(month));
+  const seasonal = SEASONAL_LINKS.filter(
+    (link) =>
+      link.months.includes(month) &&
+      !(showSeasonBand && link.href === CHRISTMAS_HUB),
+  );
   const thisMonth =
     monthGuide || seasonal.length > 0
       ? {
@@ -240,6 +270,9 @@ export default async function Page() {
 
   // 読み物は各カテゴリの新しい方から2本ずつ拾い、全体を新着順に並べ替える。
   // 1カテゴリが連投してもトップが偏らないよう、取り込みは2本までに絞る。
+  // 同じ連載は1本だけにする。連載を毎日1回ずつ出すと、5枠のうち2枠が
+  // 同じ連載の第3回と第4回になっていた。
+  const seenSeries = new Set<string>();
   const readingEntries = (
     [
       ["column", latestColumns],
@@ -247,24 +280,35 @@ export default async function Page() {
       ["british-english", latestBritishEnglish],
     ] as const
   )
-    .flatMap(([key, items]) =>
-      items.slice(0, 2).map((item) => {
+    .flatMap(([key, items]) => {
+      const picked = [];
+      for (const item of items) {
+        if (picked.length === 2) break;
+        if (item.seriesName) {
+          if (seenSeries.has(item.seriesName)) continue;
+          seenSeries.add(item.seriesName);
+        }
+        picked.push(item);
+      }
+      return picked.map((item) => {
         const cat = READING_CATEGORY[key as ReadingCategoryKey];
+        // イギリス英語は英単語を見出しにし、日本語の見出しを添える。英単語だけ
+        // (「easy peelers」)では何の話か分からず、日本語の見出し(「鹿児島生まれの
+        // みかんは…」)のほうに引きがあった。
+        const isEnglishWord = key === "british-english" && Boolean(item.engTitle);
         return {
           item,
           href: `${cat.base}/${item.slug}`,
           label: cat.label,
+          seriesLabel: item.seriesName ? `連載「${item.seriesName}」` : null,
           stripe: cat.stripe,
           badge: cat.badge,
           text: cat.text,
-          // イギリス英語は見出しより英単語のほうが引きが強い。
-          heading:
-            key === "british-english" && item.engTitle
-              ? item.engTitle
-              : item.title,
+          heading: isEnglishWord ? (item.engTitle as string) : item.title,
+          subheading: isEnglishWord ? item.title : null,
         };
-      })
-    )
+      });
+    })
     .sort(
       (a, b) =>
         publishedDateOf(b.item).getTime() - publishedDateOf(a.item).getTime(),
@@ -277,133 +321,79 @@ export default async function Page() {
     .filter((entry) => entry.href !== readingLead?.href)
     .slice(0, 4);
 
-  // ストライキ等は数日で覆るので、今週号・来週号のときだけ「注意」を出す。
-  // 古い号の注意を出し続けると誤情報になる。
-  const freshness = latestBrief
-    ? getIssueFreshness(latestBrief.weekStart, now)
-    : null;
-  // 今週号が無い週は過去号か先の週の号が来る。どちらも「今週」とは名乗らない。
-  const isThisWeek = freshness?.weeksAgo === 0;
-  const topAlert =
-    latestBrief && freshness && freshness.weeksAgo <= 0
-      ? latestBrief.items.find(
-          (item) =>
-            getKindMeta(item.kind).group === "alert" && item.severity === "high"
-        ) ?? null
-      : null;
-
   return (
     <div className="bg-background">
       {/*
-        1. ヒーロー。
+        1. 今日。天気・運行状況・為替の要約。「今日どうか」を一目で渡して送り出す。
+        以前はヒーローの下にあり、スマホでは1画面目(844px)に入らなかった。
+      */}
+      <section
+        data-home-module="live"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-muted/40 text-foreground"
+      >
+        <div className="mx-auto max-w-6xl px-4 py-2.5">
+          <LiveStrip />
+        </div>
+      </section>
+
+      {/*
+        2. ヒーロー。
         写真を文字の下敷きにするのをやめ、左に文言・右に名前つきの写真タイルを
         置く二分割にした。暗幕が要らないので写真が沈まず、写っている場所に
         そのまま入れる。判断の経緯は HeroMosaic.tsx を参照。
+        写真はその月に行く理由がある場所(fetchHeroTiles)。
       */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground">
+      <section
+        data-home-module="hero"
+        className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground"
+      >
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
           <div className="lg:col-span-5">
             <HeroIntro />
           </div>
-          {/* スマホでは写真を低めにして、検索と近道の下に続く
-              「今日」の帯(天気・運行・為替)を1画面目に近づける。 */}
+          {/* スマホでは写真を低めにして、その下の季節の特集と今週号を
+              1〜2画面目に近づける。 */}
           <div className="h-[220px] sm:h-[420px] lg:col-span-7 lg:h-[500px]">
             <HeroMosaic items={heroTiles} />
           </div>
         </div>
       </section>
 
-      {/* 天気・運行状況・為替の要約。「今日どうか」を一目で渡して送り出すだけ。 */}
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-muted/40 text-foreground">
-        <div className="mx-auto max-w-6xl px-4 py-3">
-          <LiveStrip />
-        </div>
-      </section>
+      {/* 3. 季節の特集。10〜1月はクリスマス特集。シーズン外は何も出さない。 */}
+      {showSeasonBand && (
+        <section
+          data-home-module="season"
+          className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-background text-foreground"
+        >
+          <div className="mx-auto max-w-6xl px-4 pt-10 sm:pt-14">
+            <SeasonFeatureBand today={today} />
+          </div>
+        </section>
+      )}
 
       {/*
-        3. 使う: 旅程を組む / 今週のロンドン。
+        4. 使う: 旅程を組む / 今週のロンドン。
         このサイトで唯一「読む」ではなく「する」ものと、唯一毎週変わるもの。
-        どちらも「見出し+説明+ボタン」の同じ形なので、縦に2帯に分けず
-        横に2枚並べている。今週号が無い週は旅程だけを全幅で出す。
+        2枚を横に並べる。今週号が無い週は旅程だけを全幅で出す。
       */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen border-b bg-background text-foreground">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <Reveal
+        <div
+          className={`mx-auto max-w-6xl px-4 pb-12 sm:pb-16 ${
+            showSeasonBand ? "pt-6 sm:pt-8" : "pt-12 sm:pt-16"
+          }`}
+        >
+          <div
             className={`grid gap-6 ${latestBrief ? "lg:grid-cols-2 lg:gap-8" : ""}`}
           >
-            <PlanPromo />
-
+            <div data-home-module="plan" className="h-full">
+              <PlanPromo />
+            </div>
             {latestBrief && (
-              <div className="flex h-full flex-col rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
-                <p className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-sky-700 dark:text-sky-400">
-                  <span className="relative flex h-2 w-2 shrink-0">
-                    {/* 今週号のときだけ点滅させる。過去号で光らせると、
-                        古い情報を最新のものとして押し出すことになる。 */}
-                    {!freshness?.isPast && (
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-500 opacity-75" />
-                    )}
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-600" />
-                  </span>
-                  {isThisWeek
-                    ? "This Week ・ 今週のロンドン"
-                    : "London Weekly ・ ロンドン週報"}
-                </p>
-                <h2 className="mt-3 break-words text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
-                  {latestBrief.title}
-                </h2>
-                <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
-                  {formatWeekRange(latestBrief.weekStart, latestBrief.weekEnd)}
-                  {freshness && !isThisWeek && (
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-bold">
-                      {freshness.label}の号
-                    </span>
-                  )}
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                  {latestBrief.headline}
-                </p>
-
-                {/* 号の項目一覧はトップから外したが、深刻な支障だけは1行残す。
-                    ストライキや長期運休は、記事を開かせる前に伝わらないと
-                    意味がない。今週号・来週号のときしか出ない(topAlert)。 */}
-                {topAlert && (
-                  <Link
-                    href="/events"
-                    className="mt-5 flex min-w-0 items-start gap-3 rounded-xl bg-red-50/80 p-3.5 transition-colors hover:bg-red-100/70 dark:bg-red-950/30 dark:hover:bg-red-950/50"
-                  >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-600/10">
-                      <TriangleAlert className="h-4 w-4 text-red-600" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-red-400">
-                        {freshness?.label}の注意
-                      </span>
-                      <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug">
-                        {topAlert.title}
-                      </span>
-                    </span>
-                  </Link>
-                )}
-
-                <div className="mt-6 pt-2 sm:mt-auto">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="bg-sky-700 text-white hover:bg-sky-800"
-                  >
-                    <Link href="/events">
-                      {isThisWeek
-                        ? "今週号を読む"
-                        : freshness?.isPast
-                          ? "最新号を読む"
-                          : `${freshness?.label}の号を読む`}{" "}
-                      →
-                    </Link>
-                  </Button>
-                </div>
+              <div data-home-module="weekly" className="h-full">
+                <WeeklyCard brief={latestBrief} now={now} />
               </div>
             )}
-          </Reveal>
+          </div>
 
           {/*
             今月。「◯月のロンドン」(天気・服装・祝日・催し)と、その時期の
@@ -412,81 +402,77 @@ export default async function Page() {
             時期にだけ出る(thisMonth を参照)。
           */}
           {thisMonth && (
-            <Reveal className="mt-6">
-              <div className="flex flex-col gap-4 rounded-2xl border bg-card p-5 shadow-sm sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                    今月のロンドン
-                  </p>
-                  {thisMonth.guide ? (
-                    <>
-                      <h2 className="mt-1 text-xl font-bold tracking-tight">
-                        <Link
-                          href={thisMonth.guideHref}
-                          className="underline-offset-4 hover:underline"
-                        >
-                          {thisMonth.month}月のロンドン
-                        </Link>
-                      </h2>
-                      <p className="mt-1.5 line-clamp-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                        {thisMonth.guide.lead}
-                      </p>
-                    </>
-                  ) : (
+            <div
+              data-home-module="month"
+              className="mt-6 flex flex-col gap-4 rounded-2xl border bg-card p-5 shadow-sm sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8"
+            >
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                  今月のロンドン
+                </p>
+                {thisMonth.guide ? (
+                  <>
                     <h2 className="mt-1 text-xl font-bold tracking-tight">
-                      {thisMonth.month}月の行事
+                      <Link
+                        href={thisMonth.guideHref}
+                        className="underline-offset-4 hover:underline"
+                      >
+                        {thisMonth.month}月のロンドン
+                      </Link>
                     </h2>
-                  )}
-                </div>
-                {thisMonth.links.length > 0 && (
-                  <ul className="flex shrink-0 flex-wrap gap-2 lg:max-w-md lg:justify-end">
-                    {thisMonth.links.map((link) => (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          className="inline-block rounded-full border border-border px-3 py-1.5 text-sm transition hover:border-foreground/40"
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                    {/* 導入は月ごとの短い teaser。以前は2〜3文の lead を2行で
+                        切っていて、「東京の1…」のように数字の途中で終わっていた。 */}
+                    <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                      {thisMonth.guide.teaser}
+                    </p>
+                  </>
+                ) : (
+                  <h2 className="mt-1 text-xl font-bold tracking-tight">
+                    {thisMonth.month}月の行事
+                  </h2>
                 )}
               </div>
-            </Reveal>
+              {thisMonth.links.length > 0 && (
+                <ul className="flex shrink-0 flex-wrap gap-2 lg:max-w-md lg:justify-end">
+                  {thisMonth.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="inline-block rounded-full border border-border px-3 py-1.5 text-sm transition hover:border-foreground/40"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
         </div>
       </section>
 
       {/*
-        4. 英国を読む。
+        5. 英国を読む。
         旧トップでは10ブロック中の9番目にあり、ほぼ誰にも届いていなかった。
         自分たちが書いたものがこのサイトの本体なので、名所の棚より先に置く。
       */}
       <section
         id="reading"
+        data-home-module="reading"
         className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b bg-muted/30 text-foreground"
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-foreground/15 pb-5">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-violet-600 dark:text-violet-400">
-                Reading Britain
-              </p>
-              <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
-                英国を読む
-              </h2>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-                ガイドブックが終わるところから、イギリスは面白くなる。
-              </p>
-            </div>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/reading">読み物トップへ →</Link>
-            </Button>
+          <div className="border-b border-foreground/15 pb-5">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              英国を読む
+            </h2>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+              ガイドブックが終わるところから、イギリスは面白くなる。
+            </p>
           </div>
 
           {readingLead ? (
-            <Reveal className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
               {/* 主役1本。写真を大きく取り、見出しは写真の下に置く。
                   写真に重ねると長い日本語見出しが2〜3行になって写真を潰す。 */}
               <Link
@@ -497,7 +483,11 @@ export default async function Page() {
                   {readingLead.item.image && (
                     <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-muted">
                       <img
-                        {...responsiveImage(readingLead.item.image, "(min-width: 1024px) 640px, 100vw")}
+                        {...responsiveImage(
+                          readingLead.item.image,
+                          "(min-width: 1024px) 640px, 100vw",
+                          960,
+                        )}
                         alt={readingLead.item.title}
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                         loading="lazy"
@@ -505,16 +495,26 @@ export default async function Page() {
                       />
                     </div>
                   )}
-                  <p className="mt-4 flex items-center gap-2">
+                  <p className="mt-4 flex flex-wrap items-center gap-2">
                     <span
                       className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${readingLead.badge}`}
                     >
                       {readingLead.label}
                     </span>
+                    {readingLead.seriesLabel && (
+                      <span className="text-xs font-semibold text-muted-foreground">
+                        {readingLead.seriesLabel}
+                      </span>
+                    )}
                   </p>
                   <h3 className="mt-2.5 break-words text-xl font-bold leading-snug tracking-tight decoration-1 underline-offset-4 group-hover:underline sm:text-2xl">
                     {readingLead.heading}
                   </h3>
+                  {readingLead.subheading && (
+                    <p className="mt-1.5 text-base font-semibold leading-snug">
+                      {readingLead.subheading}
+                    </p>
+                  )}
                   {readingLead.item.summary && (
                     <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                       {stripInlineMarkdown(readingLead.item.summary)}
@@ -552,47 +552,56 @@ export default async function Page() {
                       <span className="min-w-0 flex-1">
                         <span className={`text-xs font-bold ${entry.text}`}>
                           {entry.label}
+                          {entry.seriesLabel && (
+                            <span className="font-semibold text-muted-foreground">
+                              {" "}· {entry.seriesLabel}
+                            </span>
+                          )}
                         </span>
                         <span className="mt-0.5 block line-clamp-2 text-sm font-semibold leading-snug decoration-1 underline-offset-2 group-hover:underline">
                           {entry.heading}
                         </span>
+                        {entry.subheading && (
+                          <span className="mt-0.5 block line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            {entry.subheading}
+                          </span>
+                        )}
                       </span>
                     </Link>
                   </li>
                 ))}
               </ul>
-            </Reveal>
+            </div>
           ) : (
             <p className="mt-8 text-sm text-muted-foreground">
               近日公開予定です。
             </p>
           )}
 
-          {/* 読み物4区分。ここだけは索引を待たずに出す。
-              連載ごとに読者が違い、トップまで戻らせたくないため。 */}
-          <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {READING_SECTIONS.map((sec) => (
-              <RevealItem key={sec.href}>
-                <Link href={sec.href} className="group block h-full">
-                  <div className="flex h-full items-center gap-3 rounded-lg border bg-card px-4 py-3 transition hover:-translate-y-0.5 hover:shadow-md">
-                    <span
-                      className={`h-8 w-1 shrink-0 rounded-full ${sec.stripe}`}
-                    />
-                    <span className="min-w-0">
-                      <span
-                        className={`block text-[10px] font-bold uppercase tracking-[0.15em] ${sec.text}`}
-                      >
-                        {sec.eyebrow}
-                      </span>
-                      <span className="mt-0.5 block truncate text-sm font-semibold">
-                        {sec.label}
-                      </span>
-                    </span>
-                  </div>
+          {/* 読み物4区分と読み物のトップ。連載ごとに読者が違うので、
+              ここだけは索引を待たずに出す。 */}
+          <nav aria-label="読み物の区分" className="mt-8 border-t border-foreground/10 pt-5">
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+              {READING_SECTIONS.map((sec) => (
+                <li key={sec.href}>
+                  <Link
+                    href={sec.href}
+                    className="inline-block py-1 underline decoration-border underline-offset-4 transition hover:decoration-current"
+                  >
+                    {sec.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/reading"
+                  className="inline-block py-1 underline decoration-border underline-offset-4 transition hover:decoration-current"
+                >
+                  読み物トップへ →
                 </Link>
-              </RevealItem>
-            ))}
-          </RevealGroup>
+              </li>
+            </ul>
+          </nav>
         </div>
       </section>
 
@@ -601,22 +610,20 @@ export default async function Page() {
       </div>
 
       {/*
-        5. 見る・する。
+        6. 見る・する。
         旧トップの「観光」「体験する」2セクション(カード計20枚超・約5画面)の
-        置き換え。アイコン付きカードで category を説明する代わりに、
-        DBにある写真と固有名詞を横スクロールの棚で見せる。
-        件数は3枚から各10枚以上に増え、縦は半分以下になった。
+        置き換え。DBにある写真と固有名詞を横スクロールの棚で見せる。
+        以前は棚を5本縦に積んでいて、スマホで3.2画面あった。区分の切り替えで
+        2本にまとめ(RailTabs)、並びは直近1週間の閲覧順にした。
       */}
       <section
         id="explore"
+        data-home-module="rails"
         className="relative left-1/2 right-1/2 -mx-[50vw] w-screen scroll-mt-8 border-b border-t bg-background text-foreground"
       >
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <div className="max-w-2xl border-b border-foreground/15 pb-5">
-            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
-              See &amp; Do
-            </p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
               ロンドンで見る・する
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -626,134 +633,146 @@ export default async function Page() {
             </p>
           </div>
 
-          <RevealGroup className="mt-10 space-y-12 sm:space-y-14" stagger={0.1}>
-            <RevealItem>
-              <PhotoRail
-                eyebrow="Must-See"
-                title="見逃せない名所"
-                description="初めての旅行で押さえておきたい定番。混雑する時間と回る順番も添えています。"
-                href="/sightseeing/must-see"
-                moreLabel="名所をすべて見る"
-                items={rails.attractions}
-                accentClassName="bg-red-500"
-              />
-            </RevealItem>
-            <RevealItem>
-              <PhotoRail
-                eyebrow="Museums"
-                title="無料で入れる名門美術館"
-                description="大英博物館もナショナル・ギャラリーも常設展は無料。何を見るべきかを作品単位で。"
-                href="/museums/best-10-museums"
-                moreLabel="美術館ナビへ"
-                items={rails.museums}
-                accentClassName="bg-red-500"
-              />
-            </RevealItem>
-            <RevealItem>
-              <PhotoRail
-                eyebrow="West End"
-                title="ウエストエンドのミュージカル"
-                description="あらすじ、上演時間、劇場の座席、当日券の取り方まで。英語が不安でも観られる演目も。"
-                href="/musicals"
-                moreLabel="ミュージカル一覧へ"
-                items={rails.musicals}
-                accentClassName="bg-amber-500"
-              />
-            </RevealItem>
-            <RevealItem>
-              <PhotoRail
-                eyebrow="Eat"
-                title="イギリスで食べる"
-                description="まずいと言われがちな料理を、実際にうまい店の名前つきで。頼み方のコツも。"
-                href="/restaurants"
-                moreLabel="レストランガイドへ"
-                items={rails.dishes}
-                accentClassName="bg-amber-500"
-              />
-            </RevealItem>
-            <RevealItem>
-              <PhotoRail
-                eyebrow="Souvenirs"
-                title="買って帰る"
-                description="「紅茶」ではなく銘柄と商品名で。どこで買えるか、機内持ち込みか預けかまで書いています。"
-                href="/souvenirs"
-                moreLabel="お土産をすべて見る"
-                items={rails.souvenirs}
-                accentClassName="bg-amber-500"
-              />
-            </RevealItem>
-          </RevealGroup>
+          <div className="mt-10 space-y-12 sm:space-y-14">
+            <RailTabs
+              title="名所と美術館、舞台"
+              tabs={[
+                {
+                  key: "sights",
+                  label: "名所",
+                  description:
+                    "初めての旅行で押さえておきたい定番。混雑する時間と回る順番も添えています。",
+                  href: "/sightseeing/must-see",
+                  moreLabel: "名所をすべて見る",
+                  items: sights,
+                },
+                {
+                  key: "museums",
+                  label: "美術館",
+                  description:
+                    "大英博物館もナショナル・ギャラリーも常設展は無料。何を見るべきかを作品単位で。",
+                  href: "/museums/best-10-museums",
+                  moreLabel: "美術館ナビへ",
+                  items: museums,
+                },
+                {
+                  key: "musicals",
+                  label: "ミュージカル",
+                  description:
+                    "あらすじ、上演時間、劇場の座席、当日券の取り方まで。英語が不安でも観られる演目も。",
+                  href: "/musicals",
+                  moreLabel: "ミュージカル一覧へ",
+                  items: musicals,
+                },
+              ]}
+            />
+            <RailTabs
+              title="食べるものと、お土産"
+              tabs={[
+                {
+                  key: "eat",
+                  label: "食べる",
+                  description:
+                    "まずいと言われがちな料理を、実際にうまい店の名前つきで。頼み方のコツも。",
+                  href: "/restaurants",
+                  moreLabel: "レストランガイドへ",
+                  items: rails.dishes,
+                },
+                {
+                  key: "souvenirs",
+                  label: "お土産",
+                  description:
+                    "「紅茶」ではなく銘柄と商品名で。どこで買えるか、機内持ち込みか預けかまで書いています。",
+                  href: "/souvenirs",
+                  moreLabel: "お土産をすべて見る",
+                  items: rails.souvenirs,
+                },
+              ]}
+            />
+          </div>
         </div>
       </section>
 
       {/*
-        6. サイト索引 + 概要。
+        7. サイト索引 + このサイトの書き方。
         旧トップは同じ導線をヒーロー直下のハブ(カード9枚)と各セクション末尾の
         ボタンで二度出していた。ここ1箇所に集約し、途中では繰り返さない。
       */}
       <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-muted/40 text-foreground">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
-            Index
-          </p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
-            このサイトにあるもの
-          </h2>
-
-          <div className="mt-8 border-t border-border/70">
-            {SITE_INDEX.map((group) => (
-              <div
-                key={group.eng}
-                className="grid gap-x-8 gap-y-3 border-b border-border/70 py-5 sm:grid-cols-[10rem_minmax(0,1fr)] sm:py-6"
-              >
-                <div className="min-w-0">
-                  <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                    <span
-                      className={`h-3 w-0.5 shrink-0 rounded-full ${group.stripe}`}
-                    />
-                    {group.eng}
-                  </p>
-                  <p className="mt-1.5 text-sm font-bold">{group.label}</p>
-                </div>
-                <ul className="flex flex-wrap content-start gap-2">
-                  {group.links.map((link) => (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className="inline-block rounded-full border border-border bg-background px-3 py-1.5 text-xs leading-none text-muted-foreground transition hover:border-foreground/30 hover:bg-card hover:text-foreground"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <div data-home-module="index">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              このサイトにあるもの
+            </h2>
+            <div className="mt-6 border-t border-border/70 sm:mt-8">
+              {SITE_INDEX.map((group) => (
+                <SiteIndexGroup
+                  key={group.label}
+                  label={group.label}
+                  stripe={group.stripe}
+                  links={group.links}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* 検索から来た読者向けの説明。導線を塞がないよう索引の後に置く。 */}
-          <div className="mt-14 max-w-3xl border-t pt-8">
-            <h2 className="text-base font-semibold">
-              ロンドン観光をもっと楽しむためのガイド
+          {/*
+            このサイトの書き方。以前ここにあった「ロンドン観光をもっと楽しむための
+            ガイド」は冒頭の説明の言い換えで、何も足していなかった。代わりに、
+            このサイトの一番の強み(確かめて書き、いつ調べたかを出す)を、
+            実際にしていることの範囲で書く。すべての料金に確認日が付いている
+            わけではないので、そうとは書かない。掲載数はDBから数える。
+          */}
+          <div data-home-module="policy" className="mt-14 max-w-3xl border-t pt-8">
+            <h2 className="text-xl font-bold tracking-tight">
+              このサイトの書き方
             </h2>
-            <div className="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground">
-              <p>
-                ジャスト・ロンドンは、ロンドンを訪れる日本人旅行者のための観光ガイドサイトです。
-                定番の観光スポットから、美術館、ミュージカル、季節ごとのイベントまで、
-                初めての方にも分かりやすく情報をまとめています。
-              </p>
-              <p>
-                地下鉄やバスなどの移動手段、無料で楽しめる観光地、
-                子ども連れや一人旅におすすめのスポットなど、
-                旅行計画に役立つ実用的な情報も充実しています。
-                あわせて、ビザ・住まい探し・労働問題など、
-                ロンドンで暮らし働く人のための実務情報も扱っています。
-              </p>
-            </div>
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground marker:text-muted-foreground/60">
+              <li>
+                運休・催し・年末年始の営業は公式の発表で確かめ、いつ調べたかを添えています(今週のロンドン、クリスマス特集など)。
+              </li>
+              <li>
+                運賃・入場料・最低賃金などの改定は「今月変わったロンドン」に月ごとにまとめ、サイト内の数字もそのとき直しています。
+              </li>
+              <li>
+                間違いや古くなった情報に気づいたら、お問い合わせから知らせてください。確かめて直します。
+              </li>
+            </ul>
+            <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { label: "観光スポット", value: counts.attractions, unit: "か所" },
+                { label: "美術館・博物館", value: counts.museums, unit: "館" },
+                { label: "ミュージカル", value: counts.musicals, unit: "作品" },
+                { label: "読み物", value: counts.reading, unit: "本" },
+              ].map((stat) => (
+                <div key={stat.label} className="rounded-xl bg-background px-4 py-3">
+                  <dt className="text-xs text-muted-foreground">{stat.label}</dt>
+                  <dd className="mt-0.5 text-xl font-bold">
+                    {stat.value}
+                    <span className="ml-0.5 text-sm font-semibold">{stat.unit}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+              <Link
+                href="/about#editorial"
+                className="underline decoration-border underline-offset-4 hover:decoration-current"
+              >
+                編集方針(サイト概要)
+              </Link>
+              <Link
+                href="/contact"
+                className="underline decoration-border underline-offset-4 hover:decoration-current"
+              >
+                お問い合わせ
+              </Link>
+            </p>
           </div>
         </div>
       </section>
 
+      <HomeClickTracker />
       {/* トップは (with-ads) の外にあるので、AdSense の読み込みはここで行う。 */}
       <AdSenseLoader />
     </div>

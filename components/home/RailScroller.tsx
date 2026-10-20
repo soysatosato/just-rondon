@@ -38,9 +38,16 @@ export default function RailScroller({
     update();
     el.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
+    // 切り替え式の棚(RailTabs)では、隠れている棚は幅0で測られて「端まで来た」
+    // ことになり、表示されても次へのボタンが出なかった。表示されて幅が
+    // 変わったときにも測り直す。
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
+    observer?.observe(el);
     return () => {
       el.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
+      observer?.disconnect();
     };
   }, [update]);
 

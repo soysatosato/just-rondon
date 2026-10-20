@@ -18,13 +18,20 @@ import { responsiveImage } from "@/lib/wikimedia-image";
  * 画像は responsiveImage で幅つきの候補を渡す(Wikimedia のサムネイル)。
  * 1枚目はトップの最大要素なので eager + fetchPriority で先に取りに行かせる。
  * 以前は全タイルに1280px画像(1枚200〜620KB)を配っていて、低速回線では
- * この1枚目の表示に14秒かかっていた。
+ * この1枚目の表示に14秒かかっていた。幅つきにしたあとも、3倍密度のスマホは
+ * 約360×130pxの帯に1280px・634KBを選んでいた(2026-10-19、LCP 10.6秒)。
+ * タイルの大きさに対して500pxで十分なので、候補をそこで打ち切る。
+ *
+ * タイルのリンクは先読みしない。写真6枚ぶんのページを、押すかどうか
+ * 分からないうちに読み込むことになる(トップ全体で105ページ・3.4MBだった)。
  */
 
 /** 主役タイルの表示幅。モバイルは全幅、sm 以上は格子3列のうち2列。 */
 const LEAD_SIZES = "(min-width: 1024px) 440px, (min-width: 640px) 66vw, 100vw";
 /** 小さいタイル。モバイルは2列、sm 以上は3列。 */
 const TILE_SIZES = "(min-width: 1024px) 220px, (min-width: 640px) 33vw, 50vw";
+/** 候補の上限(px)。主役も小さいタイルも、枠の大きさにはこれで足りる。 */
+const MAX_IMAGE_WIDTH = 500;
 export default function HeroMosaic({ items }: { items: RailItem[] }) {
   if (items.length === 0) return null;
 
@@ -80,10 +87,15 @@ function Tile({
   return (
     <Link
       href={item.href}
+      prefetch={false}
       className={`group relative min-h-0 overflow-hidden rounded-lg bg-slate-800 ${className}`}
     >
       <img
-        {...responsiveImage(item.image, isLead ? LEAD_SIZES : TILE_SIZES)}
+        {...responsiveImage(
+          item.image,
+          isLead ? LEAD_SIZES : TILE_SIZES,
+          MAX_IMAGE_WIDTH,
+        )}
         alt={item.name}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
@@ -96,12 +108,9 @@ function Tile({
       <div
         className={`absolute inset-x-0 bottom-0 ${isLead ? "p-4 sm:p-5" : "p-2.5 sm:p-3"}`}
       >
-        {item.engName && (
-          <p
-            className={`truncate font-semibold uppercase tracking-[0.18em] text-white/60 ${
-              isLead ? "text-[10px]" : "text-[9px]"
-            }`}
-          >
+        {/* 英語名は主役のタイルだけ。小さいタイルの9pxでは、写真によって読めなかった。 */}
+        {isLead && item.engName && (
+          <p className="truncate text-[11px] font-semibold uppercase tracking-[0.16em] text-white/75">
             {item.engName}
           </p>
         )}

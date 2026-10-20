@@ -127,13 +127,29 @@ export function resizedImageUrl(url: string, width: number): string {
  * 繰り返し出る組み方は IMAGE_SIZES に置いてある。
  *
  * Wikimedia 以外(Supabase のポスターなど)は src だけを返す。
+ *
+ * maxWidth は候補の上限。小さな枠でも、3倍密度のスマホは sizes の3倍の幅を
+ * 選ぶ(約360px幅の帯に1280px・634KBを取っていた)。枠に対して十分な幅で
+ * 打ち切ると、見た目はほぼ変わらずに転送量が数分の1になる。
  */
 export function responsiveImage(
   url: string,
   sizes: string,
+  maxWidth?: number,
 ): { src: string; srcSet?: string; sizes?: string } {
   const parsed = parse(url);
   if (!parsed) return { src: url };
+
+  if (maxWidth !== undefined && maxWidth < parsed.maxWidth) {
+    const capped: number[] = SRCSET_WIDTHS.filter((w) => w <= maxWidth);
+    if (capped.length === 0) capped.push(SRCSET_WIDTHS[0]);
+    const largest = capped[capped.length - 1];
+    return {
+      srcSet: capped.map((w) => `${parsed.at(w)} ${w}w`).join(", "),
+      sizes,
+      src: parsed.at(largest),
+    };
+  }
 
   const widths: number[] = SRCSET_WIDTHS.filter((w) => w < parsed.maxWidth);
   // 元のURLの幅(既に配られて実在が分かっているサムネイル)を最大の候補にする。

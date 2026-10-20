@@ -15,6 +15,11 @@ export type MonthGuide = {
   month: number;
   /** h1 の下に出す2〜3文。その月を一言で言うと何か。 */
   lead: string;
+  /**
+   * トップの「今月のロンドン」に出す1〜2文。lead を縮めたもので、新しい事実は足さない。
+   * トップは2行で切っていたため、lead が「東京の1…」のように数字の途中で切れていた。
+   */
+  teaser: string;
   /** meta description。全角120字以内。数字を入れて、他の月と書き分ける。 */
   description: string;
   /** 平年値の表の下に出す、数字の読み方。段落ごとに1要素。 */

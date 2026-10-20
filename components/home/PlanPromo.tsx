@@ -18,16 +18,16 @@ import { usePlanCount } from "@/components/attractions/plan/plan-store";
  * 3つ目の写真グリッドとしてしか見えていなかった。タイルはやめて、
  * 何ができるかを文章で言い切り、押す先は /plan の1本に絞っている。
  * 選んだ件数だけは引き継ぐので、途中まで組んだ人にはその数字が出る。
+ *
+ * 見出しの上の英字(TRIP PLANNER)は外した。すぐ下の日本語の見出しの
+ * 言い換えで、トップには同じ形の英字の小見出しが21個並んでいた。
  */
 export default function PlanPromo() {
   const count = usePlanCount();
 
   return (
     <div className="flex h-full flex-col rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
-      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-400">
-        Trip Planner
-      </p>
-      <h2 className="mt-3 text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+      <h2 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
         行きたい場所を選ぶだけで、
         <br className="hidden sm:block" />
         旅程になる
@@ -41,7 +41,7 @@ export default function PlanPromo() {
         £100を超えます。詰め込みすぎている日には警告が出るので、
         削る判断が現地ではなく出発前にできます。
       </p>
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         ログインは要りません。順路は地図に出て、作ったプランはURL1本で
         同行者に送れます。
       </p>
