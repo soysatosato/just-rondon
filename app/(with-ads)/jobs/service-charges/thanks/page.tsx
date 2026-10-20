@@ -56,7 +56,7 @@ const NEXT_STEPS = [
   },
   {
     title: "期限を確認して、Acasに連絡する",
-    body: "未払いチップの申立ては12か月以内、ポリシーや記録の不開示は3か月以内。審判所に申し立てる前に Acas の Early Conciliation を経ることが原則として必須です。相談は無料で、雇用主に連絡が行くこともありません。",
+    body: "未払いチップの申立ては12か月以内、ポリシーや記録の不開示は6か月以内（2026年9月30日以前の不開示は3か月以内）。審判所に申し立てる前に Acas の Early Conciliation を経ることが原則として必須です。相談は無料で、雇用主に連絡が行くこともありません。",
     href: "https://www.acas.org.uk/tips-and-service-charges",
     linkLabel: "Acas に相談する",
     external: true,

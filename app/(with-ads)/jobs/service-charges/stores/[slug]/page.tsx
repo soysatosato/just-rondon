@@ -209,7 +209,7 @@ export default async function StorePage({ params }: Props) {
                 未払いの申立ては12か月以内
               </dt>
               <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                起点は「支払われるべきだった日」なので、辞めたあとでも請求できます。ポリシーや記録が開示されない場合は3か月以内です。
+                起点は「支払われるべきだった日」なので、辞めたあとでも請求できます。ポリシーや記録が開示されない場合は6か月以内です（2026年9月30日以前に起きた不開示は3か月以内）。
               </dd>
             </div>
           </dl>

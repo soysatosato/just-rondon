@@ -31,7 +31,7 @@ In my case, roughly eight months passed between first raising the issue and judg
       body: `| Stage | What you do | Deadline |
 |---|---|---|
 | 1 | Raise it at work and leave a record | — |
-| 2 | Notify Acas Early Conciliation | Start within **3 months less 1 day** of the issue arising |
+| 2 | Notify Acas Early Conciliation | Start within **6 months less 1 day** of the issue arising (3 months less 1 day if it arose on or before 30 September 2026) |
 | 3 | Deal with the conciliator | — |
 | 4 | Certificate issued | Issued if no resolution |
 | 5 | **File the ET1** | **Within the time remaining after the certificate.** File immediately |
@@ -45,7 +45,7 @@ In my case, roughly eight months passed between first raising the issue and judg
 
 **Three deadlines deserve particular attention.**
 
-1. **The deadline for notifying Acas.** Three months less one day from when the issue arose. Miss it and you generally cannot claim
+1. **The deadline for notifying Acas.** Six months less one day from when the issue arose. Miss it and you generally cannot claim. The limit went up from three months on 1 October 2026; anything that arose before then is still subject to three months less one day, which is what applied when I made my claim
 2. **The ET1 deadline.** File as soon as the certificate is issued — do not wait
 3. **The deadline for sending to the tribunal.** It is **a separate deadline** from sending to the respondent, and easy to miss
 

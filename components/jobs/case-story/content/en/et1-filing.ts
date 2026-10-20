@@ -28,7 +28,9 @@ This chapter sets out how I organised each section when I actually filed.`,
       subtitle: "Miss this and it is over, however good your evidence",
       body: `The thing to watch most carefully on an ET1 is the **time limit**.
 
-A claim for unpaid wages must generally be brought within **three months less one day** of the date the problem arose. The period spent in Acas Early Conciliation is excluded from that calculation, and the remaining time starts running once the certificate is issued.
+A claim for unpaid wages must generally be brought within **six months less one day** of the date the wages with the deduction were paid — or, where deductions continue, the last of those payments. The period spent in Acas Early Conciliation is excluded from that calculation, and the remaining time starts running once the certificate is issued.
+
+The limit went up from three months to six on 1 October 2026. For wages paid before then, it is still **three months less one day**. My own claim predates the change, so I was working to three months.
 
 The arithmetic is slightly fiddly, so in practice the safe way to think about it is:
 

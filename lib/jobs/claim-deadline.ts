@@ -6,10 +6,17 @@
  * 相談を受け付ける前に読者自身が日付を知っている状態にしておく。
  *
  * 期限は請求の根拠によって2つある(サービスチャージ・ガイドの本文と同じ):
- *  - 未払い賃金(unlawful deduction)として請求する: 3か月−1日
- *  - Tipping Act にもとづく不公正な分配: 12か月
+ *  - 未払い賃金(unlawful deduction、1996年法 s.23)として請求する:
+ *    6か月−1日。ただし天引きされた給与の支払日(続いているなら最後の
+ *    支払日)が2026年9月30日以前なら、従来どおり3か月−1日。
+ *  - Tipping Act にもとづく不公正な分配(s.27K): 12か月(変わっていない)
  * どちらで申し立てるかは事案次第で、読者が自分で決めるのは難しい。
  * 短いほうに間に合わせておけば両方とも守れるので、そちらを主に出す。
+ *
+ * 6か月への延長は Employment Rights Act 2025 の s.152・Schedule 12 で、
+ * SI 2026/954 が2026年10月1日に施行した。同 reg.4 により、基準日(s.23 は
+ * 天引きされた給与の支払日)が10月1日より前の事案には延長が及ばない。
+ * 2026-10-20 に legislation.gov.uk の条文と SI で確かめた。
  *
  * 日付は "YYYY-MM-DD" の文字列のまま扱う。Date に時刻を持たせると、
  * ブラウザのタイムゾーン次第で1日ずれる。
@@ -22,6 +29,17 @@ export const ACAS_EARLY_CONCILIATION_URL =
 
 /** 返信の目安(1週間)より余裕が無ければ、返信を待たずに動いてもらう。 */
 const URGENT_DAYS = 14;
+
+/**
+ * 未払い賃金の期限が6か月になる基準日。この日以降に支払われた給与からの
+ * 天引きは6か月−1日、それより前は3か月−1日(SI 2026/954 reg.4)。
+ */
+export const SIX_MONTH_LIMIT_FROM = "2026-10-01";
+
+/** 未払い賃金として請求するときの期限の月数。 */
+export function deductionLimitMonths(lastPaidOn: string): 3 | 6 {
+  return lastPaidOn >= SIX_MONTH_LIMIT_FROM ? 6 : 3;
+}
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -84,7 +102,7 @@ export type DeadlineAdvice = {
 export const GENERIC_DEADLINE_ADVICE: DeadlineAdvice = {
   tone: "ok",
   headline: "期限は、最後に給与を受け取った日から数えます",
-  body: "未払い賃金として請求する場合、Acasへの連絡は最後の給与日から3か月−1日以内です（Tipping Actにもとづく請求なら12か月以内）。どちらになるかは事案によるので、早いほうに間に合わせてください。",
+  body: "未払い賃金として請求する場合、Acasへの連絡は最後の給与日から6か月−1日以内です（その給与日が2026年9月30日以前なら3か月−1日。Tipping Actにもとづく請求なら12か月以内）。どちらになるかは事案によるので、早いほうに間に合わせてください。",
 };
 
 /**
@@ -111,7 +129,9 @@ export function deadlineAdvice(
   const now = parseDate(today);
   if (!start || !now || lastPaidOn > today) return null;
 
-  const short = toIso(periodEnd(start, 3));
+  const months = deductionLimitMonths(lastPaidOn);
+  const shortLabel = `${months}か月−1日`;
+  const short = toIso(periodEnd(start, months));
   const long = toIso(periodEnd(start, 12));
   const daysLeft = Math.round(
     (parseDate(short)!.getTime() - now.getTime()) / DAY_MS,
@@ -121,19 +141,25 @@ export function deadlineAdvice(
     if (long >= today) {
       return {
         tone: "past",
-        headline: `3か月−1日の期限（${formatJaDate(short)}）は過ぎています`,
+        headline: `${shortLabel}の期限（${formatJaDate(short)}）は過ぎています`,
         body: `Tipping Actにもとづく請求であれば、${formatJaDate(long)}まで間に合う可能性があります。返信を待たずに、すぐAcasに連絡してください。`,
       };
     }
     return {
       tone: "past",
       headline: "どちらの期限も過ぎている可能性があります",
-      body: `3か月−1日の期限は${formatJaDate(short)}、Tipping Actにもとづく12か月の期限は${formatJaDate(long)}でした。例外が認められることもあるので、まずAcasに相談してください。`,
+      body: `${shortLabel}の期限は${formatJaDate(short)}、Tipping Actにもとづく12か月の期限は${formatJaDate(long)}でした。例外が認められることもあるので、まずAcasに相談してください。`,
     };
   }
 
   const remaining = daysLeft === 0 ? "今日まで" : `あと${daysLeft}日`;
-  const note = `未払い賃金として請求する場合の期限です。Tipping Actにもとづく請求なら${formatJaDate(long)}までですが、どちらになるかは事案によるので、早いほうに間に合わせてください。`;
+  // 3か月になるのは、旧ルールの給与日だと読者に分かるように理由を添える。
+  // 黙って3か月を出すと、6か月と書いてある他のページと食い違って見える。
+  const basis =
+    months === 6
+      ? "未払い賃金として請求する場合の期限（6か月−1日）です。"
+      : "未払い賃金として請求する場合の期限です。最後の給与日が2026年9月30日以前なので、延長前の3か月−1日で数えています。";
+  const note = `${basis}Tipping Actにもとづく請求なら${formatJaDate(long)}までですが、どちらになるかは事案によるので、早いほうに間に合わせてください。`;
 
   if (daysLeft <= URGENT_DAYS) {
     return {
