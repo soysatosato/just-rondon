@@ -1,7 +1,6 @@
 "use server";
 
 import db from "../db";
-import type { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import {
   KM_PER_LAT_DEG,
@@ -9,7 +8,7 @@ import {
   distanceKm,
 } from "@/lib/sightseeing/geo";
 import { publishedWhere } from "@/lib/publish-schedule";
-import { nearestFareZone } from "@/lib/transport/fare-zones";
+import { PLAN_SPOT_SELECT, toPlanSpot } from "@/utils/plan-spots";
 
 const getTotalCount = unstable_cache(
   async () => db.attraction.count({ where: { isPublished: true } }),
@@ -377,42 +376,23 @@ export async function fetchAllAttractions() {
  * 一覧(/sightseeing/all)はカードに出さないので引いていないが、
  * プランはスポット間の距離と「その日に開いているか」を出すので要る。
  * 逆に tagline / summary はプランでは使わないので引かない。
+ *
+ * 寿命は詳細ページ(1時間)と揃えてある。以前は24時間で、公開を切り替えた
+ * 翌日まで古い一覧が出ていた(2026-10-20 に伏せた催しが翌日も候補に残り、
+ * 押すと404)。新しく載せたスポットのほうは、詳細ページから先に足せるのに
+ * /plan の一覧には無い時間ができる。一覧に無い slug は /plan が
+ * /api/plan/spots から引き直すので、ここが古くてもプランからは消えない。
+ * 列と PlanSpot への直し方は utils/plan-spots.ts に置いてある。
  */
 export const fetchPlanSpots = unstable_cache(
   async () => {
     const rows = await db.attraction.findMany({
       where: { isPublished: true },
-      select: {
-        slug: true,
-        name: true,
-        engName: true,
-        image: true,
-        address: true,
-        lat: true,
-        lng: true,
-        category: true,
-        area: true,
-        priceAdult: true,
-        durationText: true,
-        openingHours: true,
-        closedWeekdays: true,
-        nearestStation: true,
-        isFree: true,
-        mustSee: true,
-        recommendLevel: true,
-        londonPass: true,
-        londonPassNote: true,
-      },
+      select: PLAN_SPOT_SELECT,
       orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
     });
-    // 交通費の見積もりに使う運賃ゾーン。座標から最寄り駅を引いて決める。
-    // 駅の表はサーバーにだけ置き、ブラウザにはゾーンの値だけを渡す。
-    return rows.map((row) => ({
-      ...row,
-      fareZone:
-        row.address && row.address !== "-" ? nearestFareZone(row).zone : null,
-    }));
+    return rows.map(toPlanSpot);
   },
-  ["plan-spots-v2"],
-  { revalidate: 60 * 60 * 24 },
+  ["plan-spots-v3"],
+  { revalidate: 60 * 60, tags: ["plan-spots"] },
 );

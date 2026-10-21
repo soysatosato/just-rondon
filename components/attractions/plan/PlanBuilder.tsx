@@ -33,6 +33,7 @@ import {
   readPlan,
   readSnapshot,
   readStartDate,
+  removeFromPlan,
   replacePlan,
   restoreSnapshot,
   usePlanEntries,
@@ -129,11 +130,23 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   } | null>(null);
   const [drag, setDrag] = useState<DragState>(null);
   const [drop, setDrop] = useState<DropTarget>(null);
-
-  const bySlug = useMemo(
-    () => new Map(spots.map((spot) => [spot.slug, spot])),
-    [spots],
+  /** 一覧に無く、/api/plan/spots から引き直せたスポット。 */
+  const [extraSpots, setExtraSpots] = useState<ReadonlyMap<string, PlanSpot>>(
+    () => new Map(),
   );
+  /**
+   * 引き直しても公開中ではなかった slug。値は伏せた催しの名前で、
+   * DB にも無ければ null。
+   */
+  const [goneSpots, setGoneSpots] = useState<ReadonlyMap<string, string | null>>(
+    () => new Map(),
+  );
+
+  const bySlug = useMemo(() => {
+    const map = new Map(spots.map((spot) => [spot.slug, spot]));
+    for (const [slug, spot] of extraSpots) map.set(slug, spot);
+    return map;
+  }, [spots, extraSpots]);
 
   /*
    * アカウントのプランとこのブラウザのプランが両方変わっていたときの、
@@ -169,17 +182,64 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   }, [scrollTo]);
 
   /*
-   * 非公開になったスポットを落とす。
+   * 一覧に無い slug を引き直す。
    *
-   * 期間限定の催しは isPublished で伏せるので、ブラウザに残った
-   * プランが実在しない slug を指すことがある。表示から消すだけだと
-   * 「プランを見る(5)」と中身の4件が食い違うので、保存側からも外す。
+   * 以前はここで「非公開になったスポット」とみなし、保存からも消していた。
+   * ところが一覧はページと一緒に最長1時間キャッシュされるので、一覧に無い
+   * ことは「伏せた」とは限らない。新しく載せたスポットを詳細ページから
+   * 足した読者は、/plan を開いた瞬間にそれを失っていた(2026-10 の監査)。
+   * いまは消さずに問い合わせ、公開中なら行として足し、伏せたものは
+   * 名前を添えて知らせる。外すかどうかは読者が決める。
    */
+  const unknownKey = useMemo(
+    () =>
+      [...new Set(entries.map((entry) => entry.slug))]
+        .filter((slug) => !bySlug.has(slug) && !goneSpots.has(slug))
+        .sort()
+        .join(","),
+    [entries, bySlug, goneSpots],
+  );
+
   useEffect(() => {
-    if (entries.length === 0) return;
-    const alive = entries.filter((entry) => bySlug.has(entry.slug));
-    if (alive.length !== entries.length) replacePlan(alive);
-  }, [entries, bySlug]);
+    if (!unknownKey) return;
+    const asked = unknownKey.split(",");
+    let cancelled = false;
+    fetch(`/api/plan/spots?slugs=${unknownKey}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then(
+        (
+          data: {
+            spots?: PlanSpot[];
+            hidden?: { slug: string; name: string }[];
+          } | null,
+        ) => {
+          if (cancelled || !data) return;
+          const found = new Map(
+            (data.spots ?? []).map((spot) => [spot.slug, spot] as const),
+          );
+          const hidden = new Map(
+            (data.hidden ?? []).map((row) => [row.slug, row.name] as const),
+          );
+          if (found.size > 0) {
+            setExtraSpots((prev) => new Map([...prev, ...found]));
+          }
+          setGoneSpots((prev) => {
+            const next = new Map(prev);
+            for (const slug of asked) {
+              if (!found.has(slug)) next.set(slug, hidden.get(slug) ?? null);
+            }
+            return next;
+          });
+        },
+      )
+      // 通信できなければ何もしない。行は保存に残っていて、次に開いたときに引き直す。
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [unknownKey]);
+
+  const goneEntries = entries.filter((entry) => goneSpots.has(entry.slug));
 
   /*
    * 共有リンクの取り込み。
@@ -193,7 +253,9 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     const param = params.get(SHARE_PARAM);
     if (!param) return;
 
-    const decoded = decodePlan(param).filter((entry) => bySlug.has(entry.slug));
+    // 一覧に無い slug もここでは落とさない。一覧が古いだけのこともあり、
+    // 取り込んだあとで引き直す(上の unknownKey)。
+    const decoded = decodePlan(param);
     if (decoded.length === 0) {
       stripShareParams();
       return;
@@ -219,7 +281,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       return;
     }
     setIncoming({ entries: decoded, startDate: incomingStart });
-  }, [bySlug]);
+  }, []);
 
   /*
    * 消したあとで中身が動いたら「元に戻す」を引っ込める。
@@ -538,6 +600,42 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
               閉じる
             </button>
           </div>
+        </div>
+      )}
+
+      {/*
+        伏せた催しなど、いまは掲載していないスポット。保存からは消さずに残し、
+        何が計算から外れているのかをここで言う。黙って消すと、組んだ覚えの
+        ある行がいつの間にか無くなっている。
+      */}
+      {goneEntries.length > 0 && (
+        <div className="space-y-2.5 rounded-2xl border border-amber-300 bg-amber-50 p-4 print:hidden dark:border-amber-800 dark:bg-amber-950/30">
+          <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+            いまは掲載していないスポットが{goneEntries.length}ヶ所あります
+          </p>
+          <p className="text-xs leading-relaxed text-amber-800 dark:text-amber-300">
+            会期が終わった催しなどです。プランには残してありますが、時刻と費用の計算には入れていません。
+          </p>
+          <ul className="flex flex-wrap gap-2">
+            {goneEntries.map((entry) => (
+              <li
+                key={entry.slug}
+                className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-background px-3 py-1 text-xs dark:border-amber-800"
+              >
+                <span className="font-semibold">
+                  {goneSpots.get(entry.slug) ?? entry.slug}
+                </span>
+                <span className="text-muted-foreground">{entry.day}日目</span>
+                <button
+                  type="button"
+                  onClick={() => removeFromPlan(entry.slug)}
+                  className="font-semibold text-amber-800 underline underline-offset-2 hover:text-amber-950 dark:text-amber-300"
+                >
+                  外す
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

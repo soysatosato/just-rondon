@@ -40,6 +40,12 @@ export type PlanSpot = {
    * 「この日は閉まっています」の警告はこの値だけを見る。
    */
   closedWeekdays: number[];
+  /**
+   * 休みの曜日を出典で確かめたか(Attraction.closedDaysCheckedAt がある)。
+   * false の行は closedWeekdays が空でも「毎日開いている」とは限らないので、
+   * 日付を入れた日のカードで、曜日の警告の対象外だと断る。
+   */
+  closedDaysChecked: boolean;
   nearestStation: string | null;
   isFree: boolean;
   mustSee: boolean;

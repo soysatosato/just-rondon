@@ -1,4 +1,6 @@
-export const revalidate = 60 * 60 * 24;
+// スポット一覧(fetchPlanSpots)の寿命と揃える。ページのほうが長いと、
+// 一覧を引き直しても古いHTMLが出続ける。
+export const revalidate = 60 * 60;
 
 import Link from "next/link";
 import {
