@@ -5,8 +5,8 @@ import {
   SITE_URL,
   absoluteImage,
 } from "@/lib/seo";
-import { columnOgImage } from "@/lib/og";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { OG_PHOTO_RATIOS, columnOgImage, readingPhotoOgImage } from "@/lib/og";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 import { parseSources } from "@/lib/reading-sources";
 
 export const COLUMN_BASE = "/column";
@@ -35,6 +35,7 @@ export function columnArticleJsonLd(content: {
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  revisedAt: Date | null;
   image: string | null;
   sources?: unknown;
 }) {
@@ -50,14 +51,17 @@ export function columnArticleJsonLd(content: {
     inLanguage: "ja",
     mainEntityOfPage: url,
     datePublished: publishedDateOf(content).toISOString(),
-    dateModified: content.updatedAt.toISOString(),
-    // 挿絵の写真と、1200x630 の共有カードの2枚を渡す。Google Discover は
-    // 幅1200px以上の画像を求めており、写真は登録時にその幅を検査している
-    // (scripts/lib/article-image.ts)。カードは写真の取得に失敗した場合の控え。
-    image: [
-      ...(content.image ? [absoluteImage(content.image)] : []),
-      absoluteImage(columnOgImage(content).url),
-    ],
+    // 画面の「更新」の日付と同じ値(components/reading/ArticleDates.tsx)。
+    dateModified: modifiedDateOf(content).toISOString(),
+    // 写真のある記事は、写真を 16:9・4:3・1:1 に切り抜いた3枚(文字なし)。
+    // Discover は幅1200px以上で文字の少ない画像を求めていて、見出しを組んだ
+    // 共有カードはそれに当たらない。写真は登録時に幅を検査している
+    // (scripts/lib/article-image.ts)。写真の無い記事だけカードを渡す。
+    image: content.image
+      ? OG_PHOTO_RATIOS.map((ratio) =>
+          absoluteImage(readingPhotoOgImage("column", content, ratio).url),
+        )
+      : [absoluteImage(columnOgImage(content).url)],
     author: COLUMN_AUTHOR,
     publisher: COLUMN_PUBLISHER,
     // 記事末尾の参考資料欄と同じもの。欄の無い記事には付けない。

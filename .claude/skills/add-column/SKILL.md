@@ -299,6 +299,10 @@ npx tsx scripts/update-reading.ts column <JSONのパス> <slug> --dry   # 差分
 npx tsx scripts/update-reading.ts column <JSONのパス> <slug>
 ```
 
+公開済みの記事を直すと、記事の上に「更新」の日付が付き、JSON-LD の dateModified と
+sitemap の lastmod もその日になる(`revisedAt`)。表記の統一・誤字・リンク切れのように
+読者にとって中身の変わらない直しには `--minor` を付けて、更新日を動かさない。
+
 エラーが出た場合の対処:
 
 - スラッグ重複 → タイトル(または`engTitle`)を微調整して再実行する。

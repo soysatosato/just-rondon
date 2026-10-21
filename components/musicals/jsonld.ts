@@ -89,12 +89,18 @@ export function theaterEventJsonLd(
     },
     // validFrom は公式サイトの情報を最後に確認した日。チケット販売開始日は
     // DBになく、それより前を名乗ると確認していない期間を保証することになる。
+    //
+    // 確認した日は lastVerifiedAt(上演中かを人が確かめた日)。以前は updatedAt を
+    // 使っていたが、あちらは説明文の推敲や閲覧の加算でも動き、確認していない日を
+    // 名乗っていた。一度も確かめていない作品には付けない。
     offers: musical.website
       ? {
           "@type": "Offer",
           url: musical.website,
           availability: "https://schema.org/InStock",
-          validFrom: musical.updatedAt.toISOString().slice(0, 10),
+          ...(musical.lastVerifiedAt
+            ? { validFrom: musical.lastVerifiedAt.toISOString().slice(0, 10) }
+            : {}),
         }
       : undefined,
   };

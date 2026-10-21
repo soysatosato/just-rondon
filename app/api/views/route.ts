@@ -168,10 +168,9 @@ async function incrementView(targetType: TargetType, slug: string) {
   if (!id) return;
 
   const day = utcDay();
-  const data = { views: { increment: 1 }, lastViewedAt: new Date() };
 
   return db.$transaction([
-    updateTotal(targetType, id, data),
+    updateTotal(targetType, id),
     db.dailyView.upsert({
       where: {
         targetType_targetId_day: { targetType, targetId: id, day },
@@ -218,22 +217,30 @@ async function findTargetId(targetType: TargetType, slug: string) {
   return row?.id ?? null;
 }
 
-/** 累計の加算。id で引き当てるので、対象の表を選ぶだけ。 */
-function updateTotal(
-  targetType: TargetType,
-  id: string,
-  data: { views: { increment: number }; lastViewedAt: Date },
-) {
+/**
+ * 累計の加算。id で引き当てるので、対象の表を選ぶだけ。
+ *
+ * Prisma の update を使わない。@updatedAt は Prisma Client が update の
+ * たびに書き換えるので、閲覧を数えるだけで updatedAt が「最後に読まれた
+ * 時刻」になる。2026-10 には閲覧のあった記事138本中100本・スポット180件中
+ * 169件・美術館とミュージカルの全件がそうなっていて、中身を直していない
+ * ページの更新日(JSON-LD の dateModified)や OG 画像の ?v= が閲覧のたびに
+ * 動いていた。生の SQL は @updatedAt を通らないので、閲覧の2列だけが変わる。
+ *
+ * 時刻は DB 側で UTC の壁時計にする。列はタイムゾーン無しの timestamp で、
+ * Prisma は UTC で読み書きしている。
+ */
+function updateTotal(targetType: TargetType, id: string) {
   if (targetType === "attraction") {
-    return db.attraction.update({ where: { id }, data });
+    return db.$executeRaw`UPDATE "Attraction" SET "views" = "views" + 1, "lastViewedAt" = (NOW() AT TIME ZONE 'UTC') WHERE "id" = ${id}`;
   }
   if (targetType === "museum") {
-    return db.museum.update({ where: { id }, data });
+    return db.$executeRaw`UPDATE "Museum" SET "views" = "views" + 1, "lastViewedAt" = (NOW() AT TIME ZONE 'UTC') WHERE "id" = ${id}`;
   }
   if (targetType === "musical") {
-    return db.musical.update({ where: { id }, data });
+    return db.$executeRaw`UPDATE "Musical" SET "views" = "views" + 1, "lastViewedAt" = (NOW() AT TIME ZONE 'UTC') WHERE "id" = ${id}`;
   }
-  return db.content.update({ where: { id }, data });
+  return db.$executeRaw`UPDATE "Content" SET "views" = "views" + 1, "lastViewedAt" = (NOW() AT TIME ZONE 'UTC') WHERE "id" = ${id}`;
 }
 
 /**

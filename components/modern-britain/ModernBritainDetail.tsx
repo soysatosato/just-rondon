@@ -9,7 +9,7 @@ import ImageCredit from "@/components/shared/ImageCredit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import ArticleDates from "@/components/reading/ArticleDates";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 // 太字は本文中の「殴り返し」に多用されるので、色は付けず字面の太さだけで効かせる。
@@ -43,14 +43,6 @@ const markdownComponents = {
   },
 };
 
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
-
 type ModernBritainWithSections = Content & { sections: ContentSection[] };
 
 export default function ModernBritainDetail({
@@ -82,7 +74,7 @@ export default function ModernBritainDetail({
               Britain, Argued
             </span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(publishedDateOf(content))}
+              <ArticleDates content={content} />
             </span>
           </div>
 

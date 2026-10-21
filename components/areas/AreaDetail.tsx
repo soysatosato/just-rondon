@@ -16,7 +16,7 @@ import {
   areaGuideSlugs,
 } from "@/components/sightseeing/areas/areas";
 import type { AdjacentContent } from "@/utils/actions/contents";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import ArticleDates from "@/components/reading/ArticleDates";
 import ImageCredit from "@/components/shared/ImageCredit";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
@@ -49,14 +49,6 @@ const markdownComponents = {
     );
   },
 };
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
 
 type AreaWithSections = Content & { sections: ContentSection[] };
 
@@ -107,7 +99,7 @@ export default function AreaDetail({
               {content.engTitle ?? "London Neighbourhood"}
             </span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(publishedDateOf(content))}
+              <ArticleDates content={content} />
             </span>
           </div>
 

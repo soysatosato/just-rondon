@@ -217,6 +217,10 @@ npx tsx scripts/update-reading.ts british-english <JSONのパス> <slug> --dry  
 npx tsx scripts/update-reading.ts british-english <JSONのパス> <slug>
 ```
 
+公開済みの記事を直すと、記事の上に「更新」の日付が付き、JSON-LD の dateModified と
+sitemap の lastmod もその日になる(`revisedAt`)。表記の統一・誤字・リンク切れのように
+読者にとって中身の変わらない直しには `--minor` を付けて、更新日を動かさない。
+
 スラッグ重複エラーが出た場合は原因を確認し、engTitleを
 微調整して再実行する。
 

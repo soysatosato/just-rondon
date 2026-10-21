@@ -1600,6 +1600,16 @@ model Content {
   sources          Json?
   /// sources の資料と本文を最後に照らし合わせた日時。欄の末尾に出す。
   sourcesCheckedAt DateTime?
+  /// 公開した後で本文を直した日時。null は公開してから直していない。
+  /// 記事の「更新」の日付、JSON-LD の dateModified、sitemap の lastmod に出す
+  /// (lib/publish-schedule.ts の modifiedDateOf)。
+  ///
+  /// updatedAt では代用できない。2026-10 までは閲覧の加算でも動いていて、
+  /// 閲覧のあった記事の7割で「最後に読まれた時刻」が更新日として出ていた。
+  /// 写真のクレジットを書き足すような、読者にとって中身の変わらない書き込みでも動く。
+  /// 値を入れるのは scripts/update-reading.ts で公開済みの記事を直したときだけ
+  /// (表記の統一・誤字のように中身の変わらない直しは --minor で外す)。
+  revisedAt        DateTime?
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @default(now()) @updatedAt
 

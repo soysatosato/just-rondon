@@ -80,6 +80,25 @@ export function publishedDateOf(content: {
   return content.publishedAt ?? content.createdAt;
 }
 
+/**
+ * 記事の最終更新日。公開後に本文を直していなければ公開日と同じ。
+ *
+ * JSON-LD の dateModified、OG の modified_time、sitemap の lastmod はすべて
+ * これを使い、画面の「更新」の日付(components/reading/ArticleDates.tsx)と
+ * 食い違わないようにする。Google は画面の日付と構造化データの日付が
+ * 一致していることを求めている。
+ *
+ * updatedAt は使わない。写真のクレジットの書き足しのような、読者にとって
+ * 中身の変わらない書き込みでも動く(2026-10 までは閲覧の加算でも動いていた)。
+ */
+export function modifiedDateOf(content: {
+  publishedAt: Date | null;
+  createdAt: Date;
+  revisedAt: Date | null;
+}): Date {
+  return content.revisedAt ?? publishedDateOf(content);
+}
+
 /** その瞬間のロンドンの UTC からのずれ(ミリ秒。冬は0、夏は+1時間)。 */
 function londonOffsetMs(at: Date): number {
   const parts = new Intl.DateTimeFormat("en-GB", {

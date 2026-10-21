@@ -10,14 +10,14 @@ import {
   fetchPublishedReadingSlugs,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
-import { columnOgImage } from "@/lib/og";
+import { columnOgImage, readingPhotoOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import { columnArticleJsonLd, columnPath } from "@/components/column/jsonld";
 import ColumnDetail from "@/components/column/ColumnDetail";
 import { loadPageComments } from "@/lib/comments";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 import PreviewBanner from "@/components/admin/PreviewBanner";
 
 interface Props {
@@ -53,11 +53,20 @@ export async function generateMetadata({ params }: Props) {
     description: trimmed || `${content.title}についてのコラムです。`,
     type: "article",
     publishedTime: publishedDateOf(content).toISOString(),
-    modifiedTime: content.updatedAt.toISOString(),
+    modifiedTime: modifiedDateOf(content).toISOString(),
     // 挿絵(content.image)を直接 og:image に書かない。Wikimedia は
     // facebookexternalhit を 403 で拒否し、縦長・5MB超の写真は X と LINE に
-    // 捨てられる。自分のドメインから 1200x630 のカードを配る。
-    images: [columnOgImage(content)],
+    // 捨てられる。自分のドメインから配る。
+    //
+    // 写真のある記事は og:image を写真だけの 16:9 にし、見出しを組んだカードは
+    // X の twitter:image にだけ残す。Google は Discover と検索結果の画像に
+    // og:image を使い、文字の多い画像を避けるよう求めている。
+    ...(content.image
+      ? {
+          images: [readingPhotoOgImage("column", content)],
+          twitterImages: [columnOgImage(content)],
+        }
+      : { images: [columnOgImage(content)] }),
   });
 }
 

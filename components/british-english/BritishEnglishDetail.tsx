@@ -8,7 +8,7 @@ import ImageCredit from "@/components/shared/ImageCredit";
 import { AD_SLOTS } from "@/lib/adsense";
 import AdjacentContentNav from "@/components/content/AdjacentContentNav";
 import type { AdjacentContent } from "@/utils/actions/contents";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import ArticleDates from "@/components/reading/ArticleDates";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const proseClass =
@@ -33,14 +33,6 @@ const SECTION_ACCENTS = [
     rail: "bg-emerald-500",
   },
 ];
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
 
 type BritishEnglishWithSections = Content & { sections: ContentSection[] };
 
@@ -73,7 +65,7 @@ export default function BritishEnglishDetail({
               British English
             </span>
             <span className="text-xs text-muted-foreground">
-              {formatDate(publishedDateOf(content))}
+              <ArticleDates content={content} />
             </span>
           </div>
 

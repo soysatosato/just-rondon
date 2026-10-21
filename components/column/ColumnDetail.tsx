@@ -16,22 +16,14 @@ import PageCommentSection, {
 import AttractionSpotRail, {
   type RailSpot,
 } from "@/components/sightseeing/AttractionSpotRail";
-import { publishedDateOf } from "@/lib/publish-schedule";
 import { parseSources } from "@/lib/reading-sources";
 import { EDITORIAL_NAME, EDITORIAL_PATH } from "@/lib/seo";
 import ReadingSources from "@/components/reading/ReadingSources";
+import ArticleDates from "@/components/reading/ArticleDates";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
 
 const proseClass =
   "prose dark:prose-invert prose-base max-w-full";
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
 
 type ColumnWithSections = Content & { sections: ContentSection[] };
 
@@ -83,7 +75,9 @@ export default function ColumnDetail({
           {/* 署名。誰がどう作っているかは /about の編集方針に書いてある。
               資料で裏を取った記事は、末尾の参考資料欄へ飛べるようにする。 */}
           <p className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
-            <span>{formatDate(publishedDateOf(content))}</span>
+            <span>
+              <ArticleDates content={content} />
+            </span>
             <span aria-hidden className="text-muted-foreground/40">
               /
             </span>

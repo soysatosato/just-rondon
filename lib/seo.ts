@@ -177,6 +177,14 @@ export type PageMetadataInput = {
   description: string;
   keywords?: string | string[];
   images?: OgImageInput[];
+  /**
+   * X の twitter:image だけ別の画像にしたいときに渡す。既定は images。
+   *
+   * 写真のある読み物は、og:image を文字の無い写真(Google の Discover と
+   * 検索結果の画像向け)にし、X には見出しを大きく組んだ共有カードを残す。
+   * X は twitter:image があればそちらを使い、LINE と Facebook は og:image を使う。
+   */
+  twitterImages?: OgImageInput[];
   type?: "website" | "article";
   /** true で noindex。follow は残すのでリンク先のクロールは続く。 */
   noindex?: boolean;
@@ -223,6 +231,7 @@ export function buildPageMetadata({
   description,
   keywords,
   images,
+  twitterImages,
   type = "website",
   noindex = false,
   siteName = SITE_NAME,
@@ -278,7 +287,10 @@ export function buildPageMetadata({
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: ogImages.map((i) => i.url),
+      images: (twitterImages?.length
+        ? twitterImages.map(normaliseImage)
+        : ogImages
+      ).map((i) => i.url),
       // X運用を一旦停止中のため site/creator は非表示
       // site: TWITTER_HANDLE,
       // creator: TWITTER_HANDLE,

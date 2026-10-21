@@ -1,4 +1,4 @@
-import { OG_SIZE, type OgPhoto } from "@/lib/og";
+import { OG_SIZE, photoCoverRect, type OgPhoto } from "@/lib/og";
 
 /**
  * 読み物セクションのSNS共有カードの版面。
@@ -138,22 +138,14 @@ const TEXT_INNER = TEXT_WIDTH - 58 - 54;
  * 横方向は中央のままでよい。横長の写真は高さで合わせるので左右が均等に
  * 余るだけで、中央を残すのが素直。縦方向だけ上に寄せる。
  */
-const VERTICAL_FOCUS = 0.3;
+export const VERTICAL_FOCUS = 0.3;
 
 function coverRect(photo: OgPhoto) {
-  const scale = Math.max(
-    PANEL_WIDTH / photo.width,
-    OG_SIZE.height / photo.height,
+  return photoCoverRect(
+    photo,
+    { width: PANEL_WIDTH, height: OG_SIZE.height },
+    VERTICAL_FOCUS,
   );
-  const width = Math.ceil(photo.width * scale);
-  const height = Math.ceil(photo.height * scale);
-
-  return {
-    width,
-    height,
-    left: Math.round((PANEL_WIDTH - width) / 2),
-    top: Math.round((OG_SIZE.height - height) * VERTICAL_FOCUS),
-  };
 }
 
 /**

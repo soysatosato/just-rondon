@@ -1,5 +1,6 @@
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { SITE_NAME, SITE_URL, absoluteImage } from "@/lib/seo";
+import { OG_PHOTO_RATIOS, areaOgImage, readingPhotoOgImage } from "@/lib/og";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 
 // 観光の「エリアガイド」(components/sightseeing/areas/areas.ts の AREAS_BASE =
 // /sightseeing/areas)とは別物。あちらは半日の回遊ルート、こちらは街そのものの
@@ -24,6 +25,7 @@ export function areaArticleJsonLd(content: {
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  revisedAt: Date | null;
   image: string | null;
 }) {
   const url = `${SITE_URL}${areaPath(content.slug)}`;
@@ -37,8 +39,15 @@ export function areaArticleJsonLd(content: {
     inLanguage: "ja",
     mainEntityOfPage: url,
     datePublished: publishedDateOf(content).toISOString(),
-    dateModified: content.updatedAt.toISOString(),
-    ...(content.image ? { image: content.image } : {}),
+    // 画面の「更新」の日付と同じ値(components/reading/ArticleDates.tsx)。
+    dateModified: modifiedDateOf(content).toISOString(),
+    // 写真のある記事は文字なしの3比の切り抜き、無い記事は共有カード。
+    // 理由は components/column/jsonld.ts と同じ。
+    image: content.image
+      ? OG_PHOTO_RATIOS.map((ratio) =>
+          absoluteImage(readingPhotoOgImage("areas", content, ratio).url),
+        )
+      : [absoluteImage(areaOgImage(content).url)],
     /*
       記事が何について書かれているかを Place で明示する。
       街の名前は Brixton / Peckham のように英国内に同名が無いものが多いが、

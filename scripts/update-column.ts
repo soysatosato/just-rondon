@@ -7,8 +7,12 @@
  *
  * 実行: npx tsx scripts/update-column.ts <payload.json> <slug>
  *      npx tsx scripts/update-column.ts <payload.json> <slug> --dry
+ *      npx tsx scripts/update-column.ts <payload.json> <slug> --minor
  *
  * 節は displayOrder で突き合わせる。JSON側に無い節は削除する。
+ *
+ * 公開済みの回を直すと revisedAt(記事の「更新」の日付)が今になる。
+ * 中身の変わらない直しは --minor で外す。決まりは scripts/update-reading.ts と同じ。
  */
 
 import "dotenv/config";
@@ -44,10 +48,11 @@ async function main() {
   const [path, slug, ...rest] = process.argv.slice(2);
   if (!path || !slug) {
     throw new Error(
-      "Usage: npx tsx scripts/update-column.ts <payload.json> <slug> [--dry]",
+      "Usage: npx tsx scripts/update-column.ts <payload.json> <slug> [--dry] [--minor]",
     );
   }
   const dry = rest.includes("--dry");
+  const minor = rest.includes("--minor");
 
   const payload: ColumnPayload = JSON.parse(readFileSync(path, "utf-8"));
   for (const tag of payload.tags ?? []) {
@@ -65,6 +70,9 @@ async function main() {
   if (!existing) throw new Error(`Column not found: /column/${slug}`);
 
   const byOrder = new Map(existing.sections.map((s) => [s.displayOrder, s]));
+  const isPublished =
+    existing.publishedAt !== null && existing.publishedAt.getTime() <= Date.now();
+  const markRevised = isPublished && !minor;
 
   if (dry) {
     console.log(`/column/${slug} (id=${existing.id})`);
@@ -86,6 +94,11 @@ async function main() {
       (s) => !payload.sections.some((p) => p.displayOrder === s.displayOrder),
     );
     for (const s of extras) console.log(`  [${s.displayOrder}] delete ${s.title}`);
+    console.log(
+      markRevised
+        ? "  revisedAt: now (記事に「更新」の日付が付く。中身の変わらない直しなら --minor)"
+        : `  revisedAt: unchanged (${isPublished ? "--minor" : "not published yet"})`,
+    );
     await db.$disconnect();
     return;
   }
@@ -103,6 +116,7 @@ async function main() {
         tags: payload.tags,
         seriesName: payload.seriesName,
         seriesOrder: payload.seriesOrder,
+        ...(markRevised ? { revisedAt: new Date() } : {}),
       },
     });
 

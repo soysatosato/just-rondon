@@ -4,6 +4,7 @@
  *
  * 実行: npx tsx scripts/update-reading.ts <category> <payload.json> <slug>
  *      npx tsx scripts/update-reading.ts <category> <payload.json> <slug> --dry
+ *      npx tsx scripts/update-reading.ts <category> <payload.json> <slug> --minor
  *      npx tsx scripts/update-reading.ts export <category> <slug> <out.json>
  *
  *   category は column / british-english / modern-britain。
@@ -17,6 +18,13 @@
  * 節は displayOrder で突き合わせる。JSON側に無い節は削除する。
  * slug と公開日時(publishedAt)には触らない。予約中の記事を直しても
  * 予約はそのまま残る。
+ *
+ * 公開済みの記事を直すと、直した日時を revisedAt に入れる。記事の上に
+ * 「更新」の日付が出て、JSON-LD の dateModified と sitemap の lastmod も
+ * それになる。表記の統一・誤字・リンク切れのように、読者にとって中身の
+ * 変わらない直しには --minor を付けて、更新日を動かさない(Google は
+ * 中身の変わらない日付の書き換えを嫌う)。下書き・予約中の記事は
+ * 公開前の直しなので、--minor が無くても入れない。
  *
  * コラムには従来の scripts/update-column.ts もあり、どちらで直してもよい。
  */
@@ -137,10 +145,11 @@ async function main() {
   const [category, path, slug, ...rest] = args;
   if (!category || !path || !slug || !isScheduledCategory(category)) {
     throw new Error(
-      "Usage: npx tsx scripts/update-reading.ts <column|british-english|modern-britain> <payload.json> <slug> [--dry]",
+      "Usage: npx tsx scripts/update-reading.ts <column|british-english|modern-britain> <payload.json> <slug> [--dry] [--minor]",
     );
   }
   const dry = rest.includes("--dry");
+  const minor = rest.includes("--minor");
 
   const payload: Payload = JSON.parse(readFileSync(path, "utf-8"));
   if (!payload.title?.trim()) throw new Error("title is required");
@@ -164,6 +173,10 @@ async function main() {
   const sourcesChanged =
     sources !== undefined &&
     JSON.stringify(sources) !== JSON.stringify(parseSources(existing.sources));
+  // 公開済みの記事への直しだけが「更新」。予約中・下書きは公開前の直し。
+  const isPublished =
+    existing.publishedAt !== null && existing.publishedAt.getTime() <= Date.now();
+  const markRevised = isPublished && !minor;
 
   if (dry) {
     console.log(
@@ -184,6 +197,11 @@ async function main() {
       );
     }
     for (const s of extras) console.log(`  [${s.displayOrder}] delete ${s.title}`);
+    console.log(
+      markRevised
+        ? "  revisedAt: now (記事に「更新」の日付が付く。中身の変わらない直しなら --minor)"
+        : `  revisedAt: unchanged (${isPublished ? "--minor" : "not published yet"})`,
+    );
     if (sourcesChanged) {
       console.log(`  sources: ${sources!.length} entries`);
       for (const src of sources!) {
@@ -214,6 +232,7 @@ async function main() {
             ? { sources, sourcesCheckedAt: new Date() }
             : { sources: Prisma.DbNull, sourcesCheckedAt: null }
           : {}),
+        ...(markRevised ? { revisedAt: new Date() } : {}),
       },
     });
 
@@ -246,6 +265,7 @@ async function main() {
     `Updated /${category}/${slug} (${payload.sections.length} sections, ${statusOf(existing.publishedAt)})`,
   );
   if (sourcesChanged) console.log(`Sources: ${sources!.length}`);
+  if (markRevised) console.log("Marked as revised (shown as 更新 on the article)");
 }
 
 main()

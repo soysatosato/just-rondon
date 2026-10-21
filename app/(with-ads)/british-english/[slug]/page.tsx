@@ -7,7 +7,7 @@ import {
   fetchPublishedReadingSlugs,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
-import { britishEnglishOgImage } from "@/lib/og";
+import { britishEnglishOgImage, readingPhotoOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/british-english/jsonld";
 import BritishEnglishDetail from "@/components/british-english/BritishEnglishDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 import PreviewBanner from "@/components/admin/PreviewBanner";
 
 interface Props {
@@ -64,11 +64,20 @@ export async function generateMetadata({ params }: Props) {
     description: trimmed || `${content.title}についてのイギリス英語解説です。`,
     type: "article",
     publishedTime: publishedDateOf(content).toISOString(),
-    modifiedTime: content.updatedAt.toISOString(),
-    // 記事内の挿絵(content.image)ではなく、その単語を大きく置いた
-    // 生成カードを共有画像にする。挿絵は任意項目で無い記事が多く、
-    // あってもテーマの写真なので、タイムライン上では何の記事か分からない。
-    images: [britishEnglishOgImage(content)],
+    modifiedTime: modifiedDateOf(content).toISOString(),
+    // X の共有画像は、その単語を大きく置いた生成カード。挿絵は任意項目で
+    // 無い記事が多く、あってもテーマの写真なので、タイムライン上では
+    // 何の記事か分からない。
+    //
+    // ただし挿絵のある記事の og:image は挿絵だけの 16:9 にする。Google は
+    // Discover と検索結果の画像に og:image を使い、文字の多い画像を避けるよう
+    // 求めている。LINE と Facebook は画像の下に題を出すので、語はそこで読める。
+    ...(content.image
+      ? {
+          images: [readingPhotoOgImage("british-english", content)],
+          twitterImages: [britishEnglishOgImage(content)],
+        }
+      : { images: [britishEnglishOgImage(content)] }),
   });
 }
 

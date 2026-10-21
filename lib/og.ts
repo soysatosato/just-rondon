@@ -271,6 +271,89 @@ export async function loadOgPhoto(
 }
 
 /**
+ * 写真を箱いっぱいに敷くときの寸法と位置。objectFit:"cover" の代わり。
+ *
+ * satori は objectPosition を持たず、cover の切り抜きは必ず中央になる。
+ * 箱より縦長の写真では上下が等しく削られ、人物写真の頭が消えるので、
+ * 縦方向だけ寄せる位置(0=上端、0.5=中央)を自分で決める。横方向は中央でよい
+ * (横長の写真は高さで合わせ、左右が均等に余るだけ)。
+ */
+export function photoCoverRect(
+  photo: { width: number; height: number },
+  box: { width: number; height: number },
+  verticalFocus: number,
+) {
+  const scale = Math.max(box.width / photo.width, box.height / photo.height);
+  const width = Math.ceil(photo.width * scale);
+  const height = Math.ceil(photo.height * scale);
+
+  return {
+    width,
+    height,
+    left: Math.round((box.width - width) / 2),
+    top: Math.round((box.height - height) * verticalFocus),
+  };
+}
+
+/**
+ * 文字を載せない、写真だけの画像の寸法。
+ *
+ * 共有カード(OG_SIZE)は見出しの文字が主役で、写真は左の帯にしか入らない。
+ * SNS ではそれが読みやすいが、Google は Discover と検索結果の画像に
+ * 「ロゴや文字の多い画像を避け、幅1200px以上・16:9の、ページを代表する画像」を
+ * 求めている(developers.google.com/search/docs/appearance/google-discover)。
+ * 写真のある記事では og:image と JSON-LD の image をこちらにする。
+ *
+ * 3つの比は Article の構造化データで Google が並べるよう勧めているもの。
+ * og:image に使うのは 16x9 だけ。
+ */
+export const OG_PHOTO_SIZES = {
+  "16x9": { width: 1200, height: 675 },
+  "4x3": { width: 1200, height: 900 },
+  "1x1": { width: 1200, height: 1200 },
+} as const;
+
+export type OgPhotoRatio = keyof typeof OG_PHOTO_SIZES;
+
+export const OG_PHOTO_RATIOS = Object.keys(OG_PHOTO_SIZES) as OgPhotoRatio[];
+
+export function isOgPhotoRatio(value: string | null): value is OgPhotoRatio {
+  return value !== null && value in OG_PHOTO_SIZES;
+}
+
+/** 写真だけの画像を出す読み物。app/og/photo/[kind]/[slug]/route.tsx と対。 */
+export type ReadingPhotoKind =
+  | "column"
+  | "british-english"
+  | "modern-britain"
+  | "areas";
+
+/**
+ * 読み物の、写真だけの画像のURL。写真(content.image)のある記事にだけ使う。
+ *
+ * 写真は Wikimedia Commons にあるが、そのURLを直接 og:image に書かない理由は
+ * loadOgPhoto に書いたとおり(Facebook 系の遮断、縦横比・大きさのばらつき)。
+ * こちらのドメインから、決まった比に切り抜いた PNG を配る。
+ *
+ * ?v= は共有カードと同じく、記事を直したときに古い画像を外すためのもの。
+ */
+export function readingPhotoOgImage(
+  kind: ReadingPhotoKind,
+  content: { slug: string; title: string; updatedAt: Date },
+  ratio: OgPhotoRatio = "16x9",
+) {
+  const size = OG_PHOTO_SIZES[ratio];
+  return {
+    url:
+      `/og/photo/${kind}/${encodeURIComponent(content.slug)}` +
+      `?r=${ratio}&v=${OG_CARD_VERSION}-${content.updatedAt.getTime()}`,
+    width: size.width,
+    height: size.height,
+    alt: content.title,
+  };
+}
+
+/**
  * 「見出し——副題」を2つに割る。
  *
  * このサイトの読み物の見出しは中央値52字あり、そのまま1つの塊で置くと

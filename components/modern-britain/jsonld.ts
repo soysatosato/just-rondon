@@ -1,5 +1,10 @@
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { SITE_NAME, SITE_URL, absoluteImage } from "@/lib/seo";
+import {
+  OG_PHOTO_RATIOS,
+  modernBritainOgImage,
+  readingPhotoOgImage,
+} from "@/lib/og";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 
 export const MODERN_BRITAIN_BASE = "/modern-britain";
 
@@ -20,6 +25,7 @@ export function modernBritainArticleJsonLd(content: {
   publishedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  revisedAt: Date | null;
   image: string | null;
 }) {
   const url = `${SITE_URL}${modernBritainPath(content.slug)}`;
@@ -33,8 +39,17 @@ export function modernBritainArticleJsonLd(content: {
     inLanguage: "ja",
     mainEntityOfPage: url,
     datePublished: publishedDateOf(content).toISOString(),
-    dateModified: content.updatedAt.toISOString(),
-    ...(content.image ? { image: content.image } : {}),
+    // 画面の「更新」の日付と同じ値(components/reading/ArticleDates.tsx)。
+    dateModified: modifiedDateOf(content).toISOString(),
+    // 写真のある記事は文字なしの3比の切り抜き、無い記事は共有カード。
+    // 理由は components/column/jsonld.ts と同じ。
+    image: content.image
+      ? OG_PHOTO_RATIOS.map((ratio) =>
+          absoluteImage(
+            readingPhotoOgImage("modern-britain", content, ratio).url,
+          ),
+        )
+      : [absoluteImage(modernBritainOgImage(content).url)],
     author: MODERN_BRITAIN_PUBLISHER,
     publisher: MODERN_BRITAIN_PUBLISHER,
   };

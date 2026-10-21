@@ -7,7 +7,7 @@ import {
   fetchPublishedReadingSlugs,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
-import { modernBritainOgImage } from "@/lib/og";
+import { modernBritainOgImage, readingPhotoOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/modern-britain/jsonld";
 import ModernBritainDetail from "@/components/modern-britain/ModernBritainDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 import PreviewBanner from "@/components/admin/PreviewBanner";
 
 interface Props {
@@ -52,9 +52,15 @@ export async function generateMetadata({ params }: Props) {
     description: trimmed || `${content.title}について掘り下げて論じます。`,
     type: "article",
     publishedTime: publishedDateOf(content).toISOString(),
-    modifiedTime: content.updatedAt.toISOString(),
+    modifiedTime: modifiedDateOf(content).toISOString(),
     // 挿絵を直接 og:image に書かない理由は app/og/column/[slug]/route.tsx。
-    images: [modernBritainOgImage(content)],
+    // 写真のある記事を写真だけの画像にする理由はコラムのページと同じ。
+    ...(content.image
+      ? {
+          images: [readingPhotoOgImage("modern-britain", content)],
+          twitterImages: [modernBritainOgImage(content)],
+        }
+      : { images: [modernBritainOgImage(content)] }),
   });
 }
 

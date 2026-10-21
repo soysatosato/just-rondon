@@ -8,13 +8,13 @@ import {
   fetchPublishedReadingSlugs,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
-import { areaOgImage } from "@/lib/og";
+import { areaOgImage, readingPhotoOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import { areaArticleJsonLd, areaPath } from "@/components/areas/jsonld";
 import AreaDetail from "@/components/areas/AreaDetail";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
-import { publishedDateOf } from "@/lib/publish-schedule";
+import { modifiedDateOf, publishedDateOf } from "@/lib/publish-schedule";
 
 interface Props {
   params: {
@@ -65,9 +65,15 @@ export async function generateMetadata({ params }: Props) {
       `${content.engTitle ?? content.title}の治安・家賃・地名の由来と歩き方をまとめました。`,
     type: "article",
     publishedTime: publishedDateOf(content).toISOString(),
-    modifiedTime: content.updatedAt.toISOString(),
+    modifiedTime: modifiedDateOf(content).toISOString(),
     // 挿絵を直接 og:image に書かない理由は app/og/column/[slug]/route.tsx。
-    images: [areaOgImage(content)],
+    // 写真のある記事を写真だけの画像にする理由はコラムのページと同じ。
+    ...(content.image
+      ? {
+          images: [readingPhotoOgImage("areas", content)],
+          twitterImages: [areaOgImage(content)],
+        }
+      : { images: [areaOgImage(content)] }),
   });
 }
 
