@@ -1783,7 +1783,19 @@ model WeeklyBrief {
   /// 「今週はここに注意」の1〜2文。ページ冒頭に大きく出す。
   headline     String
   summary      String
+  /// 号の写真。その週の目玉の会場か様子で、Wikimedia Commons の CC 画像の
+  /// 1280px 版(scripts/lib/issue-image.ts が幅と出典を確かめて入れる)。
+  /// ページの題字の下と、og:image・JSON-LD の image に出る。作品は写さない。
   image        String?
+  /// 写真に何が写っているかの1文。alt に出す。撮影年が今年でないなら書く。
+  imageAlt     String?
+  /// 写真の出どころ。"commons" のとき imageCredit の表示が必須
+  /// (components/shared/ImageCredit.tsx)。Content の image* 列と同じ扱い。
+  imageSource  String?
+  /// 「作者 / ライセンス, via Wikimedia Commons」。
+  imageCredit  String?
+  /// Commons のファイルページ。
+  imageLink    String?
   /// 調査した日時。ページに「◯月◯日 調査時点」として必ず表示する。
   /// ストライキ情報は数日で覆るので、いつ時点の情報かを出さないと誤情報になる。
   researchedAt DateTime
@@ -1855,7 +1867,12 @@ model MonthlyChangeIssue {
   /// 「今月いちばん効く変化」の1〜2文。ページ冒頭に大きく出す。
   headline     String
   summary      String
+  /// 号の写真。列の意味と入れ方は WeeklyBrief の image* と同じ。
   image        String?
+  imageAlt     String?
+  imageSource  String?
+  imageCredit  String?
+  imageLink    String?
   /// 調査した日時。ページに「◯月◯日 調査」として必ず出す。
   /// 予告の項目は調査後に覆ることがあるので、いつ時点かを出さないと誤情報になる。
   researchedAt DateTime

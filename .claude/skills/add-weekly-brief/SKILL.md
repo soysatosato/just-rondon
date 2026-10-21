@@ -334,6 +334,8 @@ npx tsx scripts/create-weekly-brief.ts <path> --replace --publish  # 既存号�
   "title": "今週のロンドン(8/10〜8/16)",
   "headline": "テートの話題の特別展が今週で閉幕。週末はノッティング・ヒル・カーニバルで一帯が大混雑に。",
   "summary": "2〜3文。今週なにがあるかを主役に書き、支障があれば最後に一言添える。",
+  "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Tate_Modern_-_Bankside_Power_Station.jpg/1280px-Tate_Modern_-_Bankside_Power_Station.jpg",
+  "imageAlt": "テムズ川の対岸から見たテート・モダン",
   "items": [
     {
       "kind": "exhibition",
@@ -385,6 +387,25 @@ npx tsx scripts/create-weekly-brief.ts <path> --replace --publish  # 既存号�
 
 `headline` / `summary` の書き方 — **その週の目玉イベントを主語にする。**
 運休や工事を頭に置かない。支障系が `high` の週だけ、後半に一言添える。
+
+`image` / `imageAlt` — **号の写真を1枚入れる。** 題字の下に出て、og:image と
+Google Discover の画像にもなる(写真の無い号は、見出しを組んだ文字のカードになる)。
+
+- 写すのは **headline の主語(その週の目玉)の会場か様子**。展覧会なら美術館の建物、
+  行事なら過去の年の同じ行事
+- **作品は写さない。** 展示中の絵や彫刻、期間限定の装飾やインスタレーションは
+  著作権が残っている。会場の外観にする
+- Wikimedia Commons の CC0 / CC BY / CC BY-SA / パブリックドメインで、
+  **原本の幅が1200px以上**の写真。極端に横長のパノラマは切り抜くと使えない
+- 個人が主役の写真(顔の大写し、観客の顔のアップ)は避ける。パレードの演者や
+  群衆、建物は構わない
+- その館・スポットのページがサイトにあれば、同じ写真を使ってよい
+  (DB の Museum / Attraction の `image`。出典は登録時に取り直される)
+- 候補は縮小版を落として**目で見て確かめる**。場所の取り違えや、暗くて何か
+  分からない写真が混ざっている
+- `imageAlt` は何が写っているかの1文。撮影年がその年でなければ「(2019年)」と添える
+- 幅と出典(作者・ライセンス)は登録スクリプトが Commons の API で確かめ、
+  1280px 版で入れる(`scripts/lib/issue-image.ts`)。出典が引けない写真は弾かれる
 
 `description` の書き方 — 事実の列挙で終わらせず、**読者がどう動けばいいか**まで
 書く。イベントなら見どころ・予約の要否・混む時間帯、運休なら代替ルート、

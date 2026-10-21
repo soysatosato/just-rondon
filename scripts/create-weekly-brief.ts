@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import db from "../utils/db";
+import { issueImageColumns } from "./lib/issue-image";
 import {
   BRIEF_KINDS,
   KIND_META,
@@ -48,7 +49,14 @@ type BriefPayload = {
   title?: string;
   headline: string;
   summary: string;
+  /**
+   * 号の写真。その週の目玉の会場か様子を写した Wikimedia Commons の画像URL
+   * (原本の幅1200px以上)。作品は写さない。書くなら imageAlt も必須。
+   * 幅と出典は scripts/lib/issue-image.ts が確かめ、1280px 版で入れる。
+   */
   image?: string | null;
+  /** 写真に何が写っているかの1文。撮影年がその年でなければ年も書く。 */
+  imageAlt?: string | null;
   /** 省略時は実行時刻。 */
   researchedAt?: string;
   published?: boolean;
@@ -177,7 +185,7 @@ async function main() {
     title: payload.title?.trim() || `今週のロンドン ${slug}`,
     headline: payload.headline.trim(),
     summary: payload.summary.trim(),
-    image: payload.image ?? null,
+    ...(await issueImageColumns(payload.image, payload.imageAlt)),
     researchedAt: parseDate(payload.researchedAt, "researchedAt") ?? new Date(),
     published: publishFlag || payload.published === true,
     items: {
