@@ -469,9 +469,20 @@ export function setStartMinutes(next: number) {
   notifyLocalChange();
 }
 
-/** 共有リンクとひな形の読み込み。今のプランを丸ごと置き換える。 */
-export function replacePlan(next: PlanEntry[], nextStartDate?: string | null) {
+/**
+ * 共有リンクとひな形の読み込み。今のプランを丸ごと置き換える。
+ *
+ * 1日目の日付と宿を出る時刻は、渡したときだけ置き換える。ひな形は
+ * 宿を出る時刻を前提に組んであり(9:00のままだと開館前に着く館がある)、
+ * 共有リンクは送った人の時刻で開かないと到着時刻が全部ずれる。
+ */
+export function replacePlan(
+  next: PlanEntry[],
+  nextStartDate?: string | null,
+  nextStartMinutes?: number,
+) {
   if (nextStartDate !== undefined) startDate = nextStartDate;
+  if (isValidStartMinutes(nextStartMinutes)) startMinutes = nextStartMinutes;
   write(next);
 }
 

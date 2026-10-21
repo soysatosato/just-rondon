@@ -4,8 +4,13 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { ArrowRight, CalendarRange, MapPin, Wallet } from "lucide-react";
 
-import { buildDayPlan, formatGbp, type PlanSpot } from "@/lib/plan";
-import { PLAN_TEMPLATES, templateEntries, type PlanTemplate } from "@/lib/plan/templates";
+import { buildDayPlan, formatClock, formatGbp, type PlanSpot } from "@/lib/plan";
+import {
+  PLAN_TEMPLATES,
+  templateEntries,
+  templateOverrides,
+  type PlanTemplate,
+} from "@/lib/plan/templates";
 import { replacePlan } from "./plan-store";
 
 /**
@@ -32,12 +37,14 @@ export default function PlanStarter({ spots }: { spots: PlanSpot[] }) {
   const cards = useMemo(
     () =>
       PLAN_TEMPLATES.map((template) => {
-        const days = template.days.map((slugs, i) =>
+        const overrides = templateOverrides(template);
+        const days = template.days.map((stops, i) =>
           buildDayPlan(
             i + 1,
-            slugs
-              .map((slug) => bySlug.get(slug))
+            stops
+              .map((stop) => bySlug.get(stop.slug))
               .filter((spot): spot is PlanSpot => Boolean(spot)),
+            { startMinutes: template.startMinutes, overrides },
           ),
         );
         return {
@@ -51,10 +58,14 @@ export default function PlanStarter({ spots }: { spots: PlanSpot[] }) {
   );
 
   const load = (template: PlanTemplate) => {
-    replacePlan(templateEntries(template));
+    // 宿を出る時刻もひな形のものにする。ひな形の時刻はその前提で組んである。
+    replacePlan(templateEntries(template), undefined, template.startMinutes);
     // 読み込んだ結果は上に出る。押した位置に留まると何も起きなかったように見える。
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  // どのひな形も同じ時刻で組んであるので、説明は1か所で済ませる。
+  const startLabel = formatClock(PLAN_TEMPLATES[0].startMinutes);
 
   return (
     <div className="space-y-5">
@@ -65,7 +76,8 @@ export default function PlanStarter({ spots }: { spots: PlanSpot[] }) {
         <p className="text-sm leading-relaxed text-muted-foreground">
           押すとその場でプランができます。あとから足す・外す・日を移すのは
           全部できるので、まず1つ読み込んで、要らないものを外していくのが
-          いちばん早い方法です。
+          いちばん早い方法です。どれも{startLabel}に宿を出る前提で、
+          開館の時刻と衛兵交代式に合わせて組んであります。
         </p>
       </div>
 
