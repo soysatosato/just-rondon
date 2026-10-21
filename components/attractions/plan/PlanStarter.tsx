@@ -12,6 +12,7 @@ import {
   type PlanTemplate,
 } from "@/lib/plan/templates";
 import { replacePlan } from "./plan-store";
+import { trackPlan } from "./track";
 
 /**
  * プランが空のときに出す出発点。
@@ -60,6 +61,7 @@ export default function PlanStarter({ spots }: { spots: PlanSpot[] }) {
   const load = (template: PlanTemplate) => {
     // 宿を出る時刻もひな形のものにする。ひな形の時刻はその前提で組んである。
     replacePlan(templateEntries(template), undefined, template.startMinutes);
+    trackPlan("template", { template_id: template.id });
     // 読み込んだ結果は上に出る。押した位置に留まると何も起きなかったように見える。
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

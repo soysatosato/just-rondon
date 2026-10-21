@@ -9,6 +9,7 @@ import {
   usePlanDay,
   usePlanMinutes,
 } from "@/components/attractions/plan/plan-store";
+import { trackPlan } from "@/components/attractions/plan/track";
 
 /**
  * 「この配分で旅程に入れる」。時間別の回り方の各段の下に出す。
@@ -42,7 +43,12 @@ export default function TimeRoutePlanButton({
     <div className="flex flex-wrap items-center gap-3">
       <button
         type="button"
-        onClick={() => addToPlanWithMinutes(slug, minutes)}
+        onClick={() => {
+          // 配分を切り替えただけのときは数えない。数えるのは新しく入ったときだけ。
+          if (addToPlanWithMinutes(slug, minutes) && day === 0) {
+            trackPlan("add", { source: "time_route", spot: slug, minutes });
+          }
+        }}
         aria-pressed={selected}
         aria-label={`${name}を${label}の配分で旅程に入れる`}
         className={cn(

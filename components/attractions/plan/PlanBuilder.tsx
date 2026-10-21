@@ -47,6 +47,7 @@ import {
   type PlanSnapshot,
 } from "./plan-store";
 import { resolvePlanConflict, usePlanSyncStatus } from "./plan-sync";
+import { trackPlan } from "./track";
 
 /**
  * 地図は leaflet が window を触るのでサーバーでは描けない。
@@ -149,6 +150,8 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     label: string;
     /** サイト内のボタンから開いたか。足すのが主な使い方になる。 */
     fromSite: boolean;
+    /** 計測に添える出どころ。リンクに src が無ければ "share"。 */
+    source: string;
   } | null>(null);
   /**
    * 共有リンクの欄を開いているか。
@@ -331,6 +334,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     const current = readPlan();
     if (current.length === 0) {
       replacePlan(decoded, incomingStart, incomingStartMinutes ?? undefined);
+      trackPlan("import", { mode: "auto", src: source ?? "share" });
       stripShareParams();
       return;
     }
@@ -347,6 +351,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       startMinutes: incomingStartMinutes,
       label: sourceLabel ?? "共有されたプラン",
       fromSite: Boolean(sourceLabel),
+      source: source ?? "share",
     });
   }, []);
 
@@ -358,6 +363,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
    */
   const acceptIncoming = (mode: "append" | "replace") => {
     if (!incoming) return;
+    trackPlan("import", { mode, src: incoming.source });
     const snapshot = readSnapshot();
     if (mode === "replace") {
       replacePlan(
@@ -484,6 +490,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const handleShare = async () => {
     const url = buildShareUrl(entries, startDate, startMinutes);
     setShareOpen(true);
+    trackPlan("share");
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -514,6 +521,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       countAfter: 0,
     });
     clearPlan();
+    trackPlan("clear", { scope: "all" });
     setConfirmingClear(false);
     setShareOpen(false);
     // 消すとページが一気に短くなり、ブラウザが位置を切り詰めて
@@ -537,6 +545,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       countAfter: entries.length - removed,
     });
     clearDay(day);
+    trackPlan("clear", { scope: "day" });
   };
 
   /*
@@ -555,6 +564,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       countAfter: conflictRemote.entries.length,
     });
     resolvePlanConflict("remote");
+    trackPlan("conflict", { choice: "remote" });
   };
 
   const keepBrowserPlan = () => {
@@ -565,6 +575,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       countAfter: entries.length,
     });
     resolvePlanConflict("local");
+    trackPlan("conflict", { choice: "local" });
   };
 
   /** 掴んだものを落とす。落ちる位置が決まっていなければ何もしない。 */
@@ -721,6 +732,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             <button
               type="button"
               onClick={() => {
+                trackPlan("import", { mode: "dismiss", src: incoming.source });
                 setIncoming(null);
                 stripShareParams();
               }}
@@ -828,7 +840,10 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
             onSelectDay={selectDay}
             onAdd={() => openAdd(days.length)}
             onShare={handleShare}
-            onPrint={() => window.print()}
+            onPrint={() => {
+              trackPlan("print");
+              window.print();
+            }}
             onClear={() => setConfirmingClear(true)}
             shareCopied={copied}
           />

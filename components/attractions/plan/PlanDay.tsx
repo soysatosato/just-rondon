@@ -30,6 +30,7 @@ import { dayColor } from "./day-colors";
 import PlanDayRow from "./PlanDayRow";
 import type { DragState, DropTarget } from "./drag";
 import { reorderDay, swapDays } from "./plan-store";
+import { trackPlan } from "./track";
 
 /**
  * 1日ぶんのカード。
@@ -385,6 +386,7 @@ export default function PlanDay({
             href={directions}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackPlan("open_maps", { day: plan.day })}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
           >
             <MapIcon className="h-3.5 w-3.5" aria-hidden />

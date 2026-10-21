@@ -335,11 +335,6 @@ export function removeFromPlan(slug: string) {
   write(entries.filter((e) => e.slug !== slug));
 }
 
-export function togglePlan(slug: string) {
-  if (entries.some((e) => e.slug === slug)) removeFromPlan(slug);
-  else addToPlan(slug);
-}
-
 /**
  * 日を移す。行き先の日では末尾に付く。day に「今の最終日 + 1」を渡すと
  * 新しい日になる。

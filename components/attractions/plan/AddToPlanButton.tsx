@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Check, Plus } from "lucide-react";
 
+import { MAX_SPOTS } from "@/lib/plan";
 import { cn } from "@/lib/utils";
-import { togglePlan, usePlanDay } from "./plan-store";
+import { addToPlan, removeFromPlan, usePlanDay } from "./plan-store";
+import { trackPlan } from "./track";
 
 /**
  * 「旅行プランに追加」ボタン。一覧のカードと、スポット詳細ページに出る。
@@ -16,6 +19,9 @@ import { togglePlan, usePlanDay } from "./plan-store";
  *
  * 押すと外れるトグルにしてある。「追加済み」を押して何も起きないより、
  * 取り消せるほうが迷わない。
+ *
+ * プランが上限(40ヶ所)のときは足せない。以前は押しても黙って何も
+ * 起きなかったので、上限に達していることをボタンの中で数秒だけ言う。
  */
 export default function AddToPlanButton({
   slug,
@@ -35,8 +41,34 @@ export default function AddToPlanButton({
 }) {
   const day = usePlanDay(slug);
   const added = day > 0;
+  const [full, setFull] = useState(false);
 
-  const label = added ? `プラン${day}日目に追加済み` : "旅行プランに追加";
+  useEffect(() => {
+    if (!full) return;
+    const timer = window.setTimeout(() => setFull(false), 3000);
+    return () => window.clearTimeout(timer);
+  }, [full]);
+
+  const source = variant === "detail" ? "detail" : "card";
+
+  const handleClick = () => {
+    if (added) {
+      removeFromPlan(slug);
+      trackPlan("remove", { source, spot: slug });
+      return;
+    }
+    if (addToPlan(slug)) {
+      trackPlan("add", { source, spot: slug });
+    } else {
+      setFull(true);
+    }
+  };
+
+  const label = full
+    ? `上限の${MAX_SPOTS}ヶ所です`
+    : added
+      ? `プラン${day}日目に追加済み`
+      : "旅行プランに追加";
 
   return (
     <div
@@ -47,7 +79,7 @@ export default function AddToPlanButton({
     >
       <button
         type="button"
-        onClick={() => togglePlan(slug)}
+        onClick={handleClick}
         aria-pressed={added}
         aria-label={added ? `${name}をプランから外す` : `${name}をプランに追加`}
         className={cn(
@@ -67,7 +99,9 @@ export default function AddToPlanButton({
         )}
         {variant === "card" ? (
           <>
-            <span className="sm:hidden">{added ? `${day}日目` : "追加"}</span>
+            <span className="sm:hidden">
+              {full ? "上限" : added ? `${day}日目` : "追加"}
+            </span>
             <span className="hidden truncate sm:inline">{label}</span>
           </>
         ) : (
@@ -75,7 +109,12 @@ export default function AddToPlanButton({
         )}
       </button>
 
-      {variant === "detail" && added && (
+      {/* 上限に達したことは読み上げにも伝える。ボタンの名前は変わらないので。 */}
+      <span className="sr-only" aria-live="polite">
+        {full ? `プランが上限の${MAX_SPOTS}ヶ所に達しているので、追加できませんでした` : ""}
+      </span>
+
+      {variant === "detail" && (added || full) && (
         <Link
           href="/plan"
           className="text-sm font-medium text-indigo-600 underline underline-offset-4 hover:text-indigo-700 dark:text-indigo-400"

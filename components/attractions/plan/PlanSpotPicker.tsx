@@ -19,6 +19,7 @@ import { CATEGORY_ORDER, categoryLabel } from "@/components/sightseeing/categori
 import { areaGuides, getAreaMeta } from "@/components/sightseeing/areas/areas";
 import { MAX_DAYS, MAX_SPOTS, type PlanSpot } from "@/lib/plan";
 import { addToPlan, removeFromPlan, usePlanCount, usePlanDay } from "./plan-store";
+import { trackPlan } from "./track";
 import { responsiveImage } from "@/lib/wikimedia-image";
 
 /**
@@ -368,9 +369,14 @@ function PickerRow({
 
       <button
         type="button"
-        onClick={() =>
-          added ? removeFromPlan(spot.slug) : addToPlan(spot.slug, day)
-        }
+        onClick={() => {
+          if (added) {
+            removeFromPlan(spot.slug);
+            trackPlan("remove", { source: "picker", spot: spot.slug });
+          } else if (addToPlan(spot.slug, day)) {
+            trackPlan("add", { source: "picker", spot: spot.slug });
+          }
+        }}
         disabled={!added && full}
         aria-pressed={added}
         aria-label={

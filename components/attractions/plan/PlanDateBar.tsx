@@ -14,6 +14,7 @@ import {
   usePlanStartDate,
   usePlanStartMinutes,
 } from "./plan-store";
+import { trackPlan } from "./track";
 
 /**
  * 旅程の起点。1日目の日付と、宿を出る時刻。
@@ -78,7 +79,10 @@ export default function PlanDateBar({ dayCount }: { dayCount: number }) {
             id="plan-start-date"
             type="date"
             value={startDate ?? ""}
-            onChange={(e) => setStartDate(e.target.value || null)}
+            onChange={(e) => {
+              setStartDate(e.target.value || null);
+              if (e.target.value) trackPlan("set_date");
+            }}
             className="rounded-lg border border-border bg-background px-2.5 py-1.5 text-base sm:text-xs"
           />
           {start && (

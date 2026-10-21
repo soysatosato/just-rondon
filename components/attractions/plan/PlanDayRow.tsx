@@ -28,6 +28,7 @@ import {
 import LondonPassBadge from "./LondonPassBadge";
 import PlanStayEditor from "./PlanStayEditor";
 import { moveToDay, moveWithinDay, removeFromPlan } from "./plan-store";
+import { trackPlan } from "./track";
 import type { DragState } from "./drag";
 import { responsiveImage } from "@/lib/wikimedia-image";
 
@@ -315,7 +316,10 @@ export default function PlanDayRow({
 
             <button
               type="button"
-              onClick={() => removeFromPlan(row.spot.slug)}
+              onClick={() => {
+                removeFromPlan(row.spot.slug);
+                trackPlan("remove", { source: "row", spot: row.spot.slug });
+              }}
               className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
             >
               <X className="h-3 w-3" aria-hidden />
