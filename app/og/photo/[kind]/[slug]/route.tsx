@@ -95,8 +95,10 @@ export async function GET(
           backgroundColor: "#111827",
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element -- satori が描く画像の中身で、ページの <img> ではない */}
         <img
           src={photo.src}
+          alt=""
           width={rect.width}
           height={rect.height}
           style={{ position: "absolute", ...rect }}
