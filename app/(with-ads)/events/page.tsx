@@ -11,7 +11,7 @@ import {
 import { fetchEvents2026 } from "@/utils/actions/contents";
 import { fetchLatestChangeIssue } from "@/utils/actions/changes";
 import { formatMonthJa } from "@/lib/changes";
-import { buildPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
 import { formatWeekRange } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
@@ -107,9 +107,7 @@ export default async function EventsPage() {
   // 号そのものは /events/week/<slug> にも同じ内容で出る。検索エンジンには
   // 毎週更新されるこの /events を正とみなしてほしいので、記事の JSON-LD も
   // ここを id にする。
-  const jsonLd = buildBriefJsonLd(brief, {
-    articleId: "https://www.just-rondon.com/events",
-  });
+  const jsonLd = buildBriefJsonLd(brief, { pageUrl: absoluteUrl("/events") });
 
   return (
     // 本文が主役のページなので、コンテナ幅いっぱいに広げず読める行長に収める。

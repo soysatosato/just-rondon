@@ -10,7 +10,7 @@ import {
   fetchEventsForWeek,
   fetchBriefSlugs,
 } from "@/utils/actions/weekly";
-import { buildPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
 import { weeklyOgImage } from "@/lib/og";
 import { getISOWeekStart, getIssueFreshness } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
@@ -96,11 +96,10 @@ export default async function WeeklyBriefPage({
     fetchForecastForWeek(brief.weekStart, brief.weekEnd, freshness.isPast),
   ]);
 
-  // 過去号の催し物を Event として出すと、終わったものを案内することになる。
-  // 記事の構造化データだけに絞る。
-  const jsonLd = freshness.isPast
-    ? buildBriefJsonLd({ ...brief, items: [] })
-    : buildBriefJsonLd(brief);
+  // 号の Article だけを出す。催しを Event として並べない理由は lib/weeklyJsonLd.ts。
+  const jsonLd = buildBriefJsonLd(brief, {
+    pageUrl: absoluteUrl(`/events/week/${brief.slug}`),
+  });
 
   return (
     <div data-page-main className="mx-auto max-w-3xl sm:px-4 pt-4 pb-8 sm:pb-10">
