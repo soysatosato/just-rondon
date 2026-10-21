@@ -1,15 +1,9 @@
 import Link from "next/link";
-import { MapPin, ShieldCheck, TriangleAlert } from "lucide-react";
+import { ChevronDown, MapPin, ShieldCheck, TriangleAlert } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
 import InstagramEmbed from "@/components/shared/InstagramEmbed";
 import BanksyMap from "@/components/museums/BanksyMap";
 import {
@@ -419,26 +413,27 @@ export default function MuseumBanksy() {
           </span>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">よくある質問</h2>
         </div>
-        <Accordion
-          type="single"
-          collapsible
-          className="rounded-xl border border-border bg-card px-5"
-        >
+        {/* 開閉は details/summary。閉じていても答えが DOM にあり、Google が
+            本文として読める(理由は components/guides/GuideFaq.tsx)。 */}
+        <div className="rounded-xl border border-border bg-card px-5">
           {FAQ_ITEMS.map((item, i) => (
-            <AccordionItem
+            <details
               key={item.question}
-              value={`faq-${i}`}
-              className={i === FAQ_ITEMS.length - 1 ? "border-b-0" : ""}
+              className={`group ${i === FAQ_ITEMS.length - 1 ? "" : "border-b"}`}
             >
-              <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left text-sm font-semibold [&::-webkit-details-marker]:hidden">
                 {item.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                <ChevronDown
+                  aria-hidden
+                  className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div className="pb-4 text-sm leading-relaxed text-muted-foreground">
                 {item.answer}
-              </AccordionContent>
-            </AccordionItem>
+              </div>
+            </details>
           ))}
-        </Accordion>
+        </div>
       </section>
 
       {/* 締め */}

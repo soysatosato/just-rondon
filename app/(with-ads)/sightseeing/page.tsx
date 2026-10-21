@@ -2,14 +2,8 @@ export const revalidate = 60 * 60;
 
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
-import { CalendarRange } from "lucide-react";
+import { CalendarRange, ChevronDown } from "lucide-react";
 
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import PhotoRail from "@/components/home/PhotoRail";
@@ -517,7 +511,11 @@ export default async function Page() {
         </Link>
       </section>
 
-      {/* 5. FAQ。FAQPage の JSON-LD と対で残す。 */}
+      {/*
+        5. FAQ。FAQPage の JSON-LD と対で残す。
+        開閉は details/summary。閉じていても答えが DOM にあり、Google が本文として
+        読める(理由は components/guides/GuideFaq.tsx)。
+      */}
       <section className="mt-16">
         <div className="max-w-3xl border-b border-foreground/15 pb-5">
           <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
@@ -529,21 +527,17 @@ export default async function Page() {
           </h2>
         </div>
 
-        <Accordion
-          type="single"
-          collapsible
-          className="mt-6 divide-y rounded-xl border bg-card"
-        >
+        <div className="mt-6 divide-y rounded-xl border bg-card">
           {sightseeingFaqItems.map((faq, idx) => (
-            <AccordionItem
-              key={idx}
-              value={`faq-${idx}`}
-              className="border-none"
-            >
-              <AccordionTrigger className="px-5 py-4 text-left">
+            <details key={idx} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left hover:underline [&::-webkit-details-marker]:hidden">
                 <span className="text-sm font-semibold">{faq.question}</span>
-              </AccordionTrigger>
-              <AccordionContent className="px-5 pb-4">
+                <ChevronDown
+                  aria-hidden
+                  className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div className="px-5 pb-4">
                 <div className="space-y-1.5 text-xs leading-relaxed text-muted-foreground">
                   {faq.answer.map((line, i) => (
                     <div key={i} className="flex gap-1.5">
@@ -554,10 +548,10 @@ export default async function Page() {
                     </div>
                   ))}
                 </div>
-              </AccordionContent>
-            </AccordionItem>
+              </div>
+            </details>
           ))}
-        </Accordion>
+        </div>
       </section>
     </div>
   );
