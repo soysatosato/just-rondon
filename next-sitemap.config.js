@@ -6,6 +6,80 @@ const {
 } = require("./lib/london-months/written-months");
 const prisma = new PrismaClient();
 
+/**
+ * URL ごとの最終更新日(sitemap の lastmod)。
+ *
+ * 以前は全URLにビルドした時刻を入れていた。Google は lastmod を
+ * 「一貫して正確なときだけ」使うので、全部が同じ時刻では何も伝わらず、
+ * 季節の特集や週報を直しても再クロールの手がかりにならなかった。
+ *
+ * 本当の更新日を DB から言えるものだけ入れ、言えないものには出さない:
+ *
+ *   読み物       revisedAt(公開後に本文を直した日)、無ければ publishedAt。
+ *               記事の「更新」の日付と JSON-LD の dateModified と同じ値
+ *               (lib/publish-schedule.ts の modifiedDateOf)。
+ *   週報・月次号   updatedAt。号を直したときにだけ動く(閲覧は数えていない)。
+ *               /events は最新号を載せるので、最新号の日付。
+ *
+ * コードに本文があるガイドは日付を持たないので出さない。スポット・美術館・
+ * ミュージカルの updatedAt は 2026-10 まで閲覧の加算で動いていて、本文を
+ * 直した日にならないので出さない。
+ *
+ * transform は自動収集分(generateStaticParams 由来)と additionalPaths の
+ * 両方から呼ばれるので、表は最初の呼び出しで1回だけ引く。
+ */
+const READING_BASES = {
+  column: "/column",
+  "british-english": "/british-english",
+  "modern-britain": "/modern-britain",
+  area: "/reading/areas",
+};
+
+let lastmodsPromise;
+function loadLastmods() {
+  if (!lastmodsPromise) {
+    lastmodsPromise = (async () => {
+      const lastmods = new Map();
+      const now = new Date();
+
+      const reading = await prisma.content.findMany({
+        where: {
+          category: { in: Object.keys(READING_BASES) },
+          publishedAt: { lte: now },
+        },
+        select: { category: true, slug: true, publishedAt: true, revisedAt: true },
+      });
+      for (const c of reading) {
+        lastmods.set(
+          `${READING_BASES[c.category]}/${c.slug}`,
+          (c.revisedAt ?? c.publishedAt).toISOString(),
+        );
+      }
+
+      const briefs = await prisma.weeklyBrief.findMany({
+        where: { published: true },
+        select: { slug: true, updatedAt: true },
+        orderBy: { weekStart: "desc" },
+      });
+      for (const b of briefs) {
+        lastmods.set(`/events/week/${b.slug}`, b.updatedAt.toISOString());
+      }
+      if (briefs[0]) lastmods.set("/events", briefs[0].updatedAt.toISOString());
+
+      const issues = await prisma.monthlyChangeIssue.findMany({
+        where: { publishedAt: { lte: now } },
+        select: { slug: true, updatedAt: true },
+      });
+      for (const issue of issues) {
+        lastmods.set(`/changes/${issue.slug}`, issue.updatedAt.toISOString());
+      }
+
+      return lastmods;
+    })();
+  }
+  return lastmodsPromise;
+}
+
 /** @type {import('next-sitemap').IConfig} */
 /**
  * public/robots.txt と public/sitemap*.xml は postbuild でここから生成される。
@@ -102,11 +176,15 @@ module.exports = {
     else if (depth === 2) priority = 0.8; // 各ガイド・詳細ページ
     else priority = 0.6; // それ以下(章ページ、作品ページなど)
 
+    // 更新日が言えないURLは undefined のまま返し、<lastmod> を出さない
+    // (表の作り方は上の loadLastmods)。
+    const lastmods = await loadLastmods();
+
     return {
       loc: path,
       changefreq: isFresh ? "weekly" : "monthly",
       priority,
-      lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      lastmod: lastmods.get(path),
       alternateRefs: config.alternateRefs ?? [],
     };
   },
