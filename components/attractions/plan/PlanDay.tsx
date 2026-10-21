@@ -20,6 +20,7 @@ import {
   formatClock,
   formatGbp,
   formatMinutes,
+  hasRealLocation,
   orderByProximity,
   type DayPlan,
 } from "@/lib/plan";
@@ -78,6 +79,16 @@ export default function PlanDay({
 }) {
   const spots = plan.rows.map((row) => row.spot);
   const totalMinutes = plan.stayMinutes + plan.travelMinutes;
+  /*
+   * 休館曜日をまだ確かめていない行き先。日付を入れた日だけ数える。
+   * 曜日の警告はこの日の曜日と closedWeekdays を比べるだけなので、
+   * 確かめていない行き先は警告が出なくても開いているとは限らない。
+   */
+  const unchecked = date
+    ? plan.rows.filter(
+        (row) => hasRealLocation(row.spot) && !row.spot.closedDaysChecked,
+      )
+    : [];
   const directions = dayDirectionsUrl(spots);
   const color = dayColor(plan.day);
 
@@ -239,6 +250,17 @@ export default function PlanDay({
           は合計に入っていません。実際はこれより増えます。
           {plan.unknownDurationCount > 0 &&
             "その先の時刻もそのぶん遅くなります。滞在時間は各スポットの時計の欄から入れられます。"}
+        </p>
+      )}
+
+      {unchecked.length > 0 && (
+        <p className="border-b border-border bg-muted/20 px-4 py-2 text-xs text-muted-foreground">
+          {unchecked
+            .slice(0, 3)
+            .map((row) => row.spot.name)
+            .join("・")}
+          {unchecked.length > 3 && `ほか${unchecked.length - 3}ヶ所`}
+          は、休館する曜日をまだ確かめていないので、この日に閉まっていても警告が出ません。
         </p>
       )}
 

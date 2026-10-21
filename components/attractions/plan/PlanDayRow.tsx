@@ -11,6 +11,7 @@ import {
   DoorClosed,
   Footprints,
   GripVertical,
+  House,
   MapPin,
   TrainFront,
   Wallet,
@@ -88,7 +89,12 @@ export default function PlanDayRow({
    */
   const [armed, setArmed] = useState(false);
   const dragging = drag?.slug === row.spot.slug;
-  const LegIcon = row.legFromPrevious ? LEG_ICONS[row.legFromPrevious.kind] : null;
+  // 宿からの区間は家の印にする。乗り物の印だと、前のスポットからの移動に見える。
+  const LegIcon = row.legFromPrevious
+    ? row.legFromPrevious.fromHome
+      ? House
+      : LEG_ICONS[row.legFromPrevious.kind]
+    : null;
 
   return (
     <li

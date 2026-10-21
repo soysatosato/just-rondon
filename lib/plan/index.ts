@@ -256,10 +256,12 @@ export type LegKind = "walk" | "transit" | "daytrip";
 
 export type PlanLeg = {
   kind: LegKind;
-  /** 直線距離(km)。表示にも使うので丸めずに持つ。 */
+  /** 直線距離(km)。表示にも使うので丸めずに持つ。宿からの区間は 0。 */
   km: number;
   /** 旅程の合計に足す分数。 */
   minutes: number;
+  /** 宿から1ヶ所目への区間か。宿の場所は持っていないので距離は出さない。 */
+  fromHome?: boolean;
 };
 
 /** 実際に歩く道のりは直線距離の1.3倍前後になる。 */
@@ -303,6 +305,31 @@ export function legBetween(from: PlanSpot, to: PlanSpot): PlanLeg | null {
   return { kind: "daytrip", km, minutes: DAYTRIP_MINUTES };
 }
 
+/** 市外かどうかを測る起点。チャリング・クロス(ロンドンの距離の起点)。 */
+const CENTRAL_LONDON = { lat: 51.5074, lng: -0.1278 };
+
+/**
+ * 宿から1ヶ所目まで。
+ *
+ * 宿の場所は持っていないので、市内の移動と同じ一律の目安を置く。1ヶ所目が
+ * 中心から市外の距離にあれば、市外への移動として数える。
+ *
+ * 以前はこれを足さず、「宿を出る時刻」にそのまま1ヶ所目に着く計算だった。
+ * 9:00に宿を出てウィンザー城に9:00に着き、9:30開館の寺院には9:00に並ぶ。
+ * 交通費のほうは宿との往復を数えていたので、時間と運賃が別の旅程を
+ * 数えていたことにもなる。
+ */
+export function legFromHome(spot: PlanSpot): PlanLeg | null {
+  if (!hasRealLocation(spot)) return null;
+  const daytrip = distanceKm(CENTRAL_LONDON, spot) > DAYTRIP_KM;
+  return {
+    kind: daytrip ? "daytrip" : "transit",
+    km: 0,
+    minutes: daytrip ? DAYTRIP_MINUTES : TRANSIT_MINUTES,
+    fromHome: true,
+  };
+}
+
 /* ------------------------------------------------------------------ *
  * 1日ぶんの集計
  * ------------------------------------------------------------------ */
@@ -326,6 +353,35 @@ export const BIG_VENUES_PER_DAY = 2;
  */
 export const DAY_BUDGET_MINUTES = 9 * 60;
 
+/**
+ * 「1日」「24時間」と書かれたスポットを、旅程では何分として数えるか。
+ *
+ * 掲載値の「1日」(レゴランド、チェシントン)や「半日〜1日」(チェルシー・
+ * フラワー・ショー)は開園から閉園までのことで、乗り降り自由バスの
+ * 「24時間」は券の有効時間であって滞在ではない。これを24時間として積むと、
+ * その日は翌朝に終わり、合計は50時間を超える(2026-10 の監査で確認)。
+ *
+ * 7時間にしているのは、宿からの移動(市外なら1時間30分)を足しても1日の枠
+ * (9時間)に収まる長さだから。枠ちょうどにすると、そのスポットだけの日にも
+ * 詰め込みすぎの警告が出る。
+ */
+export const FULL_DAY_STAY_MINUTES = 7 * 60;
+
+/**
+ * 旅程で使う既定の滞在時間(分)。掲載値の原文から読み、1日の枠を超える
+ * 書き方は FULL_DAY_STAY_MINUTES として数える。読めなければ null。
+ *
+ * parseDurationMinutes そのものは一覧の絞り込み(「半日以上」など)でも
+ * 使っているので、そちらは原文どおりの値のままにしておく。
+ */
+export function planStayMinutes(
+  spot: Pick<PlanSpot, "durationText">,
+): number | null {
+  const parsed = parseDurationMinutes(spot.durationText);
+  if (parsed === null) return null;
+  return parsed > DAY_BUDGET_MINUTES ? FULL_DAY_STAY_MINUTES : parsed;
+}
+
 export type PlanWarning = {
   /** 同じ日に2つ出しても意味のない警告があるので種別を持つ。 */
   kind: "big-venues" | "too-long" | "daytrip" | "closed";
@@ -334,11 +390,14 @@ export type PlanWarning = {
 
 export type PlanRow = {
   spot: PlanSpot;
-  /** 直前のスポットからの移動。その日の先頭は null。 */
+  /**
+   * ここへの移動。1ヶ所目は宿からの区間(fromHome)、それ以降は直前の
+   * 住所を持つスポットから。住所を持たない商品(パス類)は null。
+   */
   legFromPrevious: PlanLeg | null;
   /**
    * その日が休館日だと原文から読み取れた場合の曜日一覧(「月・火」)。
-   * 出発日が未設定のとき、および openingHours が曜日に触れていないときは null。
+   * 日付が未設定のとき、およびその日の曜日が closedWeekdays に無いときは null。
    */
   closedOn: string | null;
   /**
@@ -408,56 +467,8 @@ export function buildDayPlan(
   spots: PlanSpot[],
   options: BuildDayOptions = {},
 ): DayPlan {
-  const { date, overrides, startMinutes: dayStart = DEFAULT_START_MINUTES } =
-    options;
-  const weekday = date ? weekdayIndex(date) : null;
-
-  // 時刻を積み上げながら組む。到着時刻は手前の行が決まらないと出せないので、
-  // map ではなく順に走らせる必要がある。
-  let clock = dayStart;
-
-  const rows: PlanRow[] = spots.map((spot, i) => {
-    /*
-     * 休館曜日は Attraction.closedWeekdays が持つ。以前は openingHours の
-     * 原文を正規表現で読んでいたが、読めるのが155件中10件しかなかった。
-     *
-     * 空配列は「毎日開いている」と「まだ調べていない」の両方でありうる。
-     * どちらでも警告を出さない点は同じなので、ここでは区別しない
-     * (区別が要るのは点検する側で、closedDaysCheckedAt が持つ)。
-     */
-    const closedDays = weekday === null ? null : spot.closedWeekdays;
-
-    /*
-     * 滞在時間は掲載値を既定にして、読者が入れていればそちらを採る。
-     *
-     * 掲載値のほうを書き換えないのは、原文が「1〜1時間半」のように幅と
-     * 注記を持っているため。読者が入れるのは合計に足す1つの数で、
-     * 原文の代わりにはならない。両方を持って、出す側で選ぶ。
-     */
-    const defaultMinutes = parseDurationMinutes(spot.durationText);
-    const override = overrides?.get(spot.slug);
-    const overridden = isValidStayMinutes(override);
-    const stayMinutes = overridden ? override : defaultMinutes;
-
-    const legFromPrevious = i === 0 ? null : legBetween(spots[i - 1], spot);
-    const arriveMinutes = clock + (legFromPrevious?.minutes ?? 0);
-    const leaveMinutes = arriveMinutes + (stayMinutes ?? 0);
-    clock = leaveMinutes;
-
-    return {
-      spot,
-      legFromPrevious,
-      closedOn:
-        closedDays && weekday !== null && closedDays.includes(weekday)
-          ? formatClosedDays(closedDays)
-          : null,
-      stayMinutes,
-      defaultMinutes,
-      overridden,
-      arriveMinutes,
-      leaveMinutes,
-    };
-  });
+  const dayStart = options.startMinutes ?? DEFAULT_START_MINUTES;
+  const rows = layoutRows(spots, options);
 
   let stayMinutes = 0;
   let unknownDurationCount = 0;
@@ -499,9 +510,7 @@ export function buildDayPlan(
   if (total > DAY_BUDGET_MINUTES) {
     warnings.push({
       kind: "too-long",
-      // 長さではなく終わる時刻で言う。「9時間40分」は多いかどうかの判断が
-      // 要るが、「終わるのは20:40」はその場で分かる。
-      message: `${formatClock(dayStart)}に出ても、終わるのは${formatClock(endMinutes)}です。1ヶ所を別の日に移すと収まります。`,
+      message: tooLongMessage(spots, rows, options, dayStart, endMinutes),
     });
   }
 
@@ -517,10 +526,15 @@ export function buildDayPlan(
     });
   }
 
-  const daytripCount = rows.filter(
-    (row) => row.legFromPrevious?.kind === "daytrip",
-  ).length;
-  if (daytripCount > 0) {
+  /*
+   * 市外へ出る日に、ほかの行き先も入っていたら知らせる。
+   *
+   * 宿からの区間を数えるようになったので、ウィンザー城だけの日にも市外への
+   * 区間が立つ。その日は助言(1ヶ所に絞る)をすでに満たしているので出さない。
+   */
+  const hasDaytrip = rows.some((row) => row.legFromPrevious?.kind === "daytrip");
+  const locatedCount = rows.filter((row) => hasRealLocation(row.spot)).length;
+  if (hasDaytrip && locatedCount > 1) {
     warnings.push({
       kind: "daytrip",
       message:
@@ -540,6 +554,113 @@ export function buildDayPlan(
     startMinutes: dayStart,
     endMinutes,
   };
+}
+
+/**
+ * 1日ぶんの行を、宿を出る時刻から順に積んで並べる。
+ *
+ * buildDayPlan の本体から分けてあるのは、詰め込みすぎの日に「どれを
+ * 別の日に移せば収まるか」を、1ヶ所ずつ抜いた並びで組み直して確かめるため。
+ */
+function layoutRows(spots: PlanSpot[], options: BuildDayOptions): PlanRow[] {
+  const { date, overrides, startMinutes: dayStart = DEFAULT_START_MINUTES } =
+    options;
+  const weekday = date ? weekdayIndex(date) : null;
+
+  // 時刻を積み上げながら組む。到着時刻は手前の行が決まらないと出せないので、
+  // map ではなく順に走らせる必要がある。
+  let clock = dayStart;
+  /**
+   * 直前の、住所を持つスポット。移動はここから測る。
+   * 住所を持たない商品(パス類)を挟んでも、その前後の移動は消さない。
+   */
+  let previous: PlanSpot | null = null;
+
+  return spots.map((spot) => {
+    /*
+     * 休館曜日は Attraction.closedWeekdays が持つ。以前は openingHours の
+     * 原文を正規表現で読んでいたが、読めるのが155件中10件しかなかった。
+     *
+     * 空配列は「毎日開いている」と「まだ調べていない」の両方でありうる。
+     * どちらでも警告を出さない点は同じなので、ここでは区別しない
+     * (区別が要るのは点検する側で、closedDaysCheckedAt が持つ)。
+     */
+    const closedDays = weekday === null ? null : spot.closedWeekdays;
+
+    /*
+     * 滞在時間は掲載値を既定にして、読者が入れていればそちらを採る。
+     *
+     * 掲載値のほうを書き換えないのは、原文が「1〜1時間半」のように幅と
+     * 注記を持っているため。読者が入れるのは合計に足す1つの数で、
+     * 原文の代わりにはならない。両方を持って、出す側で選ぶ。
+     */
+    const defaultMinutes = planStayMinutes(spot);
+    const override = overrides?.get(spot.slug);
+    const overridden = isValidStayMinutes(override);
+    const stayMinutes = overridden ? override : defaultMinutes;
+
+    // 1ヶ所目(住所を持つ最初の行)は宿から、それ以降は直前の行き先から測る。
+    let legFromPrevious: PlanLeg | null = null;
+    if (hasRealLocation(spot)) {
+      legFromPrevious = previous ? legBetween(previous, spot) : legFromHome(spot);
+      previous = spot;
+    }
+    const arriveMinutes = clock + (legFromPrevious?.minutes ?? 0);
+    const leaveMinutes = arriveMinutes + (stayMinutes ?? 0);
+    clock = leaveMinutes;
+
+    return {
+      spot,
+      legFromPrevious,
+      closedOn:
+        closedDays && weekday !== null && closedDays.includes(weekday)
+          ? formatClosedDays(closedDays)
+          : null,
+      stayMinutes,
+      defaultMinutes,
+      overridden,
+      arriveMinutes,
+      leaveMinutes,
+    };
+  });
+}
+
+/**
+ * 詰め込みすぎの日の警告文。
+ *
+ * 長さではなく終わる時刻で言う。「9時間40分」は多いかどうかの判断が
+ * 要るが、「終わるのは20:40」はその場で分かる。
+ *
+ * 以前は一律に「1ヶ所を別の日に移すと収まります」と書いていたが、
+ * 収まるかどうかは確かめておらず、1ヶ所しかない日にも出ていた。いまは
+ * 1ヶ所ずつ抜いて組み直し、抜けば収まる行き先があるときだけ名指しする。
+ * 候補が複数なら滞在のいちばん短いものを選ぶ——削る量が少ないほうが、
+ * 読者の組んだ日の形を崩さない。
+ */
+function tooLongMessage(
+  spots: PlanSpot[],
+  rows: PlanRow[],
+  options: BuildDayOptions,
+  dayStart: number,
+  endMinutes: number,
+): string {
+  const head = `${formatClock(dayStart)}に宿を出ると、終わるのは${formatClock(endMinutes)}です。`;
+
+  let best: { name: string; stay: number; end: number } | null = null;
+  for (let i = 0; spots.length > 1 && i < spots.length; i++) {
+    const rest = layoutRows(
+      spots.filter((_, j) => j !== i),
+      options,
+    );
+    const end = rest[rest.length - 1].leaveMinutes;
+    if (end - dayStart > DAY_BUDGET_MINUTES) continue;
+    const stay = rows[i].stayMinutes ?? 0;
+    if (!best || stay < best.stay) best = { name: spots[i].name, stay, end };
+  }
+
+  return best
+    ? `${head}${best.name}を別の日に移すと、${formatClock(best.end)}に終わります。`
+    : `${head}滞在を短くするか、行き先を別の日に分けてください。`;
 }
 
 /* ------------------------------------------------------------------ *
@@ -627,6 +748,12 @@ const LEG_LABELS: Record<LegKind, string> = {
 };
 
 export function legLabel(leg: PlanLeg): string {
+  // 宿の場所は持っていないので距離は出さず、目安だと断る。
+  if (leg.fromHome) {
+    return leg.kind === "daytrip"
+      ? `宿から鉄道で約${formatMinutes(leg.minutes)} (市外・目安)`
+      : `宿から地下鉄・バスで約${formatMinutes(leg.minutes)} (目安)`;
+  }
   if (leg.kind === "walk") {
     return `徒歩${leg.minutes}分 (${formatKm(leg.km)})`;
   }

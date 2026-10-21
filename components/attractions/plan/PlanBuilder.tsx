@@ -63,13 +63,13 @@ function stripShareParams() {
   window.history.replaceState(null, "", `${url.pathname}${url.search}`);
 }
 
-/** 「5ヶ所・2日間・10月3日(金)出発」。2つのプランを見比べてもらうときの一言。 */
+/** 「5ヶ所・2日間・10月3日(金)から」。2つのプランを見比べてもらうときの一言。 */
 function describePlan(entries: PlanEntry[], startDate: string | null): string {
   const days = new Set(entries.map((entry) => entry.day)).size;
   const start = parseIsoDate(startDate);
   return [
     entries.length === 0 ? "空" : `${entries.length}ヶ所・${days}日間`,
-    start && entries.length > 0 ? `${formatPlanDate(start)}出発` : null,
+    start && entries.length > 0 ? `${formatPlanDate(start)}から` : null,
   ]
     .filter(Boolean)
     .join("・");
@@ -689,7 +689,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                 {spotCount}ヶ所・{days.length}日分をすべて消します
               </p>
               <p className="text-xs leading-relaxed text-red-800 dark:text-red-300">
-                出発日と開始時刻の設定も一緒に消えます。消したあと、この画面を
+                1日目の日付と宿を出る時刻の設定も一緒に消えます。消したあと、この画面を
                 離れるまでは「元に戻す」で戻せます。1日だけ消したいなら、
                 その日の見出しにある消しゴムのボタンを使ってください。
               </p>

@@ -198,7 +198,7 @@ export default function PlanCostPanel({
           交通費は経路を引いていない概算です。宿との往復と、徒歩圏でない区間を
           1回ずつ地下鉄で移動するとして、Zone 1 を通る片道運賃を足し、1日の
           上限額で頭打ちにしています。平日の6:30〜9:30と16:00〜19:00に乗る回は
-          ピーク運賃で数えます(出発日が無いときは平日として計算)。バスは数えていません。
+          ピーク運賃で数えます(日付が無いときは平日として計算)。バスは数えていません。
           スポットのゾーンは最寄り駅から決めています。
         </p>
         <p>
@@ -458,7 +458,7 @@ function PaymentBlock({
           : "週の上限額は7日Travelcardと同じ値段なので、乗った分だけ払うタッチ決済が損になることはふつうありません。"}
         {!transport.datesKnown &&
           dayCount >= 5 &&
-          "いまは1日目を月曜とみなしています。出発日を入れると、月曜で区切った正確な額になります。"}
+          "いまは1日目を月曜とみなしています。1日目の日付を入れると、月曜で区切った正確な額になります。"}
       </p>
       <p className="flex items-start gap-1.5 text-xs leading-relaxed text-muted-foreground">
         <TrainFront className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
