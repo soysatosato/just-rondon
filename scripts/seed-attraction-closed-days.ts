@@ -4,8 +4,14 @@
  *   npx tsx scripts/seed-attraction-closed-days.ts            # ドライラン
  *   npx tsx scripts/seed-attraction-closed-days.ts --apply    # 投入
  *   npx tsx scripts/seed-attraction-closed-days.ts --report   # 未調査の一覧
+ *   npx tsx scripts/seed-attraction-closed-days.ts --only <slug> [--apply]
+ *                                                             # 1件だけ
  *
  * 冪等。slug を指定した行だけを更新する。
+ *
+ * ★ --apply は一覧の全件の closedDaysCheckedAt を今日に書き換える。
+ *   確かめ直していない行まで「今日確かめた」ことになるので、1件を足したり
+ *   直したりしたときは --only でその行だけを投入すること。
  *
  * ------------------------------------------------------------------
  * なぜ正規表現を使わないのか
@@ -154,6 +160,20 @@ const CLOSED_SOME_DAYS: Entry[] = [
     note: "木曜と土曜は午後のみ。金曜はガイドツアーの枠だけ",
     source: "https://williammorrissociety.org/whats-on/",
   },
+  /*
+   * 館ではなく式なので「休み」は式の無い曜日。公式カレンダー(2026年10〜11月)は
+   * 11:00の Guard Change を月・水・金にだけ載せ、火・木・土は15:00の
+   * Captain's Inspection、日曜は一部の日に10:00の Sunday Parade。
+   * 旅程の「この日は閉まっています」はこの値で出る(2026-10 の監査まで空で、
+   * 火曜に入れても警告が出なかった)。夏に毎日になる年があるので、
+   * 季節が変わったらカレンダーを見直すこと。
+   */
+  {
+    slug: "changing-the-guard-buckingham-palace",
+    closed: [TUE, THU, SAT, SUN],
+    note: "11:00の衛兵交代は月・水・金。火・木・土は15:00の点検、日曜は10:00のパレードがある日がある",
+    source: "https://www.householddivision.org.uk/changing-the-guard-calendar",
+  },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -194,6 +214,11 @@ const ENTRIES = [...CLOSED_SOME_DAYS, ...OPEN_EVERY_DAY];
 
 const APPLY = process.argv.includes("--apply");
 const REPORT = process.argv.includes("--report");
+/** --only <slug> のときの slug。全件の確認日を書き換えずに1件だけ投入する。 */
+const ONLY = (() => {
+  const i = process.argv.indexOf("--only");
+  return i === -1 ? null : (process.argv[i + 1] ?? "");
+})();
 
 const fmt = (days: number[]) =>
   days.length === 0 ? "曜日休館なし" : days.map((d) => LABELS[d]).join("・") + "休";
@@ -238,10 +263,18 @@ async function main() {
 
   console.log(APPLY ? "== 投入 ==\n" : "== ドライラン(--apply で投入) ==\n");
 
+  const targets = ONLY === null ? ENTRIES : ENTRIES.filter((e) => e.slug === ONLY);
+  if (ONLY !== null && targets.length === 0) {
+    console.error(`✗ --only ${ONLY || "(slug なし)"} は一覧にありません`);
+    process.exitCode = 1;
+    await db.$disconnect();
+    return;
+  }
+
   const seen = new Set<string>();
   let applied = 0;
 
-  for (const e of ENTRIES) {
+  for (const e of targets) {
     if (seen.has(e.slug)) {
       console.error(`✗ ${e.slug} が2回出てきます`);
       process.exitCode = 1;
@@ -251,7 +284,13 @@ async function main() {
 
     const current = await db.attraction.findUnique({
       where: { slug: e.slug },
-      select: { name: true, openingHours: true, closedWeekdays: true },
+      select: {
+        name: true,
+        openingHours: true,
+        closedWeekdays: true,
+        closedDaysCheckedAt: true,
+        closedNote: true,
+      },
     });
 
     if (!current) {
@@ -261,6 +300,14 @@ async function main() {
     }
 
     console.log(`${current.name} (${e.slug})`);
+    // 書き換える前の値。投入を取り消すときの戻し先になる。
+    console.log(
+      `    現在: ${current.closedDaysCheckedAt ? fmt(current.closedWeekdays) : "未調査"}` +
+        (current.closedNote ? ` / 注記「${current.closedNote}」` : "") +
+        (current.closedDaysCheckedAt
+          ? ` / 確認 ${current.closedDaysCheckedAt.toISOString().slice(0, 10)}`
+          : ""),
+    );
     console.log(`    ${fmt(e.closed)}   出典: ${e.source}`);
     if (e.note) console.log(`    注記: ${e.note}`);
     if (e.openingHours && e.openingHours !== current.openingHours) {
@@ -284,10 +331,10 @@ async function main() {
     console.log("");
   }
 
-  const withClosure = ENTRIES.filter((e) => e.closed.length > 0).length;
+  const withClosure = targets.filter((e) => e.closed.length > 0).length;
   console.log(
-    `対象 ${ENTRIES.length}件（うち曜日休館あり ${withClosure}件 / ` +
-      `毎日開いていることを確認 ${ENTRIES.length - withClosure}件）`,
+    `対象 ${targets.length}件（うち曜日休館あり ${withClosure}件 / ` +
+      `毎日開いていることを確認 ${targets.length - withClosure}件）`,
   );
   if (APPLY) console.log(`投入 ${applied}件`);
   else console.log("\n--apply を付けると投入します。--report で未調査の一覧が出ます。");
