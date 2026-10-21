@@ -7,6 +7,9 @@ import { columnPath } from "@/components/column/jsonld";
 import { modernBritainPath } from "@/components/modern-britain/jsonld";
 import { museumPath } from "@/components/museums/jsonld";
 import { publishedWhere } from "@/lib/publish-schedule";
+import { eventMonthPath } from "@/lib/events";
+import { getMonthGuide } from "@/lib/london-months/content";
+import { allEventGuides, eventGuidePath } from "@/lib/annual-events";
 import { buildPageMetadata } from "@/lib/seo";
 import db from "@/utils/db";
 
@@ -27,7 +30,9 @@ export const metadata = buildPageMetadata({
  * 「必要な情報を載せたページへのリンク」での表示を認めている(3(a)(2))。
  *
  * 歴史・近郊の街・ショッピングなど、コードに書いた特集の写真は
- * 本文中の写真の下に表記があるので、ここには載せない。
+ * 本文中の写真の下に表記があるので、ここには載せない。ただし
+ * 「◯月のロンドン」と年中行事ガイドの写真は og:image にも使い、
+ * Discover や SNS のカードに表記なしで出るので、ここに集める。
  */
 
 type CreditRow = {
@@ -53,7 +58,7 @@ const READING_PATHS: Record<string, (slug: string) => string> = {
 async function fetchCreditGroups(): Promise<CreditGroup[]> {
   const commons = { imageSource: "commons", imageCredit: { not: null } };
 
-  const [attractions, museums, artworks, readings] = await Promise.all([
+  const [attractions, museums, artworks, readings, briefs, changeIssues] = await Promise.all([
     db.attraction.findMany({
       where: { ...commons, isPublished: true },
       select: { slug: true, name: true, imageCredit: true, imageLink: true },
@@ -89,6 +94,18 @@ async function fetchCreditGroups(): Promise<CreditGroup[]> {
         imageLink: true,
       },
       orderBy: { publishedAt: "desc" },
+    }),
+    // 号の写真。ページでは題字の下に表記があるが、Discover や SNS の
+    // カードには表記が出ないので、ここにも集める。
+    db.weeklyBrief.findMany({
+      where: { ...commons, published: true },
+      select: { slug: true, title: true, imageCredit: true, imageLink: true },
+      orderBy: { weekStart: "desc" },
+    }),
+    db.monthlyChangeIssue.findMany({
+      where: { ...commons, publishedAt: { lte: new Date() } },
+      select: { slug: true, title: true, imageCredit: true, imageLink: true },
+      orderBy: { monthStart: "desc" },
     }),
   ]);
 
@@ -133,7 +150,62 @@ async function fetchCreditGroups(): Promise<CreditGroup[]> {
         link: c.imageLink,
       })),
     },
+    {
+      title: "今週のロンドン・今月変わったロンドン",
+      rows: [
+        ...briefs.map((b) => ({
+          key: `week/${b.slug}`,
+          name: b.title,
+          href: `/events/week/${b.slug}`,
+          credit: b.imageCredit!,
+          link: b.imageLink,
+        })),
+        ...changeIssues.map((m) => ({
+          key: `changes/${m.slug}`,
+          name: m.title,
+          href: `/changes/${m.slug}`,
+          credit: m.imageCredit!,
+          link: m.imageLink,
+        })),
+      ],
+    },
+    {
+      title: "◯月のロンドン・年中行事ガイド",
+      rows: guidePhotoRows(),
+    },
   ].filter((group) => group.rows.length > 0);
+}
+
+/** コードに書いた月ページと行事ガイドの写真。書いた順(月、行事)。 */
+function guidePhotoRows(): CreditRow[] {
+  const months = Array.from({ length: 12 }, (_, i) => i + 1).flatMap((month) => {
+    const photo = getMonthGuide(month)?.photo;
+    return photo
+      ? [
+          {
+            key: `month/${month}`,
+            name: `${month}月のロンドン`,
+            href: eventMonthPath(month),
+            credit: photo.credit,
+            link: photo.link,
+          },
+        ]
+      : [];
+  });
+  const guides = allEventGuides().flatMap((guide) =>
+    guide.photo
+      ? [
+          {
+            key: `guide/${guide.slug}`,
+            name: guide.title,
+            href: eventGuidePath(guide),
+            credit: guide.photo.credit,
+            link: guide.photo.link,
+          },
+        ]
+      : [],
+  );
+  return [...months, ...guides];
 }
 
 export default async function CreditsPage() {

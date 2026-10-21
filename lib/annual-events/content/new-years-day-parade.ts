@@ -7,6 +7,12 @@ const LONDON_PARADE = {
 
 export const newYearsDayParade: EventGuide = {
   slug: "new-years-day-parade",
+  photo: {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/London_New_Year%27s_Day_Parade_2019_-_12.jpg/1280px-London_New_Year%27s_Day_Parade_2019_-_12.jpg",
+    alt: "ニュー・イヤーズ・デー・パレードの、市松模様の衣装で行進する参加者(2019年)",
+    credit: "garryknight / CC BY 2.0, via Wikimedia Commons",
+    link: "https://commons.wikimedia.org/wiki/File:London_New_Year%27s_Day_Parade_2019_-_12.jpg",
+  },
   title: "元日のロンドン・パレード",
   engName: "London Parade (London's New Year's Day Parade)",
   month: 1,

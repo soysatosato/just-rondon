@@ -11,7 +11,7 @@ import {
   fetchBriefSlugs,
 } from "@/utils/actions/weekly";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
-import { weeklyOgImage } from "@/lib/og";
+import { issuePhotoOgImage, weeklyOgImage } from "@/lib/og";
 import { getISOWeekStart, getIssueFreshness } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import { fetchForecastForWeek } from "@/lib/weather/forecast";
@@ -70,7 +70,13 @@ export async function generateMetadata({
     type: "article",
     publishedTime: brief.createdAt.toISOString(),
     modifiedTime: brief.updatedAt.toISOString(),
-    images: [weeklyOgImage(brief)],
+    // 写真のある号は写真だけの画像を og:image に。理由は /events の metadata。
+    ...(brief.image
+      ? {
+          images: [issuePhotoOgImage("events-week", brief)],
+          twitterImages: [weeklyOgImage(brief)],
+        }
+      : { images: [weeklyOgImage(brief)] }),
   });
 }
 

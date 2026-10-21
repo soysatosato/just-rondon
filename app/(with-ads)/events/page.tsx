@@ -12,7 +12,7 @@ import { fetchEvents2026 } from "@/utils/actions/contents";
 import { fetchLatestChangeIssue } from "@/utils/actions/changes";
 import { formatMonthJa } from "@/lib/changes";
 import { absoluteUrl, buildPageMetadata } from "@/lib/seo";
-import { weeklyOgImage } from "@/lib/og";
+import { issuePhotoOgImage, weeklyOgImage } from "@/lib/og";
 import { formatWeekRange } from "@/lib/weekly";
 import { buildBriefJsonLd } from "@/lib/weeklyJsonLd";
 import { eventMonthPath } from "@/lib/events";
@@ -58,8 +58,15 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `今週のロンドン(${range}) | ストライキ・イベント・耳寄り情報`,
     description: brief.headline.slice(0, 120),
     modifiedTime: brief.updatedAt.toISOString(),
-    // 本体として出している号のカード。週が替わればカードも替わる。
-    images: [weeklyOgImage(brief)],
+    // 本体として出している号の画像。週が替わればカードも替わる。
+    // 写真のある号は写真だけの画像を og:image にし、号のカードは X にだけ出す
+    // (Google は Discover の画像に文字の多い画像を避けるよう求めている)。
+    ...(brief.image
+      ? {
+          images: [issuePhotoOgImage("events-week", brief)],
+          twitterImages: [weeklyOgImage(brief)],
+        }
+      : { images: [weeklyOgImage(brief)] }),
   });
 }
 

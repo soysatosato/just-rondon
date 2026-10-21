@@ -18,6 +18,7 @@ import BriefMasthead from "@/components/events/BriefMasthead";
 import BriefSectionNav from "@/components/events/BriefSectionNav";
 import StapleEventList from "@/components/events/StapleEventList";
 import WeekTimeline from "@/components/events/WeekTimeline";
+import PagePhoto from "@/components/shared/PagePhoto";
 import type { DailyForecast } from "@/lib/weather/forecast";
 
 type BriefWithItems = WeeklyBrief & { items: WeeklyBriefItem[] };
@@ -224,6 +225,20 @@ export default function WeeklyBriefView({
             </p>
           </div>
         </div>
+      )}
+
+      {/*
+       * 号の写真。その週の目玉の会場か様子で、og:image と同じもの。
+       * 出典の表示が利用の条件なので、表記の無い写真は出さない。
+       */}
+      {brief.image && brief.imageCredit && (
+        <PagePhoto
+          url={brief.image}
+          alt={brief.imageAlt ?? brief.title}
+          credit={brief.imageCredit}
+          link={brief.imageLink}
+          className="mb-10"
+        />
       )}
 
       <BriefSectionNav sections={navSections} />

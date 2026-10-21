@@ -9,8 +9,8 @@ import {
   fetchChangeIssues,
   fetchChangeIssueSlugs,
 } from "@/utils/actions/changes";
-import { buildPageMetadata } from "@/lib/seo";
-import { changesOgImage } from "@/lib/og";
+import { absoluteImage, absoluteUrl, buildPageMetadata } from "@/lib/seo";
+import { OG_PHOTO_RATIOS, changesOgImage, issuePhotoOgImage } from "@/lib/og";
 import { SITE_PUBLISHER } from "@/lib/jsonld";
 import { formatMonthJa, getChangeIssueFreshness } from "@/lib/changes";
 import ChangeIssueView from "@/components/changes/ChangeIssueView";
@@ -57,7 +57,14 @@ export async function generateMetadata({
     // 下書きのプレビュー中は publishedAt が無い。書いた日時を仮に出す。
     publishedTime: (issue.publishedAt ?? issue.createdAt).toISOString(),
     modifiedTime: issue.updatedAt.toISOString(),
-    images: [changesOgImage(issue)],
+    // 写真のある号は写真だけの画像を og:image にし、号のカードは X にだけ出す
+    // (Google は Discover の画像に文字の多い画像を避けるよう求めている)。
+    ...(issue.image
+      ? {
+          images: [issuePhotoOgImage("changes", issue)],
+          twitterImages: [changesOgImage(issue)],
+        }
+      : { images: [changesOgImage(issue)] }),
   });
 }
 
@@ -72,15 +79,26 @@ export default async function ChangeIssuePage({
   const freshness = getChangeIssueFreshness(issue.monthStart);
   const backIssues = await fetchChangeIssues(6, issue.slug);
 
+  const pageUrl = absoluteUrl(`/changes/${issue.slug}`);
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${pageUrl}#article`,
     headline: issue.title,
     description: issue.headline,
     datePublished: (issue.publishedAt ?? issue.createdAt).toISOString(),
     dateModified: issue.updatedAt.toISOString(),
     inLanguage: "ja",
+    mainEntityOfPage: pageUrl,
+    // 写真のある号は、写真を文字なしの 16:9・4:3・1:1 に切り抜いた3枚
+    // (ページの題字の下と同じ写真)。無い号は号の共有カード(og:image と同じ)。
+    image: issue.image
+      ? OG_PHOTO_RATIOS.map((ratio) =>
+          absoluteImage(issuePhotoOgImage("changes", issue, ratio).url),
+        )
+      : [absoluteImage(changesOgImage(issue).url)],
     about: { "@type": "City", name: "London" },
+    author: SITE_PUBLISHER,
     publisher: SITE_PUBLISHER,
   };
 

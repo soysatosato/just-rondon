@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 
 import { buildPageMetadata } from "@/lib/seo";
+import {
+  photoOgImage,
+  photoVersion,
+  type OgPhotoRatio,
+} from "@/lib/og";
+import type { ContentPhoto } from "@/lib/content-photo";
 import { eventGuidePath, pickEdition, type EventGuide } from "./index";
 
 /**
@@ -16,6 +22,22 @@ export function eventGuideTitle(guide: EventGuide, today: string): string {
   return `${name}｜${guide.titleSuffix}`;
 }
 
+/**
+ * ガイドの写真を、写真だけの画像(lib/og.ts の photoOgImage)の URL にする。
+ * og:image と JSON-LD の image の両方がこれを使う。
+ */
+export function eventGuidePhotoImage(
+  guide: EventGuide,
+  photo: ContentPhoto,
+  ratio: OgPhotoRatio = "16x9"
+) {
+  return photoOgImage(
+    "events",
+    { slug: guide.slug, alt: photo.alt, version: photoVersion(photo.url) },
+    ratio
+  );
+}
+
 export function buildEventGuideMetadata(
   guide: EventGuide,
   today: string
@@ -28,5 +50,7 @@ export function buildEventGuideMetadata(
     keywords: guide.keywords,
     type: "article",
     modifiedTime: new Date(`${edition.checkedAt}T12:00:00Z`).toISOString(),
+    // 写真のあるガイドは写真だけの画像を共有画像にする(Discover の画像の条件)。
+    ...(guide.photo ? { images: [eventGuidePhotoImage(guide, guide.photo)] } : {}),
   });
 }

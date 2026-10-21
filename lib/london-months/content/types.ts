@@ -1,3 +1,5 @@
+import type { ContentPhoto } from "@/lib/content-photo";
+
 /**
  * 「◯月のロンドン」の、年が替わっても使える本文。
  *
@@ -13,6 +15,11 @@
  */
 export type MonthGuide = {
   month: number;
+  /**
+   * ページ冒頭の写真。og:image と JSON-LD の image にも使う。
+   * その月らしい場所や様子を写したもの(条件は lib/content-photo.ts)。
+   */
+  photo?: ContentPhoto;
   /** h1 の下に出す2〜3文。その月を一言で言うと何か。 */
   lead: string;
   /**

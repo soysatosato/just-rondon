@@ -10,6 +10,7 @@ import {
   getChangeIssueFreshness,
 } from "@/lib/changes";
 import ChangeEntry from "@/components/changes/ChangeEntry";
+import PagePhoto from "@/components/shared/PagePhoto";
 
 type IssueWithItems = MonthlyChangeIssue & { items: MonthlyChangeItem[] };
 
@@ -113,6 +114,20 @@ export default function ChangeIssueView({
             </p>
           </div>
         </div>
+      )}
+
+      {/*
+       * 号の写真。その月の目玉の変化に関わる場所や物で、og:image と同じもの。
+       * 出典の表示が利用の条件なので、表記の無い写真は出さない。
+       */}
+      {issue.image && issue.imageCredit && (
+        <PagePhoto
+          url={issue.image}
+          alt={issue.imageAlt ?? issue.title}
+          credit={issue.imageCredit}
+          link={issue.imageLink}
+          className="mb-10"
+        />
       )}
 
       {sections.map((section) => (

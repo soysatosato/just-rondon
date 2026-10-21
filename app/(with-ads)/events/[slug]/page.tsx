@@ -9,7 +9,9 @@ import {
   fetchMonthIntroFallback,
   fetchWeeklyPicksForMonth,
 } from "@/utils/actions/months";
-import { buildPageMetadata, SITE_URL } from "@/lib/seo";
+import { absoluteImage, buildPageMetadata, SITE_URL } from "@/lib/seo";
+import { OG_PHOTO_RATIOS, photoOgImage, photoVersion } from "@/lib/og";
+import type { ContentPhoto } from "@/lib/content-photo";
 import { londonDate } from "@/lib/publish-schedule";
 import {
   EVENT_MONTH_NAMES,
@@ -53,6 +55,7 @@ import MonthHolidays from "@/components/events/month/MonthHolidays";
 import MonthWeeklyPicks from "@/components/events/month/MonthWeeklyPicks";
 import MonthNav from "@/components/events/month/MonthNav";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
+import PagePhoto from "@/components/shared/PagePhoto";
 import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
@@ -96,6 +99,22 @@ const SOURCES = [
 
 function monthTitle(month: number) {
   return `${month}月のロンドン`;
+}
+
+/**
+ * 月ページの写真を og:image と JSON-LD の image に渡す形にする。
+ * 写真の比ごとの URL は lib/og.ts の photoOgImage(写真だけの画像)。
+ */
+function monthPhotoImage(
+  slug: string,
+  photo: ContentPhoto,
+  ratio: (typeof OG_PHOTO_RATIOS)[number] = "16x9"
+) {
+  return photoOgImage(
+    "events",
+    { slug, alt: photo.alt, version: photoVersion(photo.url) },
+    ratio
+  );
 }
 
 /** 本文を書いていない月の description。数字で他の月と書き分ける。 */
@@ -176,6 +195,11 @@ export async function generateMetadata({
       `ロンドン ${month}月 イベント`,
     ],
     type: "article",
+    // 写真のある月は写真だけの画像を共有画像にする(Discover の画像の条件)。
+    // 無い月はサイトの既定の画像のまま。
+    ...(guide?.photo
+      ? { images: [monthPhotoImage(params.slug, guide.photo)] }
+      : {}),
     // 本文を書くまでは平年値と去年の催しの表しか無いので、検索に出さない。
     // 理由と、sitemap・広告との連動は lib/london-months/written-months.js。
     noindex: !isWrittenMonth(month),
@@ -245,6 +269,14 @@ export default async function MonthPage({
     description: guide?.description ?? generatedDescription(month, year),
     inLanguage: "ja",
     mainEntityOfPage: `${SITE_URL}${path}`,
+    // ページ冒頭と同じ写真を、文字なしの 16:9・4:3・1:1 で渡す。
+    ...(guide?.photo
+      ? {
+          image: OG_PHOTO_RATIOS.map((ratio) =>
+            absoluteImage(monthPhotoImage(params.slug, guide.photo!, ratio).url)
+          ),
+        }
+      : {}),
     author: SIGHTSEEING_PUBLISHER,
     publisher: SIGHTSEEING_PUBLISHER,
   };
@@ -296,6 +328,16 @@ export default async function MonthPage({
               {fallbackIntro}
             </MarkdownBody>
           )
+        )}
+
+        {guide?.photo && (
+          <PagePhoto
+            url={guide.photo.url}
+            alt={guide.photo.alt}
+            credit={guide.photo.credit}
+            link={guide.photo.link}
+            className="mt-6"
+          />
         )}
 
         <div className="mt-6">

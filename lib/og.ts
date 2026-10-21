@@ -321,7 +321,7 @@ export function isOgPhotoRatio(value: string | null): value is OgPhotoRatio {
   return value !== null && value in OG_PHOTO_SIZES;
 }
 
-/** 写真だけの画像を出す読み物。app/og/photo/[kind]/[slug]/route.tsx と対。 */
+/** 写真だけの画像を出す読み物。 */
 export type ReadingPhotoKind =
   | "column"
   | "british-english"
@@ -329,28 +329,70 @@ export type ReadingPhotoKind =
   | "areas";
 
 /**
- * 読み物の、写真だけの画像のURL。写真(content.image)のある記事にだけ使う。
+ * 写真だけの画像を出すページの種類。app/og/photo/[kind]/[slug]/route.tsx と対。
+ *
+ *   読み物       記事の写真(Content.image)
+ *   events-week  週次の号の写真(WeeklyBrief.image)
+ *   changes      月次の号の写真(MonthlyChangeIssue.image)
+ *   events       「◯月のロンドン」と年中行事ガイドの写真(コードの photo)
+ */
+export type OgPhotoKind = ReadingPhotoKind | "events-week" | "changes" | "events";
+
+/**
+ * 写真だけの画像のURL。写真のあるページにだけ使う。
  *
  * 写真は Wikimedia Commons にあるが、そのURLを直接 og:image に書かない理由は
  * loadOgPhoto に書いたとおり(Facebook 系の遮断、縦横比・大きさのばらつき)。
  * こちらのドメインから、決まった比に切り抜いた PNG を配る。
  *
- * ?v= は共有カードと同じく、記事を直したときに古い画像を外すためのもの。
+ * version は ?v= に入れる値。写真を替えたときに URL が変わるものを渡す
+ * (DB の行なら updatedAt、コードの写真なら photoVersion(url))。SNS も
+ * Google も、同じ URL の画像は取り直さない。
  */
-export function readingPhotoOgImage(
-  kind: ReadingPhotoKind,
-  content: { slug: string; title: string; updatedAt: Date },
+export function photoOgImage(
+  kind: OgPhotoKind,
+  page: { slug: string; alt: string; version: string },
   ratio: OgPhotoRatio = "16x9",
 ) {
   const size = OG_PHOTO_SIZES[ratio];
   return {
     url:
-      `/og/photo/${kind}/${encodeURIComponent(content.slug)}` +
-      `?r=${ratio}&v=${OG_CARD_VERSION}-${content.updatedAt.getTime()}`,
+      `/og/photo/${kind}/${encodeURIComponent(page.slug)}` +
+      `?r=${ratio}&v=${OG_CARD_VERSION}-${page.version}`,
     width: size.width,
     height: size.height,
-    alt: content.title,
+    alt: page.alt,
   };
+}
+
+/** 読み物の、写真だけの画像のURL。写真(content.image)のある記事にだけ使う。 */
+export function readingPhotoOgImage(
+  kind: ReadingPhotoKind,
+  content: { slug: string; title: string; updatedAt: Date },
+  ratio: OgPhotoRatio = "16x9",
+) {
+  return photoOgImage(
+    kind,
+    {
+      slug: content.slug,
+      alt: content.title,
+      version: String(content.updatedAt.getTime()),
+    },
+    ratio,
+  );
+}
+
+/**
+ * コードに書いた写真の ?v=。写真の URL から作るので、写真を替えたときだけ変わる。
+ * (FNV-1a。衝突しても古い画像が残るだけで、壊れはしない)
+ */
+export function photoVersion(url: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < url.length; i++) {
+    hash ^= url.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return hash.toString(36);
 }
 
 /**
@@ -508,6 +550,29 @@ export function weeklyOgImage(brief: {
     height: OG_SIZE.height,
     alt: `${brief.title} | ジャスト・ロンドン`,
   };
+}
+
+/**
+ * 写真のある号の、写真だけの画像のURL(週次・月次で共通)。
+ *
+ * og:image と JSON-LD の image に使い、見出しを組んだ号のカード
+ * (weeklyOgImage / changesOgImage)は X の twitter:image にだけ残す。
+ * 理由は photoOgImage を参照。号を直すと updatedAt が変わり、画像も取り直される。
+ */
+export function issuePhotoOgImage(
+  kind: "events-week" | "changes",
+  issue: { slug: string; title: string; imageAlt: string | null; updatedAt: Date },
+  ratio: OgPhotoRatio = "16x9",
+) {
+  return photoOgImage(
+    kind,
+    {
+      slug: issue.slug,
+      alt: issue.imageAlt ?? issue.title,
+      version: String(issue.updatedAt.getTime()),
+    },
+    ratio,
+  );
 }
 
 /**

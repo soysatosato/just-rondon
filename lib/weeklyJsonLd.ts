@@ -1,6 +1,6 @@
 import type { WeeklyBrief } from "@prisma/client";
 import { SITE_PUBLISHER } from "@/lib/jsonld";
-import { weeklyOgImage } from "@/lib/og";
+import { OG_PHOTO_RATIOS, issuePhotoOgImage, weeklyOgImage } from "@/lib/og";
 import { absoluteImage } from "@/lib/seo";
 
 /**
@@ -28,8 +28,13 @@ export function buildBriefJsonLd(brief: WeeklyBrief, { pageUrl }: { pageUrl: str
     mainEntityOfPage: pageUrl,
     datePublished: brief.createdAt.toISOString(),
     dateModified: brief.updatedAt.toISOString(),
-    // 号には写真が無いので、号の共有カード(og:image と同じ)を渡す。
-    image: [absoluteImage(brief.image ?? weeklyOgImage(brief).url)],
+    // 写真のある号は、写真を文字なしの 16:9・4:3・1:1 に切り抜いた3枚
+    // (ページの題字の下と同じ写真)。無い号は号の共有カード(og:image と同じ)。
+    image: brief.image
+      ? OG_PHOTO_RATIOS.map((ratio) =>
+          absoluteImage(issuePhotoOgImage("events-week", brief, ratio).url),
+        )
+      : [absoluteImage(weeklyOgImage(brief).url)],
     author: SITE_PUBLISHER,
     publisher: SITE_PUBLISHER,
     about: { "@type": "City", name: "London" },

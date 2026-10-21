@@ -15,6 +15,12 @@ const BLACKHEATH = {
 
 export const bonfireNight: EventGuide = {
   slug: "bonfire-night",
+  photo: {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Blackheath_fireworks_-_10.jpg/1280px-Blackheath_fireworks_-_10.jpg",
+    alt: "ブラックヒースの花火を見上げる人たち(2009年11月)",
+    credit: "paulsimpson1976 / CC BY 2.0, via Wikimedia Commons",
+    link: "https://commons.wikimedia.org/wiki/File:Blackheath_fireworks_-_10.jpg",
+  },
   title: "ボンファイア・ナイトの花火大会",
   engName: "Bonfire Night (Guy Fawkes Night)",
   month: 11,

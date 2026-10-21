@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { CalendarCheck2 } from "lucide-react";
 
-import { SITE_URL } from "@/lib/seo";
+import { SITE_URL, absoluteImage } from "@/lib/seo";
+import { OG_PHOTO_RATIOS } from "@/lib/og";
 import { eventMonthPath } from "@/lib/events";
 import {
   eventGuidePath,
@@ -14,13 +15,14 @@ import {
   type GuideItem,
   type GuideSource,
 } from "@/lib/annual-events";
-import { eventGuideTitle } from "@/lib/annual-events/seo";
+import { eventGuidePhotoImage, eventGuideTitle } from "@/lib/annual-events/seo";
 import { SIGHTSEEING_PUBLISHER } from "@/components/sightseeing/jsonld";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import MonthSection from "@/components/events/month/MonthSection";
 import GuideSectionNav from "@/components/guides/GuideSectionNav";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
+import PagePhoto from "@/components/shared/PagePhoto";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import { cn } from "@/lib/utils";
@@ -85,6 +87,14 @@ export default function EventGuideView({
     inLanguage: "ja",
     mainEntityOfPage: `${SITE_URL}${path}`,
     dateModified: `${edition.checkedAt}T12:00:00Z`,
+    // ページ冒頭と同じ写真を、文字なしの 16:9・4:3・1:1 で渡す。
+    ...(guide.photo
+      ? {
+          image: OG_PHOTO_RATIOS.map((ratio) =>
+            absoluteImage(eventGuidePhotoImage(guide, guide.photo!, ratio).url)
+          ),
+        }
+      : {}),
     author: SIGHTSEEING_PUBLISHER,
     publisher: SIGHTSEEING_PUBLISHER,
   };
@@ -128,6 +138,16 @@ export default function EventGuideView({
         <p className="mt-5 text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
           {guide.lead}
         </p>
+
+        {guide.photo && (
+          <PagePhoto
+            url={guide.photo.url}
+            alt={guide.photo.alt}
+            credit={guide.photo.credit}
+            link={guide.photo.link}
+            className="mt-6"
+          />
+        )}
 
         <dl className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {glance.map((item) => (

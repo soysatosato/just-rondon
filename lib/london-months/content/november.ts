@@ -2,6 +2,12 @@ import type { MonthGuide } from "./types";
 
 export const november: MonthGuide = {
   month: 11,
+  photo: {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Blackheath_fireworks_-_15.jpg/1280px-Blackheath_fireworks_-_15.jpg",
+    alt: "ブラックヒースの花火大会(2009年11月)",
+    credit: "paulsimpson1976 / CC BY 2.0, via Wikimedia Commons",
+    link: "https://commons.wikimedia.org/wiki/File:Blackheath_fireworks_-_15.jpg",
+  },
   lead: "11月のロンドンは、花火の夜で始まり、クリスマスの明かりがともって終わる月です。最高気温は平年で11℃、東京の12月並み。雨の量は1年でいちばん多く、下旬には16時前に日が沈みます。",
   teaser: "花火の夜で始まり、クリスマスの明かりがともって終わる月。最高気温は平年で11℃、東京の12月並みです。",
   description:

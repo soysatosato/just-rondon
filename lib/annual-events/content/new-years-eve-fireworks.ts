@@ -11,6 +11,12 @@ const TICKETMASTER_NYE = {
 
 export const newYearsEveFireworks: EventGuide = {
   slug: "new-years-eve-fireworks",
+  photo: {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/London_Eye_-_New_Year_2020_Fireworks.jpg/1280px-London_Eye_-_New_Year_2020_Fireworks.jpg",
+    alt: "ロンドン・アイを囲む年越しの花火(2020年の年明け)",
+    credit: "sergejf / CC BY 2.0, via Wikimedia Commons",
+    link: "https://commons.wikimedia.org/wiki/File:London_Eye_-_New_Year_2020_Fireworks.jpg",
+  },
   title: "ロンドンの年越し花火",
   engName: "Mayor of London's New Year's Eve Fireworks",
   month: 12,

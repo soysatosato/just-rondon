@@ -14,6 +14,8 @@
  * 太字が CommonMark の規則で崩れる問題(CLAUDE.md)を避けるため。
  */
 
+import type { ContentPhoto } from "@/lib/content-photo";
+
 export type GuideSource = { label: string; url: string };
 
 /** 見出しと本文の組。本文は1〜3文。 */
@@ -67,6 +69,11 @@ export type EventGuide = {
   engName: string;
   /** 一覧の並びと、月ページからの導線に使う。 */
   month: number;
+  /**
+   * ページ冒頭の写真。og:image と JSON-LD の image にも使う。
+   * その行事の会場や様子を写したもの(条件は lib/content-photo.ts)。
+   */
+  photo?: ContentPhoto;
   /** 年に依存しない言い方の時期。「毎年12月31日の24時」。 */
   usualTiming: string;
   /**

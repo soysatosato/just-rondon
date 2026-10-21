@@ -2,6 +2,12 @@ import type { MonthGuide } from "./types";
 
 export const december: MonthGuide = {
   month: 12,
+  photo: {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Trafalgar_Square_Christmas_tree_and_fountain_2026-01-02.jpg/1280px-Trafalgar_Square_Christmas_tree_and_fountain_2026-01-02.jpg",
+    alt: "トラファルガー広場のクリスマスツリーと噴水(2026年1月)",
+    credit: "martin_vmorris / CC BY-SA 4.0, via Wikimedia Commons",
+    link: "https://commons.wikimedia.org/wiki/File:Trafalgar_Square_Christmas_tree_and_fountain_2026-01-02.jpg",
+  },
   lead: "12月のロンドンは、街じゅうがクリスマスの明かりに包まれる一方で、1年でいちばん日が短い月です。日の入りは16時前、最高気温は平年で9℃。25日は地下鉄もバスも止まるので、旅程の組み方にコツが要ります。",
   teaser: "街じゅうがクリスマスの明かりに包まれる、1年でいちばん日が短い月。25日は地下鉄もバスも止まります。",
   description:

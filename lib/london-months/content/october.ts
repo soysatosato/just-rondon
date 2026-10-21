@@ -2,6 +2,12 @@ import type { MonthGuide } from "./types";
 
 export const october: MonthGuide = {
   month: 10,
+  photo: {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Autumn_Colours_near_The_Serpentine_Bridge%2C_Kensington_Gardens_-_geograph.org.uk_-_6679108.jpg/1280px-Autumn_Colours_near_The_Serpentine_Bridge%2C_Kensington_Gardens_-_geograph.org.uk_-_6679108.jpg",
+    alt: "ケンジントン・ガーデンズ、サーペンタイン橋のそばの紅葉(2020年11月)",
+    credit: "Roger Jones / CC BY-SA 2.0, via Wikimedia Commons",
+    link: "https://commons.wikimedia.org/wiki/File:Autumn_Colours_near_The_Serpentine_Bridge,_Kensington_Gardens_-_geograph.org.uk_-_6679108.jpg",
+  },
   lead: "10月のロンドンは、秋の大型展と映画祭が始まる文化の月です。最高気温は平年で16℃、東京の11月とほぼ同じ。月末の日曜に夏時間が終わると日の入りが1時間早まり、17時前には暗くなります。",
   teaser: "秋の大型展と映画祭が始まる文化の月。最高気温は平年で16℃、東京の11月とほぼ同じです。",
   description:
