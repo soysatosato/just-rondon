@@ -7,9 +7,12 @@ import { ChevronDown, Map as MapIcon, Plus, Undo2 } from "lucide-react";
 import {
   buildDayPlan,
   decodePlan,
+  DEFAULT_START_MINUTES,
   encodePlan,
   hasRealLocation,
+  isValidStartMinutes,
   MAX_DAYS,
+  MAX_SPOTS,
   type PlanEntry,
   type PlanSpot,
 } from "@/lib/plan";
@@ -27,6 +30,7 @@ import PlanSummaryBar from "./PlanSummaryBar";
 import PlanSyncStatus from "./PlanSyncStatus";
 import type { DragState, DropTarget } from "./drag";
 import {
+  appendDays,
   clearDay,
   clearPlan,
   moveToDayAt,
@@ -54,13 +58,50 @@ const PlanTripMap = dynamic(() => import("./PlanTripMap"), {
 
 const SHARE_PARAM = "spots";
 const START_PARAM = "start";
+/** 宿を出る時刻(0時からの分)。既定の9:00なら付けない。 */
+const FROM_PARAM = "from";
+/** リンクの出どころ。サイト内のボタンが付ける(イルミの順路など)。 */
+const SOURCE_PARAM = "src";
+
+/**
+ * 出どころごとの呼び名。取り込みの帯の見出しに出す。
+ *
+ * サイト内のボタンから開いたものまで「共有されたプラン」と呼ぶと、
+ * 誰かから送られてきたものに見え、自分のプランに足せるものだと分からない。
+ */
+const SOURCE_LABELS: Record<string, string> = {
+  lights: "クリスマスのイルミの順路",
+};
 
 /** 共有リンクを開いたあと、アドレス欄から取り込み用のクエリを落とす。 */
 function stripShareParams() {
   const url = new URL(window.location.href);
-  url.searchParams.delete(SHARE_PARAM);
-  url.searchParams.delete(START_PARAM);
+  for (const key of [SHARE_PARAM, START_PARAM, FROM_PARAM, SOURCE_PARAM]) {
+    url.searchParams.delete(key);
+  }
   window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+}
+
+/**
+ * 共有リンクの URL。
+ *
+ * URLSearchParams を通さずに組み立てる。encodePlan の区切り(. と _ と ~)は
+ * percent-encode されない文字だが、通すと読みにくくなる書き方に化けるものが
+ * ある。共有リンクは人が LINE やメールに貼るので見た目のまま残す。
+ */
+function buildShareUrl(
+  entries: PlanEntry[],
+  startDate: string | null,
+  startMinutes: number,
+): string {
+  const query = [
+    `${SHARE_PARAM}=${encodePlan(entries)}`,
+    startDate ? `${START_PARAM}=${startDate}` : null,
+    startMinutes !== DEFAULT_START_MINUTES ? `${FROM_PARAM}=${startMinutes}` : null,
+  ]
+    .filter(Boolean)
+    .join("&");
+  return `${window.location.origin}/plan?${query}`;
 }
 
 /** 「5ヶ所・2日間・10月3日(金)から」。2つのプランを見比べてもらうときの一言。 */
@@ -100,8 +141,21 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
   const [incoming, setIncoming] = useState<{
     entries: PlanEntry[];
     startDate: string | null;
+    /** 送った人の宿を出る時刻。リンクに無ければ null。 */
+    startMinutes: number | null;
+    /** 出どころの呼び名。サイト内のボタンなら「クリスマスのイルミの順路」など。 */
+    label: string;
+    /** サイト内のボタンから開いたか。足すのが主な使い方になる。 */
+    fromSite: boolean;
   } | null>(null);
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  /**
+   * 共有リンクの欄を開いているか。
+   *
+   * 以前は URL そのものを state に置いていたので、欄を開いたあとで
+   * プランを直しても古い URL が残り、手で写すと直す前のプランが届いた。
+   * URL はいまの中身から毎回作る(shareUrl)。
+   */
+  const [shareOpen, setShareOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [confirmingClear, setConfirmingClear] = useState(false);
   /** 追加の引き出し。開いていればその行き先の日。 */
@@ -246,7 +300,8 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
    *
    * 自分のプランを黙って上書きしない。旅程は作るのに時間がかかるもので、
    * 同行者からリンクが届いたときに消えるのがいちばん困る。
-   * 空のときだけ自動で開き、中身があるときは選ばせる。
+   * 空のときだけ自動で開き、中身があるときは選ばせる(足す・入れ替える・
+   * やめる)。サイト内のボタン(イルミの順路など)も同じ口から入ってくる。
    */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -264,12 +319,16 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     const incomingStart = parseIsoDate(params.get(START_PARAM))
       ? params.get(START_PARAM)
       : null;
+    const from = Number(params.get(FROM_PARAM));
+    const incomingStartMinutes = isValidStartMinutes(from) ? from : null;
+    const source = params.get(SOURCE_PARAM);
+    const sourceLabel = source ? SOURCE_LABELS[source] : undefined;
 
     // 描画時のスナップショットではなく保存内容を直接読む。
     // localStorage の読み込み前だと空に見えてしまうため。
     const current = readPlan();
     if (current.length === 0) {
-      replacePlan(decoded, incomingStart);
+      replacePlan(decoded, incomingStart, incomingStartMinutes ?? undefined);
       stripShareParams();
       return;
     }
@@ -280,8 +339,57 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       stripShareParams();
       return;
     }
-    setIncoming({ entries: decoded, startDate: incomingStart });
+    setIncoming({
+      entries: decoded,
+      startDate: incomingStart,
+      startMinutes: incomingStartMinutes,
+      label: sourceLabel ?? "共有されたプラン",
+      fromSite: Boolean(sourceLabel),
+    });
   }, []);
+
+  /*
+   * 取り込みを受ける。どちらを選んでも「元に戻す」を出す。
+   *
+   * 以前は入れ替えると戻せず、帯にも「戻せません」と書いていた。中身を
+   * 件数でしか見せずに入れ替えさせる以上、戻せないと押せない。
+   */
+  const acceptIncoming = (mode: "append" | "replace") => {
+    if (!incoming) return;
+    const snapshot = readSnapshot();
+    if (mode === "replace") {
+      replacePlan(
+        incoming.entries,
+        incoming.startDate,
+        incoming.startMinutes ?? undefined,
+      );
+      setUndo({
+        label: `${incoming.label}に入れ替えました`,
+        snapshot,
+        countAfter: incoming.entries.length,
+      });
+    } else {
+      const { added, skipped, firstDay } = appendDays(incoming.entries);
+      // 足した結果の最終日。足せなかった日があれば詰まるので、実物から数える。
+      const lastAdded = readPlan().reduce(
+        (max, entry) => Math.max(max, entry.day),
+        0,
+      );
+      if (added > 0) {
+        setUndo({
+          label:
+            `${added}ヶ所を${firstDay}日目${lastAdded > firstDay ? `〜${lastAdded}日目` : ""}に足しました` +
+            (skipped > 0
+              ? `(すでに入っていたものなど${skipped}ヶ所は足していません)`
+              : ""),
+          snapshot,
+          countAfter: snapshot.entries.length + added,
+        });
+      }
+    }
+    setIncoming(null);
+    stripShareParams();
+  };
 
   /*
    * 消したあとで中身が動いたら「元に戻す」を引っ込める。
@@ -365,18 +473,15 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
    */
   const hasMappable = mapDays.some((day) => day.spots.some(hasRealLocation));
 
+  /** 開いている間は、いまの中身から作り直す。欄の URL が直す前のまま残らない。 */
+  const shareUrl = useMemo(
+    () => (shareOpen ? buildShareUrl(entries, startDate, startMinutes) : null),
+    [shareOpen, entries, startDate, startMinutes],
+  );
+
   const handleShare = async () => {
-    // URLSearchParams を通さずに組み立てる。encodePlan の区切り(. と _)は
-    // percent-encode されない文字だが、通すと読みにくくなる書き方に化ける
-    // ものがある。共有リンクは人が LINE やメールに貼るので見た目のまま残す。
-    const query = [
-      `${SHARE_PARAM}=${encodePlan(entries)}`,
-      startDate ? `${START_PARAM}=${startDate}` : null,
-    ]
-      .filter(Boolean)
-      .join("&");
-    const url = `${window.location.origin}/plan?${query}`;
-    setShareUrl(url);
+    const url = buildShareUrl(entries, startDate, startMinutes);
+    setShareOpen(true);
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -408,7 +513,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     });
     clearPlan();
     setConfirmingClear(false);
-    setShareUrl(null);
+    setShareOpen(false);
     // 消すとページが一気に短くなり、ブラウザが位置を切り詰めて
     // 下端に落ちる。「元に戻す」は上に出るので、そこまで連れていく。
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -503,6 +608,19 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     }
   };
 
+  /** いまのプランの最終日。取り込みを後ろに足すときの起点。 */
+  const lastPlanDay = entries.reduce((max, entry) => Math.max(max, entry.day), 0);
+  const incomingDays = incoming
+    ? [...new Set(incoming.entries.map((entry) => entry.day))].sort((a, b) => a - b)
+    : [];
+  const inPlan = new Set(entries.map((entry) => entry.slug));
+  /** 1ヶ所でも足せるか。日数・ヶ所数の上限と、すでに入っているかを見る。 */
+  const canAppend =
+    incoming !== null &&
+    lastPlanDay < MAX_DAYS &&
+    entries.length < MAX_SPOTS &&
+    incoming.entries.some((entry) => !inPlan.has(entry.slug));
+
   return (
     <div className="space-y-6">
       {conflictRemote && (
@@ -543,25 +661,57 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
       {incoming && (
         <div className="space-y-3 rounded-2xl border border-indigo-300 bg-indigo-50 p-4 dark:border-indigo-800 dark:bg-indigo-950/40">
           <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
-            共有されたプランが開かれています（
-            {incoming.entries.length}ヶ所・
-            {new Set(incoming.entries.map((entry) => entry.day)).size}日間）
+            {incoming.label}を開いています（{incoming.entries.length}ヶ所・
+            {incomingDays.length}日間）
           </p>
+          {/* 件数だけでは、足すか入れ替えるかを決められない。中身を出す。 */}
+          <ul className="space-y-1 text-xs leading-relaxed text-indigo-900 dark:text-indigo-200">
+            {incomingDays.map((day) => (
+              <li key={day}>
+                {incomingDays.length > 1 && (
+                  <span className="mr-1.5 font-semibold">{day}日目</span>
+                )}
+                {incoming.entries
+                  .filter((entry) => entry.day === day)
+                  .map((entry) => bySlug.get(entry.slug)?.name ?? entry.slug)
+                  .join("・")}
+              </li>
+            ))}
+          </ul>
           <p className="text-xs leading-relaxed text-indigo-800 dark:text-indigo-300">
-            いま保存されているあなたのプラン（{entries.length}ヶ所）とは別のものです。
-            入れ替えると、いまのプランは戻せません。
+            いまのあなたのプラン（{entries.length}ヶ所・{lastPlanDay}日間）とは別のものです。
+            {canAppend
+              ? "後ろに日として足すこともできます。入れ替えても、この画面を離れるまでは元に戻せます。"
+              : "足すと上限(10日・40ヶ所)を超えるか、すべてすでに入っています。入れ替えても、この画面を離れるまでは元に戻せます。"}
           </p>
           <div className="flex flex-wrap gap-2">
+            {canAppend && (
+              <button
+                type="button"
+                onClick={() => acceptIncoming("append")}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                  incoming.fromSite
+                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                    : "border border-indigo-300 bg-background hover:border-indigo-500 dark:border-indigo-800"
+                }`}
+              >
+                {lastPlanDay + 1}日目
+                {incomingDays.length > 1
+                  ? `〜${Math.min(MAX_DAYS, lastPlanDay + incomingDays.length)}日目`
+                  : ""}
+                として足す
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => {
-                replacePlan(incoming.entries, incoming.startDate);
-                setIncoming(null);
-                stripShareParams();
-              }}
-              className="rounded-full bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-indigo-700"
+              onClick={() => acceptIncoming("replace")}
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                incoming.fromSite && canAppend
+                  ? "border border-indigo-300 bg-background hover:border-indigo-500 dark:border-indigo-800"
+                  : "bg-indigo-600 text-white hover:bg-indigo-700"
+              }`}
             >
-              共有されたプランに入れ替える
+              いまのプランと入れ替える
             </button>
             <button
               type="button"
@@ -569,7 +719,7 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
                 setIncoming(null);
                 stripShareParams();
               }}
-              className="rounded-full border border-indigo-300 bg-background px-4 py-2 text-xs font-semibold transition hover:border-indigo-500 dark:border-indigo-800"
+              className="rounded-full px-4 py-2 text-xs font-semibold text-muted-foreground transition hover:text-foreground"
             >
               いまのプランのままにする
             </button>

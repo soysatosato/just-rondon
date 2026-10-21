@@ -52,6 +52,8 @@ import RouteMapLazy from "@/components/christmas/RouteMapLazy";
 export const revalidate = 60 * 60;
 
 const PATH = "/sightseeing/christmas-lights";
+/** 順路を旅行プランに入れるときの、立ち寄り1ヶ所あたりの滞在(分)。 */
+const LIGHTS_STOP_MINUTES = 15;
 const TITLE = "ロンドンのクリスマスのイルミネーション";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -306,9 +308,14 @@ export default function ChristmasLightsPage() {
           const km = routeDistanceKm(route);
           const minutes = routeWalkMinutes(route);
           const spots = route.stops.flatMap((s) => (s.spot ? [s.spot] : []));
+          // 立ち寄りは灯りを見る時間だけ置く。掲載値(セルフリッジズ2時間など)の
+          // まま入れると、夜の散歩が昼の6時間の予定になる。src は /plan の帯が
+          // 「クリスマスのイルミの順路」と名乗り、足す使い方を先に出すための印。
           const planHref = `/plan?spots=${encodeURIComponent(
-            encodePlan(spots.map((slug) => ({ slug, day: 1 }))),
-          )}`;
+            encodePlan(
+              spots.map((slug) => ({ slug, day: 1, minutes: LIGHTS_STOP_MINUTES })),
+            ),
+          )}&src=lights`;
           return (
             <XmasSection
               key={route.slug}

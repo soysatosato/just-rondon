@@ -486,6 +486,46 @@ export function replacePlan(
   write(next);
 }
 
+/**
+ * 別のプラン(共有リンク・記事の順路)を、いまの最終日のあとに日ごと足す。
+ *
+ * 取り込みは以前「入れ替える」か「やめる」しか選べず、イルミの順路の
+ * 「旅行プランに入れる」を押した人は、組んだプランを消すか何もしないかを
+ * 迫られていた。日の並びは保ったまま後ろに足す。
+ *
+ * すでに入っているスポットは足さない(1つのプランに同じ slug は1回)。
+ * 上限(40ヶ所・10日)を超えるぶんも足さない。戻り値は、足した数・
+ * 足さなかった数・足した最初の日。
+ */
+export function appendDays(incoming: PlanEntry[]): {
+  added: number;
+  skipped: number;
+  firstDay: number;
+} {
+  if (!hydrated) hydrate();
+  const offset = lastDay();
+  const seen = new Set(entries.map((e) => e.slug));
+  const additions: PlanEntry[] = [];
+  let skipped = 0;
+
+  for (const entry of incoming) {
+    const day = offset + entry.day;
+    if (
+      seen.has(entry.slug) ||
+      entries.length + additions.length >= MAX_SPOTS ||
+      day > MAX_DAYS
+    ) {
+      skipped++;
+      continue;
+    }
+    seen.add(entry.slug);
+    additions.push({ ...entry, day });
+  }
+
+  if (additions.length > 0) write([...entries, ...additions]);
+  return { added: additions.length, skipped, firstDay: offset + 1 };
+}
+
 /** 購読を通さずに今の出発日を読む。共有リンクの取り込みで使う。 */
 export function readStartDate(): string | null {
   if (!hydrated) hydrate();
