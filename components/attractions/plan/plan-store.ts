@@ -258,6 +258,22 @@ export function usePlanStartMinutes(): number {
   );
 }
 
+/**
+ * このブラウザの保存を読み終えたか。
+ *
+ * サーバーは保存されたプランを知らないので、読み終えるまでの描画は空の
+ * プランになる。/plan はそこで空のとき用の画面(ひな形)を描いていたため、
+ * プランのある読者にもひな形が一瞬出て、読み終えたところで丸ごと
+ * 差し替わっていた。読み終えるまで骨組みを出すための口。
+ */
+export function usePlanHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribe,
+    () => hydrated,
+    () => false,
+  );
+}
+
 export function usePlanCount(): number {
   return useSyncExternalStore(
     subscribe,

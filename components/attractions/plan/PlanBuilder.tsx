@@ -41,6 +41,7 @@ import {
   replacePlan,
   restoreSnapshot,
   usePlanEntries,
+  usePlanHydrated,
   usePlanStartDate,
   usePlanStartMinutes,
   type PlanSnapshot,
@@ -131,6 +132,7 @@ function describePlan(entries: PlanEntry[], startDate: string | null): string {
  * いるので、地図の実体は最後まで1つ)。
  */
 export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
+  const hydrated = usePlanHydrated();
   const entries = usePlanEntries();
   const startDate = usePlanStartDate();
   const startMinutes = usePlanStartMinutes();
@@ -621,6 +623,9 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
     entries.length < MAX_SPOTS &&
     incoming.entries.some((entry) => !inPlan.has(entry.slug));
 
+  // 保存を読み終えるまでは、空のプランかどうかが分からない。
+  if (!hydrated) return <PlanSkeleton />;
+
   return (
     <div className="space-y-6">
       {conflictRemote && (
@@ -998,6 +1003,24 @@ export default function PlanBuilder({ spots }: { spots: PlanSpot[] }) {
         day={addingDay ?? 1}
         dayCount={days.length}
       />
+    </div>
+  );
+}
+
+/**
+ * 保存を読み終えるまでの骨組み。日割りのおおよその形だけを出す。
+ * サーバーの描画もこれになる(サーバーは保存されたプランを知らない)。
+ */
+function PlanSkeleton() {
+  return (
+    <div
+      className="space-y-5"
+      aria-busy="true"
+      aria-label="保存したプランを読み込んでいます"
+    >
+      <div className="h-24 animate-pulse rounded-2xl bg-muted motion-reduce:animate-none" />
+      <div className="h-72 animate-pulse rounded-2xl bg-muted motion-reduce:animate-none" />
+      <div className="h-72 animate-pulse rounded-2xl bg-muted motion-reduce:animate-none" />
     </div>
   );
 }
