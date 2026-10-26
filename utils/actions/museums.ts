@@ -145,8 +145,16 @@ export const fetchMuseumDetailsBySlug = (slug: string) => {
           image: true,
         },
       },
+      // 一覧(/museums/<slug>/artworks)へのボタンを出すかの判定に使う
+      // (lib/museums/artwork-list.js)。
+      _count: { select: { artworks: true } },
     },
   });
+};
+
+/** 作品一覧ページの metadata 用。本文は要らないので件数だけ数える。 */
+export const countMuseumArtworks = (museumId: string) => {
+  return db.artwork.count({ where: { museumId } });
 };
 
 // export const createMuseumReviewAction = async (

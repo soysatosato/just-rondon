@@ -8,10 +8,12 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import {
+  countMuseumArtworks,
   fetchArtworks,
   fetchMuseumIDandName,
   fetchMuseumSlugsWithArtworks,
 } from "@/utils/actions/museums";
+import { hasArtworkList } from "@/lib/museums/artwork-list";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -45,6 +47,9 @@ const roomSortKey = (room: string): [string, number, string] => {
   return [room, 0, ""];
 };
 
+// 展示室が登録されていない作品の見出し。並べ替えでもこの名前で1室として扱う。
+const ROOM_UNKNOWN = "展示室の記載なし";
+
 const compareRooms = (a: string, b: string) => {
   const [aName, aNum, aSuffix] = roomSortKey(a);
   const [bName, bNum, bSuffix] = roomSortKey(b);
@@ -65,11 +70,15 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const museum = await fetchMuseumIDandName(params.slug);
+  const count = museum ? await countMuseumArtworks(museum.id) : 0;
 
   return buildPageMetadata({
     path: `/museums/${params.slug}/artworks`,
     title: `${museum?.name}の主要作品一覧`,
     description: `${museum?.name}の主要作品を解説。ロンドン観光で絶対に見たい美術館・注目作品、必見作品の情報をわかりやすくガイドします。`,
+    // 作品が数点の館は、館のページの「見どころ作品」と同じ並びになる
+    // (lib/museums/artwork-list.js)。
+    noindex: !hasArtworkList(count),
   });
 }
 
@@ -85,7 +94,7 @@ export default async function ArtworksPage({
 
   const sorted = [...artworks].sort(
     (a, b) =>
-      compareRooms(a.room ?? "Unknown Room", b.room ?? "Unknown Room") ||
+      compareRooms(a.room ?? ROOM_UNKNOWN, b.room ?? ROOM_UNKNOWN) ||
       compareArtworks(a, b),
   );
 
@@ -96,7 +105,7 @@ export default async function ArtworksPage({
     engTitle: art.engTitle,
     artist: art.artist,
     year: art.year,
-    room: art.room ?? "Unknown Room",
+    room: art.room ?? ROOM_UNKNOWN,
     image: art.image,
     mustSee: art.mustSee,
     recommendLevel: art.recommendLevel,

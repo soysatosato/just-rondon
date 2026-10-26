@@ -20,9 +20,15 @@ type Artwork = {
 export default function HighlightedArtworks({
   artworks = [],
   slug,
+  showListLink,
 }: {
   artworks?: Artwork[];
   slug: string;
+  /**
+   * 作品一覧へのボタンを出すか。作品が数点の館では一覧がここと同じ並びに
+   * なるので出さない(lib/museums/artwork-list.js)。
+   */
+  showListLink: boolean;
 }) {
   // 作品データが揃っているのは6館だけ。無い館では
   // 以前「Upcoming / 準備中」のプレースホルダーを出していたが、
@@ -89,11 +95,13 @@ export default function HighlightedArtworks({
         ))}
       </Swiper>
 
-      <div className="flex justify-center">
-        <Button asChild variant="outline">
-          <Link href={`/museums/${slug}/artworks`}>主要作品の一覧を見る</Link>
-        </Button>
-      </div>
+      {showListLink && (
+        <div className="flex justify-center">
+          <Button asChild variant="outline">
+            <Link href={`/museums/${slug}/artworks`}>主要作品の一覧を見る</Link>
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

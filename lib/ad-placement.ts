@@ -48,6 +48,18 @@ const AD_FREE_PATHS: readonly string[] = unwrittenMonthPaths();
 const AD_FREE_CHILDREN_OF = ["/jobs/service-charges/stores"] as const;
 
 /**
+ * 形で決まる広告を出さないページ。
+ *
+ * 美術館の作品ページ(/museums/<館>/artworks/<id>)。DB から館ごとに数百件ずつ
+ * 生える作品の解説で、全件 noindex にしてある
+ * (app/museums/[slug]/artworks/[id]/page.tsx)。作品の一覧(/artworks)と
+ * 館のページには出す。
+ */
+const AD_FREE_PATTERNS: readonly RegExp[] = [
+  /^\/museums\/[^/]+\/artworks\/[^/]+$/,
+];
+
+/**
  * このパスに広告を出してよいか。
  *
  * pathname が null(初回レンダリング等)のときは false を返す。
@@ -64,6 +76,7 @@ export function allowsAds(pathname: string | null): boolean {
     return false;
   }
   if (AD_FREE_PATHS.includes(pathname)) return false;
+  if (AD_FREE_PATTERNS.some((pattern) => pattern.test(pathname))) return false;
   return !AD_FREE_CHILDREN_OF.some((parent) =>
     pathname.startsWith(`${parent}/`)
   );

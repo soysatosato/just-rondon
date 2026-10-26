@@ -35,6 +35,7 @@ import { buildPageMetadata, fitTitle, truncateDescription } from "@/lib/seo";
 import { stripInlineMarkdown } from "@/lib/plain-text";
 import { museumJsonLd, museumPath } from "@/components/museums/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { hasArtworkList } from "@/lib/museums/artwork-list";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
 import { timeRouteForMuseum } from "@/lib/time-routes";
 import SeasonBand from "@/components/christmas/SeasonBand";
@@ -227,6 +228,7 @@ export default async function MuseumDetailsPage({
           全文が HTML と RSC payload の両方に載る。 */}
       <MuseumHighlightedArtworks
         slug={museum.slug}
+        showListLink={hasArtworkList(museum._count.artworks)}
         artworks={museum.artworks.map((artwork) => ({
           ...artwork,
           description:
