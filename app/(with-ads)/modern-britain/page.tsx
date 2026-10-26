@@ -15,6 +15,7 @@ import {
 } from "@/components/modern-britain/jsonld";
 import ModernBritainBrowser from "@/components/modern-britain/ModernBritainBrowser";
 import HubMasthead from "@/components/reading/HubMasthead";
+import ArchiveIndex from "@/components/reading/ArchiveIndex";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toRankingEntries } from "@/lib/reading-ranking";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
@@ -114,7 +115,19 @@ export default async function ModernBritainHubPage() {
       {entries.length === 0 ? (
         <p className="text-muted-foreground">近日公開予定です。</p>
       ) : (
-        <ModernBritainBrowser entries={entries} />
+        <>
+          <ModernBritainBrowser entries={entries} />
+          {/* 書庫は12本ずつ画面の中でめくるので、HTML には1面ぶんしか無い。
+              全本へのリンクを新しい順に持たせる(ArchiveIndex.tsx 参照)。 */}
+          <ArchiveIndex
+            accent="modern-britain"
+            label={`全${entries.length}本の論考を一覧で見る`}
+            items={entries.map((e) => ({
+              href: `/modern-britain/${e.slug}`,
+              title: e.title,
+            }))}
+          />
+        </>
       )}
 
       <div className="mt-12">

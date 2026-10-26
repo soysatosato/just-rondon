@@ -12,6 +12,7 @@ import { columnHubCollectionJsonLd } from "@/components/column/jsonld";
 import ColumnBrowser from "@/components/column/ColumnBrowser";
 import SeriesRail from "@/components/column/SeriesRail";
 import HubMasthead from "@/components/reading/HubMasthead";
+import ArchiveIndex from "@/components/reading/ArchiveIndex";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toRankingEntries } from "@/lib/reading-ranking";
 import { groupColumns } from "@/lib/column-grouping";
@@ -113,7 +114,19 @@ export default async function ColumnHubPage() {
       {columns.length === 0 ? (
         <p className="text-muted-foreground">近日公開予定です。</p>
       ) : (
-        <ColumnBrowser columns={columns} />
+        <>
+          <ColumnBrowser columns={columns} />
+          {/* 書庫は12本ずつ画面の中でめくるので、HTML には1面ぶんしか無い。
+              全本へのリンクを新しい順に持たせる(ArchiveIndex.tsx 参照)。 */}
+          <ArchiveIndex
+            accent="column"
+            label={`全${columns.length}本のコラムを一覧で見る`}
+            items={columns.map((c) => ({
+              href: `/column/${c.slug}`,
+              title: c.title,
+            }))}
+          />
+        </>
       )}
 
       <div className="mt-12">

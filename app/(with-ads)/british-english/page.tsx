@@ -15,6 +15,7 @@ import {
 } from "@/components/british-english/jsonld";
 import BritishEnglishBrowser from "@/components/british-english/BritishEnglishBrowser";
 import HubMasthead from "@/components/reading/HubMasthead";
+import ArchiveIndex from "@/components/reading/ArchiveIndex";
 import BritishEnglishTraits from "@/components/british-english/BritishEnglishTraits";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toRankingEntries } from "@/lib/reading-ranking";
@@ -132,6 +133,21 @@ export default async function BritishEnglishHubPage() {
       ) : (
         <div className="mb-14">
           <BritishEnglishBrowser entries={entries} />
+          {/* 書庫は12語ずつ画面の中でめくるので、HTML には1面ぶんしか無い。
+              全語へのリンクを辞書順で持たせる(ArchiveIndex.tsx 参照)。 */}
+          <ArchiveIndex
+            accent="british-english"
+            label={`全${entries.length}語を一覧で見る（A–Z）`}
+            dense
+            items={entries
+              .map((e) => ({
+                href: `/british-english/${e.slug}`,
+                title: e.engTitle ?? e.title,
+              }))
+              .sort((a, b) =>
+                a.title.localeCompare(b.title, "en", { sensitivity: "base" }),
+              )}
+          />
         </div>
       )}
 
