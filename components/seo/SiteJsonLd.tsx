@@ -23,12 +23,16 @@ export default function SiteJsonLd() {
     },
   };
 
+  // 検索結果のサイト名は WebSite の name を第一候補に、使えないときは
+  // alternateName から選ばれる(Google の「サイト名」の仕様)。
+  // Organization と同じ英字表記を持たせて、ドメイン名が出るのを避ける。
   const website = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     url: SITE_URL,
     name: SITE_NAME,
+    alternateName: "Just Rondon",
     inLanguage: "ja",
     publisher: { "@id": `${SITE_URL}/#organization` },
   };
