@@ -1,5 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { buildPageMetadata, truncateDescription } from "@/lib/seo";
+import {
+  buildPageMetadata,
+  displayWidth,
+  fitTitle,
+  truncateDescription,
+} from "@/lib/seo";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -24,6 +29,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { formatMinAge, formatRuntime } from "@/components/musicals/facts";
 import MusicalInfo from "@/components/musicals/MusicalInfo";
 import MusicalPracticalFacts from "@/components/musicals/MusicalPracticalFacts";
 import MusicalFactBar from "@/components/musicals/MusicalFactBar";
@@ -73,16 +79,96 @@ export async function generateMetadata({
     };
   }
 
+  // ミュージカルは英題で検索されることも多いので engName は残す。
+  // 観光スポットや美術館と違い、英題そのものが検索語になる。
+  const fullName = `${musical.name}・${musical.engName}`;
+
+  /*
+    あらすじ専用ページ(/musicals/[slug]/story)を持つ作品は、作品ページの
+    タイトルと description から「あらすじ」を外す。
+
+    story ページは「あらすじ」の検索を作品ページから引き取るために
+    2026-09-09 に立てたが、作品ページも「…｜あらすじ・見どころ・チケット」
+    と名乗り、description も筋の要約のままだった。2026-07-28〜10-25 の
+    Search Console では「レミゼラブル あらすじ/ネタバレ/内容/結末」の
+    約1,500表示を作品ページが14〜33位で受け、story ページはほぼ出ていない
+    (Google が同じ語に2ページを持て余して、弱い方の作品ページを出している)。
+    作品ページは「ロンドンで観る」ための実用ページとして名乗り直す。
+    実際に「レミゼラブル ロンドン」系の検索がこちらに来ている。
+  */
+  if (hasMusicalStory(params.slug)) {
+    return buildPageMetadata({
+      path: `/musicals/${params.slug}`,
+      title: fitTitle(
+        fullName,
+        [
+          "｜ロンドンの劇場・上演時間・チケット",
+          "｜ロンドン公演の劇場とチケット",
+          "｜ロンドン公演とチケット",
+          "｜劇場とチケット",
+        ],
+        displayWidth,
+      ),
+      titleSuffix: false,
+      description: practicalDescription(musical),
+      type: "article",
+    });
+  }
+
   return buildPageMetadata({
     path: `/musicals/${params.slug}`,
-    // ミュージカルは英題で検索されることも多いので engName は残す。
-    // 観光スポットや美術館と違い、英題そのものが検索語になる。
-    title: `${musical.name}・${musical.engName}｜あらすじ・見どころ・チケット`,
+    title: `${fullName}｜あらすじ・見どころ・チケット`,
     titleSuffix: false,
     // Musical.summary は必須カラムなのでフォールバックは要らない。
     description: truncateDescription(musical.summary),
     type: "article",
   });
+}
+
+/**
+ * あらすじ専用ページを持つ作品の、作品ページ側の description。
+ *
+ * どこで・何時間・何歳からを先に書き、筋は story ページへ送る。数字は
+ * 冒頭の MusicalFactBar と同じ DB の値と言い回し(facts.ts)を使う。
+ * 未確認の項目は文ごと出さない。ページに無いもの(チケットの取り方の
+ * 解説は /musicals/west-end-tickets 側)は書かない。
+ */
+function practicalDescription(musical: {
+  name: string;
+  summary: string;
+  theatreName: string | null;
+  theatre: { name: string } | null;
+  runtimeMinutes: number | null;
+  intervalMinutes: number | null;
+  minAgeGuidance: number | null;
+  isOnShow: boolean;
+}): string {
+  const theatre = musical.theatre?.name ?? musical.theatreName;
+  const runtime = formatRuntime(musical.runtimeMinutes, musical.intervalMinutes);
+  const minAge = formatMinAge(musical.minAgeGuidance);
+
+  const sentences: string[] = [];
+  if (theatre) {
+    sentences.push(
+      musical.isOnShow
+        ? `${musical.name}のロンドン公演は${theatre}で上演中。`
+        : `${musical.name}のロンドン公演（${theatre}）は現在上演していません。`,
+    );
+  }
+  const details = [runtime && `上演時間${runtime}`, minAge].filter(
+    (d): d is string => Boolean(d),
+  );
+  if (details.length > 0) sentences.push(`${details.join("、")}。`);
+
+  // 劇場も上演時間も未確認なら、言えることが無いので筋の要約に戻す。
+  if (sentences.length === 0) return truncateDescription(musical.summary);
+
+  sentences.push(
+    musical.isOnShow
+      ? "劇場と予約先、観る前に知っておきたい見どころをまとめ、あらすじは結末まで別ページで解説しています。"
+      : "観る前に知っておきたい見どころをまとめ、あらすじは結末まで別ページで解説しています。",
+  );
+  return truncateDescription(sentences.join(""));
 }
 
 export default async function musicalDetailsPage({

@@ -188,6 +188,8 @@ export const fetchMusicalPerformances = async (musicalId: string) => {
 
 // generateMetadata 専用。summary / tagline まで取るのは、description を
 // 作品ごとに書き分けるため(テンプレート文だと全作品が同じスニペットになる)。
+// 劇場・上演時間・年齢は、あらすじ専用ページを持つ作品の description に使う
+// (app/(with-ads)/musicals/[slug]/page.tsx の practicalDescription)。
 export const fetchMusicalIdandName = (slug: string) => {
   return db.musical.findUnique({
     where: { slug },
@@ -197,6 +199,12 @@ export const fetchMusicalIdandName = (slug: string) => {
       engName: true,
       summary: true,
       tagline: true,
+      theatreName: true,
+      theatre: { select: { name: true } },
+      runtimeMinutes: true,
+      intervalMinutes: true,
+      minAgeGuidance: true,
+      isOnShow: true,
     },
   });
 };

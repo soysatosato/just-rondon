@@ -35,6 +35,12 @@ import type { MusicalAppeal, MusicalCharacter } from "./story";
  * 一度も出てこなかった。実際に「レミゼラブル あらすじ」で 562 回・
  * 「レミゼラブル 内容」で 340 回表示されながらクリックがほぼ 0、
  * 順位も 22〜28 位に留まっていたため、読者の検索語に字面を合わせる。
+ *
+ * ただし、あらすじ専用ページ(storyHref)がある作品だけは見出しから
+ * 「あらすじ」を外す。そちらは「あらすじ」の検索を引き受けるページで、
+ * 作品ページの title も「ロンドン公演」側に名乗り直している
+ * (app/(with-ads)/musicals/[slug]/page.tsx の generateMetadata)。
+ * 同じ語を2ページが名乗ると、Google は弱い方を出し続ける。
  */
 export default function MusicalSceneDescription({
   description,
@@ -61,11 +67,12 @@ export default function MusicalSceneDescription({
     <section className="space-y-8">
       <div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground leading-snug">
-          {name} のあらすじと見どころ
+          {storyHref ? `${name} の見どころ` : `${name} のあらすじと見どころ`}
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          物語の芯と見どころの紹介です。幕ごとのあらすじと結末は、
-          読みたい人だけが開ける形で下にまとめています。
+          {storyHref
+            ? "物語の芯と見どころの紹介です。上演順の詳しいあらすじは専用のページに、幕ごとの流れと結末の要約は下に畳んでまとめています。"
+            : "物語の芯と見どころの紹介です。幕ごとのあらすじと結末は、読みたい人だけが開ける形で下にまとめています。"}
         </p>
       </div>
 
