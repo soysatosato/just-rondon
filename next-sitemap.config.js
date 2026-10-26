@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { hasSongList } = require("./lib/musicals/song-pages");
+const { hasArtworkList } = require("./lib/museums/artwork-list");
 const {
   unwrittenMonthPaths,
   writtenMonthPaths,
@@ -13,13 +14,10 @@ const prisma = new PrismaClient();
  * 「一貫して正確なときだけ」使うので、全部が同じ時刻では何も伝わらず、
  * 季節の特集や週報を直しても再クロールの手がかりにならなかった。
  *
- * 本当の更新日を DB から言えるものだけ入れ、言えないものには出さない:
- *
- *   読み物       revisedAt(公開後に本文を直した日)、無ければ publishedAt。
- *               記事の「更新」の日付と JSON-LD の dateModified と同じ値
- *               (lib/publish-schedule.ts の modifiedDateOf)。
- *   週報・月次号   updatedAt。号を直したときにだけ動く(閲覧は数えていない)。
- *               /events は最新号を載せるので、最新号の日付。
+ * 本当の更新日を DB から言えるものだけ入れ、言えないものには出さない。
+ * このファイルが出す URL のうち言えるのは /events(最新号の updatedAt)だけ。
+ * 読み物・週報・月次号の各ページは app/sitemap-articles.xml/route.ts が
+ * 自分の lastmod つきで出す(下の exclude を参照)。
  *
  * コードに本文があるガイドは日付を持たないので出さない。スポット・美術館・
  * ミュージカルの updatedAt は 2026-10 まで閲覧の加算で動いていて、本文を
@@ -28,50 +26,19 @@ const prisma = new PrismaClient();
  * transform は自動収集分(generateStaticParams 由来)と additionalPaths の
  * 両方から呼ばれるので、表は最初の呼び出しで1回だけ引く。
  */
-const READING_BASES = {
-  column: "/column",
-  "british-english": "/british-english",
-  "modern-britain": "/modern-britain",
-  area: "/reading/areas",
-};
-
 let lastmodsPromise;
 function loadLastmods() {
   if (!lastmodsPromise) {
     lastmodsPromise = (async () => {
       const lastmods = new Map();
-      const now = new Date();
 
-      const reading = await prisma.content.findMany({
-        where: {
-          category: { in: Object.keys(READING_BASES) },
-          publishedAt: { lte: now },
-        },
-        select: { category: true, slug: true, publishedAt: true, revisedAt: true },
-      });
-      for (const c of reading) {
-        lastmods.set(
-          `${READING_BASES[c.category]}/${c.slug}`,
-          (c.revisedAt ?? c.publishedAt).toISOString(),
-        );
-      }
-
-      const briefs = await prisma.weeklyBrief.findMany({
+      const latestBrief = await prisma.weeklyBrief.findFirst({
         where: { published: true },
-        select: { slug: true, updatedAt: true },
+        select: { updatedAt: true },
         orderBy: { weekStart: "desc" },
       });
-      for (const b of briefs) {
-        lastmods.set(`/events/week/${b.slug}`, b.updatedAt.toISOString());
-      }
-      if (briefs[0]) lastmods.set("/events", briefs[0].updatedAt.toISOString());
-
-      const issues = await prisma.monthlyChangeIssue.findMany({
-        where: { publishedAt: { lte: now } },
-        select: { slug: true, updatedAt: true },
-      });
-      for (const issue of issues) {
-        lastmods.set(`/changes/${issue.slug}`, issue.updatedAt.toISOString());
+      if (latestBrief) {
+        lastmods.set("/events", latestBrief.updatedAt.toISOString());
       }
 
       return lastmods;
@@ -131,8 +98,23 @@ module.exports = {
     // 「◯月のロンドン」のうち本文をまだ書いていない月。ページは noindex。
     // 12か月とも事前生成しているので、ここで外さないと自動収集で載る。
     ...unwrittenMonthPaths(),
+    // 「ロンドンの街」は伏せてあり、ハブも記事も noindex。静的なページと
+    // 事前生成した記事が自動収集で載っていた。
+    "/reading/areas",
+    "/reading/areas/*",
+    // 公開の時刻が決まっているものは app/sitemap-articles.xml/route.ts が
+    // 1時間ごとに作り直して出す。ここ(ビルド時)で出すと、予約した記事が
+    // 次のデプロイまで載らないうえ、二重に載る。
+    // /british-english/scenes はこの型に当たってしまうので staticPages に書く。
+    "/column/*",
+    "/british-english/*",
+    "/modern-britain/*",
+    "/events/week/*",
+    "/changes/*",
   ],
   robotsTxtOptions: {
+    // 索引(sitemap.xml)と robots.txt の両方に足される(next-sitemap 4 の仕様)。
+    additionalSitemaps: ["https://www.just-rondon.com/sitemap-articles.xml"],
     policies: [
       {
         userAgent: "*",
@@ -244,6 +226,9 @@ module.exports = {
       "/column",
       "/modern-britain",
       "/british-english",
+      // 場面別の索引。上の exclude の "/british-english/*" で自動収集から
+      // 外れるので、ここに書く(記事は app/sitemap-articles.xml が出す)。
+      "/british-english/scenes",
       // イギリス史。/history をハブとする全10章。並びは
       // components/history/chapters.ts の historyChapters と一致させること
       // (このファイルは CJS なので TS を読めない)。
@@ -511,8 +496,9 @@ module.exports = {
     for (const m of museums) {
       paths.push(await config.transform(config, `/museums/${m.slug}`));
       // 作品一覧は作品が1件以上ある館にだけ生える(それ以外は 404)。
-      // 判定はページ側の generateStaticParams と同じ。
-      if (m._count.artworks > 0) {
+      // 数点しかない館の一覧は noindex なので載せない。判定はページ側と同じ
+      // lib/museums/artwork-list.js。
+      if (hasArtworkList(m._count.artworks)) {
         paths.push(
           await config.transform(config, `/museums/${m.slug}/artworks`)
         );
@@ -576,27 +562,8 @@ module.exports = {
       paths.push(await config.transform(config, `/sightseeing/${a.slug}`));
     }
 
-    // 週次ダイジェスト「今週のロンドン」のバックナンバー。
-    // 最新号は /events と同内容で、そちらを canonical にしているため出さない。
-    const briefs = await prisma.weeklyBrief.findMany({
-      where: { published: true },
-      select: { slug: true },
-      orderBy: { weekStart: "desc" },
-    });
-    for (const b of briefs.slice(1)) {
-      paths.push(await config.transform(config, `/events/week/${b.slug}`));
-    }
-
-    // 月次号「今月変わったロンドン」。下書き(publishedAt が null)は出さない。
-    // 週次と違ってハブは号の本文を持たないので、最新号も自分のURLを正とする。
-    const changeIssues = await prisma.monthlyChangeIssue.findMany({
-      where: { publishedAt: { lte: new Date() } },
-      select: { slug: true },
-      orderBy: { monthStart: "desc" },
-    });
-    for (const issue of changeIssues) {
-      paths.push(await config.transform(config, `/changes/${issue.slug}`));
-    }
+    // 週次ダイジェストの号と月次号「今月変わったロンドン」は
+    // app/sitemap-articles.xml/route.ts が出す。
 
     // 月別ページ「◯月のロンドン」。URL は年の無い月名だけ(/events/december)。
     // 載せるのは本文を書き終えた月だけ(lib/london-months/written-months.js)。
@@ -622,34 +589,8 @@ module.exports = {
       paths.push(await config.transform(config, `/souvenirs/${s.slug}`));
     }
 
-    // 読み物は publishedAt が null(下書き)か未来(予約中)なら出さない
-    // (lib/publish-schedule.ts)。sitemap はビルド時にしか作られないので、
-    // 予約していた記事が載るのは公開後の次のデプロイから。
-    const columns = await prisma.content.findMany({
-      where: { category: "column", publishedAt: { lte: new Date() } },
-      select: { slug: true },
-    });
-    for (const c of columns) {
-      paths.push(await config.transform(config, `/column/${c.slug}`));
-    }
-
-    const modernBritainEntries = await prisma.content.findMany({
-      where: { category: "modern-britain", publishedAt: { lte: new Date() } },
-      select: { slug: true },
-    });
-    for (const mb of modernBritainEntries) {
-      paths.push(await config.transform(config, `/modern-britain/${mb.slug}`));
-    }
-
-    const britishEnglishEntries = await prisma.content.findMany({
-      where: { category: "british-english", publishedAt: { lte: new Date() } },
-      select: { slug: true },
-    });
-    for (const be of britishEnglishEntries) {
-      paths.push(
-        await config.transform(config, `/british-english/${be.slug}`),
-      );
-    }
+    // 読み物(コラム・いまのイギリス・イギリス英語)の記事は予約公開なので、
+    // ビルド時ではなく app/sitemap-articles.xml/route.ts が1時間ごとに出す。
 
     // for (const n of news) {
     //   paths.push(await config.transform(config, `/news/${n.id}`));
