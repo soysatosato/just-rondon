@@ -252,10 +252,9 @@ export const newYearsEveFireworks: EventGuide = {
   links: [
     { href: "/events/december", label: "12月のロンドン" },
     { href: "/events/new-years-day-parade", label: "元日のロンドン・パレード" },
-    {
-      href: "/sightseeing/nye-london-eye-riverside-rooms",
-      label: "ロンドン・アイの年越しパーティー",
-    },
+    // ロンドン・アイ隣の年越しパーティー(/sightseeing/nye-london-eye-riverside-rooms)は、
+    // 2026年の回が未発表なので伏せてある(scripts/unpublish-nye-riverside-rooms-2026-10.ts)。
+    // 戻すときはここにも戻す。
     { href: "/sightseeing/london-eye", label: "ロンドン・アイ" },
   ],
   sources: [
