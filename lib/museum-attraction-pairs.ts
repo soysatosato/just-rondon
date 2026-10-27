@@ -42,6 +42,9 @@ export const MUSEUM_ATTRACTION_PAIRS: readonly MuseumAttractionPair[] = [
   { museumSlug: "royal-academy-of-arts", attractionSlug: "royal-academy-of-arts" },
   { museumSlug: "kenwood-house", attractionSlug: "kenwood-house-hampstead" },
   { museumSlug: "queens-house", attractionSlug: "queens-house-greenwich" },
+  // 2026-10-27 の監査で、両方にページがあるのに対応表から漏れていた2館。
+  { museumSlug: "courtauld-gallery", attractionSlug: "courtauld-gallery" },
+  { museumSlug: "cutty-sark", attractionSlug: "cutty-sark" },
 ] as const;
 
 const BY_MUSEUM = new Map(

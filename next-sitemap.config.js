@@ -47,6 +47,17 @@ function loadLastmods() {
   return lastmodsPromise;
 }
 
+/** 作品はあるが、一覧を独立したページとして出さない館の /artworks。 */
+async function thinArtworkListPaths() {
+  const museums = await prisma.museum.findMany({
+    where: { artworks: { some: {} } },
+    select: { slug: true, _count: { select: { artworks: true } } },
+  });
+  return museums
+    .filter((m) => !hasArtworkList(m._count.artworks))
+    .map((m) => `/museums/${m.slug}/artworks`);
+}
+
 /** @type {import('next-sitemap').IConfig} */
 /**
  * public/robots.txt と public/sitemap*.xml は postbuild でここから生成される。
@@ -55,7 +66,8 @@ function loadLastmods() {
 module.exports = {
   siteUrl: "https://www.just-rondon.com",
   generateRobotsTxt: true,
-  exclude: [
+  // 関数にしているのは、作品数で決まる除外(末尾)を DB から引くため。
+  exclude: async () => [
     "/api/*",
     // SNS共有カードの生成ルート。画像を返すだけでページではない。
     // robots.txt では Disallow にしない(Twitterbot 等が og:image を
@@ -111,6 +123,11 @@ module.exports = {
     "/modern-britain/*",
     "/events/week/*",
     "/changes/*",
+    // その sitemap 自体。静的なルートとして自動収集に拾われる。
+    "/sitemap-articles.xml",
+    // 作品が数点しかない館の作品一覧(noindex。lib/museums/artwork-list.js)。
+    // 作品のある館の一覧はすべて事前生成されるので、ここで外さないと載る。
+    ...(await thinArtworkListPaths()),
   ],
   robotsTxtOptions: {
     // 索引(sitemap.xml)と robots.txt の両方に足される(next-sitemap 4 の仕様)。
