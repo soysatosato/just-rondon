@@ -129,7 +129,7 @@ export default function BriefMasthead({
         <span aria-hidden className="opacity-40">
           ／
         </span>
-        <span>毎週更新(翌週分を前の週にお届け)</span>
+        <span>毎週更新(翌週分を前の週に公開)</span>
       </p>
     </header>
   );

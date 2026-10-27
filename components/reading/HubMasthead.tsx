@@ -38,7 +38,7 @@ export default function HubMasthead({
   accent: ReadingAccentName;
   /** 題字の上の英字。セクションの通り名。 */
   eyebrow: string;
-  /** 英字の右に添える一言。「毎日更新」など。 */
+  /** 英字の右に添える一言。更新の頻度は書かない(ペースが変わると嘘になる。最終更新は stats で出す)。 */
   kicker?: string;
   /** 見出しの前半。狭い画面ではここで改行する。 */
   titleLead: string;

@@ -80,7 +80,6 @@ export default async function AreasHubPage() {
       <HubMasthead
         accent="area"
         eyebrow="London, Neighbourhood by Neighbourhood"
-        kicker="毎週2本"
         titleLead="その街は、"
         titleAccent="どうしてそうなったのか"
         description="ロンドンは33の区と、名前を持った数百の街でできている。同じ地下鉄で15分の距離に、家賃が3倍違う街が並ぶ。その差は偶然ではなく、鉄道がどこを通ったか、誰がどこに住むことを許されたか、どの工場が閉じたかの結果である。一つずつ、名前の由来から今日の数字まで辿る。"

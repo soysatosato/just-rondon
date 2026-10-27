@@ -15,7 +15,7 @@ export type ServiceChargeGuide = {
 };
 
 export const serviceChargeGuide: ServiceChargeGuide = {
-  title: "英国サービスチャージ完全ガイド",
+  title: "英国のサービスチャージ｜Tipping Act 2023と従業員の権利",
   summary:
     "レストランやホテルの請求書に付く「サービスチャージ」は、2024年10月から法律で全額スタッフのものと定められました。誰が受け取るのか、断れるのか、正しく分配されていないときに何ができるのか。働く人と利用する人の双方に向けて、根拠となる法律とあわせて解説します。",
   website: "https://www.acas.org.uk/tips-and-service-charges",

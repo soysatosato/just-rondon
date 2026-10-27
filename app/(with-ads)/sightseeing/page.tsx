@@ -194,7 +194,8 @@ export default async function Page() {
         見出し。旧版は「世界的に有名な観光スポットがぎゅっと詰まって
         います」から始まっていて、どのガイドブックにも書いてあることを
         3段落使って繰り返していた。ここでは、実際に旅程を組むときに
-        最初に破綻する点を先に出す。
+        最初に破綻する点を先に出す。2段落目は「このガイドは並べるだけで
+        終わらせません」のような自己紹介をやめ、ページに何があるかだけを書く。
       */}
       <header className="mt-6 max-w-3xl space-y-4">
         <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
@@ -207,10 +208,9 @@ export default async function Page() {
           この2つを同じ日に入れた時点で、その日はもう終わりです。
         </p>
         <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
-          そこでこのガイドは、名所を並べるだけで終わらせません。各スポットのページに
+          各スポットのページには、
           <strong className="font-semibold">料金・所要時間・最寄駅</strong>
-          と、着いてからどの順に見るかを書いています。
-          何を削るかを決められる材料を先に渡すのが目的です。
+          と、着いてからどの順に見るかを載せています。
         </p>
         <p className="leading-relaxed text-neutral-700 dark:text-neutral-300">
           掲載は{totalSpots}件。宿・地下鉄・予算といった出発前の実務は、

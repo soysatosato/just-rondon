@@ -316,7 +316,7 @@ export const NAV_SECTIONS: NavSection[] = [
           { href: "/jobs", label: "労働問題ガイド トップ" },
           {
             href: "/jobs/service-charges",
-            label: "サービスチャージ完全ガイド",
+            label: "サービスチャージの仕組み",
           },
           {
             href: "/jobs/service-charges/stores",

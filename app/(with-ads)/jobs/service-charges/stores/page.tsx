@@ -211,7 +211,7 @@ export default async function StoresPage() {
               制度を知る
             </p>
             <p className="mt-1.5 font-semibold text-foreground">
-              英国サービスチャージ完全ガイド
+              英国のサービスチャージ
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
               2024年10月に何が変わったのか。全額分配の義務、書面のチップポリシー、申立ての期限まで。

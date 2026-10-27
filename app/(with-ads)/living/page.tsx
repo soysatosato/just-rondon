@@ -97,7 +97,7 @@ const SECTIONS: HubSection[] = [
     blurb:
       "雇用契約、最低賃金、職場のハラスメント、年金。飲食店のサービスチャージ未払いについては、実際に請求した当事者の記録を別立てで置いています。",
     links: [
-      { href: "/jobs/service-charges", label: "サービスチャージ完全ガイド" },
+      { href: "/jobs/service-charges", label: "サービスチャージの仕組み" },
       { href: "/jobs/employment-contract", label: "雇用契約書の読み方" },
     ],
   },

@@ -293,7 +293,7 @@ export default function ChristmasShowsPage() {
           n={n("shows")}
           id="shows"
           title={`${year}年の上演`}
-          lead="会期と料金は、各劇場の公式の案内で確かめたものです。12月25日などの公演の有無は、劇場の公演カレンダーで確かめてください。"
+          lead="12月25日などの公演の有無は、劇場の公演カレンダーで確かめてください。"
         >
           <div className="grid gap-4">
             {shows.map((item) => (
@@ -387,7 +387,7 @@ export default function ChristmasShowsPage() {
         <XmasSection n={n("basis")} id="basis" title="基準と出典">
           <div className="space-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             <p>
-              会期・料金・上演時間・年齢の決まりは、各劇場の公式の案内で確かめたものだけを載せています。料金の欄が空いている舞台は、公式の案内で料金の幅を確かめられなかったものです。出典は各舞台の欄にあります。
+              会期・料金・上演時間・年齢の決まりは、各劇場の公式の案内によります。料金の欄が空いている舞台は、公式の案内に料金の幅が見つからなかったものです。出典は各舞台の欄にあります。
             </p>
             <p>パントの成り立ちは、V&A(ヴィクトリア&アルバート博物館)の解説によります。</p>
             <p className="font-semibold">最終確認: {formatFullDate(SEASON_CHECKED)}</p>

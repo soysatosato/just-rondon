@@ -426,7 +426,7 @@ export default async function ChristmasPage() {
           n={n("stay")}
           id="stay"
           title="滞在日を入れて調べる"
-          lead="着く日と発つ日を入れると、その日程で開いている灯り・マーケット・リンク・催しと、休む館、交通が止まる日が出ます。会期は公式発表を確かめたものだけで判定し、発表の無いものは「未発表」と出ます。"
+          lead="着く日と発つ日を入れると、その日程で開いている灯り・マーケット・リンク・催しと、休む館、交通が止まる日が出ます。会期の発表が無いものは「未発表」と出ます。"
         >
           <StayPlanner
             payload={{
@@ -443,7 +443,7 @@ export default async function ChristmasPage() {
           n={n("booking")}
           id="booking"
           title="いま予約が要るもの"
-          lead="日時指定の券や抽選が要るものです。夜と週末の枠、12月の枠から先に埋まります。発売日と予約先は公式の案内のとおりに書いています。"
+          lead="日時指定の券や抽選が要るものです。夜と週末の枠、12月の枠から先に埋まります。"
         >
           <BookingList rows={bookings} />
         </XmasSection>
@@ -715,7 +715,7 @@ export default async function ChristmasPage() {
         <XmasSection n={n("basis")} id="basis" title="基準と出典">
           <div className="space-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             <p>
-              会期・時間・料金・発売日は、主催者の公式発表を確かめたものだけを載せています。予想の日程は入れず、発表の無いものは「未発表」と書いて、例年の時期を添えています。
+              会期・時間・料金・発売日は、主催者の公式発表によります。予想の日程は入れず、発表の無いものは「未発表」と書いて、例年の時期を添えています。
             </p>
             <p>
               交通は TfL と National Rail の案内、休館は各館の公式サイト、祝日と振替休日は gov.uk のデータからです。灯りの「暗くなる時刻」は、太陽が地平線の6°下に沈む時刻(市民薄明の終わり)の計算値です。

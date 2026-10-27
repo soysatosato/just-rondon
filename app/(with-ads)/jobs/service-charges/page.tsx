@@ -17,7 +17,7 @@ import { stripInlineMarkdown } from "@/lib/plain-text";
 
 export const metadata = buildPageMetadata({
   path: "/jobs/service-charges",
-  title: "英国サービスチャージ完全ガイド｜Tipping Act 2023・従業員の権利・事業者の義務まとめ | ジャスト・ロンドン",
+  title: "英国のサービスチャージ｜Tipping Act 2023・従業員の権利・事業者の義務 | ジャスト・ロンドン",
   titleSuffix: false,
   description: "2024年10月施行のTipping Act 2023により、サービスチャージは全額スタッフに帰属します。強制・任意の違い、分配ルールの確認方法、未払い時の申立て期限、2026年末の法改正までを解説。",
   keywords: [

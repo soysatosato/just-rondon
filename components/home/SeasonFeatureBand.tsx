@@ -84,7 +84,7 @@ export default function SeasonFeatureBand({ today }: { today: string }) {
           <p className="mt-3 max-w-xl text-base leading-relaxed text-white/85">
             {pulse.phase === "during"
               ? `いま点灯している通りの灯りは${pulse.lights}か所中${pulse.lit}か所、今日開いているマーケットや催しは${pulse.openToday}か所。`
-              : "通りの点灯日、マーケット、12月25日に開いている所を、公式の発表で確かめてまとめています。"}
+              : "通りの点灯日、マーケットの会期、12月25日に開いている所をまとめています。"}
           </p>
           <Link
             href="/events/christmas"

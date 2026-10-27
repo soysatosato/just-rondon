@@ -17,7 +17,7 @@ export const OG_HUBS = {
   column: {
     badge: "COLUMN",
     head: "イギリスは、掘るほど面白い",
-    tail: "歴史・文化・伝統・制度にまつわる読み物コラム。毎日更新。",
+    tail: "歴史・文化・伝統・制度にまつわる読み物コラム。",
     glyph: "掘",
     theme: "column",
   },
@@ -52,7 +52,7 @@ export const OG_HUBS = {
   reading: {
     badge: "READING BRITAIN",
     head: "英国を読む",
-    tail: "歴史を辿り、いまを論じ、言葉を味わう。ガイドブックが終わるところから。",
+    tail: "コラム、時事論考、イギリス英語と、通史10章。イギリスの歴史と言葉を読む。",
     glyph: "読",
     theme: "reading",
   },

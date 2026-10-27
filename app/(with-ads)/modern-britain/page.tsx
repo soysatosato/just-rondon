@@ -73,7 +73,7 @@ export default async function ModernBritainHubPage() {
         kicker="随時更新"
         titleLead="そのニュースは、"
         titleAccent="何を意味するのか"
-        description="ニュースは、社会の表面に浮かんだ一つの現象にすぎない。その下には、歴史があり、制度があり、人々の価値観がある。いま英国で起きていることを手がかりに、その奥にある「英国という国」の姿を読み解く。"
+        description="公表から数日以内の英国のニュースを1本選び、その背景と、誰の利害が動くのか、これから何が決まるのかを書く時事論考です。"
         image={cover}
         stats={[
           { label: "公開中", value: `${entries.length}`, unit: "本" },

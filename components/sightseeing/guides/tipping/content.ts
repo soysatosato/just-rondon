@@ -78,7 +78,7 @@ export const tippingLead =
 export const payerScope = {
   body: "この記事は「払う側」の話です。集められた service charge が従業員にどう渡るのかは別ページで扱っています。",
   href: "/jobs/service-charges",
-  label: "英国サービスチャージ完全ガイド（受け取る側の話）",
+  label: "英国のサービスチャージ（受け取る側の話）",
 };
 
 /* ------------------------------------------------------------------ */
@@ -172,7 +172,7 @@ export const doubleTip = {
 export const tippingActCallout: GuideCalloutData = {
   tone: "info",
   title: "そのチップはどこへ行くのか",
-  body: "2023年に成立した Tipping Act により、集められたサービスチャージは原則として従業員に全額渡ることになっています。制度の詳細と、実際に守られているかは[英国サービスチャージ完全ガイド](/jobs/service-charges)で掘り下げています。",
+  body: "2023年に成立した Tipping Act により、集められたサービスチャージは原則として従業員に全額渡ることになっています。制度の詳細と、実際に守られているかは[英国のサービスチャージ](/jobs/service-charges)で掘り下げています。",
 };
 
 /* ------------------------------------------------------------------ */
@@ -281,7 +281,7 @@ export const cash = {
 
   noRate: {
     title: "為替レートについて",
-    body: "この記事では意図的に「£1=◯円」を書いていません。書いた時点で古くなり、読者が誤った予算を立てる原因になるためです。渡航直前にご自身で確認してください。",
+    body: "金額はポンドだけで書いています。円での目安は、渡航直前のレートで計算してください。",
   },
 
   notes: [
@@ -397,7 +397,7 @@ export const tippingSources: GuideSourceLink[] = [
 ];
 
 export const tippingRelatedLinks: GuideRelatedLink[] = [
-  { href: "/jobs/service-charges", label: "英国サービスチャージ完全ガイド（受け取る側の話）" },
+  { href: "/jobs/service-charges", label: "英国のサービスチャージ（受け取る側の話）" },
   { href: "/sightseeing/budget", label: "ロンドン旅行の予算｜7日間の費用を積算" },
   { href: "/sightseeing/travel-tips", label: "ロンドン旅行の実用情報" },
   { href: "/sightseeing/transport/fares", label: "ロンドンの運賃と上限額の仕組み" },

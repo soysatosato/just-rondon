@@ -467,7 +467,7 @@ export default async function Page() {
               英国を読む
             </h2>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-              ガイドブックが終わるところから、イギリスは面白くなる。
+              コラム、時事論考、イギリス英語と、通史10章。イギリスの歴史と言葉を読むページです。
             </p>
           </div>
 
@@ -673,7 +673,7 @@ export default async function Page() {
                   key: "eat",
                   label: "食べる",
                   description:
-                    "まずいと言われがちな料理を、実際にうまい店の名前つきで。頼み方のコツも。",
+                    "まずいと言われがちな料理を、評判の店の名前つきで。頼み方のコツも。",
                   href: "/restaurants",
                   moreLabel: "レストランガイドへ",
                   items: rails.dishes,
@@ -719,9 +719,11 @@ export default async function Page() {
           {/*
             このサイトの書き方。以前ここにあった「ロンドン観光をもっと楽しむための
             ガイド」は冒頭の説明の言い換えで、何も足していなかった。代わりに、
-            このサイトの一番の強み(確かめて書き、いつ調べたかを出す)を、
-            実際にしていることの範囲で書く。すべての料金に確認日が付いている
-            わけではないので、そうとは書かない。掲載数はDBから数える。
+            実際にしていること(調べた日を出す、改定を月ごとに追う)を、
+            その範囲で書く。すべての料金に確認日が付いているわけではないので、
+            そうとは書かない。誤りの連絡はお問い合わせのリンクに任せ、
+            「確かめて直します」のような約束は /about の編集方針1か所に置く。
+            掲載数はDBから数える。
           */}
           <div data-home-module="policy" className="mt-14 max-w-3xl border-t pt-8">
             <h2 className="text-xl font-bold tracking-tight">
@@ -733,9 +735,6 @@ export default async function Page() {
               </li>
               <li>
                 運賃・入場料・最低賃金などの改定は「今月変わったロンドン」に月ごとにまとめ、サイト内の数字もそのとき直しています。
-              </li>
-              <li>
-                間違いや古くなった情報に気づいたら、お問い合わせから知らせてください。確かめて直します。
               </li>
             </ul>
             <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -765,7 +764,7 @@ export default async function Page() {
                 href="/contact"
                 className="underline decoration-border underline-offset-4 hover:decoration-current"
               >
-                お問い合わせ
+                誤りを知らせる(お問い合わせ)
               </Link>
             </p>
           </div>

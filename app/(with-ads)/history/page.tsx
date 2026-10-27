@@ -232,11 +232,10 @@ export default function HistoryHubPage() {
         titleAccent="全10章"
         description={
           <>
-            年号を覚えるための通史ではありません。
             <strong className="font-bold text-white">
               目の前のロンドンが、なぜこうなっているのか
             </strong>
-            を理解するための通史です。各章は「今も残っているもの」から始まり、末尾に
+            を辿る通史です。各章は「今も残っているもの」から始まり、末尾に
             <strong className="font-bold text-white">
               その時代に実際に立てる場所
             </strong>

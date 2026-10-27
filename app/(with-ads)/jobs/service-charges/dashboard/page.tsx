@@ -200,7 +200,7 @@ export default async function DashboardPage() {
               href="/jobs/service-charges"
               className="font-medium text-foreground underline underline-offset-4 hover:opacity-80"
             >
-              サービスチャージ完全ガイドを読む →
+              サービスチャージの仕組みを読む →
             </Link>
           </p>
         </section>

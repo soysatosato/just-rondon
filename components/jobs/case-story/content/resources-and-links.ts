@@ -153,8 +153,8 @@ High Courtの執行と並行して、あるいはその代わりに検討でき�
     {
       title: "このサイト内の関連ページ",
       subtitle: "",
-      body: `**[英国サービスチャージ完全ガイド](/jobs/service-charges)**
-Tipping Act 2023の内容、強制と任意の違い、Tronc制度、最低賃金との関係を網羅的に解説しています。
+      body: `**[英国のサービスチャージ](/jobs/service-charges)**
+Tipping Act 2023の内容、強制と任意の違い、Tronc制度、最低賃金との関係をまとめています。
 
 **[店舗別サービスチャージ（ロンドンの飲食店）](/jobs/service-charges/stores)**
 実際の店舗でサービスチャージがどう扱われているかの独自調査です。店名から探せます。

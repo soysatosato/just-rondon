@@ -648,7 +648,7 @@ export const travelTipsRelatedLinks: GuideRelatedLink[] = [
   },
   { href: "/sightseeing/budget", label: "ロンドン旅行の予算｜7日間の費用を積算" },
   { href: "/sightseeing/step-free", label: "バリアフリーのロンドン｜車椅子・ベビーカーでの移動" },
-  { href: "/jobs/service-charges", label: "英国サービスチャージ完全ガイド" },
+  { href: "/jobs/service-charges", label: "英国のサービスチャージ" },
   { href: "/health/ihs-and-entitlement", label: "IHSとNHS｜6ヶ月以上滞在する人の医療" },
   { href: "/money/opening-an-account", label: "英国の銀行口座開設｜長期滞在するなら" },
 ];

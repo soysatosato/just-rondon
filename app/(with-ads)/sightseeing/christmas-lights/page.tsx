@@ -218,7 +218,7 @@ export default function ChristmasLightsPage() {
           n={n("dates")}
           id="dates"
           title="通りごとの点灯日"
-          lead="点灯日は各通りの公式発表を確かめたものです。終わりの日はどこも発表しませんが、例年1月上旬に外されます。"
+          lead="終わりの日はどこも発表しませんが、例年1月上旬に外されます。"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             {lights.map((item) => (
@@ -452,7 +452,7 @@ export default function ChristmasLightsPage() {
         <XmasSection n={n("basis")} id="basis" title="基準と出典">
           <div className="space-y-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
             <p>
-              点灯日は各通りの公式発表を確かめたものだけを載せ、発表の無いものは「未発表」と書いています。出典は各通りの欄にあります。
+              点灯日は各通りの公式発表によります。発表の無いものは「未発表」と書いています。出典は各通りの欄にあります。
             </p>
             <p>
               順路の立ち寄り先の位置は OpenStreetMap から取りました。編集部が歩いて測った時間ではなく、距離から出した目安です。

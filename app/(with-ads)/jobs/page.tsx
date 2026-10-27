@@ -119,10 +119,10 @@ export default function JobsHubPage() {
             <Card className="bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm transition hover:border-blue-400 dark:hover:border-blue-500">
               <CardContent className="p-5">
                 <span className="block text-base font-semibold">
-                  英国サービスチャージ完全ガイド
+                  英国のサービスチャージ
                 </span>
                 <span className="mt-1 block text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                  Tipping Act 2023の内容、強制・任意の違い、Tronc制度、税務・最低賃金との関係まで網羅的に解説。
+                  Tipping Act 2023の内容、強制・任意の違い、Tronc制度、税務・最低賃金との関係まで。
                 </span>
               </CardContent>
             </Card>

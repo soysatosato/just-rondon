@@ -26,7 +26,7 @@ import { stripInlineMarkdown } from "@/lib/plain-text";
 const JOBS_CHILD_PAGES = [
   {
     href: "/jobs/service-charges",
-    label: "英国サービスチャージ完全ガイド｜Tipping Act 2023と従業員の権利",
+    label: "英国のサービスチャージ｜Tipping Act 2023と従業員の権利",
   },
   {
     href: "/jobs/service-charges/case-story",

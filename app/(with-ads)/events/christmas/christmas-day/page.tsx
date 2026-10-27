@@ -252,7 +252,7 @@ export default async function ChristmasDayPage() {
           n={n("hours")}
           id="hours"
           title="年末年始の営業の早見表"
-          lead={`美術館・名所・市場など${venueClosures.length}か所の、12月24日〜1月1日の営業です。公式サイトに書かれていることだけを載せ、休みでない日を「開」にしたのは、公式が「この日以外は毎日開く」と書いている館だけです。見たい館は23日までか27日以降に入れてください。`}
+          lead={`美術館・名所・市場など${venueClosures.length}か所の、12月24日〜1月1日の営業です。休みでない日を「開」にしたのは、公式サイトが「この日以外は毎日開く」と書いている館だけです。見たい館は23日までか27日以降に入れてください。`}
         >
           <HolidayTable closures={venueClosures} dates={dates} />
         </XmasSection>

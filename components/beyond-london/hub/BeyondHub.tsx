@@ -270,7 +270,7 @@ export default function BeyondHub() {
       <section className="mt-10">
         <h2 className="text-lg font-semibold">行き先を絞り込む</h2>
         <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-          日本語の日帰り情報は「何があるか」は丁寧に書きますが、どの駅から乗り、何分かかり、いくらで、着いてから歩けるのかを書いているものは多くありません。実際に行こうとすると、そこで詰まります。各記事は街の紹介より先に行き方の表を置いていて、この一覧はその要約です。
+          各記事の最初に、どの駅から乗り、何分かかり、いくらかかるか、着いてから歩けるかを表にしています。この一覧はその要約です。
         </p>
 
         <div className="mt-5">

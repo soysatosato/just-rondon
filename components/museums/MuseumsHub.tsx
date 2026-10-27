@@ -127,7 +127,7 @@ export default function MuseumsHub({
         <p className="max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
           世界有数のコレクションが、その大半を無料で公開している。
           これがロンドンという街の、少しおかしなところです。
-          ロゼッタ・ストーンも、ゴッホの《ひまわり》も、ダイナソーの全身骨格も、
+          ロゼッタ・ストーンも、ゴッホの《ひまわり》も、恐竜の全身骨格も、
           チケット売り場を通らずに見られます。
         </p>
         <p className="max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">

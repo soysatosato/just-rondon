@@ -291,7 +291,7 @@ export default function CaseStoryIndexPage() {
               href="/jobs/service-charges"
               className="text-link hover:opacity-80"
             >
-              英国サービスチャージ完全ガイド｜Tipping Act 2023と従業員の権利
+              英国のサービスチャージ｜Tipping Act 2023と従業員の権利
             </Link>
           </li>
           <li>

@@ -88,7 +88,7 @@ export default function SeasonBand({
           ロンドンのクリスマス特集へ
         </Link>
         <span className="text-xs text-neutral-500 dark:text-neutral-400">
-          公式発表を確かめたもの({formatFullDate(SEASON_CHECKED)}時点)
+          {formatFullDate(SEASON_CHECKED)}時点の公式発表
         </span>
       </p>
     </aside>

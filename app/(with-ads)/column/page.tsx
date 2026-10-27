@@ -70,10 +70,9 @@ export default async function ColumnHubPage() {
       <HubMasthead
         accent="column"
         eyebrow="Column"
-        kicker="毎日更新"
         titleLead="イギリスは、"
         titleAccent="掘るほど面白い"
-        description="歴史・文化・伝統・制度にまつわる読み物コラム。旅行ガイドだけでは伝えきれない、イギリスの奥深さをじっくり読み解きます。"
+        description="グリニッジの本初子午線が102メートルずれている理由、ウィンブルドンが芝ローラーの修理代集めで始まった話。イギリスの歴史・制度・習慣を、1本に1テーマずつ。"
         image={newest?.image}
         stats={[
           { label: "公開中", value: `${columns.length}`, unit: "本" },

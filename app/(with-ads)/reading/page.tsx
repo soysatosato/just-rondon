@@ -57,7 +57,7 @@ const CATEGORY = {
     base: "/column",
     label: "コラム",
     eyebrow: "Column",
-    blurb: "イギリスの歴史・文化・伝統をじっくり読み解きます。",
+    blurb: "イギリスの歴史・制度・習慣を、1本に1テーマずつ。",
     text: "text-amber-700 dark:text-amber-400",
     ring: "hover:border-amber-400 dark:hover:border-amber-700",
   },
@@ -213,14 +213,13 @@ export default async function ReadingHubPage() {
       <HubMasthead
         accent="reading"
         eyebrow="Reading Britain"
-        kicker="毎日更新"
         titleLead="英国を"
         titleAccent="読む"
         description={
           <>
-            ガイドブックが終わるところから、イギリスは面白くなる。
+            コラム、英国のいまを論じる時事論考、イギリス英語と、
             <br className="hidden sm:block" />
-            歴史を辿り、いまを論じ、言葉を味わう。
+            ローマ時代からの通史{historyChapters.length}章。イギリスの歴史と言葉を読むページです。
           </>
         }
         image={newest?.image}

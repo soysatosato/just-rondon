@@ -73,7 +73,6 @@ export default async function BritishEnglishHubPage() {
       <HubMasthead
         accent="british-english"
         eyebrow="British English"
-        kicker="毎日更新"
         titleLead="イギリス英語は、"
         titleAccent="ちょっとひねくれてる"
         description="単語・言い回し・スラングを1つずつ。由来や使い方、アメリカ英語との違いまで、笑いながら読めるように掘り下げます。"

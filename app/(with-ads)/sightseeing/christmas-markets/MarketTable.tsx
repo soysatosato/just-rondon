@@ -78,7 +78,7 @@ export default function MarketTable({
         </table>
       </div>
       <p className="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-        会期は主催者の公式発表を確かめたものだけを載せています({formatFullDate(LAST_CHECKED)}時点)。
+        会期は主催者の公式発表によります({formatFullDate(LAST_CHECKED)}時点)。
         「未発表」は発表がまだ無いもの、12月25日の「—」は公式の案内に記載が無いものです。
         出典は各マーケットの節にあります。
       </p>
