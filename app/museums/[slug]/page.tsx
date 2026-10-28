@@ -6,9 +6,13 @@ import {
   fetchMuseumDetailsBySlug,
   fetchMuseumSlugs,
 } from "@/utils/actions/museums";
-import { fetchAttractionName } from "@/utils/actions/attractions";
+import {
+  fetchAttractionColumns,
+  fetchAttractionDetails,
+  fetchNearbyAttractions,
+  fetchRandomAttractionsByCategory,
+} from "@/utils/actions/attractions";
 import { attractionSlugForMuseum } from "@/lib/museum-attraction-pairs";
-import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import StampButton from "@/components/stamps/StampButton";
 import PageCommentSection from "@/components/comments/PageCommentSection";
@@ -27,7 +31,22 @@ import MuseumExhibitions from "@/components/museums/MuseumExhibitions";
 import MuseumHighlightSpots from "@/components/museums/MuseumHighlightSpots";
 import MuseumVisitFlow from "@/components/museums/MuseumVisitFlow";
 import MuseumHighlightedArtworks from "@/components/museums/MuseumHighlightedArtworks";
+import MuseumStories from "@/components/museums/MuseumStories";
 import { MuseumTrivia } from "@/components/museums/MuseumTrivia";
+import AttractionTags from "@/components/sightseeing/AttractionTags";
+import AttractionFactBar from "@/components/sightseeing/AttractionFactBar";
+import AttractionVisitFlow from "@/components/sightseeing/AttractionVisitFlow";
+import AttractionSpotRail from "@/components/sightseeing/AttractionSpotRail";
+import AttractionColumnLinks from "@/components/sightseeing/AttractionColumnLinks";
+import AddToPlanButton from "@/components/attractions/plan/AddToPlanButton";
+import {
+  visibleStories,
+  withUniqueHeadings,
+} from "@/components/sightseeing/stories";
+import {
+  attractionDescription,
+  attractionTitle,
+} from "@/components/sightseeing/meta";
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -62,12 +81,43 @@ export async function generateStaticParams() {
   return fetchMuseumSlugs();
 }
 
+/**
+ * 観光スポット(Attraction)にも行がある館の、その行。無ければ null。
+ *
+ * 大英博物館などの21館は、以前は /sightseeing と /museums に別々のページが
+ * あった。2026-10 にこのページの1本にまとめ、観光側の URL はここへ転送している
+ * (lib/museum-attraction-pairs.js)。観光側で書いた読み物・料金や所要時間の
+ * 事実・旅行プランへの追加・周辺スポットは、Attraction の行からここに出す。
+ */
+async function pairedAttraction(museumSlug: string) {
+  const slug = attractionSlugForMuseum(museumSlug);
+  return slug ? fetchAttractionDetails(slug) : null;
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const museum = await fetchMuseumDetailsBySlug(params.slug);
+  const [museum, attraction] = await Promise.all([
+    fetchMuseumDetailsBySlug(params.slug),
+    pairedAttraction(params.slug),
+  ]);
+
+  // 観光側と対になる館は、観光側のページが使っていたタイトルと description を
+  // そのまま引き継ぐ。検索に出ていたのはそちらの形(「大英博物館とは？所要時間
+  // 2時間・見どころ・行き方」)で、URL を移すのと同時に題まで変えると、
+  // 順位が動いたときに何が効いたのか分からなくなる。
+  if (attraction) {
+    return buildPageMetadata({
+      path: museumPath(params.slug),
+      title: attractionTitle(attraction),
+      description: attractionDescription(attraction),
+      titleSuffix: false,
+      images: museum?.image ? [museum.image] : undefined,
+    });
+  }
+
   const timeRoute = timeRouteForMuseum(params.slug);
   // description は本文用のマークダウンで、太字の ** を含む館がある。
   // スニペットには記号のまま出てしまうので外す。
@@ -107,7 +157,10 @@ export default async function MuseumDetailsPage({
 }: {
   params: { slug: string };
 }) {
-  const museum = await fetchMuseumDetailsBySlug(params.slug);
+  const [museum, attraction] = await Promise.all([
+    fetchMuseumDetailsBySlug(params.slug),
+    pairedAttraction(params.slug),
+  ]);
   // 以前は redirect("/") でトップへ飛ばしていた。存在しない slug は
   // 404 を返さないと、消えたページが延々 200 を返し続けることになる。
   if (!museum) notFound();
@@ -118,15 +171,66 @@ export default async function MuseumDetailsPage({
   // 開館時間の表(DB)は曜日ごとの平常時の時間しか持てないため。
   // 1時間ごとに描き直すので、日付の判定はここ(サーバー)でしてよい。
   const closure = longTermClosureFor(
-    { museum: params.slug },
+    { museum: params.slug, spot: attraction?.slug },
     londonDate(new Date()),
   );
 
-  // 同じ館が /sightseeing 側にもある場合は、そちらの観光目線のページへ渡す。
-  const pairedAttractionSlug = attractionSlugForMuseum(params.slug);
-  const pairedAttraction = pairedAttractionSlug
-    ? await fetchAttractionName(pairedAttractionSlug)
-    : null;
+  // 近隣スポットは徒歩導線、同カテゴリーは興味の近さ。役割が違うので両方出す。
+  // コラムは ContentAttraction に登録されたものだけ。どれも観光側の行から引く。
+  const [nearby, related, columns] = attraction
+    ? await Promise.all([
+        fetchNearbyAttractions(
+          { lat: attraction.lat, lng: attraction.lng },
+          attraction.slug,
+          4,
+        ),
+        fetchRandomAttractionsByCategory(
+          attraction.category,
+          attraction.slug,
+          2,
+        ),
+        fetchAttractionColumns(attraction.id),
+      ])
+    : [[], [], []];
+  const nearbySlugs = new Set(nearby.map((spot) => spot.slug));
+  const relatedWithoutNearby = related.filter(
+    (spot) => !nearbySlugs.has(spot.slug),
+  );
+
+  /*
+    館内の歩き方は1つだけ出す。美術館側に書いたもの(どの入口から入り、
+    どの順に回るか)を優先し、無い館だけ観光側の「着いてからの歩き方」を出す。
+    両方出すと、同じ作品を2つの節で続けて説明することになる。
+  */
+  const useAttractionVisitFlow =
+    museum.visitFlow.length === 0 && (attraction?.visitFlow.length ?? 0) > 0;
+
+  /*
+    観光側の読み物。見どころ(highlight)は美術館側の見どころと歩き方が
+    受け持つので伏せる(stories.ts)。見出しの無い豆知識は箇条書きの寄せ集め
+    なので、美術館側の豆知識の節に「ほかにも」として続け、同じ名前の節が
+    2つ並ばないようにする。見出しのある豆知識は1本の読み物として残す。
+  */
+  const stories = attraction
+    ? withUniqueHeadings(
+        visibleStories(attraction.stories, {
+          visitFlowSteps:
+            museum.visitFlow.length +
+            museum.highlightSpots.length +
+            (useAttractionVisitFlow ? attraction.visitFlow.length : 0),
+        }),
+      )
+    : [];
+  const isLooseTrivia = (kind: string, heading: string | null) =>
+    kind === "trivia" && !heading?.trim();
+  const storySections = stories.filter(
+    ({ story }) => !isLooseTrivia(story.kind, story.heading),
+  );
+  const moreTrivia =
+    stories
+      .filter(({ story }) => isLooseTrivia(story.kind, story.heading))
+      .map(({ story }) => story.body.trim())
+      .join("\n\n") || null;
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
   // 投稿APIと管理ページの返信から revalidatePath で更新される。targetKey は id(uuid)。
@@ -158,6 +262,11 @@ export default async function MuseumDetailsPage({
             ? { from: closure.closedFrom, note: closure.notes?.[0] ?? null }
             : null
         }
+        facts={
+          attraction
+            ? { price: attraction.priceAdult, duration: attraction.durationText }
+            : null
+        }
       />
 
       {/* blurb は詩的な一文。以前はこれを h1 にしていたため、
@@ -174,12 +283,43 @@ export default async function MuseumDetailsPage({
       )}
 
       {/*
-        入った館を記録する。本文を読み始める前の位置に置いているのは、
+        観光スポットと対になる館では、観光側のページの冒頭にあったもの
+        (定番・無料・ロンドンパスの印、料金・所要時間・最寄駅・休館日の
+        ファクトバー)をここに出す。値は Attraction の列で、旅行プランが
+        計算に使うのと同じもの。
+      */}
+      {attraction && (
+        <div className="mt-6 space-y-4">
+          <AttractionTags attraction={attraction} />
+          <AttractionFactBar
+            priceAdult={attraction.priceAdult}
+            priceChild={attraction.priceChild}
+            durationText={attraction.durationText}
+            nearestStation={attraction.nearestStation}
+            openingHours={attraction.openingHours}
+            closedWeekdays={attraction.closedWeekdays}
+            closedDaysCheckedAt={attraction.closedDaysCheckedAt}
+            closedNote={attraction.closedNote}
+            website={attraction.website}
+          />
+        </div>
+      )}
+
+      {/*
+        行くと決めた人の次の一手(旅行プランに追加)と、入った館を記録する
+        スタンプを1つの行に並べる。本文を読み始める前の位置に置いているのは、
         既に行った人がこのページを開く動機の多くが「記録すること」だから。
-        館内の見どころを読み終えた最下部まで下がらせる理由が無い。
+        旅行プランは Attraction を単位にしているので、対になる館にだけ出る。
         箱ではなくボタンだけの inline にして、本文の前で場所を取らない。
       */}
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap items-start gap-x-4 gap-y-3">
+        {attraction && (
+          <AddToPlanButton
+            slug={attraction.slug}
+            name={attraction.name}
+            variant="detail"
+          />
+        )}
         <StampButton
           variant="inline"
           type="museum"
@@ -193,16 +333,19 @@ export default async function MuseumDetailsPage({
         この館のクリスマス(年末年始の休館と、近くの冬の催し)。会期は
         クリスマス特集と同じデータ(lib/christmas)から出し、10月から
         シーズンの終わりまでだけ出る。該当の無い館では何も描かない。
+        lib/christmas は観光側の slug で書いた項目もあるので両方渡す。
       */}
-      <SeasonBand museum={museum.slug} className="mt-6" />
+      <SeasonBand
+        museum={museum.slug}
+        spot={attraction?.slug}
+        className="mt-6"
+      />
 
       <MuseumAbout description={museum.description} />
 
       {/*
         「◯◯ 所要時間」で来た人への答え。行く日が決まって時間配分を
         決めたい読者が最初に探すものなので、見どころより前に置く。
-        美術館・博物館の順路の本体はこちら側に置く方針で、観光ページには
-        短い答えだけを出している(components/time-routes/TimeRouteDigest)。
       */}
       {timeRoute && (
         <TimeRouteSection
@@ -219,7 +362,16 @@ export default async function MuseumDetailsPage({
 
       {/* 見どころ(何を見るか)のすぐ後に、館内の動線(どう回るか)を置く。
           読者が「行く」と決めた直後に読む順番になる。 */}
-      <MuseumVisitFlow steps={museum.visitFlow} museumName={museum.name} />
+      {useAttractionVisitFlow && attraction ? (
+        <div className="mx-auto max-w-4xl px-4 py-10">
+          <AttractionVisitFlow
+            steps={attraction.visitFlow}
+            attractionName={museum.name}
+          />
+        </div>
+      ) : (
+        <MuseumVisitFlow steps={museum.visitFlow} museumName={museum.name} />
+      )}
 
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="my-6" />
 
@@ -237,11 +389,13 @@ export default async function MuseumDetailsPage({
         }))}
       />
 
-      <MuseumInfo museumInfo={museum.museumInfo} />
+      <MuseumStories stories={storySections} />
+
+      <MuseumTrivia trivia={museum.trivia} more={moreTrivia} />
+
+      <MuseumInfo museumInfo={museum.museumInfo} omitFacts={!!attraction} />
 
       <MuseumExhibitions exhibitions={museum.exhibition} />
-
-      <MuseumTrivia trivia={museum.trivia} />
 
       {/* 地図 */}
       <section className="py-10 sm:px-4">
@@ -260,13 +414,12 @@ export default async function MuseumDetailsPage({
         </div>
       </section>
 
-      {pairedAttraction && pairedAttractionSlug && (
+      {/* 「もっと深く読む」ための導線。観光側の行に登録されたコラム。 */}
+      {columns.length > 0 && (
         <div className="mx-4 mb-6">
-          <CrossSectionLink
-            href={`/sightseeing/${pairedAttractionSlug}`}
-            eyebrow="ロンドン観光ガイド"
-            title={`${museum.name}を観光ルートに組み込む`}
-            description="周辺スポットとの回り方や、同じエリアで一緒に回れる見どころは観光ガイド側で紹介しています。"
+          <AttractionColumnLinks
+            attractionName={museum.name}
+            columns={columns}
           />
         </div>
       )}
@@ -281,6 +434,32 @@ export default async function MuseumDetailsPage({
           initialComments={comments}
         />
       </div>
+
+      {/* 回遊リンク。読み終えた読者の次の一手。 */}
+      {nearby.length + relatedWithoutNearby.length > 0 && (
+        <div className="mx-4 space-y-12 py-10">
+          <AttractionSpotRail
+            heading={`${museum.name}の近くで一緒に回れるスポット`}
+            description="徒歩圏内にある観光スポットです。同じ日にまとめて回ると効率よく歩けます。"
+            spots={nearby.map((spot) => ({
+              slug: spot.slug,
+              name: spot.name,
+              image: spot.image,
+              distanceKm: spot.distanceKm,
+              durationText: spot.durationText,
+            }))}
+          />
+
+          <AttractionSpotRail
+            heading="同じカテゴリーの観光スポット"
+            spots={relatedWithoutNearby.map((spot) => ({
+              slug: spot.slug,
+              name: spot.name,
+              image: spot.image,
+            }))}
+          />
+        </div>
+      )}
 
       <section className="mx-4 rounded-2xl border border-border bg-card p-6 text-center">
         <h2 className="text-lg font-bold tracking-tight">

@@ -65,7 +65,7 @@ export const october: MonthGuide = {
   links: [
     { href: "/sightseeing/kew-gardens-london", label: "キュー・ガーデン" },
     { href: "/sightseeing/richmond-park", label: "リッチモンド・パーク" },
-    { href: "/sightseeing/natural-history-museum", label: "自然史博物館" },
+    { href: "/museums/natural-history-museum", label: "自然史博物館" },
     { href: "/sightseeing/hampstead-heath", label: "ハムステッド・ヒース" },
   ],
 };

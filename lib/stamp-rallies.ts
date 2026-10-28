@@ -165,15 +165,16 @@ export const RALLIES: readonly Rally[] = [
 ];
 
 /**
- * 観光スポットと美術館の両方にページがある館を、placeKey 同士で結ぶ。
+ * 観光スポットと美術館の両方に行がある館を、placeKey 同士で結ぶ。
  *
- * 大英博物館は /sightseeing と /museums の両方にあり、どちらのページで
- * 押しても別のスタンプになる。台紙の欄をスタンプの行そのもので判定すると、
- * 美術館のページで押した人の「定番」の大英博物館の欄が空いたままになる。
- * 押した本人から見れば、押したのに埋まっていない欄でしかないので、
- * 対の館で押したスタンプでも欄が埋まるようにする。
+ * 大英博物館は Attraction と Museum の両方に行がある。ページは 2026-10 から
+ * 美術館側の1本で、スタンプも美術館として押される。一方「定番」やエリアの
+ * 台紙は Attraction の印(mustSee・area)で欄を決めるので、欄は観光側の行に
+ * なる。スタンプの行そのもので判定すると、その欄が空いたままになるので、
+ * 対の館で押したスタンプでも欄が埋まるようにする。まとめる前に観光側の
+ * ページで押されたスタンプも、同じ理由で美術館の台紙の欄を埋める。
  *
- * 対応は lib/museum-attraction-pairs.ts の表に従う。名前の一致で推測しない。
+ * 対応は lib/museum-attraction-pairs.js の表に従う。名前の一致で推測しない。
  */
 export function buildTwinIndex(places: StampPlace[]): Map<string, string> {
   const bySlug = new Map<string, StampPlace>();

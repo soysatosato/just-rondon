@@ -42,7 +42,7 @@ const BY_MUSEUM = new Map(
   ),
 );
 
-/** /sightseeing/[slug] から引く。 */
+/** Attraction の slug から引く。観光ページ(/sightseeing/[slug])が使う。 */
 export function timeRouteForAttraction(slug: string): TimeRouteGuide | null {
   return BY_ATTRACTION.get(slug) ?? null;
 }
@@ -54,13 +54,6 @@ export function timeRouteForMuseum(slug: string): TimeRouteGuide | null {
 
 /** ページ内リンクの行き先。 */
 export const TIME_ROUTE_ANCHOR = "time-routes";
-
-/** 本体を出すページ。美術館側があればそちら。 */
-export function timeRoutePath(guide: TimeRouteGuide): string {
-  return guide.museumSlug
-    ? `/museums/${guide.museumSlug}#${TIME_ROUTE_ANCHOR}`
-    : `/sightseeing/${guide.attractionSlug}#${TIME_ROUTE_ANCHOR}`;
-}
 
 /** 「1時間・2〜3時間・半日」。description と短い答えの見出しに使う。 */
 export function timeRouteLabels(guide: TimeRouteGuide): string {

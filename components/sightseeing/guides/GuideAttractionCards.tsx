@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { fetchAttractionsBySlugs } from "@/utils/actions/attractions";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * ガイド記事の末尾に出す「この記事で紹介したスポット」。
@@ -31,7 +32,7 @@ export default async function GuideAttractionCards({
         {attractions.map((spot) => (
           <Link
             key={spot.slug}
-            href={`/sightseeing/${spot.slug}`}
+            href={attractionPagePath(spot.slug)}
             className="group block"
           >
             <div className="overflow-hidden rounded-lg shadow transition hover:shadow-md">

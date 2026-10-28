@@ -63,15 +63,15 @@ export type TimeRoute = {
 
 export type TimeRouteGuide = {
   /**
-   * 観光スポット側(/sightseeing/<slug>)の slug。
+   * Attraction の slug。
    * 旅程は Attraction を単位にしているので、「この配分で旅程に入れる」は
    * 美術館ページに出すときもこの slug で入れる。
    */
   attractionSlug: string;
   /**
-   * 美術館側(/museums/<slug>)の slug。あれば順路の本体はそちらに出し、
-   * 観光ページには短い答えとリンクだけを出す(運営者の方針)。
-   * lib/museum-attraction-pairs.ts の対応表と一致させること。
+   * 美術館側(/museums/<slug>)の slug。あれば順路はそのページに出す。
+   * 観光側の URL はそのページへ転送している(lib/museum-attraction-pairs.js)。
+   * 対応表と一致させること。
    */
   museumSlug?: string;
   /**

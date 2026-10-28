@@ -13,6 +13,7 @@ import {
   tableRange,
 } from "@/lib/christmas/markets";
 import { seasonYear } from "@/lib/christmas/season";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /*
  * 見出しと本文には年号を入れない。年が出るのは、lib/christmas/markets.ts の editions から
@@ -78,7 +79,7 @@ export default function ChristmasMarketsPage() {
           title: m.title,
           engTitle: m.engTitle,
           summary: m.summary,
-          href: `/sightseeing/${m.spotSlug}`,
+          href: attractionPagePath(m.spotSlug),
           factsText: facts,
           image: m.photo?.url,
           imageCredit: m.photo?.credit,

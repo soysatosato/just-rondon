@@ -262,7 +262,7 @@ const industrialRevolution: HistoryChapter = {
       access: "有料。年間パス形式で1年間再入場自由。",
       mapQuery: "London Transport Museum Covent Garden",
       internalLink: {
-        href: "/sightseeing/london-transport-museum",
+        href: "/museums/london-transport-museum",
         label: "ロンドン交通博物館",
       },
     },
@@ -339,7 +339,7 @@ const industrialRevolution: HistoryChapter = {
   relatedLinks: [
     { href: "/museums/science-museum", label: "科学博物館" },
     {
-      href: "/sightseeing/london-transport-museum",
+      href: "/museums/london-transport-museum",
       label: "ロンドン交通博物館",
     },
     {

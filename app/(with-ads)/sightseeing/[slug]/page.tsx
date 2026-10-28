@@ -3,7 +3,6 @@ export const revalidate = 60 * 60;
 import type { Metadata } from "next";
 import Image from "next/image";
 import { isResizableImage } from "@/lib/wikimedia-image";
-import Link from "next/link";
 import { CommentTargetType } from "@prisma/client";
 import {
   Dialog,
@@ -18,14 +17,10 @@ import {
   fetchRandomAttractionsByCategory,
   fetchAttractionSlugs,
 } from "@/utils/actions/attractions";
-import { fetchMuseumIDandName } from "@/utils/actions/museums";
-import { museumSlugForAttraction } from "@/lib/museum-attraction-pairs";
-import CrossSectionLink from "@/components/shared/CrossSectionLink";
 import { notFound } from "next/navigation";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import { Badge } from "@/components/ui/badge";
-import { Baby, Flame, MapPin, Star, Tag, Ticket, TicketCheck } from "lucide-react";
+import { Star } from "lucide-react";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
 import JsonLd from "@/components/seo/JsonLd";
@@ -49,24 +44,18 @@ import AttractionLocation from "@/components/sightseeing/AttractionLocation";
 import AttractionSpotRail from "@/components/sightseeing/AttractionSpotRail";
 import AttractionColumnLinks from "@/components/sightseeing/AttractionColumnLinks";
 import {
-  areaGuidePath,
-  getAreaMeta,
-} from "@/components/sightseeing/areas/areas";
-import {
   visibleStories,
   withUniqueHeadings,
   storyAnchor,
   type StoryLike,
 } from "@/components/sightseeing/stories";
-import {
-  categoryChipMap,
-  isTimeLimitedEvent,
-} from "@/components/sightseeing/categories";
+import { isTimeLimitedEvent } from "@/components/sightseeing/categories";
+import AttractionTags from "@/components/sightseeing/AttractionTags";
+import StoryFigure from "@/components/sightseeing/StoryFigure";
 import ViewTracker from "@/components/analytics/ViewTracker";
 import GuardSchedule from "@/components/sightseeing/GuardSchedule";
 import { GUARD_SLUG, fetchGuardSchedule } from "@/lib/guard/schedule";
 import TimeRouteSection from "@/components/time-routes/TimeRouteSection";
-import TimeRouteDigest from "@/components/time-routes/TimeRouteDigest";
 import { timeRouteForAttraction } from "@/lib/time-routes";
 import ImageCredit from "@/components/shared/ImageCredit";
 import SeasonBand from "@/components/christmas/SeasonBand";
@@ -141,119 +130,6 @@ function RecommendLevel({ level }: { level: number }) {
         <span className="font-medium">{level}</span>
       </div>
     </div>
-  );
-}
-
-function AttractionBadges({ attraction }: { attraction: any }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {attraction.mustSee && (
-        <Badge
-          className="flex items-center gap-1 
-          bg-red-600 text-white 
-          dark:bg-red-600
-        "
-        >
-          <Flame className="h-3 w-3" />
-          MUST SEE
-        </Badge>
-      )}
-
-      {attraction.isForKids && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 
-            dark:bg-neutral-800 dark:text-neutral-200
-          "
-        >
-          <Baby className="h-3 w-3" />
-          子ども向け
-        </Badge>
-      )}
-
-      {attraction.isFree && (
-        <Badge
-          variant="secondary"
-          className="flex items-center gap-1 
-            dark:bg-neutral-800 dark:text-neutral-200
-          "
-        >
-          <Ticket className="h-3 w-3" />
-          無料
-        </Badge>
-      )}
-
-      {/*
-        ロンドンパス対象。判定ページへのリンクにしてある。
-        「対象」だけを出すと買う方向にしか押さないが、対象施設が
-        何か所あるかで損得が決まる商品なので、対象だと知った読者が
-        次に必要なのは損益分岐のほう。バッジ単体を出口にしない。
-      */}
-      {attraction.londonPass && (
-        <Link href="/sightseeing/passes">
-          <Badge
-            variant="secondary"
-            className="flex items-center gap-1 border border-emerald-300
-              bg-emerald-50 text-emerald-800 transition hover:border-emerald-500
-              dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300
-            "
-          >
-            <TicketCheck className="h-3 w-3" />
-            ロンドンパス対象
-          </Badge>
-        </Link>
-      )}
-    </div>
-  );
-}
-
-function CategoryLink({ category }: { category: string }) {
-  return (
-    <Link
-      href={`/sightseeing/all?category=${encodeURIComponent(category)}`}
-      className="inline-flex items-center gap-1 rounded-full border
-        px-3 py-1 text-xs
-        text-neutral-600 border-neutral-300
-        transition
-        hover:bg-neutral-100
-        dark:text-neutral-300 dark:border-neutral-700
-        dark:hover:bg-neutral-800
-      "
-    >
-      <Tag className="h-3 w-3" />
-      {categoryChipMap[category] ?? category}
-    </Link>
-  );
-}
-
-/**
- * このスポットが属する街区へのリンク。
- *
- * area が null のスポット(郊外、ツアー商品など)では何も出さない。
- * エリアガイドを持たない街区に飛ばすと行き止まりになるので、
- * areas.ts に定義のある slug のときだけリンクする。
- */
-function AreaLink({ area }: { area: string | null }) {
-  if (!area) return null;
-
-  const meta = getAreaMeta(area);
-  if (!meta) return null;
-
-  return (
-    <Link
-      href={areaGuidePath(meta.slug)}
-      className="inline-flex items-center gap-1 rounded-full border
-        px-3 py-1 text-xs
-        text-emerald-700 border-emerald-300
-        transition
-        hover:bg-emerald-50
-        dark:text-emerald-400 dark:border-emerald-800
-        dark:hover:bg-emerald-950/40
-      "
-    >
-      <MapPin className="h-3 w-3" />
-      {meta.label}を歩く
-    </Link>
   );
 }
 
@@ -340,13 +216,10 @@ export default async function AttractionDetail({
     }),
   );
 
-  // 同じ館が /museums 側にもある場合は、そちらの詳しい解説へ渡す。
-  // 対応表に無ければ null のままで、リンクは出さない。
-  const pairedMuseumSlug = museumSlugForAttraction(params.slug);
+  // 美術館と対になる館(大英博物館など)はここに来ない。ページの本体は
+  // /museums 側で、観光側の URL は next.config.mjs で転送している
+  // (lib/museum-attraction-pairs.js)。
   const timeRoute = timeRouteForAttraction(params.slug);
-  const pairedMuseum = pairedMuseumSlug
-    ? await fetchMuseumIDandName(pairedMuseumSlug)
-    : null;
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
   // 投稿APIと管理ページの返信から revalidatePath で更新される。targetKey は id(uuid)。
@@ -453,20 +326,7 @@ export default async function AttractionDetail({
             </p>
           )}
 
-          <div className="flex flex-wrap items-center gap-3">
-            <AttractionBadges attraction={attraction} />
-            <CategoryLink category={attraction.category} />
-            <AreaLink area={attraction.area} />
-          </div>
-
-          {/* 「対象だが条件付き」の但し書き。バッジに収まらないので下に出す。
-              これが無いと、乗り降り自由バスのように会社が限られる対象を
-              読者が無条件だと受け取る。 */}
-          {attraction.londonPass && attraction.londonPassNote && (
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              ロンドンパス：{attraction.londonPassNote}
-            </p>
-          )}
+          <AttractionTags attraction={attraction} />
         </header>
 
         {/*
@@ -536,20 +396,16 @@ export default async function AttractionDetail({
 
         {/*
           「◯◯ 所要時間」で来た人への答え。持ち時間ごとの順路。
-          美術館・博物館は順路の本体を /museums 側に置く方針なので、
-          こちらには短い答えとリンクだけを出す。それ以外(セント・ポール、
-          ロンドン塔など)は美術館側のページが無いので、本体をここに出す。
+          ここに出るのは美術館のページが無い場所(セント・ポール、ロンドン塔
+          など)。美術館・博物館の順路は /museums 側のページにある。
         */}
-        {timeRoute &&
-          (timeRoute.museumSlug ? (
-            <TimeRouteDigest guide={timeRoute} placeName={attraction.name} />
-          ) : (
-            <TimeRouteSection
-              guide={timeRoute}
-              placeName={attraction.name}
-              variant="sightseeing"
-            />
-          ))}
+        {timeRoute && (
+          <TimeRouteSection
+            guide={timeRoute}
+            placeName={attraction.name}
+            variant="sightseeing"
+          />
+        )}
 
         <SectionToc entries={bodyStories} />
 
@@ -580,44 +436,7 @@ export default async function AttractionDetail({
                   見出し・箇条書き・表の見た目は MarkdownBody が持っている。 */}
               <MarkdownBody>{story.body}</MarkdownBody>
 
-              {/* 画像は当面ほぼ null。Commons の画像は作者名とライセンスの
-                  表記が要るので、URL だけでは描かず出典とセットで出す。 */}
-              {story.imageUrl && (
-                <figure className="mt-4">
-                  <Image
-                    src={story.imageUrl}
-                    unoptimized={!isResizableImage(story.imageUrl)}
-                    alt={story.imageCaption ?? heading}
-                    width={1200}
-                    height={800}
-                    sizes="(max-width: 768px) 100vw, 768px"
-                    className="h-auto w-full rounded-xl border border-border"
-                    loading="lazy"
-                  />
-                  {(story.imageCaption || story.imageCredit) && (
-                    <figcaption className="mt-2 text-xs text-muted-foreground">
-                      {story.imageCaption}
-                      {story.imageCredit && (
-                        <>
-                          {story.imageCaption ? " ／ " : ""}
-                          {story.imageLink ? (
-                            <a
-                              href={story.imageLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="underline underline-offset-2"
-                            >
-                              {story.imageCredit}
-                            </a>
-                          ) : (
-                            story.imageCredit
-                          )}
-                        </>
-                      )}
-                    </figcaption>
-                  )}
-                </figure>
-              )}
+              <StoryFigure story={story} heading={heading} />
             </section>
           ))}
         </div>
@@ -636,16 +455,7 @@ export default async function AttractionDetail({
           website={attraction.website}
         />
 
-        {pairedMuseum && pairedMuseumSlug && (
-          <CrossSectionLink
-            href={`/museums/${pairedMuseumSlug}`}
-            eyebrow="美術館・博物館ガイド"
-            title={`${pairedMuseum.name}をじっくり見る`}
-            description="注目作品、所要時間の目安、開館時間、館内の回り方は美術館ガイド側にまとめています。"
-          />
-        )}
-
-        {/* 美術館ガイドと同じく「もっと深く読む」ための導線なので、隣に置く。 */}
+        {/* 「もっと深く読む」ための導線。 */}
         <AttractionColumnLinks
           attractionName={attraction.name}
           columns={columns}

@@ -9,6 +9,7 @@ import {
 } from "@/lib/sightseeing/geo";
 import { publishedWhere } from "@/lib/publish-schedule";
 import { PLAN_SPOT_SELECT, toPlanSpot } from "@/utils/plan-spots";
+import { MUSEUM_ATTRACTION_PAIRS } from "@/lib/museum-attraction-pairs";
 
 const getTotalCount = unstable_cache(
   async () => db.attraction.count({ where: { isPublished: true } }),
@@ -37,10 +38,19 @@ export const fetchAttractions = async ({
   return { attractions, total };
 };
 
-/** 詳細ページの generateStaticParams 用。条件は fetchAttractionDetails と揃える。 */
+/**
+ * 詳細ページの generateStaticParams 用。条件は fetchAttractionDetails と揃える。
+ *
+ * 美術館と対になる館は外す。ページの本体は /museums 側にあり、観光側の URL は
+ * next.config.mjs で転送している。ここに残すと、転送されて誰も見ないページを
+ * 事前に描き、sitemap にも旧 URL が載る(next-sitemap は事前生成したページを拾う)。
+ */
 export const fetchAttractionSlugs = async () => {
   return db.attraction.findMany({
-    where: { isPublished: true },
+    where: {
+      isPublished: true,
+      slug: { notIn: MUSEUM_ATTRACTION_PAIRS.map((p) => p.attractionSlug) },
+    },
     select: { slug: true },
   });
 };
@@ -78,17 +88,6 @@ export const fetchLondonPassAttractions = async () => {
       londonPassNote: true,
     },
     orderBy: { name: "asc" },
-  });
-};
-
-/**
- * 相互リンクの存在確認用。リンクを1本出すために sections の本文まで
- * 引くのは重いので、名前だけ取る。
- */
-export const fetchAttractionName = async (slug: string) => {
-  return db.attraction.findFirst({
-    where: { slug, isPublished: true },
-    select: { name: true },
   });
 };
 

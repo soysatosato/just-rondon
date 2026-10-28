@@ -36,6 +36,7 @@ import ChristmasSeriesNav from "@/components/christmas/ChristmasSeriesNav";
 import XmasSection from "@/components/christmas/XmasSection";
 import StatusChip from "@/components/christmas/StatusChip";
 import RouteMapLazy from "@/components/christmas/RouteMapLazy";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * ロンドンのクリスマスのイルミネーション(/sightseeing/christmas-lights)。
@@ -359,7 +360,7 @@ export default function ChristmasLightsPage() {
                       <div className="min-w-0">
                         <p className="flex flex-wrap items-center gap-2 text-sm font-bold">
                           {stop.spot ? (
-                            <Link href={`/sightseeing/${stop.spot}`} className="underline-offset-2 hover:underline">
+                            <Link href={attractionPagePath(stop.spot)} className="underline-offset-2 hover:underline">
                               {stop.name}
                             </Link>
                           ) : (

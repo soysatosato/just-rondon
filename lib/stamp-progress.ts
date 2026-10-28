@@ -206,10 +206,19 @@ export async function loadStampBook(profileId: string): Promise<StampBookData> {
   ]);
 
   const marks = new Map<string, StampMark>(entries.map((e) => [e.key, e]));
-  const rallies = buildRallies(places, marks, buildTwinIndex(places));
+  const twins = buildTwinIndex(places);
+  const rallies = buildRallies(places, marks, twins);
 
+  // 観光と美術館の両方に行がある館は、美術館として1回だけ数える。押すボタンは
+  // 美術館のページにしか無い(lib/museum-attraction-pairs.js)ので、観光側も
+  // 分母に入れると「観光スポット」の欄は永久に埋まらない。台紙(rallies)では
+  // 観光側の行も欄に残す——「定番」やエリアの台紙は Attraction の印で
+  // 決まっていて、美術館のスタンプは twins を通してそこを埋める。
   const totals: Record<StampType, number> = { attraction: 0, museum: 0, musical: 0 };
-  for (const place of places) totals[place.type] += 1;
+  for (const place of places) {
+    if (place.type === "attraction" && twins.has(placeKey(place))) continue;
+    totals[place.type] += 1;
+  }
   const counts: Record<StampType, number> = { attraction: 0, museum: 0, musical: 0 };
   for (const entry of entries) counts[entry.type] += 1;
 

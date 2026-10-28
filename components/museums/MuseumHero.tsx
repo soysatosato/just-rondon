@@ -28,6 +28,7 @@ function formatJaDate(iso: string): string {
 export default function MuseumHero({
   museum,
   longClosure = null,
+  facts = null,
 }: {
   museum: any;
   /**
@@ -35,6 +36,13 @@ export default function MuseumHero({
    * あるときは曜日の開館時間を「本日」に出さない。
    */
   longClosure?: { from: string; note: string | null } | null;
+  /**
+   * 観光スポットと対になる館(lib/museum-attraction-pairs.js)では、料金と
+   * 所要時間を Attraction の文言のまま出す。同じページのファクトバーと
+   * 旅行プランが読むのはそちらで、Museum の数値(£◯・分)を丸めて出すと
+   * 「2〜3時間」と「目安 3時間」のように同じページの中で書き方が割れる。
+   */
+  facts?: { price: string | null; duration: string | null } | null;
 }) {
   const today = new Date();
   const dayOfWeek = today.toLocaleDateString("en-US", { weekday: "long" });
@@ -45,8 +53,22 @@ export default function MuseumHero({
       ? `${todayHours.openTime}–${todayHours.closeTime}`
       : null;
 
-  const duration = museum.museumInfo?.recommendedDuration as number | undefined;
-  const isFree = museum.price === 0;
+  const minutes = museum.museumInfo?.recommendedDuration as number | undefined;
+  const isFree = facts
+    ? (facts.price?.startsWith("無料") ?? false)
+    : museum.price === 0;
+  const priceLabel = facts
+    ? facts.price
+    : isFree
+      ? "常設展 無料"
+      : `£${museum.price}〜`;
+  const durationLabel = facts
+    ? facts.duration
+    : minutes
+      ? minutes >= 60
+        ? `${Math.round((minutes / 60) * 10) / 10}時間`
+        : `${minutes}分`
+      : null;
 
   return (
     <section className="mt-4">
@@ -70,22 +92,22 @@ export default function MuseumHero({
             {museum.name}
           </h1>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Badge
-              className={
-                isFree
-                  ? "bg-emerald-700 text-white hover:bg-emerald-700"
-                  : "bg-slate-900/80 text-white hover:bg-slate-900/80"
-              }
-            >
-              <Ticket className="mr-1 h-3 w-3" />
-              {isFree ? "常設展 無料" : `£${museum.price}〜`}
-            </Badge>
-            {duration && (
+            {priceLabel && (
+              <Badge
+                className={
+                  isFree
+                    ? "bg-emerald-700 text-white hover:bg-emerald-700"
+                    : "bg-slate-900/80 text-white hover:bg-slate-900/80"
+                }
+              >
+                <Ticket className="mr-1 h-3 w-3" />
+                {priceLabel}
+              </Badge>
+            )}
+            {durationLabel && (
               <Badge className="bg-slate-900/80 text-white hover:bg-slate-900/80">
                 <Timer className="mr-1 h-3 w-3" />
-                目安 {duration >= 60
-                  ? `${Math.round((duration / 60) * 10) / 10}時間`
-                  : `${duration}分`}
+                目安 {durationLabel}
               </Badge>
             )}
           </div>

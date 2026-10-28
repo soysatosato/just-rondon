@@ -31,6 +31,7 @@ import { moveToDay, moveWithinDay, removeFromPlan } from "./plan-store";
 import { trackPlan } from "./track";
 import type { DragState } from "./drag";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 const LEG_ICONS: Record<LegKind, typeof Footprints> = {
   walk: Footprints,
@@ -189,7 +190,7 @@ export default function PlanDayRow({
             印刷には矢印を出さない——紙には押す先が無い。
           */}
           <Link
-            href={`/sightseeing/${row.spot.slug}`}
+            href={attractionPagePath(row.spot.slug)}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-baseline gap-1 font-semibold leading-snug underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"

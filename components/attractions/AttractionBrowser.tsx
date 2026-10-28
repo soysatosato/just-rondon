@@ -41,6 +41,7 @@ import {
 } from "@/components/attractions/facts";
 import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 export type BrowsableAttraction = {
   id: string;
@@ -639,7 +640,7 @@ export default function AttractionBrowser({
                         {rest.map((a) => (
                           <li key={a.id}>
                             <Link
-                              href={`/sightseeing/${a.slug}`}
+                              href={attractionPagePath(a.slug)}
                               className="inline-block rounded-full border border-border bg-background px-3 py-1.5 text-xs transition hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400"
                             >
                               {a.name}
@@ -728,7 +729,7 @@ function SpotCard({
   return (
     <Card className="group relative flex h-full overflow-hidden border border-border transition hover:border-indigo-400 hover:shadow-lg sm:flex-col">
       <Link
-        href={`/sightseeing/${a.slug}`}
+        href={attractionPagePath(a.slug)}
         className="absolute inset-0 z-0"
         aria-label={`${a.name}の詳細を見る`}
       />

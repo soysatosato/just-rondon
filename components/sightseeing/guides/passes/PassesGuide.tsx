@@ -37,6 +37,7 @@ import {
   verdictBody,
   verdictHeadline,
 } from "./content";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * 観光パスのレイアウト。
@@ -315,7 +316,7 @@ export default async function PassesGuide() {
                   {g.spots.map((spot) => (
                     <li key={spot.slug}>
                       <Link
-                        href={`/sightseeing/${spot.slug}`}
+                        href={attractionPagePath(spot.slug)}
                         className="block rounded-lg border border-neutral-200 p-3 text-sm transition hover:border-emerald-400 dark:border-neutral-700 dark:hover:border-emerald-500"
                       >
                         <span className="font-semibold text-neutral-900 dark:text-neutral-100">

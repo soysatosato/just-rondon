@@ -1,5 +1,9 @@
 import db from "@/utils/db";
 import { stampType, STAMP_TYPES, type StampType } from "@/lib/stamps";
+import {
+  attractionSlugForMuseum,
+  museumSlugForAttraction,
+} from "@/lib/museum-attraction-pairs";
 
 /**
  * 旅仲間とスタンプ帳を重ねる(/stamps/together)。サーバー側専用。
@@ -106,11 +110,38 @@ export async function loadTogetherPlaces(
     views: row.views,
   });
 
+  /*
+    観光と美術館の両方に行がある館(大英博物館など)は、美術館として1か所だけ
+    並べる。ページは美術館側の1本で、押すボタンもそこにしか無い
+    (lib/museum-attraction-pairs.js)。観光側の行も並べると、同じ館が2か所に
+    出るうえ、観光側は誰にも押せないので「まだ誰も行っていない」に残り続ける。
+    まとめる前に観光側で押したスタンプは、美術館の欄の訪問として数える。
+  */
+  const attractionIdBySlug = new Map(attractions.map((a) => [a.slug, a.id]));
+  const museumPlace = (m: (typeof museums)[number]): TogetherPlace => {
+    const own = place("museum", m, {});
+    const twinSlug = attractionSlugForMuseum(m.slug);
+    const twinId = twinSlug ? attractionIdBySlug.get(twinSlug) : undefined;
+    if (!twinId) return own;
+    const byMember = new Map(own.visits.map((v) => [v.member, v]));
+    for (const visit of visitsByPlace.get(`attraction:${twinId}`) ?? []) {
+      const seen = byMember.get(visit.member);
+      byMember.set(visit.member, {
+        member: visit.member,
+        onSite: visit.onSite || (seen?.onSite ?? false),
+      });
+    }
+    return {
+      ...own,
+      visits: [...byMember.values()].sort((a, b) => a.member - b.member),
+    };
+  };
+
   return [
-    ...attractions.map((a) =>
-      place("attraction", a, { area: a.area, mustSee: a.mustSee }),
-    ),
-    ...museums.map((m) => place("museum", m, {})),
+    ...attractions
+      .filter((a) => !museumSlugForAttraction(a.slug))
+      .map((a) => place("attraction", a, { area: a.area, mustSee: a.mustSee })),
+    ...museums.map(museumPlace),
     ...musicals.map((m) =>
       place("musical", m, { mustSee: m.mustSee, bookable: m.isOnShow }),
     ),

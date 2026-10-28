@@ -9,7 +9,7 @@
  * 入れ替えたときに流す。見るのは次のとおり。
  *
  * - attractionSlug が公開中の Attraction にあるか(旅程に入れるキー)
- * - museumSlug が Museum にあり、lib/museum-attraction-pairs.ts と一致するか
+ * - museumSlug が Museum にあり、lib/museum-attraction-pairs.js と一致するか
  * - href の作品がその館のものとして存在するか、スポットが公開中か
  * - 段の分数が旅程に入れられる値か、地点の合計が段の分数を超えないか
  * - 1文の答えに段の名前がすべて入っているか

@@ -40,6 +40,7 @@ import type {
   SeasonPlace,
   SeasonSource,
 } from "./types";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 export type MarketSource = SeasonSource;
 
@@ -631,7 +632,7 @@ export function marketSeasonItems(): SeasonItem[] {
     summary: m.summary,
     station: m.station,
     href: m.spotSlug
-      ? `/sightseeing/${m.spotSlug}`
+      ? attractionPagePath(m.spotSlug)
       : `/sightseeing/christmas-markets#${m.slug}`,
     free: m.entry.startsWith("無料") || m.entry.startsWith("広場は無料"),
     entry: m.entry,

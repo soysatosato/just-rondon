@@ -12,6 +12,7 @@ import { getMonthGuide } from "@/lib/london-months/content";
 import { allEventGuides, eventGuidePath } from "@/lib/annual-events";
 import { buildPageMetadata } from "@/lib/seo";
 import db from "@/utils/db";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 // 画像の差し替えはスクリプトで DB に入るので、1日1回描き直せば足りる。
 export const revalidate = 86400;
@@ -115,7 +116,7 @@ async function fetchCreditGroups(): Promise<CreditGroup[]> {
       rows: attractions.map((a) => ({
         key: a.slug,
         name: a.name,
-        href: `/sightseeing/${a.slug}`,
+        href: attractionPagePath(a.slug),
         credit: a.imageCredit!,
         link: a.imageLink,
       })),

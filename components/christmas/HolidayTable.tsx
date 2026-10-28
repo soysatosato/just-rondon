@@ -7,6 +7,7 @@ import {
 import { formatDay, weekdayOf } from "@/lib/christmas/season";
 import type { VenueClosure } from "@/lib/christmas/types";
 import { cn } from "@/lib/utils";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * 年末年始の営業の早見表。館ごとに 12/24・25・26・31・1/1 を並べる。
@@ -20,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 function hrefFor(closure: VenueClosure): string | null {
   const spot = closure.places.find((p) => p.spot)?.spot;
-  if (spot) return `/sightseeing/${spot}`;
+  if (spot) return attractionPagePath(spot);
   const museum = closure.places.find((p) => p.museum)?.museum;
   return museum ? `/museums/${museum}` : null;
 }

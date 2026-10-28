@@ -21,6 +21,7 @@ import { MAX_DAYS, MAX_SPOTS, type PlanSpot } from "@/lib/plan";
 import { addToPlan, removeFromPlan, usePlanCount, usePlanDay } from "./plan-store";
 import { trackPlan } from "./track";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * プランにスポットを足す欄。
@@ -327,7 +328,7 @@ function PickerRow({
           開いていた追加欄をそのまま残すため。
         */}
         <Link
-          href={`/sightseeing/${spot.slug}`}
+          href={attractionPagePath(spot.slug)}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex min-w-0 items-start gap-1 text-sm font-semibold leading-snug underline decoration-border underline-offset-4 transition hover:text-indigo-600 hover:decoration-indigo-600 dark:hover:text-indigo-400"

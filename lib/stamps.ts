@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
 import { distanceKm } from "@/lib/sightseeing/geo";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * スタンプ機能の定義を1か所に集めたファイル。
@@ -63,7 +64,7 @@ export const STAMP_META: Record<StampType, StampTypeMeta> = {
     label: "観光スポット",
     unit: "か所",
     hubHref: "/sightseeing/all",
-    path: (slug) => `/sightseeing/${slug}`,
+    path: attractionPagePath,
     invite: "行った場所にスタンプを",
     actionLabel: "スタンプを押す",
     doneLabel: "訪問済み",

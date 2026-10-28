@@ -202,7 +202,7 @@ export const PRICE_ITEMS: PriceItem[] = [
     basis: "official",
     basisNote: "寄付は任意",
     sourceUrl: "https://www.britishmuseum.org/visit",
-    href: "/sightseeing/british-museum-london",
+    href: "/museums/british-museum",
   },
   {
     id: "tower-of-london",

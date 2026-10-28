@@ -16,6 +16,7 @@ import {
 } from "./features";
 import type { FeatureArticle, FeatureItem } from "./types";
 import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * 特集ページの共通レイアウト。types.ts の経緯を参照。
@@ -61,7 +62,7 @@ export default async function FeatureLayout({
   const facts = await getSpotsBySlugs(lookupSlugs);
 
   const hrefOf = (item: FeatureItem) =>
-    item.href ?? (facts.has(item.slug) ? `/sightseeing/${item.slug}` : null);
+    item.href ?? (facts.has(item.slug) ? attractionPagePath(item.slug) : null);
 
   const hrefs = new Map<string, string>();
   for (const item of article.items) {

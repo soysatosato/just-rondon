@@ -1,11 +1,13 @@
 import { breadcrumbListJsonLd, crumbFor } from "@/components/navigation/tree";
 import type { Attraction } from "@prisma/client";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 export const SIGHTSEEING_BASE = "/sightseeing";
 
+/** 観光スポットのページ。美術館と対になる館は /museums 側(lib/museum-attraction-pairs.js)。 */
 export function attractionPath(slug: string) {
-  return `/sightseeing/${slug}`;
+  return attractionPagePath(slug);
 }
 
 /**

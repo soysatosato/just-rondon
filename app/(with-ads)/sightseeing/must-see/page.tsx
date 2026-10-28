@@ -4,6 +4,7 @@ import FeatureLayout from "@/components/sightseeing/features/FeatureLayout";
 import type { FeatureArticle } from "@/components/sightseeing/features/types";
 import { fetchMustSeeAttractions } from "@/utils/actions/attractions";
 import { buildPageMetadata } from "@/lib/seo";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/must-see",
@@ -49,7 +50,7 @@ export default async function MustSeePage() {
       engTitle: spot.engName,
       summary: spot.tagline ?? spot.summary,
       image: spot.image,
-      href: `/sightseeing/${spot.slug}`,
+      href: attractionPagePath(spot.slug),
       factsText:
         [
           spot.priceAdult ? `料金 ${spot.priceAdult}` : null,

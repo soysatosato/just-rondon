@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { isResizableImage } from "@/lib/wikimedia-image";
 import type { AreaSpot } from "@/utils/areas";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * エリア内のスポット一覧。
@@ -35,7 +36,7 @@ export default function AreaSpotList({
         {spots.map((spot) => (
           <Link
             key={spot.slug}
-            href={`/sightseeing/${spot.slug}`}
+            href={attractionPagePath(spot.slug)}
             className="group flex gap-3 rounded-lg border border-neutral-300 bg-white p-3 transition hover:border-emerald-400 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-emerald-500"
           >
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md">

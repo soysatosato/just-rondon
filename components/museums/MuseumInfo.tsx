@@ -54,8 +54,14 @@ function formatDuration(min: number | null) {
 
 export default function MuseumInfo({
   museumInfo,
+  omitFacts = false,
 }: {
   museumInfo: MuseumInfoRow | null;
+  /**
+   * 料金・所要時間・最寄駅を出さない。観光スポットと対になる館では同じページの
+   * ファクトバー(Attraction の値)が出すので、ここでも並べると二重になる。
+   */
+  omitFacts?: boolean;
 }) {
   // museumInfo は任意リレーション。以前は無条件に参照していたため、
   // レコードの無い館を追加した時点でページ全体が落ちる状態だった。
@@ -66,9 +72,11 @@ export default function MuseumInfo({
   const cloakroom = clean(museumInfo.cloakroomInfo);
   const photo = clean(museumInfo.photographyAllowed);
   const langs = clean(museumInfo.guidedTourLanguages);
-  const adult = formatFee(museumInfo.admissionFeeAdult);
-  const child = formatFee(museumInfo.admissionFeeChild);
-  const duration = formatDuration(museumInfo.recommendedDuration);
+  const adult = omitFacts ? null : formatFee(museumInfo.admissionFeeAdult);
+  const child = omitFacts ? null : formatFee(museumInfo.admissionFeeChild);
+  const duration = omitFacts
+    ? null
+    : formatDuration(museumInfo.recommendedDuration);
 
   const items: { icon: React.ElementType; label: string; value: string }[] = [];
 
@@ -91,7 +99,7 @@ export default function MuseumInfo({
   if (cloakroom)
     items.push({ icon: Luggage, label: "荷物預かり", value: cloakroom });
 
-  if (station) {
+  if (station && !omitFacts) {
     const walk = museumInfo.stationWalkingMinutes;
     items.push({
       icon: TrainFront,

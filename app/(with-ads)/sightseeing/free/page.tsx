@@ -15,6 +15,7 @@ import {
   getFeatureMeta,
 } from "@/components/sightseeing/features/features";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 export const metadata = buildPageMetadata({
   path: "/sightseeing/free",
@@ -65,7 +66,7 @@ export default async function FreeAttractionsPage() {
               "@type": "ListItem",
               position: i + 1,
               name: spot.name,
-              url: `${SITE_URL}/sightseeing/${spot.slug}`,
+              url: `${SITE_URL}${attractionPagePath(spot.slug)}`,
             })),
         }}
       />
@@ -136,7 +137,7 @@ export default async function FreeAttractionsPage() {
               {group.spots.map((spot) => (
                 <Link
                   key={spot.slug}
-                  href={`/sightseeing/${spot.slug}`}
+                  href={attractionPagePath(spot.slug)}
                   className="group flex gap-3 rounded-lg border border-neutral-200 p-3 transition hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800/60"
                 >
                   <img

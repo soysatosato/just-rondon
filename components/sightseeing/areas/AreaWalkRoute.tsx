@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { AreaGuideWalk } from "./types";
 import type { AreaSpot } from "@/utils/areas";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * 回遊ルート。エリアガイドの中核。
@@ -62,7 +63,7 @@ export default function AreaWalkRoute({
                 <div className={isLast ? "pb-0" : "pb-6"}>
                   {spot ? (
                     <Link
-                      href={`/sightseeing/${spot.slug}`}
+                      href={attractionPagePath(spot.slug)}
                       className="text-base font-semibold text-blue-700 hover:opacity-80 dark:text-blue-400"
                     >
                       {step.title}

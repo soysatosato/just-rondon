@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import db from "./db";
 import type { RailItem } from "./actions/home";
 import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "./rankings";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * /sightseeing ハブが使うデータ。このファイルはハブ専用で、他からは読まない。
@@ -59,7 +60,7 @@ type RankRow = {
 function toRankItems(rows: RankRow[]) {
   return rows.map((row) => ({
     key: row.slug,
-    href: `/sightseeing/${row.slug}`,
+    href: attractionPagePath(row.slug),
     title: row.name,
     subtitle: row.engName,
     image: row.image,
@@ -83,7 +84,7 @@ function toRailItems(rows: RailRow[]): RailItem[] {
     .filter((row) => Boolean(row.image))
     .map((row) => ({
       slug: row.slug,
-      href: `/sightseeing/${row.slug}`,
+      href: attractionPagePath(row.slug),
       name: row.name,
       engName: row.engName,
       image: row.image,

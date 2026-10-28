@@ -1,6 +1,8 @@
 import renamedSlugs from "./lib/sightseeing/renamed-slugs.js";
+import museumPairs from "./lib/museum-attraction-pairs.js";
 
 const { RENAMED_ATTRACTION_SLUGS } = renamedSlugs;
+const { MUSEUM_ATTRACTION_PAIRS } = museumPairs;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -88,6 +90,16 @@ const nextConfig = {
       ...Object.entries(RENAMED_ATTRACTION_SLUGS).map(([from, to]) => ({
         source: `/sightseeing/${from}`,
         destination: `/sightseeing/${to}`,
+        permanent: true,
+      })),
+
+      // 観光と美術館の両方にページがあった21館は、美術館側の1本にまとめた
+      // (2026-10)。理由と、行を両方残している訳は lib/museum-attraction-pairs.js。
+      // 検索に出ていたのは観光側なので、評価を引き継ぐために恒久転送で送る
+      // (permanent は 308。Google は 301 と同じに扱う)。
+      ...MUSEUM_ATTRACTION_PAIRS.map((pair) => ({
+        source: `/sightseeing/${pair.attractionSlug}`,
+        destination: `/museums/${pair.museumSlug}`,
         permanent: true,
       })),
 

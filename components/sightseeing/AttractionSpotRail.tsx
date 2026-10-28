@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { isResizableImage } from "@/lib/wikimedia-image";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * 関連スポットの横並びカード。
@@ -43,7 +44,7 @@ export default function AttractionSpotRail({
         {spots.map((spot) => (
           <Link
             key={spot.slug}
-            href={`/sightseeing/${spot.slug}`}
+            href={attractionPagePath(spot.slug)}
             className="group block"
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border">

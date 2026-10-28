@@ -6,6 +6,7 @@ import {
   type ChristmasMarket,
 } from "@/lib/christmas/markets";
 import { formatFullDate } from "@/lib/christmas/season";
+import { attractionPagePath } from "@/lib/museum-attraction-pairs";
 
 /**
  * クリスマスマーケットの比較表。会期・12月25日・入場・最寄り駅を横に並べる。
@@ -54,7 +55,7 @@ export default function MarketTable({
                 <th scope="row" className="px-3 py-2 font-medium">
                   {m.spotSlug ? (
                     <Link
-                      href={`/sightseeing/${m.spotSlug}`}
+                      href={attractionPagePath(m.spotSlug)}
                       className="text-blue-700 underline-offset-2 hover:underline dark:text-blue-400"
                     >
                       {m.shortTitle}
