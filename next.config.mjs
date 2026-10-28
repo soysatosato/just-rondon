@@ -179,6 +179,14 @@ const nextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
+          // サイトが使わない端末の機能を、埋め込み(広告・Instagram など)も含めて止める。
+          // 位置情報だけは、スタンプを現地で押すときに自分のページで使う。
+          // 広告の配信に関わる機能(attribution-reporting など)はここに書かない。
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), hid=(), bluetooth=(), midi=(), magnetometer=(), gyroscope=(), accelerometer=()",
+          },
         ],
       },
       {
