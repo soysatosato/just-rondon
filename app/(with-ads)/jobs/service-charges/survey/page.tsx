@@ -7,7 +7,7 @@ import { noindexMetadata } from "@/lib/seo";
 import {
   fetchServiceChargeOverview,
   fetchSurveyStore,
-} from "@/utils/actions/jobs";
+} from "@/utils/service-charge-data";
 import SurveyForm from "@/components/jobs/survey/SurveyForm";
 import { SURVEY_PROMISES } from "@/components/jobs/survey/entry";
 

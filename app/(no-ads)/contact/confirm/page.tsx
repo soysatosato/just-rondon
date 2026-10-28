@@ -1,5 +1,7 @@
-import { confirmContactRequest } from "@/utils/actions/contact";
-import { sendAdminNotification } from "@/utils/actions/contact";
+import {
+  confirmContactRequest,
+  sendAdminNotification,
+} from "@/utils/contact-request";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SitePageShell } from "@/components/site/SitePageLayout";

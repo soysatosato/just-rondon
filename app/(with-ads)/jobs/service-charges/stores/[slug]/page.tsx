@@ -33,7 +33,7 @@ import {
   storeKeywords,
   storeTitle,
 } from "@/components/jobs/stores/meta";
-import { fetchStorePage, fetchStoreSlugs } from "@/utils/actions/jobs";
+import { fetchStorePage, fetchStoreSlugs } from "@/utils/service-charge-data";
 import { buildPageMetadata } from "@/lib/seo";
 import { storePath } from "@/lib/jobs/store-slug";
 

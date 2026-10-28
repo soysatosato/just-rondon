@@ -18,7 +18,7 @@ import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 import StoreDirectory from "@/components/jobs/stores/StoreDirectory";
-import { fetchServiceChargeOverview } from "@/utils/actions/jobs";
+import { fetchServiceChargeOverview } from "@/utils/service-charge-data";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
 import { STORES_BASE } from "@/lib/jobs/store-slug";
 

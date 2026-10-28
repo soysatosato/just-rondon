@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import ShareActions from "@/components/money/salary-calculator/ShareActions";
 import { surveyHref } from "@/components/jobs/survey/entry";
-import { fetchStorePage } from "@/utils/actions/jobs";
+import { fetchStorePage } from "@/utils/service-charge-data";
 import { storePath } from "@/lib/jobs/store-slug";
 
 import { noindexMetadata } from "@/lib/seo";

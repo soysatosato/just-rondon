@@ -14,7 +14,7 @@ import {
 import {
   fetchResponseCount,
   fetchResponseFeed,
-} from "@/utils/actions/jobs";
+} from "@/utils/service-charge-data";
 import { cn } from "@/lib/utils";
 import ResponseCard from "@/components/jobs/dashboard/ResponseCard";
 import type { DistributionType } from "@/utils/labels";

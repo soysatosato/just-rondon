@@ -9,7 +9,7 @@
 export const dynamic = "force-dynamic";
 
 import { notFound, permanentRedirect } from "next/navigation";
-import { fetchServiceChargesByPlaceId } from "@/utils/actions/jobs";
+import { fetchServiceChargesByPlaceId } from "@/utils/service-charge-data";
 import { storePath, storeSlug } from "@/lib/jobs/store-slug";
 import { noindexMetadata } from "@/lib/seo";
 

@@ -7,7 +7,7 @@ import {
   fetchResponseFeed,
   fetchServiceChargeOverview,
   fetchStoreCandidateCount,
-} from "@/utils/actions/jobs";
+} from "@/utils/service-charge-data";
 import Overview from "@/components/jobs/dashboard/Overview";
 import StoreExplorer from "@/components/jobs/dashboard/StoreExplorer";
 import VoiceList from "@/components/jobs/dashboard/VoiceList";
