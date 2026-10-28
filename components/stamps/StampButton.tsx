@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -7,9 +8,7 @@ import { useAuth, useClerk } from "@clerk/nextjs";
 import { Loader2, MapPin, Stamp } from "lucide-react";
 
 import { useAuthAppearance } from "@/components/stamps/AuthCard";
-import StampCelebration, {
-  type StampCelebrationData,
-} from "@/components/stamps/StampCelebration";
+import type { StampCelebrationData } from "@/components/stamps/StampCelebration";
 import StampImpression, {
   StampSlot,
   type StampArt,
@@ -23,6 +22,13 @@ import {
   STAMP_META,
   type StampType,
 } from "@/lib/stamps";
+
+/**
+ * 押したときの演出は framer-motion を使い、gzip で約40KB ある。ボタンは全部の
+ * 詳細ページに出るが、押されるのはごく一部なので、押したときに初めて読み込む。
+ */
+const loadCelebration = () => import("@/components/stamps/StampCelebration");
+const StampCelebration = dynamic(loadCelebration, { ssr: false });
 
 /**
  * 「スタンプを押す」ボタン。観光スポット・美術館・ミュージカルの詳細ページに出る。
@@ -195,6 +201,8 @@ export default function StampButton({
   const press = useCallback(
     async (withPosition: boolean) => {
       setBusy(withPosition ? "onsite" : "tap");
+      // 押した結果が返るまでのあいだに、演出の部品を読み込んでおく。
+      void loadCelebration();
       try {
         let body: Record<string, unknown> = { type, id };
 
@@ -437,11 +445,13 @@ export default function StampButton({
           )}
         </div>
 
-        <StampCelebration
-          data={celebration}
-          open={celebrating}
-          onOpenChange={setCelebrating}
-        />
+        {celebration && (
+          <StampCelebration
+            data={celebration}
+            open={celebrating}
+            onOpenChange={setCelebrating}
+          />
+        )}
       </>
     );
   }
@@ -571,11 +581,13 @@ export default function StampButton({
         </div>
       </div>
 
-      <StampCelebration
-        data={celebration}
-        open={celebrating}
-        onOpenChange={setCelebrating}
-      />
+      {celebration && (
+        <StampCelebration
+          data={celebration}
+          open={celebrating}
+          onOpenChange={setCelebrating}
+        />
+      )}
     </>
   );
 }

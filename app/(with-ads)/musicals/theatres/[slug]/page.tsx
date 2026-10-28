@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import LazyPropertyMap from "@/components/museums/LazyPropertyMap";
 import Image from "next/image";
 import { isResizableImage } from "@/lib/wikimedia-image";
 import Link from "next/link";
@@ -16,7 +16,6 @@ import {
 import JsonLd from "@/components/seo/JsonLd";
 import AdSenseUnit from "@/components/ads/AdSenseUnit";
 import { AD_SLOTS } from "@/lib/adsense";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -35,10 +34,6 @@ import TheatreNotes from "@/components/musicals/theatres/TheatreNotes";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import { formatRuntime } from "@/components/musicals/facts";
 
-const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[400px] w-full" />,
-});
 
 // 公演日程は scripts/sync-musical-performances.ts が DB に書き足す。
 export const revalidate = 60 * 60;
@@ -221,7 +216,7 @@ export default async function TheatreDetailPage({
           <h2 className="text-xl font-semibold sm:text-2xl">場所</h2>
           <Card className="rounded-2xl border-border shadow-sm">
             <CardContent className="p-4">
-              <DynamicMap lat={theatre.lat} lng={theatre.lng} />
+              <LazyPropertyMap lat={theatre.lat} lng={theatre.lng} />
             </CardContent>
           </Card>
         </section>

@@ -1,11 +1,6 @@
-"use client";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import RailScroller from "@/components/home/RailScroller";
 import { responsiveImage } from "@/lib/wikimedia-image";
 
 type Artwork = {
@@ -45,58 +40,58 @@ export default function HighlightedArtworks({
         <h2 className="mt-3 text-2xl font-bold tracking-tight">見どころ作品</h2>
       </div>
 
-      <Swiper
-        slidesPerView={1.1}
-        spaceBetween={20}
-        breakpoints={{
-          768: { slidesPerView: 2.2 },
-          1024: { slidesPerView: 3 },
-        }}
-        pagination={{ clickable: true }}
-        modules={[Pagination]}
-        className="!pb-10"
-      >
-        {artworks.map((artwork) => (
-          <SwiperSlide key={artwork.id} className="h-auto">
-            <Link
-              href={`/museums/${slug}/artworks/${artwork.id}`}
-              className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:shadow-lg"
+      {/*
+        以前は swiper のスライダーで、美術館ページにだけ swiper と react-share の
+        約50KB が載っていた。トップの写真の棚と同じ横スクロールにそろえる。
+        1枚目が全部見えて、次のカードが少し覗く幅にしてある。
+      */}
+      <RailScroller label="見どころ作品">
+        <ul className="flex snap-x snap-mandatory gap-5">
+          {artworks.map((artwork) => (
+            <li
+              key={artwork.id}
+              className="w-[85%] shrink-0 snap-start sm:w-[45%] lg:w-[calc((100%-2.5rem)/3)]"
             >
-              <div className="relative h-56 w-full overflow-hidden bg-muted">
-                {artwork.image && (
-                  <img
-                    {...responsiveImage(artwork.image, "(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw")}
-                    alt={artwork.title}
-                    className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 py-3">
-                  <h3 className="font-semibold leading-snug text-white">
-                    {artwork.title}
-                  </h3>
-                  {(artwork.artist || artwork.year) && (
-                    <p className="mt-0.5 text-xs text-white/75">
-                      {[artwork.artist, artwork.year]
-                        .filter(Boolean)
-                        .join(" — ")}
-                    </p>
+              <Link
+                href={`/museums/${slug}/artworks/${artwork.id}`}
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:shadow-lg"
+              >
+                <div className="relative h-56 w-full overflow-hidden bg-muted">
+                  {artwork.image && (
+                    <img
+                      {...responsiveImage(artwork.image, "(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw")}
+                      alt={artwork.title}
+                      className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   )}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 py-3">
+                    <h3 className="font-semibold leading-snug text-white">
+                      {artwork.title}
+                    </h3>
+                    {(artwork.artist || artwork.year) && (
+                      <p className="mt-0.5 text-xs text-white/75">
+                        {[artwork.artist, artwork.year]
+                          .filter(Boolean)
+                          .join(" — ")}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              {artwork.description && (
-                <p className="line-clamp-3 p-4 text-sm leading-relaxed text-muted-foreground">
-                  {artwork.description}
-                </p>
-              )}
-            </Link>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+                {artwork.description && (
+                  <p className="line-clamp-3 p-4 text-sm leading-relaxed text-muted-foreground">
+                    {artwork.description}
+                  </p>
+                )}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </RailScroller>
 
       {showListLink && (
-        <div className="flex justify-center">
+        <div className="mt-6 flex justify-center">
           <Button asChild variant="outline">
             <Link href={`/museums/${slug}/artworks`}>主要作品の一覧を見る</Link>
           </Button>

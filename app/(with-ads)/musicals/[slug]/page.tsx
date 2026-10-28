@@ -1,11 +1,10 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   buildPageMetadata,
   displayWidth,
   fitTitle,
   truncateDescription,
 } from "@/lib/seo";
-import dynamic from "next/dynamic";
+import LazyPropertyMap from "@/components/museums/LazyPropertyMap";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -46,10 +45,6 @@ import { theaterEventJsonLd } from "@/components/musicals/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
 
 // dynamic 関数を使ってコンポーネントを、遅延読み込み（Dynamic Import）する
-const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
-  ssr: false,
-  loading: () => <Skeleton className=" h-[400px] w-full" />,
-});
 // const DynamicBookingWrapper = dynamic(
 //   () => import("@/components/bookings/BookingWrapper"),
 //   { ssr: false, loading: () => <Skeleton className=" h-[200px] w-full" /> }
@@ -321,7 +316,7 @@ export default async function musicalDetailsPage({
                   にまとめています。
                 </p>
               )}
-              <DynamicMap
+              <LazyPropertyMap
                 lat={musical.theatre?.lat ?? musical.lat}
                 lng={musical.theatre?.lng ?? musical.lng}
               />

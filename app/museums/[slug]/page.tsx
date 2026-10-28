@@ -1,6 +1,5 @@
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ShareButton from "@/components/museums/ShareButton";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
   fetchMuseumDetailsBySlug,
@@ -17,7 +16,7 @@ import ViewTracker from "@/components/analytics/ViewTracker";
 import StampButton from "@/components/stamps/StampButton";
 import PageCommentSection from "@/components/comments/PageCommentSection";
 import { loadPageComments } from "@/lib/comments";
-import dynamic from "next/dynamic";
+import LazyPropertyMap from "@/components/museums/LazyPropertyMap";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -67,10 +66,6 @@ const TITLE_SUFFIXES = [
   "の見どころ・所要時間",
 ];
 
-const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[400px] w-full" />,
-});
 
 // 開館時間や展覧会は DB 側で直す。直したものが1時間以内に出るように。
 export const revalidate = 60 * 60;
@@ -410,7 +405,7 @@ export default async function MuseumDetailsPage({
           </p>
         </div>
         <div className="overflow-hidden rounded-xl border border-border">
-          <DynamicMap lat={museum.lat} lng={museum.lng} />
+          <LazyPropertyMap lat={museum.lat} lng={museum.lng} />
         </div>
       </section>
 

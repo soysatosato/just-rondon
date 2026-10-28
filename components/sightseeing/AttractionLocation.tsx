@@ -1,11 +1,5 @@
-import dynamic from "next/dynamic";
 import { ExternalLink, MapPin } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-
-const DynamicMap = dynamic(() => import("@/components/museums/PropertyMap"), {
-  ssr: false,
-  loading: () => <Skeleton className="h-[400px] w-full" />,
-});
+import LazyPropertyMap from "@/components/museums/LazyPropertyMap";
 
 /**
  * 地図・住所・公式サイト。
@@ -48,7 +42,7 @@ export default function AttractionLocation({
 
       {hasAddress && (
         <div className="overflow-hidden rounded-2xl border border-border">
-          <DynamicMap lat={lat} lng={lng} />
+          <LazyPropertyMap lat={lat} lng={lng} />
         </div>
       )}
 
