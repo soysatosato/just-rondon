@@ -103,7 +103,7 @@ export const christmasLights: SeasonItem[] = [
         year: 2026,
         notes: [
           "今年の飾りの一部はハリー・ポッターにちなんだものになると、通りの公式サイトが告知している。点灯日はまだ発表されていない。",
-          "10月26日から、オーチャード・ストリート(セルフリッジズの角)からグレート・ポートランド・ストリートまでの区間は車両通行止めになる。",
+          "オーチャード・ストリート(セルフリッジズの角)からグレート・ポートランド・ストリートまでの区間は、10月26日から車両通行止めになっている。",
         ],
         sources: [
           {
@@ -115,7 +115,7 @@ export const christmasLights: SeasonItem[] = [
             url: "https://tfl.gov.uk/modes/driving/oxford-street",
           },
         ],
-        checkedAt: CHECKED,
+        checkedAt: "2026-10-29",
       },
     ],
     // 2026年は飾りの一部がハリー・ポッター仕様なので、関連のスポットにも出す

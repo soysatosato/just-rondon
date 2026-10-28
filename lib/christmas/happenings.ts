@@ -205,7 +205,7 @@ export const christmasHappenings: SeasonItem[] = [
             url: "https://www.westminster-abbey.org/worship-and-music/services-and-times/advent-and-christmas",
           },
         ],
-        checkedAt: CHECKED,
+        checkedAt: "2026-10-29",
       },
     ],
     places: [{ spot: "westminster-abbey", relation: "here" }],
