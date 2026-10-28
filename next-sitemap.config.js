@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const { hasSongList } = require("./lib/musicals/song-pages");
 const { hasArtworkList } = require("./lib/museums/artwork-list");
+const { museumSlugForAttraction } = require("./lib/museum-attraction-pairs");
 const {
   unwrittenMonthPaths,
   writtenMonthPaths,
@@ -576,6 +577,10 @@ module.exports = {
     });
 
     for (const a of attractions) {
+      // 美術館と対になる館は /museums 側の1ページにまとめ、観光側の URL は
+      // 転送している(lib/museum-attraction-pairs.js)。美術館のページは
+      // 事前生成から自動で載るので、ここでは観光側の旧 URL を出さない。
+      if (museumSlugForAttraction(a.slug)) continue;
       paths.push(await config.transform(config, `/sightseeing/${a.slug}`));
     }
 
