@@ -1,0 +1,41 @@
+# 90日より前のコメント・お問い合わせ・相談から、IP アドレスなどを消す
+# (scripts/purge-old-ips.ts)。
+#
+# Vercel Cron ではなく Actions に置くのは、公開の URL を1本増やさずに済むから。
+# DB の接続情報は公演日程の同期(sync-musical-performances.yml)と同じ secrets を使う。
+name: Purge old IP addresses
+
+on:
+  schedule:
+    # 毎日 04:40 UTC。公演日程の同期(03:20)と重ならない時刻にずらす。
+    - cron: "40 4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: purge-old-ips
+  cancel-in-progress: false
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Purge
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npx tsx scripts/purge-old-ips.ts
