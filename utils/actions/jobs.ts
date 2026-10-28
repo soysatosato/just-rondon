@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
 import { ServiceCharge } from "@prisma/client";
 import { sendAdminMail } from "../mail";
+import { POST_LIMITS, RATE_LIMITED, looksLikeBot, since } from "../form-guard";
 import { SITE_URL } from "@/lib/seo";
 import { STORES_BASE, storePath, storeSlug } from "@/lib/jobs/store-slug";
 import {
@@ -89,6 +90,18 @@ export async function submitSurvey(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  // ボットには保存せずに完了画面を返す(弾いたと知らせると回避策を学ぶ)。
+  if (looksLikeBot(formData)) redirect("/jobs/service-charges/thanks");
+
+  // 回答には IP を保存していないので、サイト全体の件数で連投を止める。
+  // 店舗の手入力も新しい行を作るので、ここで止めないと候補表まで荒らされる。
+  const recent = await db.serviceCharge.count({
+    where: { createdAt: since(POST_LIMITS.global.windowMs) },
+  });
+  if (recent >= POST_LIMITS.global.max) {
+    return { ok: false, message: RATE_LIMITED };
+  }
+
   // 通知メールは保存が確定してから送る。redirect() は例外で抜けるため、
   // 保存した回答を try の外へ持ち出しておく。
   let created: ServiceCharge | null = null;

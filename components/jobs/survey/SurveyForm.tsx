@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { submitSurvey, type StoreSearchResult } from "@/utils/actions/jobs";
+import BotGuardFields from "@/components/form/BotGuardFields";
 import StoreSearch, { SelectedStore } from "@/components/jobs/StoreSearch";
 import Choice, { Question } from "./Choice";
 import DiagnosisPanel from "./DiagnosisPanel";
@@ -289,6 +290,7 @@ export default function SurveyForm({
       )}
 
       <form action={action} className="mt-8">
+        <BotGuardFields />
         {/* 1. 店舗 ------------------------------------------------ */}
         <section className={stepClass(1)}>
           <Question

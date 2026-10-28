@@ -105,8 +105,9 @@ export default async function CommentsAdminPage({
         </Link>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
+        新しいコメントは非表示のまま届き、「表示する」を押すと記事ページに載ります。
         返信は記事ページのコメントの下に、ロゴと「運営」の印付きで載ります。
-        非表示にしたコメントは記事ページから消えますが、ここには残ります。
+        非表示のコメントは記事ページには出ませんが、ここには残ります。
       </p>
 
       <nav className="mt-6 flex gap-2 border-b pb-3 text-sm">

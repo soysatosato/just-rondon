@@ -106,7 +106,7 @@ export function HideForm({ id, isHidden }: { id: string; isHidden: boolean }) {
     >
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="hidden" value={isHidden ? "0" : "1"} />
-      <Submit variant="outline">{isHidden ? "再表示する" : "非表示にする"}</Submit>
+      <Submit variant="outline">{isHidden ? "表示する" : "非表示にする"}</Submit>
       <Result state={state} />
     </form>
   );

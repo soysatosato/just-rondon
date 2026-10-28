@@ -15,7 +15,8 @@ import {
  *
  *   返信               読者のコメントに運営の返信を付ける(isOfficial = true)
  *   返信の編集・削除   運営の返信だけ。読者のコメントの本文は書き換えない
- *   非表示・再表示     読者のコメント。荒らしの記録を残すため物理削除はしない
+ *   表示・非表示       読者のコメント。新着は非表示で届き、表示が承認になる。
+ *                      荒らしの記録を残すため物理削除はしない
  *
  * 記事ページはキャッシュされているので、書き換えたら対象の記事を作り直す。
  */
@@ -134,7 +135,10 @@ export async function deleteReply(
   return { ok: true, message: "返信を消しました。" };
 }
 
-/** 読者のコメントを隠す・戻す。隠すと、付いている運営の返信も記事に出なくなる。 */
+/**
+ * 読者のコメントを表示する・隠す。新しいコメントは非表示で届くので、表示が承認になる。
+ * 隠すと、付いている運営の返信も記事に出なくなる。
+ */
 export async function setCommentHidden(
   _prev: CommentActionState,
   formData: FormData,
@@ -150,6 +154,6 @@ export async function setCommentHidden(
   await refresh(row);
   return {
     ok: true,
-    message: hidden ? "非表示にしました。" : "再表示しました。",
+    message: hidden ? "非表示にしました。" : "表示しました。",
   };
 }

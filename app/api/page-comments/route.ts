@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 import db from "@/utils/db";
 import {
   COMMENT_MAX_CONTENT,
@@ -10,6 +9,12 @@ import {
   resolvePath,
 } from "@/lib/comments";
 import { sendAdminMail } from "@/utils/mail";
+import {
+  POST_LIMITS,
+  RATE_LIMITED,
+  looksLikeBotValues,
+  since,
+} from "@/utils/form-guard";
 import { SITE_URL } from "@/lib/seo";
 
 /**
@@ -17,8 +22,9 @@ import { SITE_URL } from "@/lib/seo";
  *
  * 旧掲示板(/api/chatboard)は入力を一切検証せず、そのまま Prisma に流していた。
  * こちらは公開ページに置くフォームなので、最低限の検証と長さ制限を入れる。
- * ログイン機構が無いため、荒らしは投稿後に管理ページ(/admin/comments)で
- * 隠す運用が前提。
+ * ログイン機構が無いため、新しいコメントは非表示のまま保存し、運営者が
+ * 管理ページ(/admin/comments)で「表示する」を押したものだけが記事に載る。
+ * 以前は投稿即公開で、Cookie を送らない連投は止められず、そのまま記事に出ていた。
  *
  * ここで作るのは読者の新規コメントだけ。返信(parentId)と運営の印(isOfficial)は
  * 管理ページのサーバーアクションでしか書かない。
@@ -53,10 +59,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "不正なリクエストです" }, { status: 400 });
   }
 
-  const { targetType, targetKey, author, content } = (body ?? {}) as Record<
-    string,
-    unknown
-  >;
+  const { targetType, targetKey, author, content, website, startedAt } = (body ??
+    {}) as Record<string, unknown>;
+
+  // ボットには保存せずに成功を返す(弾いたと知らせると回避策を学ぶ)。
+  if (looksLikeBotValues(website, startedAt)) {
+    return NextResponse.json({ ok: true }, { status: 201 });
+  }
 
   if (!isTargetType(targetType)) {
     return NextResponse.json(
@@ -110,6 +119,30 @@ export async function POST(req: NextRequest) {
     "unknown";
   const userAgent = req.headers.get("user-agent") || "unknown";
 
+  // 30秒の間隔(下)は Cookie ごとなので、Cookie を送らない連投には効かない。
+  // IP とサイト全体の件数でも止める。通った投稿は運営者にメールが届くので、
+  // 上限はそのまま通知メールの上限にもなる。
+  const [byIp, total] = await Promise.all([
+    ip === "unknown"
+      ? 0
+      : db.pageComment.count({
+          where: {
+            ip,
+            isOfficial: false,
+            createdAt: since(POST_LIMITS.perIp.windowMs),
+          },
+        }),
+    db.pageComment.count({
+      where: {
+        isOfficial: false,
+        createdAt: since(POST_LIMITS.global.windowMs),
+      },
+    }),
+  ]);
+  if (byIp >= POST_LIMITS.perIp.max || total >= POST_LIMITS.global.max) {
+    return NextResponse.json({ error: RATE_LIMITED }, { status: 429 });
+  }
+
   let sessionId = req.cookies.get("sessionId")?.value;
   const isNewSession = !sessionId;
   if (!sessionId) sessionId = crypto.randomUUID();
@@ -140,6 +173,7 @@ export async function POST(req: NextRequest) {
       targetKey: targetKey.trim(),
       author: finalAuthor,
       content: trimmedContent,
+      isHidden: true,
       ip,
       userAgent,
       sessionId,
@@ -147,17 +181,17 @@ export async function POST(req: NextRequest) {
     select: { id: true, author: true, content: true, createdAt: true },
   });
 
-  // 記事ページは静的生成なので、コメント一覧を差し替えるため明示的に再検証する。
+  // 非表示のまま保存したので、記事ページはここでは作り直さない。表示にしたとき
+  // 管理ページのアクションが作り直す。
   const path = await resolvePath({ targetType, targetKey: targetKey.trim() });
-  if (path) revalidatePath(path);
 
-  // 承認制ではなく投稿即公開なので、荒らしに気付けるよう管理者にメールで知らせる。
+  // 運営者が表示するまで記事に出ないので、メールで知らせる。
   // 送信に失敗してもコメント自体は保存済みなので、握りつぶして 201 を返す。
   try {
     await sendAdminMail({
-      subject: `【コメント】${TARGET_LABEL[targetType]}: ${finalAuthor}`,
+      subject: `【コメント・確認待ち】${TARGET_LABEL[targetType]}: ${finalAuthor}`,
       text: [
-        `${TARGET_LABEL[targetType]}に新しいコメントが投稿されました。`,
+        `${TARGET_LABEL[targetType]}に新しいコメントが届きました。表示するまで記事には載りません。`,
         "",
         `名前: ${finalAuthor}`,
         `日時: ${created.createdAt.toLocaleString("ja-JP", {
@@ -171,17 +205,14 @@ export async function POST(req: NextRequest) {
         trimmedContent,
         "----",
         "",
-        `返信・非表示: ${SITE_URL}/admin/comments#c-${created.id}`,
+        `表示・返信: ${SITE_URL}/admin/comments#c-${created.id}`,
       ].join("\n"),
     });
   } catch (error) {
     console.error("コメント通知メールの送信に失敗しました", error);
   }
 
-  const res = NextResponse.json(
-    { comment: { ...created, replies: [] } },
-    { status: 201 }
-  );
+  const res = NextResponse.json({ ok: true }, { status: 201 });
   res.cookies.set("sessionId", sessionId, {
     path: "/",
     httpOnly: true,

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import BotGuardFields from "@/components/form/BotGuardFields";
 import { CornerDownRight } from "lucide-react";
 import { SITE_NAME } from "@/lib/seo";
 
@@ -118,7 +119,8 @@ export default function PageCommentSection({
   placeholder: string;
   initialComments: PageCommentItem[];
 }) {
-  const [comments, setComments] = useState(initialComments);
+  // 新しいコメントは運営者が表示するまで載らないので、投稿しても一覧は変えない。
+  const comments = initialComments;
   // コメントがあるページは最初からフォームを開いておく(読んだ流れで書けるように)。
   const [formOpen, setFormOpen] = useState(initialComments.length > 0);
   const [author, setAuthor] = useState("");
@@ -128,9 +130,10 @@ export default function PageCommentSection({
 
   const remaining = MAX_CONTENT - content.length;
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!content.trim() || status === "sending") return;
+    const guard = new FormData(e.currentTarget);
 
     setStatus("sending");
     setError(null);
@@ -139,7 +142,14 @@ export default function PageCommentSection({
       const res = await fetch("/api/page-comments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetType, targetKey, author, content }),
+        body: JSON.stringify({
+          targetType,
+          targetKey,
+          author,
+          content,
+          website: guard.get("website"),
+          startedAt: guard.get("startedAt"),
+        }),
       });
 
       const data = await res.json().catch(() => null);
@@ -150,9 +160,6 @@ export default function PageCommentSection({
         return;
       }
 
-      if (data?.comment) {
-        setComments((prev) => [data.comment as PageCommentItem, ...prev]);
-      }
       setContent("");
       setAuthor("");
       setStatus("done");
@@ -193,6 +200,7 @@ export default function PageCommentSection({
       <Card className="mt-4 bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-sm">
         <CardContent className="p-5">
           <form onSubmit={handleSubmit} className="space-y-3">
+            <BotGuardFields />
             <div>
               <label
                 htmlFor="comment-author"
@@ -242,13 +250,13 @@ export default function PageCommentSection({
 
             {status === "done" && (
               <p className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/25 dark:text-emerald-300">
-                投稿しました。ありがとうございます。
+                受け付けました。ありがとうございます。運営が確認してから、このページに載ります。
               </p>
             )}
 
             <div className="flex items-center justify-between gap-4">
               <p className="text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                投稿は誰でも読めます。個人情報は書かないでください。
+                運営が確認してから公開します。個人情報は書かないでください。
               </p>
               <Button
                 type="submit"
