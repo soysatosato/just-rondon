@@ -48,20 +48,22 @@ export default function HeroIntro() {
       <h1
         className={`text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl lg:text-[2.75rem] ${RISE}`}
       >
-        ロンドンの観光と暮らしを、
+        ロンドンのことなら、
         <br className="hidden sm:block" />
-        日本語で
+        ここから。
       </h1>
 
       {/*
-        扱う幅(観光から在住の実務まで)と、更新の実物を1文ずつ。
+        扱う幅を観光の4語と暮らしの4語で並べ、最後に更新の実物を言う。
         週報は毎週出ていて、改定は月次号で追っている。
+        JSX で文を改行して書くと行の継ぎ目に空白が入るので、1行で書く。
       */}
       <p
         className={`mt-5 text-base leading-relaxed text-muted-foreground delay-75 ${RISE}`}
       >
-        観光・美術館・ミュージカルから、ビザと住まいまで。
-        催しと運休は毎週、運賃や入場料の改定は毎月まとめています。
+        {
+          "名所、美術館、ミュージカル、パブ。交通、物価、ビザ、住まい。旅の計画から暮らしの手続きまで、ひとつの場所に。催しと運休は毎週、運賃や料金の改定は毎月更新しています。"
+        }
       </p>
 
       <div className={`mt-8 delay-150 ${RISE}`}>
