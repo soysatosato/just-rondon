@@ -12,7 +12,9 @@ import type { FootballGuideArticle } from "../types";
 
 const planning: FootballGuideArticle = {
   slug: "planning",
-  title: "プレミアリーグ観戦の日程の組み方｜キックオフ時刻は後から変わります",
+  // 検索は「キックオフ時間」「日程確定」「何時から」「何曜日」など、時刻と
+  // 日程がいつ決まるかを知りたい語が中心(2026-10、7〜10位でクリック率1%)。
+  title: "プレミアリーグのキックオフ時間と日程の確定｜観戦旅行の組み方",
   engTitle: "Planning Your Matchday",
   summary:
     "プレミアリーグのキックオフ時刻は、テレビ放映の都合で数週間前に変更されます。土曜15時のはずだった試合が日曜14時になることも、金曜夜になることもあります。旅行の日程をこの変更に耐える形で組む方法をまとめます。",

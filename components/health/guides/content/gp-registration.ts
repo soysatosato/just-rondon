@@ -9,7 +9,9 @@ import {
 
 const gpRegistration: HealthGuideArticle = {
   slug: "gp-registration",
-  title: "イギリスでGPに登録する方法｜身分証も住所証明も不要です",
+  // 検索は「gp登録 イギリス」「イギリス gp 登録」がほとんど(2026-10、8〜9位で
+  // クリック率1.8%)。題を検索語と同じ「GP登録」の形にそろえた。
+  title: "イギリスのGP登録のやり方｜身分証も住所証明も不要です",
   engTitle: "Registering with a GP Surgery in England",
   audience: "渡英したばかりで、まだ何の医療手続きもしていない人",
   summary: `英国の医療はすべて GP(かかりつけ医)が入口です。登録していないと専門医にも検査にも到達できません。そして日本語圏で最も誤解されている点として、登録に身分証・住所証明・在留資格の証明は一切必要ありません。これは診療所の親切ではなく NHS の規則です。`,

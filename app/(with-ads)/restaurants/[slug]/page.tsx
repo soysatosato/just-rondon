@@ -27,6 +27,19 @@ export async function generateStaticParams() {
   return slugs.map((d) => ({ slug: d.slug }));
 }
 
+/**
+ * 料理ごとに手で書いたタイトル。既定の「ロンドンの{料理}｜{キャッチ}」では
+ * 検索語と合わない料理だけに使う。
+ *
+ * パイ&マッシュは「パイアンドマッシュ」で平均2.9位に出ていながら、
+ * 3か月で26回表示・クリック0だった(2026-10)。日本語では「&」と「アンド」の
+ * 2通りで書かれ、探している人はまず「何の料理か」を知りたい。
+ */
+const TITLE_OVERRIDES: Record<string, (shops: number) => string> = {
+  "pie-and-mash": (shops) =>
+    `パイ&マッシュ(パイアンドマッシュ)とは｜ロンドンで食べられる店${shops}軒`,
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -37,7 +50,9 @@ export async function generateMetadata({
 
   return buildPageMetadata({
     path: dishPath(dish.slug),
-    title: `ロンドンの${dish.name}｜${dish.tagline}`,
+    title:
+      TITLE_OVERRIDES[dish.slug]?.(dish.restaurants.length) ??
+      `ロンドンの${dish.name}｜${dish.tagline}`,
     description: `${dish.summary} ${dish.name}(${dish.engName})が食べられるロンドンの店を${dish.restaurants.length}軒、エリア・最寄り駅・価格帯つきで紹介します。`,
     type: "article",
     keywords: [
