@@ -1,4 +1,5 @@
 import type { MonthGuide } from "./types";
+import { january } from "./january";
 import { october } from "./october";
 import { november } from "./november";
 import { december } from "./december";
@@ -12,6 +13,7 @@ export type { MonthGuide } from "./types";
  * mainText を借りる。
  */
 const GUIDES: Partial<Record<number, MonthGuide>> = {
+  1: january,
   10: october,
   11: november,
   12: december,
