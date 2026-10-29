@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AddToCalendarLink from "@/components/shared/AddToCalendarLink";
 import { CalendarCheck2 } from "lucide-react";
 
 import { SITE_URL, absoluteImage } from "@/lib/seo";
@@ -186,6 +187,15 @@ export default function EventGuideView({
             </p>
           )}
           <EditionBlock edition={edition} />
+          {upcoming && (
+            <AddToCalendarLink
+              href={`/calendar/events/${guide.slug}.ics`}
+              target={`event:${guide.slug}`}
+              className="mt-4"
+            >
+              {edition.year}年の日程をカレンダーに追加
+            </AddToCalendarLink>
+          )}
           {previous && (
             <details className="mt-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-700">
               <summary className="cursor-pointer text-sm font-semibold text-neutral-700 dark:text-neutral-300">

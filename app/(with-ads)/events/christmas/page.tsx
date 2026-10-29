@@ -43,6 +43,7 @@ import XmasSection from "@/components/christmas/XmasSection";
 import StayPlanner from "@/components/christmas/StayPlanner";
 import BookingList, { type BookingRow } from "@/components/christmas/BookingList";
 import SeasonCalendar from "@/components/christmas/SeasonCalendar";
+import AddToCalendarLink from "@/components/shared/AddToCalendarLink";
 import AdventDays, { type AdventTile } from "@/components/christmas/AdventDays";
 import RinkTable from "@/components/christmas/RinkTable";
 import FreeList from "@/components/christmas/FreeList";
@@ -457,6 +458,17 @@ export default async function ChristmasPage() {
           lead="灯り・マーケット・スケートリンク・催しの会期を並べました。棒が重なっているところが、いちばん多くのものが見られる時期です。"
         >
           <SeasonCalendar items={items} axis={axis} today={today} year={year} />
+
+          {items.some((i) => i.edition?.start && i.edition.start >= today) && (
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <AddToCalendarLink href="/calendar/christmas.ics" target="christmas">
+                これからの開幕・点灯日をカレンダーに入れる
+              </AddToCalendarLink>
+              <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+                発表された日付だけを、初日の終日の予定として入れます。前の日に通知が出ます。
+              </p>
+            </div>
+          )}
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {(

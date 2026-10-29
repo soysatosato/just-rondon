@@ -74,6 +74,8 @@ module.exports = {
     // robots.txt では Disallow にしない(Twitterbot 等が og:image を
     // 取りに来られなくなるため)ので、sitemap 側だけで外す。
     "/og/*",
+    // 「カレンダーに追加」の .ics。ページではなく、応答にも noindex を付けている。
+    "/calendar/*",
     // ログイン関連。スタンプ帳とアカウント管理は人ごとに中身が違い、
     // ログイン画面と登録画面は検索から入っても意味が無い。
     // 4つとも noindexMetadata 済み。
