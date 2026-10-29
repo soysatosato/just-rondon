@@ -174,6 +174,13 @@ const CLOSED_SOME_DAYS: Entry[] = [
     note: "11:00の衛兵交代は月・水・金。火・木・土は15:00の点検、日曜は10:00のパレードがある日がある",
     source: "https://www.householddivision.org.uk/changing-the-guard-calendar",
   },
+  // 2026-10-29 に公式で確認(サイト総点検 P2-4)。
+  {
+    slug: "barbican-art-gallery",
+    closed: [MON],
+    note: "祝日(バンク・ホリデー)も休み",
+    source: "https://www.barbican.org.uk/your-visit/general-info/opening-hours",
+  },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -208,6 +215,32 @@ const OPEN_EVERY_DAY: Entry[] = [
   { slug: "covent-garden", closed: [], source: "広場は終日。店舗の営業時間は個別" },
   { slug: "leadenhall-market-london", closed: [], source: "通路は常時開放。店舗の営業時間は個別" },
   { slug: "st-pancras-international", closed: [], source: "稼働中の鉄道駅。終日" },
+
+  // 2026-10-29 に公式で確認(サイト総点検 P2-4)。どれも12月24〜26日は別に休み。
+  { slug: "tate-britain", closed: [], source: "https://www.tate.org.uk/visit/tate-britain" },
+  { slug: "tate-modern", closed: [], source: "https://www.tate.org.uk/visit/tate-modern" },
+  {
+    slug: "science-museum",
+    closed: [],
+    note: "2026年11月11日(水)は終日休館",
+    source: "https://www.sciencemuseum.org.uk/visit-us",
+  },
+  { slug: "imperial-war-museum", closed: [], source: "https://www.iwm.org.uk/visits/iwm-london" },
+  { slug: "london-tower-bridge", closed: [], source: "https://www.towerbridge.org.uk/plan-your-visit" },
+  { slug: "hyde-park-london", closed: [], source: "https://www.royalparks.org.uk/visit/parks/hyde-park" },
+  {
+    slug: "sky-garden-london",
+    closed: [],
+    note: "貸し切りなどで一般公開しない日があり、公式サイトに載る",
+    source: "https://skygarden.london/booking/",
+  },
+  {
+    slug: "barbican-centre",
+    closed: [],
+    openingHours: "月〜金 8:00〜23:00 / 土日 9:00〜23:00 / 祝日 11:00〜23:00",
+    source: "https://www.barbican.org.uk/your-visit/general-info/opening-hours",
+  },
+  { slug: "harrods-london", closed: [], source: "https://www.harrods.com/en-gb/c/plan-your-visit" },
 ];
 
 const ENTRIES = [...CLOSED_SOME_DAYS, ...OPEN_EVERY_DAY];
