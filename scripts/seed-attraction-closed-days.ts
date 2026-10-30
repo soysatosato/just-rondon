@@ -181,6 +181,43 @@ const CLOSED_SOME_DAYS: Entry[] = [
     note: "祝日(バンク・ホリデー)も休み",
     source: "https://www.barbican.org.uk/your-visit/general-info/opening-hours",
   },
+  // 2026-10-30 に公式で確認(サイト総点検 P2-4 の続き)。
+  {
+    slug: "58th-street-london",
+    closed: [MON],
+    openingHours: "火〜金 19:00 / 土日 13:00・19:00(公演の開始時刻)",
+    source: "https://58thstreet.co.uk/reservations/",
+  },
+  {
+    slug: "alcotraz-immersive-prison-cocktail-experience",
+    closed: [MON],
+    source: "https://alcotraz.co.uk/locations/london",
+  },
+  {
+    slug: "osterley-park-and-house",
+    closed: [MON, TUE],
+    note: "月・火は庭園だけ開く(館はバンク・ホリデーの月曜は開く)",
+    openingHours: "館 水〜日 11:00〜15:30",
+    source: "https://www.nationaltrust.org.uk/visit/london/osterley-park-and-house",
+  },
+  {
+    slug: "spencer-house-london",
+    closed: [MON, TUE, WED, THU, FRI, SAT],
+    note: "一般公開は日曜だけ。平日は予約制の団体ツアーのみ。8月は休館",
+    source: "https://www.spencerhouse.co.uk/tours/",
+  },
+  {
+    slug: "the-charterhouse-london",
+    closed: [SUN, MON],
+    openingHours: "火〜土 10:30〜16:30(ガイドツアーは11:00と14:15)",
+    source: "https://thecharterhouse.org/visit-us/",
+  },
+  {
+    slug: "fenton-house-hampstead",
+    closed: [MON, TUE, WED, THU, SAT],
+    note: "11〜2月は休館。開くのは金・日とバンク・ホリデーの月曜",
+    source: "https://www.nationaltrust.org.uk/visit/london/fenton-house-and-garden",
+  },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -241,6 +278,140 @@ const OPEN_EVERY_DAY: Entry[] = [
     source: "https://www.barbican.org.uk/your-visit/general-info/opening-hours",
   },
   { slug: "harrods-london", closed: [], source: "https://www.harrods.com/en-gb/c/plan-your-visit" },
+
+  // 2026-10-30 に公式で確認(サイト総点検 P2-4 の続き)。王立公園は門の開閉時刻だけが
+  // 載っていて休みの曜日は無い。どれも12月25日前後は別に休み。
+  { slug: "jack-the-ripper-museum", closed: [], source: "https://www.jacktherippermuseum.com" },
+  {
+    slug: "monument-to-the-great-fire-of-london",
+    closed: [],
+    openingHours: "9:30〜13:00 / 14:00〜18:00 (最終入場12:30・17:30)",
+    source: "https://www.themonument.org.uk/",
+  },
+  {
+    slug: "london-eye",
+    closed: [],
+    note: "毎年1月いっぱいは点検のため休業",
+    source: "https://www.londoneye.com/plan-your-visit/before-you-visit/opening-hours/",
+  },
+  {
+    slug: "kenwood-house-hampstead",
+    closed: [],
+    source: "https://www.english-heritage.org.uk/visit/places/kenwood/",
+  },
+  {
+    slug: "down-house-charles-darwin",
+    closed: [],
+    source: "https://www.english-heritage.org.uk/visit/places/home-of-charles-darwin-down-house/",
+  },
+  {
+    slug: "jewel-tower-westminster",
+    closed: [],
+    openingHours: "10:00〜16:00 (最終入場15:30)",
+    source: "https://www.english-heritage.org.uk/visit/places/jewel-tower/",
+  },
+  { slug: "highgate-cemetery", closed: [], source: "https://highgatecemetery.org/" },
+  {
+    slug: "queens-house-greenwich",
+    closed: [],
+    source: "https://www.rmg.co.uk/plan-your-visit/opening-times",
+  },
+  {
+    slug: "old-royal-naval-college",
+    closed: [],
+    source: "https://ornc.org/plan-a-visit/opening-times/",
+  },
+  { slug: "young-va-bethnal-green", closed: [], source: "https://www.vam.ac.uk/young/visit" },
+  {
+    slug: "london-museum-smithfield",
+    closed: [],
+    openingHours: "2026年11月28日開館。日〜木 10:00〜18:00 / 金土 10:00〜23:00",
+    source: "https://www.londonmuseum.org.uk/whats-on/smithfield-general-admission/",
+  },
+  {
+    slug: "somerset-house",
+    closed: [],
+    source: "https://www.somersethouse.org.uk/visit-us/opening-times-and-prices",
+  },
+  {
+    slug: "southwark-cathedral",
+    closed: [],
+    source: "https://cathedral.southwark.anglican.org/visiting/visitor-information/",
+  },
+  {
+    slug: "diana-princess-of-wales-memorial-playground",
+    closed: [],
+    note: "閉園は季節で変わり、11〜1月は15:45",
+    source: "https://www.royalparks.org.uk/visit/parks/kensington-gardens/diana-memorial-playground",
+  },
+  {
+    slug: "greenwich-park",
+    closed: [],
+    source: "https://www.royalparks.org.uk/visit/parks/greenwich-park",
+  },
+  {
+    slug: "kensington-gardens",
+    closed: [],
+    source: "https://www.royalparks.org.uk/parks/kensington-gardens",
+  },
+  { slug: "regents-park", closed: [], source: "https://www.royalparks.org.uk/parks/regents-park" },
+  {
+    slug: "richmond-park",
+    closed: [],
+    source: "https://www.royalparks.org.uk/parks/richmond-park",
+  },
+  {
+    slug: "st-jamess-park",
+    closed: [],
+    source: "https://www.royalparks.org.uk/parks/st-jamess-park",
+  },
+  { slug: "abbey-road-beatles", closed: [], source: "屋外の道路の横断歩道。常時" },
+  {
+    slug: "bicester-village",
+    closed: [],
+    source: "https://www.thebicestercollection.com/bicester-village/en/visit",
+  },
+  { slug: "camden-lock-market", closed: [], source: "https://www.camdenmarket.com/visit-us" },
+  {
+    slug: "fortnum-and-mason",
+    closed: [],
+    openingHours: "月〜土 10:00〜20:00 / 日 12:00〜18:00",
+    source: "https://www.fortnumandmason.com/piccadilly",
+  },
+  { slug: "battersea-power-station", closed: [], source: "https://batterseapowerstation.co.uk/" },
+  {
+    slug: "shakespeares-globe-guided-tour",
+    closed: [],
+    source: "https://www.shakespearesglobe.com/whats-on/globe-theatre-guided-tour/",
+  },
+  { slug: "the-ghost-bus-tours", closed: [], source: "https://theghostbustours.com/london/" },
+  {
+    slug: "bat-and-ball-stratford",
+    closed: [],
+    source: "https://www.thebatandball.com/locations/stratford",
+  },
+  {
+    slug: "chimney-lift-battersea-power-station",
+    closed: [],
+    source: "https://thechimneylift.co.uk/your-visit/opening-hours/",
+  },
+  {
+    slug: "frameless-london",
+    closed: [],
+    openingHours: "月〜木 11:00〜18:00 / 金 10:30〜22:00 / 土 10:00〜22:00 / 日 10:00〜18:00",
+    source: "https://frameless.com/opening-times/",
+  },
+  { slug: "paradox-museum-london", closed: [], source: "https://paradoxmuseum.com/london/" },
+  {
+    slug: "lords-cricket-ground",
+    closed: [],
+    source: "https://www.lords.org/lords/lord-s-experience/tours",
+  },
+  {
+    slug: "ifs-cloud-cable-car-london",
+    closed: [],
+    source: "https://tfl.gov.uk/modes/london-cable-car/opening-hours-frequency",
+  },
 ];
 
 const ENTRIES = [...CLOSED_SOME_DAYS, ...OPEN_EVERY_DAY];
