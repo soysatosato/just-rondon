@@ -218,6 +218,24 @@ const CLOSED_SOME_DAYS: Entry[] = [
     note: "11〜2月は休館。開くのは金・日とバンク・ホリデーの月曜",
     source: "https://www.nationaltrust.org.uk/visit/london/fenton-house-and-garden",
   },
+  // 2026-10-30、公式サイトが自動の読み取りを拒むため、公式ドメインに絞った検索で確認。
+  {
+    slug: "windsor-castle",
+    closed: [TUE, WED],
+    openingHours: "3〜10月 10:00〜17:15 / 11〜2月 10:00〜16:15(最終入場は閉館の1時間15分前)",
+    source: "https://www.rct.uk/visit/windsor-castle",
+  },
+  {
+    slug: "royal-mews",
+    closed: [TUE, WED],
+    note: "冬のあいだは休館(再開日は公式で確認)",
+    source: "https://www.rct.uk/visit/the-royal-mews-buckingham-palace",
+  },
+  {
+    slug: "grant-museum-of-zoology",
+    closed: [SUN, MON],
+    source: "https://www.ucl.ac.uk/engage/museums-collections/grant-museum-zoology/visit-grant-museum-zoology",
+  },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -411,6 +429,22 @@ const OPEN_EVERY_DAY: Entry[] = [
     slug: "ifs-cloud-cable-car-london",
     closed: [],
     source: "https://tfl.gov.uk/modes/london-cable-car/opening-hours-frequency",
+  },
+  // 次の5件は公式ドメインに絞った検索で確認(公式サイトが自動の読み取りを拒むため)。
+  {
+    slug: "kew-gardens-london",
+    closed: [],
+    openingHours: "10:00開園。閉園は季節で変わり、冬は15:15〜16:00(最終入場は閉園の45分〜1時間前)",
+    source: "https://www.kew.org/kew-gardens/visit-kew-gardens/opening-and-closing-times",
+  },
+  { slug: "london-zoo", closed: [], source: "https://www.londonzoo.org/plan-your-visit/opening-times" },
+  { slug: "london-transport-museum", closed: [], source: "https://www.ltmuseum.co.uk/visit/opening-times" },
+  { slug: "hms-belfast", closed: [], source: "https://www.iwm.org.uk/visits/hms-belfast" },
+  {
+    slug: "liberty-london",
+    closed: [],
+    openingHours: "月〜土 10:00〜20:00 / 日 12:00〜18:00(11:30から見て回れる)",
+    source: "https://support.libertylondon.com/hc/en-us/articles/26970438567185-What-are-the-store-opening-hours",
   },
 ];
 
