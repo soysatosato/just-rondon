@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const { hasSongList } = require("./lib/musicals/song-pages");
 const { hasArtworkList } = require("./lib/museums/artwork-list");
 const { museumSlugForAttraction } = require("./lib/museum-attraction-pairs");
+const { MASTERPIECE_PATHS } = require("./lib/masterpieces/indexable");
 const {
   unwrittenMonthPaths,
   writtenMonthPaths,
@@ -527,6 +528,11 @@ module.exports = {
       // 1件あたりの固有本文が数百字しかないページが 490 件あり、
       // sitemap 全体の 4 割を占めて記事コンテンツの評価を薄めていた。
       // ページ側で noindex を宣言済み。一覧からは辿れるので回遊導線は残る。
+    }
+    // 例外は本文を書いた名作ページ(展示状況・行き方・出典つき)。ページ側でも
+    // 同じ一覧(lib/masterpieces/indexable.js)を読んで検索に載せている。
+    for (const p of MASTERPIECE_PATHS) {
+      paths.push(await config.transform(config, p));
     }
     const musicals = await prisma.musical.findMany({
       select: { slug: true, _count: { select: { songs: true } } },

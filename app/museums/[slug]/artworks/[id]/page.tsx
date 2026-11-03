@@ -17,15 +17,76 @@ import {
   artworkJsonLd,
 } from "@/components/museums/jsonld";
 import { breadcrumbListJsonLd } from "@/components/navigation/tree";
+import { permanentRedirect } from "next/navigation";
+import MasterpieceGuideView from "@/components/museums/masterpieces/MasterpieceGuideView";
+import {
+  getMasterpieceGuide,
+  masterpiecePath,
+  readsPlacementDaily,
+  type MasterpieceGuide,
+} from "@/lib/masterpieces";
+import {
+  fetchNationalGalleryPlacement,
+  type LivePlacementResult,
+} from "@/lib/masterpieces/national-gallery";
 
+// 名作ページの展示状況(lib/masterpieces/national-gallery.ts)も、この間隔で
+// 公式を読み直す。
 export const revalidate = 60 * 60 * 24;
 
-// 作品は数百件あり、どれも noindex なのでビルド時には描かない。それでも
+// 作品は数百件あり、名作ページ以外は noindex なのでビルド時には描かない。それでも
 // generateStaticParams は置く。Next 14 ではこれが無い動的ルートは ISR の
 // キャッシュに載らず毎回描画になるが、空配列を返すだけで、初めて開かれた
 // ときに描いて残す扱いになる。
 export function generateStaticParams() {
   return [];
+}
+
+/** 公式を毎日読む館だけ取りに行く。metadata と本文で2回呼ばれるが、fetch はまとめられる。 */
+function loadLivePlacement(
+  guide: MasterpieceGuide,
+): Promise<LivePlacementResult> | null {
+  if (!readsPlacementDaily(guide.museumSlug)) return null;
+  return fetchNationalGalleryPlacement(guide.officialUrl, masterpiecePath(guide));
+}
+
+/**
+ * 題に添える部屋。いま開いている部屋で見られると分かったときだけ付ける。
+ * 公式が読めなかった日は、人が確かめた記録の部屋を使う。
+ */
+function roomForTitle(
+  guide: MasterpieceGuide,
+  live: LivePlacementResult | null,
+): string | null {
+  if (live?.ok) {
+    const p = live.placement;
+    return p.state === "on-display" && p.roomState !== "closed" && p.roomState !== "empty"
+      ? p.room
+      : null;
+  }
+  const checked = guide.checked.placement;
+  return checked.state === "on-display" ? checked.room : null;
+}
+
+async function masterpieceMetadata(
+  guide: MasterpieceGuide,
+  museumName: string,
+): Promise<Metadata> {
+  const live = await loadLivePlacement(guide);
+  const room = roomForTitle(guide, live);
+  return buildPageMetadata({
+    path: masterpiecePath(guide),
+    title: `${guide.name}の場所と見どころ｜${museumName}${room ? ` ${room}` : ""}`,
+    description: guide.description,
+    images: [
+      {
+        url: guide.photo.url,
+        width: 1280,
+        height: Math.round((1280 * guide.photo.height) / guide.photo.width),
+        alt: guide.photo.alt,
+      },
+    ],
+  });
 }
 
 export async function generateMetadata({
@@ -34,6 +95,9 @@ export async function generateMetadata({
   params: { id: string; slug: string };
 }): Promise<Metadata> {
   const artwork = await fetchArtworkDetails(params.id);
+
+  const guide = getMasterpieceGuide(params.id);
+  if (guide && artwork) return masterpieceMetadata(guide, artwork.museum.name);
 
   return buildPageMetadata({
     path: `/museums/${params.slug}/artworks/${params.id}`,
@@ -44,6 +108,7 @@ export async function generateMetadata({
     // 作品ページはDBから機械的に量産され、1件あたりの固有本文が数百字しかない。
     // サイト全体(1,199URL)の4割を占めるため、インデックスさせると
     // 記事コンテンツの評価まで薄まる。館内の回遊導線としては残すので follow は維持。
+    // 本文を書いた名作ページ(lib/masterpieces)だけは上で検索に載せている。
     noindex: true,
   });
 }
@@ -53,9 +118,59 @@ export default async function ArtworkDetailPage({
 }: {
   params: { id: string; slug: string };
 }) {
+  const guide = getMasterpieceGuide(params.id);
+  // 名作ページは検索に載せるので、館の slug が違う URL は正しい館へ送る。
+  if (guide && guide.museumSlug !== params.slug) {
+    permanentRedirect(masterpiecePath(guide));
+  }
+
   const museum = await fetchMuseumIDandName(params.slug);
   if (!museum) return;
   const artwork = await fetchArtworkDetails(params.id);
+
+  if (guide && artwork) {
+    const live = await loadLivePlacement(guide);
+    const path = masterpiecePath(guide);
+    return (
+      <div data-page-main className="max-w-3xl mx-auto sm:px-4 space-y-4">
+        <JsonLd
+          data={breadcrumbListJsonLd({
+            path: "/museums",
+            trail: [
+              { label: museum.name, href: `/museums/${params.slug}` },
+              { label: "コレクション", href: `/museums/${params.slug}/artworks` },
+            ],
+            current: artwork.title,
+            currentHref: path,
+          })}
+        />
+        <JsonLd
+          data={{
+            ...artworkJsonLd(artwork, { name: museum.name, slug: params.slug }),
+            // DB の写真は小さな縮小版で、説明文も名作ページの本文とは別物。
+            // 検索結果と画像検索には、ページに出している写真と説明を渡す。
+            image: guide.photo.url,
+            description: guide.description,
+          }}
+        />
+        <Breadcrumbs
+          path="/museums"
+          trail={[
+            { label: museum.name, href: `/museums/${params.slug}` },
+            { label: "コレクション", href: `/museums/${params.slug}/artworks` },
+          ]}
+          current={artwork.title}
+        />
+        <MasterpieceGuideView
+          guide={guide}
+          museumName={museum.name}
+          engTitle={artwork.engTitle}
+          live={live}
+        />
+      </div>
+    );
+  }
+
   return (
     <div data-page-main className="max-w-3xl mx-auto sm:px-4 space-y-4">
       {artwork && (

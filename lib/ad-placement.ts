@@ -29,6 +29,7 @@ const AD_FREE_PREFIXES = [
 ] as const;
 
 import { unwrittenMonthPaths } from "@/lib/london-months/written-months";
+import { isMasterpiecePath } from "@/lib/masterpieces/indexable";
 
 /**
  * そのパスちょうどにだけ広告を出さないページ。
@@ -53,7 +54,8 @@ const AD_FREE_CHILDREN_OF = ["/jobs/service-charges/stores"] as const;
  * 美術館の作品ページ(/museums/<館>/artworks/<id>)。DB から館ごとに数百件ずつ
  * 生える作品の解説で、全件 noindex にしてある
  * (app/museums/[slug]/artworks/[id]/page.tsx)。作品の一覧(/artworks)と
- * 館のページには出す。
+ * 館のページには出す。本文を書いた名作ページ(lib/masterpieces/indexable.js)は
+ * 検索に載せる読み物なので、この形でも出す。
  */
 const AD_FREE_PATTERNS: readonly RegExp[] = [
   /^\/museums\/[^/]+\/artworks\/[^/]+$/,
@@ -76,7 +78,12 @@ export function allowsAds(pathname: string | null): boolean {
     return false;
   }
   if (AD_FREE_PATHS.includes(pathname)) return false;
-  if (AD_FREE_PATTERNS.some((pattern) => pattern.test(pathname))) return false;
+  if (
+    AD_FREE_PATTERNS.some((pattern) => pattern.test(pathname)) &&
+    !isMasterpiecePath(pathname)
+  ) {
+    return false;
+  }
   return !AD_FREE_CHILDREN_OF.some((parent) =>
     pathname.startsWith(`${parent}/`)
   );
