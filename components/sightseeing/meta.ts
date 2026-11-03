@@ -1,5 +1,6 @@
 import { fitTitle, truncateDescription, TITLE_MAX_LENGTH } from "@/lib/seo";
 import { timeRouteForAttraction } from "@/lib/time-routes";
+import { spotKindProfile, type SpotKind } from "@/lib/sightseeing/spot-kind";
 
 /**
  * 観光スポット詳細(/sightseeing/[slug])のタイトルと description を組み立てる。
@@ -25,13 +26,69 @@ const MIN_BODY_LENGTH = 20;
 type AttractionMetaInput = {
   slug?: string;
   name: string;
+  /** 渡されたときだけ、スポットの種類に合わせた語尾にする(spot-kind.ts)。 */
+  category?: string;
   summary?: string | null;
   tagline?: string | null;
   durationText?: string | null;
   priceAdult?: string | null;
   nearestStation?: string | null;
+  openingHours?: string | null;
+  closedWeekdays?: number[];
   isFree?: boolean;
 };
+
+/**
+ * 種類ごとのタイトルの語尾。長い順。null の種類は所要時間を軸にした既定の
+ * 語尾(下の TITLE_SUFFIXES / durationSuffixes)を使う。
+ *
+ * 2026-11 に分けた理由(Search Console 2026-08-05〜11-01):
+ * - マーケット・店は「営業時間」で探される。「レドンホールマーケット 営業時間」
+ *   49表示、「キングスクロス駅 ハリーポッター 時間」54表示。
+ *   所要時間「30分」を題に入れても、この問いには答えていない。
+ * - 外から見る名所は「場所」「どこ」で探される。「アビーロード 場所 地図」
+ *   「ハイドパーク どこ」。中に入らない場所の「所要時間5〜10分」は情報が薄い。
+ * 券を買って入る場所・体験・ツアーは従来どおり。「ロンドン塔 所要時間」
+ * 「ロンドンアイ 所要時間」はこの語尾で5〜10位に出ている。
+ */
+const KIND_TITLE_SUFFIXES: Partial<Record<SpotKind, string[]>> = {
+  market: [
+    "の営業時間・定休日・見どころ・行き方",
+    "の営業時間・見どころ・行き方",
+    "の営業時間と見どころ",
+    "の営業時間",
+    "とは",
+  ],
+  store: [
+    "の営業時間・見どころ・行き方",
+    "の営業時間と見どころ",
+    "の営業時間",
+    "とは",
+  ],
+  park: [
+    "とは？見どころ・開園時間・行き方",
+    "の見どころ・開園時間・行き方",
+    "の見どころと開園時間",
+    "の見どころ",
+    "とは",
+  ],
+  landmark: [
+    "とは？場所・見どころ・行き方",
+    "の場所・見どころ・行き方",
+    "の場所と見どころ",
+    "の見どころ",
+    "とは",
+  ],
+  event: [
+    "の日程・チケット・行き方",
+    "の日程とチケット",
+    "の日程",
+    "とは",
+  ],
+};
+
+/** 0=月 〜 6=日。 */
+const WEEKDAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
 
 /**
  * タイトルのサフィックス候補。長い順に渡し、収まるいちばん長いものが選ばれる。
@@ -91,6 +148,15 @@ export function attractionTitle(attraction: AttractionMetaInput): string {
   const override = attraction.slug && META_OVERRIDES[attraction.slug];
   if (override) return override.title;
 
+  if (attraction.slug && attraction.category !== undefined) {
+    const { kind } = spotKindProfile({
+      slug: attraction.slug,
+      category: attraction.category,
+    });
+    const suffixes = KIND_TITLE_SUFFIXES[kind];
+    if (suffixes) return fitTitle(attraction.name, suffixes);
+  }
+
   const duration = attraction.durationText?.trim();
 
   // 所要時間があればそれを優先する。収まらなければ通常のサフィックスへ落ちる。
@@ -114,20 +180,21 @@ export function attractionDescription(attraction: AttractionMetaInput): string {
   const override = attraction.slug && META_OVERRIDES[attraction.slug];
   if (override) return override.description;
 
-  const facts: string[] = [];
+  const kindFacts = kindDescriptionFacts(attraction);
+  const facts: string[] = kindFacts ?? [];
 
-  if (attraction.durationText?.trim()) {
+  if (!kindFacts && attraction.durationText?.trim()) {
     facts.push(`所要時間${attraction.durationText.trim()}`);
   }
 
   // isFree のスポットは priceAdult も "無料" が入っているので二重に出さない。
-  if (attraction.priceAdult?.trim()) {
+  if (!kindFacts && attraction.priceAdult?.trim()) {
     facts.push(
       attraction.isFree ? "入場無料" : `料金${attraction.priceAdult.trim()}`
     );
   }
 
-  if (attraction.nearestStation?.trim()) {
+  if (!kindFacts && attraction.nearestStation?.trim()) {
     facts.push(attraction.nearestStation.trim());
   }
 
@@ -163,6 +230,58 @@ export function attractionDescription(attraction: AttractionMetaInput): string {
   if (remaining < MIN_BODY_LENGTH) return head;
 
   return `${head}${truncateDescription(body, remaining)}`;
+}
+
+/**
+ * 種類ごとに、スニペットの先頭へ寄せる事実を選ぶ。null は既定
+ * (所要時間・料金・最寄駅)。
+ *
+ * マーケットと店は「いつ開いているか」、公園は開園時間と入園無料、
+ * 外から見る名所は最寄駅を先に置く。検索されている問いの答えを
+ * 一目目に入れるため(KIND_TITLE_SUFFIXES の注記)。
+ */
+function kindDescriptionFacts(attraction: AttractionMetaInput): string[] | null {
+  if (!attraction.slug || attraction.category === undefined) return null;
+  const profile = spotKindProfile({
+    slug: attraction.slug,
+    category: attraction.category,
+  });
+  const hours = attraction.openingHours?.trim();
+  const station = attraction.nearestStation?.trim();
+  const closed = attraction.closedWeekdays ?? [];
+  const facts: string[] = [];
+
+  switch (profile.kind) {
+    case "market":
+    case "store": {
+      // 「営業時間は通路は常時開放…」のように、原文の書き出しによっては
+      // 「は」が重なるので、欄名と値はコロンで区切る。
+      if (hours) facts.push(`${profile.hoursLabel}：${hours}`);
+      if (closed.length >= 4) {
+        const open = WEEKDAY_LABELS.filter((_, i) => !closed.includes(i));
+        facts.push(`開くのは${open.join("・")}曜だけ`);
+      } else if (closed.length > 0) {
+        facts.push(`${closed.map((d) => WEEKDAY_LABELS[d]).join("・")}曜は休み`);
+      }
+      if (station) facts.push(station);
+      return facts;
+    }
+    case "park": {
+      if (hours) facts.push(`開園${hours}`);
+      if (attraction.isFree) facts.push("入園無料");
+      if (station) facts.push(station);
+      return facts;
+    }
+    case "landmark": {
+      if (station) facts.push(station);
+      if (attraction.durationText?.trim()) {
+        facts.push(`見学の目安${attraction.durationText.trim()}`);
+      }
+      return facts;
+    }
+    default:
+      return null;
+  }
 }
 
 export { TITLE_MAX_LENGTH };

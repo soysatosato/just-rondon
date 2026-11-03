@@ -52,21 +52,39 @@ export type VisitStep = {
 export default function AttractionVisitFlow({
   steps,
   attractionName,
+  id,
+  heading,
+  lead,
 }: {
   steps: VisitStep[];
   attractionName: string;
+  /** ページ内リンクの行き先。観光ページの節ナビから飛ぶ。 */
+  id?: string;
+  /**
+   * 見出し。観光ページはスポットの種類に合わせて「◯◯の見どころ」と出す
+   * (アビー・ロードやハリー・ポッターの店に「着いてからの歩き方」は合わない)。
+   * 美術館のページは既定のまま。
+   */
+  heading?: string;
+  /** 見出しの下の1文。null で出さない。 */
+  lead?: string | null;
 }) {
   if (!steps.length) return null;
 
+  const leadText =
+    lead === undefined
+      ? `${attractionName}に着いたら、この順に見ていくと迷いません。`
+      : lead;
+
   return (
-    <section className="space-y-6">
+    <section id={id} className="scroll-mt-24 space-y-6">
       <div className="space-y-1">
         <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
-          着いてからの歩き方
+          {heading ?? "着いてからの歩き方"}
         </h2>
-        <p className="text-sm text-muted-foreground">
-          {attractionName}に着いたら、この順に見ていくと迷いません。
-        </p>
+        {leadText && (
+          <p className="text-sm text-muted-foreground">{leadText}</p>
+        )}
       </div>
 
       <ol className="relative space-y-6 border-l border-border pl-6">

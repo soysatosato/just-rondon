@@ -150,6 +150,31 @@ export const fetchRandomAttractionsByCategory = async (
 };
 
 /**
+ * 同じ区分のほかのスポットを、閲覧の多い順に固定で返す。
+ *
+ * 観光スポットのページの末尾「ほかの◯◯のスポット」に使う。以前は
+ * fetchRandomAttractionsByCategory で日替わりに2件出していたが、
+ * 読むたびに違うものが出て、選ばれた理由を読者に説明できなかった。
+ * 近隣の枠に出したものは呼び出し側で excludeSlugs に入れて外す。
+ */
+export const fetchPopularAttractionsByCategory = async (
+  category: string,
+  excludeSlugs: string[],
+  limit = 6,
+) => {
+  return db.attraction.findMany({
+    where: {
+      category,
+      isPublished: true,
+      slug: { notIn: excludeSlugs },
+    },
+    select: { slug: true, name: true },
+    orderBy: [{ views: "desc" }, { recommendLevel: "desc" }, { slug: "asc" }],
+    take: limit,
+  });
+};
+
+/**
  * 徒歩圏の近隣スポット。カテゴリー違いでも拾うのが狙いで、
  * 「ロンドン塔の次はタワーブリッジ」のような実際の回り方に沿った導線を作る。
  *
