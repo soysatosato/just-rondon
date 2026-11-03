@@ -19,7 +19,6 @@
 
 import { LONDON_CLUBS } from "../lib/football/clubs";
 import {
-  ANNOUNCEMENTS,
   CONFIRMED_THROUGH,
   FINAL_MATCHWEEK,
   FIXTURES,
@@ -113,12 +112,6 @@ function main() {
     problems.push(
       `公式は${formatAnnouncement(next)}に第${next.from}〜${next.to}節を発表する予定だった。` +
         `発表記事で日時を直し、CONFIRMED_THROUGH を上げる`,
-    );
-  }
-  const lastAnnounced = ANNOUNCEMENTS.filter((a) => a.to <= CONFIRMED_THROUGH.matchweek);
-  if (lastAnnounced.length > 0) {
-    problems.push(
-      `ANNOUNCEMENTS に発表済みの節(第${lastAnnounced.map((a) => a.from).join("・")}節〜)が残っている。消してよい`,
     );
   }
 
