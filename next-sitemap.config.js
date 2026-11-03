@@ -302,6 +302,9 @@ module.exports = {
       // 入場無料スポットの一覧。/sightseeing/all の「無料」絞り込みは
       // クライアント側でURLを持たないので、検索の受け皿はこの静的URL。
       "/sightseeing/free",
+      // 曜日で探す(lib/sightseeing/open-days.ts)。日曜と月曜の2本だけ。
+      "/sightseeing/open/sunday",
+      "/sightseeing/open/monday",
       // 旅行ガイド。並びは components/sightseeing/guides/guides.ts の
       // travelGuides と一致させること。
       "/sightseeing/eta-uk-visa-guide",

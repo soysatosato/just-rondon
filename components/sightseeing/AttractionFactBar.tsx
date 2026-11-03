@@ -1,4 +1,7 @@
+import { Fragment } from "react";
+import Link from "next/link";
 import { Clock, Ticket, Train, CalendarClock, CalendarOff } from "lucide-react";
+import { openDayLinksFor } from "@/lib/sightseeing/open-days";
 
 /**
  * 訪問前に知りたい実用情報を1か所にまとめて出す。
@@ -18,6 +21,8 @@ type Fact = {
   value: string;
   /** 値だけでは足りないときの但し書き。小さく下に出す。 */
   note?: string | null;
+  /** 但し書きの下に出すサイト内のリンク。 */
+  links?: { href: string; label: string }[];
 };
 
 /** 0=月 〜 6=日。lib/plan/dates.ts の WEEKDAY_LABELS と同じ並び。 */
@@ -103,7 +108,17 @@ export default function AttractionFactBar({
       ? [{ icon: Train, label: "最寄駅", value: nearestStation }]
       : []),
     ...(closedValue
-      ? [{ icon: CalendarOff, label: "休館日", value: closedValue, note: closedRowNote }]
+      ? [
+          {
+            icon: CalendarOff,
+            label: "休館日",
+            value: closedValue,
+            note: closedRowNote,
+            // 日曜・月曜に休む所は、同じ曜日に休む所の一覧へ送る
+            // (/sightseeing/open/<曜日>)。その日の代わりを探せるように。
+            links: openDayLinksFor(closedWeekdays ?? []),
+          },
+        ]
       : closedNote
         ? [{ icon: CalendarOff, label: "休館日", value: closedNote }]
         : []),
@@ -145,6 +160,21 @@ export default function AttractionFactBar({
               {f.note && (
                 <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">
                   {f.note}
+                </span>
+              )}
+              {f.links && f.links.length > 0 && (
+                <span className="mt-1 block text-xs font-normal">
+                  {f.links.map((link, i) => (
+                    <Fragment key={link.href}>
+                      {i > 0 && "・"}
+                      <Link
+                        href={link.href}
+                        className="text-link underline underline-offset-2 hover:opacity-80 dark:text-blue-400"
+                      >
+                        {link.label}
+                      </Link>
+                    </Fragment>
+                  ))}
                 </span>
               )}
             </dd>

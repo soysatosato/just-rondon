@@ -236,6 +236,22 @@ const CLOSED_SOME_DAYS: Entry[] = [
     closed: [SUN, MON],
     source: "https://www.ucl.ac.uk/engage/museums-collections/grant-museum-zoology/visit-grant-museum-zoology",
   },
+  // 2026-11-03、曜日のページ(/sightseeing/open)を出す前に閲覧上位を確認。
+  // 公式の営業カレンダー(ページ内の openingTimeData)は11〜12月の分だけ。
+  {
+    slug: "the-view-from-the-shard",
+    closed: [MON, TUE],
+    note: "2026年11〜12月の営業で確認。12月22・28・29日は開き、24〜26日は休む。1月以降は公式の営業カレンダーで確認",
+    openingHours: "水〜金・日 11:00〜19:00 / 土 10:00〜22:00(最終入場は閉場の1時間前)",
+    source: "https://www.theviewfromtheshard.com/opening-times/",
+  },
+  // 公式サイトが自動の読み取りを拒むため、公式ドメインに絞った検索で確認。
+  {
+    slug: "houses-of-parliament-self-guided-audio-tour",
+    closed: [MON, TUE, WED, THU, FRI, SUN],
+    note: "見学ツアーは土曜(通年)と、議会の休会中の平日にある。日程は公式のチケット販売で確認",
+    source: "https://www.parliament.uk/visiting/visiting-and-tours/",
+  },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -445,6 +461,26 @@ const OPEN_EVERY_DAY: Entry[] = [
     closed: [],
     openingHours: "月〜土 10:00〜20:00 / 日 12:00〜18:00(11:30から見て回れる)",
     source: "https://support.libertylondon.com/hc/en-us/articles/26970438567185-What-are-the-store-opening-hours",
+  },
+  // 2026-11-03、曜日のページ(/sightseeing/open)を出す前に閲覧上位を確認。
+  {
+    slug: "harry-potter-shop-platform-934",
+    closed: [],
+    openingHours: "月〜土 8:00〜22:00 / 日 9:00〜20:00",
+    source: "https://harrypottershop.co.uk/pages/kings-cross",
+  },
+  {
+    slug: "madame-tussauds-london",
+    closed: [],
+    note: "12月25日は休む。閉館時刻は日によって変わる",
+    source: "https://www.madametussauds.com/london/plan-your-visit/before-you-visit/opening-hours/",
+  },
+  // 公式サイトが自動の読み取りを拒むため、公式ドメインに絞った検索で確認。
+  {
+    slug: "london-dungeon",
+    closed: [],
+    note: "12月25日は休む。開館時間は日によって変わる",
+    source: "https://www.thedungeons.com/london/plan-your-visit/before-you-visit/opening-hours/",
   },
 ];
 

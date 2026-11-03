@@ -82,6 +82,8 @@ export const NAV_SECTIONS: NavSection[] = [
           { href: "/sightseeing/areas", label: "エリア別ガイド（街区で歩く）" },
           { href: "/sightseeing/royal-london", label: "ロイヤル・ロンドン" },
           { href: "/sightseeing/free", label: "無料で楽しむロンドン" },
+          { href: "/sightseeing/open/sunday", label: "日曜日のロンドン観光" },
+          { href: "/sightseeing/open/monday", label: "月曜日に休む観光地" },
           { href: "/sightseeing/all", label: "観光スポット一覧" },
         ],
       },
