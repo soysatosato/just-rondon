@@ -54,6 +54,8 @@ import MonthSun from "@/components/events/month/MonthSun";
 import MonthHolidays from "@/components/events/month/MonthHolidays";
 import MonthWeeklyPicks from "@/components/events/month/MonthWeeklyPicks";
 import MonthNav from "@/components/events/month/MonthNav";
+import MonthFixtures from "@/components/events/month/MonthFixtures";
+import { upcomingFixtures } from "@/lib/football/fixtures";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import PagePhoto from "@/components/shared/PagePhoto";
 import GuideSectionNav from "@/components/guides/GuideSectionNav";
@@ -245,6 +247,10 @@ export default async function MonthPage({
   const hasWeekly =
     picks.exhibitions.length + picks.events.length + briefs.length > 0;
 
+  // その月のロンドンのプレミアリーグ(ホーム試合)。今日より前の試合は出さない。
+  const monthKey = `${year}-${String(month).padStart(2, "0")}`;
+  const fixtures = upcomingFixtures(today).filter((f) => f.month === monthKey);
+
   const sections = [
     { id: "weather", navLabel: "天気" },
     { id: "wear", navLabel: "服装" },
@@ -253,6 +259,7 @@ export default async function MonthPage({
     ...(guide ? [{ id: "tips", navLabel: "旅のコツ" }] : []),
     { id: "events", navLabel: "イベント" },
     ...(hasWeekly ? [{ id: "weekly", navLabel: "展覧会・催し" }] : []),
+    ...(fixtures.length > 0 ? [{ id: "football", navLabel: "サッカー" }] : []),
   ];
   const n = (id: string) => sections.findIndex((s) => s.id === id) + 1;
 
@@ -496,6 +503,16 @@ export default async function MonthPage({
               events={picks.events}
               briefs={briefs}
             />
+          </MonthSection>
+        )}
+
+        {fixtures.length > 0 && (
+          <MonthSection
+            n={n("football")}
+            id="football"
+            title={`${month}月のプレミアリーグ(ロンドンのホーム試合)`}
+          >
+            <MonthFixtures fixtures={fixtures} month={monthKey} />
           </MonthSection>
         )}
       </div>

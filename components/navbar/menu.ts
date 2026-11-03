@@ -142,6 +142,10 @@ export const NAV_SECTIONS: NavSection[] = [
             href: "/sightseeing/football",
             label: "プレミアリーグ観戦",
           },
+          {
+            href: "/sightseeing/football/fixtures",
+            label: "プレミアリーグの日程",
+          },
           { href: "/sightseeing/stadium-tours", label: "スタジアムツアー" },
           { href: "/sightseeing/thames-cruise", label: "テムズ川クルーズ" },
           {

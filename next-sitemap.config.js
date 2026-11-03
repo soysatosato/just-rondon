@@ -368,6 +368,8 @@ module.exports = {
       "/sightseeing/christmas-lights",
       "/sightseeing/stadium-tours",
       "/sightseeing/football",
+      // ロンドンの試合日程(lib/football/fixtures.ts)。ガイド記事ではない。
+      "/sightseeing/football/fixtures",
       // プレミアリーグ観戦ガイド。/sightseeing/football をハブとする12本。
       // 並びは components/sightseeing/football/guides.ts の
       // footballGuides と一致させること。

@@ -99,8 +99,11 @@ export function modifiedDateOf(content: {
   return content.revisedAt ?? publishedDateOf(content);
 }
 
-/** その瞬間のロンドンの UTC からのずれ(ミリ秒。冬は0、夏は+1時間)。 */
-function londonOffsetMs(at: Date): number {
+/**
+ * その瞬間のロンドンの UTC からのずれ(ミリ秒。冬は0、夏は+1時間)。
+ * サッカーの試合日程(lib/football/fixtures.ts)もキックオフの換算に使う。
+ */
+export function londonOffsetMs(at: Date): number {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: LONDON,
     hourCycle: "h23",

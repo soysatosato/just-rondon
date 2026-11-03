@@ -24,6 +24,7 @@ import {
   footballGuidesByCategory,
   footballHubCollectionJsonLd,
 } from "@/components/sightseeing/football/guides";
+import { FIXTURES_PATH } from "@/lib/football/fixtures";
 import {
   DIFFICULTY_LABELS,
   FOOTBALL_AS_OF,
@@ -93,6 +94,14 @@ const SCENARIOS: {
     detail: `ロンドンには6クラブあります。${REALISTIC_CLUBS.map((c) => c.name).join("・")}なら現実的に取れて、相手として強豪もやって来ます。`,
     href: "/sightseeing/football/which-club",
     cta: "6クラブを比べる",
+  },
+  {
+    situation: "行く日にロンドンで試合があるか知りたい",
+    answer: "残りの試合を日程表にしました",
+    detail:
+      "旅行の日付を入れると、その日程で観られる試合と、日時が動くと日程から外れうる試合を分けて出します。いつ日時が確定するかも、公式の発表予定から載せています。",
+    href: FIXTURES_PATH,
+    cta: "試合日程を見る",
   },
   {
     situation: "旅行の日程に試合を組み込みたい",
