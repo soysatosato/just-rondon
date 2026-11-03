@@ -45,5 +45,54 @@
       "tv-licence": 180,
       "minimum-wage": 12.71
     }
+  },
+  {
+    "month": "2026-11",
+    "checkedAt": "2026-11-03",
+    "jpyPerGbp": 211.89,
+    "rateDate": "2026-11-02",
+    "prices": {
+      "tube-single": 3.1,
+      "tube-daily-cap": 8.9,
+      "bus-single": 1.85,
+      "heathrow-piccadilly": 5.9,
+      "heathrow-elizabeth": 15.5,
+      "heathrow-express": 26,
+      "santander-single": 1.65,
+      "meal-deal": 3.85,
+      "pint": 7.2,
+      "coffee": 3.5,
+      "afternoon-tea": 45,
+      "british-museum": 0,
+      "tower-of-london": 38,
+      "westminster-abbey": 32,
+      "st-pauls": 27,
+      "london-eye": 39,
+      "harry-potter-studio": 58.5,
+      "musical-cheap": 25,
+      "musical-mid": 75,
+      "hostel": {
+        "min": 25,
+        "max": 45
+      },
+      "budget-hotel": {
+        "min": 80,
+        "max": 150
+      },
+      "mid-hotel": {
+        "min": 150,
+        "max": 260
+      },
+      "rent": 2338,
+      "room": 932,
+      "travelcard-monthly": 171.7,
+      "council-tax": 2068,
+      "energy": 1723,
+      "water": 639,
+      "tv-licence": 180,
+      "minimum-wage": 12.71
+    },
+    "memo": "バスの1回が11月1日に£1.75から£1.85に上がった。家賃は統計の新しい月・四半期の値に替わり、1軒の平均が£2,338、シェアの1部屋が£932と少し上がった。ほかの品目はポンドでは据え置きだが、円は前月より1.8%安くなり、円で払う額はそのぶん増えた。",
+    "issue": "2026-11"
   }
 ]
