@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import type { Content } from "@prisma/client";
 import ColumnCard from "@/components/column/ColumnCard";
-import { COLUMN_TAGS } from "@/lib/column-taxonomy";
+import { COLUMN_TAGS, type ColumnTagKey } from "@/lib/column-taxonomy";
+import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
 import { countTags, groupColumns, matchesQuery } from "@/lib/column-grouping";
 import {
   ArchiveHeading,
@@ -34,6 +35,17 @@ import { publishedDateOf } from "@/lib/publish-schedule";
 /** 1ページに並べる本数。3列 × 4行。 */
 const PAGE_SIZE = 12;
 
+/**
+ * テーマの絞り込みは URL(?tag=history)に持たせる。記事ページのテーマの
+ * チップがここへリンクしていて、開いた時点でそのテーマに絞られている必要がある。
+ */
+const TAG_KEYS = COLUMN_TAGS.map((t) => t.key) as readonly ColumnTagKey[];
+const TAG_IN_URL: UrlStateCodec<ColumnTagKey | null> = {
+  keys: ["tag"],
+  parse: (params) => pickOne(params.get("tag"), TAG_KEYS),
+  serialize: (tag) => ({ tag }),
+};
+
 type SortKey = "new" | "popular";
 
 const SORTS: { key: SortKey; label: string }[] = [
@@ -43,7 +55,7 @@ const SORTS: { key: SortKey; label: string }[] = [
 
 export default function ColumnBrowser({ columns }: { columns: Content[] }) {
   const [query, setQuery] = useState("");
-  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [activeTag, setActiveTag] = useUrlState(TAG_IN_URL);
   const [sort, setSort] = useState<SortKey>("new");
 
   // タグの件数は絞り込み前の全件から出す（押すたびに件数が変わると選びにくい）

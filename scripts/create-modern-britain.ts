@@ -7,6 +7,7 @@ import {
   MODERN_BRITAIN_TAGS,
   isKnownModernBritainTag,
 } from "../lib/modern-britain-taxonomy";
+import { formatKeyPoints } from "../lib/reading-keypoints";
 
 type ModernBritainSectionInput = {
   title: string;
@@ -20,6 +21,8 @@ type ModernBritainPayload = {
   engTitle?: string;
   summary: string;
   mainText?: string;
+  /** 冒頭の「要点」(イギリス英語は「早わかり」)。Content.description に入る。 */
+  keyPoints?: string[];
   image?: string;
   website?: string;
   tags: string[];
@@ -117,6 +120,9 @@ async function main() {
         slug,
         summary: payload.summary,
         mainText: payload.mainText,
+        ...(payload.keyPoints && payload.keyPoints.length > 0
+          ? { description: formatKeyPoints(payload.keyPoints) }
+          : {}),
         image: payload.image,
         ...imageCredit,
         website: payload.website,

@@ -18,6 +18,8 @@ import {
   fetchWeeklyPopularReadingContents,
 } from "@/utils/actions/contents";
 import { historyChapters, HISTORY_BASE } from "@/components/history/chapters";
+import ThemeIndex, { type ThemeIndexItem } from "@/components/reading/ThemeIndex";
+import { buildThemeIndex } from "@/lib/reading-theme-index";
 import HubMasthead from "@/components/reading/HubMasthead";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toReadingRankingEntries } from "@/lib/reading-ranking";
@@ -28,7 +30,7 @@ const PAGE_PATH = "/reading";
 const PAGE_NAME = "英国を読む";
 const TITLE = "英国を読む｜コラム・時事論考・歴史・イギリス英語";
 const DESCRIPTION =
-  "旅行の実務情報の先にある、じっくり読むコンテンツをまとめました。イギリスの歴史や文化を掘り下げるコラム、最新ニュースを論じる時事論考、ローマ時代から現在までの通史、そしてイギリス英語の言い回し。旅の合間や暮らしのなかで読めるように、日々更新しています。";
+  "ロンドン塔のカラスの予言はいつ生まれたか、ロンドン大火の「犯人」は誰だったか、chuffed はどんな気持ちか。イギリスの歴史と習慣を1本1テーマで掘り下げるコラム、英国のニュースの論考、イギリス英語、ローマ時代からの通史10章を、話題ごとに読めます。";
 
 export const metadata = buildPageMetadata({
   path: PAGE_PATH,
@@ -203,6 +205,37 @@ export default async function ReadingHubPage() {
 
   const firstChapter = historyChapters[0];
 
+  // テーマで読む。英語の語のテーマはイギリス英語のハブに出し、ここでは
+  // 歴史・街・暮らしの話題だけを束ねる。
+  const themeItems = new Map<string, ThemeIndexItem>([
+    ...[...columns, ...modernBritain, ...britishEnglish].map(
+      (c) =>
+        [
+          `/${c.category}/${c.slug}`,
+          {
+            href: `/${c.category}/${c.slug}`,
+            title: c.title,
+            engTitle: c.engTitle,
+            kind: c.category as ThemeIndexItem["kind"],
+          },
+        ] as const,
+    ),
+    ...historyChapters.map(
+      (ch) =>
+        [
+          `${HISTORY_BASE}/${ch.slug}`,
+          {
+            href: `${HISTORY_BASE}/${ch.slug}`,
+            title: `通史 第${ch.number}章 ${ch.label}`,
+            kind: "history" as const,
+          },
+        ] as const,
+    ),
+  ]);
+  const themes = buildThemeIndex(themeItems, {
+    include: (key) => !key.startsWith("be-"),
+  });
+
   return (
     <div data-page-main className="mx-auto max-w-6xl sm:px-4 pt-4 pb-8 md:pb-10">
       <JsonLd data={breadcrumbJsonLd({ name: PAGE_NAME, path: PAGE_PATH })} />
@@ -267,6 +300,15 @@ export default async function ReadingHubPage() {
           latest={toReadingRankingEntries(latest.slice(0, RANK_TAKE))}
         />
       </section>
+
+      <div className="mt-12">
+        <ThemeIndex
+          id="themes"
+          heading="テーマで読む"
+          description="コラム・英国のいま・通史を、セクションをまたいで話題ごとに束ねました。"
+          themes={themes}
+        />
+      </div>
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="my-10" />
 

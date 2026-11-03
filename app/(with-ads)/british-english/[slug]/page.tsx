@@ -5,8 +5,11 @@ import {
   fetchAdjacentContents,
   fetchBritishEnglishBySlug,
   fetchPublishedReadingSlugs,
+  fetchRelatedReading,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
+import { readingLinksOf } from "@/lib/reading-topics";
 import { britishEnglishOgImage, readingPhotoOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
@@ -44,7 +47,7 @@ export async function generateMetadata({ params }: Props) {
   }
 
   const text = content.summary || content.mainText || "";
-  const trimmed = truncateDescription(text.replace(/[#>*_\-`]/g, ""));
+  const trimmed = truncateDescription(stripInlineMarkdown(text));
 
   return buildPageMetadata({
     path: `/british-english/${params.slug}`,
@@ -86,10 +89,13 @@ export default async function BritishEnglishDetailPage({ params }: Props) {
 
   if (!content) return notFound();
 
-  const { prev, next } = await fetchAdjacentContents("british-english", {
-    id: content.id,
-    publishedAt: content.publishedAt,
-  });
+  const [{ prev, next }, related] = await Promise.all([
+    fetchAdjacentContents("british-english", {
+      id: content.id,
+      publishedAt: content.publishedAt,
+    }),
+    fetchRelatedReading(content),
+  ]);
 
   return (
     <>
@@ -102,7 +108,13 @@ export default async function BritishEnglishDetailPage({ params }: Props) {
         })}
       />
       <JsonLd data={britishEnglishArticleJsonLd(content)} />
-      <BritishEnglishDetail content={content} prev={prev} next={next} />
+      <BritishEnglishDetail
+        content={content}
+        prev={prev}
+        next={next}
+        links={readingLinksOf(`/british-english/${content.slug}`)}
+        related={related}
+      />
 
       {/* 閲覧の記録(内部データ)。何も描画しない。 */}
       <ViewTracker targetType="britishEnglish" slug={content.slug} />

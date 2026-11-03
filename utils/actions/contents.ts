@@ -7,6 +7,10 @@ import {
   publishedWhere,
   type ReadingCategory,
 } from "@/lib/publish-schedule";
+import { pickRelated, type RelatedCandidate } from "@/lib/reading-related";
+import { themesOf } from "@/lib/reading-topics";
+import { chapterPath, historyChapters } from "@/components/history/chapters";
+import { historyChapterArticles } from "@/components/history/content";
 
 /**
  * 詳細ページ(slug で1件引く)の公開条件。
@@ -360,3 +364,101 @@ export const fetchHeroSlides = async (take = 5) => {
     (r): r is typeof r & { engName: string } => Boolean(r.image && r.engName)
   );
 };
+
+/**
+ * 記事末尾の「関連する読み物」。コラム・イギリス英語・英国のいまと、
+ * 通史の10章から、話題の近いものを選ぶ(選び方は lib/reading-related.ts)。
+ *
+ * 候補は公開済みの全記事の軽い列だけを読む(本文は読まない。題・要約・
+ * 節の見出し・紐づくスポットで足りる)。150本ほどなので毎回数え直す。
+ */
+export const fetchRelatedReading = async (current: {
+  id: string;
+  category: string;
+  slug: string;
+  title: string;
+  engTitle: string | null;
+  summary: string | null;
+  seriesName: string | null;
+  sections: { title: string }[];
+}): Promise<RelatedCandidate[]> => {
+  const rows = await db.content.findMany({
+    where: {
+      category: { in: ["column", "british-english", "modern-britain"] },
+      ...publishedWhere(),
+    },
+    select: {
+      id: true,
+      category: true,
+      slug: true,
+      title: true,
+      engTitle: true,
+      summary: true,
+      image: true,
+      seriesName: true,
+      views: true,
+      sections: { select: { title: true }, orderBy: { displayOrder: "asc" } },
+      attractionLinks: { select: { attractionId: true } },
+    },
+  });
+
+  const toCandidate = (r: (typeof rows)[number]): RelatedCandidate => {
+    const href = `/${r.category}/${r.slug}`;
+    return {
+      key: r.id,
+      href,
+      title: r.title,
+      engTitle: r.engTitle,
+      summary: r.summary,
+      sectionTitles: r.sections.map((s) => s.title),
+      image: r.image,
+      kind: r.category as RelatedCandidate["kind"],
+      seriesName: r.category === "column" ? r.seriesName : null,
+      attractionIds: r.attractionLinks.map((l) => l.attractionId),
+      themes: themesOf(href),
+      views: r.views,
+    };
+  };
+
+  const pool: RelatedCandidate[] = [
+    ...rows.map(toCandidate),
+    ...historyRelatedCandidates(),
+  ];
+
+  // 下書きのプレビューでは自分が候補に入っていないので、ここで作る。
+  const self =
+    pool.find((c) => c.key === current.id) ??
+    ({
+      key: current.id,
+      href: `/${current.category}/${current.slug}`,
+      title: current.title,
+      engTitle: current.engTitle,
+      summary: current.summary,
+      sectionTitles: current.sections.map((s) => s.title),
+      kind: current.category as RelatedCandidate["kind"],
+      seriesName: current.category === "column" ? current.seriesName : null,
+      attractionIds: [],
+      themes: themesOf(`/${current.category}/${current.slug}`),
+    } satisfies RelatedCandidate);
+
+  return pickRelated(self, pool, 4);
+};
+
+/** 通史の10章を、関連する読み物の候補の形にする。 */
+function historyRelatedCandidates(): RelatedCandidate[] {
+  return historyChapters.map((meta) => {
+    const chapter = historyChapterArticles[meta.slug];
+    const href = chapterPath(meta.slug);
+    const figure = chapter?.sections.find((s) => s.figure)?.figure;
+    return {
+      key: `history:${meta.slug}`,
+      href,
+      title: `第${meta.number}章 ${meta.label}`,
+      summary: chapter?.summary ?? meta.blurb,
+      sectionTitles: chapter?.sections.map((s) => s.title) ?? [],
+      image: figure?.image ?? null,
+      kind: "history",
+      themes: themesOf(href),
+    };
+  });
+}

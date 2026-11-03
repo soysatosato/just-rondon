@@ -7,6 +7,7 @@ import { resolveAttractionSlugs } from "./lib/column-attractions";
 import { resolveArticleImage } from "./lib/article-image";
 import { creditColumns } from "./lib/commons";
 import { validateSources, type ReadingSource } from "../lib/reading-sources";
+import { formatKeyPoints } from "../lib/reading-keypoints";
 
 type ColumnSectionInput = {
   title: string;
@@ -24,6 +25,8 @@ type ColumnPayload = {
   engTitle?: string;
   summary: string;
   mainText?: string;
+  /** 冒頭の「要点」(イギリス英語は「早わかり」)。Content.description に入る。 */
+  keyPoints?: string[];
   image?: string;
   website?: string;
   tags: string[];
@@ -200,6 +203,9 @@ async function main() {
         slug,
         summary: payload.summary,
         mainText: payload.mainText,
+        ...(payload.keyPoints && payload.keyPoints.length > 0
+          ? { description: formatKeyPoints(payload.keyPoints) }
+          : {}),
         image,
         ...imageCredit,
         website: payload.website,

@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import { resolveArticleImage } from "./lib/article-image";
 import { creditColumns } from "./lib/commons";
+import { formatKeyPoints } from "../lib/reading-keypoints";
 
 type BritishEnglishSectionInput = {
   title: string;
@@ -17,6 +18,8 @@ type BritishEnglishPayload = {
   engTitle: string;
   summary: string;
   mainText?: string;
+  /** 冒頭の「要点」(イギリス英語は「早わかり」)。Content.description に入る。 */
+  keyPoints?: string[];
   image?: string;
   website?: string;
   sections: BritishEnglishSectionInput[];
@@ -102,6 +105,9 @@ async function main() {
         slug,
         summary: payload.summary,
         mainText: payload.mainText,
+        ...(payload.keyPoints && payload.keyPoints.length > 0
+          ? { description: formatKeyPoints(payload.keyPoints) }
+          : {}),
         image,
         ...imageCredit,
         website: payload.website,

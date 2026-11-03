@@ -8,8 +8,11 @@ import {
   fetchColumnBySlug,
   fetchColumnSeries,
   fetchPublishedReadingSlugs,
+  fetchRelatedReading,
 } from "@/utils/actions/contents";
 import { buildPageMetadata, truncateDescription } from "@/lib/seo";
+import { stripInlineMarkdown } from "@/lib/plain-text";
+import { readingLinksOf } from "@/lib/reading-topics";
 import { columnOgImage, readingPhotoOgImage } from "@/lib/og";
 import JsonLd from "@/components/seo/JsonLd";
 import ViewTracker from "@/components/analytics/ViewTracker";
@@ -45,7 +48,7 @@ export async function generateMetadata({ params }: Props) {
   }
 
   const text = content.summary || content.mainText || "";
-  const trimmed = truncateDescription(text.replace(/[#>*_\-`]/g, ""));
+  const trimmed = truncateDescription(stripInlineMarkdown(text));
 
   return buildPageMetadata({
     path: `/column/${params.slug}`,
@@ -75,13 +78,14 @@ export default async function ColumnDetailPage({ params }: Props) {
 
   if (!content) return notFound();
 
-  const [series, { prev, next }, spots] = await Promise.all([
+  const [series, { prev, next }, spots, related] = await Promise.all([
     fetchColumnSeries(content.seriesName),
     fetchAdjacentContents("column", {
       id: content.id,
       publishedAt: content.publishedAt,
     }),
     fetchContentAttractions(content.id),
+    fetchRelatedReading(content),
   ]);
 
   // コメントは投稿された時点で表示したいので、ここだけはリクエスト時に読む。
@@ -108,6 +112,8 @@ export default async function ColumnDetailPage({ params }: Props) {
         prev={prev}
         next={next}
         spots={spots}
+        links={readingLinksOf(`/column/${content.slug}`)}
+        related={related}
         comments={comments}
       />
 

@@ -1562,6 +1562,10 @@ model Content {
   slug             String
   summary          String?
   mainText         String?
+  /// 読み物(column / british-english / modern-britain)では記事冒頭の
+  /// 「要点」(イギリス英語は「早わかり」)。マークダウンの箇条書きで、
+  /// 書式と描き方は lib/reading-keypoints.ts。街の記事(area)では区の名前
+  /// (lib/area-taxonomy.ts)。
   description      String?
   description2     String?
   description3     String?

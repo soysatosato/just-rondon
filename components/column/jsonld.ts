@@ -94,7 +94,7 @@ export function columnHubCollectionJsonLd(
     url,
     name: "コラム | イギリスの歴史・文化・伝統を深掘りする読み物",
     description:
-      "イギリスの歴史・文化・伝統・制度にまつわるコラムを毎日更新でお届けします。",
+      "イギリスの歴史・制度・習慣を1本1テーマで掘り下げるコラムです。",
     inLanguage: "ja",
     publisher: COLUMN_PUBLISHER,
     hasPart: items.map((item) => ({

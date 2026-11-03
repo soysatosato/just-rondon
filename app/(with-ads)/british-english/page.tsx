@@ -15,7 +15,9 @@ import {
 } from "@/components/british-english/jsonld";
 import BritishEnglishBrowser from "@/components/british-english/BritishEnglishBrowser";
 import HubMasthead from "@/components/reading/HubMasthead";
-import ArchiveIndex from "@/components/reading/ArchiveIndex";
+import BritishEnglishAZ from "@/components/british-english/BritishEnglishAZ";
+import ThemeIndex, { type ThemeIndexItem } from "@/components/reading/ThemeIndex";
+import { buildThemeIndex } from "@/lib/reading-theme-index";
 import BritishEnglishTraits from "@/components/british-english/BritishEnglishTraits";
 import ContentRankingTabs from "@/components/rankings/ContentRankingTabs";
 import { toRankingEntries } from "@/lib/reading-ranking";
@@ -63,6 +65,22 @@ export default async function BritishEnglishHubPage() {
   const newest = entries[0] ?? null;
   const cover = entries.find((e) => e.image)?.image ?? null;
 
+  // テーマで引く(lib/reading-topics.ts の be- で始まるテーマ)。
+  const themes = buildThemeIndex(
+    new Map<string, ThemeIndexItem>(
+      entries.map((e) => [
+        `/british-english/${e.slug}`,
+        {
+          href: `/british-english/${e.slug}`,
+          title: e.title,
+          engTitle: e.engTitle,
+          kind: "british-english",
+        },
+      ]),
+    ),
+    { include: (key) => key.startsWith("be-") },
+  );
+
   return (
     <div data-page-main className="mx-auto max-w-6xl sm:px-4 pt-4 pb-8 md:pb-10">
       <JsonLd data={breadcrumbListJsonLd({ path: "/british-english" })} />
@@ -84,6 +102,8 @@ export default async function BritishEnglishHubPage() {
             : []),
         ]}
       />
+
+      <BritishEnglishAZ entries={entries} />
 
       {/*
         読者側の軸の棚。
@@ -127,26 +147,22 @@ export default async function BritishEnglishHubPage() {
         </span>
       </Link>
 
+      <div className="mb-14">
+        <ThemeIndex
+          id="be-themes"
+          heading="テーマで引く"
+          description="気持ちを言う語、遠回しな言い方、アメリカ英語と意味が違う語、由来のある慣用句。"
+          themes={themes}
+        />
+      </div>
+
       {entries.length === 0 ? (
         <p className="text-muted-foreground">近日公開予定です。</p>
       ) : (
         <div className="mb-14">
+          {/* 全語へのリンクは上の A〜Z 索引が持つ(書庫は12語ずつ画面の中で
+              めくるので、HTML には1面ぶんしか無い)。 */}
           <BritishEnglishBrowser entries={entries} />
-          {/* 書庫は12語ずつ画面の中でめくるので、HTML には1面ぶんしか無い。
-              全語へのリンクを辞書順で持たせる(ArchiveIndex.tsx 参照)。 */}
-          <ArchiveIndex
-            accent="british-english"
-            label={`全${entries.length}語を一覧で見る（A–Z）`}
-            dense
-            items={entries
-              .map((e) => ({
-                href: `/british-english/${e.slug}`,
-                title: e.engTitle ?? e.title,
-              }))
-              .sort((a, b) =>
-                a.title.localeCompare(b.title, "en", { sensitivity: "base" }),
-              )}
-          />
         </div>
       )}
 

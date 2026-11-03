@@ -44,6 +44,7 @@ import {
   validateSources,
   type ReadingSource,
 } from "../lib/reading-sources";
+import { formatKeyPoints, parseKeyPoints } from "../lib/reading-keypoints";
 
 type SectionInput = {
   title: string;
@@ -68,6 +69,12 @@ type Payload = {
   seriesOrder?: number;
   sections: SectionInput[];
   sources?: ReadingSource[];
+  /**
+   * 記事冒頭の「要点」(イギリス英語は「早わかり」)。Content.description に
+   * 箇条書きで入る(lib/reading-keypoints.ts)。キーが無ければ DB の値を残し、
+   * 空配列か null なら欄を外す。
+   */
+  keyPoints?: string[] | null;
 };
 
 /** タグの正典はセクションごとに違う。イギリス英語はタグを持たない。 */
@@ -125,6 +132,9 @@ async function exportPayload(category: string, slug: string, out: string) {
       imageSummary: opt(sec.imageSummary),
     })),
     ...(sources.length > 0 ? { sources } : {}),
+    ...(parseKeyPoints(row.description).length > 0
+      ? { keyPoints: parseKeyPoints(row.description) }
+      : {}),
   };
   writeFileSync(out, JSON.stringify(payload, null, 2) + "\n");
   console.log(`Exported /${category}/${slug} (${statusOf(row.publishedAt)}) -> ${out}`);
@@ -173,6 +183,14 @@ async function main() {
   const sourcesChanged =
     sources !== undefined &&
     JSON.stringify(sources) !== JSON.stringify(parseSources(existing.sources));
+  const keyPoints =
+    payload.keyPoints === undefined
+      ? undefined
+      : payload.keyPoints && payload.keyPoints.length > 0
+        ? formatKeyPoints(payload.keyPoints)
+        : null;
+  const keyPointsChanged =
+    keyPoints !== undefined && keyPoints !== (existing.description ?? null);
   // 公開済みの記事への直しだけが「更新」。予約中・下書きは公開前の直し。
   const isPublished =
     existing.publishedAt !== null && existing.publishedAt.getTime() <= Date.now();
@@ -202,6 +220,10 @@ async function main() {
         ? "  revisedAt: now (記事に「更新」の日付が付く。中身の変わらない直しなら --minor)"
         : `  revisedAt: unchanged (${isPublished ? "--minor" : "not published yet"})`,
     );
+    if (keyPointsChanged) {
+      console.log(`  keyPoints:${keyPoints ? "" : " (removed)"}`);
+      for (const p of parseKeyPoints(keyPoints)) console.log(`    - ${p}`);
+    }
     if (sourcesChanged) {
       console.log(`  sources: ${sources!.length} entries`);
       for (const src of sources!) {
@@ -232,6 +254,7 @@ async function main() {
             ? { sources, sourcesCheckedAt: new Date() }
             : { sources: Prisma.DbNull, sourcesCheckedAt: null }
           : {}),
+        ...(keyPointsChanged ? { description: keyPoints } : {}),
         ...(markRevised ? { revisedAt: new Date() } : {}),
       },
     });
