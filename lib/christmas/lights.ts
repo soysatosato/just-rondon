@@ -101,25 +101,26 @@ export const christmasLights: SeasonItem[] = [
     editions: [
       {
         year: 2026,
+        start: "2026-11-09",
+        label: "点灯は",
         notes: [
-          "今年の飾りの一部はハリー・ポッターにちなんだものになると、通りの公式サイトが告知している。点灯日はまだ発表されていない。",
+          "今年の飾りの一部はハリー・ポッターにちなんだもの。点灯の催しは11月9日(月)16:30から。",
           "オーチャード・ストリート(セルフリッジズの角)からグレート・ポートランド・ストリートまでの区間は、10月26日から車両通行止めになっている。",
         ],
         sources: [
           {
-            label: "Oxford Street(公式サイト)",
-            url: "https://www.oxfordstreet.co.uk/",
+            label: "Oxford Street – Christmas Light Switch-On 2026",
+            url: "https://www.oxfordstreet.co.uk/whats-happening/harry-potter-x-oxford-street-christmas-switch-on-event/",
           },
           {
             label: "TfL – Oxford Street",
             url: "https://tfl.gov.uk/modes/driving/oxford-street",
           },
         ],
-        checkedAt: "2026-10-29",
+        checkedAt: "2026-11-03",
       },
     ],
-    // 2026年は飾りの一部がハリー・ポッター仕様なので、関連のスポットにも出す
-    // (点灯日が発表されるまでは、帯には出ない)。
+    // 2026年は飾りの一部がハリー・ポッター仕様なので、関連のスポットにも出す。
     places: [
       { spot: "selfridges-london", relation: "here" },
       { spot: "harry-potter-shop-platform-934", relation: "related" },

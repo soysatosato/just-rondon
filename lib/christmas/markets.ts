@@ -95,7 +95,7 @@ export type ChristmasMarket = {
  * 発表の無いマーケットを「未発表」と書くときの、確かめた日。
  * 全マーケットの公式サイトを見直したら、ここを直す。
  */
-export const LAST_CHECKED = "2026-10-18";
+export const LAST_CHECKED = "2026-11-03";
 
 /** 地図リンク。住所の表記をそのまま検索語にする。 */
 function map(label: string): string {
@@ -464,7 +464,31 @@ export const christmasMarkets: ChristmasMarket[] = [
       { spot: "st-pancras-international", relation: "nearby" },
       { spot: "harry-potter-shop-platform-934", relation: "nearby" },
     ],
-    editions: [],
+    editions: [
+      // 公式サイトは WebFetch が403。検索エンジン経由の写しで確かめた(2026-11-03)。
+      // 12月25日の営業は書かれていないので christmasDay は省く。
+      {
+        year: 2026,
+        start: "2026-11-26",
+        end: "2027-01-03",
+        notes: [
+          "今年はグラナリー・スクエアに新しくウィンター・マーケットが出る。キングス・クロスに出る7つのクリスマスマーケットは、どれも入場無料。",
+          "ルイス・キュービット・スクエアには有料のローラースケートのリンクが出る(11月26日〜12月22日、11:00〜20:00、要予約)。",
+          "コール・ドロップス・ヤードのアジアの屋台市「Shōtengai」は12月3〜6日と17〜20日だけ開く(木・金12:00〜19:00、土・日11:00〜18:00)。",
+        ],
+        sources: [
+          {
+            label: "King's Cross – Christmas at King's Cross 2026",
+            url: "https://www.kingscross.co.uk/christmas",
+          },
+          {
+            label: "King's Cross – Shōtengai pan-Asian Christmas Street Market",
+            url: "https://www.kingscross.co.uk/event/shotengai-christmas-market",
+          },
+        ],
+        checkedAt: "2026-11-03",
+      },
+    ],
   },
   {
     slug: "spitalfields-christmas-market",

@@ -205,7 +205,7 @@ export const christmasHappenings: SeasonItem[] = [
             url: "https://www.westminster-abbey.org/worship-and-music/services-and-times/advent-and-christmas",
           },
         ],
-        checkedAt: "2026-10-29",
+        checkedAt: "2026-11-03",
       },
     ],
     places: [{ spot: "westminster-abbey", relation: "here" }],
@@ -233,7 +233,15 @@ export const christmasHappenings: SeasonItem[] = [
           status: "無料だがチケット制。配り方はまだ案内されていない",
           url: "https://www.stpauls.co.uk/whats-on/christmas-carol-service-3",
         },
+        notes: [
+          "券なしで入れるキャロルの礼拝もある。11月28日(土)と29日(日)の Advent Carol Service、12月12日(土)のブリテン『キャロルの祭典』は、いずれも17:00〜18:00。",
+          "12月19日(土)11:00の Family Carols は抽選で券を配る。",
+        ],
         sources: [
+          {
+            label: "St Paul's Cathedral – Advent and Christmas",
+            url: "https://www.stpauls.co.uk/christmas",
+          },
           {
             label: "St Paul's Cathedral – Christmas Carol Service(12月23日)",
             url: "https://www.stpauls.co.uk/whats-on/christmas-carol-service-3",
@@ -243,7 +251,7 @@ export const christmasHappenings: SeasonItem[] = [
             url: "https://www.stpauls.co.uk/whats-on/christmas-carol-service-4",
           },
         ],
-        checkedAt: CHECKED,
+        checkedAt: "2026-11-03",
       },
     ],
     places: [{ spot: "st-pauls-cathedral", relation: "here" }],
