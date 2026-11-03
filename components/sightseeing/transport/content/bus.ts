@@ -12,7 +12,7 @@ const bus: TransportGuideArticle = {
   slug: "bus",
   title: `ロンドンのバスの乗り方｜均一運賃${gbp(BUS.single)}と60分無料乗り継ぎ`,
   engTitle: "Buses and Trams",
-  summary: `ロンドンの赤い2階建てバスは、どこまで乗っても ${gbp(BUS.single)}。しかも${BUS.hopperMinutes}分以内の乗り継ぎは無料です。降りるときのタッチは要りません。乗り方の手順、観光に使える路線、そして${jpDate(TRANSPORT_KEY_DATES.busFareRise)}の値上げまで整理しました。`,
+  summary: `ロンドンの赤い2階建てバスは、どこまで乗っても ${gbp(BUS.single)}。しかも${BUS.hopperMinutes}分以内の乗り継ぎは無料です。降りるときのタッチは要りません。乗り方の手順、観光に使える路線、そして${jpDate(TRANSPORT_KEY_DATES.busFareRise)}に上がった運賃まで整理しました。`,
   description: `ロンドンのバスの乗り方を解説。均一運賃${gbp(BUS.single)}、${BUS.hopperMinutes}分以内の乗り継ぎが無料になるホッパー運賃、1日上限${gbp(BUS.dailyCap)}の仕組み、手を挙げて止める作法、観光に使える路線、深夜バス、${jpDate(TRANSPORT_KEY_DATES.busFareRise)}の運賃改定まで。`,
   keywords: [
     "ロンドン バス 乗り方",
@@ -40,8 +40,8 @@ const bus: TransportGuideArticle = {
     { label: "支払い", value: "タッチ決済カードか Oyster。現金は使えません" },
     { label: "降車", value: "タッチ不要。STOP ボタンを押して降りるだけ" },
     {
-      label: "値上げ",
-      value: `${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.from2026Nov.single)}、1日上限 ${gbp(BUS.from2026Nov.dailyCap)}`,
+      label: "改定",
+      value: `${jpDate(TRANSPORT_KEY_DATES.busFareRise)}に ${gbp(BUS.before2026Nov.single)} から ${gbp(BUS.single)} へ。1日上限も ${gbp(BUS.before2026Nov.dailyCap)} から ${gbp(BUS.dailyCap)} へ`,
     },
   ],
   mainText: `ロンドンのバスは、旅行者に過小評価されています。
@@ -108,8 +108,8 @@ const bus: TransportGuideArticle = {
       ],
       callout: {
         tone: "warn",
-        title: `${jpDate(TRANSPORT_KEY_DATES.busFareRise)}に値上げされます`,
-        body: `市長の凍結措置により ${gbp(BUS.single)} が2023年3月から据え置かれてきましたが、**${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.from2026Nov.single)}** に改定されます。1日上限は ${gbp(BUS.dailyCap)} → **${gbp(BUS.from2026Nov.dailyCap)}**、7 Day Bus & Tram Pass は ${gbp(BUS.pass7Day)} → **${gbp(BUS.from2026Nov.pass7Day)}**。子ども・割引運賃も同時に ${gbp(BUS.from2026Nov.childSingle)} に上がります。`,
+        title: `${jpDate(TRANSPORT_KEY_DATES.busFareRise)}に値上げされました`,
+        body: `市長の凍結措置により ${gbp(BUS.before2026Nov.single)} が2023年3月から据え置かれてきましたが、**${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.single)}** に改定されました。1日上限は ${gbp(BUS.before2026Nov.dailyCap)} → **${gbp(BUS.dailyCap)}**、7 Day Bus & Tram Pass は ${gbp(BUS.before2026Nov.pass7Day)} → **${gbp(BUS.pass7Day)}**。子ども・割引運賃も同時に ${gbp(BUS.discountSingle)} に上がりました。`,
       },
     },
     {
@@ -197,7 +197,7 @@ const bus: TransportGuideArticle = {
   faq: [
     {
       question: "ロンドンのバスはいくらですか？",
-      answer: `**1回 ${gbp(BUS.single)} の均一運賃**です（${TRANSPORT_AS_OF}時点）。ゾーンや距離に関係なく、ロンドンの端から端まで乗っても同額です。さらに1日の上限が ${gbp(BUS.dailyCap)} なので、1日に4回以上乗っても ${gbp(BUS.dailyCap)} を超えません。**${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.from2026Nov.single)} に値上げ**されます。`,
+      answer: `**1回 ${gbp(BUS.single)} の均一運賃**です（${TRANSPORT_AS_OF}時点）。ゾーンや距離に関係なく、ロンドンの端から端まで乗っても同額です。さらに1日の上限が ${gbp(BUS.dailyCap)} なので、1日に4回以上乗っても ${gbp(BUS.dailyCap)} を超えません。${jpDate(TRANSPORT_KEY_DATES.busFareRise)}に ${gbp(BUS.before2026Nov.single)} から値上げされたあとの金額です。`,
     },
     {
       question: "降りるときもタッチが必要ですか？",

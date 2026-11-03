@@ -82,11 +82,26 @@ export const MEAL_DEALS = {
  */
 export const ONS_LONDON_PRICES = {
   /** 調査月。 */
-  surveyMonth: "2026-08",
+  surveyMonth: "2026-09",
   /** ラガーの1パイント(4.3〜7.5%)。Peroni・Camden Hells・Madri の帯。ONS の品目名は PREMIUM LAGER - PINT 4.3-7.5%。 */
-  lagerPint: { median: 7.2, quotes: 48 },
+  lagerPint: { median: 7.2, quotes: 51 },
   /** カフェ・レストランのコーヒー1杯。種類の指定はない。ONS の品目名は RESTAURANT CUP OF COFFEE。 */
-  coffee: { median: 3.5, quotes: 33 },
+  coffee: { median: 3.5, quotes: 31 },
+} as const;
+
+/**
+ * 酒税(Alcohol Duty)の次の改定。2026年10月28日の予算で決まった。
+ * すべての税率が RPI に合わせて上がる。パイントの値段に効くのでここに置く。
+ *
+ * 店の値段がどれだけ上がるかは店しだいで、政府は1パイントあたりの額を
+ * 出していない。生ビール(3.5〜8.5%)の改定後の税率は純アルコール1リットル
+ * あたり£20.34で、4.5%の1パイントなら税は約52ペンス(改定前は約50ペンス)。
+ */
+export const ALCOHOL_DUTY_RISE = {
+  date: "2027-02-01",
+  percent: 4.55,
+  source:
+    "https://www.gov.uk/government/publications/changes-to-alcohol-duty-rates-from-1-february-2027/alcohol-duty-uprating-and-small-producer-relief-changes",
 } as const;
 
 /** Meal Deal 1件ぶんの表示用データ。 */

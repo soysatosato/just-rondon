@@ -99,7 +99,7 @@ const SCENARIOS: {
   {
     situation: "バスは難しそうで避けている",
     answer: "実はいちばん安い",
-    detail: `どこまで乗っても ${gbp(BUS.single)}、${BUS.hopperMinutes}分以内の乗り継ぎは無料、降車時のタッチも不要。2階最前列は有料の観光バスと同じ景色です。ただし${jpDate(TRANSPORT_KEY_DATES.busFareRise)}に値上げされます。`,
+    detail: `どこまで乗っても ${gbp(BUS.single)}、${BUS.hopperMinutes}分以内の乗り継ぎは無料、降車時のタッチも不要。2階最前列は有料の観光バスと同じ景色です。1日に何回乗っても ${gbp(BUS.dailyCap)} が上限です。`,
     href: "/sightseeing/transport/bus",
     cta: "バスの乗り方を見る",
   },
@@ -330,8 +330,8 @@ export default function TransportHubPage() {
 |---|---:|
 | 地下鉄・鉄道の1日上限（Zone 1–2） | ${gbp(CAPS.zone1to2.daily)} |
 | 同、月〜日の上限 | ${gbp(CAPS.zone1to2.weekly)} |
-| バス・トラム 1回 | ${gbp(BUS.single)}（${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.from2026Nov.single)}） |
-| バス・トラムの1日上限 | ${gbp(BUS.dailyCap)}（同 ${gbp(BUS.from2026Nov.dailyCap)}） |
+| バス・トラム 1回 | ${gbp(BUS.single)}（${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から） |
+| バス・トラムの1日上限 | ${gbp(BUS.dailyCap)} |
 | ヒースロー〜Zone 1（ピカデリー線） | ${gbp(5.9)} |
 | ヒースロー〜Zone 1（エリザベス・ライン） | ${gbp(15.5)} |
 | シェアサイクル 1日券（Santander） | ${gbp(SANTANDER.dayPass)} |
@@ -479,8 +479,8 @@ export default function TransportHubPage() {
 
       <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50/70 p-4 text-xs leading-relaxed text-neutral-700 dark:border-amber-900/60 dark:bg-amber-950/25 dark:text-neutral-300">
         本サイトの料金・制度は{TRANSPORT_AS_OF}時点で TfL・GOV.UK
-        の公式情報を確認したものです。地下鉄・鉄道の運賃は毎年3月に、バス・トラムの運賃は
-        {jpDate(TRANSPORT_KEY_DATES.busFareRise)}に改定されます。Congestion Charge
+        の公式情報を確認したものです。地下鉄・鉄道の運賃は毎年3月に改定されます。バス・トラムの運賃は
+        {jpDate(TRANSPORT_KEY_DATES.busFareRise)}に改定済みです。Congestion Charge
         は{jpDate(TRANSPORT_KEY_DATES.congestionChargeRevision)}
         に改定済みです。運転免許・車両登録・保険に関する記述は情報提供を目的としたもので、
         法的助言ではありません。実際の手続きにあたっては、TfL・GOV.UK・DVLA

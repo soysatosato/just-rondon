@@ -13,13 +13,14 @@
  * 3. 出典は TRANSPORT_SOURCES に持つ。裏取りせずに数値を書き換えないこと。
  *
  * 金額はすべて GBP。2026年8月8日に tfl.gov.uk・gov.uk で確認。
+ * バス・トラムは改定後の2026年11月3日に tfl.gov.uk で確認。
  */
 
 /** 情報の基準時点。記事の dataAsOf バッジに出る。 */
-export const TRANSPORT_AS_OF = "2026年8月";
+export const TRANSPORT_AS_OF = "2026年11月";
 
 /** ISO日付。記事の updatedAt(Article.dateModified)に出る。 */
-export const TRANSPORT_UPDATED_AT = "2026-08-08";
+export const TRANSPORT_UPDATED_AT = "2026-11-03";
 
 /**
  * 制度・運賃改定の日付。
@@ -33,7 +34,7 @@ export const TRANSPORT_KEY_DATES = {
   fareRevision: "2026-03-01",
   /** 1日・週の上限額と Travelcard 価格が据え置かれる期限。 */
   capsFrozenUntil: "2027年3月",
-  /** バス・トラム運賃の凍結が解除され値上げされる日。 */
+  /** バス・トラム運賃の凍結が解除され値上げされた日。 */
   busFareRise: "2026-11-01",
   /** Congestion Charge が £15→£18 になり、EV の全額免除が終わった日。 */
   congestionChargeRevision: "2026-01-02",
@@ -175,20 +176,25 @@ export const DAY_TRAVELCARD = {
 ----------------------------------------------------- */
 
 export const BUS = {
-  single: 1.75,
-  dailyCap: 5.25,
+  single: 1.85,
+  dailyCap: 5.55,
   /** 月曜〜日曜の上限。7 Day Bus & Tram Pass と同額。 */
-  weeklyCap: 24.7,
-  pass7Day: 24.7,
-  passMonthly: 94.9,
+  weeklyCap: 26.1,
+  pass7Day: 26.1,
+  passMonthly: 100.3,
+  /** 子ども(16+ Zip で市外在住など)・割引の運賃。大人の半額。 */
+  discountSingle: 0.9,
   /** ホッパー運賃。最初のタッチからこの分数以内は追加のバス・トラムが無料。 */
   hopperMinutes: 60,
-  /** 2026年11月1日からの改定後の価格。 */
-  from2026Nov: {
-    single: 1.85,
-    dailyCap: 5.55,
-    pass7Day: 26.1,
-    childSingle: 0.9,
+  /**
+   * 2026年11月1日の改定前の価格。「いくらからいくらへ」を出す記事と
+   * 予定表(lib/changes-schedule.ts)が使う。次の改定で書き換える。
+   */
+  before2026Nov: {
+    single: 1.75,
+    dailyCap: 5.25,
+    pass7Day: 24.7,
+    passMonthly: 94.9,
   },
 } as const;
 

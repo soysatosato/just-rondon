@@ -1,6 +1,12 @@
 import { TRANSPORT_KEY_DATES, BUS, gbp } from "@/lib/transport/rates";
 import { VISA_KEY_DATES, VISA_THRESHOLDS } from "@/lib/visa/rates";
-import { ENERGY_CAP, ELECTRICITY_VAT_CUT } from "@/lib/bills/rates";
+import {
+  ENERGY_CAP,
+  ELECTRICITY_VAT_CUT,
+  HOUSEHOLD_ENERGY_PAYMENT,
+} from "@/lib/bills/rates";
+import { NEXT_WAGE_RATES, WAGE_BANDS, hourlyGbp } from "@/lib/jobs/rates";
+import { ALCOHOL_DUTY_RISE } from "@/lib/food/prices";
 import type { ChangeAudience, ChangeKind } from "@/lib/changes";
 
 /**
@@ -83,9 +89,9 @@ export function buildScheduledChanges(now: Date = new Date()): ScheduledChange[]
     kind: "fare",
     audience: "both",
     title: "バス・トラム運賃の値上げ",
-    before: gbp(BUS.single),
-    after: gbp(BUS.from2026Nov.single),
-    note: `1日の上限は${gbp(BUS.dailyCap)}から${gbp(BUS.from2026Nov.dailyCap)}に。`,
+    before: gbp(BUS.before2026Nov.single),
+    after: gbp(BUS.single),
+    note: `1日の上限は${gbp(BUS.before2026Nov.dailyCap)}から${gbp(BUS.dailyCap)}に。`,
     sitePath: "/sightseeing/transport/bus",
   });
 
@@ -179,6 +185,30 @@ export function buildScheduledChanges(now: Date = new Date()): ScheduledChange[]
     });
   }
 
+  const energyPayment = parseJaDate(HOUSEHOLD_ENERGY_PAYMENT.from);
+  if (energyPayment) {
+    list.push({
+      id: "household-energy-payment",
+      ...energyPayment,
+      kind: "bills",
+      audience: "resident",
+      title: `Council Tax の band ${HOUSEHOLD_ENERGY_PAYMENT.bands} の世帯に£${HOUSEHOLD_ENERGY_PAYMENT.amount}の給付(Household Energy Payment)`,
+      note: "イングランドが対象の1回限りの給付。Council Tax を Direct Debit で払っていれば手続き不要。",
+      sitePath: "/bills/energy",
+    });
+  }
+
+  list.push({
+    id: "alcohol-duty-rise",
+    date: ALCOHOL_DUTY_RISE.date,
+    precision: "day",
+    kind: "tax",
+    audience: "both",
+    title: `酒税(Alcohol Duty)が${ALCOHOL_DUTY_RISE.percent}%上がる`,
+    note: "パブの生ビール(4.5%)1パイントで、税は約50ペンスから約52ペンスに。",
+    sitePath: "/modern-britain/healey-raises-alcohol-duty-and-widens-pub-business-rates-relief",
+  });
+
   const student = VISA_THRESHOLDS.student;
   list.push({
     id: "student-maintenance-rise",
@@ -219,17 +249,37 @@ export function buildScheduledChanges(now: Date = new Date()): ScheduledChange[]
     sitePath: "/visa/skilled-worker",
   });
 
-  list.push({
-    id: "minimum-wage-annual",
-    date: nextAnnual(4, 1, now),
-    precision: "day",
-    recurring: true,
-    kind: "wage",
-    audience: "resident",
-    title: "最低賃金(National Living Wage)の年次改定",
-    note: "毎年4月1日。新しい額は前年の秋に政府が発表する。",
-    sitePath: "/jobs/minimum-wage",
-  });
+  /*
+   * 次の額が発表されていればそれを出し、まだなら「例年」の予定を出す。
+   * 両方出すと同じ4月1日が2行になる。
+   */
+  const nextWageDate = nextAnnual(4, 1, now);
+  if (NEXT_WAGE_RATES && NEXT_WAGE_RATES.effectiveFrom === nextWageDate) {
+    list.push({
+      id: "minimum-wage-next",
+      date: NEXT_WAGE_RATES.effectiveFrom,
+      precision: "day",
+      kind: "wage",
+      audience: "resident",
+      title: "最低賃金(National Living Wage・21歳以上)が上がる",
+      before: hourlyGbp(WAGE_BANDS[0].hourlyRate),
+      after: hourlyGbp(NEXT_WAGE_RATES.hourlyRates[0]),
+      note: `18〜20歳は${hourlyGbp(NEXT_WAGE_RATES.hourlyRates[1])}、16〜17歳と見習いは${hourlyGbp(NEXT_WAGE_RATES.hourlyRates[2])}に。`,
+      sitePath: "/jobs/minimum-wage",
+    });
+  } else {
+    list.push({
+      id: "minimum-wage-annual",
+      date: nextWageDate,
+      precision: "day",
+      recurring: true,
+      kind: "wage",
+      audience: "resident",
+      title: "最低賃金(National Living Wage)の年次改定",
+      note: "毎年4月1日。新しい額は前年の秋に政府が発表する。",
+      sitePath: "/jobs/minimum-wage",
+    });
+  }
 
   list.push({
     id: "april-household-bills",

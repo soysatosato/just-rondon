@@ -14,14 +14,15 @@
  *    「2026年4月1日から」と明記して差し替えてよい。
  * 4. 年齢区分は制度側の区分をそのまま持つ。読者の年齢で丸めない。
  *
- * 2026年8月13日に gov.uk で確認。
+ * 2026年8月13日に gov.uk で確認。2027年4月からのレートは
+ * 2026年10月28日の発表(LPC の勧告を政府が全面的に受け入れ)を11月3日に確認。
  */
 
 /** 情報の基準時点。記事の dataAsOf バッジに出る。 */
-export const JOBS_AS_OF = "2026年8月";
+export const JOBS_AS_OF = "2026年11月";
 
 /** ISO日付。記事の updatedAt(Article.dateModified)に出る。 */
-export const JOBS_UPDATED_AT = "2026-08-13";
+export const JOBS_UPDATED_AT = "2026-11-03";
 
 /** 現行レートの適用開始日。改定のたびに更新する。 */
 export const WAGE_RATES_EFFECTIVE_FROM = "2026年4月1日";
@@ -63,6 +64,31 @@ export const WAGE_BANDS: WageBand[] = [
     hourlyRate: 8.0,
   },
 ];
+
+/**
+ * 次の改定で適用されるレート。秋に発表されてから4月1日まで持つ。
+ *
+ * WAGE_BANDS を先に差し替えないのは、4月までは今のレートを下回ると違法で、
+ * 読者が「いまの時給が合法か」を確かめるのに使う数字だから。4月1日に
+ * これを WAGE_BANDS へ移し、NEXT_WAGE_BANDS は次の発表まで null にする。
+ * 区分の並びは WAGE_BANDS と同じにする(添字で突き合わせる)。
+ */
+export const NEXT_WAGE_RATES: {
+  /** 適用開始日(ISO)。 */
+  effectiveFrom: string;
+  /** 記事に出す適用開始日。 */
+  effectiveFromJa: string;
+  /** 政府が発表した日。 */
+  announcedJa: string;
+  source: string;
+  hourlyRates: number[];
+} | null = {
+  effectiveFrom: "2027-04-01",
+  effectiveFromJa: "2027年4月1日",
+  announcedJa: "2026年10月28日",
+  source: "https://www.gov.uk/government/news/lpc-recommendations-take-the-national-living-wage-to-1321",
+  hourlyRates: [13.21, 11.27, 8.31, 8.31],
+};
 
 /**
  * 最低賃金違反に対する HMRC のペナルティ。

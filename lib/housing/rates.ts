@@ -112,19 +112,20 @@ export const HOUSING_PENALTIES = {
 export const LONDON_RENT = {
   /**
    * グレーターロンドンの平均月額家賃(全物件・ONS の Price Index of Private Rents)。
-   * 新規の募集額ではなく、契約中の賃貸も含めた平均。2026年10月5日に確認。
+   * 新規の募集額ではなく、契約中の賃貸も含めた平均。2026年11月3日に
+   * 10月21日公表の分で確認。
    */
-  onsGreaterLondonMonthly: 2332,
+  onsGreaterLondonMonthly: 2338,
   /** 上の値が指す月。記事では値の横に必ず添える。 */
-  onsPeriod: "2026年8月",
-  /** インナーロンドンのシェア1部屋あたり平均月額(SpareRoom、2026年Q2)。 */
-  roomInnerLondonMonthly: 979,
+  onsPeriod: "2026年9月",
+  /** インナーロンドンのシェア1部屋あたり平均月額(SpareRoom、2026年Q3)。2026年11月3日に確認。 */
+  roomInnerLondonMonthly: 1002,
   /** アウターロンドンのシェア1部屋あたり平均月額(同上)。 */
-  roomOuterLondonMonthly: 794,
+  roomOuterLondonMonthly: 800,
   /** グレーターロンドン全体のシェア1部屋あたり平均月額(同上)。 */
-  roomGreaterLondonMonthly: 915,
+  roomGreaterLondonMonthly: 932,
   /** SpareRoom の3つの値が指す四半期。四半期ごとに出るので、毎月見ても変わらない。 */
-  spareRoomPeriod: "2026年4〜6月",
+  spareRoomPeriod: "2026年7〜9月",
 } as const;
 
 /**
@@ -172,7 +173,7 @@ export const HOUSING_SOURCES = [
   },
   {
     label: "ONS - Private rent and house prices, UK",
-    url: "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/september2026",
+    url: "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/privaterentandhousepricesuk/october2026",
   },
   {
     label: "SpareRoom - UK Rental Index",

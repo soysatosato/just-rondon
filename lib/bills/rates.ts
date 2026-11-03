@@ -22,14 +22,15 @@
  *    公的機関か規制当局が公表する数字だけを持つ。
  *
  * 2026年9月13日に Ofgem・GOV.UK・MHCLG の統計・Thames Water・
- * Wandsworth 区の公表資料で確認。
+ * Wandsworth 区の公表資料で確認。電気の VAT 0% の延長と
+ * Household Energy Payment は2026年11月3日に GOV.UK(10月28日の予算)で確認。
  */
 
 /** 情報の基準時点。記事の dataAsOf バッジに出る。 */
-export const BILLS_AS_OF = "2026年9月";
+export const BILLS_AS_OF = "2026年11月";
 
 /** ISO日付。記事の updatedAt(Article.dateModified)に出る。 */
-export const BILLS_UPDATED_AT = "2026-09-13";
+export const BILLS_UPDATED_AT = "2026-11-03";
 
 /** 1か月の平均日数。日額の基本料金を月額に直すときに使う。 */
 const DAYS_PER_MONTH = 365 / 12;
@@ -43,7 +44,7 @@ const DAYS_PER_MONTH = 365 / 12;
  * 「典型的な使用量」の世帯で計算した参考値にすぎない。
  *
  * 単価はイングランド・スコットランド・ウェールズの平均、Direct Debit 払い。
- * 電気は2026年10月1日〜2027年3月31日の間 VAT 0%(政府の時限措置)、
+ * 電気は2026年10月1日〜2027年6月30日の間 VAT 0%(政府の時限措置)、
  * ガスは VAT 5% 込み。
  */
 export const ENERGY_CAP = {
@@ -70,14 +71,35 @@ export const ENERGY_CAP = {
   },
 } as const;
 
-/** 電気の VAT 撤廃(時限措置)。 */
+/**
+ * 電気の VAT 撤廃(時限措置)。
+ *
+ * 当初は2027年3月31日まで。2026年10月28日の予算で延長が決まった。
+ * GOV.UK の文言は "extended until 1 July 2027"。4〜6月の price cap の期間を
+ * まるごと覆い、7月1日の次の期間から5%に戻る、と読んで6月30日にしている。
+ */
 export const ELECTRICITY_VAT_CUT = {
   from: "2026年10月1日",
-  until: "2027年3月31日",
+  until: "2027年6月30日",
   /** 典型的な世帯の年間の節約額(政府発表)。 */
   typicalSaving: 45,
   /** 撤廃前の税率(%)。 */
   previousRatePercent: 5,
+} as const;
+
+/**
+ * Household Energy Payment。2026年10月28日の予算で決まった1回限りの給付。
+ *
+ * 対象はイングランドで、Council Tax の band A〜D の物件を主な住まいにして
+ * Council Tax を払っている世帯。Direct Debit で払っていれば口座に自動で
+ * 振り込まれ、それ以外は区から申請の案内が来る。細かい要件は後日公表。
+ */
+export const HOUSEHOLD_ENERGY_PAYMENT = {
+  amount: 100,
+  /** 支払いが始まる月。日付は公表されていない。 */
+  from: "2027年1月",
+  bands: "A〜D",
+  source: "https://www.gov.uk/government/news/what-the-autumn-budget-2026-means-for-your-energy-bills",
 } as const;
 
 /** 光熱費の支援制度。対象は資力調査のある給付の受給者に限られる。 */

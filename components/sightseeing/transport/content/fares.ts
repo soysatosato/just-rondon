@@ -214,8 +214,8 @@ Oyster は駅の券売機、TfL Visitor Centre、一部のコンビニ（Oyster 
 **バスで現金は使えません**。タッチ決済カードか Oyster が必須です。乗り方の詳細は[バスとトラム](/sightseeing/transport/bus)を参照してください。`,
       callout: {
         tone: "warn",
-        title: `${jpDate(TRANSPORT_KEY_DATES.busFareRise)}にバス運賃が値上げされます`,
-        body: `バス・トラムの運賃は市長の方針で ${gbp(BUS.single)} に凍結されてきましたが、**${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.from2026Nov.single)}** に、1日上限も ${gbp(BUS.dailyCap)} から **${gbp(BUS.from2026Nov.dailyCap)}** に改定されます。7 Day Bus & Tram Pass も ${gbp(BUS.pass7Day)} から ${gbp(BUS.from2026Nov.pass7Day)} になります。11月以降に渡航・通勤する方はご注意ください。`,
+        title: `${jpDate(TRANSPORT_KEY_DATES.busFareRise)}にバス運賃が上がりました`,
+        body: `バス・トラムの運賃は市長の方針で ${gbp(BUS.before2026Nov.single)} に凍結されてきましたが、**${jpDate(TRANSPORT_KEY_DATES.busFareRise)}から ${gbp(BUS.single)}** に、1日上限も ${gbp(BUS.before2026Nov.dailyCap)} から **${gbp(BUS.dailyCap)}** に上がりました。7 Day Bus & Tram Pass も ${gbp(BUS.before2026Nov.pass7Day)} から ${gbp(BUS.pass7Day)} になっています。それより前に書かれたガイドブックやブログの金額で予算を組まないようご注意ください。`,
       },
     },
     {

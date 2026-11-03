@@ -3,6 +3,7 @@ import {
   JOBS_AS_OF,
   JOBS_UPDATED_AT,
   MINIMUM_WAGE_PENALTY,
+  NEXT_WAGE_RATES,
   WAGE_BANDS,
   WAGE_RATES_EFFECTIVE_FROM,
   gbp,
@@ -49,7 +50,19 @@ ${WAGE_BANDS.map(
   (band) =>
     `| ${band.name} | ${band.appliesTo} | ${hourlyGbp(band.hourlyRate)} |`,
 ).join("\n")}
+${
+  NEXT_WAGE_RATES
+    ? `
+${NEXT_WAGE_RATES.effectiveFromJa}からのレートは${NEXT_WAGE_RATES.announcedJa}に発表されています。それまでは上の表のレートが適用されます。
 
+| 区分 | ${NEXT_WAGE_RATES.effectiveFromJa}から |
+| --- | --- |
+${WAGE_BANDS.map(
+  (band, i) => `| ${band.name} | ${hourlyGbp(NEXT_WAGE_RATES!.hourlyRates[i])} |`,
+).join("\n")}
+`
+    : ""
+}
 **ポイント**
 
 - 学生ビザやYouth Mobility（旧Tier 5）ビザで働く場合も、年齢区分がそのまま適用されます。ビザの種類による最低賃金の差はありません。

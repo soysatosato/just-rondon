@@ -238,8 +238,8 @@ Zone 1–2 のオフピーク1日上限 ${gbp(CAPS.zone1to2.daily)} が、約 £
 もちろん、時間はかかります。「安いが遅い」と「速いが高い」のトレードオフを、自分の通勤ルートで測ってみてください。`,
       callout: {
         tone: "warn",
-        title: `${TRANSPORT_KEY_DATES.busFareRise.replace(/-/g, "/")} にバス関連の価格が上がります`,
-        body: `バス・トラムの運賃は ${gbp(BUS.single)} → ${gbp(BUS.from2026Nov.single)}、1日上限は ${gbp(BUS.dailyCap)} → ${gbp(BUS.from2026Nov.dailyCap)}、7 Day Bus & Tram Pass は ${gbp(BUS.pass7Day)} → ${gbp(BUS.from2026Nov.pass7Day)} に改定されます。月額パスも同時に上がる見込みです。`,
+        title: `${TRANSPORT_KEY_DATES.busFareRise.replace(/-/g, "/")} にバス関連の価格が上がりました`,
+        body: `バス・トラムの運賃は ${gbp(BUS.before2026Nov.single)} → ${gbp(BUS.single)}、1日上限は ${gbp(BUS.before2026Nov.dailyCap)} → ${gbp(BUS.dailyCap)}、7 Day Bus & Tram Pass は ${gbp(BUS.before2026Nov.pass7Day)} → ${gbp(BUS.pass7Day)}、月額 Bus & Tram Pass は ${gbp(BUS.before2026Nov.passMonthly)} → ${gbp(BUS.passMonthly)} に改定されました。上の表は改定後の価格です。`,
       },
     },
     {

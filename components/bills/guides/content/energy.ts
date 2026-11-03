@@ -5,6 +5,7 @@ import {
   BILLS_UPDATED_AT,
   ELECTRICITY_TO_GAS_UNIT_RATIO,
   ELECTRICITY_VAT_CUT,
+  HOUSEHOLD_ENERGY_PAYMENT,
   ENERGY_CAP,
   ENERGY_COMPLAINT_WEEKS,
   ENERGY_STANDING_PER_MONTH,
@@ -214,7 +215,11 @@ ${ELECTRICITY_VAT_CUT.from}から${ELECTRICITY_VAT_CUT.until}まで、家庭の�
         ELECTRICITY_VAT_CUT.typicalSaving
       )}ほど安くなる計算です。**手続きは要りません。** 固定料金の契約にも自動で適用されます。ガスには引き続き VAT ${
         ELECTRICITY_VAT_CUT.previousRatePercent
-      }%がかかります。`,
+      }%がかかります。
+
+### ${HOUSEHOLD_ENERGY_PAYMENT.from}から£${HOUSEHOLD_ENERGY_PAYMENT.amount}の給付
+
+${HOUSEHOLD_ENERGY_PAYMENT.from}から、Council Tax の band ${HOUSEHOLD_ENERGY_PAYMENT.bands} の物件に住んで Council Tax を払っている世帯に、1回限りの Household Energy Payment（£${HOUSEHOLD_ENERGY_PAYMENT.amount}）が支払われます。対象はイングランドです。Council Tax を Direct Debit で払っていれば手続きは要らず、口座に振り込まれます。それ以外の払い方なら、区から申請の案内が届きます。自分の物件の band は Council Tax の請求書に書いてあります。`,
     },
     {
       id: "monthly-cost",

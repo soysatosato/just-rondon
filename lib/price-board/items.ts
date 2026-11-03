@@ -7,7 +7,6 @@ import {
   TFL_CAPPING_SOURCE,
   TFL_FARES_SOURCE,
   TFL_SINGLE_FARE_SOURCE,
-  TRANSPORT_KEY_DATES,
   TRAVELCARD,
 } from "@/lib/transport/rates";
 import { MEAL_DEALS, ONS_LONDON_PRICES } from "@/lib/food/prices";
@@ -112,7 +111,6 @@ export const PRICE_ITEMS: PriceItem[] = [
     basis: "official",
     basisNote: "TfL・タッチ決済",
     sourceUrl: "https://tfl.gov.uk/fares/find-fares/bus-and-tram-fares",
-    next: { date: TRANSPORT_KEY_DATES.busFareRise, price: BUS.from2026Nov.single },
     href: "/sightseeing/transport/bus",
   },
   {
