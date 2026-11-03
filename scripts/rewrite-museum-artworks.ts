@@ -478,8 +478,10 @@ const rewrites: Rewrite[] = [
     ],
   },
   {
-    id: "ed145783-27ea-4f69-8df7-75ceadb7965b",
-    title: "クレオパトラ：若い女性のミイラ",
+    // 2026-10-30 に同じミイラの2行を 6690fd10 にまとめた
+    // (scripts/merge-cleopatra-artwork-2026-10.ts)。元の行は ed145783。
+    id: "6690fd10-3de2-453c-90b9-684ce80e89ea",
+    title: "クレオパトラのミイラ",
     slug: "british-museum",
     description: `**名前はクレオパトラ。しかし、あの女王ではありません。**
 

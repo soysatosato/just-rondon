@@ -1,8 +1,10 @@
 import renamedSlugs from "./lib/sightseeing/renamed-slugs.js";
 import museumPairs from "./lib/museum-attraction-pairs.js";
+import mergedArtworks from "./lib/museums/merged-artworks.js";
 
 const { RENAMED_ATTRACTION_SLUGS } = renamedSlugs;
 const { MUSEUM_ATTRACTION_PAIRS } = museumPairs;
+const { mergedArtworkRedirects } = mergedArtworks;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -102,6 +104,10 @@ const nextConfig = {
         destination: `/museums/${pair.museumSlug}`,
         permanent: true,
       })),
+
+      // 同じ資料が作品の表に2行あったのを1行にまとめた。消した行の作品ページは
+      // 残した行へ送る。対応表は lib/museums/merged-artworks.js。
+      ...mergedArtworkRedirects(),
 
       // ウィンター・ワンダーランドは、スポット版とクリスマスマーケット版の
       // 2ページが同じ催しを別々に書いていた。検索の実績(過去1年でクリック
