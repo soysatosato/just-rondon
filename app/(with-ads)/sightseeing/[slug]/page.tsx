@@ -58,6 +58,8 @@ import ImageCredit from "@/components/shared/ImageCredit";
 import SeasonBand from "@/components/christmas/SeasonBand";
 import { spotKindProfile } from "@/lib/sightseeing/spot-kind";
 import { practicalFor } from "@/lib/sightseeing/practical";
+import SpotNoticeBanner from "@/components/sightseeing/SpotNoticeBanner";
+import SpotGroupLinks from "@/components/sightseeing/SpotGroupLinks";
 
 // ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
 // ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
@@ -341,6 +343,12 @@ export default async function AttractionDetail({
           衛兵交代式の実施予定。検索してきた人の問いは「何時に、どの日に
           やるか」なので、早わかりより先に置く。
         */}
+        {/*
+          閉館の予定・移転・休止(lib/sightseeing/notices.ts)。「いま行けるか」は
+          早わかりの欄より前で言い切る。
+        */}
+        <SpotNoticeBanner slug={attraction.slug} />
+
         {guardSchedule && <GuardSchedule result={guardSchedule} />}
 
         <div className="space-y-4">
@@ -386,6 +394,9 @@ export default async function AttractionDetail({
           知らせる。10月からシーズンの終わりまでだけ出る。
         */}
         <SeasonBand spot={attraction.slug} />
+
+        {/* 同じ建物・会場を別ページで案内している組(バービカンの3ページなど)。 */}
+        <SpotGroupLinks slug={attraction.slug} />
 
         {/*
           節が3つ以上あるときだけ。2つなら下へスクロールすれば済む。
