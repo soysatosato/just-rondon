@@ -24,7 +24,11 @@ function postalAddress(address: string) {
   };
 }
 
-export function attractionJsonLd(attraction: Attraction) {
+/**
+ * extraImages はヒーロー以外の写真(lib/sightseeing/gallery.ts)。
+ * あれば image を配列にして、ヒーローを先頭に並べる。
+ */
+export function attractionJsonLd(attraction: Attraction, extraImages: string[] = []) {
   const url = `${SITE_URL}${attractionPath(attraction.slug)}`;
 
   return {
@@ -35,7 +39,7 @@ export function attractionJsonLd(attraction: Attraction) {
     name: attraction.name,
     ...(attraction.engName ? { alternateName: attraction.engName } : {}),
     ...(attraction.summary ? { description: attraction.summary } : {}),
-    image: attraction.image,
+    image: extraImages.length > 0 ? [attraction.image, ...extraImages] : attraction.image,
     address: postalAddress(attraction.address),
     geo: {
       "@type": "GeoCoordinates",

@@ -60,6 +60,8 @@ import { spotKindProfile } from "@/lib/sightseeing/spot-kind";
 import { practicalFor } from "@/lib/sightseeing/practical";
 import SpotNoticeBanner from "@/components/sightseeing/SpotNoticeBanner";
 import SpotGroupLinks from "@/components/sightseeing/SpotGroupLinks";
+import SpotGallery from "@/components/sightseeing/SpotGallery";
+import { spotGalleryFor } from "@/lib/sightseeing/gallery";
 
 // ビルド時に描いておく。generateStaticParams が無い動的ルートは、Next 14 では
 // ISR のキャッシュに載らず、revalidate を書いても毎回描画になる。
@@ -251,7 +253,12 @@ export default async function AttractionDetail({
   return (
     <div data-page-main className="mx-auto w-full max-w-5xl">
       <JsonLd data={attractionBreadcrumbJsonLd(attraction)} />
-      <JsonLd data={attractionJsonLd(attraction)} />
+      <JsonLd
+        data={attractionJsonLd(
+          attraction,
+          spotGalleryFor(attraction.slug).map((photo) => photo.url),
+        )}
+      />
 
       <div className="mb-4 pt-4">
         <Breadcrumbs path="/sightseeing" current={attraction.name} />
@@ -306,6 +313,9 @@ export default async function AttractionDetail({
         link={attraction.imageLink}
         className="mt-1.5 px-2 text-right"
       />
+
+      {/* ヒーローのほかの写真。検索の多い20か所にだけある(lib/sightseeing/gallery.ts)。 */}
+      <SpotGallery slug={attraction.slug} name={attraction.name} />
 
       {/* 左右の余白はスマホでは付けない。外側の container が既に 16px を
           持っていて、ここで px-6 を足すと本文の幅が 310px まで細る。 */}
