@@ -2,7 +2,10 @@ const { PrismaClient } = require("@prisma/client");
 const { hasSongList } = require("./lib/musicals/song-pages");
 const { hasArtworkList } = require("./lib/museums/artwork-list");
 const { museumSlugForAttraction } = require("./lib/museum-attraction-pairs");
+<<<<<<< HEAD
 const { MASTERPIECE_PATHS } = require("./lib/masterpieces/indexable");
+=======
+>>>>>>> origin/main
 const {
   unwrittenMonthPaths,
   writtenMonthPaths,
