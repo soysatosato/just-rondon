@@ -85,11 +85,14 @@ export function Question({
   label,
   hint,
   optional,
+  optionalLabel = "任意",
   children,
 }: {
   label: string;
   hint?: React.ReactNode;
   optional?: boolean;
+  /** 「任意」の札の文言。英語版では "Optional"。 */
+  optionalLabel?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -99,7 +102,7 @@ export function Question({
           {label}
           {optional && (
             <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[0.6875rem] font-medium text-muted-foreground">
-              任意
+              {optionalLabel}
             </span>
           )}
         </p>

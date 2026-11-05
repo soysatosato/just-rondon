@@ -16,6 +16,7 @@ import {
   YES_NO_UNKNOWN_LABEL,
   labelOf,
 } from "../labels";
+import { thanksPath } from "@/components/jobs/survey/entry";
 
 type ActionState = { ok: true } | { ok: false; message: string };
 
@@ -86,12 +87,32 @@ function pickNumber(
 
 const YES_NO_UNKNOWN = ["yes", "no", "unknown"] as const;
 
+/** 送信処理が返す文言。英語版のアンケートには英語で返す。 */
+const SURVEY_MESSAGES = {
+  ja: {
+    storeName: "店舗名を入力してください。",
+    store: "店舗を選択してください。",
+    failed: "送信に失敗しました。時間をおいて再度お試しください。",
+    rateLimited: RATE_LIMITED,
+  },
+  en: {
+    storeName: "Please enter the restaurant's name.",
+    store: "Please choose a restaurant.",
+    failed: "Sorry, your answers couldn't be sent. Please try again later.",
+    rateLimited: "Too many answers have been sent. Please try again later.",
+  },
+} as const;
+
 export async function submitSurvey(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const locale = formData.get("locale") === "en" ? "en" : "ja";
+  const messages = SURVEY_MESSAGES[locale];
+  const thanks = thanksPath(locale);
+
   // ボットには保存せずに完了画面を返す(弾いたと知らせると回避策を学ぶ)。
-  if (looksLikeBot(formData)) redirect("/jobs/service-charges/thanks");
+  if (looksLikeBot(formData)) redirect(thanks);
 
   // 回答には IP を保存していないので、サイト全体の件数で連投を止める。
   // 店舗の手入力も新しい行を作るので、ここで止めないと候補表まで荒らされる。
@@ -99,7 +120,7 @@ export async function submitSurvey(
     where: { createdAt: since(POST_LIMITS.global.windowMs) },
   });
   if (recent >= POST_LIMITS.global.max) {
-    return { ok: false, message: RATE_LIMITED };
+    return { ok: false, message: messages.rateLimited };
   }
 
   // 通知メールは保存が確定してから送る。redirect() は例外で抜けるため、
@@ -125,7 +146,7 @@ export async function submitSurvey(
 
     if (!placeId && manualName) {
       if (manualName.length < 2) {
-        return { ok: false, message: "店舗名を入力してください。" };
+        return { ok: false, message: messages.storeName };
       }
       const manualAddress =
         formData.get("manualStoreAddress")?.toString().trim() ?? "";
@@ -150,7 +171,7 @@ export async function submitSurvey(
     }
 
     if (!placeId) {
-      return { ok: false, message: "店舗を選択してください。" };
+      return { ok: false, message: messages.store };
     }
 
     const collected = formData.get("collected") === "yes";
@@ -227,10 +248,7 @@ export async function submitSurvey(
     });
   } catch (e) {
     console.error(e);
-    return {
-      ok: false,
-      message: "送信に失敗しました。時間をおいて再度お試しください。",
-    };
+    return { ok: false, message: messages.failed };
   }
 
   // 回答は管理画面を見に行かないと気付けないので、届いたことをメールで知らせる。
@@ -238,8 +256,8 @@ export async function submitSurvey(
   if (created) {
     try {
       await sendAdminMail({
-        subject: `【アンケート】サービスチャージ: ${created.storeName || "店舗名なし"}`,
-        text: buildSurveyMailBody(created),
+        subject: `【アンケート${locale === "en" ? "・英語版" : ""}】サービスチャージ: ${created.storeName || "店舗名なし"}`,
+        text: buildSurveyMailBody(created, locale),
       });
     } catch (error) {
       console.error("アンケート通知メールの送信に失敗しました", error);
@@ -251,20 +269,30 @@ export async function submitSurvey(
     revalidatePath(STORES_BASE);
     revalidatePath(storePath(slug));
 
+    // 完了画面から「前に働いた店も答える」短縮版へ進むとき、職種を聞き直さない。
+    const params = new URLSearchParams();
     // 手入力の店舗は確認が済むまで集計に出ないので、店舗ページへは案内しない。
-    if (created.isVerified) {
-      redirect(`/jobs/service-charges/thanks?store=${encodeURIComponent(slug)}`);
-    }
+    if (created.isVerified) params.set("store", slug);
+    if (created.jobRole) params.set("role", created.jobRole);
+    const qs = params.toString();
+    redirect(qs ? `${thanks}?${qs}` : thanks);
   }
 
-  redirect("/jobs/service-charges/thanks");
+  redirect(thanks);
 }
 
 /** 管理者宛の通知メール本文。回答をそのまま読める形に整えるだけ。 */
-function buildSurveyMailBody(charge: ServiceCharge): string {
+function buildSurveyMailBody(
+  charge: ServiceCharge,
+  locale: "ja" | "en",
+): string {
   const siteUrl = SITE_URL;
   const lines: string[] = [
     "サービスチャージのアンケートに新しい回答が届きました。",
+    // 英語版の回答は列に残していない。どちらから来たかはこの通知でだけ分かる。
+    ...(locale === "en"
+      ? ["英語版（/en/jobs/service-charges/survey）からの回答です。"]
+      : []),
     "",
     `店舗: ${charge.storeName || "(未入力)"}`,
     `住所: ${charge.storeAddress || "(未入力)"}`,

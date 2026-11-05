@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import Disclaimer from "@/components/jobs/case-story/Disclaimer";
 import GateNote from "@/components/jobs/case-story/GateNote";
 import HtmlLang from "@/components/jobs/case-story/HtmlLang";
+import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
+import { SURVEY_PATH_EN } from "@/components/jobs/survey/entry";
 import LocaleSwitch from "@/components/jobs/case-story/LocaleSwitch";
 import {
   CASE_STORY_BASE,
@@ -157,6 +159,13 @@ export default function CaseStoryIndexPageEn() {
           . The calculation the tribunal actually accepted is published here in
           full.
         </p>
+        <SurveyAskLine
+          href={SURVEY_PATH_EN}
+          label="Answer the survey (anonymous, 3 min)"
+        >
+          Worked at a Japanese restaurant in London? Tell the next person what
+          happens to the service charge there.
+        </SurveyAskLine>
       </header>
 
       <Separator className="my-6" />

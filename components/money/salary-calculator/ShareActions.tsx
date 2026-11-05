@@ -16,12 +16,40 @@ import { cn } from "@/lib/utils";
  * サービスチャージ調査の完了画面でも、調査そのものを知り合いに渡すのに使う。
  * そちらは今いるページ(完了画面)ではなく path で渡したページを共有する。
  */
+export type ShareTarget = "x" | "line" | "whatsapp";
+
+export type ShareLabels = {
+  copied: string;
+  share: string;
+  x: string;
+  line: string;
+  whatsapp: string;
+};
+
+const JA_LABELS: ShareLabels = {
+  copied: "コピーしました",
+  share: "共有",
+  x: "Xでポスト",
+  line: "LINEで送る",
+  whatsapp: "WhatsAppで送る",
+};
+
+export const EN_SHARE_LABELS: ShareLabels = {
+  copied: "Copied",
+  share: "Share",
+  x: "Post on X",
+  line: "Send on LINE",
+  whatsapp: "Send on WhatsApp",
+};
+
 export default function ShareActions({
   query = "",
   path,
   shareText,
   title = "イギリスの手取り計算機",
   copyLabel = "この条件のリンク",
+  labels = JA_LABELS,
+  targets = ["x", "line"],
 }: {
   /** 現在の条件のクエリ文字列(? なし)。 */
   query?: string;
@@ -32,6 +60,10 @@ export default function ShareActions({
   title?: string;
   /** コピーボタンの文言。 */
   copyLabel?: string;
+  /** ボタンの文言。英語のページでは EN_SHARE_LABELS を渡す。 */
+  labels?: ShareLabels;
+  /** 文面つきで開く送り先。英国の読者には LINE より WhatsApp。 */
+  targets?: ShareTarget[];
 }) {
   const [copied, setCopied] = useState(false);
   const [canShare, setCanShare] = useState(false);
@@ -67,12 +99,14 @@ export default function ShareActions({
     }
   };
 
-  const openIntent = (target: "x" | "line") => {
+  const openIntent = (target: ShareTarget) => {
     const link = url();
     const href =
       target === "x"
         ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(link)}`
-        : `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(link)}&text=${encodeURIComponent(shareText)}`;
+        : target === "line"
+          ? `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(link)}&text=${encodeURIComponent(shareText)}`
+          : `https://wa.me/?text=${encodeURIComponent(`${shareText} ${link}`)}`;
     window.open(href, "_blank", "noopener,noreferrer");
   };
 
@@ -92,7 +126,7 @@ export default function ShareActions({
         )}
       >
         {copied ? <Check className="h-3.5 w-3.5" aria-hidden /> : <Link2 className="h-3.5 w-3.5" aria-hidden />}
-        <span aria-live="polite">{copied ? "コピーしました" : copyLabel}</span>
+        <span aria-live="polite">{copied ? labels.copied : copyLabel}</span>
       </button>
       {canShare && (
         <button
@@ -101,23 +135,19 @@ export default function ShareActions({
           className={cn(button, "border-border bg-background text-foreground hover:border-foreground/40")}
         >
           <Share2 className="h-3.5 w-3.5" aria-hidden />
-          共有
+          {labels.share}
         </button>
       )}
-      <button
-        type="button"
-        onClick={() => openIntent("x")}
-        className={cn(button, "border-border bg-background text-foreground hover:border-foreground/40")}
-      >
-        Xでポスト
-      </button>
-      <button
-        type="button"
-        onClick={() => openIntent("line")}
-        className={cn(button, "border-border bg-background text-foreground hover:border-foreground/40")}
-      >
-        LINEで送る
-      </button>
+      {targets.map((target) => (
+        <button
+          key={target}
+          type="button"
+          onClick={() => openIntent(target)}
+          className={cn(button, "border-border bg-background text-foreground hover:border-foreground/40")}
+        >
+          {labels[target]}
+        </button>
+      ))}
     </div>
   );
 }

@@ -22,11 +22,14 @@ import { surveyHref } from "./entry";
 export function SurveyAskLine({
   children,
   href = surveyHref(),
+  label = "アンケートに答える（匿名・3分）",
   className,
 }: {
   /** 「この店で働いたことがありますか。」など、そのページの読者への呼びかけ。 */
   children: React.ReactNode;
   href?: string;
+  /** リンクの文言。英語のページでは英語で渡す。 */
+  label?: string;
   className?: string;
 }) {
   return (
@@ -44,7 +47,7 @@ export function SurveyAskLine({
       <span className="min-w-0 text-muted-foreground">
         {children}
         <span className="ml-1 font-medium text-foreground underline-offset-4 group-hover:underline">
-          アンケートに答える（匿名・3分）
+          {label}
           <ArrowRight
             aria-hidden
             className="ml-0.5 inline h-3.5 w-3.5 align-[-0.15em]"

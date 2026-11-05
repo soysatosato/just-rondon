@@ -26,6 +26,9 @@ const AD_FREE_PREFIXES = [
   "/jobs/service-charges/survey",
   "/jobs/service-charges/thanks",
   "/jobs/service-charges/dashboard",
+  // 英語版のアンケートと送信完了画面。
+  "/en/jobs/service-charges/survey",
+  "/en/jobs/service-charges/thanks",
 ] as const;
 
 import { unwrittenMonthPaths } from "@/lib/london-months/written-months";

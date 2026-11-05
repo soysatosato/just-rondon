@@ -3,7 +3,33 @@
 // アンケートの入口で共通に使うもの。ダッシュボード・店舗ページ・完了画面から
 // 同じ約束を同じ言葉で書くため、URLの組み立てと文言をここに集める。
 
+import type { JobRole } from "@/utils/labels";
+import type { SurveyLocale } from "@/utils/service-charge-diagnosis-text";
+
 export const SURVEY_PATH = "/jobs/service-charges/survey";
+/** 英語版。日本食店で働く日本人以外のスタッフ向け。 */
+export const SURVEY_PATH_EN = "/en/jobs/service-charges/survey";
+
+export const THANKS_PATH = "/jobs/service-charges/thanks";
+export const THANKS_PATH_EN = "/en/jobs/service-charges/thanks";
+
+export function surveyPath(locale: SurveyLocale = "ja") {
+  return locale === "en" ? SURVEY_PATH_EN : SURVEY_PATH;
+}
+
+export function thanksPath(locale: SurveyLocale = "ja") {
+  return locale === "en" ? THANKS_PATH_EN : THANKS_PATH;
+}
+
+/** 職種の値か。URL から受け取ったものを確かめるのに使う。 */
+export function isJobRole(value: unknown): value is JobRole {
+  return (
+    value === "floor" ||
+    value === "kitchen" ||
+    value === "both" ||
+    value === "other"
+  );
+}
 
 /**
  * アンケートのURL。
@@ -11,14 +37,27 @@ export const SURVEY_PATH = "/jobs/service-charges/survey";
  * store を渡すと、その店舗を選んだ状態で2問目から始まる。店名を探し直す
  * 手間は、店舗ページや検索から来た人にとっていちばん無駄な1手になる。
  * q は店名の打ちかけで、検索欄に入った状態で開く。
+ *
+ * more は「前に働いた店も答える」短縮版。答え終えた人が2店舗目以降を
+ * 答えるときに使い、詳しい設問と自由記述を飛ばす。role は1店舗目で
+ * 答えた職種で、短縮版では聞き直さない。
  */
-export function surveyHref(params?: { store?: string; q?: string }): string {
+export function surveyHref(params?: {
+  store?: string;
+  q?: string;
+  more?: boolean;
+  role?: JobRole | null;
+  locale?: SurveyLocale;
+}): string {
   const search = new URLSearchParams();
   const q = params?.q?.trim();
   if (params?.store) search.set("store", params.store);
   else if (q) search.set("q", q);
+  if (params?.more) search.set("more", "1");
+  if (params?.more && params.role) search.set("role", params.role);
   const qs = search.toString();
-  return qs ? `${SURVEY_PATH}?${qs}` : SURVEY_PATH;
+  const path = surveyPath(params?.locale);
+  return qs ? `${path}?${qs}` : path;
 }
 
 export type SurveyPromiseKey = "scope" | "short" | "preview" | "welcome";

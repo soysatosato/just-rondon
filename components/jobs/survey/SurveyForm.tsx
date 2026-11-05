@@ -3,7 +3,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,80 +15,51 @@ import BotGuardFields from "@/components/form/BotGuardFields";
 import StoreSearch, { SelectedStore } from "@/components/jobs/StoreSearch";
 import Choice, { Question } from "./Choice";
 import DiagnosisPanel from "./DiagnosisPanel";
-import {
-  DISTRIBUTION_LABEL,
-  DISTRIBUTION_LEGAL_NOTE,
-  JOB_ROLE_LABEL,
-  WORK_PERIOD_LABEL,
-  type DistributionType,
-  type JobRole,
-  type WorkPeriod,
-  type YesNoUnknown,
+import { SURVEY_COPY, type StepId, type SurveyLocale } from "./copy";
+import type {
+  DistributionType,
+  JobRole,
+  WorkPeriod,
+  YesNoUnknown,
 } from "@/utils/labels";
 import { diagnose } from "@/utils/service-charge";
 
 type ActionState = { ok: true } | { ok: false; message: string };
 
 /* ------------------------------------------------------------------
- * 設問の定義
+ * 設問の定義(値の並び。文言は copy.tsx)
  * ---------------------------------------------------------------- */
 
-const WORK_PERIOD_OPTIONS = (
-  ["current", "within1y", "1to3y", "over3y"] as WorkPeriod[]
-).map((value) => ({
-  value,
-  label: WORK_PERIOD_LABEL[value],
-  note:
-    value === "over3y"
-      ? "全額分配の義務が始まったのは2024年10月1日です"
-      : undefined,
-}));
-
-const JOB_ROLE_OPTIONS = (
-  ["floor", "kitchen", "both", "other"] as JobRole[]
-).map((value) => ({ value, label: JOB_ROLE_LABEL[value] }));
-
-const DISTRIBUTION_OPTIONS = (
-  ["equal", "gradient", "fixed", "none"] as DistributionType[]
-).map((value) => ({
-  value,
-  label: DISTRIBUTION_LABEL[value],
-  note: DISTRIBUTION_LEGAL_NOTE[value],
-  warn: value === "fixed" || value === "none",
-}));
-
-const YES_NO_UNKNOWN_OPTIONS: {
-  value: YesNoUnknown;
-  label: string;
-  note?: string;
-}[] = [
-  { value: "yes", label: "はい" },
-  { value: "no", label: "いいえ" },
-  { value: "unknown", label: "わからない" },
-];
+const WORK_PERIODS: WorkPeriod[] = ["current", "within1y", "1to3y", "over3y"];
+const JOB_ROLES: JobRole[] = ["floor", "kitchen", "both", "other"];
+const DISTRIBUTIONS: DistributionType[] = ["equal", "gradient", "fixed", "none"];
+const YES_NO_UNKNOWN: YesNoUnknown[] = ["yes", "no", "unknown"];
 
 type RateChoice = "12.5" | "15" | "10" | "other" | "unknown";
 
-const RATE_OPTIONS: { value: RateChoice; label: string }[] = [
-  { value: "12.5", label: "12.5%" },
-  { value: "15", label: "15%" },
-  { value: "10", label: "10%" },
-  { value: "other", label: "その他の料率" },
-  { value: "unknown", label: "わからない" },
-];
-
-const STEPS = [
-  { id: 1, title: "店舗" },
-  { id: 2, title: "働き方" },
-  { id: 3, title: "サービスチャージ" },
-  { id: 4, title: "分配の中身" },
-  { id: 5, title: "自由記述" },
-  { id: 6, title: "判定と送信" },
-] as const;
+/**
+ * 回答の流れ。
+ *
+ * - 通常: 6ステップ。徴収していない職場では「分配の中身」を飛ばす。
+ * - 短縮版(quick): 2店舗目以降。店名・時期・サービスチャージの有無と分配だけを
+ *   聞き、詳しい設問と自由記述は出さない。1人が働いた店をまとめて答えやすくする。
+ */
+function stepsFor(quick: boolean, collected: "yes" | "no" | null): StepId[] {
+  if (quick) return [1, 2, 3, 6];
+  return collected === "no" ? [1, 2, 3, 5, 6] : [1, 2, 3, 4, 5, 6];
+}
 
 /* ------------------------------------------------------------------ */
 
-function SubmitButton({ disabled }: { disabled: boolean }) {
+function SubmitButton({
+  disabled,
+  label,
+  pendingLabel,
+}: {
+  disabled: boolean;
+  label: string;
+  pendingLabel: string;
+}) {
   const { pending } = useFormStatus();
   return (
     <Button
@@ -98,7 +68,7 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
       disabled={pending || disabled}
       className="flex-1"
     >
-      {pending ? "送信中..." : "この内容で送信する"}
+      {pending ? pendingLabel : label}
     </Button>
   );
 }
@@ -109,6 +79,9 @@ export default function SurveyForm({
   storeCount,
   initialStore,
   initialQuery,
+  locale = "ja",
+  quick = false,
+  initialJobRole,
 }: {
   hourlyMedian: number | null;
   responseCount: number;
@@ -117,7 +90,14 @@ export default function SurveyForm({
   initialStore?: StoreSearchResult | null;
   /** ダッシュボードで打ちかけた店名。 */
   initialQuery?: string;
+  locale?: SurveyLocale;
+  /** 2店舗目以降の短縮版。 */
+  quick?: boolean;
+  /** 短縮版で、1店舗目に答えた職種。あれば聞き直さない。 */
+  initialJobRole?: JobRole | null;
 }) {
+  const copy = SURVEY_COPY[locale];
+
   const [state, action] = useFormState<ActionState, FormData>(submitSurvey, {
     ok: true,
   });
@@ -126,7 +106,9 @@ export default function SurveyForm({
     initialStore ? { mode: "matched", store: initialStore } : null,
   );
   const [workPeriod, setWorkPeriod] = useState<WorkPeriod | null>(null);
-  const [jobRole, setJobRole] = useState<JobRole | null>(null);
+  const [jobRole, setJobRole] = useState<JobRole | null>(
+    initialJobRole ?? null,
+  );
   const [collected, setCollected] = useState<"yes" | "no" | null>(null);
   const [rateChoice, setRateChoice] = useState<RateChoice | null>(null);
   const [rateOther, setRateOther] = useState("");
@@ -141,16 +123,15 @@ export default function SurveyForm({
   const [amountValue, setAmountValue] = useState("");
   const [monthlyHours, setMonthlyHours] = useState("");
   const [showError, setShowError] = useState(true);
+  // 「残りの設問を飛ばして判定へ」を押したか。判定の画面で、戻って答える道を出す。
+  const [skipped, setSkipped] = useState(false);
 
   // 店舗が決まって来た人に、同じ店を探し直させない。
-  const [currentStep, setCurrentStep] = useState(initialStore ? 2 : 1);
+  const [currentStep, setCurrentStep] = useState<StepId>(initialStore ? 2 : 1);
+
+  const steps = useMemo(() => stepsFor(quick, collected), [quick, collected]);
 
   // 徴収していない職場には、分配の中身を聞く意味がない。
-  const steps = useMemo(
-    () => (collected === "no" ? [1, 2, 3, 5, 6] : [1, 2, 3, 4, 5, 6]),
-    [collected],
-  );
-
   useEffect(() => {
     if (currentStep === 4 && collected === "no") setCurrentStep(5);
   }, [collected, currentStep]);
@@ -166,7 +147,12 @@ export default function SurveyForm({
     return false;
   }, [currentStep, store, workPeriod, collected]);
 
-  function goTo(step: number) {
+  // 必須の3問が済んだあとは、任意の設問を残したまま判定へ進める。
+  // 送る前に判定を見られる約束(SURVEY_PROMISES の preview)はそのまま守る。
+  const canSkipToResult =
+    !quick && (currentStep === 3 || currentStep === 4) && !nextDisabled;
+
+  function goTo(step: StepId) {
     setCurrentStep(step);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -176,8 +162,12 @@ export default function SurveyForm({
   function goBack() {
     if (!isFirstStep) goTo(steps[stepIndex - 1]);
   }
+  function skipToResult() {
+    setSkipped(true);
+    goTo(6);
+  }
 
-  function stepClass(n: number) {
+  function stepClass(n: StepId) {
     return cn("space-y-8", currentStep !== n && "hidden");
   }
 
@@ -198,23 +188,26 @@ export default function SurveyForm({
 
   const diagnosis = useMemo(
     () =>
-      diagnose({
-        collected,
-        distribution: collected === "no" ? null : distribution,
-        kitchenIncluded: collected === "no" ? null : kitchenIncluded,
-        onPayslip: collected === "no" ? null : onPayslip,
-        writtenPolicy: collected === "no" ? null : writtenPolicy,
-        workPeriod,
-        jobRole,
-        monthlyAmount:
-          amountNumber !== null && !Number.isNaN(amountNumber)
-            ? amountNumber
-            : null,
-        monthlyHours:
-          hoursNumber !== null && !Number.isNaN(hoursNumber)
-            ? hoursNumber
-            : null,
-      }),
+      diagnose(
+        {
+          collected,
+          distribution: collected === "no" ? null : distribution,
+          kitchenIncluded: collected === "no" ? null : kitchenIncluded,
+          onPayslip: collected === "no" ? null : onPayslip,
+          writtenPolicy: collected === "no" ? null : writtenPolicy,
+          workPeriod,
+          jobRole,
+          monthlyAmount:
+            amountNumber !== null && !Number.isNaN(amountNumber)
+              ? amountNumber
+              : null,
+          monthlyHours:
+            hoursNumber !== null && !Number.isNaN(hoursNumber)
+              ? hoursNumber
+              : null,
+        },
+        locale,
+      ),
     [
       collected,
       distribution,
@@ -225,8 +218,47 @@ export default function SurveyForm({
       jobRole,
       amountNumber,
       hoursNumber,
+      locale,
     ],
   );
+
+  // 飛ばした詳しい設問が、判定を変えうるまま空になっているか。
+  const detailsMissing =
+    skipped &&
+    collected === "yes" &&
+    writtenPolicy === null &&
+    onPayslip === null &&
+    kitchenIncluded === null;
+
+  const workPeriodOptions = WORK_PERIODS.map((value) => ({
+    value,
+    label: copy.workPeriod.labels[value],
+    note: value === "over3y" ? copy.workPeriod.over3yNote : undefined,
+  }));
+  const jobRoleOptions = JOB_ROLES.map((value) => ({
+    value,
+    label: copy.jobRole.labels[value],
+  }));
+  const distributionOptions = DISTRIBUTIONS.map((value) => ({
+    value,
+    label: copy.distribution.labels[value],
+    note: copy.distribution.legal[value],
+    warn: value === "fixed" || value === "none",
+  }));
+  const yesNoUnknownOptions = YES_NO_UNKNOWN.map((value) => ({
+    value,
+    label: copy.yesNoUnknown[value],
+  }));
+  const rateOptions: { value: RateChoice; label: string }[] = [
+    { value: "12.5", label: "12.5%" },
+    { value: "15", label: "15%" },
+    { value: "10", label: "10%" },
+    { value: "other", label: copy.rate.other },
+    { value: "unknown", label: copy.rate.unknown },
+  ];
+
+  // 短縮版で1店舗目の職種を引き継いだときは、聞き直さずにそのまま送る。
+  const roleCarried = quick && initialJobRole != null;
 
   return (
     <>
@@ -234,7 +266,6 @@ export default function SurveyForm({
       <div className="space-y-2">
         <ol className="flex items-center gap-1.5">
           {steps.map((id, i) => {
-            const step = STEPS.find((s) => s.id === id)!;
             const done = i < stepIndex;
             const active = i === stepIndex;
             return (
@@ -253,15 +284,18 @@ export default function SurveyForm({
                       : "text-muted-foreground",
                   )}
                 >
-                  {step.title}
+                  {copy.steps[id]}
                 </p>
               </li>
             );
           })}
         </ol>
         <p className="text-xs text-muted-foreground sm:hidden">
-          ステップ {stepIndex + 1} / {steps.length}：
-          {STEPS.find((s) => s.id === currentStep)?.title}
+          {copy.stepCounter(
+            stepIndex + 1,
+            steps.length,
+            copy.steps[currentStep],
+          )}
         </p>
       </div>
 
@@ -269,7 +303,7 @@ export default function SurveyForm({
       {storeName && currentStep !== 1 && (
         <div className="mt-6 flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-3.5 py-2.5">
           <p className="min-w-0 truncate text-sm">
-            <span className="text-muted-foreground">回答する店舗：</span>
+            <span className="text-muted-foreground">{copy.answeringAbout}</span>
             <span className="font-medium text-foreground">{storeName}</span>
           </p>
           <button
@@ -277,29 +311,33 @@ export default function SurveyForm({
             onClick={() => goTo(1)}
             className="shrink-0 text-xs text-muted-foreground underline underline-offset-4 transition hover:text-foreground"
           >
-            変更
+            {copy.change}
           </button>
         </div>
       )}
 
       {showError && !state.ok && (
         <Alert variant="destructive" className="mt-6">
-          <AlertTitle>入力内容をご確認ください</AlertTitle>
+          <AlertTitle>{copy.errorTitle}</AlertTitle>
           <AlertDescription>{state.message}</AlertDescription>
         </Alert>
       )}
 
       <form action={action} className="mt-8">
         <BotGuardFields />
+        {/* 完了画面と、エラーの文言の言語を決める。 */}
+        <input type="hidden" name="locale" value={locale} />
+
         {/* 1. 店舗 ------------------------------------------------ */}
         <section className={stepClass(1)}>
           <Question
-            label="どの店舗について答えますか？"
-            hint={`これまでに ${storeCount} 店舗・${responseCount} 件の回答が集まっています。候補に出てこない場合は手入力もできます。`}
+            label={copy.store.label}
+            hint={copy.store.hint(storeCount, responseCount)}
           >
             <StoreSearch
               initialStore={initialStore ?? undefined}
               initialQuery={initialQuery}
+              copy={copy.storeSearch}
               onSelect={(selection) => {
                 setStore(selection);
                 setShowError(false);
@@ -345,48 +383,52 @@ export default function SurveyForm({
 
         {/* 2. 働き方 ---------------------------------------------- */}
         <section className={stepClass(2)}>
-          <Question
-            label="その職場で働いていたのはいつですか？"
-            hint="サービスチャージの全額分配が義務になったのは2024年10月1日です。いつの話かによって、当てはまる法律が変わります。"
-          >
+          <Question label={copy.workPeriod.label} hint={copy.workPeriod.hint}>
             <Choice
               name="workPeriod"
               value={workPeriod}
               onChange={setWorkPeriod}
-              options={WORK_PERIOD_OPTIONS}
+              options={workPeriodOptions}
             />
           </Question>
 
-          <Separator />
+          {roleCarried ? (
+            <input type="hidden" name="jobRole" value={initialJobRole ?? ""} />
+          ) : (
+            <>
+              <Separator />
 
-          <Question
-            label="どの職種で働いていましたか？"
-            hint="「キッチンには分配されない」という証言が繰り返し寄せられています。どちら側から見た話かによって、意味が変わります。"
-            optional
-          >
-            <Choice
-              name="jobRole"
-              value={jobRole}
-              onChange={setJobRole}
-              options={JOB_ROLE_OPTIONS}
-              columns={2}
-            />
-          </Question>
+              <Question
+                label={copy.jobRole.label}
+                hint={copy.jobRole.hint}
+                optional
+                optionalLabel={copy.optional}
+              >
+                <Choice
+                  name="jobRole"
+                  value={jobRole}
+                  onChange={setJobRole}
+                  options={jobRoleOptions}
+                  columns={2}
+                />
+              </Question>
+            </>
+          )}
         </section>
 
         {/* 3. サービスチャージ ------------------------------------ */}
         <section className={stepClass(3)}>
-          <Question label="この店舗は、お客様からサービスチャージを徴収していますか？">
+          <Question label={copy.collected.label}>
             <Choice
               name="collected"
               value={collected}
               onChange={setCollected}
               options={[
-                { value: "yes", label: "徴収している" },
+                { value: "yes", label: copy.collected.yes },
                 {
                   value: "no",
-                  label: "徴収していない",
-                  note: "この先の分配についての設問はスキップされます",
+                  label: copy.collected.no,
+                  note: copy.collected.noNote,
                 },
               ]}
               columns={2}
@@ -397,15 +439,16 @@ export default function SurveyForm({
             <Separator />
 
             <Question
-              label="料率は何％ですか？"
-              hint="レシートの「service charge」の行に書かれています。近年は15%を掲げる店も増えています。"
+              label={copy.rate.label}
+              hint={copy.rate.hint}
               optional
+              optionalLabel={copy.optional}
             >
               <Choice
                 name="rateChoice"
                 value={rateChoice}
                 onChange={setRateChoice}
-                options={RATE_OPTIONS}
+                options={rateOptions}
                 columns={2}
               />
               {rateChoice === "other" && (
@@ -418,8 +461,8 @@ export default function SurveyForm({
                     step="0.1"
                     value={rateOther}
                     onChange={(e) => setRateOther(e.target.value)}
-                    placeholder="例）13"
-                    aria-label="サービスチャージの料率"
+                    placeholder="13"
+                    aria-label={copy.rate.aria}
                   />
                   <span className="text-sm text-muted-foreground">％</span>
                 </div>
@@ -434,43 +477,18 @@ export default function SurveyForm({
             <Separator />
 
             <Question
-              label="集めたサービスチャージは、どう分配されていますか？"
-              hint="他のスタッフから聞いた話でも構いません。実際に受け取っていなくても、分かる範囲でお答えください。"
+              label={copy.distribution.label}
+              hint={copy.distribution.hint}
             >
               <Choice
                 name="distribution"
                 value={distribution}
                 onChange={setDistribution}
-                options={DISTRIBUTION_OPTIONS}
+                options={distributionOptions}
               />
 
               <div className="mt-3 rounded-lg border border-border/70 bg-muted/40 p-3.5 text-xs leading-relaxed text-muted-foreground">
-                <p>
-                  <span className="font-medium text-foreground">
-                    Employment (Allocation of Tips) Act 2023
-                  </span>
-                  （2024年10月1日施行）により、チップとサービスチャージは
-                  <span className="font-medium text-foreground">
-                    全額が働いた人のもの
-                  </span>
-                  と定められ、雇用主が税金・国民保険料以外を差し引くことは違法です。
-                </p>
-                <p className="mt-2">
-                  「時給に固定額で上乗せ」は、上乗せという方式そのものが違法なのではなく、
-                  <span className="font-medium text-foreground">
-                    店が集めた総額が全額スタッフに渡っているか
-                  </span>
-                  が分かれ目になります。
-                </p>
-                <p className="mt-2">
-                  <Link
-                    href="/jobs/service-charges"
-                    target="_blank"
-                    className="font-medium text-foreground underline underline-offset-2 hover:opacity-80"
-                  >
-                    サービスチャージの法律を読む ↗
-                  </Link>
-                </p>
+                {copy.distribution.law}
               </div>
             </Question>
           </div>
@@ -479,49 +497,42 @@ export default function SurveyForm({
         {/* 4. 分配の中身 ------------------------------------------ */}
         <section className={stepClass(4)}>
           <div className="rounded-lg border border-border bg-muted/40 p-4 text-xs leading-relaxed text-muted-foreground">
-            ここから先は、雇用主に義務づけられていることを、働く人の側から確認する設問です。
-            分からない項目は「わからない」で構いません。
+            {copy.detailsIntro}
           </div>
 
           <Question
-            label="分配のルールを書いた文書（チップポリシー）を見たことがありますか？"
-            hint="分配の責任者・分配方法・サービスチャージの扱いを書面にし、働く人が読める状態にしておくことは、2024年10月から雇用主の義務です。"
+            label={copy.writtenPolicy.label}
+            hint={copy.writtenPolicy.hint}
           >
             <Choice
               name="writtenPolicy"
               value={writtenPolicy}
               onChange={setWrittenPolicy}
-              options={YES_NO_UNKNOWN_OPTIONS}
+              options={yesNoUnknownOptions}
               columns={2}
             />
           </Question>
 
           <Separator />
 
-          <Question
-            label="給与明細に、サービスチャージが別項目として載っていますか？"
-            hint="別項目で出ていれば、いくら受け取ったかを自分で確認できます。従業員には過去3年分の支払い記録を閲覧する権利もあります。"
-          >
+          <Question label={copy.onPayslip.label} hint={copy.onPayslip.hint}>
             <Choice
               name="onPayslip"
               value={onPayslip}
               onChange={setOnPayslip}
-              options={YES_NO_UNKNOWN_OPTIONS}
+              options={yesNoUnknownOptions}
               columns={2}
             />
           </Question>
 
           <Separator />
 
-          <Question
-            label="キッチンスタッフにも分配されていますか？"
-            hint="分配の対象は「その職場で働く人」で、フロアに限られません。一律の除外は公平性の観点から問題になり得ます。"
-          >
+          <Question label={copy.kitchen.label} hint={copy.kitchen.hint}>
             <Choice
               name="kitchenIncluded"
               value={kitchenIncluded}
               onChange={setKitchenIncluded}
-              options={YES_NO_UNKNOWN_OPTIONS}
+              options={yesNoUnknownOptions}
               columns={2}
             />
           </Question>
@@ -529,9 +540,10 @@ export default function SurveyForm({
           <Separator />
 
           <Question
-            label="あなたが実際に受け取っている額を教えてください"
-            hint="店舗全体の総額ではなく、あなた個人が1ヶ月に受け取っている概算です。勤務時間もあわせて答えていただくと、他店と比べられる「時給換算」が出せます。"
+            label={copy.amount.label}
+            hint={copy.amount.hint}
             optional
+            optionalLabel={copy.optional}
           >
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -539,7 +551,7 @@ export default function SurveyForm({
                   htmlFor="amountValue"
                   className="text-xs text-muted-foreground"
                 >
-                  1ヶ月に受け取る額
+                  {copy.amount.perMonthLabel}
                 </label>
                 <div className="mt-1 flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">£</span>
@@ -550,12 +562,12 @@ export default function SurveyForm({
                     inputMode="decimal"
                     min={0}
                     step="0.01"
-                    placeholder="例）250"
+                    placeholder={copy.amount.amountPlaceholder}
                     value={amountValue}
                     onChange={(e) => setAmountValue(e.target.value)}
                   />
                   <span className="shrink-0 text-sm text-muted-foreground">
-                    / 月
+                    {copy.amount.perMonth}
                   </span>
                 </div>
               </div>
@@ -565,7 +577,7 @@ export default function SurveyForm({
                   htmlFor="monthlyHours"
                   className="text-xs text-muted-foreground"
                 >
-                  1ヶ月の勤務時間（概算）
+                  {copy.amount.hoursLabel}
                 </label>
                 <div className="mt-1 flex items-center gap-2">
                   <Input
@@ -576,33 +588,22 @@ export default function SurveyForm({
                     min={0}
                     max={744}
                     step="1"
-                    placeholder="例）160"
+                    placeholder={copy.amount.hoursPlaceholder}
                     value={monthlyHours}
                     onChange={(e) => setMonthlyHours(e.target.value)}
                   />
                   <span className="shrink-0 text-sm text-muted-foreground">
-                    時間 / 月
+                    {copy.amount.hoursUnit}
                   </span>
                 </div>
               </div>
             </div>
 
             {diagnosis.hourly !== null && (
-              <p className="mt-3 rounded-lg bg-muted/60 px-3.5 py-3 text-sm">
-                サービスチャージは時給換算で{" "}
-                <span className="font-semibold tabular-nums">
-                  £{diagnosis.hourly.toFixed(2)}
-                </span>{" "}
-                です。
-                {hourlyMedian != null && (
-                  <>
-                    {" "}
-                    この調査の中央値は{" "}
-                    <span className="font-semibold tabular-nums">
-                      £{hourlyMedian.toFixed(2)}
-                    </span>{" "}
-                    です。
-                  </>
+              <p className="mt-3 rounded-lg bg-muted/60 px-3.5 py-3 text-sm tabular-nums">
+                {copy.amount.hourlySentence(
+                  diagnosis.hourly.toFixed(2),
+                  hourlyMedian != null ? hourlyMedian.toFixed(2) : null,
                 )}
               </p>
             )}
@@ -612,49 +613,48 @@ export default function SurveyForm({
         {/* 5. 自由記述 -------------------------------------------- */}
         <section className={stepClass(5)}>
           <div className="rounded-lg border border-border bg-muted/40 p-4 text-xs leading-relaxed text-muted-foreground">
-            集計の数字より、ここに書かれた具体的な話のほうが読まれています。
-            <span className="font-medium text-foreground">
-              個人が特定される情報は書かないでください。
-            </span>
-            すべて任意です。
+            {copy.commentsIntro}
           </div>
 
           <Question
-            label="サービスチャージについて"
-            hint="分配の実態、店側の説明、質問したときの反応など。"
+            label={copy.comments.serviceCharge.label}
+            hint={copy.comments.serviceCharge.hint}
             optional
+            optionalLabel={copy.optional}
           >
             <Textarea
               name="serviceChargeComment"
               rows={5}
               maxLength={1000}
-              placeholder="例）フロアスタッフのみで分配。キッチンには渡っていない。総額を聞いたが教えてもらえなかった。"
+              placeholder={copy.comments.serviceCharge.placeholder}
             />
           </Question>
 
           <Question
-            label="賄いについて"
-            hint="回数、内容、提供されない食材、ドリンクの有無など。"
+            label={copy.comments.meal.label}
+            hint={copy.comments.meal.hint}
             optional
+            optionalLabel={copy.optional}
           >
             <Textarea
               name="mealComment"
               rows={4}
               maxLength={1000}
-              placeholder="例）1日1回、日替わりで選べない。ドリンクは水とお茶のみ。"
+              placeholder={copy.comments.meal.placeholder}
             />
           </Question>
 
           <Question
-            label="その他（職場について）"
-            hint="シフト、残業、休憩、人間関係、ビザサポートなど。良い点も書いてください。"
+            label={copy.comments.general.label}
+            hint={copy.comments.general.hint}
             optional
+            optionalLabel={copy.optional}
           >
             <Textarea
               name="generalComment"
               rows={5}
               maxLength={1000}
-              placeholder="個人が特定される情報は入力しないでください。"
+              placeholder={copy.comments.general.placeholder}
             />
           </Question>
         </section>
@@ -663,30 +663,44 @@ export default function SurveyForm({
         <section className={stepClass(6)}>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              あなたの回答からの判定
+              {copy.result.kicker}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              送信する前に、いただいた回答を法律に照らして整理しました。
-              送信せずにこのまま閉じても、この判定は変わりません。
+              {copy.result.sub}
             </p>
           </div>
 
-          <DiagnosisPanel diagnosis={diagnosis} hourlyMedian={hourlyMedian} />
+          {detailsMissing && (
+            <div className="flex flex-col gap-3 rounded-lg border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {copy.result.skippedNote}
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="shrink-0 self-start sm:self-auto"
+                onClick={() => goTo(4)}
+              >
+                {copy.result.answerDetails}
+              </Button>
+            </div>
+          )}
+
+          <DiagnosisPanel
+            diagnosis={diagnosis}
+            hourlyMedian={hourlyMedian}
+            locale={locale}
+          />
 
           <div className="rounded-xl border border-border bg-muted/40 p-4">
             <p className="text-sm font-semibold text-foreground">
-              送信すると、どうなりますか
+              {copy.result.whatHappensTitle}
             </p>
             <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-              <li>
-                ・店舗名とあわせて集計され、実態調査に匿名で反映されます。
-              </li>
-              <li>
-                ・次にその店で働く人が、面接を受ける前に実態を知ることができます。
-              </li>
-              <li>
-                ・自由記述は、運営が内容を確かめてから店舗ページに載せます。
-              </li>
+              {copy.result.whatHappens.map((line) => (
+                <li key={line}>・{line}</li>
+              ))}
             </ul>
           </div>
         </section>
@@ -702,12 +716,16 @@ export default function SurveyForm({
                 className="flex-1"
                 onClick={goBack}
               >
-                戻る
+                {copy.nav.back}
               </Button>
             )}
 
             {isLastStep ? (
-              <SubmitButton disabled={!store} />
+              <SubmitButton
+                disabled={!store}
+                label={copy.nav.send}
+                pendingLabel={copy.nav.sending}
+              />
             ) : (
               <Button
                 type="button"
@@ -716,10 +734,20 @@ export default function SurveyForm({
                 disabled={nextDisabled}
                 onClick={goNext}
               >
-                次へ
+                {copy.nav.next}
               </Button>
             )}
           </div>
+
+          {canSkipToResult && (
+            <button
+              type="button"
+              onClick={skipToResult}
+              className="mt-2.5 w-full text-center text-xs text-muted-foreground underline underline-offset-4 transition hover:text-foreground"
+            >
+              {copy.nav.skipToResult}
+            </button>
+          )}
         </div>
       </form>
     </>

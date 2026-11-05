@@ -6,6 +6,7 @@ import GuideSectionCard from "@/components/guides/GuideSectionCard";
 import { Separator } from "@/components/ui/separator";
 import MarkdownBody from "../MarkdownBody";
 import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
+import { SURVEY_PATH_EN } from "@/components/jobs/survey/entry";
 import ConsultAsk from "@/components/jobs/consult/ConsultAsk";
 import ChapterNav from "./ChapterNav";
 import MemberSections from "./MemberSections";
@@ -83,11 +84,19 @@ export default function ArticleLayout({
         {/*
           この記録を読むのは、同じことが起きている側の人であることが多い。
           いちばん当事者に近い読者なのに、これまで入口が1つも無かった。
-          アンケートは日本語だけなので、英語版には出さない。
+          英語版の読者には英語版のアンケートへ案内する。
         */}
-        {locale === "ja" && (
+        {locale === "ja" ? (
           <SurveyAskLine>
             同じことが、自分の職場でも起きていませんか。次に働く人のために、
+          </SurveyAskLine>
+        ) : (
+          <SurveyAskLine
+            href={SURVEY_PATH_EN}
+            label="Answer the survey (anonymous, 3 min)"
+          >
+            Is the same thing happening where you work? For the next person
+            who works there,
           </SurveyAskLine>
         )}
       </header>

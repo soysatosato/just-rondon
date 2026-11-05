@@ -4,6 +4,28 @@ import { useEffect, useRef, useState } from "react";
 import type { StoreSearchResult } from "@/utils/actions/jobs";
 import { useStoreSearch } from "./useStoreSearch";
 
+/** 店舗欄の文言。英語版のアンケートは SURVEY_COPY.en.storeSearch を渡す。 */
+export type StoreSearchCopy = {
+  placeholder: string;
+  selected: string;
+  notListed: string;
+  manualName: string;
+  manualAddress: string;
+  manualNote: string;
+  backToList: string;
+};
+
+const DEFAULT_COPY: StoreSearchCopy = {
+  placeholder: "店舗名を検索",
+  selected: "選択中: ",
+  notListed: "リストにない場合はこちら",
+  manualName: "店舗名（必須）",
+  manualAddress: "住所（任意）",
+  manualNote:
+    "リスト未登録の店舗として送信されます。確認され次第マスタに反映されるため、それまでダッシュボードには表示されない場合があります。",
+  backToList: "リストから検索する",
+};
+
 export type SelectedStore =
   | { mode: "matched"; store: StoreSearchResult }
   | { mode: "manual"; name: string; address: string };
@@ -14,12 +36,14 @@ type Props = {
   initialStore?: StoreSearchResult;
   /** ダッシュボードで打ちかけた店名。検索欄に入れた状態で始める。 */
   initialQuery?: string;
+  copy?: StoreSearchCopy;
 };
 
 export default function StoreSearch({
   onSelect,
   initialStore,
   initialQuery,
+  copy = DEFAULT_COPY,
 }: Props) {
   const [query, setQuery] = useState(
     initialStore?.name ?? initialQuery ?? "",
@@ -106,7 +130,7 @@ export default function StoreSearch({
       <div className="space-y-2">
         <input
           type="text"
-          placeholder="店舗名（必須）"
+          placeholder={copy.manualName}
           value={manualName}
           autoComplete="off"
           onChange={(e) => updateManualName(e.target.value)}
@@ -114,21 +138,21 @@ export default function StoreSearch({
         />
         <input
           type="text"
-          placeholder="住所（任意）"
+          placeholder={copy.manualAddress}
           value={manualAddress}
           autoComplete="off"
           onChange={(e) => updateManualAddress(e.target.value)}
           className="w-full rounded-md border px-3 py-2 bg-background"
         />
         <p className="text-xs text-muted-foreground">
-          リスト未登録の店舗として送信されます。確認され次第マスタに反映されるため、それまでダッシュボードには表示されない場合があります。
+          {copy.manualNote}
         </p>
         <button
           type="button"
           onClick={toggleManual}
           className="text-xs text-muted-foreground underline"
         >
-          リストから検索する
+          {copy.backToList}
         </button>
       </div>
     );
@@ -138,7 +162,7 @@ export default function StoreSearch({
     <div className="relative space-y-1" ref={containerRef}>
       <input
         type="text"
-        placeholder="店舗名を検索"
+        placeholder={copy.placeholder}
         value={query}
         autoComplete="off"
         onChange={(e) => {
@@ -170,7 +194,8 @@ export default function StoreSearch({
       )}
 
       {selectedLabel && (
-        <p className="text-xs text-muted-foreground">選択中: {selectedLabel}</p>
+        <p className="text-xs text-muted-foreground">{copy.selected}
+          {selectedLabel}</p>
       )}
 
       <button
@@ -178,7 +203,7 @@ export default function StoreSearch({
         onClick={toggleManual}
         className="text-xs text-muted-foreground underline"
       >
-        リストにない場合はこちら
+        {copy.notListed}
       </button>
     </div>
   );

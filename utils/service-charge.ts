@@ -12,6 +12,10 @@ import {
   type WorkPeriod,
   type YesNoUnknown,
 } from "./labels";
+import {
+  DIAGNOSIS_TEXT,
+  type SurveyLocale,
+} from "./service-charge-diagnosis-text";
 
 /* ============================================================
  * 型
@@ -451,14 +455,15 @@ export type Diagnosis = {
   hourly: number | null;
 };
 
-const LEVEL_HEADLINE: Record<DiagnosisLevel, string> = {
-  alert: "法律に反している可能性が高い項目があります",
-  check: "確認したほうがよい項目があります",
-  clear: "大きな問題は見当たりませんでした",
-  unknown: "判断するには情報が足りません",
-};
-
-export function diagnose(input: DiagnosisInput): Diagnosis {
+/**
+ * 判定する。文章は utils/service-charge-diagnosis-text.ts が言語ごとに持ち、
+ * ここは「どの指摘を出すか」だけを決める。英語版のアンケートも同じ論理を通る。
+ */
+export function diagnose(
+  input: DiagnosisInput,
+  locale: SurveyLocale = "ja",
+): Diagnosis {
+  const text = DIAGNOSIS_TEXT[locale];
   const findings: DiagnosisFinding[] = [];
   const actions: DiagnosisAction[] = [];
 
@@ -472,96 +477,53 @@ export function diagnose(input: DiagnosisInput): Diagnosis {
   if (input.collected === "no") {
     return {
       level: "unknown",
-      headline: "サービスチャージを徴収していない職場です",
-      lead: "Tipping Act 2023 が対象にするのは、雇用主が管理・影響できるチップとサービスチャージです。徴収していない職場では、この法律の分配義務そのものが発生しません。",
-      findings: [
-        {
-          tone: "info",
-          title: "現金で直接受け取るチップは対象外",
-          body: "客から直接手渡され、雇用主がいっさい関与しないチップは法律の対象外です。逆に、カード決済のチップを店がいったん預かって配っているなら、名前が何であれ分配義務がかかります。",
-        },
-      ],
-      actions: [minimumWageAction(), acasAction()],
+      headline: text.notCollected.headline,
+      lead: text.notCollected.lead,
+      findings: [{ tone: "info", ...text.notCollected.cashTips }],
+      actions: [{ ...text.actions.minimumWage }, { ...text.actions.acas }],
       hourly: null,
     };
   }
 
   /* --- 分配方法 ---------------------------------------------------- */
-  if (input.distribution === "none") {
+  if (input.distribution) {
+    const tone: Record<DistributionType, DiagnosisTone> = {
+      none: "alert",
+      fixed: "warn",
+      gradient: "info",
+      equal: "ok",
+    };
     findings.push({
-      tone: "alert",
-      title: "集めたサービスチャージが1ポンドも渡っていない",
-      body: "2024年10月1日以降、チップ・サービスチャージは全額が働いた人のものと定められています。雇用主が差し引けるのは税金と国民保険料だけです。まったく分配されていない状態は、Tipping Act 2023 に反している可能性が高いと言えます。",
-    });
-  } else if (input.distribution === "fixed") {
-    findings.push({
-      tone: "warn",
-      title: "「時給に固定額で上乗せ」は、それだけでは判断できない",
-      body: "上乗せという方式そのものが違法なのではありません。分かれ目は、店が集めた総額が全額スタッフに渡っているかどうかです。上乗せの合計が集めた総額を下回り、差額が店に残っているなら違法です。総額の開示を求めてください。",
-    });
-  } else if (input.distribution === "gradient") {
-    findings.push({
-      tone: "info",
-      title: "傾斜配分は、基準が書面にあれば適法",
-      body: "役職や勤務時間に応じて配分を変えること自体は認められています。ただし法律が求めているのは「公平で透明性のある分配」なので、その基準がチップポリシーに書かれている必要があります。",
-    });
-  } else if (input.distribution === "equal") {
-    findings.push({
-      tone: "ok",
-      title: "分配の方法そのものには問題がなさそう",
-      body: "等分配は Code of Practice が想定する形のひとつです。残る論点は、集めた総額がそのまま分配に回っているかどうかになります。",
+      tone: tone[input.distribution],
+      ...text.distribution[input.distribution],
     });
   }
 
   /* --- 書面のチップポリシー（法定義務） ------------------------------ */
   if (input.writtenPolicy === "no") {
-    findings.push({
-      tone: "alert",
-      title: "書面のチップポリシーが存在しない",
-      body: "分配のルールを書面にし、働く人が読める状態にしておくことは、2024年10月1日から雇用主の義務です。ポリシーや記録が開示されない場合の申立て期限は3か月と短いので、未払いの請求（12か月）とは分けて考えてください。",
-    });
+    findings.push({ tone: "alert", ...text.policyMissing });
   } else if (input.writtenPolicy === "unknown") {
-    findings.push({
-      tone: "info",
-      title: "チップポリシーは「見せてください」と言える",
-      body: "すべての労働者がチップポリシーにアクセスできるようにすることは雇用主の義務です。分配の責任者・分配方法・サービスチャージの扱いが書かれているはずなので、まずは開示を求めるところから始められます。",
-    });
+    findings.push({ tone: "info", ...text.policyUnknown });
   }
 
   /* --- 給与明細と記録 ---------------------------------------------- */
   if (input.onPayslip === "no") {
-    findings.push({
-      tone: "warn",
-      title: "給与明細に別項目で出ていない",
-      body: "いくら受け取ったのかを自分で確認できない状態です。従業員には過去3年間のチップ支払い記録を閲覧する権利があり、雇用主には3年間の記録保存義務があります。記録の請求は、未払いを計算する前提になります。",
-    });
+    findings.push({ tone: "warn", ...text.notOnPayslip });
   }
 
   /* --- キッチンの扱い ----------------------------------------------- */
   if (input.kitchenIncluded === "no") {
-    findings.push({
-      tone: "warn",
-      title: "キッチンが分配から外されている",
-      body: "分配の対象は「その職場で働く人」であり、フロアに限られません。キッチンスタッフを一律に除外する運用は、公平性の観点から問題になり得ます。役割に応じた重み付けは可能ですが、その基準はポリシーに書かれている必要があります。",
-    });
+    findings.push({ tone: "warn", ...text.kitchenExcluded });
   }
 
   /* --- いつの話か --------------------------------------------------- */
   if (input.workPeriod === "over3y") {
-    findings.push({
-      tone: "info",
-      title: "3年以上前の経験は、法律が違う可能性がある",
-      body: "全額分配の義務が始まったのは2024年10月1日です。それ以前の運用は、いまの基準では測れません。記録の保存義務も3年なので、当時の資料が残っていない可能性もあります。",
-    });
+    findings.push({ tone: "info", ...text.over3y });
   }
 
   /* --- 金額 ---------------------------------------------------------- */
   if (hourly !== null) {
-    findings.push({
-      tone: "info",
-      title: `サービスチャージは時給換算で £${hourly.toFixed(2)}`,
-      body: "この額は最低賃金とは別に受け取るべきものです。時給が最低賃金に届かない分をサービスチャージで埋める運用は違法で、チップは最低賃金の「上に」乗ります。給与明細で、基本時給だけで最低賃金を満たしているか確認してください。",
-    });
+    findings.push({ tone: "info", ...text.hourly(hourly.toFixed(2)) });
   }
 
   /* --- レベル判定 ---------------------------------------------------- */
@@ -578,71 +540,41 @@ export function diagnose(input: DiagnosisInput): Diagnosis {
   else level = "unknown";
 
   /* --- 次にやること --------------------------------------------------- */
-  if (input.writtenPolicy !== "yes") {
-    actions.push({
-      title: "チップポリシーの開示を求める",
-      body: "「分配のルールを書いたものを見せてください」と伝えるだけです。開示は義務なので、断られた事実そのものが記録になります。",
-      href: "/jobs/service-charges#section-286",
-    });
-  }
-  actions.push({
-    title: "給与明細とシフト表を手元に残す",
-    body: "未払いを計算するのに要る記録は、給与明細・シフト表・売上記録（Zレポート）の3つだけです。在職中のうちに揃うものは揃えておきます。",
-    href: "/jobs/service-charges/case-story/check-your-service-charge",
-  });
+  if (input.writtenPolicy !== "yes") actions.push({ ...text.actions.askPolicy });
+  actions.push({ ...text.actions.keepRecords });
   if (level === "alert" || level === "check") {
-    actions.push({
-      title: "未払い額を自分で計算する",
-      body: "審判所で実際に認容された計算方法を、数字ごと公開しています。「その日の総サービスチャージ ÷ その日の稼働人数 × 自分の実稼働日数」が出発点です。",
-      href: "/jobs/service-charges/case-story/check-your-service-charge",
-    });
-    actions.push({
-      title: "期限を確認する",
-      body: "未払いチップの申立ては12か月以内、ポリシーや記録が開示されない場合は3か月以内です。起点は「支払われるべきだった日」なので、辞めたあとでも請求できます。",
-      href: "/jobs/service-charges#section-286",
-    });
+    actions.push({ ...text.actions.calculate });
+    actions.push({ ...text.actions.deadlines });
   }
-  actions.push(minimumWageAction());
-  actions.push(acasAction());
+  actions.push({ ...text.actions.minimumWage });
+  actions.push({ ...text.actions.acas });
 
   return {
     level,
-    headline: LEVEL_HEADLINE[level],
-    lead: leadFor(level, input),
+    headline: text.levelHeadline[level],
+    lead: leadFor(level, input, locale),
     findings,
     actions,
     hourly,
   };
 }
 
-function leadFor(level: DiagnosisLevel, input: DiagnosisInput): string {
+function leadFor(
+  level: DiagnosisLevel,
+  input: DiagnosisInput,
+  locale: SurveyLocale,
+): string {
+  const lead = DIAGNOSIS_TEXT[locale].lead;
   switch (level) {
     case "alert":
-      return "回答の中に、Tipping Act 2023 が禁じている状態にあたる可能性の高いものがありました。いますぐ争う必要はありませんが、記録を残すことだけは先に始めてください。";
+      return lead.alert;
     case "check":
-      return "ただちに違法と言い切れるものではないものの、店に確認すれば白黒がつく項目があります。確認の求め方も下にまとめました。";
+      return lead.check;
     case "clear":
       return input.distribution === "equal" || input.distribution === "gradient"
-        ? "回答の範囲では、法律が求めている形から外れているところは見当たりませんでした。残る論点は「集めた総額が全額渡っているか」だけです。"
-        : "回答の範囲では、目立った問題は見当たりませんでした。";
+        ? lead.clearShared
+        : lead.clear;
     default:
-      return "分からない項目が多いままでも構いません。下の順番で確認していけば、自分の職場がどちらなのかは判断できます。";
+      return lead.unknown;
   }
-}
-
-function minimumWageAction(): DiagnosisAction {
-  return {
-    title: "基本時給だけで最低賃金を満たしているか見る",
-    body: "チップを最低賃金の補填に使うことは違法です。サービスチャージを除いた基本時給が法定額に届いているかを確認してください。",
-    href: "/jobs/minimum-wage",
-  };
-}
-
-function acasAction(): DiagnosisAction {
-  return {
-    title: "Acas に相談する（無料・雇用主に連絡は行かない）",
-    body: "審判所に申し立てる場合、その前に Acas の Early Conciliation を経ることが原則として必須です。順序を間違えると受理されません。",
-    href: "https://www.acas.org.uk/tips-and-service-charges",
-    external: true,
-  };
 }

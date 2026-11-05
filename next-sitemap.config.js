@@ -90,6 +90,8 @@ module.exports = {
     "/jobs/service-charges/dashboard/*",
     "/jobs/service-charges/survey",
     "/jobs/service-charges/thanks",
+    "/en/jobs/service-charges/survey",
+    "/en/jobs/service-charges/thanks",
     "/contact/confirm",
     "/jobs/service-charges/consult/confirm",
     // 運営者専用(lib/admin.ts)。運営者以外には404を返す。

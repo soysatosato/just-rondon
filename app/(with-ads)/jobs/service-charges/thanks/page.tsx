@@ -3,7 +3,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import ShareActions from "@/components/money/salary-calculator/ShareActions";
-import { surveyHref } from "@/components/jobs/survey/entry";
+import {
+  SURVEY_PATH_EN,
+  isJobRole,
+  surveyHref,
+} from "@/components/jobs/survey/entry";
 import { fetchStorePage } from "@/utils/service-charge-data";
 import { storePath } from "@/lib/jobs/store-slug";
 
@@ -15,6 +19,8 @@ type Props = {
   searchParams?: {
     /** 回答した店舗の slug。送信処理が、候補から選ばれた店舗のときだけ付ける。 */
     store?: string;
+    /** 答えた職種。2店舗目の短縮版で聞き直さないために引き継ぐ。 */
+    role?: string;
   };
 };
 
@@ -25,6 +31,10 @@ type Props = {
 const SHARE_PATH = "/jobs/service-charges/dashboard";
 const SHARE_TEXT =
   "ロンドンの飲食店で働いたことがある人へ。サービスチャージがちゃんと配られているか、店舗ごとの実態が見られて、自分の職場も匿名・3分で判定できます。";
+
+/** 日本人以外の同僚に渡す英語版の文面。英語版の完了画面と同じ。 */
+const EN_SHARE_TEXT =
+  "Worked at a Japanese restaurant in London? Check whether the service charge is shared the way the law requires. Anonymous, about 3 minutes.";
 
 /**
  * 送信後の画面。
@@ -71,6 +81,8 @@ export default async function ThanksPage({ searchParams }: Props) {
       ? await fetchStorePage(searchParams.store)
       : null;
   const store = storePage?.store;
+  const roleParam = searchParams?.role;
+  const role = isJobRole(roleParam) ? roleParam : null;
 
   return (
     <div data-page-main className="min-h-dvh bg-background text-foreground">
@@ -161,10 +173,12 @@ export default async function ThanksPage({ searchParams }: Props) {
               ほかの店でも働いたことがありますか？
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              1店舗ずつ、何店舗でも答えられます。前に働いていた店の回答も、同じだけ役に立ちます。
+              2店舗目からは短縮版です。店名・時期・サービスチャージの有無と分配の仕方だけで、1分ほどで答えられます。前に働いていた店の回答も、同じだけ役に立ちます。
             </p>
             <Button asChild variant="outline" className="mt-4 self-start">
-              <Link href={surveyHref()}>別の店舗について答える</Link>
+              <Link href={surveyHref({ more: true, role })}>
+                別の店舗について答える
+              </Link>
             </Button>
           </div>
 
@@ -187,6 +201,22 @@ export default async function ThanksPage({ searchParams }: Props) {
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
               同じ店の人に送るときは少し日をおくと、誰が答えたか推測されにくくなります。
             </p>
+
+            {/* キッチンには日本人以外のスタッフも多い。その人たちに渡せる英語版。 */}
+            <div className="mt-4 border-t border-border pt-4">
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                日本人以外の同僚には、英語版を送れます。
+              </p>
+              <div className="mt-2">
+                <ShareActions
+                  path={SURVEY_PATH_EN}
+                  shareText={EN_SHARE_TEXT}
+                  title="Service charge survey"
+                  copyLabel="英語版のリンクをコピー"
+                  targets={["whatsapp"]}
+                />
+              </div>
+            </div>
           </div>
         </section>
 

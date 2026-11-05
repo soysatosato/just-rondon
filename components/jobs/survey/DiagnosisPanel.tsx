@@ -6,30 +6,27 @@ import type {
   DiagnosisLevel,
   DiagnosisTone,
 } from "@/utils/service-charge";
+import { SURVEY_COPY, type SurveyLocale } from "./copy";
 
 const LEVEL_STYLE: Record<
   DiagnosisLevel,
-  { ring: string; chip: string; label: string }
+  { ring: string; chip: string }
 > = {
   alert: {
     ring: "border-destructive/40 bg-destructive/[0.04]",
     chip: "bg-destructive text-destructive-foreground",
-    label: "要注意",
   },
   check: {
     ring: "border-amber-500/40 bg-amber-500/[0.06]",
     chip: "bg-amber-700 text-white dark:bg-amber-700",
-    label: "確認が必要",
   },
   clear: {
     ring: "border-emerald-600/40 bg-emerald-600/[0.05]",
     chip: "bg-emerald-700 text-white",
-    label: "問題なし",
   },
   unknown: {
     ring: "border-border bg-muted/40",
     chip: "bg-muted-foreground text-background",
-    label: "情報不足",
   },
 };
 
@@ -43,12 +40,15 @@ const TONE_STYLE: Record<DiagnosisTone, { dot: string; text: string }> = {
 export default function DiagnosisPanel({
   diagnosis,
   hourlyMedian,
+  locale = "ja",
 }: {
   diagnosis: Diagnosis;
   /** 全体の時給換算の中央値。自分の額を置く物差しとして添える。 */
   hourlyMedian?: number | null;
+  locale?: SurveyLocale;
 }) {
   const style = LEVEL_STYLE[diagnosis.level];
+  const copy = SURVEY_COPY[locale].diagnosis;
 
   return (
     <div className="space-y-5">
@@ -59,7 +59,7 @@ export default function DiagnosisPanel({
             style.chip,
           )}
         >
-          {style.label}
+          {copy.levels[diagnosis.level]}
         </span>
         <p className="mt-3 text-lg font-bold leading-snug tracking-tight">
           {diagnosis.headline}
@@ -72,23 +72,25 @@ export default function DiagnosisPanel({
           <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-2 border-t border-border/60 pt-4">
             <div>
               <p className="text-xs text-muted-foreground">
-                あなたの時給換算
+                {copy.yourHourly}
               </p>
               <p className="text-2xl font-bold tabular-nums tracking-tight">
                 £{diagnosis.hourly.toFixed(2)}
                 <span className="ml-1 text-sm font-normal text-muted-foreground">
-                  / 時
+                  {copy.perHour}
                 </span>
               </p>
             </div>
             {hourlyMedian != null && (
               <div>
                 <p className="text-xs text-muted-foreground">
-                  この調査の中央値
+                  {copy.median}
                 </p>
                 <p className="text-2xl font-bold tabular-nums tracking-tight text-muted-foreground">
                   £{hourlyMedian.toFixed(2)}
-                  <span className="ml-1 text-sm font-normal">/ 時</span>
+                  <span className="ml-1 text-sm font-normal">
+                    {copy.perHour}
+                  </span>
                 </p>
               </div>
             )}
@@ -99,7 +101,7 @@ export default function DiagnosisPanel({
       {diagnosis.findings.length > 0 && (
         <section>
           <h3 className="text-sm font-semibold text-foreground">
-            回答から分かること
+            {copy.findings}
           </h3>
           <ul className="mt-3 space-y-4">
             {diagnosis.findings.map((f) => {
@@ -130,7 +132,7 @@ export default function DiagnosisPanel({
 
       <section>
         <h3 className="text-sm font-semibold text-foreground">
-          次にやること
+          {copy.nextSteps}
         </h3>
         <ol className="mt-3 space-y-3">
           {diagnosis.actions.map((a, i) => {
@@ -190,10 +192,7 @@ export default function DiagnosisPanel({
       </section>
 
       <p className="text-xs leading-relaxed text-muted-foreground">
-        この判定は、いただいた回答を Employment (Allocation of Tips) Act 2023
-        の条文と Acas の解説に照らして機械的に当てはめたものです。法的助言ではなく、
-        個別の事情によって結論は変わります。実際に手続きを取る前に Acas
-        または資格を持つ専門家にご確認ください。
+        {copy.disclaimer}
       </p>
     </div>
   );
@@ -223,7 +222,7 @@ export function DiagnosisPreview({
           style.chip,
         )}
       >
-        {style.label}
+        {SURVEY_COPY.ja.diagnosis.levels[diagnosis.level]}
       </span>
       <p className="mt-2.5 font-bold leading-snug tracking-tight">
         {diagnosis.headline}
