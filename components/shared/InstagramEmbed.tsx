@@ -13,11 +13,12 @@ import { useEffect, useRef, useState } from "react";
  * 1. embed.js はページに1本だけ読む。コンポーネントごとに append すると、
  *    1つがアンマウントしたときに共有のスクリプトごと消えて、
  *    残りの埋め込みが二度と描画されなくなる。
- * 2. 交差監視で、画面に近づくまで読み込まない。埋め込み1つが数百KBの
- *    iframe になるので、1ページに複数置くと初期表示が目に見えて遅くなる。
+ * 2. 読者が「投稿を表示する」を押すまで読み込まない。以前は画面に近づくと
+ *    自動で読んでいたが、埋め込み1つが480〜556pxの外部 iframe になり、
+ *    読み込めない環境では同じ高さの空白が残っていた(2026-11 の計測)。
+ *    押す前は投稿へのリンクだけを出す。Instagram への送信も押したときだけになる。
  * 3. スクリプトが来なくても、リンクだけは必ず残るようにする。
- *    Instagram の埋め込みは広告ブロッカーに止められることが珍しくなく、
- *    その場合に空白が残るのは避けたい。
+ *    Instagram の埋め込みは広告ブロッカーに止められることが珍しくない。
  */
 
 declare global {
@@ -70,33 +71,9 @@ export default function InstagramEmbed({
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  // 押されたら true。名前は以前の「画面に入った」の名残で、意味は「読み込む」。
   const [inView, setInView] = useState(false);
   const [blocked, setBlocked] = useState(false);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    // 交差監視が使えない環境ではそのまま読み込む。
-    if (typeof IntersectionObserver === "undefined") {
-      setInView(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setInView(true);
-          observer.disconnect();
-        }
-      },
-      // 画面に入る少し手前から読み始める。
-      { rootMargin: "400px" },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!inView) return;
@@ -152,12 +129,37 @@ export default function InstagramEmbed({
     );
   }
 
+  if (!inView) {
+    return (
+      <div
+        className={`flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-4 dark:border-slate-700 ${className}`}
+      >
+        <p className="text-sm text-muted-foreground">
+          公式アカウントの投稿(写真)
+        </p>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setInView(true)}
+            className="rounded-full border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800"
+          >
+            ここに表示する
+          </button>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-sky-700 underline underline-offset-2 dark:text-sky-300"
+          >
+            Instagram で開く
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      style={{ minHeight: inView ? undefined : reservedHeight }}
-    >
+    <div ref={containerRef} className={className}>
       {inView && (
         <blockquote
           className="instagram-media"
