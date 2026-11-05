@@ -34,7 +34,16 @@ export type MenuPickSeed = {
   priceRange?: string;
   reason: string;
   role?: "signature" | "second" | "drink" | "seasonal";
+  /**
+   * 公式メニューの価格(£)。確かめた日(YYYY-MM-DD)と、載っていたページと組で書く。
+   * 店のページは priceRange よりこちらを優先して出し、予算の例もこれで計算する。
+   */
+  officialPrice?: number;
+  priceCheckedAt?: string;
+  priceSourceUrl?: string;
 };
+
+const CHECKED = "2026-11-05";
 
 export const MENU_PICKS: { slug: string; picks: MenuPickSeed[] }[] = [
   // ── アフタヌーンティー ──
@@ -42,26 +51,32 @@ export const MENU_PICKS: { slug: string; picks: MenuPickSeed[] }[] = [
     slug: "the-ritz-afternoon-tea",
     picks: [
       {
-        name: "Afternoon Tea at The Ritz",
-        nameJa: "アフタヌーンティー(基本のセット)",
-        priceRange: "£75〜",
+        name: "Traditional Afternoon Tea",
+        nameJa: "アフタヌーンティー(大人1人)",
+        priceRange: "£95〜",
+        officialPrice: 95,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.theritzlondon.com/dine-with-us/afternoon-tea/",
         reason:
-          "ここは単品で頼む店ではなく、セットが体験そのものです。サンドイッチ・スコーン・ペイストリーの3段で、**サンドイッチとスコーンはおかわりを頼めます**。遠慮すると損をするので、足りなければ声をかけてください。",
+          "ここは単品で頼む店ではなく、このセットが体験そのものです。**コースは滞在中に補充されます**(公式)。16歳未満は£73からです。",
         role: "signature",
       },
       {
-        name: "Ritz Royal English",
-        nameJa: "リッツ・ロイヤル・イングリッシュ(オリジナルブレンド)",
+        name: "Ritz Royal Blend",
+        nameJa: "リッツ・ロイヤル・ブレンド(紅茶)",
         reason:
-          "紅茶は十数種類から選べて、迷ったら店名を冠したこのブレンド。ミルクを入れる前提の濃さで、サンドイッチにもスコーンにも合います。**途中で別の茶葉に変えることもできます。**",
+          "リッツのアフタヌーンティーでしか飲めない独自のブレンドです(公式)。",
         role: "drink",
       },
       {
-        name: "Champagne Afternoon Tea",
-        nameJa: "シャンパン付きのセット",
-        priceRange: "£90〜",
+        name: "A Glass of Champagne",
+        nameJa: "シャンパン(グラス1杯)",
+        priceRange: "£26〜",
+        officialPrice: 26,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.theritzlondon.com/dine-with-us/afternoon-tea/",
         reason:
-          "記念日ならこちら。グラス1杯が付くだけですが、**この店で写真を撮るなら画面に入るものが変わります。** 用が無ければ基本のセットで十分です。",
+          "記念日なら1杯足せます。アフタヌーンティーの公式ページでは£26から、よくある質問のページでは£25からとあり、表記が揃っていません。",
         role: "second",
       },
     ],
@@ -70,27 +85,59 @@ export const MENU_PICKS: { slug: string; picks: MenuPickSeed[] }[] = [
     slug: "fortnum-and-mason-tea-salon",
     picks: [
       {
-        name: "Afternoon Tea",
-        nameJa: "アフタヌーンティー(基本のセット)",
-        priceRange: "£70〜",
+        name: "Classic Afternoon Tea",
+        nameJa: "クラシック・アフタヌーンティー(1人、紅茶のポットつき)",
+        priceRange: "£88",
+        officialPrice: 88,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.fortnumandmason.com/media/fortnums/blogpost/pdf/DJTS_Classic_Afternoon_Tea_Christmas_2026.pdf",
         reason:
-          "紅茶屋が母体なので、**茶葉の選択肢がこの価格帯で最も多い店**です。専門のスタッフに好みを伝えると選んでくれるので、銘柄が分からなくても任せられます。",
+          "2026年のクリスマスの期間のメニューで、紅茶のポットがついて1人£88です。公式の案内では、時期によっては£84からです。**紅茶は席で担当者に相談しながら選べます**(公式)。",
         role: "signature",
-      },
-      {
-        name: "Royal Blend",
-        nameJa: "ロイヤル ブレンド",
-        reason:
-          "F&M の看板ブレンド。濃いめでミルクによく合い、迷ったときの基準になります。**同じ茶葉を1階の売り場で缶入りで買えるので、気に入ったらそのまま土産にできます。**",
-        role: "drink",
       },
       {
         name: "Savoury Afternoon Tea",
         nameJa: "セイヴォリー(甘くない)のセット",
-        priceRange: "£70〜",
+        priceRange: "£89",
+        officialPrice: 89,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.fortnumandmason.com/media/fortnums/blogpost/pdf/DJTS_Savoury_Afternoon_Tea_Christmas_2026.pdf",
         reason:
-          "甘いものが続くのが苦手な人向けに、塩気のある品を中心に組んだセットがあります。**同行者と別のセットを頼めるので、好みが割れたときに使えます。**",
+          "甘いものより塩気を好む人のために、スコーンやペイストリーまで塩気のある品にしたセットです(公式メニュー)。",
         role: "second",
+      },
+      {
+        name: "High Tea",
+        nameJa: "ハイティー(温かい料理を1皿選ぶセット)",
+        priceRange: "£90",
+        officialPrice: 90,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.fortnumandmason.com/media/fortnums/blogpost/pdf/DJTS_High_Tea_Christmas_2026.pdf",
+        reason:
+          "ロブスターのオムレツやビーフ・ウェリントンなどから温かい料理を1皿選び、スコーンとペイストリーが続きます(公式メニュー)。",
+        role: "second",
+      },
+      {
+        name: "Royal Blend",
+        nameJa: "ロイヤル ブレンド(紅茶)",
+        reason:
+          "フォートナム&メイソンの定番の紅茶です。**同じ茶葉は下の階の売り場でも買えます。**",
+        role: "drink",
+      },
+      {
+        name: "A Glass of Blanc de Blancs",
+        nameJa: "シャンパン(グラス1杯)",
+        priceRange: "£23.50",
+        officialPrice: 23.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.fortnumandmason.com/media/fortnums/blogpost/pdf/DJTS_Classic_Afternoon_Tea_Christmas_2026.pdf",
+        reason:
+          "メニューの最初に勧められている、フォートナム&メイソンのブラン・ド・ブラン(シャンパン)です。",
+        role: "drink",
       },
     ],
   },
@@ -353,35 +400,45 @@ export const MENU_PICKS: { slug: string; picks: MenuPickSeed[] }[] = [
     slug: "dishoom",
     picks: [
       {
-        name: "Black Daal",
-        nameJa: "ブラック・ダール(黒豆を煮込んだカレー)",
-        priceRange: "£10〜13",
+        name: "House Black Daal",
+        nameJa: "ハウス・ブラック・ダール(黒豆を煮込んだカレー)",
+        priceRange: "£11.50",
+        officialPrice: 11.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.dishoom.com/menu/all-day-main/",
         reason:
-          "**24時間煮込む看板料理で、これを頼まないならこの店に来た意味が半分になります。** 辛くなく、日本人の口にも確実に合います。ナンに付けて食べてください。",
+          "**店の看板の一皿です。** 黒豆をじっくり煮込んだカレーで、ナンに付けて食べます。",
         role: "signature",
-      },
-      {
-        name: "Bacon Naan Roll",
-        nameJa: "ベーコン・ナン・ロール",
-        priceRange: "£8〜11",
-        reason:
-          "**朝の時間帯だけの名物。** ナンにベーコンを巻いた一品で、夜のメニューには載りません。朝に行くならこれが主役になります。",
-        role: "seasonal",
       },
       {
         name: "Chicken Ruby",
         nameJa: "チキン・ルビー(トマトベースのチキンカレー)",
-        priceRange: "£13〜17",
-        reason:
-          "カレーを1皿頼むならこれが基準。**バターチキンに近い穏やかな味**なので、辛さが心配な同行者がいても安全です。",
+        priceRange: "£18.90",
+        officialPrice: 18.9,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.dishoom.com/menu/all-day-main/",
+        reason: "カレーを1皿頼むなら、これが基準になります。",
         role: "second",
       },
       {
-        name: "Chai",
-        nameJa: "チャイ",
-        priceRange: "£3〜5",
+        name: "Bacon Naan Roll",
+        nameJa: "ベーコン・ナン・ロール",
+        priceRange: "£11.70",
+        officialPrice: 11.7,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.dishoom.com/menu/breakfast/",
         reason:
-          "**並んでいる間に無償で配られることがありますが、席で頼むものは別物**です。イラニ・カフェの再現という店の趣旨に最も合う飲み物。",
+          "**朝食の時間だけの品です**(平日8:00〜11:45、週末9:00〜11:45)。ナンにベーコンを巻いたもので、昼と夜のメニューには載りません。",
+        role: "seasonal",
+      },
+      {
+        name: "House Chai",
+        nameJa: "ハウス・チャイ",
+        priceRange: "£4.90",
+        officialPrice: 4.9,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.dishoom.com/menu/drinks/",
+        reason: "イラニ・カフェの再現という店の趣旨に合う飲み物です。",
         role: "drink",
       },
     ],
@@ -652,9 +709,8 @@ export const MENU_PICKS: { slug: string; picks: MenuPickSeed[] }[] = [
       {
         name: "Omakase Course",
         nameJa: "おまかせコース",
-        priceRange: "£88〜180（要確認・サービス料別）",
         reason:
-          "**単品ではなくコースの店**です。公式が価格を非公開にしており、出典によって£88〜£180と幅があります。**予約時に必ず総額とサービス料を確認してください。**",
+          "**単品ではなくコースの店**です。公式は価格を公開していません。**予約するときに総額とサービス料を確認してください。**",
         role: "signature",
       },
     ],
@@ -724,6 +780,159 @@ export const MENU_PICKS: { slug: string; picks: MenuPickSeed[] }[] = [
       },
     ],
   },
+
+  // ── 料理ページを持たない店(「絶対行くべき店」から) ──
+  {
+    slug: "the-devonshire",
+    picks: [
+      {
+        name: "Steak Sandwich",
+        nameJa: "ステーキ・サンドイッチ(1階のパブ)",
+        priceRange: "£12",
+        officialPrice: 12,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.devonshiresoho.co.uk/menus/bar-menu.pdf",
+        reason:
+          "予約なしで入れる1階のパブで頼める品です。牛肉は店で熟成させて切り分けています(公式)。",
+        role: "signature",
+      },
+      {
+        name: "Sausage Roll",
+        nameJa: "ソーセージ・ロール(1階のパブ)",
+        priceRange: "£6",
+        officialPrice: 6,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.devonshiresoho.co.uk/menus/bar-menu.pdf",
+        reason: "パブの軽食は、店の精肉場とパン焼き場で作っています(公式)。",
+        role: "second",
+      },
+      {
+        name: "Beef Cheek and Guinness Suet Pudding",
+        nameJa: "牛ほほ肉とギネスのスエット・プディング(2〜3階の食堂)",
+        priceRange: "£28",
+        officialPrice: 28,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.devonshiresoho.co.uk/menus/restaurant-menu.pdf",
+        reason:
+          "牛ほほ肉をギネスで煮込み、牛脂を練り込んだ生地で包んで蒸したイギリスの料理です。予約制の食堂のメニューにあります。",
+        role: "second",
+      },
+    ],
+  },
+  {
+    slug: "padella",
+    picks: [
+      {
+        name: "Pici cacio & pepe",
+        nameJa: "ピチ・カチョ・エ・ペペ(太い手打ち麺、ペコリーノと黒胡椒)",
+        priceRange: "£13〜13.5",
+        officialPrice: 13.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.padella.co/borough-market/",
+        reason:
+          "店の名物です。11月4日のメニューで、ボロー店とショーディッチ店は£13.5、ソーホー店は£13でした。",
+        role: "signature",
+      },
+      {
+        name: "Pappardelle with 8 hours Hereford beef shin ragu",
+        nameJa: "パッパルデッレ(ヘレフォード牛すね肉の8時間ラグー)",
+        priceRange: "£15.5〜16.5",
+        officialPrice: 16.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.padella.co/borough-market/",
+        reason:
+          "幅の広い手打ち麺に、牛すね肉を8時間煮込んだラグーを合わせた皿です(メニューの表記)。",
+        role: "second",
+      },
+      {
+        name: "Tagliarini with slow cooked tomato sauce",
+        nameJa: "タリアリーニ(じっくり煮たトマトソース)",
+        priceRange: "£12.5",
+        officialPrice: 12.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://www.padella.co/borough-market/",
+        reason: "11月4日のメニューで、いちばん安い皿でした。",
+        role: "second",
+      },
+    ],
+  },
+  {
+    slug: "st-john-smithfield",
+    picks: [
+      {
+        name: "Roast Bone Marrow and Parsley Salad",
+        nameJa: "骨髄のローストとパセリのサラダ",
+        priceRange: "£16.50",
+        officialPrice: 16.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://stjohnrestaurant.com/a/menus/1",
+        reason: "店の看板の一皿です。骨ごと焼いた髄に、パセリのサラダを添えます。",
+        role: "signature",
+      },
+      {
+        name: "Eccles Cake and Lancashire Cheese",
+        nameJa: "エクルズ・ケーキとランカシャー・チーズ",
+        priceRange: "£12.50",
+        officialPrice: 12.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://stjohnrestaurant.com/a/menus/1",
+        reason:
+          "干しぶどうを詰めたパイ菓子に、ランカシャー地方のチーズを合わせるデザートです。",
+        role: "second",
+      },
+      {
+        name: "Madeleines Half Dozen",
+        nameJa: "マドレーヌ(6個)",
+        priceRange: "£10",
+        officialPrice: 10,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl: "https://stjohnrestaurant.com/a/menus/1",
+        reason:
+          "注文を受けてから焼くので15分かかります(メニューの表記)。12個は£18です。",
+        role: "second",
+      },
+    ],
+  },
+  {
+    slug: "simpsons-in-the-strand",
+    picks: [
+      {
+        name: "Roast Rib of Devonshire Beef",
+        nameJa: "デヴォン産牛リブのロースト(席で切り分け)",
+        priceRange: "£49.75",
+        officialPrice: 49.75,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.simpsonsinthestrand.co.uk/wp-content/uploads/2026/09/00362_Simpsons_Grand_Divan_MAIN_Menu_AUGUST_2026.pdf",
+        reason:
+          "ワゴンで運んで席で切り分ける、店の名物です。ヨークシャー・プディング、根菜のロースト、ホースラディッシュのソースとグレイビーが付きます(公式メニュー)。",
+        role: "signature",
+      },
+      {
+        name: "The English Gambit",
+        nameJa: "イングリッシュ・ブレックファスト(朝食)",
+        priceRange: "£22.75",
+        officialPrice: 22.75,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.simpsonsinthestrand.co.uk/wp-content/uploads/2026/09/00362_Simpsons_Grand_Divan_BREAKFAST_Menu_A5_4pp_AUGUST_2026.pdf",
+        reason:
+          "好みの調理の卵、カンバーランド・ソーセージ、ベーコン、焼きトマト、バブル&スクイークの皿です(公式の朝食メニュー)。朝食は平日7時からです。",
+        role: "seasonal",
+      },
+      {
+        name: "English Breakfast tea",
+        nameJa: "イングリッシュ・ブレックファスト・ティー",
+        priceRange: "£6.50",
+        officialPrice: 6.5,
+        priceCheckedAt: CHECKED,
+        priceSourceUrl:
+          "https://www.simpsonsinthestrand.co.uk/wp-content/uploads/2026/09/00362_Simpsons_Grand_Divan_BREAKFAST_Menu_A5_4pp_AUGUST_2026.pdf",
+        reason: "朝食メニューの紅茶です。",
+        role: "drink",
+      },
+    ],
+  },
 ];
 
 async function main() {
@@ -756,6 +965,11 @@ async function main() {
         priceRange: p.priceRange ?? null,
         reason: p.reason,
         role: p.role ?? "signature",
+        officialPrice: p.officialPrice ?? null,
+        priceCheckedAt: p.priceCheckedAt
+          ? new Date(`${p.priceCheckedAt}T00:00:00Z`)
+          : null,
+        priceSourceUrl: p.priceSourceUrl ?? null,
         displayOrder: i,
       };
 
@@ -767,6 +981,18 @@ async function main() {
         });
       }
       picks += 1;
+    }
+
+    // seed から外した皿を消す。写真を手で入れた皿は残す(消すと写真ごと失う)。
+    const removed = await db.menuPick.deleteMany({
+      where: {
+        restaurantId: restaurant.id,
+        name: { notIn: entry.picks.map((p) => p.name) },
+        image: null,
+      },
+    });
+    if (removed.count > 0) {
+      console.log(`  - ${restaurant.name}: 外した皿 ${removed.count}件を削除`);
     }
 
     shops += 1;

@@ -2,6 +2,7 @@ import type { MenuPick } from "@prisma/client";
 import MarkdownBody from "@/components/jobs/MarkdownBody";
 import ImageCredit from "@/components/shared/ImageCredit";
 import { responsiveImage } from "@/lib/wikimedia-image";
+import { formatCheckedDate, formatGbp } from "@/lib/restaurants/shop";
 
 /**
  * 店で頼むべき一皿を並べる。SouvenirPicks の restaurants 版。
@@ -40,14 +41,41 @@ const ROLE_STYLES: Record<string, string> = {
     "bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-200",
 };
 
-export default function MenuPicks({ picks }: { picks: MenuPick[] }) {
+export default function MenuPicks({
+  picks,
+  /**
+   * 店のページでは見出しを外側(h2)に出すので、カード内の小見出しを消す。
+   * あわせて、公式価格の出典の注記を一覧の下に出す。
+   */
+  variant = "card",
+}: {
+  picks: MenuPick[];
+  variant?: "card" | "page";
+}) {
   if (picks.length === 0) return null;
 
+  // 公式価格を確かめた日。全品で同じ日ならまとめて1行で書く。
+  const checkedDates = Array.from(
+    new Set(
+      picks
+        .filter((p) => p.officialPrice != null && p.priceCheckedAt)
+        .map((p) => formatCheckedDate(p.priceCheckedAt)),
+    ),
+  );
+
   return (
-    <div className="border-t border-slate-200 pt-3 dark:border-slate-700">
-      <p className="mb-2 text-xs font-semibold text-muted-foreground">
-        何を頼むか
-      </p>
+    <div
+      className={
+        variant === "card"
+          ? "border-t border-slate-200 pt-3 dark:border-slate-700"
+          : ""
+      }
+    >
+      {variant === "card" && (
+        <p className="mb-2 text-xs font-semibold text-muted-foreground">
+          何を頼むか
+        </p>
+      )}
 
       <ul className="space-y-3">
         {picks.map((pick) => (
@@ -68,10 +96,16 @@ export default function MenuPicks({ picks }: { picks: MenuPick[] }) {
                   >
                     {ROLE_LABELS[pick.role] ?? ROLE_LABELS.signature}
                   </span>
-                  {pick.priceRange && (
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {pick.priceRange}
+                  {pick.officialPrice != null ? (
+                    <span className="text-sm font-semibold tabular-nums">
+                      {formatGbp(pick.officialPrice)}
                     </span>
+                  ) : (
+                    pick.priceRange && (
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {pick.priceRange}
+                      </span>
+                    )
                   )}
                 </div>
 
@@ -117,6 +151,13 @@ export default function MenuPicks({ picks }: { picks: MenuPick[] }) {
           </li>
         ))}
       </ul>
+
+      {checkedDates.length > 0 && (
+        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          太字の価格は公式メニューの表記です({checkedDates.join("・")}に確認)。
+          メニューと価格は変わります。
+        </p>
+      )}
     </div>
   );
 }

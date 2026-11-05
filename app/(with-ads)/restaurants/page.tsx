@@ -11,6 +11,16 @@ import DishCard from "@/components/restaurants/DishCard";
 import { SITE_URL, buildPageMetadata } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
 import { fetchDishes } from "@/utils/actions/dishes";
+import { fetchPublishedShops } from "@/utils/actions/restaurants";
+import LazyMultiPinMap from "@/components/maps/LazyMultiPinMap";
+import {
+  budgetExamples,
+  cheapestBudget,
+  formatGbp,
+  mappedBranches,
+  shopPath,
+  shopScenes,
+} from "@/lib/restaurants/shop";
 import {
   RESTAURANT_BASE,
   RESTAURANT_SECTION_NAME,
@@ -105,10 +115,47 @@ const FAQ: GuideFaqItem[] = [
 ];
 
 export default async function RestaurantsPage() {
-  const dishes = await fetchDishes();
+  const [dishes, shops] = await Promise.all([
+    fetchDishes(),
+    fetchPublishedShops(),
+  ]);
   const totalRestaurants = dishes.reduce(
     (n, d) => n + d.restaurants.length,
     0,
+  );
+
+  /*
+   * 店のページを持つ店(公式で事実を確かめた店)。場面で引けるように、
+   * 記録した事実から決めた「こんなときに」で束ねる。2軒未満の場面は出さない
+   * (1軒だけの棚は、選ぶ道具として働かない)。
+   */
+  const shopRows = shops.map((shop, i) => {
+    const examples = budgetExamples(shop);
+    return {
+      shop,
+      n: i + 1,
+      scenes: shopScenes(shop, examples),
+      cheapest: cheapestBudget(examples),
+    };
+  });
+  const sceneShelves = (
+    [
+      ["breakfast", "朝食に"],
+      ["walk-in", "予約なしで"],
+      ["theatre", "劇場街の近くで"],
+      ["under-20", "£20以内で"],
+    ] as const
+  )
+    .map(([id, heading]) => ({
+      id,
+      heading,
+      rows: shopRows.filter((r) => r.scenes.some((s) => s.id === id)),
+    }))
+    .filter((shelf) => shelf.rows.length >= 2);
+  const pins = shopRows.flatMap((r) =>
+    mappedBranches(r.shop)
+      .slice(0, 1)
+      .map((b) => ({ lat: b.lat, lng: b.lng, n: r.n, label: r.shop.name })),
   );
 
   /*
@@ -155,7 +202,7 @@ export default async function RestaurantsPage() {
           <strong className="font-semibold">料理から入ります</strong>。
         </p>
         <p className="mt-3 text-sm font-medium text-muted-foreground">
-          {dishes.length}品・掲載{totalRestaurants}軒。それぞれ何を食べているのか、どう頼むのか、どこで食べるのか。
+          {dishes.length}品・掲載{totalRestaurants}軒。うち{shops.length}軒は、予約の条件と価格を公式で確かめた店のページがあります。
         </p>
       </header>
 
@@ -202,6 +249,80 @@ export default async function RestaurantsPage() {
           ))}
         </ul>
       </section>
+
+      {shopRows.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-xs font-bold text-muted-foreground">
+            <span className="uppercase tracking-[0.22em]">By Shop</span> ・ 店のページから選ぶ
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            予約の条件・頼むものの価格・場所を、公式サイトで確かめて載せている店です。場面の分け方は記録した事実から決めています(朝食を出している、予約なしの席がある、など)。
+          </p>
+
+          {sceneShelves.length > 0 && (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              {sceneShelves.map((shelf) => (
+                <div
+                  key={shelf.id}
+                  className="rounded-xl border border-slate-200 p-4 dark:border-slate-700"
+                >
+                  <h3 className="text-sm font-bold">{shelf.heading}</h3>
+                  <ul className="mt-2 space-y-1.5 text-sm">
+                    {shelf.rows.map(({ shop, cheapest }) => (
+                      <li key={shop.id} className="flex justify-between gap-3">
+                        <Link
+                          href={shopPath(shop.slug)}
+                          className="min-w-0 font-medium text-sky-700 hover:underline dark:text-sky-300"
+                        >
+                          {shop.name}
+                        </Link>
+                        {cheapest && (
+                          <span className="flex-none text-xs tabular-nums text-muted-foreground">
+                            {formatGbp(cheapest.total)}〜
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <LazyMultiPinMap pins={pins} color="#b91c1c" />
+            <ol className="space-y-2">
+              {shopRows.map(({ shop, n, cheapest }) => (
+                <li key={shop.id}>
+                  <Link
+                    href={shopPath(shop.slug)}
+                    className="group flex gap-3 rounded-lg border border-slate-200 p-3 transition hover:border-sky-400 dark:border-slate-700"
+                  >
+                    <span
+                      aria-hidden
+                      className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-red-700 text-xs font-semibold text-white"
+                    >
+                      {n}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-bold group-hover:underline">
+                        {shop.name}
+                        <span className="ml-1 text-xs font-normal italic text-muted-foreground">
+                          {shop.engName}
+                        </span>
+                      </span>
+                      <span className="block text-xs text-muted-foreground">
+                        {[shop.cuisine, shop.area].filter(Boolean).join("・")}
+                        {cheapest ? `・予算の例 ${formatGbp(cheapest.total)}〜` : ""}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
 
       <AdSenseUnit slot={AD_SLOTS.listing} className="mt-10" />
 

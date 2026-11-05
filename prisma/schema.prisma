@@ -1107,21 +1107,26 @@ model Dish {
   updatedAt DateTime @updatedAt
 }
 
-// 料理に紐づく店。
+// 店。料理ページ(/restaurants/<料理>)のカードと、店のページ
+// (/restaurants/<店>)の両方の元になる。
 //
 // 1つの店が複数の料理を出すことはあるが(パブは日曜ローストも朝食も出す)、
 // 特集としては「その店を何で推すのか」が定まっている方が読みやすいので
 // 多対多にはしていない。両方で推したくなったら、そのとき初めて中間表を作る。
+// 「絶対行くべき店」にだけ出る店(パブ・パスタなど料理ページの無い店)は
+// dishId を持たない。
 //
-// 住所を持たせていないのは番地の裏取りができないため。エリアと最寄り駅、
-// そして公式サイトへのリンクがあれば読者は辿り着ける。
+// 店のページを出すかどうかは lib/restaurants/shop.ts の公開基準で決める。
+// 住所・予約の方式・公式価格つきの注文品2品・出典つきの写真・出典・確認日が
+// そろった店だけ。そろわない店は料理ページのカードのまま。
+// 住所は branches に持つ(公式サイトの表記と、郵便番号から引いた座標)。
 model Restaurant {
-  id      String @id @default(cuid())
-  slug    String @unique
+  id      String  @id @default(cuid())
+  slug    String  @unique
   name    String
   engName String
-  dishId  String
-  dish    Dish   @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  dishId  String?
+  dish    Dish?   @relation(fields: [dishId], references: [id], onDelete: Cascade)
 
   /// カード用の一言。なぜこの店なのかを1文で。
   blurb String
@@ -1143,13 +1148,89 @@ model Restaurant {
   imageCredit String?
   imageLink   String?
 
-  displayOrder Int        @default(0)
+  /// 料理の種類。店のページの表示と構造化データ(servesCuisine)に使う。
+  /// 料理ページに属さない店では、これが料理名の代わりになる。
+  cuisine String?
+
+  /// 入り方。予約が開く時期・人数・ウォークイン・行列のアプリなど。markdown。
+  /// 公式で確かめたことだけを書く(factsCheckedAt と sources が根拠)。
+  bookingNote          String?
+  /// 予約なしで入れる席がある。公式に記載があるときだけ true/false、未確認は null。
+  walkIn               Boolean?
+  /// 朝食を出す。公式に記載があるときだけ true/false、未確認は null。
+  breakfast            Boolean?
+  /// 休みの曜日(0=日〜6=土)。closedDaysCheckedAt があるときだけ表示する。
+  closedWeekdays       Int[]     @default([])
+  closedDaysCheckedAt  DateTime?
+  /// 服装の決まり。公式の記載の要約。記載が無ければ null。
+  dressCode            String?
+  /// 会計に加算されるサービス料(%)。公式に記載があるときだけ。
+  serviceChargePercent Float?
+  /// 住所・予約・休み・服装・サービス料を公式で確かめた日。
+  factsCheckedAt       DateTime?
+  /// 出典の一覧。[{ "label": string, "url": string }]
+  sources              Json?
+  /// 予算の例。[{ "label": string, "picks": string[] }]
+  /// picks は MenuPick.name。公式価格のある品だけを足し、serviceChargePercent が
+  /// あれば上乗せして表示する(lib/restaurants/shop.ts の budgetExamples)。
+  budgetExamples       Json?
+
+  displayOrder Int                @default(0)
   menuPicks    MenuPick[]
+  branches     RestaurantBranch[]
+  photos       RestaurantPhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([dishId])
+}
+
+/// 店の所在地。1店舗だけの店も1行持つ。
+///
+/// 座標は住所の郵便番号から postcodes.io で引いた点(郵便番号の中心)。
+/// 番地の建物そのものではないが、英国の郵便番号は十数軒単位なので
+/// 地図と「近くのスポット」の計算には足りる。推測で置かない。
+model RestaurantBranch {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  /// 「コヴェント・ガーデン店」など。1店舗だけの店は店名。
+  name     String
+  /// 公式サイトの表記のまま。
+  address  String
+  postcode String?
+  lat      Float?
+  lng      Float?
+  /// その店舗だけの事情(予約の扱い・朝食の有無など)。
+  note     String?
+
+  displayOrder Int @default(0)
+
+  @@index([restaurantId, displayOrder])
+}
+
+/// 店の写真。Restaurant.image(カード用の1枚)とは別に、料理・店内・外観を
+/// 分けて持つ。撮影はしないので、Commons で見つかったものだけが入る。
+model RestaurantPhoto {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  url     String
+  /// "food" | "interior" | "exterior"
+  kind    String
+  /// 何が写っているか。
+  caption String
+
+  imageSource String?
+  imageCredit String?
+  imageLink   String?
+
+  displayOrder Int @default(0)
+
+  @@index([restaurantId, displayOrder])
 }
 
 /// 店で頼むべき一皿。Souvenir に対する SouvenirPick と同じ役割で、
@@ -1182,6 +1263,12 @@ model MenuPick {
   /// "signature"(名物・まず頼む) | "second"(2皿目・連れと分ける)
   /// | "drink"(飲み物) | "seasonal"(時間帯・季節限定)
   role String @default("signature")
+
+  /// 公式メニューに載っている価格(£)。priceCheckedAt・priceSourceUrl と組で持つ。
+  /// priceRange(幅で書いた目安)より優先して表示する。
+  officialPrice  Float?
+  priceCheckedAt DateTime?
+  priceSourceUrl String?
 
   /// 料理写真。撮れるまで null のまま運用する。
   image       String?
@@ -1373,12 +1460,17 @@ model Brand {
   /// 買い方の実務。markdown。日本との価格差、いつ買うか。
   buying   String
 
-  founded      Int?
+  founded               Int?
   /// 発祥地。「ロンドン・ストランド」「ノーサンバーランド州」など。
-  origin       String?
+  origin                String?
   /// 王室御用達(Royal Warrant)を現在保持しているか。
   /// authorised が取り消される例があるので、過去の保持は true にしない。
-  royalWarrant Boolean @default(false)
+  royalWarrant          Boolean   @default(false)
+  /// 授与者(「国王チャールズ3世」など)。royalWarrant が true のときだけ持つ。
+  royalWarrantGrantor   String?
+  /// 現在も保持していることを確かめた日と、その出典。
+  royalWarrantCheckedAt DateTime?
+  royalWarrantSourceUrl String?
 
   priceRange String?
   website    String?
@@ -1434,6 +1526,11 @@ model BrandStore {
   nearestStation String?
   /// その店ならではの事情。「ここだけ限定ブレンドがある」「間口が狭く見落としやすい」など。
   note           String?
+  /// 地図に置く点。address の郵便番号から postcodes.io で引いた中心点。
+  /// 番地まで分かっている店舗だけ持つ。
+  postcode       String?
+  lat            Float?
+  lng            Float?
 
   displayOrder Int @default(0)
 

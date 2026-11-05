@@ -37,6 +37,16 @@ function stripHtml(html: string): string {
     .trim();
 }
 
+/**
+ * 2026-11 から Commons の API はサムネイルを thumb.wikimedia.org で返すように
+ * なった。中身は upload.wikimedia.org の同じパスと同一(両方 200 で同じバイト数を
+ * 確認)。サイトの縮小画像の仕組み(lib/wikimedia-image.ts の srcset 生成)は
+ * upload.wikimedia.org だけを読むので、こちらに揃えて保存する。
+ */
+function toUploadHost(url: string): string {
+  return url.replace(/^https:\/\/thumb\.wikimedia\.org\//, "https://upload.wikimedia.org/");
+}
+
 export async function resolveCommonsImage(
   fileTitle: string,
 ): Promise<CommonsImage | null> {
@@ -66,7 +76,7 @@ export async function resolveCommonsImage(
   const rawUrl: string = info.thumburl ?? info.url;
 
   return {
-    url: rawUrl.split("?")[0],
+    url: toUploadHost(rawUrl.split("?")[0]),
     credit: creditFromMetadata(info.extmetadata),
     link: info.descriptionurl,
   };

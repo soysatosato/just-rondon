@@ -27,7 +27,10 @@ export default function ViewTracker({
     | "column"
     | "britishEnglish"
     | "area"
-    | "modernBritain";
+    | "modernBritain"
+    | "dish"
+    | "restaurant"
+    | "brand";
   slug: string;
 }) {
   // Strict Mode の二重実行と、同一ページ内での再描画で二重に送らないための旗。

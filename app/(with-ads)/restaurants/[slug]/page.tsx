@@ -1,44 +1,97 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, Wallet } from "lucide-react";
-import JsonLd from "@/components/seo/JsonLd";
-import AdSenseUnit from "@/components/ads/AdSenseUnit";
-import { AD_SLOTS } from "@/lib/adsense";
-import Breadcrumbs from "@/components/navigation/Breadcrumbs";
-import MarkdownBody from "@/components/jobs/MarkdownBody";
-import ImageCredit from "@/components/shared/ImageCredit";
 import { buildPageMetadata } from "@/lib/seo";
-import { breadcrumbJsonLd } from "@/lib/jsonld";
 import { fetchDish, fetchDishSlugs, fetchDishes } from "@/utils/actions/dishes";
-import RestaurantCard from "@/components/restaurants/RestaurantCard";
 import {
-  RESTAURANT_BASE,
-  RESTAURANT_SECTION_NAME,
-  dishJsonLd,
-  dishPath,
-} from "@/components/restaurants/meta";
-import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
+  fetchAllShops,
+  fetchPublishedShops,
+  fetchShop,
+  fetchShopsOfDish,
+} from "@/utils/actions/restaurants";
+import { fetchNearbyAttractions } from "@/utils/actions/attractions";
+import { fetchGbpJpyRate, type FxRate } from "@/lib/fx/rate";
+import DishView from "@/components/restaurants/DishView";
+import ShopView from "@/components/restaurants/ShopView";
+import { dishPath } from "@/components/restaurants/meta";
+import { restaurantGuides } from "@/components/restaurants/guides/guides";
+import { mustVisitShopSlugs } from "@/components/restaurants/guides/content/must-visit";
+import {
+  budgetExamples,
+  cheapestBudget,
+  formatCheckedDate,
+  formatGbp,
+  mappedBranches,
+  meetsShopPageStandard,
+  shopPath,
+} from "@/lib/restaurants/shop";
+
+/*
+ * /restaurants/<slug> は2種類のページを出す。
+ *
+ *   料理ページ(/restaurants/afternoon-tea など)… DB の Dish
+ *   店のページ(/restaurants/dishoom など)      … DB の Restaurant のうち公開基準を満たす店
+ *
+ * URL の階層を分けなかったのは、店名で検索した人が着地する URL を短く保つため。
+ * そのかわり slug が重ならないことをビルド時に確かめる(generateStaticParams)。
+ * must-visit / pub-etiquette は静的ルートなので、こちらより優先される。
+ */
 
 // 取得側の unstable_cache(utils/actions/dishes.ts)と同じ1日。
 export const revalidate = 60 * 60 * 24;
 
 export async function generateStaticParams() {
-  const slugs = await fetchDishSlugs();
-  return slugs.map((d) => ({ slug: d.slug }));
+  const [dishes, shops] = await Promise.all([
+    fetchDishSlugs(),
+    fetchPublishedShops(),
+  ]);
+  const taken = new Set([
+    ...dishes.map((d) => d.slug),
+    ...restaurantGuides.map((g) => g.slug),
+  ]);
+  const clash = shops.filter((s) => taken.has(s.slug)).map((s) => s.slug);
+  if (clash.length > 0) {
+    throw new Error(
+      `店の slug が料理・ガイドの slug と重なっています: ${clash.join(", ")}`,
+    );
+  }
+  return [
+    ...dishes.map((d) => ({ slug: d.slug })),
+    ...shops.map((s) => ({ slug: s.slug })),
+  ];
 }
 
 /**
- * 料理ごとに手で書いたタイトル。既定の「ロンドンの{料理}｜{キャッチ}」では
- * 検索語と合わない料理だけに使う。
+ * 料理ページの題名。検索で探されている言い方(おすすめ・店・値段・予約)を入れ、
+ * 店の数はデータから入れる(増減しても嘘にならないように)。
  *
  * パイ&マッシュは「パイアンドマッシュ」で平均2.9位に出ていながら、
  * 3か月で26回表示・クリック0だった(2026-10)。日本語では「&」と「アンド」の
  * 2通りで書かれ、探している人はまず「何の料理か」を知りたい。
  */
-const TITLE_OVERRIDES: Record<string, (shops: number) => string> = {
-  "pie-and-mash": (shops) =>
-    `パイ&マッシュ(パイアンドマッシュ)とは｜ロンドンで食べられる店${shops}軒`,
+const DISH_TITLES: Record<string, (shops: number) => string> = {
+  "afternoon-tea": (n) =>
+    `ロンドンのアフタヌーンティー おすすめ${n}店｜料金・予約・服装を比較`,
+  "fish-and-chips": (n) =>
+    `ロンドンのフィッシュ&チップス おすすめ${n}店｜値段と店の選び方`,
+  "sunday-roast": (n) => `ロンドンのサンデーロースト おすすめ${n}店｜予約と値段`,
+  "full-english-breakfast": (n) =>
+    `ロンドンのイングリッシュ・ブレックファスト ${n}店｜朝食の店と値段`,
+  "indian-curry": (n) =>
+    `ロンドンのインドカレー おすすめ${n}店｜ディシュームの予約の条件も`,
+  "pie-and-mash": (n) =>
+    `パイ&マッシュ(パイアンドマッシュ)とは｜ロンドンで食べられる店${n}軒`,
+  "salt-beef-bagel": (n) =>
+    `ソルトビーフ・ベーグルとは｜ロンドンで食べられる店${n}軒`,
+  ramen: (n) => `ロンドンのラーメン ${n}店｜値段と空いている時間`,
+  japanese: (n) => `ロンドンの日本食 ${n}店｜うどん・定食からおまかせまで`,
+  chinese: (n) => `ロンドンの中華 ${n}店｜チャイナタウンの飲茶と手打ち麺`,
 };
+
+function shopTitle(shop: { name: string; engName: string; cuisine: string | null }) {
+  if (shop.cuisine === "アフタヌーンティー") {
+    return `${shop.name}のアフタヌーンティー｜予約・服装・価格(${shop.engName})`;
+  }
+  return `${shop.name}(${shop.engName})｜予約の仕方・頼む料理・予算`;
+}
 
 export async function generateMetadata({
   params,
@@ -46,175 +99,112 @@ export async function generateMetadata({
   params: { slug: string };
 }) {
   const dish = await fetchDish(params.slug);
-  if (!dish) return {};
+  if (dish) {
+    const n = dish.restaurants.length;
+    return buildPageMetadata({
+      path: dishPath(dish.slug),
+      title: DISH_TITLES[dish.slug]?.(n) ?? `ロンドンの${dish.name}｜${dish.tagline}`,
+      description: `${dish.summary} ${dish.name}(${dish.engName})が食べられるロンドンの店${n}軒を、予算・予約・エリアで比べられます。`,
+      type: "article",
+      keywords: [
+        `ロンドン ${dish.name}`,
+        `${dish.name} おすすめ`,
+        dish.engName,
+        "ロンドン グルメ",
+      ],
+      ...(dish.image ? { images: [dish.image] } : {}),
+    });
+  }
 
+  const shop = await fetchShop(params.slug);
+  if (!shop || !meetsShopPageStandard(shop)) return {};
+
+  const cheapest = cheapestBudget(budgetExamples(shop));
+  const checked = formatCheckedDate(shop.factsCheckedAt);
+  const image = shop.image ?? shop.photos[0]?.url;
   return buildPageMetadata({
-    path: dishPath(dish.slug),
-    title:
-      TITLE_OVERRIDES[dish.slug]?.(dish.restaurants.length) ??
-      `ロンドンの${dish.name}｜${dish.tagline}`,
-    description: `${dish.summary} ${dish.name}(${dish.engName})が食べられるロンドンの店を${dish.restaurants.length}軒、エリア・最寄り駅・価格帯つきで紹介します。`,
+    path: shopPath(shop.slug),
+    title: shopTitle(shop),
+    description: `${shop.blurb} 公式で確かめた予約の条件と、頼むものの価格${
+      cheapest ? `(予算の例 ${formatGbp(cheapest.total)}〜)` : ""
+    }、店の場所と近くの観光スポット。${checked}確認。`,
     type: "article",
     keywords: [
-      `ロンドン ${dish.name}`,
-      `${dish.name} おすすめ`,
-      dish.engName,
-      "イギリス料理",
-      "ロンドン グルメ",
+      shop.engName,
+      `${shop.engName} 予約`,
+      `${shop.name} ロンドン`,
+      ...(shop.cuisine ? [`ロンドン ${shop.cuisine}`] : []),
     ],
-    ...(dish.image ? { images: [dish.image] } : {}),
+    modifiedTime: shop.factsCheckedAt?.toISOString().slice(0, 10),
+    ...(image ? { images: [image] } : {}),
   });
 }
 
-export default async function DishPage({
+async function fxOrNull(): Promise<FxRate | null> {
+  try {
+    return await fetchGbpJpyRate();
+  } catch {
+    return null;
+  }
+}
+
+export default async function RestaurantSlugPage({
   params,
 }: {
   params: { slug: string };
 }) {
   const dish = await fetchDish(params.slug);
-  if (!dish) notFound();
 
-  // 「次にどれを読むか」を切らさないための他料理リンク。
-  const others = (await fetchDishes()).filter((d) => d.slug !== dish.slug);
+  if (dish) {
+    const [shops, allDishes] = await Promise.all([
+      fetchShopsOfDish(dish.id),
+      fetchDishes(),
+    ]);
+    const others = allDishes.filter((d) => d.slug !== dish.slug);
+    return <DishView dish={dish} shops={shops} others={others} />;
+  }
+
+  const shop = await fetchShop(params.slug);
+  if (!shop || !meetsShopPageStandard(shop)) notFound();
+
+  const branches = mappedBranches(shop);
+  const [nearby, allShops, fx] = await Promise.all([
+    branches.length === 1
+      ? fetchNearbyAttractions({ lat: branches[0].lat, lng: branches[0].lng }, "", 4)
+      : Promise.resolve([]),
+    fetchAllShops(),
+    fxOrNull(),
+  ]);
+
+  // 同じ料理の店(料理を持たない店は、同じく料理を持たない店)。
+  const siblings = allShops.filter(
+    (s) => s.id !== shop.id && s.dishId === shop.dishId,
+  );
+  const relatedShops = siblings
+    .filter((s) => shop.dishId != null || meetsShopPageStandard(s))
+    .map((s) => ({
+      slug: s.slug,
+      name: s.name,
+      engName: s.engName,
+      blurb: s.blurb,
+      href: meetsShopPageStandard(s)
+        ? shopPath(s.slug)
+        : `${dishPath(s.dish?.slug ?? "")}#${s.slug}`,
+    }));
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
-      <JsonLd
-        data={[
-          breadcrumbJsonLd(
-            { name: RESTAURANT_SECTION_NAME, path: RESTAURANT_BASE },
-            [{ name: dish.name, path: dishPath(dish.slug) }],
-          ),
-          dishJsonLd(dish),
-        ]}
-      />
-
-      <Breadcrumbs path="/restaurants" current={dish.name} />
-
-      <header className="mt-6 space-y-3">
-        <h1 className="text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
-          {dish.name}
-          <span className="ml-2 text-base font-normal italic text-muted-foreground">
-            {dish.engName}
-          </span>
-        </h1>
-        <p className="text-base font-medium leading-relaxed text-sky-800 dark:text-sky-300">
-          {dish.tagline}
-        </p>
-      </header>
-
-      {dish.image && (
-        <figure className="mt-6">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl">
-            <img
-              {...responsiveImage(dish.image, IMAGE_SIZES.article)}
-              alt={dish.name}
-              className="absolute inset-0 h-full w-full object-cover"
-              decoding="async"
-            />
-          </div>
-          <figcaption className="mt-1.5">
-            <ImageCredit
-              source={dish.imageSource}
-              credit={dish.imageCredit}
-              link={dish.imageLink}
-            />
-          </figcaption>
-        </figure>
-      )}
-
-      {(dish.priceRange || dish.bestTime) && (
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          {dish.priceRange && (
-            <div className="flex items-start gap-2 rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60">
-              <Wallet className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground">
-                  価格の目安
-                </p>
-                <p className="text-sm font-medium">{dish.priceRange}</p>
-              </div>
-            </div>
-          )}
-          {dish.bestTime && (
-            <div className="flex items-start gap-2 rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60">
-              <Clock className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
-              <div>
-                <p className="text-xs font-semibold text-muted-foreground">
-                  食べる時間帯
-                </p>
-                <p className="text-sm font-medium">{dish.bestTime}</p>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      <section className="mt-8">
-        <h2 className="mb-1 text-xl font-semibold">
-          {dish.name}とは何なのか
-        </h2>
-        <MarkdownBody className="text-base">{dish.body}</MarkdownBody>
-      </section>
-
-      <AdSenseUnit slot={AD_SLOTS.inArticle} className="mt-8" />
-
-      {dish.howTo && (
-        <section className="mt-10 rounded-lg border border-amber-200 bg-amber-50 p-5 dark:border-amber-900/50 dark:bg-amber-950/30">
-          <h2 className="mb-1 text-xl font-semibold">頼み方・食べ方</h2>
-          <MarkdownBody className="text-base">{dish.howTo}</MarkdownBody>
-        </section>
-      )}
-
-      <section className="mt-12 space-y-5">
-        <div className="space-y-2 border-b border-slate-200 pb-3 dark:border-slate-700">
-          <h2 className="text-xl font-semibold sm:text-2xl">
-            {dish.name}が食べられる店
-          </h2>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            長く続いている店を中心に選びました。
-            <strong className="font-semibold">
-              営業時間・定休日・価格は変わります。
-            </strong>
-            行く前に公式サイトで確認してください。
-          </p>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2">
-          {dish.restaurants.map((r) => (
-            <RestaurantCard key={r.id} restaurant={r} />
-          ))}
-        </div>
-      </section>
-
-      <AdSenseUnit slot={AD_SLOTS.articleBottom} className="mt-10" />
-
-      <section className="mt-12 space-y-3 rounded-lg border border-slate-200 p-5 dark:border-slate-800">
-        <h2 className="text-lg font-semibold">ほかのイギリス料理</h2>
-        <ul className="grid gap-2 text-sm sm:grid-cols-2">
-          {others.map((d) => (
-            <li key={d.id}>
-              <Link
-                href={dishPath(d.slug)}
-                className="text-sky-700 hover:underline dark:text-sky-300"
-              >
-                {d.name}
-              </Link>
-              <span className="ml-1 text-xs text-muted-foreground">
-                （{d.restaurants.length}軒）
-              </span>
-            </li>
-          ))}
-        </ul>
-        <p className="pt-2 text-sm">
-          <Link
-            href={RESTAURANT_BASE}
-            className="font-semibold text-sky-700 hover:underline dark:text-sky-300"
-          >
-            イギリス料理の一覧に戻る →
-          </Link>
-        </p>
-      </section>
-    </div>
+    <ShopView
+      shop={shop}
+      nearby={nearby.map((spot) => ({
+        slug: spot.slug,
+        name: spot.name,
+        image: spot.image,
+        distanceKm: spot.distanceKm,
+        durationText: spot.durationText,
+      }))}
+      relatedShops={relatedShops}
+      inMustVisit={mustVisitShopSlugs.includes(shop.slug)}
+      fx={fx}
+    />
   );
 }

@@ -32,7 +32,15 @@ const TARGETS = {
   britishEnglish: "british-english",
   area: "area",
   modernBritain: "modern-britain",
+  // 料理ページ・店のページ・ブランド。累計の列を持たない表なので、
+  // 日別(DailyView)だけを数える。効果の測定に使う(2026-11 の再設計)。
+  dish: "dish",
+  restaurant: "restaurant",
+  brand: "brand",
 } as const;
+
+/** 累計(views)の列を持たず、日別だけを数える対象。 */
+const DAILY_ONLY = new Set<TargetType>(["dish", "restaurant", "brand"]);
 
 type TargetType = keyof typeof TARGETS;
 
@@ -169,6 +177,15 @@ async function incrementView(targetType: TargetType, slug: string) {
 
   const day = utcDay();
 
+  const daily = db.dailyView.upsert({
+    where: {
+      targetType_targetId_day: { targetType, targetId: id, day },
+    },
+    create: { targetType, targetId: id, day, count: 1 },
+    update: { count: { increment: 1 } },
+  });
+  if (DAILY_ONLY.has(targetType)) return daily;
+
   return db.$transaction([
     updateTotal(targetType, id),
     db.dailyView.upsert({
@@ -202,6 +219,21 @@ async function findTargetId(targetType: TargetType, slug: string) {
       where: { slug },
       select: { id: true },
     });
+    return row?.id ?? null;
+  }
+  if (targetType === "dish") {
+    const row = await db.dish.findUnique({ where: { slug }, select: { id: true } });
+    return row?.id ?? null;
+  }
+  if (targetType === "restaurant") {
+    const row = await db.restaurant.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    return row?.id ?? null;
+  }
+  if (targetType === "brand") {
+    const row = await db.brand.findUnique({ where: { slug }, select: { id: true } });
     return row?.id ?? null;
   }
 

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { Prisma } from "@prisma/client";
 import db from "../utils/db";
 import {
   imageColumns,
@@ -6,13 +7,23 @@ import {
   type CommonsImage,
 } from "./lib/commons";
 import { normaliseInstagramUrl } from "./lib/instagram";
+import { SHOP_FACTS, type ShopFacts } from "./data/shop-facts";
 
 /**
  * /restaurants の料理・店データを投入する。
  *
- * 店には住所を持たせない。番地の裏取りができないうえ、移転すると
- * 一番目立つ場所に古い情報が残る。エリアと最寄り駅、公式サイトがあれば
- * 読者は辿り着けるし、この3つは番地より変わりにくい。
+ * 店は2種類ある。
+ *   DISHES の中の店 … 料理ページ(/restaurants/<料理>)のカードになる。
+ *   GUIDE_RESTAURANTS … 料理ページを持たない店(「絶対行くべき店」の
+ *                      パブやパスタの店)。dishId を持たない。
+ *
+ * どちらも、data/shop-facts.ts に公式で確かめた事実(所在地・入り方・
+ * 確認日・出典・写真)があり、lib/restaurants/shop.ts の公開基準を満たせば
+ * 店のページ(/restaurants/<店>)が作られる。事実を持たない店には住所を
+ * 持たせない。番地の裏取りをしていない店で一番目立つ場所に古い情報を
+ * 残さないため。
+ *
+ * 実行の順: このスクリプト → seed-menu-picks.ts(注文品は店の行が要る)。
  */
 
 type RestaurantSeed = {
@@ -88,13 +99,13 @@ const DISHES: DishSeed[] = [
         name: "ザ・リッツ",
         engName: "The Ritz London",
         blurb:
-          "格式で選ぶならここ。ドレスコードが最も厳しく、そのぶん体験としての密度が高い。",
-        body: `パーム・コートと呼ばれる吹き抜けの空間で、生演奏を聴きながら供されます。ロンドンのアフタヌーンティーの基準点のような存在で、1日に複数回の時間帯が設定されているほど需要があります。
+          "格式で選ぶならここ。服装の決まりがいちばん厳しい。",
+        body: `ホテルのパーム・コート(Palm Court)で供される、ロンドンのアフタヌーンティーの代表格です。時間帯は1日5回あります。
 
-**ドレスコードが明確**なのが特徴で、男性はジャケットとネクタイが必要、ジーンズとスニーカーは不可。旅行の荷物にジャケットを入れるかどうかを、予約の段階で決めておく必要があります。予約は数か月前から埋まります。`,
+**服装の決まりがはっきりしています**。男性はジャケットとネクタイが必要で、ジーンズとスポーツウェアは男女とも入れません(16歳未満は対象外)。旅行の荷物にジャケットを入れるかどうかを、予約の段階で決めておく必要があります。`,
         area: "ピカデリー",
         nearestStation: "Green Park",
-        priceRange: "£75〜",
+        priceRange: "£95〜",
         website: "https://www.theritzlondon.com/",
         bookingRequired: true,
         commonsFile: "File:The Ritz London.jpg",
@@ -105,15 +116,17 @@ const DISHES: DishSeed[] = [
         name: "フォートナム&メイソン",
         engName: "Fortnum & Mason",
         blurb:
-          "紅茶そのものの品揃えが最強。買い物と同じ建物で済むので、旅程に組み込みやすい。",
-        body: `1707年創業の老舗。上階のティーサロンでアフタヌーンティーを供しています。**紅茶専門店が母体**なので茶葉の選択肢が非常に多く、紅茶を目的に来るならここが分かりやすい。
+          "紅茶を席で選ばせてくれるティーサロン。下の階で紅茶や菓子を買える。",
+        body: `1707年創業のフォートナム&メイソン本店の4階、ダイヤモンド・ジュビリー・ティーサロンで供されます。紅茶は、席で担当者が説明しながら選ばせてくれる形式です(公式)。
 
-同じ建物の下の階が土産物の宝庫なので、**お茶をしてそのまま買い物**という流れが作れます。ホテルのアフタヌーンティーより旅程に組み込みやすいのが実務的な利点です。`,
+同じ建物の下の階で紅茶や菓子を買えるので、**お茶をしてそのまま買い物**という流れが作れます。ホテルのアフタヌーンティーより旅程に組み込みやすいのが実務的な利点です。`,
         area: "ピカデリー",
         nearestStation: "Green Park / Piccadilly Circus",
-        priceRange: "£70〜",
-        website: "https://www.fortnumandmason.com/",
+        priceRange: "£84〜",
+        website: "https://www.fortnumandmason.com/diamond-jubilee-tea-salon",
         bookingRequired: true,
+        commonsFile:
+          "File:Fortnum and Mason, Piccadilly - geograph.org.uk - 2409156.jpg",
         instagramUrl: "https://www.instagram.com/fortnums/p/CxfhKgGMb_G/",
       },
       {
@@ -311,10 +324,10 @@ const DISHES: DishSeed[] = [
         name: "リージェンシー・カフェ",
         engName: "Regency Cafe",
         blurb:
-          "1946年開業。黒タイルの外観が有名で、映画にも使われてきたロンドンの朝の象徴。",
-        body: `ウェストミンスターの住宅街にある、黒いタイル張りの外観が印象的なカフェ。**1946年から続く**greasy spoon の代表格で、映画やドラマのロケ地としても知られます。
+          "1946年開業。黒タイルの外観で知られる大衆食堂。2025年7月に新しい経営者のもとで再開した。",
+        body: `ウェストミンスターの住宅街にある、黒いタイル張りの外観が印象的なカフェ。1946年に開いた greasy spoon(大衆食堂)の代表格で、映画やドラマのロケ地としても知られます。
 
-注文が出来上がると**カウンターから名前や品名を大声で呼ばれる**のがこの店の名物。緊張しますが、それも含めて体験です。朝は並びますが回転は速い。
+**2024年に長年の経営者が引退して店を閉め、2025年7月に新しい経営者のもとで再開しました**(Time Out、The Caterer の報道)。
 
 ウェストミンスター寺院やビッグ・ベンから歩ける距離なので、**観光の初日の朝に組み込みやすい**立地です。`,
         area: "ウェストミンスター",
@@ -389,14 +402,12 @@ greasy spoon の対極にある選択肢で、値段も相応。朝から人が�
         name: "ディシューム",
         engName: "Dishoom",
         blurb:
-          "旧ボンベイのイラニ・カフェを再現した内装。ロンドンで最も予約が取りにくい店のひとつ。",
+          "旧ボンベイのイラニ・カフェを再現した内装。席の大半を予約なしの客のために空けている。",
         body: `20世紀のボンベイにあったイラニ・カフェ（ペルシャ系移民が営んだ大衆食堂）へのオマージュとして作られた店。**内装の作り込みが徹底していて**、店に入った時点で体験が始まります。
 
-名物は黒豆を長時間煮込んだ **black daal** と、朝に出る **bacon naan roll**。日本人の口にも合いやすい味付けで、辛さで身構える必要がありません。
+名物は黒豆を煮込んだ **House Black Daal** と、朝だけ出る **Bacon Naan Roll**。ロンドンにはコヴェント・ガーデン、カーナビー、キングス・クロス、ショーディッチなど8店あります。
 
-コヴェント・ガーデン、キングス・クロス、ショーディッチ、カーナビーなど複数店舗。
-
-予約の条件が独特で、**17時45分までは人数を問わず予約できますが、それ以降は6名以上でないと予約できません**。少人数で夜に行くなら並ぶことになります（待ち時間の目安は30分〜1時間、チャイが無償で出ます）。早い時間に予約するか、朝食の時間帯を狙うのが現実的です。`,
+予約の条件が独特で、**17時45分までは人数を問わず予約できますが、それ以降は6名以上でないと予約できません**。少人数で夜に行くなら並ぶことになります。早い時間に予約するか、朝食の時間帯に行くのが確実です。`,
         area: "コヴェント・ガーデン / キングス・クロス / ショーディッチ ほか",
         nearestStation: "Covent Garden / King's Cross",
         priceRange: "£20〜35",
@@ -706,12 +717,13 @@ greasy spoon の対極にある選択肢で、値段も相応。朝から人が�
           "ソーホーの江戸前おまかせ。特別な日のための一軒。",
         body: `ソーホーの Broadwick Street にある**江戸前おまかせ**の店。カウンター中心の小さな空間で、板前が目の前で握ります。仕入れに応じて日ごとに献立が変わる形式です。
 
-**価格は出典によって幅があり、公式サイトには掲載されていません**。ランチ£88・ディナー£180（いずれも十数品〜十九品、サービス料15%別）とする情報がある一方、より安い帯と高い帯の両方を挙げる情報もあります。**予約時に必ず確認してください。**
+**公式サイトには価格が載っていません**。レストランガイドの Harden's には、昼は£40と£70、夜は£100と£150のコースがあると載っています(2026年11月確認)。**予約するときに総額とサービス料を確認してください。**
 
 予約は SevenRooms 経由。水曜〜日曜の営業で、月曜・火曜は休みという情報があります。`,
         area: "ソーホー",
         nearestStation: "Oxford Circus / Piccadilly Circus",
-        priceRange: "£88〜180（要確認・サービス料別）",
+        // 公式は価格を出していない。出典つきの数字は本文に書く。
+        priceRange: "公式は非公開",
         website: "https://namaiki.co.uk/",
         bookingRequired: true,
         instagramUrl: "https://www.instagram.com/p/DNfwYGPIMnd/", // @namaikilondon
@@ -787,6 +799,210 @@ greasy spoon の対極にある選択肢で、値段も相応。朝から人が�
   },
 ];
 
+/**
+ * 料理ページを持たない店。「絶対行くべき店」(/restaurants/must-visit)に
+ * 出てくる店のうち、公式で事実を確かめて店のページを出すもの。
+ *
+ * BAO ソーホーとチルコロ・ポポラーレも記事には出るが、公式のメニューから
+ * 価格が読めず公開基準を満たさないので、ここには入れていない(記事の中だけ)。
+ */
+const GUIDE_RESTAURANTS: RestaurantSeed[] = [
+  {
+    slug: "the-devonshire",
+    name: "ザ・デヴォンシャー",
+    engName: "The Devonshire",
+    blurb:
+      "1階のパブと屋上は予約なしで入れる。2〜3階の食堂は毎週木曜10時30分に予約が開く。",
+    body: `ソーホーのデンマン通りにあるパブと肉料理の店です。2026年1月の Estrella Damm Top 50 Gastropubs で英国1位になりました。
+
+牛肉は店で熟成させて切り分け、パブの軽食も店の精肉場とパン焼き場で作っています(公式)。**建物の中で予約のルールが分かれている**のがこの店の要点で、1階のパブと屋上は先着順、2〜3階の食堂は予約制です。`,
+    area: "ソーホー",
+    nearestStation: "Piccadilly Circus",
+    priceRange: "パブの軽食£2〜12・食堂の主菜£24〜54",
+    website: "https://www.devonshiresoho.co.uk/",
+    bookingRequired: false,
+    commonsFile: "File:Devonshire, Soho, W1.jpg",
+  },
+  {
+    slug: "padella",
+    name: "パデッラ",
+    engName: "Padella",
+    blurb:
+      "ボロー・マーケットの手打ちパスタの店。ボロー店は予約を受けず、アプリの仮想の行列に並ぶ。",
+    body: `ボロー・マーケットの入口にある手打ちパスタの店で、ソーホーとショーディッチにも店があります。名物は太い手打ち麺にペコリーノと黒胡椒を合わせた **Pici cacio & pepe** です。
+
+メニューは日付入りで公式サイトに出ていて、同じ皿でも店によって価格が少し違います。`,
+    area: "ボロー・マーケット / ソーホー / ショーディッチ",
+    nearestStation: "London Bridge",
+    priceRange: "パスタ1皿£12.5〜16.5",
+    website: "https://www.padella.co/",
+    bookingRequired: false,
+    commonsFile: "File:Padella reopens for takeout pasta (50007016677).jpg",
+    instagramUrl: "https://www.instagram.com/p/C0J0wFtNAzV/",
+  },
+  {
+    slug: "st-john-smithfield",
+    name: "セント・ジョン",
+    engName: "St. JOHN",
+    blurb:
+      "動物を余さず食べる nose-to-tail をイギリス料理に持ち込んだ店。看板は骨髄のロースト。",
+    body: `1994年にスミスフィールド食肉市場のそばに開いた店です。動物を余さず食べる **nose-to-tail**(鼻から尻尾まで)の考え方をイギリス料理に持ち込みました。Time Out の2026年版ロンドンのレストラン50では3位でした。
+
+看板は **Roast Bone Marrow and Parsley Salad**(骨髄のロースト)。食後のマドレーヌは注文を受けてから焼くので15分かかると、メニューに書いてあります。`,
+    area: "スミスフィールド",
+    nearestStation: "Farringdon",
+    priceRange: "主菜£24〜45",
+    website: "https://stjohnrestaurant.com/",
+    bookingRequired: true,
+    commonsFile: "File:2014-08-07 st john 0203.jpg",
+    instagramUrl: "https://www.instagram.com/p/CDOmIGBjNKj/",
+  },
+  {
+    slug: "simpsons-in-the-strand",
+    name: "シンプソンズ・イン・ザ・ストランド",
+    engName: "Simpson's in the Strand",
+    blurb:
+      "ローストビーフをワゴンで運び、席の横で切り分ける老舗。2026年に再開した。",
+    body: `1828年に始まった店で、19世紀にはイギリスのチェスの中心地でした。大広間グランド・ディヴァンでは、**ローストビーフ(Roast Rib of Devonshire Beef)を席で切り分けて**出します(公式メニュー)。
+
+2020年に閉じたまま6年間動きませんでしたが、2026年に再開しました。手がけたのは、ウォルズリーやザ・デラウニーを作ったジェレミー・キングです。`,
+    area: "ストランド",
+    nearestStation: "Charing Cross / Embankment",
+    priceRange: "朝食£22.75〜・ローストビーフ£49.75",
+    website: "https://www.simpsonsinthestrand.co.uk/",
+    bookingRequired: true,
+    commonsFile:
+      "File:Grand Divan, Simpson's-in-the-Strand, London (24437703603).jpg",
+  },
+];
+
+/**
+ * 店の行に入れる「確かめた事実」の列。事実を持たない店は空に戻す
+ * (以前の値が残って、確かめていないのに画面に出ることがないように)。
+ */
+function factColumns(f: ShopFacts | undefined) {
+  if (!f) {
+    return {
+      cuisine: null,
+      bookingNote: null,
+      walkIn: null,
+      breakfast: null,
+      closedWeekdays: [] as number[],
+      closedDaysCheckedAt: null,
+      dressCode: null,
+      serviceChargePercent: null,
+      factsCheckedAt: null,
+      sources: Prisma.DbNull,
+      budgetExamples: Prisma.DbNull,
+    };
+  }
+  const checked = new Date(`${f.factsCheckedAt}T00:00:00Z`);
+  return {
+    cuisine: f.cuisine,
+    bookingNote: f.bookingNote,
+    walkIn: f.walkIn ?? null,
+    breakfast: f.breakfast ?? null,
+    closedWeekdays: f.closedWeekdays ?? [],
+    closedDaysCheckedAt: f.closedWeekdays ? checked : null,
+    dressCode: f.dressCode ?? null,
+    serviceChargePercent: f.serviceChargePercent ?? null,
+    factsCheckedAt: checked,
+    sources: f.sources,
+    budgetExamples: f.budgetExamples ?? Prisma.DbNull,
+  };
+}
+
+/** 店を1件登録し、所在地と写真を差し替える。解決できた画像の枚数を返す。 */
+async function upsertRestaurant(
+  r: RestaurantSeed,
+  dishId: string | null,
+  order: number,
+): Promise<{ images: number; missing: number }> {
+  let images = 0;
+  let missing = 0;
+
+  let restImage: CommonsImage | null = null;
+  if (r.commonsFile) {
+    restImage = await resolveCommonsImage(r.commonsFile);
+    if (restImage) images += 1;
+    else {
+      missing += 1;
+      console.warn(`  画像が見つからない: ${r.commonsFile}`);
+    }
+  }
+
+  const facts = SHOP_FACTS[r.slug];
+  const restData = {
+    name: r.name,
+    engName: r.engName,
+    dishId,
+    blurb: r.blurb,
+    body: r.body ?? null,
+    area: r.area,
+    nearestStation: r.nearestStation ?? null,
+    priceRange: r.priceRange ?? null,
+    website: r.website ?? null,
+    bookingRequired: r.bookingRequired ?? false,
+    instagramUrl: normaliseInstagramUrl(r.instagramUrl, r.slug),
+    displayOrder: order,
+    ...imageColumns(restImage),
+    ...factColumns(facts),
+  };
+
+  const restaurant = await db.restaurant.upsert({
+    where: { slug: r.slug },
+    create: { slug: r.slug, ...restData },
+    update: restData,
+    select: { id: true },
+  });
+
+  // 所在地と写真は手で埋める列を持たないので、毎回全消し→再投入でよい。
+  await db.restaurantBranch.deleteMany({
+    where: { restaurantId: restaurant.id },
+  });
+  if (facts) {
+    await db.restaurantBranch.createMany({
+      data: facts.branches.map((b, i) => ({
+        restaurantId: restaurant.id,
+        name: b.name,
+        address: b.address,
+        postcode: b.postcode ?? null,
+        lat: b.lat ?? null,
+        lng: b.lng ?? null,
+        note: b.note ?? null,
+        displayOrder: i,
+      })),
+    });
+  }
+
+  await db.restaurantPhoto.deleteMany({
+    where: { restaurantId: restaurant.id },
+  });
+  for (const [i, photo] of (facts?.photos ?? []).entries()) {
+    const resolved = await resolveCommonsImage(photo.commonsFile);
+    if (!resolved) {
+      missing += 1;
+      console.warn(`  画像が見つからない: ${photo.commonsFile}`);
+      continue;
+    }
+    images += 1;
+    await db.restaurantPhoto.create({
+      data: {
+        restaurantId: restaurant.id,
+        url: resolved.url,
+        kind: photo.kind,
+        caption: photo.caption,
+        imageSource: "commons",
+        imageCredit: resolved.credit,
+        imageLink: resolved.link,
+        displayOrder: i,
+      },
+    });
+  }
+
+  return { images, missing };
+}
+
 async function main() {
   let dishOrder = 0;
   let images = 0;
@@ -827,44 +1043,35 @@ async function main() {
     let restOrder = 0;
     for (const r of d.restaurants) {
       restOrder += 1;
-
-      let restImage: CommonsImage | null = null;
-      if (r.commonsFile) {
-        restImage = await resolveCommonsImage(r.commonsFile);
-        if (restImage) images += 1;
-        else {
-          missing += 1;
-          console.warn(`  画像が見つからない: ${r.commonsFile}`);
-        }
-      }
-
-      const restData = {
-        name: r.name,
-        engName: r.engName,
-        dishId: dish.id,
-        blurb: r.blurb,
-        body: r.body ?? null,
-        area: r.area,
-        nearestStation: r.nearestStation ?? null,
-        priceRange: r.priceRange ?? null,
-        website: r.website ?? null,
-        bookingRequired: r.bookingRequired ?? false,
-        instagramUrl: normaliseInstagramUrl(r.instagramUrl, r.slug),
-        displayOrder: restOrder,
-        ...imageColumns(restImage),
-      };
-
-      await db.restaurant.upsert({
-        where: { slug: r.slug },
-        create: { slug: r.slug, ...restData },
-        update: restData,
-      });
+      const result = await upsertRestaurant(r, dish.id, restOrder);
+      images += result.images;
+      missing += result.missing;
     }
 
     console.log(`✓ ${d.name}（店 ${d.restaurants.length}件）`);
   }
 
-  const total = DISHES.reduce((n, d) => n + d.restaurants.length, 0);
+  let guideOrder = 0;
+  for (const r of GUIDE_RESTAURANTS) {
+    guideOrder += 1;
+    const result = await upsertRestaurant(r, null, guideOrder);
+    images += result.images;
+    missing += result.missing;
+    console.log(`✓ ${r.name}（料理ページなし）`);
+  }
+
+  const unknown = Object.keys(SHOP_FACTS).filter(
+    (slug) =>
+      !DISHES.some((d) => d.restaurants.some((r) => r.slug === slug)) &&
+      !GUIDE_RESTAURANTS.some((r) => r.slug === slug),
+  );
+  if (unknown.length > 0) {
+    console.warn(`\n× shop-facts にあるが店が無い: ${unknown.join(", ")}`);
+  }
+
+  const total =
+    DISHES.reduce((n, d) => n + d.restaurants.length, 0) +
+    GUIDE_RESTAURANTS.length;
   console.log(
     `\n料理 ${DISHES.length}件 / 店 ${total}件を登録。画像 ${images}枚を解決、${missing}枚は見つからず。`,
   );

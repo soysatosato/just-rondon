@@ -607,6 +607,10 @@ module.exports = {
     }
 
     // 料理ページ。/restaurants ハブ自体は上の staticPages 側にある。
+    // 店のページ(/restaurants/<店>)はここでは足さない。公開基準
+    // (lib/restaurants/shop.ts の meetsShopPageStandard)を満たす店だけが
+    // generateStaticParams に入り、自動収集の側で sitemap に載る。
+    // ここで DB から全店を足すと、基準を満たさない(404の)店まで載ってしまう。
     const dishes = await prisma.dish.findMany({ select: { slug: true } });
     for (const d of dishes) {
       paths.push(await config.transform(config, `/restaurants/${d.slug}`));
