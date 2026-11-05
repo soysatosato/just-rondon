@@ -8,6 +8,13 @@ import type {
 import { SITE_URL } from "@/lib/seo";
 
 export const BRAND_BASE = "/brands";
+
+/**
+ * ブランドの価格の目安(Brand.priceRange・BrandItem.priceRange)を調べた時期。
+ * seed-brands.ts の最終投入が 2026-08-23〜09-06。確認日を項目ごとに持つまでは、
+ * この時期を画面に出して「いつの数字か」を示す。
+ */
+export const BRAND_PRICES_RECORDED = "2026年8〜9月";
 export const BRAND_SECTION_NAME = "イギリスのブランド";
 
 export type BrandWithItems = Brand & {
@@ -60,11 +67,12 @@ export type BrandCategory =
   | "food";
 
 /**
- * 並び順は「現地で買う理由の強さ」の順。
+ * 並び順はハブでの掲載順。
  *
- * 読者がこのページに来る動機の中心は価格差なので、日本との差が出やすい
- * カテゴリを先に置く。同じ £100 でも、日本の直営価格と倍近く開くアパレルと、
- * ほとんど変わらない紅茶とでは、読者にとっての優先度が違う。
+ * 以前は「日本との価格差が出やすい順」と説明していたが、その差を数字で
+ * 確かめていなかった。2026-11 に、ジョー マローンのコロンが今の為替では
+ * 日本とほぼ同額だと分かったので、価格差を前提にした説明は外した。
+ * 日本との比較は、両国の公式価格・為替・確認日がそろった品でだけ書く。
  */
 export const BRAND_CATEGORIES: {
   key: BrandCategory;
@@ -75,7 +83,7 @@ export const BRAND_CATEGORIES: {
     key: "fashion",
     label: "ファッション",
     description:
-      "日本との価格差が最も大きいカテゴリ。同じ品が本国では定価から下がっていることも珍しくない。",
+      "定番の型を、本国の店で試着して選べる。日本では見かけない型や色が並ぶこともある。",
   },
   {
     key: "footwear",
@@ -93,13 +101,13 @@ export const BRAND_CATEGORIES: {
     key: "beauty",
     label: "コスメ・香り",
     description:
-      "単価が手頃で荷物にならず、価格差もはっきり出る。土産と自分用を兼ねやすい。",
+      "単価が手頃で荷物にならない。土産と自分用を兼ねやすい。液体は持ち帰り方に注意。",
   },
   {
     key: "homeware",
     label: "食器・インテリア",
     description:
-      "割れ物なので持ち帰りに難があるが、アウトレットとの価格差は全カテゴリで最も大きい。",
+      "割れ物なので持ち帰りに手間がかかる。アウトレットで値引きされた品が並ぶことがある。",
   },
   {
     key: "food",
@@ -160,6 +168,20 @@ export function brandListJsonLd(brands: Brand[]) {
 export function brandJsonLd(brand: BrandWithItems) {
   const pageUrl = `${SITE_URL}${brandPath(brand.slug)}`;
 
+  // 地図に置いている店舗(番地と郵便番号まで確かめたもの)だけを Store として出す。
+  const stores = brand.stores
+    .filter((s) => s.address && s.lat != null && s.lng != null)
+    .map((s) => ({
+      "@type": "Store",
+      name: s.name,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: s.address,
+        addressCountry: "GB",
+      },
+      geo: { "@type": "GeoCoordinates", latitude: s.lat, longitude: s.lng },
+    }));
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -169,6 +191,6 @@ export function brandJsonLd(brand: BrandWithItems) {
     description: brand.blurb,
     ...(brand.founded ? { foundingDate: String(brand.founded) } : {}),
     ...(brand.website ? { url: brand.website } : {}),
-    ...(brand.image ? { logo: brand.image } : {}),
+    ...(stores.length > 0 ? { location: stores } : {}),
   };
 }

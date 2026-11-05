@@ -8,8 +8,9 @@ import type { GuideFaqItem } from "@/components/guides/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 import { breadcrumbJsonLd, faqPageJsonLd } from "@/lib/jsonld";
-import { fetchBrands } from "@/utils/actions/brands";
+import { fetchBrands, fetchFlagshipStores } from "@/utils/actions/brands";
 import BrandCard from "@/components/brands/BrandCard";
+import LazyMultiPinMap from "@/components/maps/LazyMultiPinMap";
 import {
   BRAND_BASE,
   BRAND_SECTION_NAME,
@@ -20,7 +21,7 @@ import {
 
 const TITLE = "イギリスのブランド｜ロンドンで買う価値がある定番と、その成り立ち";
 const DESCRIPTION =
-  "バーバリー、バブアー、ドクターマーチン、ウェッジウッドなど、イギリス発のブランドをカテゴリ別にまとめました。創業の経緯と定番品が生まれた背景、ロンドンのどこで買えるか、日本との価格差まで具体的に紹介します。";
+  "バーバリー、バブアー、ドクターマーチン、ウェッジウッドなど、イギリス発のブランドをカテゴリ別にまとめました。定番品と価格の目安、ロンドンの旗艦店とアウトレットの場所(地図つき)、創業の経緯まで紹介します。";
 
 // 取得側の unstable_cache(utils/actions/brands.ts)と同じ1日。
 export const revalidate = 60 * 60 * 24;
@@ -50,7 +51,7 @@ export const metadata = buildPageMetadata({
 const BUYING_BASICS: { title: string; body: string; href?: string }[] = [
   {
     title: "免税（VAT還付）はもう無い",
-    body: "2021年1月にイギリスの旅行者向け免税制度は廃止されました。空港で書類を出せば20%戻る、という以前の前提は今は通用しません。それでも現地が安いブランドは多いのですが、理由は免税ではなく元の定価差とセールです。",
+    body: "2021年1月にイギリスの旅行者向け免税制度は廃止されました。空港で書類を出せば20%戻る、という以前の前提は今は通用しません。日本より安いかどうかは品と為替で変わるので、買う品が決まっているなら両国の公式オンラインストアで比べてください。",
     href: "/shopping/vat-refund",
   },
   {
@@ -67,7 +68,7 @@ const FAQ: GuideFaqItem[] = [
   {
     question: "イギリスでブランド品を買うと日本より安いですか？",
     answer:
-      "カテゴリによります。アパレル・靴・食器は本国価格が明確に安く、セール期ならさらに開きます。一方で紅茶やコスメは日本の並行輸入品と大きく変わらないこともあります。**免税（VAT還付）は2021年に廃止されている**ので、「20%戻る前提」で計算すると必ずずれます（[詳しくはこちら](/shopping/vat-refund)）。",
+      "**品と為替で変わるので、一概には言えません。** 2026年11月の為替では、ジョー マローンのコロン30mLのように英国と日本でほぼ同じ値段の品もあります。買う品が決まっているなら、英国と日本の公式オンラインストアで同じ品の価格を比べ、その日の為替で円に直してください。**免税（VAT還付）は2021年に廃止されている**ので、「20%戻る前提」で計算すると必ずずれます（[詳しくはこちら](/shopping/vat-refund)）。",
   },
   {
     question: "「王室御用達」とは何ですか？",
@@ -86,9 +87,44 @@ const FAQ: GuideFaqItem[] = [
   },
 ];
 
+/**
+ * 目的から入る入口。ブランド名を知らない人も、ここから選べるようにする。
+ * 配る土産はお土産のページのほうが答えに近いので、そちらへ送る。
+ */
+const PURPOSES: { title: string; body: string; href: string }[] = [
+  {
+    title: "配る土産を買う",
+    body: "数をそろえる菓子や紅茶は、品目ごとに選び方と持ち帰り方をまとめたお土産のページへ。",
+    href: "/souvenirs",
+  },
+  {
+    title: "自分用の定番を買う",
+    body: "服・靴・鞄を、分野ごとに。各ブランドのページで定番品と旗艦店を先に出しています。",
+    href: "#category-fashion",
+  },
+  {
+    title: "本店・旗艦店を見に行く",
+    body: "旗艦店の多くはメイフェアからリージェント・ストリートのあたりに集まっています。",
+    href: "#flagships",
+  },
+  {
+    title: "アウトレットで買う",
+    body: "ビスター・ヴィレッジはロンドンから列車で約1時間。往復と滞在で1日がかりです。",
+    href: "/shopping/bicester-village",
+  },
+];
+
 export default async function BrandsPage() {
-  const brands = await fetchBrands();
+  const [brands, flagships] = await Promise.all([
+    fetchBrands(),
+    fetchFlagshipStores(),
+  ]);
   const groups = groupByCategory(brands);
+  const flagshipPins = flagships.flatMap((store, i) =>
+    store.lat != null && store.lng != null
+      ? [{ lat: store.lat, lng: store.lng, n: i + 1, label: store.brand.name }]
+      : [],
+  );
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-10">
@@ -120,9 +156,66 @@ export default async function BrandsPage() {
             イギリス発のブランドを{brands.length}社
           </strong>
           、成り立ちと、ロンドンでの買い方の両方から紹介します。
-          どの店に行けばよく、日本と比べて実際どうなのかまで具体的に書いています。
+          定番品と旗艦店を先に出し、創業の経緯はその後ろに置いています。
         </p>
       </header>
+
+      {/* 目的から入る。 */}
+      <section className="mt-8">
+        <h2 className="text-xl font-semibold">何をしに行くか</h2>
+        <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+          {PURPOSES.map((p) => (
+            <li key={p.title}>
+              <Link
+                href={p.href}
+                className="block h-full rounded-xl border border-slate-200 p-4 transition hover:border-emerald-500 dark:border-slate-800"
+              >
+                <span className="block text-sm font-bold">{p.title} →</span>
+                <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                  {p.body}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 旗艦店の地図。番地と郵便番号まで確かめた店舗だけを置く。 */}
+      {flagshipPins.length > 0 && (
+        <section id="flagships" className="mt-10 scroll-mt-16 space-y-4">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold">旗艦店の地図</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              番地と郵便番号まで確かめられた{flagshipPins.length}店を置いています。位置は郵便番号の中心点で、建物の入口とは少しずれます。
+            </p>
+          </div>
+          <LazyMultiPinMap pins={flagshipPins} color="#047857" />
+          <ol className="grid gap-2 sm:grid-cols-2">
+            {flagships.map((store, i) => (
+              <li key={store.id}>
+                <Link
+                  href={`/brands/${store.brand.slug}#where-to-buy`}
+                  className="flex gap-3 rounded-lg border border-slate-200 p-3 text-sm transition hover:border-emerald-500 dark:border-slate-800"
+                >
+                  <span
+                    aria-hidden
+                    className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-emerald-700 text-xs font-semibold text-white"
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-bold">{store.brand.name}</span>
+                    <span className="block text-xs text-muted-foreground">
+                      {store.name}
+                      {store.nearestStation ? `・${store.nearestStation}` : ""}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       {/* 買い方の前提。各ブランドを見る前にここで一度片付けておく。 */}
       <section className="mt-10 space-y-4">

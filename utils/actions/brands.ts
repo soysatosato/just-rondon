@@ -33,3 +33,15 @@ export const fetchBrand = async (slug: string) =>
       faqs: { orderBy: { displayOrder: "asc" } },
     },
   });
+
+/**
+ * 旗艦店の一覧(ハブの地図用)。地図に置ける座標を持つ店舗だけ。
+ * 座標は seed-brands.ts が住所の郵便番号から入れる。
+ */
+export const fetchFlagshipStores = async () =>
+  db.brandStore.findMany({
+    where: { kind: "flagship", lat: { not: null }, lng: { not: null } },
+    include: { brand: { select: { slug: true, name: true, engName: true } } },
+    orderBy: [{ brand: { displayOrder: "asc" } }],
+  });
+
