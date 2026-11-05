@@ -221,8 +221,8 @@ export default async function CreditsPage() {
       />
 
       <p className="mt-6 text-sm leading-7 text-neutral-600 dark:text-neutral-400">
-        作者名のリンクから Commons のファイルページに移動できます。CC BY-SA
-        の写真は、利用する人が同じライセンスで公開することを条件に、誰でも再利用できます。
+        作者名のリンクから Commons のファイルページに移動できます。写真はそれぞれの作者の著作物で、再利用するときは、どのライセンスでも作者名とライセンスの表示が必要です。CC
+        BY-SA の写真を加工して公開する場合は、加工したものも同じライセンスで公開してください。歴史や近郊の街などの特集ページの写真は、ここではなく本文中の写真の下に表記しています。
         掲載に問題がある場合は
         <Link href="/contact" className="underline underline-offset-2">
           お問い合わせ

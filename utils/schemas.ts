@@ -96,7 +96,7 @@ export const contactSchema = z.object({
   message: z
     .string()
     .min(10, "お問い合わせ内容は10文字以上入力してください")
-    .max(1000, "お問い合わせ内容は1000文字以内で入力してください"),
+    .max(1000, "お問い合わせ内容は1,000文字以内で入力してください"),
 });
 
 /** 任意の入力欄。空欄は undefined にする(DB には NULL で入る)。 */

@@ -4,7 +4,7 @@ export const metadata = buildPageMetadata({
   path: "/contact",
   title: "お問い合わせ",
   description:
-    "質問や相談、お仕事の依頼など、ちょっとしたお問い合わせもお気軽にどうぞ。",
+    "ご質問・ご感想、掲載内容の誤りのご指摘、お仕事のご依頼を受け付けています。",
 });
 
 export default function ContactLayout({ children }: { children: any }) {

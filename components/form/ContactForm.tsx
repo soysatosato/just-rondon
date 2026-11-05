@@ -113,7 +113,7 @@ export default function ContactForm() {
             確認メールを送信しました
           </p>
           <p className="text-sm leading-7 text-emerald-800 dark:text-emerald-300/90">
-            メール内のリンクをクリックすると、お問い合わせが完了します。
+            メール内のリンクを開くと、お問い合わせが完了します。メールが届かない場合は、迷惑メールのフォルダもご確認ください。
           </p>
         </div>
       </div>

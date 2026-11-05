@@ -42,7 +42,7 @@ export default async function ConfirmPage({
     result = {
       kicker: "Contact",
       title: "リンクが無効です",
-      body: "リンクの有効期限が切れているか、すでに確認が済んでいる可能性があります。お手数ですが、お問い合わせフォームからもう一度お送りください。",
+      body: "リンクが正しくありません。メールのリンクが途中で切れていないかご確認ください。開けない場合は、お手数ですがお問い合わせフォームからもう一度お送りください。",
       tone: "error",
     };
   } else if (!confirmed.firstTime) {
