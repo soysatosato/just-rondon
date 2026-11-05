@@ -85,22 +85,28 @@ export type Origin = {
   /** 測定に使った駅。ページに明示して、数字の出どころを分かるようにする。 */
   station: string;
   naptanId: string;
+  /**
+   * 駅の座標。エリアの地図と「近くで食べる」の距離の計算に使う。
+   * TfL の StopPoint API(/StopPoint/<naptanId>)の lat/lon を 2026-11-05 に引いた値。
+   */
+  lat: number;
+  lng: number;
 };
 
 export const origins: Origin[] = [
-  { id: "westminster", station: "Victoria", naptanId: "910GVICTRIC" },
-  { id: "covent-garden", station: "Covent Garden", naptanId: "940GZZLUCGN" },
-  { id: "south-ken", station: "South Kensington", naptanId: "940GZZLUSKS" },
-  { id: "bloomsbury", station: "Russell Square", naptanId: "940GZZLURSQ" },
-  { id: "kings-cross", station: "King's Cross St Pancras", naptanId: "940GZZLUKSX" },
-  { id: "paddington", station: "Paddington", naptanId: "910GPADTON" },
-  { id: "city", station: "Liverpool Street", naptanId: "940GZZLULVT" },
-  { id: "southbank", station: "Waterloo", naptanId: "910GWATRLMN" },
-  { id: "marylebone", station: "Baker Street", naptanId: "940GZZLUBST" },
-  { id: "shoreditch", station: "Old Street", naptanId: "940GZZLUODS" },
-  { id: "bayswater", station: "Bayswater", naptanId: "940GZZLUBWT" },
-  { id: "greenwich", station: "Cutty Sark", naptanId: "940GZZDLCUT" },
-  { id: "stratford", station: "Stratford", naptanId: "940GZZLUSTD" },
+  { id: "westminster", station: "Victoria", naptanId: "910GVICTRIC", lat: 51.495812, lng: -0.143826 },
+  { id: "covent-garden", station: "Covent Garden", naptanId: "940GZZLUCGN", lat: 51.513093, lng: -0.124436 },
+  { id: "south-ken", station: "South Kensington", naptanId: "940GZZLUSKS", lat: 51.494094, lng: -0.174138 },
+  { id: "bloomsbury", station: "Russell Square", naptanId: "940GZZLURSQ", lat: 51.523073, lng: -0.124285 },
+  { id: "kings-cross", station: "King's Cross St Pancras", naptanId: "940GZZLUKSX", lat: 51.531683, lng: -0.123538 },
+  { id: "paddington", station: "Paddington", naptanId: "910GPADTON", lat: 51.516981, lng: -0.17616 },
+  { id: "city", station: "Liverpool Street", naptanId: "940GZZLULVT", lat: 51.51794, lng: -0.083162 },
+  { id: "southbank", station: "Waterloo", naptanId: "910GWATRLMN", lat: 51.504269, lng: -0.113356 },
+  { id: "marylebone", station: "Baker Street", naptanId: "940GZZLUBST", lat: 51.522883, lng: -0.15713 },
+  { id: "shoreditch", station: "Old Street", naptanId: "940GZZLUODS", lat: 51.526065, lng: -0.088193 },
+  { id: "bayswater", station: "Bayswater", naptanId: "940GZZLUBWT", lat: 51.512284, lng: -0.187938 },
+  { id: "greenwich", station: "Cutty Sark", naptanId: "940GZZDLCUT", lat: 51.481675, lng: -0.010802 },
+  { id: "stratford", station: "Stratford", naptanId: "940GZZLUSTD", lat: 51.541508, lng: -0.00241 },
 ];
 
 /**

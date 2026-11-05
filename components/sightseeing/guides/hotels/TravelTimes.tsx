@@ -114,17 +114,26 @@ export default function TravelTimes({ areaId }: { areaId: string }) {
         </ul>
       )}
 
+      {/*
+        空港は5つあり、読者に要るのは使う1つだけなので畳む。
+        details は閉じていても中身が HTML に残る(検索にも読まれる)。
+      */}
       {airports.length > 0 && (
-        <>
-          <p className="mt-3 text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-            空港へ
-          </p>
+        <details className="group mt-3">
+          <summary className="cursor-pointer list-none text-xs font-semibold text-neutral-600 dark:text-neutral-300 [&::-webkit-details-marker]:hidden">
+            <span className="underline underline-offset-2 group-open:no-underline">
+              空港への所要時間({airports.length}空港)
+            </span>
+            <span aria-hidden className="ml-1 inline-block transition group-open:rotate-180">
+              ▾
+            </span>
+          </summary>
           <ul className="mt-1.5 grid grid-cols-2 gap-1.5 sm:grid-cols-3">
             {airports.map((l) => (
               <Chip key={l.destinationId} leg={l} />
             ))}
           </ul>
-        </>
+        </details>
       )}
     </div>
   );

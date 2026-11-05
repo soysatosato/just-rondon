@@ -1,4 +1,4 @@
-import { TRAVEL_GUIDE_AS_OF, TRAVEL_GUIDE_UPDATED_AT } from "../guides";
+import { TRAVEL_GUIDE_AS_OF } from "../guides";
 import type { TravelGuideMetaSource } from "../guides";
 import type {
   GuideCalloutData,
@@ -43,7 +43,7 @@ export const hotelsMeta: TravelGuideMetaSource & {
   dataAsOf: string;
 } = {
   slug: "hotels",
-  title: "ロンドンの宿泊エリア徹底比較｜観光に便利なホテルの選び方",
+  title: "ロンドンのホテルはどこに泊まる？13エリア比較｜空港・観光地までの所要時間つき",
   engTitle: "Where to Stay in London",
   summary:
     "ロンドンのホテル選びは「どのホテルか」より「どのエリアか」で決まります。ウェストミンスター、コヴェント・ガーデン、サウス・ケンジントンなど主要10エリアの特徴と向き不向き、宿のタイプ別の予算感、そして日本人が現地で驚くポイントまでまとめました。",
@@ -59,7 +59,9 @@ export const hotelsMeta: TravelGuideMetaSource & {
     "ロンドン 家族 ホテル",
   ],
   dataAsOf: TRAVEL_GUIDE_AS_OF,
-  updatedAt: TRAVEL_GUIDE_UPDATED_AT,
+  // 2026-11-05 に、絞り込みを3つの問いに分け、地図とエリアの写真を足した。
+  // 共通の TRAVEL_GUIDE_UPDATED_AT は動かさない(他の旅行ガイドの更新日が嘘になる)。
+  updatedAt: "2026-11-05",
 };
 
 export const hotelsLead = `ロンドンのホテル選びで失敗する原因は、ほぼ例外なく「安さだけを見てエリアを軽視した」ことです。
@@ -121,7 +123,15 @@ export type Area = {
   callout?: GuideCalloutData;
   /** major=詳細あり / other=候補として名前だけ挙げる */
   tier: "major" | "other";
+  /**
+   * エリアの様子が分かる写真(Wikimedia Commons)。主要8エリアだけ。
+   * 宿そのものではなく街の写真。撮影年を caption に添える。
+   */
+  photo?: { url: string; credit: string; link: string; caption: string };
 };
+
+const COMMONS = "https://upload.wikimedia.org/wikipedia/commons/thumb";
+const FILE = "https://commons.wikimedia.org/wiki/File:";
 
 /**
  * 早見表・詳細8本・「その他の選択肢」5件は、もともと同じものを
@@ -131,6 +141,12 @@ export type Area = {
 export const areas: Area[] = [
   {
     id: "westminster",
+    photo: {
+      url: `${COMMONS}/9/97/Palace_of_Westminster%2C_London_-_Feb_2007.jpg/1280px-Palace_of_Westminster%2C_London_-_Feb_2007.jpg`,
+      credit: "Diliff / CC BY-SA 2.5, via Wikimedia Commons",
+      link: `${FILE}Palace_of_Westminster,_London_-_Feb_2007.jpg`,
+      caption: "国会議事堂とテムズ川(2007年撮影)",
+    },
     name: "ウェストミンスター／ヴィクトリア",
     tagline: "初めてのロンドンなら、まずここ",
     stations: "Victoria, Westminster",
@@ -151,6 +167,12 @@ export const areas: Area[] = [
   },
   {
     id: "covent-garden",
+    photo: {
+      url: `${COMMONS}/0/07/Covent_Garden_Piazza_%28August_2023%29_13.jpg/1280px-Covent_Garden_Piazza_%28August_2023%29_13.jpg`,
+      credit: "DiscoA340 / CC BY-SA 4.0, via Wikimedia Commons",
+      link: `${FILE}Covent_Garden_Piazza_(August_2023)_13.jpg`,
+      caption: "コヴェント・ガーデンのマーケットの建物(2023年撮影)",
+    },
     name: "コヴェント・ガーデン／ソーホー／レスター・スクエア",
     tagline: "劇場街のど真ん中",
     stations: "Covent Garden, Leicester Sq",
@@ -176,6 +198,12 @@ export const areas: Area[] = [
   },
   {
     id: "south-ken",
+    photo: {
+      url: `${COMMONS}/e/ec/Exhibition_Road_South_Kensington.jpg/1280px-Exhibition_Road_South_Kensington.jpg`,
+      credit: "Romazur / CC BY-SA 3.0, via Wikimedia Commons",
+      link: `${FILE}Exhibition_Road_South_Kensington.jpg`,
+      caption: "博物館が並ぶエキシビション・ロード(2012年撮影)",
+    },
     name: "サウス・ケンジントン／ケンジントン",
     tagline: "子連れ旅行のベストアンサー",
     stations: "South Kensington",
@@ -197,6 +225,12 @@ export const areas: Area[] = [
   },
   {
     id: "bloomsbury",
+    photo: {
+      url: `${COMMONS}/8/82/Russell_Square%2C_Bloomsbury_-_geograph.org.uk_-_4934214.jpg/1280px-Russell_Square%2C_Bloomsbury_-_geograph.org.uk_-_4934214.jpg`,
+      credit: "Chris Whippet / CC BY-SA 2.0, via Wikimedia Commons",
+      link: `${FILE}Russell_Square,_Bloomsbury_-_geograph.org.uk_-_4934214.jpg`,
+      caption: "ラッセル・スクエアの通り(2016年撮影)",
+    },
     name: "ブルームズベリー／ラッセル・スクエア",
     tagline: "コストパフォーマンス最強",
     stations: "Russell Sq, Holborn",
@@ -217,6 +251,12 @@ export const areas: Area[] = [
   },
   {
     id: "kings-cross",
+    photo: {
+      url: `${COMMONS}/3/3f/Granary_Square_fountains%2C_King%27s_Cross_-_geograph.org.uk_-_7736852.jpg/1280px-Granary_Square_fountains%2C_King%27s_Cross_-_geograph.org.uk_-_7736852.jpg`,
+      credit: "Stephen McKay / CC BY-SA 2.0, via Wikimedia Commons",
+      link: `${FILE}Granary_Square_fountains,_King%27s_Cross_-_geograph.org.uk_-_7736852.jpg`,
+      caption: "駅の北側の再開発地区、グラナリー・スクエア(2024年撮影)",
+    },
     name: "キングス・クロス／セント・パンクラス",
     tagline: "どこかへ出かける拠点として",
     stations: "King's Cross St Pancras",
@@ -242,6 +282,12 @@ export const areas: Area[] = [
   },
   {
     id: "paddington",
+    photo: {
+      url: `${COMMONS}/f/f6/PaddingtonBasin_London_260_20220420_1729.jpg/1280px-PaddingtonBasin_London_260_20220420_1729.jpg`,
+      credit: "Karlunun / CC BY-SA 4.0, via Wikimedia Commons",
+      link: `${FILE}PaddingtonBasin_London_260_20220420_1729.jpg`,
+      caption: "駅に隣り合う運河、パディントン・ベイスン(2022年撮影)",
+    },
     name: "パディントン",
     tagline: "ヒースロー最優先ならここ",
     stations: "Paddington",
@@ -258,6 +304,12 @@ export const areas: Area[] = [
   },
   {
     id: "city",
+    photo: {
+      url: `${COMMONS}/c/c4/City_of_London%2C_Leadenhall_Market_-_geograph.org.uk_-_7912314.jpg/1280px-City_of_London%2C_Leadenhall_Market_-_geograph.org.uk_-_7912314.jpg`,
+      credit: "Michael Garlick / CC BY-SA 2.0, via Wikimedia Commons",
+      link: `${FILE}City_of_London,_Leadenhall_Market_-_geograph.org.uk_-_7912314.jpg`,
+      caption: "シティのレドンホール・マーケット(2024年撮影)",
+    },
     name: "シティ／リヴァプール・ストリート",
     tagline: "週末が狙い目",
     stations: "Liverpool St, Bank",
@@ -279,6 +331,12 @@ export const areas: Area[] = [
   },
   {
     id: "southbank",
+    photo: {
+      url: `${COMMONS}/a/ab/The_Queen%27s_Walk_2011-07-30.jpg/1280px-The_Queen%27s_Walk_2011-07-30.jpg`,
+      credit: "Garry Knight / CC BY 2.0, via Wikimedia Commons",
+      link: `${FILE}The_Queen%27s_Walk_2011-07-30.jpg`,
+      caption: "テムズ川南岸の遊歩道、クイーンズ・ウォークの夜(2011年撮影)",
+    },
     name: "サウスバンク／ウォータールー",
     tagline: "川沿いの散歩が日常になる",
     stations: "Waterloo, Southwark",
@@ -361,7 +419,7 @@ export function needLabel(id: NeedId): string {
 }
 
 export const areaNote =
-  "価格帯はあくまでエリア間の相対比較です。ロンドンの宿泊費は季節・曜日・イベントで倍以上変動します。";
+  "価格帯(高・中〜高・中)は、編集部がエリア同士を比べた目安で、統計の数字ではありません。ロンドンの宿泊費は季節・曜日・イベントで倍以上変わるので、予約サイトで日付を入れて比べてください。写真はエリアの街並みで、宿そのものではありません。";
 
 export const areaGuideLink = {
   href: "/sightseeing/areas",

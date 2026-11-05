@@ -22,6 +22,13 @@ import {
 } from "../guides";
 import AreaChooser from "./AreaChooser";
 import TravelTimes, { TravelTimesNote } from "./TravelTimes";
+import ImageCredit from "@/components/shared/ImageCredit";
+import LazyMultiPinMap from "@/components/maps/LazyMultiPinMap";
+import { IMAGE_SIZES, responsiveImage } from "@/lib/wikimedia-image";
+import { origins } from "@/lib/hotels/travel-times";
+import { distanceKm } from "@/lib/sightseeing/geo";
+import { mappedBranches, shopPath } from "@/lib/restaurants/shop";
+import { fetchPublishedShops } from "@/utils/actions/restaurants";
 import { BOOKING_FILTER_VOCAB, bookingSearchUrl } from "@/lib/hotels/booking-link";
 import {
   areas,
@@ -64,8 +71,38 @@ import {
  * SEO まわり(JSON-LD・パンくず・出典・鮮度・広告枠)は
  * TravelGuideLayout と同じ部品をそのまま使うこと。
  */
-export default function HotelsGuide() {
+/** 「近くで食べる」に出す範囲。代表駅から直線でこの距離までの店。 */
+const NEARBY_SHOP_KM = 1.2;
+
+type NearbyShop = { slug: string; name: string; km: number };
+
+export default async function HotelsGuide() {
   const meta = getTravelGuideMeta(hotelsMeta.slug);
+
+  // エリアの代表駅の近くにある「店のページ」。店舗が複数ある店は、
+  // いちばん近い店舗で測る。
+  const shops = await fetchPublishedShops().catch(() => []);
+  const nearbyShops = (areaId: string): NearbyShop[] => {
+    const origin = origins.find((o) => o.id === areaId);
+    if (!origin) return [];
+    return shops
+      .map((shop) => ({
+        slug: shop.slug,
+        name: shop.name,
+        km: Math.min(
+          ...mappedBranches(shop).map((b) => distanceKm(b, origin)),
+        ),
+      }))
+      .filter((s) => Number.isFinite(s.km) && s.km <= NEARBY_SHOP_KM)
+      .sort((a, b) => a.km - b.km);
+  };
+
+  const areaPins = areas.flatMap((area, i) => {
+    const origin = origins.find((o) => o.id === area.id);
+    return origin
+      ? [{ lat: origin.lat, lng: origin.lng, n: i + 1, label: area.name }]
+      : [];
+  });
   const pageUrl = `${SITE_URL}${travelGuidePath(hotelsMeta.slug)}`;
   const relatedGuides = travelGuides.filter((g) => g.slug !== hotelsMeta.slug);
 
@@ -182,11 +219,27 @@ export default function HotelsGuide() {
             載り、初回読み込みが 50kB ほど増えるため。
           */}
           <AreaChooser
-            cards={areas.map((area) => ({
+            cards={areas.map((area, i) => ({
               id: area.id,
+              name: area.name,
               needs: area.needs,
-              node: <AreaCard key={area.id} area={area} />,
+              node: (
+                <AreaCard
+                  key={area.id}
+                  area={area}
+                  n={i + 1}
+                  shops={nearbyShops(area.id)}
+                />
+              ),
             }))}
+            map={
+              <div className="space-y-2">
+                <LazyMultiPinMap pins={areaPins} color="#047857" />
+                <p className="text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                  番号は下のカードの番号と同じです。点は各エリアの代表駅(所要時間を測った駅)の位置です。
+                </p>
+              </div>
+            }
           />
 
           <TravelTimesNote />
@@ -522,17 +575,52 @@ function Section({
  * state で出し分けると、記事の実体であるエリア解説がプリレンダー結果に
  * 一切出ず、JS 無効でも読めなくなる。
  */
-function AreaCard({ area }: { area: Area }) {
+function AreaCard({
+  area,
+  n,
+  shops,
+}: {
+  area: Area;
+  n: number;
+  shops: NearbyShop[];
+}) {
   const searchUrl = bookingSearchUrl(area.id);
 
   return (
     <div
       id={area.id}
-      className="scroll-mt-20 rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
+      className="scroll-mt-20 overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900"
     >
+      {area.photo && (
+        <figure>
+          <div className="relative aspect-[16/7] w-full bg-neutral-100 dark:bg-neutral-800">
+            <img
+              {...responsiveImage(area.photo.url, IMAGE_SIZES.article)}
+              alt={area.photo.caption}
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <figcaption className="flex flex-wrap gap-x-2 px-4 pt-1.5 text-xs text-neutral-500 dark:text-neutral-400 sm:px-5">
+            <span>{area.photo.caption}</span>
+            <ImageCredit
+              source="commons"
+              credit={area.photo.credit}
+              link={area.photo.link}
+            />
+          </figcaption>
+        </figure>
+      )}
       <div className="p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
+          <h3 className="flex items-baseline gap-2 text-base font-bold text-neutral-900 dark:text-neutral-100">
+            <span
+              aria-hidden
+              className="inline-flex h-6 w-6 flex-none items-center justify-center rounded-full bg-emerald-700 text-xs font-semibold text-white"
+            >
+              {n}
+            </span>
             {area.name}
           </h3>
           <span className="rounded bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
@@ -584,6 +672,29 @@ function AreaCard({ area }: { area: Area }) {
         </dl>
 
         <TravelTimes areaId={area.id} />
+
+        {shops.length > 0 && (
+          <div className="mt-3 border-t border-neutral-200 pt-3 dark:border-neutral-700">
+            <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+              近くで食べる(代表駅から直線{NEARBY_SHOP_KM}km以内の店のページ)
+            </p>
+            <ul className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+              {shops.map((s) => (
+                <li key={s.slug}>
+                  <Link
+                    href={shopPath(s.slug)}
+                    className="text-link underline underline-offset-2 dark:text-blue-400"
+                  >
+                    {s.name}
+                  </Link>
+                  <span className="ml-1 text-xs text-neutral-500 dark:text-neutral-400">
+                    約{s.km < 1 ? `${Math.max(100, Math.round(s.km * 10) * 100)}m` : `${s.km.toFixed(1)}km`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {searchUrl && (
           /*
