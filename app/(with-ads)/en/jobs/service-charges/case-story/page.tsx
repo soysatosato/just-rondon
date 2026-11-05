@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Disclaimer from "@/components/jobs/case-story/Disclaimer";
+import GateNote from "@/components/jobs/case-story/GateNote";
 import HtmlLang from "@/components/jobs/case-story/HtmlLang";
 import LocaleSwitch from "@/components/jobs/case-story/LocaleSwitch";
 import {
@@ -229,6 +230,7 @@ export default function CaseStoryIndexPageEn() {
       {/* 経過の章 */}
       <section className="mt-12">
         <h2 className="text-lg font-semibold">The record</h2>
+        <GateNote locale="en" />
         <div className="mt-4 space-y-3">
           {storyChapters.map((c) => (
             <Link

@@ -8,6 +8,8 @@ import MarkdownBody from "../MarkdownBody";
 import { SurveyAskLine } from "@/components/jobs/survey/SurveyAsk";
 import ConsultAsk from "@/components/jobs/consult/ConsultAsk";
 import ChapterNav from "./ChapterNav";
+import MemberSections from "./MemberSections";
+import { freeSectionCount } from "./gate";
 import Disclaimer from "./Disclaimer";
 import HtmlLang from "./HtmlLang";
 import LocaleSwitch from "./LocaleSwitch";
@@ -33,6 +35,13 @@ export default function ArticleLayout({
   const position = getChapterIndex(article.slug) + 1;
   const strings = t(locale);
   const path = chapterPath(article.slug, locale);
+
+  // 線より後の節は、見出しだけをページに載せ、本文は会員に API から渡す(gate.ts)。
+  const free = freeSectionCount(article.slug, article.sections.length);
+  const openSections = article.sections.slice(0, free);
+  const locked = article.sections
+    .slice(free)
+    .map(({ title, subtitle }) => ({ title, subtitle }));
 
   return (
     <div data-page-main className="mx-auto max-w-4xl pt-4 pb-10 text-neutral-900 dark:text-neutral-100">
@@ -94,7 +103,7 @@ export default function ArticleLayout({
       <AdSenseUnit slot={AD_SLOTS.inArticle} className="mb-10" />
 
       <div className="space-y-8">
-        {article.sections.map((section, i) => (
+        {openSections.map((section, i) => (
           <GuideSectionCard key={section.title}>
             <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
               {i + 1}. {section.title}
@@ -108,6 +117,15 @@ export default function ArticleLayout({
           </GuideSectionCard>
         ))}
       </div>
+
+      {locked.length > 0 && (
+        <MemberSections
+          slug={article.slug}
+          locale={locale}
+          from={free}
+          locked={locked}
+        />
+      )}
 
       {/*
         読み終えたところで相談の入口を出す。計算の章は自分の未払い額が出た直後で、

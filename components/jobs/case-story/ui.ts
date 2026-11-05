@@ -14,6 +14,17 @@ const strings = {
     backToIndex: "全体の目次に戻る",
     switchLabel: "English",
     switchAria: "Read this chapter in English",
+    gateHeading: "この先は会員の方だけが読めます",
+    gateBody:
+      "登録は無料です。メールに届く確認コードか、Google・LINE のアカウントで1分ほどで済みます。名前や写真の登録はありません。",
+    gateLockedList: "この章の続き",
+    gateSignUp: "無料で登録して続きを読む",
+    gateSignIn: "登録済みの方はログイン",
+    gateLoading: "続きを読み込んでいます…",
+    gateError: "続きを読み込めませんでした。",
+    gateRetry: "もう一度読み込む",
+    gateIndexNote:
+      "第1章と参考リンク集は全文、ほかの章は最初の節まで読めます。続きは無料の会員登録で読めます。",
     disclaimerHeading: "この記事について",
     disclaimerBody: [
       "これは私個人の経験にもとづく記録であり、法律アドバイスではありません。手続きの内容や期限は変わることがあります。ご自身のケースについては、AcasやCitizens Advice、資格のある専門家に確認してください。",
@@ -30,6 +41,17 @@ const strings = {
     backToIndex: "Back to all chapters",
     switchLabel: "日本語",
     switchAria: "この章を日本語で読む",
+    gateHeading: "The rest of this chapter is for members",
+    gateBody:
+      "Signing up is free and takes about a minute, with a code sent to your email or your Google or LINE account. No name or photo is needed. (The sign-up screen is in Japanese.)",
+    gateLockedList: "Still to come in this chapter",
+    gateSignUp: "Sign up free to keep reading",
+    gateSignIn: "Already a member? Log in",
+    gateLoading: "Loading the rest of the chapter…",
+    gateError: "The rest of the chapter could not be loaded.",
+    gateRetry: "Try again",
+    gateIndexNote:
+      "Chapter 1 and the sources page are open to everyone; the other chapters can be read up to their first section. The rest is free with a member account.",
     disclaimerHeading: "About this record",
     disclaimerBody: [
       "This is a personal account of my own case, not legal advice. Procedures and time limits change. For your own situation, check with Acas, Citizens Advice, or a qualified adviser.",
