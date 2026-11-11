@@ -33,6 +33,7 @@ import MusicalInfo from "@/components/musicals/MusicalInfo";
 import MusicalPracticalFacts from "@/components/musicals/MusicalPracticalFacts";
 import MusicalFactBar from "@/components/musicals/MusicalFactBar";
 import MusicalHero from "@/components/musicals/MusicalHero";
+import MusicalRunBanner from "@/components/musicals/MusicalRunBanner";
 import { theatrePath } from "@/components/musicals/theatres/theatres";
 import Breadcrumbs from "@/components/navigation/Breadcrumbs";
 import ViewTracker from "@/components/analytics/ViewTracker";
@@ -207,6 +208,9 @@ export default async function musicalDetailsPage({
           songsCount={musical.songs.length}
           isOnShow={musical.isOnShow}
         />
+
+        {/* 発表済みの初日・千秋楽(lib/musicals/runs.ts)。無い作品では何も出ない。 */}
+        <MusicalRunBanner slug={musical.slug} />
 
         {/*
           冒頭の要約。どこで・何時間・何歳から・英語・直近の公演を1行ずつ。

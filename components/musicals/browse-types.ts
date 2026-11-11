@@ -24,4 +24,10 @@ export type BrowseMusical = {
   englishForm: string | null;
   theatre: { slug: string; name: string; nameJa: string } | null;
   theatreName: string;
+  /**
+   * まだ来ていない初日と千秋楽("YYYY-MM-DD")。lib/musicals/runs.ts から
+   * サーバーで付ける。過ぎた日付と、発表の無い作品は null。
+   */
+  opens: string | null;
+  closes: string | null;
 };

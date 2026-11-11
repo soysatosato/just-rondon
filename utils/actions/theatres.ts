@@ -1,6 +1,8 @@
 import "server-only";
 
 import db from "../db";
+import { londonDate } from "@/lib/publish-schedule";
+import { hasClosed, onShowNow } from "@/lib/musicals/runs";
 
 /**
  * 劇場ハブに出す一覧。
@@ -11,7 +13,8 @@ import db from "../db";
  * 劇場の情報(座席・アクセス)は有効で、検索需要も消えない。
  */
 export const fetchAllTheatres = async () => {
-  const theatres = await db.theatre.findMany({
+  const today = londonDate(new Date());
+  const rows = await db.theatre.findMany({
     orderBy: { name: "asc" },
     include: {
       musicals: {
@@ -28,6 +31,11 @@ export const fetchAllTheatres = async () => {
       },
     },
   });
+  // DB の isOnShow が true でも、千秋楽を過ぎた作品は外す(lib/musicals/runs.ts)。
+  const theatres = rows.map((theatre) => ({
+    ...theatre,
+    musicals: theatre.musicals.filter((m) => !hasClosed(m.slug, today)),
+  }));
 
   return [...theatres].sort((a, b) => {
     // 上演中を持つ劇場を先に、その中は作品の推薦度が高い順。
@@ -44,7 +52,7 @@ export const fetchAllTheatres = async () => {
 };
 
 export const fetchTheatreDetails = async (slug: string) => {
-  return db.theatre.findUnique({
+  const theatre = await db.theatre.findUnique({
     where: { slug },
     include: {
       musicals: {
@@ -70,6 +78,15 @@ export const fetchTheatreDetails = async (slug: string) => {
       },
     },
   });
+  if (!theatre) return null;
+
+  // 千秋楽を過ぎた作品は「過去の上演作品」側へ回す。並びは DB と同じく
+  // 上演中が先(sort は安定なので、推薦度の順はそのまま残る)。
+  const today = londonDate(new Date());
+  const musicals = theatre.musicals
+    .map((m) => ({ ...m, isOnShow: onShowNow(m.slug, m.isOnShow, today) }))
+    .sort((a, b) => Number(b.isOnShow) - Number(a.isOnShow));
+  return { ...theatre, musicals };
 };
 
 /** generateStaticParams / サイトマップ用。 */

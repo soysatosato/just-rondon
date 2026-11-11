@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { isResizableImage } from "@/lib/wikimedia-image";
+import { formatRunDateShort } from "@/lib/musicals/runs";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { pickOne, useUrlState, type UrlStateCodec } from "@/hooks/use-url-state";
@@ -93,9 +94,18 @@ function MusicalPosterCard({ musical }: { musical: BrowseMusical }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
         <div className="absolute left-2 top-2 right-2 flex items-start justify-between gap-1">
+          {/* 初日・千秋楽は Must See より先に出す。観に行けるかどうかを決める情報なので。 */}
           {!musical.isOnShow ? (
             <Badge className="bg-neutral-800 text-white border-transparent shadow">
               上演終了
+            </Badge>
+          ) : musical.opens ? (
+            <Badge className="bg-sky-600 text-white border-transparent shadow">
+              {formatRunDateShort(musical.opens)}開幕
+            </Badge>
+          ) : musical.closes ? (
+            <Badge className="bg-amber-500 text-black border-transparent shadow">
+              {formatRunDateShort(musical.closes)}で終演
             </Badge>
           ) : musical.mustSee ? (
             <Badge className="bg-rose-600 text-white border-transparent shadow">

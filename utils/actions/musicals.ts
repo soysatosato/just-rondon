@@ -2,11 +2,25 @@ import "server-only";
 
 import db from "../db";
 import { MIN_WEEKLY, fetchWeeklyTopIds, orderByIds } from "../rankings";
+import { londonDate } from "@/lib/publish-schedule";
+import { onShowNow, upcomingRunDates } from "@/lib/musicals/runs";
+
+/**
+ * isOnShow に、発表済みの千秋楽(lib/musicals/runs.ts)を重ねる。
+ *
+ * DB の isOnShow は人が倒すまで true のまま残るので、千秋楽を過ぎた作品を
+ * 上演中として出し続けないよう、作品を返す関数はすべてここを通す。
+ * ページは ISR で1時間ごとに描き直すので、判定はその時点のロンドンの日付。
+ */
+function withRunStatus<T extends { slug: string; isOnShow: boolean }>(row: T): T {
+  return { ...row, isOnShow: onShowNow(row.slug, row.isOnShow, londonDate(new Date())) };
+}
 
 export const fetchAllMusicals = async () => {
-  return db.musical.findMany({
+  const rows = await db.musical.findMany({
     orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
   });
+  return rows.map(withRunStatus);
 };
 
 /**
@@ -19,7 +33,8 @@ export const fetchAllMusicals = async () => {
  * フィールドだけを選ぶ。
  */
 export const fetchMusicalsForBrowse = async () => {
-  return db.musical.findMany({
+  const today = londonDate(new Date());
+  const rows = await db.musical.findMany({
     orderBy: [{ recommendLevel: "desc" }, { name: "asc" }],
     select: {
       id: true,
@@ -41,6 +56,11 @@ export const fetchMusicalsForBrowse = async () => {
       theatreName: true,
     },
   });
+  // 初日・千秋楽はカードのバッジに出す。過ぎた日付は null で返る。
+  return rows.map((row) => ({
+    ...withRunStatus(row),
+    ...upcomingRunDates(row.slug, today),
+  }));
 };
 
 /** ランキングに出す件数。縦に積むので長くしない。 */
@@ -156,7 +176,7 @@ export const fetchMusicalDetails = async (slug: string) => {
       },
     },
   });
-  return musical;
+  return musical ? withRunStatus(musical) : null;
 };
 
 /**
@@ -190,11 +210,12 @@ export const fetchMusicalPerformances = async (musicalId: string) => {
 // 作品ごとに書き分けるため(テンプレート文だと全作品が同じスニペットになる)。
 // 劇場・上演時間・年齢は、あらすじ専用ページを持つ作品の description に使う
 // (app/(with-ads)/musicals/[slug]/page.tsx の practicalDescription)。
-export const fetchMusicalIdandName = (slug: string) => {
-  return db.musical.findUnique({
+export const fetchMusicalIdandName = async (slug: string) => {
+  const row = await db.musical.findUnique({
     where: { slug },
     select: {
       id: true,
+      slug: true,
       name: true,
       engName: true,
       summary: true,
@@ -207,6 +228,7 @@ export const fetchMusicalIdandName = (slug: string) => {
       isOnShow: true,
     },
   });
+  return row ? withRunStatus(row) : null;
 };
 
 /**
@@ -217,10 +239,11 @@ export const fetchMusicalIdandName = (slug: string) => {
  * 演出改訂で上演時間が変わったときに作品ページとあらすじページで
  * 違う数字が出る。数字の出どころは DB 1箇所に寄せること。
  */
-export const fetchMusicalStoryFacts = (slug: string) => {
-  return db.musical.findUnique({
+export const fetchMusicalStoryFacts = async (slug: string) => {
+  const row = await db.musical.findUnique({
     where: { slug },
     select: {
+      slug: true,
       name: true,
       engName: true,
       theatreName: true,
@@ -232,6 +255,7 @@ export const fetchMusicalStoryFacts = (slug: string) => {
       _count: { select: { songs: true } },
     },
   });
+  return row ? withRunStatus(row) : null;
 };
 
 export const fetchSongs = (musicalId: string) => {
