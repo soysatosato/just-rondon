@@ -198,6 +198,8 @@ const OVERRIDES: Record<string, ProfileOverride> = {
   "barbican-conservatory": { kind: "attraction", hoursLabel: "公開日時" },
   // 無料だが予約制の展望庭園。
   "sky-garden-london": { kind: "attraction", priceLabel: "入場料" },
+  // 無料だが日時指定の予約制の展望ギャラリー(category は architecture)。
+  "horizon-22": { kind: "attraction", priceLabel: "入場料" },
   "barbican-centre": { kind: "attraction" },
   "sea-life-london-aquarium": { kind: "attraction" },
   "madame-tussauds-london": { kind: "attraction" },
