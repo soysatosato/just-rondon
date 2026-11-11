@@ -141,3 +141,36 @@ export function validateIgCopy(copy: {
 
   return problems;
 }
+
+/**
+ * リール(動画)にする原稿の上限。カルーセルの上限に上乗せで効かせる。
+ *
+ * 動画は読み終える前に次の場面へ進むので、1場面の字数がそのまま場面の
+ * 長さになる(video/timing.ts は1秒9字で数える)。要点の本文が100字だと
+ * 1場面が13秒を超え、全体が1分近くになる。60字までなら全体で40秒前後。
+ * 短くした原稿はカルーセルにもそのまま使える。
+ */
+export const IG_REEL_LIMITS = {
+  pointBody: 60,
+  closingBody: 60,
+} as const;
+
+export function validateIgReelCopy(copy: {
+  points: IgPoint[];
+  closingBody: string;
+}): string[] {
+  const problems: string[] = [];
+  copy.points.forEach((p, i) => {
+    const n = charLength(p.body.trim());
+    if (n > IG_REEL_LIMITS.pointBody) {
+      problems.push(
+        `points[${i}].body が ${n}字です(リールの上限 ${IG_REEL_LIMITS.pointBody}字)`,
+      );
+    }
+  });
+  const n = charLength(copy.closingBody.trim());
+  if (n > IG_REEL_LIMITS.closingBody) {
+    problems.push(`closingBody が ${n}字です(リールの上限 ${IG_REEL_LIMITS.closingBody}字)`);
+  }
+  return problems;
+}

@@ -13,6 +13,7 @@ import {
 import {
   IG_SLOT_HOUR_JST,
   formatIgSlot,
+  igEarliestPostTime,
   igSlotWeekdaysLabel,
   jstDate,
   nextIgSlot,
@@ -54,6 +55,7 @@ const INCLUDE = {
       image: true,
       imageSource: true,
       imageCredit: true,
+      publishedAt: true,
       updatedAt: true,
     },
   },
@@ -114,6 +116,10 @@ function PostCard({ post, now }: { post: PostRow; now: Date }) {
   const baseName = `ig-${jstDate(post.scheduledAt ?? post.createdAt)}-${post.content.slug.slice(0, 24)}`;
   const slotPassed = post.scheduledAt && post.scheduledAt.getTime() <= now.getTime();
   const today = jstDate(now);
+  // リールは公開前の新しい記事からも作る。記事が画面に出る前の枠は選ばせない。
+  const publishedAt = post.content.publishedAt;
+  const earliest = publishedAt ? igEarliestPostTime(publishedAt) : null;
+  const minDate = earliest && jstDate(earliest) > today ? jstDate(earliest) : today;
 
   return (
     <li className="rounded-lg border p-4">
@@ -138,6 +144,17 @@ function PostCard({ post, now }: { post: PostRow; now: Date }) {
       >
         記事: {post.content.title}
       </Link>
+      {!publishedAt ? (
+        <p className="mt-1 text-xs font-semibold text-amber-700 dark:text-amber-400">
+          記事はまだ下書きです。/admin/reading で記事を承認すると、この投稿も承認できます。
+        </p>
+      ) : (
+        publishedAt.getTime() > now.getTime() && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            記事の公開予定: {formatIgSlot(publishedAt)}(投稿の枠はこの1時間後以降)
+          </p>
+        )
+      )}
 
       {post.status === "approved" && slotPassed && (
         <p className="mt-2 text-xs font-semibold text-red-600 dark:text-red-400">
@@ -208,8 +225,8 @@ function PostCard({ post, now }: { post: PostRow; now: Date }) {
         <div className="mt-2">
           <IgRescheduleForm
             id={post.id}
-            defaultDate={slotPassed ? today : jstDate(post.scheduledAt)}
-            minDate={today}
+            defaultDate={slotPassed ? minDate : jstDate(post.scheduledAt)}
+            minDate={minDate}
           />
         </div>
       )}
@@ -297,6 +314,10 @@ export default async function InstagramAdminPage() {
         承認すると次の枠に入ります。スマホでこのページを開き「5枚を保存」→
         Instagram アプリで5枚を選び、キャプションを貼って予約投稿に入れたら
         「アプリの予約に入れた」を押してください。原稿の修正はチャットで Claude に。
+      </p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        リールにする投稿は、Claude が /add-instagram-reel で書き出した動画(MP4)と表紙を
+        使います。公開前の記事の投稿は、記事が画面に出たあと(公開の1時間後以降)の枠に入ります。
       </p>
 
       <section className="mt-6 grid gap-2 sm:grid-cols-3">

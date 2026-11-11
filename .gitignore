@@ -74,3 +74,6 @@ just-rondon-backups/
 
 # TfL 最寄駅の収集結果（再取得すれば作り直せる作業ファイル）
 scripts/.nearest-station-cache.json
+
+# Instagram のリール(scripts/render-instagram-reel.ts の書き出し先。投稿用の動画で、作り直せる)
+/instagram-reels/

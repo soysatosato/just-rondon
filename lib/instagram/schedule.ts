@@ -46,18 +46,48 @@ export function igSlotFor(ymd: string): Date | null {
 }
 
 /**
+ * 記事の公開時刻から、記事が画面に出るまでの最大の遅れ。各ページの ISR が
+ * 1時間なので(lib/publish-schedule.ts)、公開時刻ちょうどの投稿では
+ * プロフィールから来た人がまだ記事に辿り着けないことがある。
+ */
+export const IG_PUBLISH_LAG_MS = 60 * 60 * 1000;
+
+/**
+ * 記事の公開時刻から見て、投稿してよい最も早い時刻。
+ *
+ * 新しい記事のリールで効く。コラムはロンドン12:30公開で、日本時間では
+ * 冬21:30・夏20:30。ISR の遅れを足すと、公開当日21:00の枠ではまだ
+ * 記事が出ていない。
+ */
+export function igEarliestPostTime(publishedAt: Date): Date {
+  return new Date(publishedAt.getTime() + IG_PUBLISH_LAG_MS);
+}
+
+/**
  * 次に空いている枠。
  *
  * まだ時刻が来ていない枠のうち、いちばん後ろに入っている予約の翌日以降で
- * 最初の投稿曜日。承認した順に枠が埋まっていく。
+ * 最初の投稿曜日。承認した順に枠が埋まっていく。notBefore を渡すと、
+ * その時刻より前の枠は飛ばす(記事がまだ出ていない枠に入れないため)。
  */
-export function nextIgSlot(latest: Date | null, now = new Date()): Date {
+export function nextIgSlot(
+  latest: Date | null,
+  now = new Date(),
+  notBefore: Date | null = null,
+): Date {
   const today = jstDate(now);
   const todaySlot = igSlotFor(today)!;
   let day = todaySlot.getTime() > now.getTime() ? today : addDays(today, 1);
   if (latest) {
     const afterLatest = addDays(jstDate(latest), 1);
     if (afterLatest > day) day = afterLatest;
+  }
+  if (notBefore) {
+    const earliest = jstDate(notBefore);
+    if (earliest > day) day = earliest;
+    if (day === earliest && igSlotFor(day)!.getTime() < notBefore.getTime()) {
+      day = addDays(day, 1);
+    }
   }
   while (!IG_SLOT_WEEKDAYS.includes(weekdayOf(day))) day = addDays(day, 1);
   return igSlotFor(day)!;

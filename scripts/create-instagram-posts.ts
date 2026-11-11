@@ -1,8 +1,13 @@
 /**
- * Instagram のカルーセル投稿の原稿を、下書きとして DB に入れる。
- * /add-instagram スキルから呼ぶ。
+ * Instagram の投稿の原稿を、下書きとして DB に入れる。
+ * /add-instagram(カルーセル)と /add-instagram-reel(リール)の両スキルから呼ぶ。
  *
- *   npx tsx scripts/create-instagram-posts.ts <payload.json> [--dry]
+ *   npx tsx scripts/create-instagram-posts.ts <payload.json> [--dry] [--reel]
+ *
+ * --reel はリールにする原稿。本文の上限が短くなり(IG_REEL_LIMITS)、
+ * まだ公開されていない記事(下書き・予約中)も使える。リールは新しい記事と
+ * 一緒に作るため。公開前の記事の投稿は、/admin/instagram で記事の公開
+ * 1時間後以降の枠にしか入らない(記事が下書きのうちは承認できない)。
  *
  * payload は配列。1件が1投稿(5枚):
  *
@@ -26,10 +31,12 @@ import db from "../utils/db";
 import {
   isIgCategory,
   validateIgCopy,
+  validateIgReelCopy,
   type IgCategory,
   type IgPoint,
 } from "../lib/instagram/limits";
 import { composeIgCaption } from "../lib/instagram/caption";
+import { formatIgSlot } from "../lib/instagram/schedule";
 
 type PostInput = {
   category: string;
@@ -45,6 +52,7 @@ type PostInput = {
 };
 
 const DRY = process.argv.includes("--dry");
+const REEL = process.argv.includes("--reel");
 
 async function main() {
   const path = process.argv.slice(2).find((a) => !a.startsWith("--"));
@@ -58,6 +66,7 @@ async function main() {
 
   const now = new Date();
   const problems: string[] = [];
+  const notes: string[] = [];
   const ready: {
     input: PostInput;
     category: IgCategory;
@@ -91,8 +100,18 @@ async function main() {
       continue;
     }
     // 投稿を見た人がプロフィールから記事へ来るので、まだ出ていない記事は使えない。
+    // リールだけは新しい記事と一緒に作るので通し、枠を記事の公開後に限る
+    // (utils/actions/instagram-admin.ts の承認)。
     if (!content.publishedAt || content.publishedAt > now) {
-      problems.push(`${where}: まだ公開されていない記事です`);
+      if (!REEL) {
+        problems.push(`${where}: まだ公開されていない記事です`);
+      } else {
+        notes.push(
+          content.publishedAt
+            ? `${where}: 記事は ${formatIgSlot(content.publishedAt)} 公開予定。投稿の枠はその1時間後以降になります`
+            : `${where}: 記事はまだ下書きです。/admin/reading で記事を承認するまで、この投稿は承認できません`,
+        );
+      }
     }
     if (seen.has(content.id)) problems.push(`${where}: 同じ記事が payload に2回あります`);
     seen.add(content.id);
@@ -130,6 +149,9 @@ async function main() {
       hashtags: input.hashtags ?? [],
     };
     for (const p of validateIgCopy(copy)) problems.push(`${where}: ${p}`);
+    if (REEL) {
+      for (const p of validateIgReelCopy(copy)) problems.push(`${where}: ${p}`);
+    }
 
     ready.push({ input, category, contentId: content.id, credit });
   }
@@ -140,6 +162,7 @@ async function main() {
     process.exitCode = 1;
     return;
   }
+  for (const note of notes) console.log(`注: ${note}`);
 
   for (const { input, category, contentId, credit } of ready) {
     const hashtags = input.hashtags ?? [];
@@ -168,7 +191,11 @@ async function main() {
     console.log(`下書きを入れました: ${category}/${input.slug} (id=${created.id})`);
   }
   if (!DRY) {
-    console.log(`\n${ready.length}件。/admin/instagram で5枚を確認して承認してください。`);
+    console.log(
+      REEL
+        ? `\n${ready.length}件。/admin/instagram で承認すると枠が入ります。動画は instagram-reels/ の MP4 を使ってください。`
+        : `\n${ready.length}件。/admin/instagram で5枚を確認して承認してください。`,
+    );
   }
 }
 
