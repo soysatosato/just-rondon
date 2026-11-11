@@ -236,16 +236,18 @@ export const venueClosures: VenueClosure[] = [
     group: "museum",
     closed: [],
     closedFrom: "2026-11-02",
-    notes: ["改修のための全館の休館で、再開の日は発表されていない。"],
+    notes: [
+      "改修のための全館の休館。本初子午線の中庭は2027年夏に再開する予定で、改修全体は2028年春に終わる予定。",
+    ],
     places: [
       { spot: "royal-observatory-greenwich", relation: "here" },
       { museum: "royal-observatory-greenwich", relation: "here" },
     ],
     source: {
-      label: "Royal Museums Greenwich – Royal Observatory closures",
-      url: "https://www.rmg.co.uk/royal-observatory/plan-your-visit/closures",
+      label: "Royal Museums Greenwich – Royal Observatory transformation",
+      url: "https://www.rmg.co.uk/royal-observatory/transformation",
     },
-    checkedAt: CHECKED,
+    checkedAt: "2026-11-11",
   },
   {
     id: "sherlock-holmes-museum",
